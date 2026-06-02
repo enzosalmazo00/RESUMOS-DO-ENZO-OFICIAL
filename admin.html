@@ -242,6 +242,7 @@
   <div class="stats" id="statsArea">
     <div class="stat-card"><div class="stat-label">Total de Alunos</div><div class="stat-value" id="statAlunos">—</div><div class="stat-sub">contas cadastradas</div></div>
     <div class="stat-card"><div class="stat-label">Com Acesso Ativo</div><div class="stat-value" id="statAtivos">—</div><div class="stat-sub">algum resumo liberado</div></div>
+    <div class="stat-card"><div class="stat-label">Total Recebido</div><div class="stat-value" id="statReceita">—</div><div class="stat-sub">pagamentos aprovados</div></div>
     <div class="stat-card"><div class="stat-label">Pagamentos</div><div class="stat-value" id="statPagamentos">—</div><div class="stat-sub">pedidos registrados</div></div>
     <div class="stat-card"><div class="stat-label">Expiram em 7 dias</div><div class="stat-value" id="statExpirando">—</div><div class="stat-sub">precisam renovar</div></div>
   </div>
@@ -401,8 +402,18 @@ async function loadOrders() {
   var tbody = document.getElementById("ordersBody");
   if (error || !data || data.length === 0) {
     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:rgba(125,211,232,0.3);font-size:13px;">Nenhum pedido registrado</td></tr>';
+    document.getElementById("statPagamentos").textContent = "0";
+    document.getElementById("statReceita").textContent = "R$ 0";
     return;
   }
+
+  // Calcula total recebido (apenas aprovados)
+  var totalReceita = data
+    .filter(function(o) { return o.status === "approved"; })
+    .reduce(function(sum, o) { return sum + parseFloat(o.valor || 0); }, 0);
+
+  document.getElementById("statPagamentos").textContent = data.length;
+  document.getElementById("statReceita").textContent = "R$ " + totalReceita.toFixed(2).replace(".", ",");
 
   tbody.innerHTML = data.map(function(o) {
     var statusBadge = o.status === "approved"
@@ -419,8 +430,6 @@ async function loadOrders() {
       '<td class="date-cell">' + new Date(o.criado_em).toLocaleDateString('pt-BR') + '</td>' +
       '</tr>';
   }).join('');
-
-  document.getElementById("statPagamentos").textContent = data.length;
 }
 
 // ── Stats ─────────────────────────────────────────────────────────────────────
