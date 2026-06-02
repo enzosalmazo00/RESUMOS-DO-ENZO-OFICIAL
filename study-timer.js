@@ -58,13 +58,6 @@ function buildWidget() {
   widget.className = "st-widget";
   widget.id = "stWidget";
 
-  // Botão voltar ao dashboard
-  var back = document.createElement("a");
-  back.className = "st-back";
-  back.href = "dashboard.html";
-  back.innerHTML = "← Dashboard";
-  widget.appendChild(back);
-
   // Timer
   var timer = document.createElement("div");
   timer.className = "st-timer";
