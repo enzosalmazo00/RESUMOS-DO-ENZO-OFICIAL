@@ -2056,24 +2056,8 @@
     el.classList.add('show');
   }
 
-  // ── SUPABASE AUTH CHECK ──
-  document.addEventListener('DOMContentLoaded', async function() {
-    var supabaseUrl = 'https://dmuwtmovrtlhvokdnmis.supabase.co';
-    var supabaseKey = 'sb_publishable_TA6bGrJ_gMQ9A4l6G3XYTQ_2rEuNNAj';
+  // Auth gerenciado pelo auth-guard.js
 
-    // window.supabase estará disponível pois o SDK foi carregado antes deste script
-    var client = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-    try {
-      var result = await client.auth.getSession();
-      if (!result.data.session) {
-        window.location.replace('login.html');
-      }
-    } catch (err) {
-      console.error('Erro ao verificar sessão Supabase:', err);
-      window.location.replace('login.html');
-    }
-  });
 </script>
 
 
