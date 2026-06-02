@@ -536,16 +536,37 @@ window.openModal = function(id) {
 
 function renderResumosGrid() {
   var grid = document.getElementById("resumosGrid");
+  var presentes = (currentAluno && currentAluno.resumos_presente) || [];
+
   grid.innerHTML = RESUMOS_COLS.map(function(r) {
     var on = currentToggles[r.key];
-    return '<div class="resumo-toggle ' + (on ? 'on' : '') + '" onclick="toggleResumo(\'' + r.key + '\')">' +
-      (on ? '✅ ' : '🔒 ') + r.label +
+    var isPresente = presentes.includes(r.key);
+    return '<div style="display:flex;gap:4px;align-items:stretch;">' +
+      '<div class="resumo-toggle ' + (on ? 'on' : '') + '" style="flex:1" onclick="toggleResumo(\'' + r.key + '\')">' +
+        (on ? '✅ ' : '🔒 ') + r.label +
+      '</div>' +
+      (on ? '<div title="Marcar como presente" style="' +
+        'padding:4px 8px;border-radius:10px;cursor:pointer;font-size:14px;' +
+        'border:1px solid rgba(251,191,36,' + (isPresente ? '0.5' : '0.15') + ');' +
+        'background:rgba(251,191,36,' + (isPresente ? '0.15' : '0.04') + ');' +
+        'display:flex;align-items:center;justify-content:center;' +
+      '" onclick="togglePresente(\'' + r.key + '\')">🎁</div>' : '') +
     '</div>';
   }).join('');
 }
 
 window.toggleResumo = function(key) {
   currentToggles[key] = !currentToggles[key];
+  renderResumosGrid();
+};
+
+window.togglePresente = function(key) {
+  if (!currentAluno) return;
+  var presentes = (currentAluno.resumos_presente || []).slice();
+  var idx = presentes.indexOf(key);
+  if (idx >= 0) presentes.splice(idx, 1);
+  else presentes.push(key);
+  currentAluno.resumos_presente = presentes;
   renderResumosGrid();
 };
 
@@ -570,6 +591,7 @@ window.saveAluno = async function() {
 
   var expiryVal = document.getElementById("expiryInput").value;
   update.acesso_expira_em = expiryVal ? new Date(expiryVal).toISOString() : null;
+  update.resumos_presente = currentAluno.resumos_presente || [];
 
   var { error } = await client.from("profiles").update(update).eq("id", currentAluno.id);
   if (error) { showToast("Erro ao salvar!", "error"); }

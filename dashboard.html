@@ -401,11 +401,70 @@
     }
     .prova-label-line { flex:1; height:1px; background:rgba(34,211,238,0.08); }
 
-    /* ── RESPONSIVO ── */
-    @media (max-width:640px) {
-      .semestre-header { padding:16px 18px; }
-      .semestre-title { font-size:15px; }
+    /* ── BOAS VINDAS ── */
+    .welcome-box {
+      padding:20px 24px; border-radius:16px; margin-bottom:28px;
+      background:linear-gradient(135deg,rgba(34,211,238,0.06),rgba(6,182,212,0.03));
+      border:1px solid rgba(34,211,238,0.15);
     }
+    .welcome-msg {
+      font-size:16px; font-weight:600; color:#e2f8fc;
+      margin-bottom:6px; letter-spacing:-0.2px;
+    }
+    .welcome-sub {
+      font-size:12.5px; color:rgba(125,211,232,0.5); line-height:1.5;
+    }
+    .welcome-change-btn {
+      font-size:11px; color:rgba(34,211,238,0.45); cursor:pointer;
+      text-decoration:underline; text-underline-offset:3px;
+      background:none; border:none; font-family:'Poppins',sans-serif;
+      margin-top:8px; display:inline-block; transition:color .2s;
+    }
+    .welcome-change-btn:hover { color:rgba(34,211,238,0.8); }
+
+    /* ── PRESENTE ── */
+    .presente-btn {
+      position:absolute; top:12px; right:12px;
+      font-size:22px; cursor:pointer; z-index:10;
+      transition:transform .2s; line-height:1;
+      filter:drop-shadow(0 2px 6px rgba(251,191,36,0.4));
+    }
+    .presente-btn:hover { transform:scale(1.2) rotate(-10deg); }
+
+    .presente-modal {
+      position:fixed; inset:0; z-index:2000;
+      display:flex; align-items:center; justify-content:center;
+      padding:20px; background:rgba(2,8,16,0.85); backdrop-filter:blur(8px);
+      opacity:0; pointer-events:none; transition:opacity .3s;
+    }
+    .presente-modal.open { opacity:1; pointer-events:all; }
+    .presente-modal-box {
+      background:linear-gradient(160deg,#020d1a,#010812);
+      border:1px solid rgba(251,191,36,0.35);
+      border-radius:24px; padding:40px 32px; max-width:380px; width:100%;
+      text-align:center;
+      box-shadow:0 24px 64px rgba(0,0,0,0.6), 0 0 60px rgba(251,191,36,0.06) inset;
+      transform:translateY(16px); transition:transform .3s;
+    }
+    .presente-modal.open .presente-modal-box { transform:translateY(0); }
+    .presente-emoji { font-size:56px; margin-bottom:16px; display:block;
+      animation:bounce 1s ease infinite alternate; }
+    @keyframes bounce { from{transform:translateY(0)} to{transform:translateY(-8px)} }
+    .presente-title {
+      font-size:18px; font-weight:700; color:#fbbf24;
+      margin-bottom:12px; letter-spacing:-0.3px;
+    }
+    .presente-msg {
+      font-size:14px; color:rgba(125,211,232,0.7);
+      line-height:1.7; margin-bottom:24px;
+    }
+    .presente-close {
+      padding:11px 28px; border-radius:12px; border:1px solid rgba(251,191,36,0.3);
+      background:rgba(251,191,36,0.08); color:#fbbf24;
+      font-family:'Poppins',sans-serif; font-size:13px; font-weight:600;
+      cursor:pointer; transition:all .2s;
+    }
+    .presente-close:hover { background:rgba(251,191,36,0.18); }
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
@@ -431,6 +490,27 @@
 
   <!-- CONTEÚDO PRINCIPAL — revelado após authReady -->
   <div id="mainContent" style="display:none">
+
+    <!-- BOAS VINDAS PERSONALIZADAS -->
+    <div class="welcome-box" id="welcomeBox">
+      <div class="welcome-msg" id="welcomeMsg"></div>
+      <div class="welcome-name-row" id="welcomeNameRow" style="display:none">
+        <span style="font-size:13px;color:rgba(125,211,232,0.6);">Como prefere ser chamado(a)?</span>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <input type="text" id="nomeInput" placeholder="Seu nome ou apelido..." style="
+            flex:1; padding:10px 14px; border-radius:10px;
+            background:rgba(255,255,255,0.05); border:1px solid rgba(34,211,238,0.2);
+            color:#fff; font-size:13px; font-family:'Poppins',sans-serif;
+          " maxlength="30">
+          <button onclick="salvarNome()" style="
+            padding:10px 18px; border-radius:10px; border:none;
+            background:linear-gradient(135deg,#22d3ee,#0891b2);
+            color:#fff; font-size:13px; font-weight:600;
+            font-family:'Poppins',sans-serif; cursor:pointer;
+          ">Salvar</button>
+        </div>
+      </div>
+    </div>
 
     <!-- TABS -->
     <div class="tabs">
@@ -498,6 +578,20 @@
   </div>
 </div>
 
+<!-- MODAL PRESENTE -->
+<div class="presente-modal" id="presenteModal" onclick="closePresenteModal()">
+  <div class="presente-modal-box" onclick="event.stopPropagation()">
+    <span class="presente-emoji">🎁</span>
+    <div class="presente-title">Um presente especial para você!</div>
+    <div class="presente-msg" id="presenteMsgTexto">
+      Este resumo foi um presente do Enzo para você!<br><br>
+      Que ele seja mais uma ferramenta na sua jornada rumo à medicina.<br>
+      <strong style="color:#fbbf24;">Bons estudos e boa prova! 🩺✨</strong>
+    </div>
+    <button class="presente-close" onclick="closePresenteModal()">💛 Obrigado, Enzo!</button>
+  </div>
+</div>
+
 <!-- MODAL PIX -->
 <div class="modal-overlay" id="pixModal">
   <div class="modal">
@@ -540,7 +634,7 @@ var MATERIAS = [
   { key:"bioquimica",    label:"Bioquímica",    emoji:"📚", desc:"Bases moleculares e metabolismo.",          file_p1:"bioquimica_p1.html",    file_p2:"resumo_bioquimica_p2.html",  file_final:"bioquimica_final.html"    },
   { key:"biofisica",     label:"Biofísica",     emoji:"⚡", desc:"Física aplicada à medicina.",               file_p1:"biofisica_p1.html",     file_p2:"biofisica.html",             file_final:"biofisica_final.html"     },
   { key:"genetica",      label:"Genética",      emoji:"🧬", desc:"Herança e mutações genéticas.",            file_p1:"genetica_p1.html",      file_p2:"genetica_p2_enzo.html",      file_final:"genetica_final.html"      },
-  { key:"fisiologia",    label:"Fisiologia",    emoji:"🫀", desc:"Funcionamento dos sistemas humanos.",      file_p1:"fisiologia_p1.html",    file_p2:"fisiologia_p2_enzo.html",    file_final:"fisiologia_final.html"    },
+  { key:"fisiologia",    label:"Fisiologia",    emoji:"❤️", desc:"Funcionamento dos sistemas humanos.",      file_p1:"fisiologia_p1.html",    file_p2:"fisiologia_p2_enzo.html",    file_final:"fisiologia_final.html"    },
   { key:"microbiologia", label:"Microbiologia", emoji:"🦠", desc:"Microrganismos e patologias.",             file_p1:"microbiologia_p1.html", file_p2:"microbiologia_gram_negativos.html", file_final:"microbiologia_final.html" },
   { key:"micro_pratica", label:"Micro Prática", emoji:"🧫", desc:"Identificação e técnicas laboratoriais.",  file_p1:"micro_pratica_p1.html", file_p2:"micro_pratica.html",          file_final:"micro_pratica_final.html" },
   { key:"imunologia",    label:"Imunologia",    emoji:"🛡️", desc:"Sistema imune e respostas do organismo.", file_p1:"imunologia_p1.html",    file_p2:"resumo_imunologia_p2.html",  file_final:"imunologia_final.html"    },
@@ -648,7 +742,68 @@ function renderExpiryBadge() {
 }
 
 // ── Renderiza grid de resumos (aba Meus Resumos) ───────────────────────────────
-// ── Renderiza acordeão de semestres ───────────────────────────────────────────
+// ── Boas vindas personalizadas ─────────────────────────────────────────────
+function renderWelcome() {
+  var nome = profile.nome_preferido || "";
+  var hora = new Date().getHours();
+  var saudacao = hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
+
+  var welcomeMsg  = document.getElementById("welcomeMsg");
+  var welcomeRow  = document.getElementById("welcomeNameRow");
+  var nomeInput   = document.getElementById("nomeInput");
+
+  if (nome) {
+    // Tem nome salvo — mostra saudação + frases motivacionais
+    var frases = [
+      "Cada página estudada hoje é um passo a mais rumo ao seu jaleco. 🩺",
+      "A medicina escolheu você. Agora é a sua vez de escolher estudar. 📖",
+      "Grandes médicos foram feitos de noites de estudo como esta. 💡",
+      "Você está mais perto do que imagina. Continue assim! 🚀",
+      "Um resumo por vez. Uma prova por vez. Um sonho de cada vez. ✨",
+    ];
+    var frase = frases[Math.floor(Math.random() * frases.length)];
+
+    welcomeMsg.innerHTML =
+      '<div style="font-size:16px;font-weight:700;color:#e2f8fc;margin-bottom:6px;">' +
+        saudacao + ', <span style="color:#22d3ee;">' + nome + '</span>! 👋' +
+      '</div>' +
+      '<div class="welcome-sub">' + frase + '</div>' +
+      '<button class="welcome-change-btn" onclick="mostrarCampoNome()">✏️ Alterar nome</button>';
+
+    welcomeRow.style.display = "none";
+  } else {
+    // Sem nome — pede para preencher
+    welcomeMsg.innerHTML =
+      '<div style="font-size:15px;font-weight:600;color:#e2f8fc;margin-bottom:4px;">' +
+        'Bem-vindo(a) aos Resumos do Enzo! 🎓' +
+      '</div>' +
+      '<div class="welcome-sub">Personalize sua experiência — como você gostaria de ser chamado(a)?</div>';
+
+    welcomeRow.style.display = "block";
+    nomeInput.value = "";
+    setTimeout(function(){ nomeInput.focus(); }, 300);
+  }
+}
+
+window.mostrarCampoNome = function() {
+  document.getElementById("welcomeNameRow").style.display = "block";
+  document.getElementById("nomeInput").value = profile.nome_preferido || "";
+  document.getElementById("nomeInput").focus();
+};
+
+window.salvarNome = async function() {
+  var nome = document.getElementById("nomeInput").value.trim();
+  if (!nome) return;
+  var session = window.authSession;
+  var { error } = await window.authClient
+    .from("profiles")
+    .update({ nome_preferido: nome })
+    .eq("id", session.user.id);
+  if (!error) {
+    profile.nome_preferido = nome;
+    renderWelcome();
+  }
+};
 function renderResumosGrid() {
   var wrap = document.getElementById("semestresWrap");
   if (!wrap) return;
@@ -772,6 +927,9 @@ function renderGridCards() {
     gridP2.innerHTML = "";
     MATERIAS.forEach(function(m) {
       var acesso = hasAccess(m, "p2");
+      var presentes = profile.resumos_presente || [];
+      var ehPresente = presentes.includes(m.key + "_p2");
+
       if (acesso) {
         var dias = daysLeftForResumo(m, "p2");
         var expiryInfo = dias !== null
@@ -779,10 +937,17 @@ function renderGridCards() {
             ? '<div style="font-size:10px;color:#fbbf24;margin-top:6px;">⚠️ Expira em ' + dias + ' dia' + (dias===1?'':'s') + '</div>'
             : '<div style="font-size:10px;color:rgba(125,211,232,0.4);margin-top:6px;">⏱️ ' + dias + ' dias restantes</div>')
           : '';
+
+        var presenteBtn = ehPresente
+          ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>'
+          : '';
+
         var a = document.createElement("a");
         a.className = "resumo-card unlocked";
         a.href = m.file_p2;
+        a.style.position = "relative";
         a.innerHTML =
+          presenteBtn +
           '<span class="card-emoji">' + m.emoji + '</span>' +
           '<div class="card-title">' + m.label + ' — P2</div>' +
           '<div class="card-desc">' + m.desc + '</div>' + expiryInfo;
@@ -816,6 +981,22 @@ function renderGridCards() {
     });
   }
 }
+
+window.showPresenteMsg = function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  var nome = (profile && profile.nome_preferido) ? profile.nome_preferido : "nosso aluno(a)";
+  document.getElementById("presenteMsgTexto").innerHTML =
+    'Este resumo foi um presente do Enzo para você, <strong style="color:#fbbf24;">' + nome + '</strong>!<br><br>' +
+    'Que ele seja mais uma ferramenta na sua jornada rumo à medicina.<br>' +
+    'Você está no caminho certo — continue firme! 💪<br><br>' +
+    '<strong style="color:#fbbf24;">Bons estudos e boa prova! 🩺✨</strong>';
+  document.getElementById("presenteModal").classList.add("open");
+};
+
+window.closePresenteModal = function() {
+  document.getElementById("presenteModal").classList.remove("open");
+};
 
 window.goToStore = function() { switchTab("loja"); };
 
@@ -1025,6 +1206,7 @@ document.addEventListener("authReady", async function(e) {
   mainContent.style.display = "block";
 
   renderExpiryBadge();
+  renderWelcome();
   renderResumosGrid();
   renderStore();
 });
