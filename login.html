@@ -747,25 +747,10 @@ window.authConfig = {
           setMsg(errMsg, "#f87171"); setLoading(false); return;
         }
 
-        // Aguarda o trigger criar o perfil automaticamente
-        await new Promise(r => setTimeout(r, 1200));
-
-        // Verifica se o perfil foi criado
-        const { data:newProfile } = await supabaseClient
-          .from("profiles").select("id").eq("id", authData.user.id).single();
-
-        if (!newProfile) {
-          // Tenta inserir manualmente se o trigger falhou
-          await supabaseClient.from("profiles").insert({
-            id:          authData.user.id,
-            email:       authData.user.email,
-            is_approved: true
-          });
-        }
-
+        // Aguarda trigger criar perfil e redireciona
         setMsg("✅ Conta criada com sucesso! Entrando...", "#4ade80");
-        await new Promise(r => setTimeout(r, 800));
-        await finalizeLogin(authData.user.id);
+        await new Promise(r => setTimeout(r, 1500));
+        window.location.replace("dashboard.html");
       }
 
     } catch(err) {
