@@ -734,21 +734,37 @@ window.authConfig = {
         const { data:authData, error:signupError } = await supabaseClient.auth.signUp({
           email: emailVal, password: passVal
         });
-        if (signupError) { setMsg(signupError.message||"Erro ao criar conta", "#f87171"); setLoading(false); return; }
-
-        const { error:insertError } = await supabaseClient.from("profiles").insert({
-          id:          authData.user.id,
-          email:       authData.user.email,
-          is_approved: true   // aprovação direta no cadastro
-        });
-        if (insertError) {
-          setMsg("Erro ao criar perfil. Tente novamente.", "#f87171");
-          setLoading(false);
-          return;
+        if (signupError) {
+          var errMsg = "Erro ao criar conta. Tente novamente.";
+          if (signupError.message) {
+            var m = signupError.message.toLowerCase();
+            if (m.includes("already registered") || m.includes("user already exists")) errMsg = "Este email já está cadastrado. Faça login.";
+            else if (m.includes("invalid email")) errMsg = "Email inválido.";
+            else if (m.includes("password")) errMsg = "Senha muito fraca. Use pelo menos 6 caracteres.";
+            else if (m.includes("rate limit") || m.includes("email rate")) errMsg = "Muitas tentativas. Aguarde alguns minutos.";
+            else if (m.includes("network")) errMsg = "Erro de conexão. Verifique sua internet.";
+          }
+          setMsg(errMsg, "#f87171"); setLoading(false); return;
         }
 
-        setMsg("✅ Conta criada! Entrando...", "#4ade80");
-        await new Promise(r => setTimeout(r, 1000));
+        // Aguarda o trigger criar o perfil automaticamente
+        await new Promise(r => setTimeout(r, 1200));
+
+        // Verifica se o perfil foi criado
+        const { data:newProfile } = await supabaseClient
+          .from("profiles").select("id").eq("id", authData.user.id).single();
+
+        if (!newProfile) {
+          // Tenta inserir manualmente se o trigger falhou
+          await supabaseClient.from("profiles").insert({
+            id:          authData.user.id,
+            email:       authData.user.email,
+            is_approved: true
+          });
+        }
+
+        setMsg("✅ Conta criada com sucesso! Entrando...", "#4ade80");
+        await new Promise(r => setTimeout(r, 800));
         await finalizeLogin(authData.user.id);
       }
 
