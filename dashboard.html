@@ -562,20 +562,52 @@ function colKey(materia, tipo) {
 
 function hasAccess(materia, tipo) {
   if (!profile) return false;
-  // pacote completo dá acesso a todas do tipo
-  if (profile["pacote_" + tipo]) return true;
-  return !!profile[colKey(materia, tipo)];
+  var col = colKey(materia, tipo);
+  if (!profile[col] && !profile["pacote_" + tipo]) return false;
+  // Verifica expiração individual do resumo
+  var expiraCol = col + "_expira";
+  var expiraPacote = "pacote_" + tipo + "_expira";
+  var expira = profile[expiraCol] || profile[expiraPacote] || profile.acesso_expira_em;
+  if (!expira) return true;
+  return new Date(expira) > new Date();
+}
+
+function daysLeftForResumo(materia, tipo) {
+  if (!profile) return null;
+  var col = colKey(materia, tipo);
+  var expiraCol = col + "_expira";
+  var expiraPacote = "pacote_" + tipo + "_expira";
+  var expira = profile[expiraCol] || profile[expiraPacote] || profile.acesso_expira_em;
+  if (!expira) return null;
+  var diff = new Date(expira) - new Date();
+  return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
 }
 
 function isExpired() {
-  if (!profile || !profile.acesso_expira_em) return false;
-  return new Date(profile.acesso_expira_em) < new Date();
+  // Não usa mais expiração global — cada resumo tem sua própria data
+  return false;
 }
 
 function daysLeft() {
-  if (!profile || !profile.acesso_expira_em) return null;
-  var diff = new Date(profile.acesso_expira_em) - new Date();
-  return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
+  // Retorna o menor prazo entre todos os resumos ativos
+  if (!profile) return null;
+  var minDays = null;
+  var COLS = ["bioquimica_p1","bioquimica_p2","bioquimica_final",
+    "biofisica_p1","biofisica_p2","biofisica_final",
+    "genetica_p1","genetica_p2","genetica_final",
+    "fisiologia_p1","fisiologia_p2","fisiologia_final",
+    "microbiologia_p1","microbiologia_p2","microbiologia_final",
+    "micro_pratica_p1","micro_pratica_p2","micro_pratica_final",
+    "imunologia_p1","imunologia_p2","imunologia_final"];
+  COLS.forEach(function(col) {
+    if (!profile[col]) return;
+    var expira = profile[col + "_expira"] || profile.acesso_expira_em;
+    if (!expira) return;
+    var diff = new Date(expira) - new Date();
+    var days = Math.max(0, Math.ceil(diff / (1000*60*60*24)));
+    if (minDays === null || days < minDays) minDays = days;
+  });
+  return minDays;
 }
 
 function formatPrice(v) {
@@ -610,6 +642,12 @@ function renderResumosGrid() {
       var expired = isExpired();
 
       if (acesso && !expired) {
+        var diasRestantes = daysLeftForResumo(m, prova.tipo);
+        var expiryInfo = diasRestantes !== null
+          ? (diasRestantes <= 7
+            ? '<div style="font-size:10px;color:#fbbf24;margin-top:6px;">⚠️ Expira em ' + diasRestantes + ' dia' + (diasRestantes===1?'':'s') + '</div>'
+            : '<div style="font-size:10px;color:rgba(125,211,232,0.4);margin-top:6px;">⏱️ ' + diasRestantes + ' dias restantes</div>')
+          : '';
         // card clicável
         var a = document.createElement("a");
         a.className = "resumo-card unlocked";
@@ -617,7 +655,8 @@ function renderResumosGrid() {
         a.innerHTML =
           '<span class="card-emoji">' + m.emoji + '</span>' +
           '<div class="card-title">' + m.label + ' — ' + prova.label + '</div>' +
-          '<div class="card-desc">' + m.desc + '</div>';
+          '<div class="card-desc">' + m.desc + '</div>' +
+          expiryInfo;
         grid.appendChild(a);
       } else {
         // card bloqueado
