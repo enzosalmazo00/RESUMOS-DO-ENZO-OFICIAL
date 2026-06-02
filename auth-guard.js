@@ -72,9 +72,16 @@
       var result = await client.auth.getSession();
       if (result.error) throw result.error;
       session = (result.data && result.data.session) ? result.data.session : null;
+
+      // Se não encontrou sessão, tenta mais uma vez após delay
+      // (Supabase pode demorar para restaurar do localStorage)
+      if (!session) {
+        await new Promise(function(r){ setTimeout(r, 800); });
+        var retry = await client.auth.getSession();
+        session = (retry.data && retry.data.session) ? retry.data.session : null;
+      }
     } catch (err) {
       console.error("[auth-guard] getSession falhou:", err);
-      // Erro de rede → NÃO redireciona (evita loop por timeout/offline)
       return;
     }
 
