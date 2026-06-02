@@ -391,31 +391,47 @@
     <!-- TAB: MEUS RESUMOS -->
     <div class="tab-panel active" id="tab-resumos">
 
+      <!-- ══ 3º SEMESTRE ══ -->
       <div class="section-label">
         <span class="section-label-text">🎓 3º Semestre</span>
         <span class="section-label-line"></span>
       </div>
 
-      <!-- SUB-SEÇÃO P1 -->
+      <!-- P1 — EXPIRADOS -->
       <div class="section-label" style="margin-top:4px;">
-        <span class="section-label-text" style="font-size:10px;color:rgba(34,211,238,0.4);">📝 Provas de P1</span>
+        <span class="section-label-text" style="font-size:10px;color:rgba(248,113,113,0.5);">📝 Provas de P1 — Período encerrado</span>
         <span class="section-label-line"></span>
       </div>
       <div class="resumos-grid" id="grid-p1"></div>
 
-      <!-- SUB-SEÇÃO P2 -->
+      <!-- P2 — ATIVOS -->
       <div class="section-label">
-        <span class="section-label-text" style="font-size:10px;color:rgba(34,211,238,0.4);">📝 Provas de P2</span>
+        <span class="section-label-text" style="font-size:10px;color:rgba(34,211,238,0.6);">📝 Provas de P2 — Disponíveis</span>
         <span class="section-label-line"></span>
       </div>
       <div class="resumos-grid" id="grid-p2"></div>
 
-      <!-- SUB-SEÇÃO FINAIS -->
+      <!-- FINAIS — EM BREVE -->
       <div class="section-label">
-        <span class="section-label-text" style="font-size:10px;color:rgba(34,211,238,0.4);">🎓 Provas Finais</span>
+        <span class="section-label-text" style="font-size:10px;color:rgba(251,191,36,0.5);">🎓 Provas Finais — Em breve</span>
         <span class="section-label-line"></span>
       </div>
       <div class="resumos-grid" id="grid-final"></div>
+
+      <!-- ══ 4º SEMESTRE ══ -->
+      <div class="section-label" style="margin-top:32px;">
+        <span class="section-label-text">🎓 4º Semestre</span>
+        <span class="section-label-line"></span>
+      </div>
+      <div style="
+        padding:24px; border-radius:16px; text-align:center;
+        border:1px solid rgba(251,191,36,0.15);
+        background:rgba(251,191,36,0.04); margin-bottom:32px;
+      ">
+        <div style="font-size:28px;margin-bottom:10px;">🚧</div>
+        <div style="font-size:14px;font-weight:600;color:rgba(251,191,36,0.7);margin-bottom:6px;">Em breve</div>
+        <div style="font-size:12px;color:rgba(125,211,232,0.4);">Os resumos do 4º semestre serão disponibilizados em breve.</div>
+      </div>
 
     </div>
 
@@ -427,16 +443,12 @@
         <p>Acesso imediato após confirmação do PIX. Disponível por <strong style="color:#7dd3e8;">50 dias</strong> a partir do pagamento.</p>
       </div>
 
-      <!-- RESUMOS INDIVIDUAIS P1 -->
+      <!-- RESUMOS INDIVIDUAIS P1 — EXPIRADOS -->
       <div class="store-section">
-        <div class="store-section-title">📝 Resumos individuais — P1 &nbsp;<span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;">R$ 15,00 cada</span></div>
-        <div class="store-grid" id="store-individual-p1"></div>
-      </div>
-
-      <!-- PACOTE P1 -->
-      <div class="store-section">
-        <div class="store-section-title">📦 Pacote completo — P1</div>
-        <div class="store-grid" id="store-package-p1"></div>
+        <div class="store-section-title" style="color:rgba(248,113,113,0.4);">⏰ Resumos de P1 — Período encerrado</div>
+        <div style="padding:16px 20px;border-radius:14px;border:1px solid rgba(248,113,113,0.1);background:rgba(248,113,113,0.03);font-size:13px;color:rgba(248,113,113,0.5);text-align:center;">
+          Os resumos de P1 não estão mais disponíveis para compra. O período de provas foi encerrado.
+        </div>
       </div>
 
       <!-- RESUMOS INDIVIDUAIS P2 -->
@@ -451,16 +463,12 @@
         <div class="store-grid" id="store-package-p2"></div>
       </div>
 
-      <!-- RESUMOS INDIVIDUAIS FINAL -->
+      <!-- RESUMOS FINAIS — EM BREVE -->
       <div class="store-section">
-        <div class="store-section-title">🎓 Resumos individuais — Final &nbsp;<span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;">R$ 20,00 cada</span></div>
-        <div class="store-grid" id="store-individual-final"></div>
-      </div>
-
-      <!-- PACOTE FINAL -->
-      <div class="store-section">
-        <div class="store-section-title">📦 Pacote completo — Final</div>
-        <div class="store-grid" id="store-package-final"></div>
+        <div class="store-section-title" style="color:rgba(251,191,36,0.5);">🎓 Resumos de Provas Finais — Em breve</div>
+        <div style="padding:16px 20px;border-radius:14px;border:1px solid rgba(251,191,36,0.15);background:rgba(251,191,36,0.04);font-size:13px;color:rgba(251,191,36,0.5);text-align:center;">
+          Os resumos das provas finais serão disponibilizados em breve. Fique atento!
+        </div>
       </div>
 
       <!-- TERMOS -->
@@ -639,38 +647,60 @@ function renderResumosGrid() {
       var acesso = hasAccess(m, prova.tipo);
       var fileKey = "file_" + prova.tipo;
       var fileName = m[fileKey];
-      var expired = isExpired();
+      var div, a;
 
-      if (acesso && !expired) {
+      // P1 — sempre "Expirado"
+      if (prova.tipo === "p1") {
+        div = document.createElement("div");
+        div.className = "resumo-card soon";
+        div.style.cssText = "opacity:0.45;border-color:rgba(248,113,113,0.12);background:rgba(248,113,113,0.03);";
+        div.innerHTML =
+          '<span class="card-emoji">' + m.emoji + '</span>' +
+          '<div class="card-title" style="color:rgba(248,113,113,0.6);">' + m.label + ' — P1</div>' +
+          '<div class="card-desc">' + m.desc + '</div>' +
+          '<div style="display:inline-flex;align-items:center;gap:5px;margin-top:10px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);color:rgba(248,113,113,0.6);">⏰ Período encerrado</div>';
+        grid.appendChild(div);
+        return;
+      }
+
+      // Final — sempre "Em breve"
+      if (prova.tipo === "final") {
+        div = document.createElement("div");
+        div.className = "resumo-card soon";
+        div.innerHTML =
+          '<span class="card-emoji">' + m.emoji + '</span>' +
+          '<div class="card-title">' + m.label + ' — Final</div>' +
+          '<div class="card-desc">' + m.desc + '</div>' +
+          '<div class="soon-badge"><span class="soon-dot"></span> Em breve</div>';
+        grid.appendChild(div);
+        return;
+      }
+
+      // P2 — lógica normal (acesso ou bloqueado)
+      if (acesso) {
         var diasRestantes = daysLeftForResumo(m, prova.tipo);
         var expiryInfo = diasRestantes !== null
           ? (diasRestantes <= 7
             ? '<div style="font-size:10px;color:#fbbf24;margin-top:6px;">⚠️ Expira em ' + diasRestantes + ' dia' + (diasRestantes===1?'':'s') + '</div>'
             : '<div style="font-size:10px;color:rgba(125,211,232,0.4);margin-top:6px;">⏱️ ' + diasRestantes + ' dias restantes</div>')
           : '';
-        // card clicável
-        var a = document.createElement("a");
+        a = document.createElement("a");
         a.className = "resumo-card unlocked";
         a.href = fileName;
         a.innerHTML =
           '<span class="card-emoji">' + m.emoji + '</span>' +
-          '<div class="card-title">' + m.label + ' — ' + prova.label + '</div>' +
+          '<div class="card-title">' + m.label + ' — P2</div>' +
           '<div class="card-desc">' + m.desc + '</div>' +
           expiryInfo;
         grid.appendChild(a);
       } else {
-        // card bloqueado
-        var div = document.createElement("div");
-        // se é p1 ainda sem conteúdo, mostra "Em breve"
-        var isSoon = (prova.tipo === "final");
-        div.className = "resumo-card " + (isSoon ? "soon" : "locked");
+        div = document.createElement("div");
+        div.className = "resumo-card locked";
         div.innerHTML =
           '<span class="card-emoji">' + m.emoji + '</span>' +
-          '<div class="card-title">' + m.label + ' — ' + prova.label + '</div>' +
+          '<div class="card-title">' + m.label + ' — P2</div>' +
           '<div class="card-desc">' + m.desc + '</div>' +
-          (isSoon
-            ? '<div class="soon-badge"><span class="soon-dot"></span> Em breve</div>'
-            : '<div class="lock-badge" onclick="goToStore()">🔒 Comprar acesso</div>');
+          '<div class="lock-badge" onclick="goToStore()">🔒 Comprar acesso</div>';
         grid.appendChild(div);
       }
     });
