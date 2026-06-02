@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — Resumos do Enzo</title>
+
+  <script>document.documentElement.style.visibility = "hidden";</script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cyan:   #22d3ee;
+      --cyan2:  #06b6d4;
+      --border: rgba(34,211,238,0.18);
+      --red:    #f87171;
+      --green:  #4ade80;
+      --yellow: #fbbf24;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { height:100%; }
+    body {
+      font-family:'Poppins',sans-serif;
+      min-height:100%;
+      background:linear-gradient(160deg,#020d1a 0%,#010812 50%,#020d1a 100%);
+      color:#fff; overflow-x:hidden;
+    }
+    body::before {
+      content:''; position:fixed; inset:0;
+      background-image:
+        linear-gradient(rgba(34,211,238,0.03) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(34,211,238,0.03) 1px,transparent 1px);
+      background-size:60px 60px; pointer-events:none; z-index:0;
+    }
+    .container { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:32px 20px 60px; }
+
+    /* HEADER */
+    .header { display:flex; justify-content:space-between; align-items:center; margin-bottom:36px; flex-wrap:wrap; gap:16px; }
+    .logo { font-size:20px; font-weight:700; letter-spacing:-0.5px; }
+    .logo span { background:linear-gradient(100deg,#22d3ee,#67e8f9); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .admin-badge {
+      display:inline-flex; align-items:center; gap:6px; padding:5px 14px;
+      border-radius:20px; font-size:11px; font-weight:700; letter-spacing:0.1em;
+      text-transform:uppercase; background:rgba(251,191,36,0.1);
+      border:1px solid rgba(251,191,36,0.3); color:#fbbf24;
+    }
+    .header-right { display:flex; align-items:center; gap:12px; }
+    .btn-outline {
+      padding:9px 20px; border:1px solid var(--border); border-radius:10px;
+      background:transparent; color:#7dd3e8; font-family:'Poppins',sans-serif;
+      font-size:13px; font-weight:500; cursor:pointer; transition:all .25s;
+    }
+    .btn-outline:hover { border-color:var(--cyan); background:rgba(34,211,238,0.06); color:#fff; }
+
+    /* STATS */
+    .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:32px; }
+    .stat-card {
+      padding:20px 22px; border-radius:14px;
+      background:rgba(34,211,238,0.04); border:1px solid rgba(34,211,238,0.12);
+    }
+    .stat-label { font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:rgba(125,211,232,0.5); margin-bottom:8px; }
+    .stat-value { font-size:28px; font-weight:700; color:#e2f8fc; letter-spacing:-1px; }
+    .stat-sub   { font-size:11px; color:rgba(125,211,232,0.4); margin-top:4px; }
+
+    /* SEARCH */
+    .search-bar { margin-bottom:20px; display:flex; gap:10px; flex-wrap:wrap; }
+    .search-input {
+      flex:1; min-width:200px; padding:11px 16px;
+      background:rgba(255,255,255,0.04); border:1px solid rgba(34,211,238,0.14);
+      border-radius:12px; color:#fff; font-size:14px; font-family:'Poppins',sans-serif;
+      transition:all .25s;
+    }
+    .search-input::placeholder { color:rgba(255,255,255,0.2); }
+    .search-input:focus { outline:none; border-color:var(--cyan); background:rgba(34,211,238,0.06); }
+    .filter-select {
+      padding:11px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(34,211,238,0.14);
+      border-radius:12px; color:#7dd3e8; font-family:'Poppins',sans-serif; font-size:13px;
+      cursor:pointer; appearance:none;
+    }
+
+    /* TABLE */
+    .table-wrap { border-radius:16px; border:1px solid rgba(34,211,238,0.12); overflow:hidden; margin-bottom:32px; }
+    table { width:100%; border-collapse:collapse; }
+    thead { background:rgba(34,211,238,0.06); }
+    th {
+      padding:13px 16px; text-align:left; font-size:11px; font-weight:700;
+      letter-spacing:0.1em; text-transform:uppercase; color:rgba(34,211,238,0.6);
+      white-space:nowrap;
+    }
+    td { padding:14px 16px; font-size:13px; color:#c0f0f8; border-top:1px solid rgba(34,211,238,0.06); vertical-align:middle; }
+    tr:hover td { background:rgba(34,211,238,0.03); }
+    .email-cell { font-size:12.5px; color:#e2f8fc; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .date-cell  { font-size:12px; color:rgba(125,211,232,0.5); white-space:nowrap; }
+
+    /* BADGES */
+    .badge {
+      display:inline-flex; align-items:center; gap:4px;
+      padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600;
+    }
+    .badge-green  { background:rgba(74,222,128,0.12);  border:1px solid rgba(74,222,128,0.25);  color:#4ade80; }
+    .badge-red    { background:rgba(248,113,113,0.12); border:1px solid rgba(248,113,113,0.25); color:#f87171; }
+    .badge-yellow { background:rgba(251,191,36,0.12);  border:1px solid rgba(251,191,36,0.25);  color:#fbbf24; }
+    .badge-cyan   { background:rgba(34,211,238,0.10);  border:1px solid rgba(34,211,238,0.25);  color:#22d3ee; }
+
+    /* RESUMOS CHIPS */
+    .resumos-chips { display:flex; flex-wrap:wrap; gap:4px; max-width:300px; }
+    .chip {
+      padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600;
+      background:rgba(34,211,238,0.08); border:1px solid rgba(34,211,238,0.18); color:rgba(125,211,232,0.7);
+    }
+    .chip.active { background:rgba(74,222,128,0.12); border-color:rgba(74,222,128,0.3); color:#4ade80; }
+
+    /* ACTIONS */
+    .action-btn {
+      padding:6px 14px; border-radius:8px; border:1px solid; font-size:11.5px;
+      font-family:'Poppins',sans-serif; font-weight:600; cursor:pointer; transition:all .2s;
+      white-space:nowrap;
+    }
+    .action-btn.green { border-color:rgba(74,222,128,0.3); background:rgba(74,222,128,0.08); color:#4ade80; }
+    .action-btn.green:hover { background:rgba(74,222,128,0.2); }
+    .action-btn.red   { border-color:rgba(248,113,113,0.3); background:rgba(248,113,113,0.08); color:#f87171; }
+    .action-btn.red:hover   { background:rgba(248,113,113,0.2); }
+    .action-btn.cyan  { border-color:rgba(34,211,238,0.3);  background:rgba(34,211,238,0.08);  color:#22d3ee; }
+    .action-btn.cyan:hover  { background:rgba(34,211,238,0.18); }
+    .actions-cell { display:flex; gap:6px; flex-wrap:wrap; }
+
+    /* MODAL */
+    .modal-overlay {
+      position:fixed; inset:0; z-index:1000; background:rgba(2,8,16,0.88);
+      backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center;
+      padding:20px; opacity:0; pointer-events:none; transition:opacity .3s;
+    }
+    .modal-overlay.open { opacity:1; pointer-events:all; }
+    .modal {
+      width:100%; max-width:480px;
+      background:linear-gradient(160deg,#020d1a,#010812);
+      border:1px solid rgba(34,211,238,0.25); border-radius:20px; padding:28px;
+      box-shadow:0 24px 64px rgba(0,0,0,0.6);
+      transform:translateY(16px); transition:transform .3s; max-height:90vh; overflow-y:auto;
+    }
+    .modal-overlay.open .modal { transform:translateY(0); }
+    .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; }
+    .modal-title  { font-size:16px; font-weight:700; }
+    .modal-close  {
+      width:30px; height:30px; border-radius:8px; border:1px solid var(--border);
+      background:transparent; color:#7dd3e8; cursor:pointer; font-size:14px;
+      display:flex; align-items:center; justify-content:center; transition:all .2s;
+    }
+    .modal-close:hover { background:rgba(34,211,238,0.1); color:#fff; }
+    .modal-email  { font-size:13px; color:#7dd3e8; margin-bottom:20px; padding:10px 14px; background:rgba(34,211,238,0.06); border-radius:10px; }
+
+    .resumos-grid-modal { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:20px; }
+    .resumo-toggle {
+      padding:8px 6px; border-radius:10px; border:1px solid rgba(34,211,238,0.15);
+      background:rgba(255,255,255,0.02); text-align:center;
+      font-size:10.5px; font-weight:600; color:rgba(125,211,232,0.5);
+      cursor:pointer; transition:all .2s; user-select:none;
+    }
+    .resumo-toggle.on { background:rgba(74,222,128,0.12); border-color:rgba(74,222,128,0.3); color:#4ade80; }
+    .resumo-toggle:hover { border-color:rgba(34,211,238,0.35); }
+
+    .expiry-row { display:flex; align-items:center; gap:10px; margin-bottom:20px; }
+    .expiry-row label { font-size:12px; color:rgba(125,211,232,0.6); flex-shrink:0; }
+    .expiry-input {
+      flex:1; padding:9px 12px; background:rgba(255,255,255,0.04);
+      border:1px solid rgba(34,211,238,0.14); border-radius:10px;
+      color:#fff; font-size:13px; font-family:'Poppins',sans-serif;
+    }
+    .expiry-input:focus { outline:none; border-color:var(--cyan); }
+
+    .modal-actions { display:flex; gap:10px; }
+    .btn-primary {
+      flex:1; padding:12px; border:none; border-radius:12px;
+      background:linear-gradient(135deg,#22d3ee,#0891b2); color:#fff;
+      font-size:14px; font-weight:600; font-family:'Poppins',sans-serif;
+      cursor:pointer; transition:all .25s;
+    }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(34,211,238,0.3); }
+    .btn-primary:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+    .btn-danger {
+      padding:12px 20px; border:1px solid rgba(248,113,113,0.3); border-radius:12px;
+      background:rgba(248,113,113,0.08); color:#f87171;
+      font-size:14px; font-weight:600; font-family:'Poppins',sans-serif; cursor:pointer; transition:all .25s;
+    }
+    .btn-danger:hover { background:rgba(248,113,113,0.2); }
+
+    /* ORDERS TABLE */
+    .section-title {
+      font-size:12px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase;
+      color:rgba(34,211,238,0.5); margin-bottom:16px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .section-title::after { content:''; flex:1; height:1px; background:rgba(34,211,238,0.1); }
+
+    .loading { text-align:center; padding:40px; color:rgba(125,211,232,0.4); font-size:14px; }
+    .spinner-inline {
+      display:inline-block; width:14px; height:14px;
+      border:2px solid rgba(34,211,238,0.3); border-top-color:#22d3ee;
+      border-radius:50%; animation:spin .8s linear infinite; margin-right:8px; vertical-align:middle;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    .toast {
+      position:fixed; bottom:24px; right:24px; z-index:2000;
+      padding:12px 20px; border-radius:12px; font-size:13px; font-weight:600;
+      animation:slideUp .3s ease; pointer-events:none;
+    }
+    .toast.success { background:rgba(74,222,128,0.15); border:1px solid rgba(74,222,128,0.3); color:#4ade80; }
+    .toast.error   { background:rgba(248,113,113,0.15); border:1px solid rgba(248,113,113,0.3); color:#f87171; }
+    @keyframes slideUp { from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);} }
+
+    @media (max-width:768px) {
+      .stats { grid-template-columns:repeat(2,1fr); }
+      .resumos-grid-modal { grid-template-columns:repeat(2,1fr); }
+      th:nth-child(4), td:nth-child(4),
+      th:nth-child(5), td:nth-child(5) { display:none; }
+    }
+    @media (max-width:480px) {
+      .stats { grid-template-columns:1fr 1fr; }
+      th:nth-child(3), td:nth-child(3) { display:none; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div class="logo">RESUMOS <span>ENZO</span></div>
+      <div class="admin-badge">⚙️ Admin</div>
+    </div>
+    <div class="header-right">
+      <span id="adminEmail" style="font-size:13px;color:rgba(125,211,232,0.5);"></span>
+      <button class="btn-outline" onclick="goToDashboard()">← Dashboard</button>
+      <button class="btn-outline" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats" id="statsArea">
+    <div class="stat-card"><div class="stat-label">Total de Alunos</div><div class="stat-value" id="statAlunos">—</div><div class="stat-sub">contas cadastradas</div></div>
+    <div class="stat-card"><div class="stat-label">Com Acesso Ativo</div><div class="stat-value" id="statAtivos">—</div><div class="stat-sub">algum resumo liberado</div></div>
+    <div class="stat-card"><div class="stat-label">Pagamentos</div><div class="stat-value" id="statPagamentos">—</div><div class="stat-sub">pedidos registrados</div></div>
+    <div class="stat-card"><div class="stat-label">Expiram em 7 dias</div><div class="stat-value" id="statExpirando">—</div><div class="stat-sub">precisam renovar</div></div>
+  </div>
+
+  <!-- ALUNOS -->
+  <div class="section-title">👥 Alunos</div>
+
+  <div class="search-bar">
+    <input class="search-input" id="searchInput" placeholder="🔍 Buscar por email..." oninput="filterAlunos()">
+    <select class="filter-select" id="filterSelect" onchange="filterAlunos()">
+      <option value="all">Todos</option>
+      <option value="active">Com acesso ativo</option>
+      <option value="noAccess">Sem acesso</option>
+      <option value="expiring">Expirando em 7 dias</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table id="alunosTable">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Resumos</th>
+          <th>Expira em</th>
+          <th>Cadastro</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="alunosBody">
+        <tr><td colspan="5" class="loading"><span class="spinner-inline"></span> Carregando alunos...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PEDIDOS -->
+  <div class="section-title">📋 Pedidos Recentes</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Produto</th>
+          <th>Valor</th>
+          <th>Status</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody id="ordersBody">
+        <tr><td colspan="5" class="loading"><span class="spinner-inline"></span> Carregando pedidos...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- MODAL EDITAR ALUNO -->
+<div class="modal-overlay" id="modalAluno">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">✏️ Gerenciar Acesso</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-email" id="modalEmail">—</div>
+
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(34,211,238,0.5);margin-bottom:10px;">Resumos — clique para liberar/revogar</div>
+    <div class="resumos-grid-modal" id="resumosGrid"></div>
+
+    <div class="expiry-row">
+      <label>Acesso até:</label>
+      <input class="expiry-input" type="date" id="expiryInput">
+      <button class="action-btn cyan" onclick="set50Days()">+50 dias</button>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-primary" id="saveBtn" onclick="saveAluno()">💾 Salvar alterações</button>
+      <button class="btn-danger" onclick="revokeAll()">🚫 Revogar tudo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(async function() {
+"use strict";
+
+var SUPABASE_URL = "https://chqhdmjqnjjdatowfyif.supabase.co";
+var SUPABASE_KEY = "sb_publishable_cgNwK1hWh8IoNm9cX9M7zQ_oqk6Dszn";
+var client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+var allAlunos = [];
+var currentAluno = null;
+var currentToggles = {};
+
+var RESUMOS_COLS = [
+  {key:"bioquimica_p1",    label:"Bioquímica P1"},
+  {key:"bioquimica_p2",    label:"Bioquímica P2"},
+  {key:"bioquimica_final", label:"Bioquímica Final"},
+  {key:"biofisica_p1",     label:"Biofísica P1"},
+  {key:"biofisica_p2",     label:"Biofísica P2"},
+  {key:"biofisica_final",  label:"Biofísica Final"},
+  {key:"genetica_p1",      label:"Genética P1"},
+  {key:"genetica_p2",      label:"Genética P2"},
+  {key:"genetica_final",   label:"Genética Final"},
+  {key:"fisiologia_p1",    label:"Fisiologia P1"},
+  {key:"fisiologia_p2",    label:"Fisiologia P2"},
+  {key:"fisiologia_final", label:"Fisiologia Final"},
+  {key:"microbiologia_p1",    label:"Micro P1"},
+  {key:"microbiologia_p2",    label:"Micro P2"},
+  {key:"microbiologia_final", label:"Micro Final"},
+  {key:"micro_pratica_p1",    label:"Micro Prát. P1"},
+  {key:"micro_pratica_p2",    label:"Micro Prát. P2"},
+  {key:"micro_pratica_final", label:"Micro Prát. Final"},
+  {key:"imunologia_p1",    label:"Imuno P1"},
+  {key:"imunologia_p2",    label:"Imuno P2"},
+  {key:"imunologia_final", label:"Imuno Final"},
+  {key:"pacote_p1",    label:"📦 Pacote P1"},
+  {key:"pacote_p2",    label:"📦 Pacote P2"},
+  {key:"pacote_final", label:"📦 Pacote Final"},
+];
+
+// ── Auth check ────────────────────────────────────────────────────────────────
+async function init() {
+  var { data: { session } } = await client.auth.getSession();
+  if (!session) { window.location.replace("login.html"); return; }
+
+  var { data: profile } = await client.from("profiles").select("is_admin,email").eq("id", session.user.id).single();
+  if (!profile || !profile.is_admin) {
+    alert("Acesso negado. Apenas administradores.");
+    window.location.replace("dashboard.html");
+    return;
+  }
+
+  document.documentElement.style.visibility = "visible";
+  document.getElementById("adminEmail").textContent = session.user.email;
+  await loadData();
+}
+
+// ── Load data ─────────────────────────────────────────────────────────────────
+async function loadData() {
+  await Promise.all([loadAlunos(), loadOrders()]);
+}
+
+async function loadAlunos() {
+  var { data, error } = await client.from("profiles").select("*").order("email");
+  if (error) { console.error(error); return; }
+  allAlunos = data || [];
+  renderStats();
+  renderAlunos(allAlunos);
+}
+
+async function loadOrders() {
+  var { data, error } = await client
+    .from("orders")
+    .select("*, profiles(email)")
+    .order("criado_em", { ascending: false })
+    .limit(20);
+
+  var tbody = document.getElementById("ordersBody");
+  if (error || !data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:rgba(125,211,232,0.3);font-size:13px;">Nenhum pedido registrado</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = data.map(function(o) {
+    var statusBadge = o.status === "approved"
+      ? '<span class="badge badge-green">✅ Aprovado</span>'
+      : o.status === "pending"
+      ? '<span class="badge badge-yellow">⏳ Pendente</span>'
+      : '<span class="badge badge-red">❌ ' + o.status + '</span>';
+
+    return '<tr>' +
+      '<td class="email-cell">' + (o.profiles?.email || '—') + '</td>' +
+      '<td style="font-size:12px;">' + (o.produto_nome || o.produto_key) + '</td>' +
+      '<td style="color:#22d3ee;font-weight:600;">R$ ' + parseFloat(o.valor).toFixed(2).replace('.',',') + '</td>' +
+      '<td>' + statusBadge + '</td>' +
+      '<td class="date-cell">' + new Date(o.criado_em).toLocaleDateString('pt-BR') + '</td>' +
+      '</tr>';
+  }).join('');
+
+  document.getElementById("statPagamentos").textContent = data.length;
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────────
+function renderStats() {
+  var total = allAlunos.length;
+  var ativos = allAlunos.filter(function(a) {
+    return RESUMOS_COLS.some(function(r) { return a[r.key]; });
+  }).length;
+  var expirando = allAlunos.filter(function(a) {
+    if (!a.acesso_expira_em) return false;
+    var diff = new Date(a.acesso_expira_em) - new Date();
+    return diff > 0 && diff < 7 * 24 * 60 * 60 * 1000;
+  }).length;
+
+  document.getElementById("statAlunos").textContent = total;
+  document.getElementById("statAtivos").textContent = ativos;
+  document.getElementById("statExpirando").textContent = expirando;
+}
+
+// ── Render alunos ─────────────────────────────────────────────────────────────
+function renderAlunos(list) {
+  var tbody = document.getElementById("alunosBody");
+  if (!list || list.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:rgba(125,211,232,0.3);font-size:13px;">Nenhum aluno encontrado</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = list.map(function(a) {
+    var activeCount = RESUMOS_COLS.filter(function(r) { return a[r.key]; }).length;
+    var expiryStr = "—";
+    var expiryClass = "";
+    if (a.acesso_expira_em) {
+      var exp = new Date(a.acesso_expira_em);
+      var diff = exp - new Date();
+      var days = Math.ceil(diff / (1000*60*60*24));
+      if (days < 0) { expiryStr = "Expirado"; expiryClass = "color:#f87171"; }
+      else if (days <= 7) { expiryStr = days + "d restantes"; expiryClass = "color:#fbbf24"; }
+      else { expiryStr = exp.toLocaleDateString('pt-BR'); }
+    }
+
+    var adminTag = a.is_admin ? '<span class="badge badge-yellow" style="margin-left:6px;">Admin</span>' : '';
+
+    return '<tr>' +
+      '<td class="email-cell">' + (a.email||'—') + adminTag + '</td>' +
+      '<td>' +
+        '<span class="badge ' + (activeCount > 0 ? 'badge-green' : 'badge-red') + '">' +
+          (activeCount > 0 ? activeCount + ' resumo' + (activeCount>1?'s':'') : 'Nenhum') +
+        '</span>' +
+      '</td>' +
+      '<td style="' + expiryClass + ';font-size:12px;">' + expiryStr + '</td>' +
+      '<td class="date-cell">' + (a.last_login ? new Date(a.last_login).toLocaleDateString('pt-BR') : '—') + '</td>' +
+      '<td>' +
+        '<div class="actions-cell">' +
+          '<button class="action-btn cyan" onclick="openModal(\'' + a.id + '\')">✏️ Editar</button>' +
+          (activeCount > 0
+            ? '<button class="action-btn red" onclick="quickRevoke(\'' + a.id + '\',\'' + (a.email||'') + '\')">🚫</button>'
+            : '<button class="action-btn green" onclick="quickGrantAll(\'' + a.id + '\',\'' + (a.email||'') + '\')">✅ Liberar tudo</button>'
+          ) +
+        '</div>' +
+      '</td>' +
+      '</tr>';
+  }).join('');
+}
+
+// ── Filter ────────────────────────────────────────────────────────────────────
+window.filterAlunos = function() {
+  var search = document.getElementById("searchInput").value.toLowerCase();
+  var filter = document.getElementById("filterSelect").value;
+  var filtered = allAlunos.filter(function(a) {
+    if (search && !(a.email||'').toLowerCase().includes(search)) return false;
+    if (filter === "active") return RESUMOS_COLS.some(function(r) { return a[r.key]; });
+    if (filter === "noAccess") return !RESUMOS_COLS.some(function(r) { return a[r.key]; });
+    if (filter === "expiring") {
+      if (!a.acesso_expira_em) return false;
+      var diff = new Date(a.acesso_expira_em) - new Date();
+      return diff > 0 && diff < 7 * 24 * 60 * 60 * 1000;
+    }
+    return true;
+  });
+  renderAlunos(filtered);
+};
+
+// ── Modal ─────────────────────────────────────────────────────────────────────
+window.openModal = function(id) {
+  currentAluno = allAlunos.find(function(a) { return a.id === id; });
+  if (!currentAluno) return;
+
+  document.getElementById("modalEmail").textContent = currentAluno.email || '—';
+
+  // Expiry
+  if (currentAluno.acesso_expira_em) {
+    document.getElementById("expiryInput").value = currentAluno.acesso_expira_em.substring(0,10);
+  } else {
+    document.getElementById("expiryInput").value = "";
+  }
+
+  // Toggles
+  currentToggles = {};
+  RESUMOS_COLS.forEach(function(r) { currentToggles[r.key] = !!currentAluno[r.key]; });
+
+  renderResumosGrid();
+  document.getElementById("modalAluno").classList.add("open");
+};
+
+function renderResumosGrid() {
+  var grid = document.getElementById("resumosGrid");
+  grid.innerHTML = RESUMOS_COLS.map(function(r) {
+    var on = currentToggles[r.key];
+    return '<div class="resumo-toggle ' + (on ? 'on' : '') + '" onclick="toggleResumo(\'' + r.key + '\')">' +
+      (on ? '✅ ' : '🔒 ') + r.label +
+    '</div>';
+  }).join('');
+}
+
+window.toggleResumo = function(key) {
+  currentToggles[key] = !currentToggles[key];
+  renderResumosGrid();
+};
+
+window.set50Days = function() {
+  var d = new Date();
+  d.setDate(d.getDate() + 50);
+  document.getElementById("expiryInput").value = d.toISOString().substring(0,10);
+};
+
+window.closeModal = function() {
+  document.getElementById("modalAluno").classList.remove("open");
+  currentAluno = null;
+};
+
+window.saveAluno = async function() {
+  if (!currentAluno) return;
+  var btn = document.getElementById("saveBtn");
+  btn.disabled = true; btn.textContent = "Salvando...";
+
+  var update = {};
+  RESUMOS_COLS.forEach(function(r) { update[r.key] = !!currentToggles[r.key]; });
+
+  var expiryVal = document.getElementById("expiryInput").value;
+  update.acesso_expira_em = expiryVal ? new Date(expiryVal).toISOString() : null;
+
+  var { error } = await client.from("profiles").update(update).eq("id", currentAluno.id);
+  if (error) { showToast("Erro ao salvar!", "error"); }
+  else {
+    showToast("✅ Salvo com sucesso!", "success");
+    closeModal();
+    await loadAlunos();
+  }
+  btn.disabled = false; btn.textContent = "💾 Salvar alterações";
+};
+
+window.revokeAll = async function() {
+  if (!currentAluno) return;
+  if (!confirm("Revogar TODOS os acessos de " + currentAluno.email + "?")) return;
+
+  RESUMOS_COLS.forEach(function(r) { currentToggles[r.key] = false; });
+  document.getElementById("expiryInput").value = "";
+  renderResumosGrid();
+  showToast("Clique em Salvar para confirmar", "success");
+};
+
+window.quickRevoke = async function(id, email) {
+  if (!confirm("Revogar todos os acessos de " + email + "?")) return;
+  var update = {};
+  RESUMOS_COLS.forEach(function(r) { update[r.key] = false; });
+  update.acesso_expira_em = null;
+  var { error } = await client.from("profiles").update(update).eq("id", id);
+  if (error) showToast("Erro!", "error");
+  else { showToast("✅ Acessos revogados!", "success"); await loadAlunos(); }
+};
+
+window.quickGrantAll = async function(id, email) {
+  if (!confirm("Liberar TODOS os resumos para " + email + "?")) return;
+  var update = {};
+  RESUMOS_COLS.forEach(function(r) { update[r.key] = true; });
+  var exp = new Date(); exp.setDate(exp.getDate() + 50);
+  update.acesso_expira_em = exp.toISOString();
+  var { error } = await client.from("profiles").update(update).eq("id", id);
+  if (error) showToast("Erro!", "error");
+  else { showToast("✅ Acessos liberados!", "success"); await loadAlunos(); }
+};
+
+// ── Utils ─────────────────────────────────────────────────────────────────────
+function showToast(msg, type) {
+  var t = document.createElement("div");
+  t.className = "toast " + type;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 3000);
+}
+
+window.goToDashboard = function() { window.location.href = "dashboard.html"; };
+window.doLogout = async function() {
+  await client.auth.signOut();
+  window.location.replace("login.html");
+};
+
+init();
+})();
+</script>
+</body>
+</html>
