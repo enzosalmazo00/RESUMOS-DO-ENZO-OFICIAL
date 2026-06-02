@@ -348,13 +348,63 @@
       font-size:11.5px; color:rgba(125,211,232,0.45);
     }
 
+    /* ── ACORDEÃO DE SEMESTRES ── */
+    .semestres-wrap { display:flex; flex-direction:column; gap:12px; }
+
+    .semestre-card {
+      border-radius:18px; border:1px solid rgba(34,211,238,0.15);
+      background:rgba(34,211,238,0.03); overflow:hidden; transition:all .3s;
+    }
+    .semestre-card.soon {
+      border-color:rgba(251,191,36,0.15);
+      background:rgba(251,191,36,0.03);
+    }
+
+    .semestre-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:20px 24px; cursor:pointer; user-select:none;
+      transition:background .25s;
+    }
+    .semestre-header:hover { background:rgba(34,211,238,0.05); }
+    .semestre-card.soon .semestre-header:hover { background:rgba(251,191,36,0.04); }
+
+    .semestre-header-left { display:flex; align-items:center; gap:14px; }
+    .semestre-icon { font-size:24px; }
+    .semestre-title { font-size:17px; font-weight:700; letter-spacing:-0.3px; }
+    .semestre-subtitle { font-size:12px; color:rgba(125,211,232,0.5); margin-top:2px; }
+
+    .semestre-meta { display:flex; align-items:center; gap:10px; }
+    .semestre-badge {
+      padding:4px 12px; border-radius:20px; font-size:11px; font-weight:600;
+      background:rgba(34,211,238,0.08); border:1px solid rgba(34,211,238,0.2);
+      color:rgba(125,211,232,0.7);
+    }
+    .semestre-badge.soon { background:rgba(251,191,36,0.08); border-color:rgba(251,191,36,0.2); color:rgba(251,191,36,0.7); }
+    .semestre-chevron {
+      font-size:12px; color:rgba(125,211,232,0.4);
+      transition:transform .3s; display:inline-block;
+    }
+    .semestre-card.open .semestre-chevron { transform:rotate(180deg); }
+
+    .semestre-body {
+      max-height:0; overflow:hidden; transition:max-height .4s ease;
+    }
+    .semestre-card.open .semestre-body { max-height:3000px; }
+
+    .semestre-body-inner { padding:0 20px 20px; }
+
+    .prova-section { margin-bottom:24px; }
+    .prova-label {
+      display:flex; align-items:center; gap:10px;
+      font-size:11px; font-weight:700; letter-spacing:0.12em;
+      text-transform:uppercase; margin-bottom:12px;
+    }
+    .prova-label-line { flex:1; height:1px; background:rgba(34,211,238,0.08); }
+
     /* ── RESPONSIVO ── */
     @media (max-width:640px) {
-      .header { flex-direction:column; align-items:flex-start; }
-      .header-right { flex-direction:column; align-items:flex-start; width:100%; }
-      .logout-btn { width:100%; }
-      .tabs { flex-direction:column; }
-      .tab-btn { text-align:left; }
+      .semestre-header { padding:16px 18px; }
+      .semestre-title { font-size:15px; }
     }
   </style>
 
@@ -391,47 +441,8 @@
     <!-- TAB: MEUS RESUMOS -->
     <div class="tab-panel active" id="tab-resumos">
 
-      <!-- ══ 3º SEMESTRE ══ -->
-      <div class="section-label">
-        <span class="section-label-text">🎓 3º Semestre</span>
-        <span class="section-label-line"></span>
-      </div>
-
-      <!-- P1 — EXPIRADOS -->
-      <div class="section-label" style="margin-top:4px;">
-        <span class="section-label-text" style="font-size:10px;color:rgba(248,113,113,0.5);">📝 Provas de P1 — Período encerrado</span>
-        <span class="section-label-line"></span>
-      </div>
-      <div class="resumos-grid" id="grid-p1"></div>
-
-      <!-- P2 — ATIVOS -->
-      <div class="section-label">
-        <span class="section-label-text" style="font-size:10px;color:rgba(34,211,238,0.6);">📝 Provas de P2 — Disponíveis</span>
-        <span class="section-label-line"></span>
-      </div>
-      <div class="resumos-grid" id="grid-p2"></div>
-
-      <!-- FINAIS — EM BREVE -->
-      <div class="section-label">
-        <span class="section-label-text" style="font-size:10px;color:rgba(251,191,36,0.5);">🎓 Provas Finais — Em breve</span>
-        <span class="section-label-line"></span>
-      </div>
-      <div class="resumos-grid" id="grid-final"></div>
-
-      <!-- ══ 4º SEMESTRE ══ -->
-      <div class="section-label" style="margin-top:32px;">
-        <span class="section-label-text">🎓 4º Semestre</span>
-        <span class="section-label-line"></span>
-      </div>
-      <div style="
-        padding:24px; border-radius:16px; text-align:center;
-        border:1px solid rgba(251,191,36,0.15);
-        background:rgba(251,191,36,0.04); margin-bottom:32px;
-      ">
-        <div style="font-size:28px;margin-bottom:10px;">🚧</div>
-        <div style="font-size:14px;font-weight:600;color:rgba(251,191,36,0.7);margin-bottom:6px;">Em breve</div>
-        <div style="font-size:12px;color:rgba(125,211,232,0.4);">Os resumos do 4º semestre serão disponibilizados em breve.</div>
-      </div>
+      <!-- ══ ACORDEÃO DE SEMESTRES ══ -->
+      <div class="semestres-wrap" id="semestresWrap"></div>
 
     </div>
 
@@ -637,74 +648,173 @@ function renderExpiryBadge() {
 }
 
 // ── Renderiza grid de resumos (aba Meus Resumos) ───────────────────────────────
+// ── Renderiza acordeão de semestres ───────────────────────────────────────────
 function renderResumosGrid() {
-  PROVAS.forEach(function(prova) {
-    var grid = document.getElementById("grid-" + prova.tipo);
-    if (!grid) return;
-    grid.innerHTML = "";
+  var wrap = document.getElementById("semestresWrap");
+  if (!wrap) return;
+  wrap.innerHTML = "";
 
+  // ── 3º SEMESTRE ──────────────────────────────────────────────────────────
+  var sem3 = document.createElement("div");
+  sem3.className = "semestre-card open"; // começa aberto
+
+  // Conta resumos liberados
+  var liberados = MATERIAS.filter(function(m) { return hasAccess(m, "p2"); }).length;
+
+  sem3.innerHTML =
+    '<div class="semestre-header" onclick="toggleSemestre(this)">' +
+      '<div class="semestre-header-left">' +
+        '<span class="semestre-icon">🎓</span>' +
+        '<div>' +
+          '<div class="semestre-title">3º Semestre</div>' +
+          '<div class="semestre-subtitle">Bioquímica · Biofísica · Genética · Fisiologia · Micro · Imuno</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="semestre-meta">' +
+        '<span class="semestre-badge">' + liberados + '/7 liberados</span>' +
+        '<span class="semestre-chevron">▼</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="semestre-body">' +
+      '<div class="semestre-body-inner">' +
+
+        // P1 — Período encerrado
+        '<div class="prova-section">' +
+          '<div class="prova-label" style="color:rgba(248,113,113,0.5);">' +
+            '⏰ P1 — Período encerrado' +
+            '<span class="prova-label-line"></span>' +
+          '</div>' +
+          '<div class="resumos-grid" id="grid-p1"></div>' +
+        '</div>' +
+
+        // P2 — Disponível
+        '<div class="prova-section">' +
+          '<div class="prova-label" style="color:rgba(34,211,238,0.6);">' +
+            '📝 P2 — Disponível' +
+            '<span class="prova-label-line"></span>' +
+          '</div>' +
+          '<div class="resumos-grid" id="grid-p2"></div>' +
+        '</div>' +
+
+        // Final — Em breve
+        '<div class="prova-section">' +
+          '<div class="prova-label" style="color:rgba(251,191,36,0.5);">' +
+            '🎓 Final — Em breve' +
+            '<span class="prova-label-line"></span>' +
+          '</div>' +
+          '<div class="resumos-grid" id="grid-final"></div>' +
+        '</div>' +
+
+      '</div>' +
+    '</div>';
+
+  wrap.appendChild(sem3);
+
+  // ── 4º SEMESTRE ──────────────────────────────────────────────────────────
+  var sem4 = document.createElement("div");
+  sem4.className = "semestre-card soon";
+  sem4.innerHTML =
+    '<div class="semestre-header" onclick="toggleSemestre(this)">' +
+      '<div class="semestre-header-left">' +
+        '<span class="semestre-icon">📚</span>' +
+        '<div>' +
+          '<div class="semestre-title" style="color:rgba(251,191,36,0.7);">4º Semestre</div>' +
+          '<div class="semestre-subtitle">Resumos em preparação</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="semestre-meta">' +
+        '<span class="semestre-badge soon">Em breve</span>' +
+        '<span class="semestre-chevron" style="color:rgba(251,191,36,0.4);">▼</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="semestre-body">' +
+      '<div class="semestre-body-inner">' +
+        '<div style="text-align:center;padding:32px 20px;">' +
+          '<div style="font-size:36px;margin-bottom:12px;">🚧</div>' +
+          '<div style="font-size:14px;font-weight:600;color:rgba(251,191,36,0.7);margin-bottom:8px;">Em preparação</div>' +
+          '<div style="font-size:12px;color:rgba(125,211,232,0.4);line-height:1.6;">Os resumos do 4º semestre serão<br>disponibilizados em breve.</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  wrap.appendChild(sem4);
+
+  // Renderiza cards nas grids
+  renderGridCards();
+}
+
+window.toggleSemestre = function(header) {
+  var card = header.parentElement;
+  card.classList.toggle("open");
+};
+
+function renderGridCards() {
+  // P1 — sempre "Período encerrado"
+  var gridP1 = document.getElementById("grid-p1");
+  if (gridP1) {
+    gridP1.innerHTML = "";
     MATERIAS.forEach(function(m) {
-      var acesso = hasAccess(m, prova.tipo);
-      var fileKey = "file_" + prova.tipo;
-      var fileName = m[fileKey];
-      var div, a;
+      var div = document.createElement("div");
+      div.className = "resumo-card soon";
+      div.style.cssText = "opacity:0.4;border-color:rgba(248,113,113,0.12);background:rgba(248,113,113,0.02);";
+      div.innerHTML =
+        '<span class="card-emoji">' + m.emoji + '</span>' +
+        '<div class="card-title" style="color:rgba(248,113,113,0.6);">' + m.label + ' — P1</div>' +
+        '<div class="card-desc">' + m.desc + '</div>' +
+        '<div style="display:inline-flex;align-items:center;gap:5px;margin-top:10px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);color:rgba(248,113,113,0.6);">⏰ Período encerrado</div>';
+      gridP1.appendChild(div);
+    });
+  }
 
-      // P1 — sempre "Expirado"
-      if (prova.tipo === "p1") {
-        div = document.createElement("div");
-        div.className = "resumo-card soon";
-        div.style.cssText = "opacity:0.45;border-color:rgba(248,113,113,0.12);background:rgba(248,113,113,0.03);";
-        div.innerHTML =
-          '<span class="card-emoji">' + m.emoji + '</span>' +
-          '<div class="card-title" style="color:rgba(248,113,113,0.6);">' + m.label + ' — P1</div>' +
-          '<div class="card-desc">' + m.desc + '</div>' +
-          '<div style="display:inline-flex;align-items:center;gap:5px;margin-top:10px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);color:rgba(248,113,113,0.6);">⏰ Período encerrado</div>';
-        grid.appendChild(div);
-        return;
-      }
-
-      // Final — sempre "Em breve"
-      if (prova.tipo === "final") {
-        div = document.createElement("div");
-        div.className = "resumo-card soon";
-        div.innerHTML =
-          '<span class="card-emoji">' + m.emoji + '</span>' +
-          '<div class="card-title">' + m.label + ' — Final</div>' +
-          '<div class="card-desc">' + m.desc + '</div>' +
-          '<div class="soon-badge"><span class="soon-dot"></span> Em breve</div>';
-        grid.appendChild(div);
-        return;
-      }
-
-      // P2 — lógica normal (acesso ou bloqueado)
+  // P2 — lógica normal
+  var gridP2 = document.getElementById("grid-p2");
+  if (gridP2) {
+    gridP2.innerHTML = "";
+    MATERIAS.forEach(function(m) {
+      var acesso = hasAccess(m, "p2");
       if (acesso) {
-        var diasRestantes = daysLeftForResumo(m, prova.tipo);
-        var expiryInfo = diasRestantes !== null
-          ? (diasRestantes <= 7
-            ? '<div style="font-size:10px;color:#fbbf24;margin-top:6px;">⚠️ Expira em ' + diasRestantes + ' dia' + (diasRestantes===1?'':'s') + '</div>'
-            : '<div style="font-size:10px;color:rgba(125,211,232,0.4);margin-top:6px;">⏱️ ' + diasRestantes + ' dias restantes</div>')
+        var dias = daysLeftForResumo(m, "p2");
+        var expiryInfo = dias !== null
+          ? (dias <= 7
+            ? '<div style="font-size:10px;color:#fbbf24;margin-top:6px;">⚠️ Expira em ' + dias + ' dia' + (dias===1?'':'s') + '</div>'
+            : '<div style="font-size:10px;color:rgba(125,211,232,0.4);margin-top:6px;">⏱️ ' + dias + ' dias restantes</div>')
           : '';
-        a = document.createElement("a");
+        var a = document.createElement("a");
         a.className = "resumo-card unlocked";
-        a.href = fileName;
+        a.href = m.file_p2;
         a.innerHTML =
           '<span class="card-emoji">' + m.emoji + '</span>' +
           '<div class="card-title">' + m.label + ' — P2</div>' +
-          '<div class="card-desc">' + m.desc + '</div>' +
-          expiryInfo;
-        grid.appendChild(a);
+          '<div class="card-desc">' + m.desc + '</div>' + expiryInfo;
+        gridP2.appendChild(a);
       } else {
-        div = document.createElement("div");
+        var div = document.createElement("div");
         div.className = "resumo-card locked";
         div.innerHTML =
           '<span class="card-emoji">' + m.emoji + '</span>' +
           '<div class="card-title">' + m.label + ' — P2</div>' +
           '<div class="card-desc">' + m.desc + '</div>' +
           '<div class="lock-badge" onclick="goToStore()">🔒 Comprar acesso</div>';
-        grid.appendChild(div);
+        gridP2.appendChild(div);
       }
     });
-  });
+  }
+
+  // Final — sempre "Em breve"
+  var gridFinal = document.getElementById("grid-final");
+  if (gridFinal) {
+    gridFinal.innerHTML = "";
+    MATERIAS.forEach(function(m) {
+      var div = document.createElement("div");
+      div.className = "resumo-card soon";
+      div.innerHTML =
+        '<span class="card-emoji">' + m.emoji + '</span>' +
+        '<div class="card-title">' + m.label + ' — Final</div>' +
+        '<div class="card-desc">' + m.desc + '</div>' +
+        '<div class="soon-badge"><span class="soon-dot"></span> Em breve</div>';
+      gridFinal.appendChild(div);
+    });
+  }
 }
 
 window.goToStore = function() { switchTab("loja"); };
