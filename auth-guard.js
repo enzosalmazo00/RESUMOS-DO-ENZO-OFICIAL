@@ -86,7 +86,23 @@
 
     // ── Buscar perfil ─────────────────────────────────────────────────────
     var pageKey = window.PAGE_KEY || null;
-    var fields  = "is_approved, active_session, device_id" + (pageKey ? ", " + pageKey : "");
+
+    // Determina o pacote correspondente ao resumo (ex: bioquimica_p2 → pacote_p2)
+    var pacoteKey = null;
+    if (pageKey) {
+      if (pageKey.endsWith("_p1"))    pacoteKey = "pacote_p1";
+      if (pageKey.endsWith("_p2"))    pacoteKey = "pacote_p2";
+      if (pageKey.endsWith("_final")) pacoteKey = "pacote_final";
+    }
+
+    // Busca coluna do resumo + pacote + data de expiração individual
+    var extraFields = "";
+    if (pageKey)    extraFields += ", " + pageKey;
+    if (pacoteKey)  extraFields += ", " + pacoteKey;
+    if (pageKey)    extraFields += ", " + pageKey + "_expira";
+    if (pacoteKey)  extraFields += ", " + pacoteKey + "_expira";
+
+    var fields = "is_approved, active_session, device_id" + extraFields;
 
     var profile = null;
     try {
@@ -100,11 +116,6 @@
       profile = res.data;
     } catch (err) {
       console.error("[auth-guard] Erro ao buscar perfil:", err);
-      // [C1] CORREÇÃO CRÍTICA: erro de perfil NÃO redireciona para login.
-      // Antes: window.location.replace(LOGIN_PAGE) ← causava loop se RLS
-      // bloqueasse ou a rede falhasse.
-      // Agora: mostra mensagem de erro e aguarda — o usuário permanece na
-      // página atual sem ser derrubado.
       _showErrorOverlay("Erro ao carregar perfil. Tente recarregar a página.");
       return;
     }
@@ -127,20 +138,32 @@
     var currentDevice = getDeviceId();
 
     if (profile.active_session && profile.device_id && profile.device_id !== currentDevice) {
-      // Sessão ativa em outro dispositivo → força logout LOCAL
-      // Não altera o banco aqui — o outro dispositivo ainda está ativo legitimamente
       await client.auth.signOut();
       window.location.replace(LOGIN_PAGE);
       return;
     }
 
-    // ── [C3] Verificar coluna da página ───────────────────────────────────
-    if (pageKey && !profile[pageKey]) {
-      // Acesso não liberado para este conteúdo → volta para DASHBOARD
-      // (não para login — o usuário está autenticado, só sem permissão nesta página)
-      alert("Acesso não liberado para este conteúdo. Faça o pagamento para liberar.");
-      window.location.replace(DASHBOARD_PAGE);
-      return;
+    // ── [C3] Verificar acesso à página ────────────────────────────────────
+    if (pageKey) {
+      // Verifica se tem acesso individual OU pelo pacote
+      var temAcesso = !!profile[pageKey] || !!(pacoteKey && profile[pacoteKey]);
+
+      if (!temAcesso) {
+        alert("Acesso não liberado para este conteúdo. Faça o pagamento para liberar.");
+        window.location.replace(DASHBOARD_PAGE);
+        return;
+      }
+
+      // Verifica expiração individual do resumo ou do pacote
+      var expiraCol  = pageKey + "_expira";
+      var expiraPack = pacoteKey ? pacoteKey + "_expira" : null;
+      var expiraData = profile[expiraCol] || (expiraPack && profile[expiraPack]);
+
+      if (expiraData && new Date(expiraData) < new Date()) {
+        alert("Seu acesso a este resumo expirou. Renove para continuar.");
+        window.location.replace(DASHBOARD_PAGE);
+        return;
+      }
     }
 
     // ── TUDO OK ───────────────────────────────────────────────────────────
