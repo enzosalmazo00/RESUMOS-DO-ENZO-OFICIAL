@@ -605,8 +605,8 @@ window.quickGrantAll = async function(id, email) {
   if (!confirm("Liberar TODOS os resumos para " + email + "?")) return;
   var update = {};
   RESUMOS_COLS.forEach(function(r) { update[r.key] = true; });
-  var exp = new Date(); exp.setDate(exp.getDate() + 50);
-  update.acesso_expira_em = exp.toISOString();
+  // Não seta data de expiração — acesso permanente quando liberado manualmente
+  update.acesso_expira_em = null;
   var { error } = await client.from("profiles").update(update).eq("id", id);
   if (error) showToast("Erro!", "error");
   else { showToast("✅ Acessos liberados!", "success"); await loadAlunos(); }

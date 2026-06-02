@@ -154,10 +154,11 @@
         return;
       }
 
-      // Verifica expiração individual do resumo ou do pacote
+      // Verifica expiração — só bloqueia se tiver data E ela já passou
+      // Se não tiver data de expiração = acesso permanente (liberado manualmente)
       var expiraCol  = pageKey + "_expira";
       var expiraPack = pacoteKey ? pacoteKey + "_expira" : null;
-      var expiraData = profile[expiraCol] || (expiraPack && profile[expiraPack]);
+      var expiraData = profile[expiraCol] || (expiraPack ? profile[expiraPack] : null);
 
       if (expiraData && new Date(expiraData) < new Date()) {
         alert("Seu acesso a este resumo expirou. Renove para continuar.");
