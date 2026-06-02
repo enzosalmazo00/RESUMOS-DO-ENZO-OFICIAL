@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bioquímica P1 — Resumos do Enzo</title>
+
+  <script>window.PAGE_KEY = "bioquimica_p1";</script>
+  <script>document.documentElement.style.visibility = "hidden";</script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth-guard.js"></script>
+  <script>
+    document.addEventListener("authReady", function () {
+      document.documentElement.style.visibility = "visible";
+    });
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(160deg,#020d1a 0%,#010812 50%,#020d1a 100%);
+      color:#fff; min-height:100vh; padding:40px 20px;
+    }
+    .container { max-width:860px; margin:0 auto; }
+    .back-btn {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 20px; border-radius:12px;
+      border:1px solid rgba(34,211,238,0.25); background:transparent;
+      color:#7dd3e8; font-family:'Poppins',sans-serif; font-size:13px;
+      cursor:pointer; text-decoration:none; transition:all .2s;
+      margin-bottom:32px;
+    }
+    .back-btn:hover { background:rgba(34,211,238,0.08); color:#fff; }
+    .header { margin-bottom:40px; }
+    .badge {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:5px 14px; border-radius:20px; font-size:11px; font-weight:600;
+      letter-spacing:0.1em; text-transform:uppercase;
+      background:rgba(34,211,238,0.08); border:1px solid rgba(34,211,238,0.25);
+      color:rgba(34,211,238,0.8); margin-bottom:16px;
+    }
+    h1 { font-size:clamp(28px,5vw,42px); font-weight:700; letter-spacing:-1px; margin-bottom:10px; }
+    h1 span {
+      background:linear-gradient(100deg,#22d3ee,#67e8f9);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .subtitle { font-size:14px; color:rgba(125,211,232,0.6); }
+    .divider { height:1px; background:rgba(34,211,238,0.1); margin:32px 0; }
+    .section { margin-bottom:36px; }
+    .section h2 {
+      font-size:16px; font-weight:700; color:#22d3ee;
+      letter-spacing:0.05em; margin-bottom:16px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .section h2::after { content:''; flex:1; height:1px; background:rgba(34,211,238,0.15); }
+    .card {
+      background:rgba(34,211,238,0.04); border:1px solid rgba(34,211,238,0.12);
+      border-radius:14px; padding:20px 24px; margin-bottom:12px;
+    }
+    .card h3 { font-size:14px; font-weight:600; color:#e2f8fc; margin-bottom:8px; }
+    .card p  { font-size:13px; color:rgba(125,211,232,0.7); line-height:1.7; }
+    .card ul { font-size:13px; color:rgba(125,211,232,0.7); line-height:1.8; padding-left:18px; }
+    .highlight {
+      background:rgba(34,211,238,0.08); border-left:3px solid #22d3ee;
+      border-radius:0 10px 10px 0; padding:14px 18px; margin:16px 0;
+      font-size:13px; color:#a5f3fc; line-height:1.7;
+    }
+    .tag {
+      display:inline-block; padding:3px 10px; border-radius:20px;
+      font-size:11px; font-weight:600; margin:3px;
+      background:rgba(34,211,238,0.1); border:1px solid rgba(34,211,238,0.2);
+      color:rgba(125,211,232,0.8);
+    }
+    .footer {
+      margin-top:48px; text-align:center;
+      font-size:12px; color:rgba(125,211,232,0.3);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <a href="dashboard.html" class="back-btn">← Voltar ao Dashboard</a>
+
+  <div class="header">
+    <div class="badge">📚 3º Semestre · P1</div>
+    <h1>Bioquímica <span>P1</span></h1>
+    <div class="subtitle">Resumo de teste — conteúdo ilustrativo</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <h2>🧬 Aminoácidos e Proteínas</h2>
+    <div class="card">
+      <h3>Estrutura dos Aminoácidos</h3>
+      <p>Os aminoácidos são as unidades básicas das proteínas. Possuem um grupo amino (-NH₂), um grupo carboxila (-COOH), um hidrogênio e uma cadeia lateral (radical R) ligados a um carbono central (carbono alfa).</p>
+    </div>
+    <div class="card">
+      <h3>Classificação</h3>
+      <ul>
+        <li><strong>Apolares:</strong> Glicina, Alanina, Valina, Leucina, Isoleucina</li>
+        <li><strong>Polares sem carga:</strong> Serina, Treonina, Cisteína, Tirosina</li>
+        <li><strong>Carga positiva (+):</strong> Lisina, Arginina, Histidina</li>
+        <li><strong>Carga negativa (-):</strong> Ácido aspártico, Ácido glutâmico</li>
+      </ul>
+    </div>
+    <div class="highlight">
+      💡 <strong>Dica de prova:</strong> Os 9 aminoácidos essenciais (não sintetizados pelo organismo) devem ser obtidos pela dieta: Histidina, Isoleucina, Leucina, Lisina, Metionina, Fenilalanina, Treonina, Triptofano e Valina.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>⚡ Enzimas</h2>
+    <div class="card">
+      <h3>Conceito e Função</h3>
+      <p>Enzimas são catalisadores biológicos, geralmente proteínas, que aumentam a velocidade das reações químicas sem serem consumidas. Atuam reduzindo a energia de ativação da reação.</p>
+    </div>
+    <div class="card">
+      <h3>Fatores que afetam a atividade enzimática</h3>
+      <ul>
+        <li><strong>pH:</strong> Cada enzima tem pH ótimo (ex: pepsina pH 2, tripsina pH 8)</li>
+        <li><strong>Temperatura:</strong> Aumenta até o ótimo, depois desnatura</li>
+        <li><strong>Concentração de substrato:</strong> Curva de Michaelis-Menten</li>
+        <li><strong>Inibidores:</strong> Competitivos e não-competitivos</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🏷️ Palavras-chave</h2>
+    <div class="card">
+      <span class="tag">Aminoácidos essenciais</span>
+      <span class="tag">Ligação peptídica</span>
+      <span class="tag">Estrutura primária</span>
+      <span class="tag">Estrutura secundária</span>
+      <span class="tag">Km</span>
+      <span class="tag">Vmax</span>
+      <span class="tag">Inibição competitiva</span>
+      <span class="tag">Cofatores</span>
+      <span class="tag">Coenzimas</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    Resumos do Enzo · 3º Semestre · Bioquímica P1 · Conteúdo de teste
+  </div>
+
+</div>
+</body>
+</html>

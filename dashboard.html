@@ -623,7 +623,7 @@ function renderResumosGrid() {
         // card bloqueado
         var div = document.createElement("div");
         // se é p1 ainda sem conteúdo, mostra "Em breve"
-        var isSoon = (prova.tipo === "p1" || prova.tipo === "final");
+        var isSoon = (prova.tipo === "final");
         div.className = "resumo-card " + (isSoon ? "soon" : "locked");
         div.innerHTML =
           '<span class="card-emoji">' + m.emoji + '</span>' +
