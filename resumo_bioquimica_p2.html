@@ -387,7 +387,7 @@ em { color: var(--accent2); }
 <div class="info-block">
   <div class="label">Visão Geral</div>
   <h4>Sobre este material</h4>
-  <p>Este resumo organiza o conteúdo da P2 de Bioquímica em quatro grandes blocos — <strong>enzimas no diagnóstico clínico</strong>, <strong>carboidratos</strong>, <strong>lipídios</strong> e <strong>digestão de lipídios</strong> — voltados ao estudo de graduação em Medicina. Inclui ainda 35 flashcards interativos e um simulado autocorrigido para revisão ativa.</p>
+  <p>Este resumo organiza o conteúdo da P2 de Bioquímica em quatro grandes blocos — <strong>enzimas no diagnóstico clínico</strong>, <strong>carboidratos</strong>, <strong>lipídios</strong> e <strong>digestão de lipídios</strong> — voltados ao estudo de graduação em Medicina. Inclui ainda 35 flashcards interativos e um simulado autocorrigido com 63 questões para revisão ativa.</p>
 </div>
 
 <div class="info-block success">
@@ -750,7 +750,7 @@ em { color: var(--accent2); }
 <div id="quiz" class="section">
 <div class="container">
 
-<div class="chapter-title"><span class="chap-icon">❓</span> Simulado P2 — 40 Questões</div>
+<div class="chapter-title"><span class="chap-icon">❓</span> Simulado P2 — 63 Questões</div>
 <p style="color:var(--muted);font-size:13px;margin-bottom:24px;">30 questões de múltipla escolha + 10 de verdadeiro ou falso, com correção e explicação imediata.</p>
 
 <div class="quiz-container" id="quiz-container"></div>
@@ -905,6 +905,74 @@ const quizData = [
   {q:"[V/F] Os ácidos biliares emulsificam gorduras no duodeno.", opts:["Verdadeiro","Falso"], correct:0, explain:"Verdadeiro. Facilitam a ação da <strong>lipase pancreática</strong>."},
   {q:"[V/F] A HDL leva colesterol do fígado aos tecidos e causa aterosclerose.", opts:["Verdadeiro","Falso"], correct:1, explain:"Falso. Isso é a <strong>LDL</strong>. HDL faz o transporte reverso."},
   {q:"[V/F] Os quilomícrons transportam lipídios da dieta do intestino aos tecidos.", opts:["Verdadeiro","Falso"], correct:0, explain:"Verdadeiro. Lipídios <strong>exógenos</strong>."},
+,
+  // ══ QUESTÕES COMPLEMENTARES ══
+  {q:"A Fosfatase Ácida é a enzima utilizada no diagnóstico clínico do carcinoma metastático de próstata.", opts:["Verdadeiro", "Falso"], correct:0, explain:"A Fosfatase Ácida tem atividade elevada em tecido prostático e é marcador clássico do carcinoma metastático de próstata.
+        Lembre: cada enzima tem seu órgão-alvo diagnóstico:
+        • CK (Creatina Quinase) → IAM e transtornos musculares
+        • AST/ALT → IAM ou hepatite viral aguda
+        • Fosfatase Alcalina → doenças hepáticas obstrutivas e ósseas"},
+  {q:"Quais fatores influenciam a atividade e a velocidade das reações enzimáticas?", opts:["Apenas a temperatura", "Apenas o pH", "Temperatura e pH apenas", "Temperatura, pH e concentração de enzima/substrato"], correct:3, explain:"As enzimas dependem de três condições para funcionar na velocidade máxima:
+        → Temperatura ótima: desnaturação acima da temperatura ideal
+        → pH ótimo: cada enzima tem seu pH ideal (ex: pepsina = pH 2; tripsina = pH 8)
+        → Concentração: excesso de substrato satura a enzima (cinética de Michaelis-Menten)"},
+  {q:"Os lipídios complexos contêm apenas carbono, hidrogênio e oxigênio em sua composição elementar, assim como os lipídios simples.", opts:["Verdadeiro", "Falso"], correct:1, explain:"strong>Lipídios simples (triglicerídeos, ceras) → apenas C, H, O
+        Lipídios complexos (fosfolipídios, glicolipídios) → contêm também P (fósforo) e N (nitrogênio) além de C, H, O.
+        Exemplo clássico: a fosfatidilcolina da membrana celular tem fósforo na cabeça polar → lipídio complexo."},
+  {q:"Qual classe de enzimas catalisa a união de duas moléculas, geralmente acoplada à hidrólise de ATP?", opts:["Oxidorredutases", "Hidrolases", "Ligases", "Liases"], correct:2, explain:"As Ligases (ou sintetases) unem duas moléculas com gasto de ATP. Ex: DNA Ligase une fragmentos de Okazaki.
+        Pegadinha: Liases ≠ Ligases. Liases quebram ligações sem água. Não confunda!
+        → Hidrolases = quebram com água
+        → Transferases = transferem grupos químicos
+        → Isomerases = rearranjam a mesma molécula"},
+  {q:"As ceras têm como função biológica principal a impermeabilização de superfícies (como folhas de plantas e penas de aves).", opts:["Verdadeiro", "Falso"], correct:0, explain:"As ceras são lipídios simples formados por álcool de cadeia longa + ácido graxo.
+        São altamente hidrofóbicas → função de impermeabilização:
+        • Cutícula de folhas (evita perda de água)
+        • Penas de aves aquáticas (repele água)
+        • Cera de abelha (proteção da colmeia)"},
+  {q:"A alergia ao leite de vaca (APLV) é causada pela resposta imunológica às proteínas do leite, sendo diferente da intolerância à lactose.", opts:["Verdadeiro", "Falso"], correct:0, explain:"strong>APLV = reação imunológica (IgE mediada) contra proteínas como caseína e beta-lactoglobulina.
+        Intolerância à lactose = deficiência da enzima lactase, que hidrolisa lactose → glicose + galactose. Sem relação com o sistema imune.
+        Pegadinha clássica de prova: confundir alergia (imune) com intolerância (enzimática)."},
+  {q:"A lactose, quando sofre hidrólise completa, origina:", opts:["Glicose + Frutose", "Glicose + Galactose", "Galactose + Frutose", "Glicose + Glicose"], correct:1, explain:"A lactose é um dissacarídeo formado por β-D-galactose + D-glicose, unidas por ligação β-1,4-glicosídica.
+        A enzima lactase (β-galactosidase) hidrolisa essa ligação.
+        Memorize os dissacarídeos:
+        • Sacarose = glicose + frutose (sacarase)
+        • Maltose = glicose + glicose (maltase)
+        • Lactose = glicose + galactose (lactase)"},
+  {q:"Na biologia molecular, qual molécula é responsável por copiar a informação genética do DNA no núcleo e transportá-la até os ribossomos?", opts:["DNA polimerase", "RNA transportador (RNAt)", "RNA mensageiro (RNAm)", "RNA ribossomal (RNAr)"], correct:2, explain:"O RNAm (RNA mensageiro) é sintetizado durante a transcrição a partir do DNA molde.
+        Sai do núcleo → entra no citoplasma → é lido pelos ribossomos na tradução.
+        Distinção dos tipos de RNA:
+        • RNAm = mensageiro (leva a \"receita\" da proteína)
+        • RNAt = transportador (traz os aminoácidos)
+        • RNAr = ribossomal (compõe o ribossomo)"},
+  {q:"Qual célula do sistema imunológico é a primeira a chegar ao sítio de inflamação aguda, especialmente nas infecções bacterianas?", opts:["Linfócito T", "Macrófago", "Neutrófilo", "Eosinófilo"], correct:2, explain:"Os neutrófilos são os leucócitos mais abundantes e são os primeiros a migrar para o tecido infectado (quimiotaxia).
+        Eles fagocitam e destroem bactérias por mecanismos oxidativos (burst respiratório).
+        Cronologia da resposta inflamatória:
+        → 0–6h: Neutrófilos
+        → 24–48h: Macrófagos (chegam depois e limpam o debris)
+        → Dias depois: Linfócitos (resposta adaptativa)"},
+  {q:"Os fosfolipídios são precursores metabólicos de tromboxanas, leucotrienos e prostaglandinas.", opts:["Verdadeiro", "Falso"], correct:0, explain:"Os fosfolipídios de membrana liberam ácido araquidônico pela ação da enzima fosfolipase A₂.
+        O ácido araquidônico é então o precursor de toda a família dos eicosanoides:
+        • Prostaglandinas → via ciclooxigenase (COX) → inflamação, febre, dor
+        • Tromboxanas → via COX → agregação plaquetária e vasoconstrição
+        • Leucotrienos → via lipoxigenase (LOX) → reações alérgicas e broncoespasmo
+        Dica clínica: Os AINEs (ibuprofeno, aspirina) inibem a COX, bloqueando prostaglandinas e tromboxanas. Por isso são anti-inflamatórios e antiagregantes plaquetários."},
+  {q:"Os carboidratos complexos são ricos em fibras e fornecem energia de forma sustentada (liberada aos poucos).", opts:["Verdadeiro", "Falso"], correct:1, explain:""},
+  {q:"A intolerância ao leite é uma reação imunológica à proteína do leite, que causa sintomas cutâneos e respiratórios.", opts:["Verdadeiro", "Falso"], correct:1, explain:""},
+  {q:"Os lipídios saponificáveis possuem ácidos graxos em sua estrutura, enquanto os insaponificáveis (ex: terpenos e esteroides) não possuem.", opts:["Verdadeiro", "Falso"], correct:1, explain:""},
+  {q:"A biossíntese do ADN ocorre em quatro etapas: Iniciação, Elongação, Maturação e Terminação.", opts:["Verdadeiro", "Falso"], correct:1, explain:""},
+  {q:"A amilase sérica elevada é um marcador clínico utilizado no diagnóstico de pancreatite aguda.", opts:["Verdadeiro", "Falso"], correct:1, explain:""}
+,
+  // ══ QUESTÕES COMPLETAR ══
+  {type:'complete', q:"A sacarose é formada pela união de glicose + _______.", accepted:["frutose"], explain:"Resposta: frutose"}
+  {type:'complete', q:"Os oligossacarídeos são compostos entre _______ e _______ monossacarídeos unidos por ligações glicosídicas.", accepted:["3 e 10", "3 a 10", "3e10"], explain:"Resposta: 3 e 10"}
+  {type:'complete', q:"A holoenzima é composta por: Apoenzima + _______ + Substrato.", accepted:["cofator", "cofactor"], explain:"Resposta: cofator"}
+  {type:'complete', q:"Os lipídios complexos, além de carbono, hidrogênio e oxigênio, contêm elementos como _______, podendo também conter nitrogênio ou enxofre. Exemplo: _______ e glicolipídios.", accepted:["fósforo / fosfolipídios", "fosforo / fosfolipidios", "fósforo/fosfolipídios", "fosforo/fosfolipidios"], explain:"Resposta: fósforo / fosfolipídios"}
+,
+  // ══ QUESTÕES ASSOCIAÇÃO ══
+  {type:'assoc', q:"Associe o tipo de ARN à sua função:", labels:["ARN Mensageiro", "ARN Transferência", "ARN Ribossômico"], options:["Leva a informação genética", "Transfere aminoácidos", "Une mensageiro e transferência para traduzir em proteínas"], correct:["A", "B", "C"], explain:''}
+  {type:'assoc', q:"Associe o tipo de enzima ao tipo de reação que catalisa:", labels:["Hidrolase", "Oxidorredutase", "Ligase"], options:["Óxido-redução", "Quebra moléculas usando água", "Transfere grupos químicos"], correct:["B", "A"], explain:''}
+  {type:'assoc', q:"Associe o hormônio/molécula à sua ação enzimática/metabólica:", labels:["Insulina", "Glucagon / Adrenalina", "CCK"], options:["Promove a desfosforilação (síntese do glicogênio)", "Ativa a fosforilação", "Estimula a liberação de enzimas pancreáticas"], correct:["A", "B", "C"], explain:''}
+  {type:'assoc', q:"Associe o eicosanoide à sua função principal:", labels:["Leucotrienos", "Tromboxanos", "Prostaglandinas"], options:["Processos inflamatórios e alérgicos", "Coagulação sanguínea e formação de trombos", "Inflamação, regulação da pressão arterial, dor e febre"], correct:["A", "B", "C"], explain:''}
 ];
 
 let currentQ = 0, score = 0, answered = false;
@@ -925,13 +993,43 @@ function renderQuiz() {
   }
   const q = quizData[currentQ];
   const pct = Math.round((currentQ/quizData.length)*100);
+  const typeTag = q.type==='complete' ? '<span style="font-size:10px;font-weight:700;letter-spacing:0.1em;padding:3px 10px;border-radius:20px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);color:#34d399;margin-bottom:10px;display:inline-block;">✏️ COMPLETE</span>' :
+                  q.type==='assoc'    ? '<span style="font-size:10px;font-weight:700;letter-spacing:0.1em;padding:3px 10px;border-radius:20px;background:rgba(251,146,60,0.12);border:1px solid rgba(251,146,60,0.3);color:#fb923c;margin-bottom:10px;display:inline-block;">🔗 ASSOCIAÇÃO</span>' : '';
+
+  let bodyHTML = '';
+
+  if(!q.type || q.type==='mc' || q.type==='vf') {
+    // Múltipla escolha / V-F
+    bodyHTML = `<div class="quiz-opts">
+      ${q.opts.map((o,i)=>`<button class="quiz-opt" onclick="selectAnswer(${i})" id="opt-${i}"><span class="opt-letter">${String.fromCharCode(65+i)})</span><span>${o}</span></button>`).join('')}
+    </div>`;
+  } else if(q.type==='complete') {
+    bodyHTML = `<div style="margin:16px 0">
+      <input id="complete-input" type="text" placeholder="Digite sua resposta..."
+        style="width:100%;padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:#e8e4f0;font-size:15px;font-family:inherit;"
+        onkeydown="if(event.key==='Enter') checkComplete()">
+      <button class="btn" style="margin-top:10px" onclick="checkComplete()">Verificar ✓</button>
+    </div>`;
+  } else if(q.type==='assoc') {
+    bodyHTML = `<div style="margin:16px 0;display:flex;flex-direction:column;gap:10px">
+      ${q.labels.map((l,i)=>`
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="min-width:160px;font-size:13px;font-weight:500;color:#e8e4f0">${l}</span>
+          <select id="assoc-sel-${i}" style="flex:1;padding:8px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#e8e4f0;font-family:inherit;font-size:13px">
+            <option value="">-- selecione --</option>
+            ${q.options.map((o,j)=>`<option value="${String.fromCharCode(65+j)}">${o}</option>`).join('')}
+          </select>
+        </div>`).join('')}
+      <button class="btn" style="margin-top:6px;align-self:flex-start" onclick="checkAssoc()">Verificar ✓</button>
+    </div>`;
+  }
+
   c.innerHTML = `
     <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
     <div class="quiz-num">QUESTÃO ${currentQ+1} DE ${quizData.length} • Pontos: ${score}</div>
+    ${typeTag}
     <div class="quiz-q">${q.q}</div>
-    <div class="quiz-opts">
-      ${q.opts.map((o,i)=>`<button class="quiz-opt" onclick="selectAnswer(${i})" id="opt-${i}"><span class="opt-letter">${String.fromCharCode(65+i)})</span><span>${o}</span></button>`).join('')}
-    </div>
+    ${bodyHTML}
     <div class="quiz-explain" id="quiz-explain"></div>
     <div class="quiz-nav">
       <span style="color:var(--muted);font-size:12px">${score} acertos até agora</span>
@@ -951,6 +1049,42 @@ function selectAnswer(idx) {
   else score++;
   const ex = document.getElementById('quiz-explain');
   ex.innerHTML = `<strong>${idx===q.correct?'✅ Correto!':'❌ Incorreto.'}</strong><br><br>${q.explain}`;
+  ex.classList.add('show');
+  document.getElementById('next-btn').style.display='block';
+}
+
+function checkComplete() {
+  if(answered) return;
+  const q = quizData[currentQ];
+  const input = document.getElementById('complete-input');
+  const val = input.value.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const correct = q.accepted.some(a => val === a.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''));
+  answered = true;
+  input.disabled = true;
+  input.style.borderColor = correct ? '#4ff984' : '#f95f5f';
+  if(correct) score++;
+  const ex = document.getElementById('quiz-explain');
+  ex.innerHTML = `<strong>${correct?'✅ Correto!':'❌ Incorreto.'}</strong>${correct?'':' Resposta: <strong>'+q.accepted[0]+'</strong>'}<br><br>${q.explain}`;
+  ex.classList.add('show');
+  document.getElementById('next-btn').style.display='block';
+}
+
+function checkAssoc() {
+  if(answered) return;
+  const q = quizData[currentQ];
+  const sels = q.labels.map((_,i) => document.getElementById('assoc-sel-'+i));
+  if(sels.some(s => !s.value)) { alert('Selecione todas as opções antes de verificar.'); return; }
+  answered = true;
+  const userAnswers = sels.map(s => s.value);
+  const allCorrect = userAnswers.every((v,i) => v === q.correct[i]);
+  if(allCorrect) score++;
+  sels.forEach((s,i) => {
+    s.disabled = true;
+    s.style.borderColor = s.value === q.correct[i] ? '#4ff984' : '#f95f5f';
+  });
+  const ex = document.getElementById('quiz-explain');
+  const correctMap = q.labels.map((l,i) => `${l} → ${q.options[q.correct[i].charCodeAt(0)-65]}`).join('<br>');
+  ex.innerHTML = `<strong>${allCorrect?'✅ Correto!':'❌ Revise as associações.'}</strong><br><br><small>${correctMap}</small>`;
   ex.classList.add('show');
   document.getElementById('next-btn').style.display='block';
 }
