@@ -568,10 +568,51 @@
   }
 
   // ── PUBMED ────────────────────────────────────────────────────────────────
+  // Dicionário de tradução PT → EN para termos médicos comuns
+  var traducoes = {
+    'enzima':'enzyme','enzimas':'enzymes','carboidrato':'carbohydrate',
+    'carboidratos':'carbohydrates','lipídio':'lipid','lipídios':'lipids',
+    'proteína':'protein','proteínas':'proteins','metabolismo':'metabolism',
+    'célula':'cell','tecido':'tissue','hormônio':'hormone','receptor':'receptor',
+    'anticorpo':'antibody','antígeno':'antigen','imunidade':'immunity',
+    'bactéria':'bacteria','vírus':'virus','infecção':'infection',
+    'diagnóstico':'diagnosis','tratamento':'treatment','doença':'disease',
+    'síndrome':'syndrome','fisiologia':'physiology','anatomia':'anatomy',
+    'farmacologia':'pharmacology','medicamento':'drug','antibiótico':'antibiotic',
+    'coração':'heart','pulmão':'lung','rim':'kidney','fígado':'liver',
+    'cérebro':'brain','sangue':'blood','pressão':'pressure','glicose':'glucose',
+    'diabetes':'diabetes','hipertensão':'hypertension','câncer':'cancer',
+    'inflamação':'inflammation','genética':'genetics','gene':'gene',
+    'mutação':'mutation','vitamina':'vitamin','mineral':'mineral',
+    'base nitrogenada':'nitrogenous base','ácido nucleico':'nucleic acid',
+    'dna':'DNA','rna':'RNA','atp':'ATP','lipídio saponificável':'saponifiable lipid',
+    'lipídio não saponificável':'non-saponifiable lipid','colesterol':'cholesterol',
+    'triglicerídeo':'triglyceride','fosfolipídio':'phospholipid',
+  };
+
+  function traduzirParaIngles(texto) {
+    var t = texto.toLowerCase();
+    // Substitui termos conhecidos
+    for (var pt in traducoes) {
+      t = t.replace(new RegExp(pt, 'gi'), traducoes[pt]);
+    }
+    // Pega só as palavras relevantes (remove artigos e preposições)
+    var stopwords = ['o','a','os','as','de','da','do','em','que','são','é','um','uma','me','dizer','pode','quais','qual','como','para','por','com','se'];
+    var palavras = t.split(/\s+/).filter(function(p) {
+      return p.length > 3 && stopwords.indexOf(p) === -1;
+    });
+    // Usa no máximo 4 palavras-chave
+    return palavras.slice(0, 4).join(' ');
+  }
+
   async function ezPubMed(query) {
     try {
+      // Traduz a query para inglês antes de buscar
+      var queryEN = traduzirParaIngles(query);
+      if (!queryEN || queryEN.length < 3) return [];
+
       var url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term="
-        + encodeURIComponent(query) + "&retmax=3&retmode=json&sort=relevance";
+        + encodeURIComponent(queryEN + "[Title/Abstract]") + "&retmax=3&retmode=json&sort=relevance";
       var r1 = await fetch(url);
       var d1 = await r1.json();
       var ids = (d1.esearchresult && d1.esearchresult.idlist) || [];
