@@ -730,12 +730,16 @@
 
   // ── FORMATA TEXTO ─────────────────────────────────────────────────────────
   function ezFormat(texto) {
-    return "<p>" + texto
+    texto = texto
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
       .replace(/\*(.*?)\*/g, "<em>$1</em>")
-      .replace(/`(.*?)`/g, "<code style='font-family:monospace;background:rgba(0,0,0,0.4);padding:1px 5px;border-radius:4px;font-size:11.5px'>$1</code>")
-      .replace(/\n\n/g, "</p><p style='margin-top:7px'>")
-      .replace(/\n/g, "<br>") + "</p>";
+      .replace(/`(.*?)`/g, "<code style='font-family:monospace;background:rgba(0,0,0,0.4);padding:1px 5px;border-radius:4px;font-size:11.5px'>$1</code>");
+    var paragrafos = texto.split(/\n\n+/);
+    return paragrafos.map(function(p) {
+      p = p.replace(/\n/g, "<br>");
+      if (p.startsWith("<ul") || p.startsWith("<ol")) return p;
+      return "<p style='margin:0 0 10px 0;line-height:1.7'>" + p + "</p>";
+    }).join("");
   }
 
   // ── ENVIAR ────────────────────────────────────────────────────────────────
