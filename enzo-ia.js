@@ -611,7 +611,7 @@
       var q = encodeURIComponent(query);
       var url = "https://search.scielo.org/api/v1/search/?q=" + q
         + "&lang=pt&count=3&from=0&output=json&format=json";
-      var r = await fetch(url);
+      var r = await fetchTimeout(url);
       if (!r.ok) return [];
       var d = await r.json();
       var hits = (d.hits && d.hits.hits) || [];
@@ -729,13 +729,28 @@
   }
 
 
+  // ── FETCH COM TIMEOUT ────────────────────────────────────────────────────
+  async function fetchTimeout(url, ms) {
+    ms = ms || 4000;
+    var controller = new AbortController();
+    var timer = setTimeout(function(){ controller.abort(); }, ms);
+    try {
+      var r = await fetch(url, { signal: controller.signal });
+      clearTimeout(timer);
+      return r;
+    } catch(e) {
+      clearTimeout(timer);
+      throw e;
+    }
+  }
+
   // ── RXNORM (NIH) — Interações e classes de fármacos ──────────────────────
   async function ezRxNorm(query) {
     try {
       var farmaco = extrairFarmaco(query);
       if (!farmaco || farmaco.length < 3) return null;
       // Busca o RxCUI do medicamento
-      var r1 = await fetch("https://rxnav.nlm.nih.gov/REST/drugs.json?name=" + encodeURIComponent(farmaco));
+      var r1 = await fetchTimeout("https://rxnav.nlm.nih.gov/REST/drugs.json?name=" + encodeURIComponent(farmaco));
       if (!r1.ok) return null;
       var d1 = await r1.json();
       var grupos = d1.drugGroup && d1.drugGroup.conceptGroup;
@@ -749,7 +764,7 @@
       }
       if (!drug) return null;
       // Busca classe do medicamento
-      var r2 = await fetch("https://rxnav.nlm.nih.gov/REST/rxclass/class/byRxcui.json?rxcui=" + drug.rxcui + "&relaSource=ATC");
+      var r2 = await fetchTimeout("https://rxnav.nlm.nih.gov/REST/rxclass/class/byRxcui.json?rxcui=" + drug.rxcui + "&relaSource=ATC");
       var classe = "";
       if (r2.ok) {
         var d2 = await r2.json();
@@ -775,12 +790,12 @@
       if (!termoEN || termoEN.length < 3) return [];
       var url = "https://connect.medlineplus.gov/application?mainSearchCriteria.v.cs=2.16.840.1.113883.6.177&mainSearchCriteria.v.dn="
         + encodeURIComponent(termoEN) + "&knowledgeResponseType=application/json&informationRecipient.languageCode.c=pt";
-      var r = await fetch(url);
+      var r = await fetchTimeout(url, 3000);
       if (!r.ok) {
         // Tenta em inglês
         url = "https://connect.medlineplus.gov/application?mainSearchCriteria.v.cs=2.16.840.1.113883.6.177&mainSearchCriteria.v.dn="
           + encodeURIComponent(termoEN) + "&knowledgeResponseType=application/json";
-        r = await fetch(url);
+        r = await fetchTimeout(url, 3000);
       }
       if (!r.ok) return [];
       var d = await r.json();
@@ -804,7 +819,7 @@
       var url = "https://clinicaltrials.gov/api/v2/studies?query.term="
         + encodeURIComponent(termoEN)
         + "&filter.overallStatus=RECRUITING&pageSize=2&format=json";
-      var r = await fetch(url);
+      var r = await fetchTimeout(url, 4000);
       if (!r.ok) return [];
       var d = await r.json();
       var studies = d.studies || [];
