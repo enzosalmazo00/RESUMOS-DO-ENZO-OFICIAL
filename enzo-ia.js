@@ -416,7 +416,7 @@
           <div class="ez-avatar">Ez</div>
           <div>
             <div class="ez-name">Enzo IA <span id="ez-header-nome" style="font-weight:400;font-size:11px;color:var(--ez-dim);"></span></div>
-            <div class="ez-status" id="ez-status-bar">● Groq · Gemini · PubMed · SciELO · FDA · NIH · MedlinePlus</div>
+            <div class="ez-status" id="ez-status-bar">● Groq · Gemini · PubMed · SciELO · FDA</div>
             ${contexto ? `<div class="ez-ctx-badge">📖 ${contexto}</div>` : ''}
           </div>
         </div>
@@ -611,7 +611,7 @@
       var q = encodeURIComponent(query);
       var url = "https://search.scielo.org/api/v1/search/?q=" + q
         + "&lang=pt&count=3&from=0&output=json&format=json";
-      var r = await fetchTimeout(url);
+      var r = await fetch(url);
       if (!r.ok) return [];
       var d = await r.json();
       var hits = (d.hits && d.hits.hits) || [];
@@ -728,140 +728,14 @@
     } catch (e) { return []; }
   }
 
-
-  // ── FETCH COM TIMEOUT ────────────────────────────────────────────────────
-  async function fetchTimeout(url, ms) {
-    ms = ms || 4000;
-    var controller = new AbortController();
-    var timer = setTimeout(function(){ controller.abort(); }, ms);
-    try {
-      var r = await fetch(url, { signal: controller.signal });
-      clearTimeout(timer);
-      return r;
-    } catch(e) {
-      clearTimeout(timer);
-      throw e;
-    }
-  }
-
-  // ── RXNORM (NIH) — Interações e classes de fármacos ──────────────────────
-  async function ezRxNorm(query) {
-    try {
-      var farmaco = extrairFarmaco(query);
-      if (!farmaco || farmaco.length < 3) return null;
-      // Busca o RxCUI do medicamento
-      var r1 = await fetchTimeout("https://rxnav.nlm.nih.gov/REST/drugs.json?name=" + encodeURIComponent(farmaco));
-      if (!r1.ok) return null;
-      var d1 = await r1.json();
-      var grupos = d1.drugGroup && d1.drugGroup.conceptGroup;
-      if (!grupos) return null;
-      var drug = null;
-      for (var g of grupos) {
-        if (g.conceptProperties && g.conceptProperties.length > 0) {
-          drug = g.conceptProperties[0];
-          break;
-        }
-      }
-      if (!drug) return null;
-      // Busca classe do medicamento
-      var r2 = await fetchTimeout("https://rxnav.nlm.nih.gov/REST/rxclass/class/byRxcui.json?rxcui=" + drug.rxcui + "&relaSource=ATC");
-      var classe = "";
-      if (r2.ok) {
-        var d2 = await r2.json();
-        var classes = d2.rxclassDrugInfoList && d2.rxclassDrugInfoList.rxclassDrugInfo;
-        if (classes && classes.length > 0) {
-          classe = classes[0].rxclassMinConceptItem && classes[0].rxclassMinConceptItem.className || "";
-        }
-      }
-      return {
-        nome: drug.name || farmaco,
-        rxcui: drug.rxcui,
-        classe: classe,
-        url: "https://www.nlm.nih.gov/research/umls/rxnorm/",
-        source: "rxnorm"
-      };
-    } catch(e) { return null; }
-  }
-
-  // ── MEDLINEPLUS — Enciclopédia médica ─────────────────────────────────────
-  async function ezMedlinePlus(query) {
-    try {
-      var termoEN = traduzirParaIngles(query);
-      if (!termoEN || termoEN.length < 3) return [];
-      var url = "https://connect.medlineplus.gov/application?mainSearchCriteria.v.cs=2.16.840.1.113883.6.177&mainSearchCriteria.v.dn="
-        + encodeURIComponent(termoEN) + "&knowledgeResponseType=application/json&informationRecipient.languageCode.c=pt";
-      var r = await fetchTimeout(url, 3000);
-      if (!r.ok) {
-        // Tenta em inglês
-        url = "https://connect.medlineplus.gov/application?mainSearchCriteria.v.cs=2.16.840.1.113883.6.177&mainSearchCriteria.v.dn="
-          + encodeURIComponent(termoEN) + "&knowledgeResponseType=application/json";
-        r = await fetchTimeout(url, 3000);
-      }
-      if (!r.ok) return [];
-      var d = await r.json();
-      var entries = d.feed && d.feed.entry || [];
-      return entries.slice(0, 2).map(function(e) {
-        return {
-          title: e.title && e.title._value || e.title || "",
-          url: e.link && e.link[0] && e.link[0].href || "",
-          summary: e.summary && e.summary._value || "",
-          source: "medlineplus"
-        };
-      }).filter(function(e) { return e.title; });
-    } catch(e) { return []; }
-  }
-
-  // ── CLINICALTRIALS.GOV — Ensaios clínicos ─────────────────────────────────
-  async function ezClinicalTrials(query) {
-    try {
-      var termoEN = traduzirParaIngles(query);
-      if (!termoEN || termoEN.length < 3) return [];
-      var url = "https://clinicaltrials.gov/api/v2/studies?query.term="
-        + encodeURIComponent(termoEN)
-        + "&filter.overallStatus=RECRUITING&pageSize=2&format=json";
-      var r = await fetchTimeout(url, 4000);
-      if (!r.ok) return [];
-      var d = await r.json();
-      var studies = d.studies || [];
-      return studies.map(function(s) {
-        var p = s.protocolSection;
-        var id = p.identificationModule;
-        var status = p.statusModule;
-        return {
-          nctId: id.nctId || "",
-          title: id.briefTitle || id.officialTitle || "",
-          status: status.overallStatus || "",
-          phase: (p.designModule && p.designModule.phases && p.designModule.phases[0]) || "",
-          url: "https://clinicaltrials.gov/study/" + (id.nctId || ""),
-          source: "clinicaltrials"
-        };
-      }).filter(function(s) { return s.title; });
-    } catch(e) { return []; }
-  }
-
   // ── FORMATA TEXTO ─────────────────────────────────────────────────────────
   function ezFormat(texto) {
-    // Formata markdown basico
-    texto = texto
+    return "<p>" + texto
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
       .replace(/\*(.*?)\*/g, "<em>$1</em>")
-      .replace(/`(.*?)`/g, "<code style='font-family:monospace;background:rgba(0,0,0,0.4);padding:1px 5px;border-radius:4px;font-size:11.5px'>$1</code>");
-
-    // Converte listas com * ou - em <ul><li>
-    texto = texto.replace(/((?:^[\*\-•] .+\n?)+)/gm, function(match) {
-      var items = match.trim().split("\n").map(function(l) {
-        return "<li style='margin-bottom:4px'>" + l.replace(/^[\*\-•] /, "") + "</li>";
-      }).join("");
-      return "<ul style='margin:8px 0 8px 16px;padding:0'>" + items + "</ul>";
-    });
-
-    // Paragrafos com espacamento
-    var paragrafos = texto.split(/\n\n+/);
-    return paragrafos.map(function(p) {
-      p = p.replace(/\n/g, "<br>");
-      if (p.startsWith("<ul") || p.startsWith("<ol")) return p;
-      return "<p style='margin:0 0 10px 0;line-height:1.7'>" + p + "</p>";
-    }).join("");
+      .replace(/`(.*?)`/g, "<code style='font-family:monospace;background:rgba(0,0,0,0.4);padding:1px 5px;border-radius:4px;font-size:11.5px'>$1</code>")
+      .replace(/\n\n/g, "</p><p style='margin-top:7px'>")
+      .replace(/\n/g, "<br>") + "</p>";
   }
 
   // ── ENVIAR ────────────────────────────────────────────────────────────────
@@ -889,24 +763,20 @@
     var fdaDrug = null;
     if (!ehSaudacao(texto) && temContextoMedico(texto)) {
       var termoBusca = contexto ? contexto + " " + texto : texto;
-      if (loaderText) loaderText.textContent = "Consultando PubMed · SciELO · FDA · NIH";
+      if (loaderText) loaderText.textContent = "Consultando PubMed · SciELO · FDA";
 
       var buscaFDA = detectarFarmaco(texto) ? ezOpenFDA(texto) : Promise.resolve(null);
 
-      // PubMed e OpenFDA têm CORS liberado — as demais ficam para versão futura via Edge Function
       var results = await Promise.all([
         ezPubMed(termoBusca),
         ezSciELO(termoBusca),
         buscaFDA
       ]);
 
-      var pubmedArtigos  = (results[0] || []).slice(0, 2);
-      var scieloArtigos  = (results[1] || []).slice(0, 2);
+      var pubmedArtigos = (results[0] || []).slice(0, 2);
+      var scieloArtigos = (results[1] || []).slice(0, 2);
       artigos = pubmedArtigos.concat(scieloArtigos);
-      fdaDrug   = results[2] || null;
-      var rxDrug       = null;
-      var medlineItems = [];
-      var trials       = [];
+      fdaDrug = results[2] || null;
     }
 
     if (loaderText) loaderText.textContent = "Enzo está sintetizando";
@@ -960,43 +830,6 @@
             + (fdaDrug.indicacoes ? '<div class="ez-pubmed-item"><span style="color:#34d399">Indicações:</span> ' + fdaDrug.indicacoes + '</div>' : '')
             + (fdaDrug.contraindicacoes ? '<div class="ez-pubmed-item"><span style="color:#f87171">Contraindicações:</span> ' + fdaDrug.contraindicacoes + '</div>' : '')
             + '<div class="ez-pubmed-item"><a href="https://www.accessdata.fda.gov/scripts/cder/daf/" target="_blank">Ver bula completa no FDA ↗</a></div>'
-            + '</div>';
-        }
-
-        // Bloco RxNorm
-        if (rxDrug) {
-          html += '<div class="ez-pubmed" style="margin-top:8px;">'
-            + '<div class="ez-pubmed-label">💊 RxNorm — Classe Farmacológica</div>'
-            + '<div class="ez-pubmed-item"><strong style="color:#e2e8f0">' + rxDrug.nome + '</strong>'
-            + (rxDrug.classe ? ' · <span style="color:#34d399">' + rxDrug.classe + '</span>' : '')
-            + ' <a href="' + rxDrug.url + '" target="_blank" style="color:#2dd4bf;font-size:10px;margin-left:4px;">Ver RxNorm ↗</a></div>'
-            + '</div>';
-        }
-
-        // Bloco MedlinePlus
-        if (medlineItems.length > 0) {
-          html += '<div class="ez-pubmed" style="margin-top:8px;">'
-            + '<div class="ez-pubmed-label">📖 MedlinePlus — Referência Clínica</div>'
-            + medlineItems.map(function(m) {
-              return '<div class="ez-pubmed-item">'
-                + '<span style="color:#2dd4bf;font-size:9px;font-weight:700;margin-right:3px;">NIH</span>'
-                + (m.url ? '<a href="' + m.url + '" target="_blank">' + m.title.substring(0,70) + '</a>' : m.title.substring(0,70))
-                + '</div>';
-            }).join('')
-            + '</div>';
-        }
-
-        // Bloco ClinicalTrials
-        if (trials.length > 0) {
-          html += '<div class="ez-pubmed" style="margin-top:8px;">'
-            + '<div class="ez-pubmed-label">🔬 ClinicalTrials.gov — Ensaios Ativos</div>'
-            + trials.map(function(t) {
-              return '<div class="ez-pubmed-item">'
-                + '<span style="color:#f59e0b;font-size:9px;font-weight:700;margin-right:3px;">' + (t.phase||'Trial') + '</span>'
-                + '<a href="' + t.url + '" target="_blank">' + t.nctId + '</a>'
-                + ' — ' + t.title.substring(0,65) + '…'
-                + '</div>';
-            }).join('')
             + '</div>';
         }
 
