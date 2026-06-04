@@ -307,10 +307,10 @@ function renderAlunos(list){
       "<td style='"+ei.css+";font-size:12px;'>"+ei.str+"</td>"+
       "<td class='date-cell'>"+ll+"</td>"+
       "<td><div class='actions-cell'>"+
-        "<button class='action-btn cyan' onclick='openModal(""+a.id+"")'>&#9998;&#65039; Editar</button>"+
+        "<button class='action-btn cyan' data-id='"+a.id+"' data-act='edit'>&#9998;&#65039; Editar</button>"+
         (cnt>0
-          ?"<button class='action-btn red' onclick='quickRevoke(""+a.id+"",""+encodeURIComponent(a.email||"")+"")'>&#128683; Revogar</button>"
-          :"<button class='action-btn green' onclick='quickGrantAll(""+a.id+"",""+encodeURIComponent(a.email||"")+"")'>&#9989; Liberar tudo</button>")+
+          ?"<button class='action-btn red' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"'  data-act='revoke'>&#128683; Revogar</button>"
+          :"<button class='action-btn green' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"'  data-act='grant'>&#9989; Liberar tudo</button>")+
       "</div></td></tr>";
     cds+="<div class='aluno-card'>"+
       "<div class='ac-top'><div class='ac-email'>"+(a.email||"—")+(a.is_admin?" <span class='badge badge-yellow' style='font-size:9px;'>Admin</span>":"")+"</div><div>"+bdg+"</div></div>"+
@@ -318,13 +318,25 @@ function renderAlunos(list){
         (ei.str!=="—"?"<span style='color:"+(ei.color||"rgba(125,211,232,0.5)")+"'>&#8987; "+ei.str+"</span>":"")+
         "<span>&#128197; "+ll+"</span>"+
       "</div>"+
-      "<button class='ac-btn cyan' onclick='openModal(""+a.id+"")'>&#9998;&#65039; Editar acesso</button>"+
+      "<button class='ac-btn cyan' data-id='"+a.id+"' data-act='edit'>&#9998;&#65039; Editar acesso</button>"+
       (cnt>0
-        ?"<button class='ac-btn red' onclick='quickRevoke(""+a.id+"",""+encodeURIComponent(a.email||"")+"")'>&#128683; Revogar todos os acessos</button>"
-        :"<button class='ac-btn green' onclick='quickGrantAll(""+a.id+"",""+encodeURIComponent(a.email||"")+"")'>&#9989; Liberar todos os resumos</button>")+
+        ?"<button class='ac-btn red' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"'  data-act='revoke'>&#128683; Revogar todos os acessos</button>"
+        :"<button class='ac-btn green' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"'  data-act='grant'>&#9989; Liberar todos os resumos</button>")+
     "</div>";
   });
   tbody.innerHTML=rows;cards.innerHTML=cds;
+  function _act(e){
+    var b=e.target.closest("[data-act]");
+    if(!b)return;
+    var id=b.dataset.id||"", em=b.dataset.email||"", 
+        key=b.dataset.key||"", act=b.dataset.act;
+    if(act==="edit")openModal(id);
+    else if(act==="revoke")quickRevoke(id,em);
+    else if(act==="grant")quickGrantAll(id,em);
+    else if(act==="toggle")toggleResumo(key);
+    else if(act==="presente")togglePresente(key);
+  }
+  tbody.onclick=_act; cards.onclick=_act;
 }
 window.filterAlunos=function(){
   var s=document.getElementById("searchInput").value.toLowerCase();
@@ -410,8 +422,8 @@ function renderResumosGrid(){
   g.innerHTML=RESUMOS_COLS.map(function(r){
     var on=currentToggles[r.key],ip=pr.includes(r.key);
     return"<div style='display:flex;gap:4px;align-items:stretch;'>"+
-      "<div class='resumo-toggle "+(on?"on":"")+"' style='flex:1' onclick='toggleResumo(""+r.key+"")'>"+(on?"&#9989; ":"&#128274; ")+r.label+"</div>"+
-      (on?"<div title='Marcar como presente' style='padding:4px 8px;border-radius:10px;cursor:pointer;font-size:14px;border:1px solid rgba(251,191,36,"+(ip?"0.5":"0.15")+");background:rgba(251,191,36,"+(ip?"0.15":"0.04")+");display:flex;align-items:center;justify-content:center;' onclick='togglePresente(""+r.key+"")'>&#127873;</div>":"")+
+      "<div class='resumo-toggle "+(on?"on":"")+"' style='flex:1' data-key='"+r.key+"' data-act='toggle'>"+(on?"&#9989; ":"&#128274; ")+r.label+"</div>"+
+      (on?"<div title='Marcar como presente' style='padding:4px 8px;border-radius:10px;cursor:pointer;font-size:14px;border:1px solid rgba(251,191,36,"+(ip?"0.5":"0.15")+");background:rgba(251,191,36,"+(ip?"0.15":"0.04")+");display:flex;align-items:center;justify-content:center;' data-key='"+r.key+"' data-act='toggle'>&#127873;</div>":"")+
     "</div>";
   }).join("");
 }
