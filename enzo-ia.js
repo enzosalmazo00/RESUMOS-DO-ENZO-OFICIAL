@@ -641,7 +641,18 @@
 
     var isDragging = false;
     var hasMoved   = false;
-    var startX, startY, startRight, startBottom;
+    var startMouseX, startMouseY, startFabX, startFabY;
+    var fabW = 56, fabH = 56;
+
+    // Converte right/bottom para left/top para facilitar o drag
+    function getRightBottom() {
+      var r = parseFloat(fab.style.right)  || 20;
+      var b = parseFloat(fab.style.bottom) || 24;
+      return {
+        x: window.innerWidth  - r - fabW,
+        y: window.innerHeight - b - fabH
+      };
+    }
 
     // Restaura posição salva
     var saved = localStorage.getItem('ez-fab-pos');
@@ -650,8 +661,6 @@
         var pos = JSON.parse(saved);
         fab.style.right  = pos.right;
         fab.style.bottom = pos.bottom;
-        fab.style.left   = 'auto';
-        fab.style.top    = 'auto';
       } catch(e) {}
     }
 
@@ -665,10 +674,12 @@
       fab.style.animation  = 'none';
 
       var touch = e.touches ? e.touches[0] : e;
-      startX = touch.clientX;
-      startY = touch.clientY;
-      startRight  = parseInt(fab.style.right)  || 20;
-      startBottom = parseInt(fab.style.bottom) || 24;
+      startMouseX = touch.clientX;
+      startMouseY = touch.clientY;
+
+      var pos = getRightBottom();
+      startFabX = pos.x;
+      startFabY = pos.y;
 
       document.addEventListener('mousemove', onMove);
       document.addEventListener('touchmove', onMove, { passive: false });
@@ -681,13 +692,18 @@
       if (e.cancelable) e.preventDefault();
 
       var touch = e.touches ? e.touches[0] : e;
-      var dx = touch.clientX - startX;
-      var dy = touch.clientY - startY;
+      var dx = touch.clientX - startMouseX;
+      var dy = touch.clientY - startMouseY;
 
       if (Math.abs(dx) > 4 || Math.abs(dy) > 4) hasMoved = true;
 
-      var newRight  = Math.max(8, Math.min(window.innerWidth  - 60, startRight  + dx));
-      var newBottom = Math.max(8, Math.min(window.innerHeight - 60, startBottom - dy));
+      // Nova posição em left/top
+      var newX = Math.max(8, Math.min(window.innerWidth  - fabW - 8, startFabX + dx));
+      var newY = Math.max(8, Math.min(window.innerHeight - fabH - 8, startFabY + dy));
+
+      // Converte de volta para right/bottom
+      var newRight  = window.innerWidth  - newX - fabW;
+      var newBottom = window.innerHeight - newY - fabH;
 
       fab.style.right  = newRight  + 'px';
       fab.style.bottom = newBottom + 'px';
@@ -700,7 +716,7 @@
       }
     }
 
-    function onEnd(e) {
+    function onEnd() {
       if (!isDragging) return;
       isDragging = false;
       fab.style.transition = '';
@@ -738,10 +754,20 @@
     }, 500);
   });
 
-  // ── ENTER ─────────────────────────────────────────────────────────────────
-  document.addEventListener("DOMContentLoaded", function () {
+  // ── INIT IMEDIATO ─────────────────────────────────────────────────────────
+  // Constrói o widget assim que o script carrega (não espera DOMContentLoaded)
+  if (document.body) {
     buildHTML();
     initDraggableFab();
+  } else {
+    document.addEventListener("DOMContentLoaded", function () {
+      buildHTML();
+      initDraggableFab();
+    });
+  }
+
+  // ── ENTER ─────────────────────────────────────────────────────────────────
+  document.addEventListener("DOMContentLoaded", function () {
     var inputEl = document.getElementById("ez-input");
     if (inputEl) {
       inputEl.addEventListener("keypress", function (e) {
