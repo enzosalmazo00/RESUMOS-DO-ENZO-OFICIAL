@@ -60,8 +60,8 @@
       bottom: 24px;
       right: 20px;
       z-index: 9998;
-      width: 56px; height: 56px;
-      border-radius: 50%;
+      width: 52px; height: 52px;
+      border-radius: 16px;
       background: linear-gradient(135deg, #059669, #0d9488);
       border: none; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
@@ -686,8 +686,8 @@
 
       if (Math.abs(dx) > 4 || Math.abs(dy) > 4) hasMoved = true;
 
-      var newRight  = Math.max(8, Math.min(window.innerWidth  - 60, startRight  - dx));
-      var newBottom = Math.max(8, Math.min(window.innerHeight - 60, startBottom + dy));
+      var newRight  = Math.max(8, Math.min(window.innerWidth  - 60, startRight  + dx));
+      var newBottom = Math.max(8, Math.min(window.innerHeight - 60, startBottom - dy));
 
       fab.style.right  = newRight  + 'px';
       fab.style.bottom = newBottom + 'px';
