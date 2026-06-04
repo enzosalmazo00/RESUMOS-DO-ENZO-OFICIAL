@@ -411,7 +411,7 @@ function renderResumosGrid(){
     var on=currentToggles[r.key],ip=pr.includes(r.key);
     return"<div style='display:flex;gap:4px;align-items:stretch;'>"+
       "<div class='resumo-toggle "+(on?"on":"")+"' style='flex:1' data-key='"+r.key+"' data-act='toggle'>"+(on?"&#9989; ":"&#128274; ")+r.label+"</div>"+
-      (on?"<div title='Marcar como presente' style='padding:4px 8px;border-radius:10px;cursor:pointer;font-size:14px;border:1px solid rgba(251,191,36,"+(ip?"0.5":"0.15")+");background:rgba(251,191,36,"+(ip?"0.15":"0.04")+");display:flex;align-items:center;justify-content:center;' data-key='"+r.key+"' data-act='toggle'>&#127873;</div>":"")+
+      (on?"<div title='Marcar como presente' style='padding:4px 8px;border-radius:10px;cursor:pointer;font-size:14px;border:1px solid rgba(251,191,36,"+(ip?"0.5":"0.15")+");background:rgba(251,191,36,"+(ip?"0.15":"0.04")+");display:flex;align-items:center;justify-content:center;' data-key='"+r.key+"' data-act='presente'>&#127873;</div>":"")+
     "</div>";
   }).join("");
 }
