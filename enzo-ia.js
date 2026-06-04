@@ -928,14 +928,18 @@
     var msgs = historico.slice(0, -1).concat([{ role: "user", content: msgContexto }]);
 
     try {
+      var controller = new AbortController();
+      var timeoutId = setTimeout(function(){ controller.abort(); }, 20000);
       var res = await fetch(SUPABASE_URL + "/functions/v1/enzo-chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + SUPABASE_ANON_KEY
         },
-        body: JSON.stringify({ messages: msgs, texto: texto })
+        body: JSON.stringify({ messages: msgs, texto: texto }),
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
 
       var data = await res.json();
       loader.classList.remove("show");
