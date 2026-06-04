@@ -527,7 +527,7 @@
     </div>
 
     <!-- BANNER ENZO IA -->
-    <div onclick="document.getElementById('ez-fab') && document.getElementById('ez-fab').click()" style="
+    <div onclick="if(typeof ezToggle==='function'){ezToggle();}else{var f=document.getElementById('ez-fab');if(f)f.click();}" style="
       display:flex; align-items:center; gap:14px;
       margin-bottom:16px;
       padding:14px 18px;
@@ -1269,5 +1269,6 @@ document.addEventListener("authReady", async function(e) {
 })();
 </script>
 
+<script src="enzo-ia.js"></script>
 </body>
 </html>
