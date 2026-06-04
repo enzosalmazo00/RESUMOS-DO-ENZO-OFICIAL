@@ -57,7 +57,7 @@
     /* ── BOTÃO FLUTUANTE ── */
     #ez-fab {
       position: fixed;
-      bottom: 90px;
+      bottom: 24px;
       right: 20px;
       z-index: 9998;
       width: 52px; height: 52px;
@@ -99,11 +99,12 @@
     /* ── PAINEL CHAT ── */
     #ez-panel {
       position: fixed;
-      bottom: 155px;
+      bottom: 80px;
       right: 20px;
       z-index: 9997;
       width: 360px;
-      height: 520px;
+      height: min(520px, calc(100dvh - 100px));
+      max-height: calc(100dvh - 100px);
       display: flex;
       flex-direction: column;
       background: var(--ez-surface);
@@ -276,12 +277,24 @@
     }
 
     /* ── CHIPS ── */
-    #ez-chips {
+    #ez-chips-wrap {
       position: relative; z-index: 2;
+      flex-shrink: 0;
+    }
+    #ez-chips-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0;
+      width: 32px;
+      background: linear-gradient(to right, transparent, var(--ez-surface));
+      pointer-events: none;
+      border-radius: 0 0 0 0;
+    }
+    #ez-chips {
+      position: relative;
       display: flex; gap: 5px;
       overflow-x: auto; overflow-y: hidden;
-      padding: 10px 14px 0;
-      flex-shrink: 0;
+      padding: 10px 14px 8px;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
       overscroll-behavior-x: contain;
@@ -429,7 +442,7 @@
         </div>
       </div>
 
-      <div id="ez-chips">${chipsHTML}</div>
+      <div id="ez-chips-wrap"><div id="ez-chips">${chipsHTML}</div></div>
 
       <div id="ez-input-area">
         <div class="ez-input-wrap">
