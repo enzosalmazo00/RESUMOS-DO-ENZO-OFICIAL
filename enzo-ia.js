@@ -157,13 +157,12 @@
     }
     .ez-identity { display: flex; align-items: center; gap: 10px; }
     .ez-avatar {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: linear-gradient(135deg, #059669, #0d9488);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 13px; color: #fff;
-      box-shadow: 0 0 16px rgba(52,211,153,0.2);
+      width: 36px; height: 36px; border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 0 16px rgba(34,211,238,0.25);
       position: relative; flex-shrink: 0;
     }
+    .ez-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .ez-avatar::after {
       content: ''; position: absolute; bottom: -2px; right: -2px;
       width: 9px; height: 9px;
@@ -220,14 +219,11 @@
       to { opacity: 1; transform: translateY(0); }
     }
     .ez-msg-icon {
-      width: 26px; height: 26px; border-radius: 8px;
-      background: linear-gradient(135deg, #059669, #0d9488);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 9px; font-weight: 700; color: #fff;
-      flex-shrink: 0; margin-top: 2px;
-      box-shadow: 0 0 8px rgba(52,211,153,0.12);
-      font-family: 'Poppins', sans-serif;
+      width: 26px; height: 26px; border-radius: 50%;
+      overflow: hidden; flex-shrink: 0; margin-top: 2px;
+      box-shadow: 0 0 8px rgba(34,211,238,0.15);
     }
+    .ez-msg-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .ez-bubble {
       max-width: 84%; padding: 10px 13px;
       border-radius: 14px; font-size: 13px; line-height: 1.6;
@@ -413,7 +409,7 @@
     panel.innerHTML = `
       <div id="ez-header">
         <div class="ez-identity">
-          <div class="ez-avatar">Ez</div>
+          <div class="ez-avatar"><img src="logo-ia.png" alt="Enzo IA"></div>
           <div>
             <div class="ez-name">Enzo IA <span id="ez-header-nome" style="font-weight:400;font-size:11px;color:var(--ez-dim);"></span></div>
             <div class="ez-status" id="ez-status-bar">● Groq · Gemini · PubMed · SciELO · FDA</div>
@@ -429,7 +425,7 @@
 
       <div id="ez-chatbox">
         <div class="ez-msg enzo">
-          <div class="ez-msg-icon">Ez</div>
+          <div class="ez-msg-icon"><img src="logo-ia.png" alt="IA"></div>
           <div class="ez-bubble">
             <span id="ez-welcome-msg">Olá! Sou o <strong>Enzo IA</strong>, seu assistente de estudos médicos. 🩺<br><br>
             O que você precisa agora, Dr(a)?<br><br>
@@ -438,7 +434,7 @@
         </div>
         <div id="ez-dynamic"></div>
         <div id="ez-loader">
-          <div class="ez-msg-icon">Ez</div>
+          <div class="ez-msg-icon"><img src="logo-ia.png" alt="IA"></div>
           <div class="ez-loader-bubble">
             <span id="ez-loader-text">Consultando PubMed</span>
             <div class="ez-dots">
@@ -519,7 +515,7 @@
     div.className = "ez-msg " + (isUser ? "user" : "enzo");
     div.innerHTML = isUser
       ? `<div class="ez-bubble">${html}</div>`
-      : `<div class="ez-msg-icon">Ez</div><div class="ez-bubble">${html}</div>`;
+      : `<div class="ez-msg-icon"><img src="logo-ia.png" alt="IA"></div><div class="ez-bubble">${html}</div>`;
     dyn.appendChild(div);
     ezScroll();
   }
