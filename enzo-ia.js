@@ -70,23 +70,23 @@
       bottom: 24px;
       right: 20px;
       z-index: 9998;
-      width: 52px; height: 52px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #059669, #0d9488);
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: transparent;
       border: none; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 24px rgba(52,211,153,0.35), 0 0 0 0 rgba(52,211,153,0.4);
+      box-shadow: 0 4px 24px rgba(34,211,238,0.4), 0 0 0 0 rgba(34,211,238,0.3);
       transition: transform 0.2s, box-shadow 0.2s;
       animation: ez-fab-pulse 3s ease infinite;
-      font-family: 'Poppins', 'Sora', sans-serif;
+      padding: 0; overflow: hidden;
     }
-    #ez-fab:hover { transform: scale(1.08); box-shadow: 0 8px 32px rgba(52,211,153,0.45); animation: none; }
+    #ez-fab:hover { transform: scale(1.08); box-shadow: 0 8px 32px rgba(34,211,238,0.55); animation: none; }
     #ez-fab:active { transform: scale(0.96); }
     @keyframes ez-fab-pulse {
-      0%, 100% { box-shadow: 0 4px 24px rgba(52,211,153,0.35), 0 0 0 0 rgba(52,211,153,0.3); }
-      50% { box-shadow: 0 4px 24px rgba(52,211,153,0.35), 0 0 0 8px rgba(52,211,153,0); }
+      0%, 100% { box-shadow: 0 4px 24px rgba(34,211,238,0.35), 0 0 0 0 rgba(34,211,238,0.2); }
+      50% { box-shadow: 0 4px 24px rgba(34,211,238,0.35), 0 0 0 8px rgba(34,211,238,0); }
     }
-    #ez-fab-icon-open  { width: 22px; height: 22px; transition: opacity 0.2s, transform 0.2s; }
+    #ez-fab-icon-open  { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; transition: opacity 0.2s, transform 0.2s; display: block; }
     #ez-fab-icon-close { width: 20px; height: 20px; transition: opacity 0.2s, transform 0.2s; position: absolute; opacity: 0; transform: rotate(-90deg); }
     #ez-fab.open #ez-fab-icon-open  { opacity: 0; transform: rotate(90deg); }
     #ez-fab.open #ez-fab-icon-close { opacity: 1; transform: rotate(0deg); }
@@ -385,7 +385,7 @@
     fab.title = "Enzo IA — Assistente de Estudos";
     fab.innerHTML = `
       <span id="ez-fab-badge"></span>
-      <span id="ez-fab-icon-open" style="font-size:14px;font-weight:800;color:#fff;letter-spacing:-0.5px;font-family:'Poppins',sans-serif;line-height:1;">IA</span>
+      <img id="ez-fab-icon-open" src="logo-ia.png" alt="Enzo IA">
       <svg id="ez-fab-icon-close" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
         <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
       </svg>
