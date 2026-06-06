@@ -460,11 +460,6 @@
       font-size:20px; font-weight:700; color:#e2f8fc;
       margin-bottom:20px; display:flex; align-items:center; gap:10px; letter-spacing:-0.5px;
     }
-    .resumos-grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fill, minmax(200px,1fr));
-      gap:16px;
-    }
 
     /* ── BOAS VINDAS ── */
     .welcome-box {
@@ -1226,19 +1221,20 @@ function renderMateriaInterna(key) {
 
   if (acP2) {
     var expiryHtml = diasP2 !== null
-      ? '<div style="font-size:11px;color:' + (diasP2 <= 7 ? '#fbbf24' : 'rgba(125,211,232,0.4)') + ';margin-top:6px;">' +
+      ? '<div style="font-size:10px;color:' + (diasP2 <= 7 ? '#fbbf24' : 'rgba(125,211,232,0.4)') + ';margin-top:6px;">' +
           (diasP2 <= 7 ? '⚠️ Expira em ' : '⏱️ ') + diasP2 + ' dia' + (diasP2===1?'':'s') + (diasP2 > 7 ? ' restantes' : '') +
         '</div>'
-      : '<div style="font-size:11px;color:rgba(125,211,232,0.4);margin-top:6px;">✓ Acesso permanente</div>';
+      : '';
+
+    var presentes = profile.resumos_presente || [];
+    var ehPresente = presentes.includes(m.key + "_p2");
 
     var p2 = document.createElement("a");
     p2.className = "resumo-card unlocked";
     p2.href = m.file_p2;
-    var presentes = profile.resumos_presente || [];
-    if (presentes.includes(m.key + "_p2")) {
-      p2.innerHTML = '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>';
-    }
-    p2.innerHTML +=
+    p2.style.position = "relative";
+    p2.innerHTML =
+      (ehPresente ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>' : '') +
       '<span class="card-emoji">' + m.emoji + '</span>' +
       '<div class="card-title">' + m.label + ' — P2</div>' +
       '<div class="card-desc">' + m.desc + '</div>' + expiryHtml;
