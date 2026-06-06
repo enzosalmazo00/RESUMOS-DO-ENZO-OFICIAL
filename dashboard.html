@@ -700,6 +700,10 @@ var profile     = null;
 var pollingTimer = null;
 var currentPaymentId = null;
 
+// ── [M1] Cache de acessos (carregado na init) ──────────────────────────────────
+// Estrutura: { "resumo_name": { expira_em: "2026-07-23", ... } }
+var acessosCache = {};
+
 // ── Elementos ─────────────────────────────────────────────────────────────────
 var statusArea   = document.getElementById("statusArea");
 var mainContent  = document.getElementById("mainContent");
@@ -725,8 +729,22 @@ function colKey(materia, tipo) {
 function hasAccess(materia, tipo) {
   if (!profile) return false;
   var col = colKey(materia, tipo);
+  
+  // ── [M2] DUAL-MODE: Tenta acessos PRIMEIRO ────────────────────────────────
+  // Verifica se tem registro em acessos cache
+  var chaveAcesso = col;  // ex: "bioquimica_p2"
+  var acesso = acessosCache[chaveAcesso];
+  
+  if (acesso) {
+    // Encontrou em acessos — verifica expiração
+    if (!acesso.expira_em) return true;  // Sem expiração = acesso permanente
+    return new Date(acesso.expira_em) > new Date();  // Tem expiração — verifica
+  }
+  
+  // ── Fallback: Sistema antigo (profiles) ────────────────────────────────────
   if (!profile[col] && !profile["pacote_" + tipo]) return false;
-  // Verifica expiração individual do resumo
+  
+  // Verifica expiração individual do resumo (profiles)
   var expiraCol = col + "_expira";
   var expiraPacote = "pacote_" + tipo + "_expira";
   var expira = profile[expiraCol] || profile[expiraPacote] || profile.acesso_expira_em;
@@ -737,6 +755,17 @@ function hasAccess(materia, tipo) {
 function daysLeftForResumo(materia, tipo) {
   if (!profile) return null;
   var col = colKey(materia, tipo);
+  
+  // ── [M2] DUAL-MODE: Tenta acessos PRIMEIRO ────────────────────────────────
+  var chaveAcesso = col;
+  var acesso = acessosCache[chaveAcesso];
+  
+  if (acesso && acesso.expira_em) {
+    var diff = new Date(acesso.expira_em) - new Date();
+    return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
+  }
+  
+  // ── Fallback: Sistema antigo (profiles) ────────────────────────────────────
   var expiraCol = col + "_expira";
   var expiraPacote = "pacote_" + tipo + "_expira";
   var expira = profile[expiraCol] || profile[expiraPacote] || profile.acesso_expira_em;
@@ -1251,6 +1280,26 @@ document.addEventListener("authReady", async function(e) {
     profile = res.data || {};
   } catch(err) {
     profile = {};
+  }
+
+  // ── [M3] Carregar acessos da tabela acessos ────────────────────────────────
+  try {
+    var acessosRes = await window.authClient
+      .from("acessos")
+      .select("resumo,expira_em")
+      .eq("user_id", session.user.id);
+    
+    if (acessosRes.data && Array.isArray(acessosRes.data)) {
+      // Monta cache: { "bioquimica_p2": { expira_em: "..." }, ... }
+      acessosRes.data.forEach(function(acesso) {
+        acessosCache[acesso.resumo] = {
+          expira_em: acesso.expira_em
+        };
+      });
+    }
+  } catch(err) {
+    // Se der erro ao carregar acessos, continua mesmo assim (fallback pra profiles)
+    console.warn("[dashboard] Erro ao carregar acessos:", err);
   }
 
   // Mostrar botão admin só para o admin
