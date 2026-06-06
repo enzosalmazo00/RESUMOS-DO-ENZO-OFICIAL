@@ -430,9 +430,18 @@ window.closeModal=function(){document.getElementById("modalAluno").classList.rem
 window.saveAluno=async function(){
   if(!currentAluno)return;
   var btn=document.getElementById("saveBtn");btn.disabled=true;btn.textContent="Salvando...";
-  var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=!!currentToggles[r.key];});
+  var u={};
   var ev=document.getElementById("expiryInput").value;
-  u.acesso_expira_em=ev?new Date(ev).toISOString():null;
+  var expiraIso=ev?new Date(ev).toISOString():null;
+  u.acesso_expira_em=expiraIso;
+  RESUMOS_COLS.forEach(function(r){
+    u[r.key]=!!currentToggles[r.key];
+    if(!!currentToggles[r.key]&&expiraIso){
+      u[r.key+"_expira"]=expiraIso;
+    }else if(!currentToggles[r.key]){
+      u[r.key+"_expira"]=null;
+    }
+  });
   u.resumos_presente=currentAluno.resumos_presente||[];
   var res=await client.from("profiles").update(u).eq("id",currentAluno.id);
   if(res.error)showToast("Erro ao salvar!","error");
@@ -449,7 +458,7 @@ window.revokeAll=async function(){
 window.quickRevoke=async function(id,emailEnc){
   var email=decodeURIComponent(emailEnc);
   if(!confirm("Revogar todos os acessos de "+email+"?"))return;
-  var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=false;});u.acesso_expira_em=null;
+  var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=false;u[r.key+"_expira"]=null;});u.acesso_expira_em=null;
   var res=await client.from("profiles").update(u).eq("id",id);
   if(res.error)showToast("Erro!","error");
   else{showToast("&#9989; Acessos revogados!","success");await loadAlunos();}
