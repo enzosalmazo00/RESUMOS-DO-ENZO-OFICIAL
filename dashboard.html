@@ -1025,7 +1025,7 @@
       <div class="sk-empty-sub">Seu card é gerado automaticamente com seus dados de estudo</div>
       <button class="sk-generate-btn" onclick="skGenerate()">
         <span class="sk-gen-spark">⚡</span>
-        Gerar meu card do dia
+        Gerar card aleatório
       </button>
       <div class="sk-empty-meta" id="sk-empty-meta"></div>
     </div>
@@ -1042,8 +1042,8 @@
         <button class="sk-btn-secondary" onclick="skShare()" id="sk-share-btn">
           📤 Compartilhar
         </button>
-        <button class="sk-btn-ghost" onclick="skRegenerate()" title="Gerar de novo com outra frase">
-          ↻ Outra frase
+        <button class="sk-btn-ghost" onclick="skRegenerate()" title="Sortear outro visual">
+          ↻ Outro visual
         </button>
       </div>
       <div class="sk-result-meta">
@@ -1240,18 +1240,25 @@ window.switchTab = function(tab) {
     return { cnt:cnt, best:best };
   }
 
-  // ── Tiers por progressão ───────────────────────────────────────
-  // 1-3   → fogo      (Iniciante)
-  // 4-7   → aurora    (Constante)
-  // 8-14  → cosmos    (Dedicado)
-  // 15-29 → matrix    (Veterano)
-  // 30+   → premium   (Lendário)
+  // ── Tiers por progressão (label do streak — não trava mais o tema) ─────
+  // Tema agora é RANDOMIZADO a cada clique para variar visual entre cards.
+  // O label do tier continua sendo função do streak para gamificação no HERO.
   function skTierFor(streak){
-    if (streak >= 30) return { tema:"premium", label:"Lendário",  icon:"👑" };
-    if (streak >= 15) return { tema:"matrix",  label:"Veterano",  icon:"💻" };
-    if (streak >= 8)  return { tema:"cosmos",  label:"Dedicado",  icon:"🌌" };
-    if (streak >= 4)  return { tema:"aurora",  label:"Constante", icon:"✨" };
-    return                  { tema:"fogo",    label:"Iniciante", icon:"🔥" };
+    if (streak >= 30) return { label:"Lendário"  };
+    if (streak >= 15) return { label:"Veterano"  };
+    if (streak >= 8)  return { label:"Dedicado"  };
+    if (streak >= 4)  return { label:"Constante" };
+    return                  { label:"Iniciante" };
+  }
+
+  // Sorteia tema aleatório, evitando repetir o último
+  var SK_TEMAS = ["fogo", "aurora", "cosmos", "matrix", "premium"];
+  var skLastTema = null;
+  function skRandomTema(){
+    var avail = SK_TEMAS.filter(function(t){ return t !== skLastTema; });
+    var pick = avail[Math.floor(Math.random() * avail.length)];
+    skLastTema = pick;
+    return pick;
   }
 
   // ── Tempo estudado hoje (lê do Supabase) ───────────────────────
@@ -1329,9 +1336,16 @@ window.switchTab = function(tab) {
     "Hoje você estuda. Amanhã você diagnostica."
   ];
   var skFI = Math.floor(Math.random()*SK_FR.length);
+  var skFraseHistory = []; // últimas frases usadas (evita repetir)
   function skNextFraseIndex(){
-    var n; do { n = Math.floor(Math.random()*SK_FR.length); } while (n === skFI && SK_FR.length > 1);
+    var attempts = 0, n;
+    do {
+      n = Math.floor(Math.random() * SK_FR.length);
+      attempts++;
+    } while ((n === skFI || skFraseHistory.indexOf(n) !== -1) && attempts < 30 && SK_FR.length > 4);
     skFI = n;
+    skFraseHistory.push(n);
+    if (skFraseHistory.length > 5) skFraseHistory.shift(); // mantém só as 5 últimas
     return SK_FR[skFI];
   }
   function skCurrentFrase(){ return SK_FR[skFI]; }
@@ -1419,7 +1433,11 @@ window.switchTab = function(tab) {
     }
     skCX.fillText(line.trim(),cx,cy);
   }
-  function skAbs(v){return Math.abs((Math.sin(v)*43758.5453)%1);}
+  function skAbs(v){return Math.abs((Math.sin(v + skVariantSeed * 0.0001)*43758.5453)%1);}
+  // PRNG simples baseado no seed (para variações de layout repetíveis na mesma geração)
+  function skRand(i){
+    return Math.abs((Math.sin((i + skVariantSeed) * 12.9898) * 43758.5453) % 1);
+  }
   function skGlow(gx,gy,r,c){var g=skCX.createRadialGradient(gx,gy,0,gx,gy,r);g.addColorStop(0,c);g.addColorStop(1,"transparent");skCX.fillStyle=g;skCX.fillRect(0,0,SK_W,SK_H);}
 
   // ── BG effects ─────────────────────────────────────────────────
@@ -1574,7 +1592,41 @@ window.switchTab = function(tab) {
     T.bg.forEach(function(c,i){bg.addColorStop(i/2,c);});
     skCX.fillStyle=bg;skCX.fillRect(0,0,W,H);
     T.glows.forEach(function(g){skGlow(g[0],g[1],g[2],g[3]);});
+
+    // ⚡ VARIAÇÃO POR CLIQUE: glows extras em posições randômicas (cor temática)
+    var extraGlowColor = T.glows[0][3];
+    var nExtra = 2 + Math.floor(skRand(1) * 3); // 2-4 glows extras
+    for (var eg = 0; eg < nExtra; eg++) {
+      var egx = skRand(eg*7 + 1) * W;
+      var egy = skRand(eg*7 + 2) * H;
+      var egr = 180 + skRand(eg*7 + 3) * 320;
+      skGlow(egx, egy, egr, extraGlowColor);
+    }
+
     ({fire:skBGFire,stars:skBGStars,matrix_clean:skBGMatrixClean,aurora:skBGAurora,gold:skBGGold})[T.bgfn]();
+
+    // ⚡ VARIAÇÃO: sparkles extras (raios de luz pequenos) espalhados
+    var nSparkles = 8 + Math.floor(skRand(20) * 12); // 8-20 sparkles
+    for (var s = 0; s < nSparkles; s++) {
+      var sx = skRand(s*11 + 100) * W;
+      var sy = skRand(s*11 + 101) * H;
+      // Evita zona central do streak/clock (que é o foco)
+      if (sx > W*0.25 && sx < W*0.75 && sy > 400 && sy < 1400) continue;
+      var sSize = 1 + skRand(s*11 + 102) * 3;
+      var sOp = 0.3 + skRand(s*11 + 103) * 0.5;
+      skCX.fillStyle = "rgba(255,255,255," + sOp.toFixed(2) + ")";
+      // Estrela de 4 pontas
+      skCX.beginPath();
+      skCX.moveTo(sx, sy - sSize*2);
+      skCX.lineTo(sx + sSize*0.3, sy - sSize*0.3);
+      skCX.lineTo(sx + sSize*2, sy);
+      skCX.lineTo(sx + sSize*0.3, sy + sSize*0.3);
+      skCX.lineTo(sx, sy + sSize*2);
+      skCX.lineTo(sx - sSize*0.3, sy + sSize*0.3);
+      skCX.lineTo(sx - sSize*2, sy);
+      skCX.lineTo(sx - sSize*0.3, sy - sSize*0.3);
+      skCX.closePath(); skCX.fill();
+    }
 
     // Top bar
     skCX.fillStyle="rgba(255,255,255,0.03)";skCX.fillRect(0,0,W,122);
@@ -1597,12 +1649,34 @@ window.switchTab = function(tab) {
     skCX.fillStyle=ug;skCX.fillRect(W/2-nw/2,272,nw,3);
 
     // Icon (PNG personalizado com fallback para emoji)
+    // ⚡ VARIAÇÃO: tamanho/rotação/glow do ícone mudam a cada clique
     var iconImg = SK_ICONS[opts.tema];
     if (iconImg && iconImg.complete && iconImg.naturalWidth > 0) {
-      var iconSize = 200;
+      var iconSizeBase = 200;
+      var iconSize = iconSizeBase + Math.floor(skRand(50) * 30); // 200-230
       var iconX = W/2 - iconSize/2;
-      var iconY = 320;
-      skCX.drawImage(iconImg, iconX, iconY, iconSize, iconSize);
+      var iconY = 320 - (iconSize - iconSizeBase)/2;
+      var iconRot = (skRand(51) - 0.5) * 0.12; // -0.06 a +0.06 rad (~±3.5°)
+
+      // Halo glow atrás do ícone
+      skCX.save();
+      var haloR = iconSize * 0.7;
+      var halo = skCX.createRadialGradient(W/2, iconY + iconSize/2, 0, W/2, iconY + iconSize/2, haloR);
+      halo.addColorStop(0, T.a1 + "44");
+      halo.addColorStop(0.5, T.a1 + "22");
+      halo.addColorStop(1, "transparent");
+      skCX.fillStyle = halo;
+      skCX.beginPath();
+      skCX.arc(W/2, iconY + iconSize/2, haloR, 0, Math.PI*2);
+      skCX.fill();
+      skCX.restore();
+
+      // Desenha o ícone com leve rotação
+      skCX.save();
+      skCX.translate(W/2, iconY + iconSize/2);
+      skCX.rotate(iconRot);
+      skCX.drawImage(iconImg, -iconSize/2, -iconSize/2, iconSize, iconSize);
+      skCX.restore();
     } else {
       // Fallback: emoji caso a imagem ainda não tenha carregado
       skCX.font="160px serif"; skCX.textAlign="center"; skCX.textBaseline="middle";
@@ -1673,6 +1747,7 @@ window.switchTab = function(tab) {
 
   // ── Estado e dados ─────────────────────────────────────────────
   var skState = { streak:1, best:1, tier:null, tema:"fogo", name:"", subj:"", hrs:0, mins:0 };
+  var skVariantSeed = Date.now();  // Muda a cada clique em "Gerar" — randomiza visualmente o card
 
   // Frase determinística por usuário+dia (hash simples)
   function skHashStr(s){
@@ -1718,8 +1793,11 @@ window.switchTab = function(tab) {
       }
     } catch(e) { best = streak; }
 
-    // 3. Tier baseado no streak real
+    // 3. Tier (label) baseado no streak real - usado no HERO
     var t = skTierFor(streak);
+
+    // ⚡ TEMA: agora é SORTEADO entre os 5 a cada clique (não trava no streak)
+    var temaSorteado = skRandomTema();
 
     // 4. Minutos: do Supabase
     var minutos = (todayData && todayData.minutos) || 0;
@@ -1740,7 +1818,7 @@ window.switchTab = function(tab) {
     }
 
     skState = {
-      streak: streak, best: best, tier: t, tema: t.tema,
+      streak: streak, best: best, tier: t, tema: temaSorteado,
       name: name, subj: subj, hrs: hrs, mins: mins,
       phrase: SK_FR[skFI],
       hasData: !!(todayData && todayData.minutos > 0)
@@ -1797,8 +1875,11 @@ window.switchTab = function(tab) {
 
     if(n) n.textContent = streak;
     if(b) b.textContent = best;
-    if(ti && SK_TM[t.tema] && SK_TM[t.tema].iconImg) {
-      ti.src = SK_TM[t.tema].iconImg;
+    // Mapeamento tier → ícone do HERO (badge de progressão)
+    var tierToTema = { "Iniciante":"fogo", "Constante":"aurora", "Dedicado":"cosmos", "Veterano":"matrix", "Lendário":"premium" };
+    var tierTema = tierToTema[t.label] || "fogo";
+    if(ti && SK_TM[tierTema] && SK_TM[tierTema].iconImg) {
+      ti.src = SK_TM[tierTema].iconImg;
       ti.style.display = "";
       if (tiFb) tiFb.style.display = "none";
     }
@@ -1810,7 +1891,7 @@ window.switchTab = function(tab) {
       else if (streak < 30) h2.textContent = "Você está entre os melhores";
       else h2.textContent = "Você é uma lenda viva 👑";
     }
-    if(sub) sub.textContent = "Seu tier atual: " + t.label + " — desbloqueado pelo seu streak";
+    if(sub) sub.textContent = "Seu tier atual: " + t.label + " — cada card gerado vem em um visual diferente";
 
     // Estado: precisa estudar antes de gerar
     if (minutos < 5) {
@@ -1821,7 +1902,7 @@ window.switchTab = function(tab) {
         genBtn.style.cursor = "not-allowed";
       }
     } else {
-      if (meta) meta.innerHTML = "Hoje você estudou <strong style='color:#22d3ee'>"+hrs+"h "+(mins<10?"0":"")+mins+"min</strong> · Tema desbloqueado: <strong style='color:#22d3ee'>"+t.label+"</strong>";
+      if (meta) meta.innerHTML = "Hoje você estudou <strong style='color:#22d3ee'>"+hrs+"h "+(mins<10?"0":"")+mins+"min</strong> · <strong style='color:#22d3ee'>Cada clique gera um visual diferente!</strong>";
       if (genBtn) {
         genBtn.disabled = false;
         genBtn.style.opacity = "";
@@ -1848,6 +1929,10 @@ window.switchTab = function(tab) {
       btn.disabled = true;
       btn.innerHTML = '<span class="sk-gen-spark">⏳</span> Carregando seus dados...';
     }
+
+    // ⚡ A CADA CLIQUE: sorteia nova frase + novo seed visual
+    skNextFraseIndex();
+    skVariantSeed = Date.now() + Math.random() * 100000;
 
     var opts = await skBuildOpts();
 
@@ -1877,8 +1962,9 @@ window.switchTab = function(tab) {
     // Meta do resultado
     var rt = document.getElementById("sk-result-tier");
     if(rt) {
+      var temaLabel = SK_TM[opts.tema] ? SK_TM[opts.tema].label : "";
       var tierImgTag = '<img src="'+SK_TM[opts.tema].iconImg+'" style="width:18px;height:18px;vertical-align:middle;margin-right:4px;object-fit:contain" alt="">';
-      rt.innerHTML = "Tema " + tierImgTag + "<strong>" + opts.tier.label +
+      rt.innerHTML = "Visual " + tierImgTag + "<strong>" + temaLabel +
         "</strong> · Streak de <strong>" + opts.streak + " dia"+(opts.streak===1?"":"s")+"</strong>" +
         " · <strong>" + opts.hrs + "h " + (opts.mins<10?"0":"") + opts.mins + "min</strong> hoje";
     }
@@ -1887,6 +1973,7 @@ window.switchTab = function(tab) {
   // ── Regenerar com outra frase ──────────────────────────────────
   window.skRegenerate = async function(){
     skNextFraseIndex();
+    skVariantSeed = Date.now() + Math.random() * 100000;
     var opts = await skBuildOpts();
     skRender(opts);
   };
