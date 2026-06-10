@@ -656,6 +656,14 @@
       -webkit-background-clip:text; -webkit-text-fill-color:transparent;
       line-height:1; margin-bottom:4px;
     }
+    .sk-hero-stat-icon {
+      display:flex; align-items:center; justify-content:center;
+      height:44px; margin-bottom:2px;
+    }
+    .sk-hero-stat-icon img {
+      width:42px; height:42px; object-fit:contain;
+      filter: drop-shadow(0 4px 12px rgba(34,211,238,0.25));
+    }
     .sk-hero-stat-lbl {
       font-size:10px; color:rgba(125,211,232,0.5);
       text-transform:uppercase; letter-spacing:0.08em;
@@ -1010,7 +1018,10 @@
         </div>
         <div class="sk-hero-divider"></div>
         <div class="sk-hero-stat">
-          <div class="sk-hero-stat-num" id="sk-tier-icon">🔥</div>
+          <div class="sk-hero-stat-icon">
+            <img id="sk-tier-icon" src="icons/icon-iniciante.png" alt="Tier" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';">
+            <span id="sk-tier-icon-fallback" style="display:none;font-size:32px">🔥</span>
+          </div>
           <div class="sk-hero-stat-lbl" id="sk-tier-lbl">Iniciante</div>
         </div>
       </div>
@@ -1345,7 +1356,7 @@ window.switchTab = function(tab) {
       brand:"rgba(255,255,255,0.42)",
       ck:"classic", cf:"#1c0a04", cb1:"#f97316", cb2:"#ef4444",
       ch:"#fff", cm:"#fbbf24", cs:"#ef4444", cn:"rgba(249,115,22,0.92)",
-      icon:"🔥", bgfn:"fire", label:"Iniciante"
+      icon:"🔥", iconImg:"icons/icon-iniciante.png", bgfn:"fire", label:"Iniciante"
     },
     aurora: {
       bg:["#030816","#050f1a","#030c14"],
@@ -1356,7 +1367,7 @@ window.switchTab = function(tab) {
       brand:"rgba(255,255,255,0.42)",
       ck:"minimal", cf:"transparent", cb1:"#22d3ee", cb2:"#a78bfa",
       ch:"#fff", cm:"#22d3ee", cs:"#a78bfa", cn:"rgba(34,211,238,0.8)",
-      icon:"✨", bgfn:"aurora", label:"Constante"
+      icon:"✨", iconImg:"icons/icon-constante.png", bgfn:"aurora", label:"Constante"
     },
     cosmos: {
       bg:["#030014","#0d0628","#060020"],
@@ -1367,7 +1378,7 @@ window.switchTab = function(tab) {
       brand:"rgba(255,255,255,0.42)",
       ck:"classic", cf:"#0d0628", cb1:"#8b5cf6", cb2:"#6366f1",
       ch:"#fff", cm:"#a78bfa", cs:"#818cf8", cn:"rgba(139,92,246,0.92)",
-      icon:"✦", bgfn:"stars", label:"Dedicado"
+      icon:"✦", iconImg:"icons/icon-dedicado.png", bgfn:"stars", label:"Dedicado"
     },
     matrix: {
       bg:["#000000","#011003","#000800"],
@@ -1378,7 +1389,7 @@ window.switchTab = function(tab) {
       brand:"rgba(74,222,128,0.55)",
       ck:"digital", cf:"#001a05", cb1:"#22c55e", cb2:"#16a34a",
       ch:"#22c55e", cm:"#4ade80", cs:"#86efac", cn:"#22c55e",
-      icon:"»", bgfn:"matrix_clean", label:"Veterano"
+      icon:"»", iconImg:"icons/icon-veterano.png", bgfn:"matrix_clean", label:"Veterano"
     },
     premium: {
       bg:["#060400","#120c00","#0c0800"],
@@ -1389,9 +1400,18 @@ window.switchTab = function(tab) {
       brand:"rgba(253,230,138,0.52)",
       ck:"roman", cf:"#0c0800", cb1:"#d97706", cb2:"#fbbf24",
       ch:"#fde68a", cm:"#d97706", cs:"#fbbf24", cn:"rgba(217,119,6,0.92)",
-      icon:"♛", bgfn:"gold", label:"Lendário"
+      icon:"♛", iconImg:"icons/icon-lendario.png", bgfn:"gold", label:"Lendário"
     }
   };
+
+  // Pre-carrega imagens dos ícones para uso no canvas
+  var SK_ICONS = {};
+  Object.keys(SK_TM).forEach(function(k){
+    var img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = SK_TM[k].iconImg;
+    SK_ICONS[k] = img;
+  });
 
   // ── Helpers canvas ─────────────────────────────────────────────
   function skRR(x,y,w,h,r){
@@ -1585,12 +1605,18 @@ window.switchTab = function(tab) {
     ug.addColorStop(0,"transparent");ug.addColorStop(0.5,T.a1);ug.addColorStop(1,"transparent");
     skCX.fillStyle=ug;skCX.fillRect(W/2-nw/2,272,nw,3);
 
-    // Icon
-    if(T.bgfn==="matrix_clean"){
-      skCX.font="700 52px 'Courier New',Courier,monospace";skCX.fillStyle=T.a1;skCX.textAlign="center";
-      skCX.fillText("[ STREAK ]",W/2,410);
+    // Icon (PNG personalizado com fallback para emoji)
+    var iconImg = SK_ICONS[opts.tema];
+    if (iconImg && iconImg.complete && iconImg.naturalWidth > 0) {
+      var iconSize = 200;
+      var iconX = W/2 - iconSize/2;
+      var iconY = 320;
+      skCX.drawImage(iconImg, iconX, iconY, iconSize, iconSize);
     } else {
-      skCX.font="100px serif";skCX.textAlign="center";skCX.fillText(T.icon,W/2,448);
+      // Fallback: emoji caso a imagem ainda não tenha carregado
+      skCX.font="160px serif"; skCX.textAlign="center"; skCX.textBaseline="middle";
+      skCX.fillText(T.icon, W/2, 420);
+      skCX.textBaseline="alphabetic";
     }
 
     // Streak number
@@ -1771,6 +1797,7 @@ window.switchTab = function(tab) {
     var n = document.getElementById("sk-num");
     var b = document.getElementById("sk-best");
     var ti = document.getElementById("sk-tier-icon");
+    var tiFb = document.getElementById("sk-tier-icon-fallback");
     var tl = document.getElementById("sk-tier-lbl");
     var h2 = document.getElementById("sk-hero-h2");
     var sub = document.getElementById("sk-hero-sub");
@@ -1779,7 +1806,11 @@ window.switchTab = function(tab) {
 
     if(n) n.textContent = streak;
     if(b) b.textContent = best;
-    if(ti) ti.textContent = t.icon;
+    if(ti && SK_TM[t.tema] && SK_TM[t.tema].iconImg) {
+      ti.src = SK_TM[t.tema].iconImg;
+      ti.style.display = "";
+      if (tiFb) tiFb.style.display = "none";
+    }
     if(tl) tl.textContent = t.label;
     if(h2) {
       if (streak === 1) h2.textContent = "Sua jornada começa hoje";
@@ -1788,7 +1819,7 @@ window.switchTab = function(tab) {
       else if (streak < 30) h2.textContent = "Você está entre os melhores";
       else h2.textContent = "Você é uma lenda viva 👑";
     }
-    if(sub) sub.textContent = "Tema atual: " + t.icon + " " + t.label + " — desbloqueado pelo seu streak";
+    if(sub) sub.textContent = "Seu tier atual: " + t.label + " — desbloqueado pelo seu streak";
 
     // Estado: precisa estudar antes de gerar
     if (minutos < 5) {
@@ -1855,7 +1886,8 @@ window.switchTab = function(tab) {
     // Meta do resultado
     var rt = document.getElementById("sk-result-tier");
     if(rt) {
-      rt.innerHTML = "Tema <strong>" + opts.tier.icon + " " + opts.tier.label +
+      var tierImgTag = '<img src="'+SK_TM[opts.tema].iconImg+'" style="width:18px;height:18px;vertical-align:middle;margin-right:4px;object-fit:contain" alt="">';
+      rt.innerHTML = "Tema " + tierImgTag + "<strong>" + opts.tier.label +
         "</strong> · Streak de <strong>" + opts.streak + " dia"+(opts.streak===1?"":"s")+"</strong>" +
         " · <strong>" + opts.hrs + "h " + (opts.mins<10?"0":"") + opts.mins + "min</strong> hoje";
     }
