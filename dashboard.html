@@ -635,10 +635,11 @@
 
     /* HERO */
     .sk-hero {
-      display:flex; align-items:center; justify-content:center;
+      display:flex; align-items:center; justify-content:space-between;
       gap:20px; padding:22px 26px; border-radius:18px;
       background:linear-gradient(135deg, rgba(34,211,238,0.08), rgba(99,102,241,0.04));
       border:1px solid rgba(34,211,238,0.15);
+      flex-wrap:wrap;
     }
     .sk-hero-eyebrow {
       font-size:10px; font-weight:700; letter-spacing:0.18em;
@@ -982,20 +983,6 @@
         </ul>
       </div>
     </div>
-
-      <!-- TERMOS -->
-      <div class="store-terms">
-        <div class="store-terms-title">⚠️ Condições de Acesso</div>
-        <ul>
-          <li>💰 Valores <strong>não reembolsáveis</strong> após liberação do acesso.</li>
-          <li>⏱️ Acesso disponível por <strong>50 dias</strong> a partir da data do pagamento.</li>
-          <li>📚 Resumos de P1/P2 <strong>não incluem</strong> conteúdo das provas finais — vendidos separadamente.</li>
-          <li>🔒 Conta pessoal e intransferível — <strong>1 dispositivo ativo por vez</strong>.</li>
-          <li>✅ Ao comprar você concorda com todas as condições acima.</li>
-        </ul>
-      </div>
-
-    </div>
   </div>
 </div>
 
@@ -1003,8 +990,13 @@
 <div class="tab-panel" id="tab-streak">
   <div class="streak-panel">
 
-    <!-- HERO: Stats -->
+    <!-- HERO: Stats + título -->
     <div class="sk-hero">
+      <div class="sk-hero-title">
+        <div class="sk-hero-eyebrow">SUA CONQUISTA DE HOJE</div>
+        <h2 class="sk-hero-h2" id="sk-hero-h2">Compartilhe seu progresso</h2>
+        <div class="sk-hero-sub" id="sk-hero-sub">Gere um card único do seu streak para postar no Instagram</div>
+      </div>
       <div class="sk-hero-stats">
         <div class="sk-hero-stat">
           <div class="sk-hero-stat-num" id="sk-num">1</div>
