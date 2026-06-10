@@ -626,84 +626,143 @@
     }
 
     /* ── STREAK CARD ────────────────────────────────────────────── */
-    .streak-panel { display:flex; flex-direction:column; gap:20px; }
-    .streak-top { display:grid; grid-template-columns:auto 1fr; gap:20px; align-items:start; }
-    .streak-canvas-wrap {
-      width:220px; flex-shrink:0;
-      border-radius:16px; overflow:hidden;
-      border:1px solid rgba(34,211,238,0.18);
-      background:#07070e;
-      box-shadow:0 12px 40px rgba(0,0,0,0.5);
+    .streak-panel { display:flex; flex-direction:column; gap:24px; }
+
+    /* HERO */
+    .sk-hero {
+      display:flex; align-items:center; justify-content:space-between;
+      gap:20px; padding:22px 26px; border-radius:18px;
+      background:linear-gradient(135deg, rgba(34,211,238,0.08), rgba(99,102,241,0.04));
+      border:1px solid rgba(34,211,238,0.15);
+      flex-wrap:wrap;
     }
-    #streakCanvas { display:block; width:100%; height:auto; }
-    .streak-right { display:flex; flex-direction:column; gap:12px; }
-    .streak-stat-row {
-      display:flex; gap:10px; flex-wrap:wrap;
+    .sk-hero-eyebrow {
+      font-size:10px; font-weight:700; letter-spacing:0.18em;
+      text-transform:uppercase; color:rgba(34,211,238,0.55);
+      margin-bottom:6px;
     }
-    .streak-stat {
-      flex:1; min-width:80px;
-      padding:14px 16px; border-radius:14px;
-      background:rgba(34,211,238,0.04);
-      border:1px solid rgba(34,211,238,0.14);
+    .sk-hero-h2 {
+      font-size:22px; font-weight:700; color:#fff; letter-spacing:-0.5px;
+      margin-bottom:4px;
+    }
+    .sk-hero-sub { font-size:13px; color:rgba(125,211,232,0.6); }
+    .sk-hero-stats {
+      display:flex; align-items:center; gap:18px; flex-shrink:0;
+    }
+    .sk-hero-stat { text-align:center; min-width:64px; }
+    .sk-hero-stat-num {
+      font-size:30px; font-weight:800;
+      background:linear-gradient(135deg, #22d3ee, #67e8f9);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      line-height:1; margin-bottom:4px;
+    }
+    .sk-hero-stat-lbl {
+      font-size:10px; color:rgba(125,211,232,0.5);
+      text-transform:uppercase; letter-spacing:0.08em;
+    }
+    .sk-hero-divider {
+      width:1px; height:38px;
+      background:linear-gradient(180deg, transparent, rgba(34,211,238,0.25), transparent);
+    }
+
+    /* EMPTY STATE — botão gerar */
+    .sk-empty {
+      display:flex; flex-direction:column; align-items:center;
+      gap:18px; padding:60px 24px;
+      border-radius:24px;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 30%, rgba(34,211,238,0.06), transparent 70%),
+        rgba(34,211,238,0.02);
+      border:1px solid rgba(34,211,238,0.12);
       text-align:center;
     }
-    .streak-stat-num {
-      font-size:28px; font-weight:800;
-      background:linear-gradient(135deg,#22d3ee,#67e8f9);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-      margin-bottom:2px;
+    .sk-empty-icon { font-size:48px; opacity:0.85; }
+    .sk-empty-title {
+      font-size:20px; font-weight:700; color:#e2f8fc;
+      letter-spacing:-0.3px;
     }
-    .streak-stat-lbl { font-size:11px; color:rgba(125,211,232,0.5); }
-    .streak-themes { display:flex; gap:6px; flex-wrap:wrap; }
-    .skt {
-      padding:6px 13px; border-radius:999px;
-      border:1px solid rgba(34,211,238,0.15);
-      background:rgba(255,255,255,0.03);
-      color:rgba(125,211,232,0.5);
-      font-size:11px; font-weight:700;
+    .sk-empty-sub {
+      font-size:13px; color:rgba(125,211,232,0.55);
+      max-width:380px; line-height:1.55;
+    }
+    .sk-generate-btn {
+      display:inline-flex; align-items:center; gap:10px;
+      padding:16px 36px; margin-top:6px;
+      border:none; border-radius:14px;
+      background:linear-gradient(135deg, #22d3ee, #0891b2);
+      color:#fff; font-family:'Poppins',sans-serif;
+      font-size:15px; font-weight:700; letter-spacing:0.3px;
+      cursor:pointer; transition:all .25s;
+      box-shadow:0 10px 30px rgba(34,211,238,0.32);
+    }
+    .sk-generate-btn:hover {
+      transform:translateY(-2px);
+      box-shadow:0 14px 40px rgba(34,211,238,0.5);
+    }
+    .sk-gen-spark { font-size:18px; }
+    .sk-empty-meta {
+      font-size:11px; color:rgba(125,211,232,0.4);
+      max-width:340px; line-height:1.5; margin-top:6px;
+    }
+
+    /* RESULT */
+    .sk-result { display:flex; flex-direction:column; align-items:center; gap:18px; }
+    .sk-canvas-wrap {
+      width:100%; max-width:340px;
+      border-radius:20px; overflow:hidden;
+      border:1px solid rgba(34,211,238,0.2);
+      background:#020810;
+      box-shadow:0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(34,211,238,0.05);
+      animation:skFadeIn .55s cubic-bezier(.2,.8,.2,1);
+    }
+    .sk-canvas-wrap canvas { display:block; width:100%; height:auto; }
+    @keyframes skFadeIn {
+      from { opacity:0; transform:translateY(10px) scale(0.98); }
+      to   { opacity:1; transform:translateY(0)    scale(1); }
+    }
+    .sk-result-actions {
+      display:flex; gap:8px; flex-wrap:wrap; justify-content:center;
+      width:100%; max-width:380px;
+    }
+    .sk-btn-primary, .sk-btn-secondary, .sk-btn-ghost {
+      flex:1; min-width:120px;
+      padding:13px 18px; border-radius:12px;
       cursor:pointer; font-family:'Poppins',sans-serif;
-      transition:all .2s; letter-spacing:.2px;
+      font-size:13px; font-weight:700; transition:all .2s;
+      display:flex; align-items:center; justify-content:center; gap:6px;
+      white-space:nowrap;
     }
-    .skt[data-t=fogo].on  { background:#3d0d00; border-color:#f97316; color:#fb923c; }
-    .skt[data-t=cosmos].on{ background:#0d0228; border-color:#8b5cf6; color:#a78bfa; }
-    .skt[data-t=matrix].on{ background:#001a05; border-color:#22c55e; color:#4ade80; }
-    .skt[data-t=aurora].on{ background:#021020; border-color:#22d3ee; color:#67e8f9; }
-    .skt[data-t=premium].on{background:#1a0e00; border-color:#d97706; color:#fde68a; }
-    .streak-inputs { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-    .sk-fi { display:flex; flex-direction:column; gap:3px; }
-    .sk-fi.full { grid-column:1/-1; }
-    .sk-fi label { font-size:10px; color:rgba(125,211,232,0.5); text-transform:uppercase; letter-spacing:.5px; }
-    .sk-fi input {
-      background:rgba(255,255,255,0.04); border:1px solid rgba(34,211,238,0.14);
-      border-radius:9px; padding:9px 12px; color:#fff;
-      font-size:13px; font-family:'Poppins',sans-serif; outline:none;
+    .sk-btn-primary {
+      border:none;
+      background:linear-gradient(135deg, #22d3ee, #0891b2); color:#fff;
+      box-shadow:0 6px 20px rgba(34,211,238,0.3);
     }
-    .sk-fi input:focus { border-color:rgba(34,211,238,0.35); }
-    .streak-phrase-box {
-      padding:14px 16px; border-radius:14px;
-      background:rgba(34,211,238,0.03);
-      border:1px solid rgba(34,211,238,0.12);
+    .sk-btn-primary:hover { transform:translateY(-1px); box-shadow:0 10px 28px rgba(34,211,238,0.45); }
+    .sk-btn-secondary {
+      background:rgba(34,211,238,0.1); color:#22d3ee;
+      border:1px solid rgba(34,211,238,0.3);
     }
-    .streak-phrase-lbl { font-size:10px; color:rgba(34,211,238,0.45); text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
-    .streak-phrase-txt { font-size:12.5px; color:rgba(255,255,255,0.65); font-style:italic; line-height:1.6; }
-    .streak-btn-row { display:flex; gap:8px; }
-    .streak-dl-btn {
-      flex:1; padding:13px; border-radius:12px; border:none; cursor:pointer;
-      font-size:13px; font-weight:700; font-family:'Poppins',sans-serif;
-      background:linear-gradient(135deg,#7c3aed,#1d4ed8); color:#fff;
-      transition:opacity .2s;
+    .sk-btn-secondary:hover { background:rgba(34,211,238,0.18); border-color:#22d3ee; color:#fff; }
+    .sk-btn-ghost {
+      background:transparent; color:rgba(125,211,232,0.6);
+      border:1px solid rgba(34,211,238,0.15); flex:0 0 auto;
     }
-    .streak-dl-btn:hover { opacity:.88; }
-    .streak-next-btn {
-      padding:13px 16px; border-radius:12px; cursor:pointer;
-      background:rgba(34,211,238,0.08); border:1px solid rgba(34,211,238,0.2);
-      color:#7dd3e8; font-size:13px; font-weight:600; font-family:'Poppins',sans-serif;
-      transition:all .2s; white-space:nowrap;
+    .sk-btn-ghost:hover { color:#fff; border-color:rgba(34,211,238,0.4); }
+    .sk-result-meta {
+      font-size:11.5px; color:rgba(125,211,232,0.5);
+      text-align:center; line-height:1.6; max-width:380px;
     }
-    .streak-next-btn:hover { background:rgba(34,211,238,0.14); color:#fff; }
+    .sk-result-meta strong { color:rgba(125,211,232,0.85); font-weight:600; }
+
     @media (max-width:600px) {
-      .streak-top { grid-template-columns:1fr; }
-      .streak-canvas-wrap { width:100%; max-width:280px; margin:0 auto; }
+      .sk-hero { flex-direction:column; align-items:flex-start; padding:18px; }
+      .sk-hero-stats { width:100%; justify-content:space-around; gap:8px; }
+      .sk-hero-h2 { font-size:18px; }
+      .sk-empty { padding:42px 18px; }
+      .sk-empty-title { font-size:17px; }
+      .sk-generate-btn { padding:14px 28px; font-size:14px; width:100%; max-width:300px; justify-content:center; }
+      .sk-result-actions { flex-direction:column; }
+      .sk-btn-primary, .sk-btn-secondary, .sk-btn-ghost { width:100%; flex:none; }
     }
   </style>
 
@@ -932,53 +991,61 @@
 <div class="tab-panel" id="tab-streak">
   <div class="streak-panel">
 
-    <!-- Topo: canvas + controles -->
-    <div class="streak-top">
-      <div class="streak-canvas-wrap">
+    <!-- HERO: Stats + título -->
+    <div class="sk-hero">
+      <div class="sk-hero-title">
+        <div class="sk-hero-eyebrow">SUA CONQUISTA DE HOJE</div>
+        <h2 class="sk-hero-h2" id="sk-hero-h2">Compartilhe seu progresso</h2>
+        <div class="sk-hero-sub" id="sk-hero-sub">Gere um card único do seu streak para postar no Instagram</div>
+      </div>
+      <div class="sk-hero-stats">
+        <div class="sk-hero-stat">
+          <div class="sk-hero-stat-num" id="sk-num">1</div>
+          <div class="sk-hero-stat-lbl">dias seguidos</div>
+        </div>
+        <div class="sk-hero-divider"></div>
+        <div class="sk-hero-stat">
+          <div class="sk-hero-stat-num" id="sk-best">1</div>
+          <div class="sk-hero-stat-lbl">recorde</div>
+        </div>
+        <div class="sk-hero-divider"></div>
+        <div class="sk-hero-stat">
+          <div class="sk-hero-stat-num" id="sk-tier-icon">🔥</div>
+          <div class="sk-hero-stat-lbl" id="sk-tier-lbl">Iniciante</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado inicial: botão gigante de gerar -->
+    <div class="sk-empty" id="sk-empty-state">
+      <div class="sk-empty-icon">✨</div>
+      <div class="sk-empty-title">Pronto para mostrar sua dedicação?</div>
+      <div class="sk-empty-sub">Seu card é gerado automaticamente com seus dados de estudo</div>
+      <button class="sk-generate-btn" onclick="skGenerate()">
+        <span class="sk-gen-spark">⚡</span>
+        Gerar meu card do dia
+      </button>
+      <div class="sk-empty-meta" id="sk-empty-meta"></div>
+    </div>
+
+    <!-- Card gerado (oculto inicialmente) -->
+    <div class="sk-result" id="sk-result-state" style="display:none">
+      <div class="sk-canvas-wrap">
         <canvas id="streakCanvas" width="1080" height="1920"></canvas>
       </div>
-
-      <div class="streak-right">
-        <!-- Stats automáticos -->
-        <div class="streak-stat-row">
-          <div class="streak-stat">
-            <div class="streak-stat-num" id="sk-num">0</div>
-            <div class="streak-stat-lbl">dias seguidos</div>
-          </div>
-          <div class="streak-stat">
-            <div class="streak-stat-num" id="sk-best">0</div>
-            <div class="streak-stat-lbl">melhor streak</div>
-          </div>
-        </div>
-
-        <!-- Temas -->
-        <div class="streak-themes">
-          <button class="skt on" data-t="fogo"    onclick="skSetT('fogo',this)">🔥 Fogo</button>
-          <button class="skt"    data-t="cosmos"  onclick="skSetT('cosmos',this)">🌌 Cosmos</button>
-          <button class="skt"    data-t="matrix"  onclick="skSetT('matrix',this)">💻 Matrix</button>
-          <button class="skt"    data-t="aurora"  onclick="skSetT('aurora',this)">🌈 Aurora</button>
-          <button class="skt"    data-t="premium" onclick="skSetT('premium',this)">👑 Premium</button>
-        </div>
-
-        <!-- Inputs -->
-        <div class="streak-inputs">
-          <div class="sk-fi full"><label>Nome no card</label><input id="sk-nome" placeholder="Seu nome" oninput="skDraw()"></div>
-          <div class="sk-fi"><label>Horas estudadas</label><input id="sk-h" type="number" value="2" min="0" max="23" oninput="skDraw()"></div>
-          <div class="sk-fi"><label>Minutos</label><input id="sk-m" type="number" value="30" min="0" max="59" oninput="skDraw()"></div>
-          <div class="sk-fi full"><label>Matéria</label><input id="sk-subj" value="Imunologia P2" oninput="skDraw()"></div>
-        </div>
-
-        <!-- Frase -->
-        <div class="streak-phrase-box">
-          <div class="streak-phrase-lbl">Frase automática</div>
-          <div class="streak-phrase-txt" id="sk-phrase-txt"></div>
-        </div>
-
-        <!-- Botões -->
-        <div class="streak-btn-row">
-          <button class="streak-dl-btn" onclick="skDownload()">⬇ Baixar PNG 1080×1920</button>
-          <button class="streak-next-btn" onclick="skNextPhrase()">↻ Frase</button>
-        </div>
+      <div class="sk-result-actions">
+        <button class="sk-btn-primary" onclick="skDownload()">
+          ⬇ Baixar para o Instagram
+        </button>
+        <button class="sk-btn-secondary" onclick="skShare()" id="sk-share-btn">
+          📤 Compartilhar
+        </button>
+        <button class="sk-btn-ghost" onclick="skRegenerate()" title="Gerar de novo com outra frase">
+          ↻ Outra frase
+        </button>
+      </div>
+      <div class="sk-result-meta">
+        <span id="sk-result-tier"></span>
       </div>
     </div>
 
@@ -1144,16 +1211,15 @@ window.switchTab = function(tab) {
     if (ezPanel && ezPanel.classList.contains("open") && typeof ezToggle === "function") ezToggle();
   }
   document.body.classList.toggle("loja-ativa", tab === "loja");
-  if (tab === "streak") { setTimeout(skDraw, 80); }
+  if (tab === "streak" && typeof skOnTabOpen === "function") { skOnTabOpen(); }
 };
 
-// ── STREAK CARD ENGINE ────────────────────────────────────────────────────────
+// ── STREAK CARD ENGINE (v2 — fluxo automático, sem inputs) ───────────────────
 (function(){
-  var SK_W=1080, SK_H=1920;
-  var skCV = document.getElementById("streakCanvas");
-  var skCX = skCV ? skCV.getContext("2d") : null;
+  var SK_W = 1080, SK_H = 1920;
+  var skCV, skCX;
 
-  // ── Streak counter (localStorage) ─────────────────────────────
+  // ── Streak counter (localStorage) ──────────────────────────────
   function skToday(){ return new Date().toISOString().slice(0,10); }
   function skInitStreak(){
     var today = skToday();
@@ -1161,21 +1227,66 @@ window.switchTab = function(tab) {
     var cnt   = parseInt(localStorage.getItem("ez-sk-cnt"))  || 0;
     var best  = parseInt(localStorage.getItem("ez-sk-best")) || 0;
     var prev  = new Date(last); prev.setDate(prev.getDate()+1);
-    var prevStr = prev.toISOString().slice(0,10);
-    if (last === today) { /* mesmo dia, sem mudança */ }
+    var prevStr = isNaN(prev) ? "" : prev.toISOString().slice(0,10);
+    if (last === today) { if (cnt < 1) cnt = 1; }
     else if (prevStr === today) { cnt++; }
     else { cnt = 1; }
     if (cnt > best) best = cnt;
     localStorage.setItem("ez-sk-last",  today);
     localStorage.setItem("ez-sk-cnt",   cnt);
     localStorage.setItem("ez-sk-best",  best);
-    var numEl  = document.getElementById("sk-num");
-    var bestEl = document.getElementById("sk-best");
-    if (numEl)  numEl.textContent  = cnt;
-    if (bestEl) bestEl.textContent = best;
-    return cnt;
+    return { cnt:cnt, best:best };
   }
-  var skStreak = 1;
+
+  // ── Tiers por progressão ───────────────────────────────────────
+  // 1-3   → fogo      (Iniciante)
+  // 4-7   → aurora    (Constante)
+  // 8-14  → cosmos    (Dedicado)
+  // 15-29 → matrix    (Veterano)
+  // 30+   → premium   (Lendário)
+  function skTierFor(streak){
+    if (streak >= 30) return { tema:"premium", label:"Lendário",  icon:"👑" };
+    if (streak >= 15) return { tema:"matrix",  label:"Veterano",  icon:"💻" };
+    if (streak >= 8)  return { tema:"cosmos",  label:"Dedicado",  icon:"🌌" };
+    if (streak >= 4)  return { tema:"aurora",  label:"Constante", icon:"✨" };
+    return                  { tema:"fogo",    label:"Iniciante", icon:"🔥" };
+  }
+
+  // ── Tempo estudado hoje (via study-timer.js) ───────────────────
+  function skTodayMinutes(){
+    var min = 0;
+    try {
+      var raw = localStorage.getItem("ez-timer-today-" + skToday());
+      if (raw) min = parseInt(raw) || 0;
+      if (!min) {
+        var raw2 = localStorage.getItem("ez-study-today");
+        if (raw2) {
+          var d = JSON.parse(raw2);
+          if (d && d.date === skToday() && d.minutes) min = parseInt(d.minutes) || 0;
+        }
+      }
+      if (!min) {
+        var raw3 = localStorage.getItem("study-timer-today");
+        if (raw3) min = parseInt(raw3) || 0;
+      }
+    } catch(e) {}
+    if (!min) min = 30; // fallback: 30 min mínimo se nada registrado
+    return min;
+  }
+  function skTodayHM(){
+    var m = skTodayMinutes();
+    return { h: Math.floor(m/60), m: m % 60 };
+  }
+
+  // ── Última matéria estudada ─────────────────────────────────────
+  function skLastSubject(){
+    try {
+      var s = localStorage.getItem("ez-last-materia");
+      if (s) return s;
+    } catch(e) {}
+    var hr = new Date().getHours();
+    return hr < 12 ? "Estudo Matutino" : hr < 18 ? "Estudo Vespertino" : "Estudo Noturno";
+  }
 
   // ── 35 Frases ──────────────────────────────────────────────────
   var SK_FR=[
@@ -1183,84 +1294,186 @@ window.switchTab = function(tab) {
     "Consistência supera talento todos os dias da semana.",
     "Médico não se faz em um dia. Se faz em mil dias como esse.",
     "O estudo de hoje é o diagnóstico certeiro de amanhã.",
-    "Não pare quando estiver cansado — pare quando terminar.",
-    "A aprovação não escolhe os mais inteligentes, escolhe os mais persistentes.",
+    "Não pare quando estiver cansado, pare quando terminar.",
+    "A aprovação escolhe os mais persistentes, não os mais inteligentes.",
     "Você está construindo a versão mais preparada de si mesmo.",
-    "Cada hora de estudo é um investimento que nenhuma crise pode tirar.",
+    "Cada hora de estudo é um investimento que ninguém pode tirar.",
     "Seu futuro paciente precisa que você não desista hoje.",
-    "A memória muscular do estudo se chama revisão constante.",
+    "Quem revisa, governa. Quem esquece, improvisa.",
     "Quem estuda quando não quer descansa quando todos trabalham.",
     "O plantão vai ser mais leve para quem estudou hoje.",
     "Conhecimento não ocupa espaço. Ignorância custa vidas.",
-    "Você não está cansado — você está ficando mais forte.",
+    "Você não está cansado, está ficando mais forte.",
     "Cada flashcard virado é uma sinapse construída.",
     "A nota de amanhã começa no estudo de hoje.",
     "Dificuldade agora. Segurança na beira do leito depois.",
     "Nenhum resumo perdido. Nenhuma revisão desperdiçada.",
-    "Estudar não é punição. É preparação para o melhor dia da sua vida.",
+    "Estudar é preparação para o melhor dia da sua vida.",
     "O estresse de hoje forma o clínico de excelência de amanhã.",
-    "Você escolheu a profissão mais humana do mundo. Honre essa escolha.",
+    "Você escolheu a profissão mais humana do mundo.",
     "Cada dia de estudo aproxima você do jaleco que sonhou.",
     "Repita até entender. Entenda até não esquecer.",
-    "Quem revisa governa. Quem esquece improvisa.",
+    "Errou na questão? Ótimo, não vai errar no paciente.",
     "O cérebro aprende no esforço, não no conforto.",
     "Cada minuto de estudo é uma vida que você vai salvar.",
     "Ser médico é ter o privilégio de aprender para sempre.",
-    "Errou na questão? Ótimo — não vai errar no paciente.",
     "Medicina não é uma carreira. É um compromisso diário.",
     "Cansar é normal. Desistir é opcional.",
     "Você está mais perto do que pensa. Só continue.",
     "A profundidade do seu conhecimento é a segurança do paciente.",
     "Cada revisão consolida o que o esquecimento quer apagar.",
     "A melhor hora para estudar era ontem. A segunda melhor é agora.",
-    "Às 3h da manhã no plantão, vai importar o que você estudou hoje."
+    "Às 3h da manhã no plantão, vai importar o que você estudou hoje.",
+    "Hoje você estuda. Amanhã você diagnostica."
   ];
   var skFI = Math.floor(Math.random()*SK_FR.length);
-  function skF(){ return SK_FR[skFI]; }
-  window.skNextPhrase = function(){
-    var n; do{n=Math.floor(Math.random()*SK_FR.length);}while(n===skFI&&SK_FR.length>1);
-    skFI=n;
-    var el=document.getElementById("sk-phrase-txt");
-    if(el) el.textContent=skF();
-    skDraw();
-  };
+  function skNextFraseIndex(){
+    var n; do { n = Math.floor(Math.random()*SK_FR.length); } while (n === skFI && SK_FR.length > 1);
+    skFI = n;
+    return SK_FR[skFI];
+  }
+  function skCurrentFrase(){ return SK_FR[skFI]; }
 
   // ── Temas ──────────────────────────────────────────────────────
-  var SK_TM={
-    fogo:{bg:["#0a0200","#1a0800","#0d0100"],glows:[[200,350,580,"rgba(234,88,12,0.22)"],[880,1600,460,"rgba(239,68,68,0.16)"],[540,960,300,"rgba(251,191,36,0.08)"]],sG:["#fef3c7","#fbbf24","#f97316","#dc2626"],a1:"#f97316",a2:"#ef4444",a3:"#fbbf24",tag:["rgba(234,88,12,0.2)","rgba(249,115,22,0.5)","#fb923c"],brand:"rgba(255,255,255,0.42)",ck:"classic",cf:"#1c0a04",cb1:"#f97316",cb2:"#ef4444",ch:"#fff",cm:"#fbbf24",cs:"#ef4444",cn:"rgba(249,115,22,0.92)",icon:"🔥",bgfn:"fire"},
-    cosmos:{bg:["#030014","#0d0628","#060020"],glows:[[150,250,620,"rgba(109,40,217,0.26)"],[900,1700,520,"rgba(99,102,241,0.18)"],[540,960,280,"rgba(167,139,250,0.08)"]],sG:["#ede9fe","#c4b5fd","#8b5cf6","#4c1d95"],a1:"#8b5cf6",a2:"#6366f1",a3:"#a78bfa",tag:["rgba(109,40,217,0.2)","rgba(139,92,246,0.5)","#c4b5fd"],brand:"rgba(255,255,255,0.42)",ck:"classic",cf:"#0d0628",cb1:"#8b5cf6",cb2:"#6366f1",ch:"#fff",cm:"#a78bfa",cs:"#818cf8",cn:"rgba(139,92,246,0.92)",icon:"✦",bgfn:"stars"},
-    matrix:{bg:["#000000","#011003","#000800"],glows:[[200,400,500,"rgba(22,197,94,0.14)"],[880,1600,400,"rgba(22,197,94,0.09)"],[540,960,200,"rgba(74,222,128,0.05)"]],sG:["#f0fdf4","#86efac","#22c55e","#15803d"],a1:"#22c55e",a2:"#16a34a",a3:"#4ade80",tag:["rgba(21,128,61,0.2)","rgba(34,197,94,0.5)","#4ade80"],brand:"rgba(74,222,128,0.55)",ck:"digital",cf:"#001a05",cb1:"#22c55e",cb2:"#16a34a",ch:"#22c55e",cm:"#4ade80",cs:"#86efac",cn:"#22c55e",icon:"»",bgfn:"matrix"},
-    aurora:{bg:["#030816","#050f1a","#030c14"],glows:[[100,400,620,"rgba(34,211,238,0.15)"],[900,1500,520,"rgba(167,139,250,0.15)"],[540,960,360,"rgba(52,211,153,0.09)"]],sG:["#ecfeff","#67e8f9","#22d3ee","#6d28d9"],a1:"#22d3ee",a2:"#a78bfa",a3:"#34d399",tag:["rgba(6,182,212,0.15)","rgba(34,211,238,0.45)","#67e8f9"],brand:"rgba(255,255,255,0.42)",ck:"minimal",cf:"transparent",cb1:"#22d3ee",cb2:"#a78bfa",ch:"#fff",cm:"#22d3ee",cs:"#a78bfa",cn:"rgba(34,211,238,0.8)",icon:"✨",bgfn:"aurora"},
-    premium:{bg:["#060400","#120c00","#0c0800"],glows:[[200,300,560,"rgba(180,83,9,0.22)"],[880,1700,460,"rgba(217,119,6,0.15)"],[540,960,300,"rgba(251,191,36,0.07)"]],sG:["#fffbeb","#fde68a","#d97706","#92400e"],a1:"#d97706",a2:"#b45309",a3:"#fbbf24",tag:["rgba(180,83,9,0.2)","rgba(217,119,6,0.5)","#fde68a"],brand:"rgba(253,230,138,0.52)",ck:"roman",cf:"#0c0800",cb1:"#d97706",cb2:"#fbbf24",ch:"#fde68a",cm:"#d97706",cs:"#fbbf24",cn:"rgba(217,119,6,0.92)",icon:"♛",bgfn:"gold"}
-  };
-  var skTema="fogo";
-  window.skSetT=function(t,btn){
-    skTema=t;
-    document.querySelectorAll(".skt").forEach(function(b){b.classList.remove("on");});
-    btn.classList.add("on");
-    skDraw();
+  var SK_TM = {
+    fogo: {
+      bg:["#0a0200","#1a0800","#0d0100"],
+      glows:[[200,350,580,"rgba(234,88,12,0.22)"],[880,1600,460,"rgba(239,68,68,0.16)"],[540,960,300,"rgba(251,191,36,0.08)"]],
+      sG:["#fef3c7","#fbbf24","#f97316","#dc2626"],
+      a1:"#f97316",a2:"#ef4444",a3:"#fbbf24",
+      tag:["rgba(234,88,12,0.2)","rgba(249,115,22,0.5)","#fb923c"],
+      brand:"rgba(255,255,255,0.42)",
+      ck:"classic", cf:"#1c0a04", cb1:"#f97316", cb2:"#ef4444",
+      ch:"#fff", cm:"#fbbf24", cs:"#ef4444", cn:"rgba(249,115,22,0.92)",
+      icon:"🔥", bgfn:"fire", label:"Iniciante"
+    },
+    aurora: {
+      bg:["#030816","#050f1a","#030c14"],
+      glows:[[100,400,620,"rgba(34,211,238,0.15)"],[900,1500,520,"rgba(167,139,250,0.15)"],[540,960,360,"rgba(52,211,153,0.09)"]],
+      sG:["#ecfeff","#67e8f9","#22d3ee","#6d28d9"],
+      a1:"#22d3ee",a2:"#a78bfa",a3:"#34d399",
+      tag:["rgba(6,182,212,0.15)","rgba(34,211,238,0.45)","#67e8f9"],
+      brand:"rgba(255,255,255,0.42)",
+      ck:"minimal", cf:"transparent", cb1:"#22d3ee", cb2:"#a78bfa",
+      ch:"#fff", cm:"#22d3ee", cs:"#a78bfa", cn:"rgba(34,211,238,0.8)",
+      icon:"✨", bgfn:"aurora", label:"Constante"
+    },
+    cosmos: {
+      bg:["#030014","#0d0628","#060020"],
+      glows:[[150,250,620,"rgba(109,40,217,0.26)"],[900,1700,520,"rgba(99,102,241,0.18)"],[540,960,280,"rgba(167,139,250,0.08)"]],
+      sG:["#ede9fe","#c4b5fd","#8b5cf6","#4c1d95"],
+      a1:"#8b5cf6",a2:"#6366f1",a3:"#a78bfa",
+      tag:["rgba(109,40,217,0.2)","rgba(139,92,246,0.5)","#c4b5fd"],
+      brand:"rgba(255,255,255,0.42)",
+      ck:"classic", cf:"#0d0628", cb1:"#8b5cf6", cb2:"#6366f1",
+      ch:"#fff", cm:"#a78bfa", cs:"#818cf8", cn:"rgba(139,92,246,0.92)",
+      icon:"✦", bgfn:"stars", label:"Dedicado"
+    },
+    matrix: {
+      bg:["#000000","#011003","#000800"],
+      glows:[[200,400,500,"rgba(22,197,94,0.14)"],[880,1600,400,"rgba(22,197,94,0.09)"],[540,960,200,"rgba(74,222,128,0.05)"]],
+      sG:["#f0fdf4","#86efac","#22c55e","#15803d"],
+      a1:"#22c55e",a2:"#16a34a",a3:"#4ade80",
+      tag:["rgba(21,128,61,0.2)","rgba(34,197,94,0.5)","#4ade80"],
+      brand:"rgba(74,222,128,0.55)",
+      ck:"digital", cf:"#001a05", cb1:"#22c55e", cb2:"#16a34a",
+      ch:"#22c55e", cm:"#4ade80", cs:"#86efac", cn:"#22c55e",
+      icon:"»", bgfn:"matrix_clean", label:"Veterano"
+    },
+    premium: {
+      bg:["#060400","#120c00","#0c0800"],
+      glows:[[200,300,560,"rgba(180,83,9,0.22)"],[880,1700,460,"rgba(217,119,6,0.15)"],[540,960,300,"rgba(251,191,36,0.07)"]],
+      sG:["#fffbeb","#fde68a","#d97706","#92400e"],
+      a1:"#d97706",a2:"#b45309",a3:"#fbbf24",
+      tag:["rgba(180,83,9,0.2)","rgba(217,119,6,0.5)","#fde68a"],
+      brand:"rgba(253,230,138,0.52)",
+      ck:"roman", cf:"#0c0800", cb1:"#d97706", cb2:"#fbbf24",
+      ch:"#fde68a", cm:"#d97706", cs:"#fbbf24", cn:"rgba(217,119,6,0.92)",
+      icon:"♛", bgfn:"gold", label:"Lendário"
+    }
   };
 
   // ── Helpers canvas ─────────────────────────────────────────────
   function skRR(x,y,w,h,r){
     if(w<1)return;
-    if(skCX.roundRect){skCX.roundRect(x,y,w,h,r);return;}
+    if(skCX.roundRect){ skCX.beginPath(); skCX.roundRect(x,y,w,h,r); return; }
     skCX.beginPath();skCX.moveTo(x+r,y);skCX.lineTo(x+w-r,y);skCX.quadraticCurveTo(x+w,y,x+w,y+r);skCX.lineTo(x+w,y+h-r);skCX.quadraticCurveTo(x+w,y+h,x+w-r,y+h);skCX.lineTo(x+r,y+h);skCX.quadraticCurveTo(x,y+h,x,y+h-r);skCX.lineTo(x,y+r);skCX.quadraticCurveTo(x,y,x+r,y);skCX.closePath();
   }
   function skWC(text,cx,y,mw,lh){
     var words=text.split(" ");var line="";var cy=y;
-    for(var n=0;n<words.length;n++){var t=line+words[n]+" ";if(skCX.measureText(t).width>mw&&n>0){skCX.fillText(line.trim(),cx,cy);line=words[n]+" ";cy+=lh;}else line=t;}
+    for(var n=0;n<words.length;n++){
+      var t=line+words[n]+" ";
+      if(skCX.measureText(t).width>mw&&n>0){skCX.fillText(line.trim(),cx,cy);line=words[n]+" ";cy+=lh;}
+      else line=t;
+    }
     skCX.fillText(line.trim(),cx,cy);
   }
   function skAbs(v){return Math.abs((Math.sin(v)*43758.5453)%1);}
   function skGlow(gx,gy,r,c){var g=skCX.createRadialGradient(gx,gy,0,gx,gy,r);g.addColorStop(0,c);g.addColorStop(1,"transparent");skCX.fillStyle=g;skCX.fillRect(0,0,SK_W,SK_H);}
 
   // ── BG effects ─────────────────────────────────────────────────
-  function skBGFire(){for(var i=0;i<90;i++){var x=skAbs(i*127.1)*SK_W,y=skAbs(i*311.7)*SK_H,o=0.05+skAbs(i*57.3)*0.2;skCX.beginPath();skCX.arc(x,y,i%4===0?2.5:1.2,0,Math.PI*2);skCX.fillStyle=i%3===0?"rgba(249,115,22,"+o+")":"rgba(255,255,255,"+(o*.55)+")";skCX.fill();}}
-  function skBGStars(){for(var i=0;i<130;i++){var x=skAbs(i*127.1)*SK_W,y=skAbs(i*311.7)*SK_H,s=i%8===0?3:i%4===0?2:1,o=0.08+skAbs(i*57.3)*0.55;skCX.beginPath();skCX.arc(x,y,s,0,Math.PI*2);skCX.fillStyle="rgba(255,255,255,"+o+")";skCX.fill();}[[220,420,320,"rgba(109,40,217,0.12)"],[800,900,260,"rgba(99,102,241,0.1)"],[360,1650,380,"rgba(139,92,246,0.09)"]].forEach(function(a){skGlow(a[0],a[1],a[2],a[3]);});}
-  function skBGMatrix(){skCX.font='20px "Courier New",Courier,monospace';var chars="01アイウABCDEF011";for(var i=0;i<28;i++){var x=skAbs(i*127.1)*SK_W;for(var j=0;j<22;j++){var o=Math.max(0.015,0.1-j*0.004),c=chars[Math.floor(skAbs(i*j*57.3)*chars.length)];skCX.fillStyle="rgba(34,197,94,"+o+")";skCX.fillText(c,x,j*86+80+(i*37)%80);}}}
-  function skBGAurora(){[[0.22,0.09,"rgba(34,211,238,0.08)"],[0.42,0.1,"rgba(52,211,153,0.06)"],[0.62,0.09,"rgba(167,139,250,0.09)"]].forEach(function(a){var g=skCX.createLinearGradient(0,SK_H*a[0],0,SK_H*(a[0]+a[1]));g.addColorStop(0,"transparent");g.addColorStop(0.5,a[2]);g.addColorStop(1,"transparent");skCX.fillStyle=g;skCX.fillRect(0,SK_H*a[0],SK_W,SK_H*a[1]);});for(var i=0;i<60;i++){var x=skAbs(i*127.1)*SK_W,y=skAbs(i*311.7)*SK_H,o=0.05+skAbs(i*57.3)*0.14;skCX.beginPath();skCX.arc(x,y,1.5,0,Math.PI*2);skCX.fillStyle="rgba(255,255,255,"+o+")";skCX.fill();}}
-  function skBGGold(){skCX.strokeStyle="rgba(217,119,6,0.07)";skCX.lineWidth=1;for(var i=0;i<10;i++){var x=i*(SK_W/9);skCX.beginPath();skCX.moveTo(x,0);skCX.lineTo(x+SK_W/5,SK_H);skCX.stroke();}for(var i=0;i<80;i++){var x=skAbs(i*127.1)*SK_W,y=skAbs(i*311.7)*SK_H,o=0.07+skAbs(i*57.3)*0.2;skCX.beginPath();skCX.arc(x,y,i%5===0?2.5:1,0,Math.PI*2);skCX.fillStyle="rgba(251,191,36,"+o+")";skCX.fill();}}
+  function skBGFire(){
+    for(var i=0;i<90;i++){
+      var x=skAbs(i*127.1)*SK_W,y=skAbs(i*311.7)*SK_H,o=0.05+skAbs(i*57.3)*0.2;
+      skCX.beginPath();skCX.arc(x,y,i%4===0?2.5:1.2,0,Math.PI*2);
+      skCX.fillStyle=i%3===0?"rgba(249,115,22,"+o+")":"rgba(255,255,255,"+(o*.55)+")";
+      skCX.fill();
+    }
+  }
+  function skBGStars(){
+    for(var i=0;i<130;i++){
+      var x=skAbs(i*127.1)*SK_W,y=skAbs(i*311.7)*SK_H,s=i%8===0?3:i%4===0?2:1,o=0.08+skAbs(i*57.3)*0.55;
+      skCX.beginPath();skCX.arc(x,y,s,0,Math.PI*2);skCX.fillStyle="rgba(255,255,255,"+o+")";skCX.fill();
+    }
+    [[220,420,320,"rgba(109,40,217,0.12)"],[800,900,260,"rgba(99,102,241,0.1)"],[360,1650,380,"rgba(139,92,246,0.09)"]].forEach(function(a){skGlow(a[0],a[1],a[2],a[3]);});
+  }
+  function skBGMatrixClean(){
+    // Matrix CORRIGIDO: linhas verticais discretas com fade, sem chuva de caracteres
+    skCX.strokeStyle = "rgba(34,197,94,0.04)";
+    skCX.lineWidth = 1;
+    for(var i=0; i<24; i++){
+      var x = (i + 0.5) * (SK_W / 24);
+      skCX.beginPath(); skCX.moveTo(x, 0); skCX.lineTo(x, SK_H); skCX.stroke();
+    }
+    // Brackets decorativos nas bordas
+    var br = 60, off = 36, t = 6;
+    skCX.strokeStyle = "rgba(34,197,94,0.45)"; skCX.lineWidth = 3;
+    // top-left
+    skCX.beginPath(); skCX.moveTo(off, off+br); skCX.lineTo(off, off); skCX.lineTo(off+br, off); skCX.stroke();
+    // top-right
+    skCX.beginPath(); skCX.moveTo(SK_W-off-br, off); skCX.lineTo(SK_W-off, off); skCX.lineTo(SK_W-off, off+br); skCX.stroke();
+    // bottom-left
+    skCX.beginPath(); skCX.moveTo(off, SK_H-off-br); skCX.lineTo(off, SK_H-off); skCX.lineTo(off+br, SK_H-off); skCX.stroke();
+    // bottom-right
+    skCX.beginPath(); skCX.moveTo(SK_W-off-br, SK_H-off); skCX.lineTo(SK_W-off, SK_H-off); skCX.lineTo(SK_W-off, SK_H-off-br); skCX.stroke();
+    // Pontos verdes sutis
+    for(var p=0; p<50; p++){
+      var px = skAbs(p*127.1)*SK_W, py = skAbs(p*311.7)*SK_H;
+      var po = 0.05 + skAbs(p*57.3)*0.15;
+      skCX.beginPath(); skCX.arc(px, py, 1.5, 0, Math.PI*2);
+      skCX.fillStyle = "rgba(74,222,128,"+po+")"; skCX.fill();
+    }
+  }
+  function skBGAurora(){
+    [[0.22,0.09,"rgba(34,211,238,0.08)"],[0.42,0.1,"rgba(52,211,153,0.06)"],[0.62,0.09,"rgba(167,139,250,0.09)"]].forEach(function(a){
+      var g=skCX.createLinearGradient(0,SK_H*a[0],0,SK_H*(a[0]+a[1]));
+      g.addColorStop(0,"transparent");g.addColorStop(0.5,a[2]);g.addColorStop(1,"transparent");
+      skCX.fillStyle=g;skCX.fillRect(0,SK_H*a[0],SK_W,SK_H*a[1]);
+    });
+    for(var i=0;i<60;i++){
+      var x=skAbs(i*127.1)*SK_W,y=skAbs(i*311.7)*SK_H,o=0.05+skAbs(i*57.3)*0.14;
+      skCX.beginPath();skCX.arc(x,y,1.5,0,Math.PI*2);skCX.fillStyle="rgba(255,255,255,"+o+")";skCX.fill();
+    }
+  }
+  function skBGGold(){
+    skCX.strokeStyle="rgba(217,119,6,0.07)";skCX.lineWidth=1;
+    for(var i=0;i<10;i++){var x=i*(SK_W/9);skCX.beginPath();skCX.moveTo(x,0);skCX.lineTo(x+SK_W/5,SK_H);skCX.stroke();}
+    for(var i=0;i<80;i++){
+      var x=skAbs(i*127.1)*SK_W,y=skAbs(i*311.7)*SK_H,o=0.07+skAbs(i*57.3)*0.2;
+      skCX.beginPath();skCX.arc(x,y,i%5===0?2.5:1,0,Math.PI*2);
+      skCX.fillStyle="rgba(251,191,36,"+o+")";skCX.fill();
+    }
+  }
 
   // ── Clock helpers ──────────────────────────────────────────────
   function skHands(x,y,r,h,m,T){
@@ -1278,25 +1491,48 @@ window.switchTab = function(tab) {
     skCX.beginPath();skCX.arc(x,y,r,0,Math.PI*2);skCX.fillStyle=fg;skCX.fill();
     var bd=skCX.createLinearGradient(x-r,y-r,x+r,y+r);bd.addColorStop(0,T.cb1);bd.addColorStop(1,T.cb2);
     skCX.beginPath();skCX.arc(x,y,r,0,Math.PI*2);skCX.strokeStyle=bd;skCX.lineWidth=5;skCX.stroke();
-    for(var i=0;i<60;i++){var a=i*Math.PI/30-Math.PI/2,iQ=i%15===0,iH=i%5===0,ir=iQ?r*.72:iH?r*.80:r*.88;skCX.beginPath();skCX.moveTo(x+Math.cos(a)*ir,y+Math.sin(a)*ir);skCX.lineTo(x+Math.cos(a)*r*.96,y+Math.sin(a)*r*.96);skCX.strokeStyle=iQ?"rgba(255,255,255,.8)":iH?"rgba(255,255,255,.4)":"rgba(255,255,255,.12)";skCX.lineWidth=iQ?4:iH?2:1;skCX.stroke();}
+    for(var i=0;i<60;i++){
+      var a=i*Math.PI/30-Math.PI/2,iQ=i%15===0,iH=i%5===0,ir=iQ?r*.72:iH?r*.80:r*.88;
+      skCX.beginPath();skCX.moveTo(x+Math.cos(a)*ir,y+Math.sin(a)*ir);skCX.lineTo(x+Math.cos(a)*r*.96,y+Math.sin(a)*r*.96);
+      skCX.strokeStyle=iQ?"rgba(255,255,255,.8)":iH?"rgba(255,255,255,.4)":"rgba(255,255,255,.12)";
+      skCX.lineWidth=iQ?4:iH?2:1;skCX.stroke();
+    }
     skCX.textAlign="center";skCX.textBaseline="middle";
-    [[12,0],[3,1],[6,2],[9,3]].forEach(function(p){var a=p[1]*Math.PI/2-Math.PI/2;skCX.font="700 "+Math.round(r*.14)+"px Poppins,system-ui,sans-serif";skCX.fillStyle=T.cn;skCX.fillText(String(p[0]),x+Math.cos(a)*r*.65,y+Math.sin(a)*r*.65);});
+    [[12,0],[3,1],[6,2],[9,3]].forEach(function(p){
+      var a=p[1]*Math.PI/2-Math.PI/2;
+      skCX.font="700 "+Math.round(r*.14)+"px Poppins,system-ui,sans-serif";
+      skCX.fillStyle=T.cn;
+      skCX.fillText(String(p[0]),x+Math.cos(a)*r*.65,y+Math.sin(a)*r*.65);
+    });
     skCX.textBaseline="alphabetic";skHands(x,y,r,h,m,T);
   }
   function skCkDigital(x,y,h,m,T){
     var pw=440,ph=150,px=x-pw/2,py=y-ph/2-30;
-    skCX.beginPath();skRR(px,py,pw,ph,20);skCX.fillStyle="rgba(0,30,8,0.95)";skCX.fill();
-    var bd=skCX.createLinearGradient(px,py,px+pw,py+ph);bd.addColorStop(0,T.cb1);bd.addColorStop(1,T.cb2);skCX.strokeStyle=bd;skCX.lineWidth=2;skCX.beginPath();skRR(px,py,pw,ph,20);skCX.stroke();
-    skCX.font='bold 100px "Courier New",Courier,monospace';skCX.fillStyle="rgba(0,80,0,0.2)";skCX.textAlign="center";skCX.fillText("88:88",x,y+40);
+    skRR(px,py,pw,ph,20);skCX.fillStyle="rgba(0,30,8,0.95)";skCX.fill();
+    var bd=skCX.createLinearGradient(px,py,px+pw,py+ph);bd.addColorStop(0,T.cb1);bd.addColorStop(1,T.cb2);
+    skCX.strokeStyle=bd;skCX.lineWidth=2;skRR(px,py,pw,ph,20);skCX.stroke();
+    skCX.font='bold 100px "Courier New",Courier,monospace';
+    skCX.fillStyle="rgba(0,80,0,0.2)";skCX.textAlign="center";skCX.fillText("88:88",x,y+40);
     skCX.shadowBlur=18;skCX.shadowColor=T.a1;skCX.fillStyle=T.a1;
-    skCX.fillText((h<10?"0":"")+h+":"+(m<10?"0":"")+m,x,y+40);skCX.shadowBlur=0;
-    skCX.font='400 24px "Courier New",Courier,monospace';skCX.fillStyle=T.a2;skCX.fillText(h+"h  "+m+"min  estudados",x,y+95);skCX.textAlign="left";
+    skCX.fillText((h<10?"0":"")+h+":"+(m<10?"0":"")+m,x,y+40);
+    skCX.shadowBlur=0;
+    skCX.font='400 24px "Courier New",Courier,monospace';skCX.fillStyle=T.a2;
+    skCX.fillText(h+"h  "+m+"min  estudados",x,y+95);
+    skCX.textAlign="left";
   }
   function skCkMinimal(x,y,r,h,m,T){
-    for(var i=0;i<60;i++){var a=i*Math.PI/30-Math.PI/2,iH=i%5===0,iQ=i%15===0,dr=iQ?5:iH?3.5:1.8;skCX.beginPath();skCX.arc(x+Math.cos(a)*r*.96,y+Math.sin(a)*r*.96,dr,0,Math.PI*2);skCX.fillStyle=iQ?T.a1:iH?"rgba(255,255,255,.5)":"rgba(255,255,255,.15)";skCX.fill();}
+    for(var i=0;i<60;i++){
+      var a=i*Math.PI/30-Math.PI/2,iH=i%5===0,iQ=i%15===0,dr=iQ?5:iH?3.5:1.8;
+      skCX.beginPath();skCX.arc(x+Math.cos(a)*r*.96,y+Math.sin(a)*r*.96,dr,0,Math.PI*2);
+      skCX.fillStyle=iQ?T.a1:iH?"rgba(255,255,255,.5)":"rgba(255,255,255,.15)";
+      skCX.fill();
+    }
     skCX.beginPath();skCX.arc(x,y,r,0,Math.PI*2);skCX.strokeStyle="rgba(255,255,255,0.06)";skCX.lineWidth=1;skCX.stroke();
     skHands(x,y,r,h,m,T);
-    skCX.beginPath();skCX.arc(x,y,r*.5,0,Math.PI*2);var ag=skCX.createLinearGradient(x-r,y-r,x+r,y+r);ag.addColorStop(0,T.a1+"40");ag.addColorStop(0.5,T.a2+"40");ag.addColorStop(1,T.a3+"40");skCX.strokeStyle=ag;skCX.lineWidth=1;skCX.stroke();
+    skCX.beginPath();skCX.arc(x,y,r*.5,0,Math.PI*2);
+    var ag=skCX.createLinearGradient(x-r,y-r,x+r,y+r);
+    ag.addColorStop(0,T.a1+"40");ag.addColorStop(0.5,T.a2+"40");ag.addColorStop(1,T.a3+"40");
+    skCX.strokeStyle=ag;skCX.lineWidth=1;skCX.stroke();
   }
   function skCkRoman(x,y,r,h,m,T){
     var fg=skCX.createRadialGradient(x,y*.95,0,x,y,r);fg.addColorStop(0,"#1a1000");fg.addColorStop(1,T.bg[0]);
@@ -1306,109 +1542,239 @@ window.switchTab = function(tab) {
     skCX.beginPath();skCX.arc(x,y,r*.88,0,Math.PI*2);skCX.strokeStyle="rgba(217,119,6,0.2)";skCX.lineWidth=1;skCX.stroke();
     var rom=["XII","I","II","III","IV","V","VI","VII","VIII","IX","X","XI"];
     skCX.textAlign="center";skCX.textBaseline="middle";
-    rom.forEach(function(rm,i){var a=i*Math.PI/6-Math.PI/2,fs=Math.round(r*(rm.length>3?0.075:rm.length>2?0.085:0.1));skCX.font="700 "+fs+"px 'Times New Roman',Georgia,serif";skCX.fillStyle=T.cn;skCX.fillText(rm,x+Math.cos(a)*r*.7,y+Math.sin(a)*r*.7);});
+    rom.forEach(function(rm,i){
+      var a=i*Math.PI/6-Math.PI/2,fs=Math.round(r*(rm.length>3?0.075:rm.length>2?0.085:0.1));
+      skCX.font="700 "+fs+"px 'Times New Roman',Georgia,serif";
+      skCX.fillStyle=T.cn;
+      skCX.fillText(rm,x+Math.cos(a)*r*.7,y+Math.sin(a)*r*.7);
+    });
     skCX.textBaseline="alphabetic";skHands(x,y,r,h,m,T);
   }
 
   // ── Render principal ───────────────────────────────────────────
-  function skDraw(){
+  function skRender(opts){
     if(!skCX) return;
-    var T=SK_TM[skTema];
-    var nomeEl=document.getElementById("sk-nome");
-    var hEl=document.getElementById("sk-h");
-    var mEl=document.getElementById("sk-m");
-    var subjEl=document.getElementById("sk-subj");
-    var name=(nomeEl&&nomeEl.value)||"Aluno";
-    var streak=skStreak;
-    var hrs=parseInt(hEl&&hEl.value)||2;
-    var mins=parseInt(mEl&&mEl.value)||30;
-    var subj=(subjEl&&subjEl.value)||"";
-    var phrase=skF();
-    var W=SK_W,H=SK_H;
+    var T = SK_TM[opts.tema] || SK_TM.fogo;
+    var W = SK_W, H = SK_H;
     skCX.clearRect(0,0,W,H);
+
     // BG
     var bg=skCX.createLinearGradient(0,0,W,H);
     T.bg.forEach(function(c,i){bg.addColorStop(i/2,c);});
     skCX.fillStyle=bg;skCX.fillRect(0,0,W,H);
     T.glows.forEach(function(g){skGlow(g[0],g[1],g[2],g[3]);});
-    ({fire:skBGFire,stars:skBGStars,matrix:skBGMatrix,aurora:skBGAurora,gold:skBGGold})[T.bgfn]();
+    ({fire:skBGFire,stars:skBGStars,matrix_clean:skBGMatrixClean,aurora:skBGAurora,gold:skBGGold})[T.bgfn]();
+
     // Top bar
     skCX.fillStyle="rgba(255,255,255,0.03)";skCX.fillRect(0,0,W,122);
     skCX.textAlign="center";skCX.textBaseline="alphabetic";
-    skCX.font="700 44px Poppins,system-ui,sans-serif";skCX.fillStyle=T.brand;skCX.fillText("RESUMOS DO ENZO",W/2,74);
-    skCX.font="400 30px Poppins,system-ui,sans-serif";skCX.fillStyle="rgba(255,255,255,0.2)";skCX.fillText("@resumosdoenzo",W/2,110);
-    var sl=skCX.createLinearGradient(60,0,W-60,0);sl.addColorStop(0,"transparent");sl.addColorStop(0.5,"rgba(255,255,255,0.1)");sl.addColorStop(1,"transparent");
-    skCX.strokeStyle=sl;skCX.lineWidth=1;skCX.beginPath();skCX.moveTo(60,126);skCX.lineTo(W-60,126);skCX.stroke();
+    skCX.font="700 44px Poppins,system-ui,sans-serif";skCX.fillStyle=T.brand;
+    skCX.fillText("RESUMOS DO ENZO",W/2,74);
+    skCX.font="400 30px Poppins,system-ui,sans-serif";skCX.fillStyle="rgba(255,255,255,0.2)";
+    skCX.fillText("@resumosdoenzo",W/2,110);
+    var sl=skCX.createLinearGradient(60,0,W-60,0);
+    sl.addColorStop(0,"transparent");sl.addColorStop(0.5,"rgba(255,255,255,0.1)");sl.addColorStop(1,"transparent");
+    skCX.strokeStyle=sl;skCX.lineWidth=1;
+    skCX.beginPath();skCX.moveTo(60,126);skCX.lineTo(W-60,126);skCX.stroke();
+
     // Nome
-    skCX.font="800 92px Poppins,system-ui,sans-serif";skCX.fillStyle="#ffffff";skCX.textAlign="center";skCX.fillText(name,W/2,260);
-    var nw=Math.min(skCX.measureText(name).width,840);
-    var ug=skCX.createLinearGradient(W/2-nw/2,0,W/2+nw/2,0);ug.addColorStop(0,"transparent");ug.addColorStop(0.5,T.a1);ug.addColorStop(1,"transparent");
+    skCX.font="800 92px Poppins,system-ui,sans-serif";skCX.fillStyle="#ffffff";skCX.textAlign="center";
+    skCX.fillText(opts.name,W/2,260);
+    var nw=Math.min(skCX.measureText(opts.name).width,840);
+    var ug=skCX.createLinearGradient(W/2-nw/2,0,W/2+nw/2,0);
+    ug.addColorStop(0,"transparent");ug.addColorStop(0.5,T.a1);ug.addColorStop(1,"transparent");
     skCX.fillStyle=ug;skCX.fillRect(W/2-nw/2,272,nw,3);
+
     // Icon
-    if(T.bgfn==="matrix"){skCX.font="700 52px Poppins,system-ui,sans-serif";skCX.fillStyle=T.a1;skCX.textAlign="center";skCX.fillText("[ STREAK ]",W/2,410);}
-    else{skCX.font="100px serif";skCX.textAlign="center";skCX.fillText(T.icon,W/2,448);}
-    // Streak
+    if(T.bgfn==="matrix_clean"){
+      skCX.font="700 52px 'Courier New',Courier,monospace";skCX.fillStyle=T.a1;skCX.textAlign="center";
+      skCX.fillText("[ STREAK ]",W/2,410);
+    } else {
+      skCX.font="100px serif";skCX.textAlign="center";skCX.fillText(T.icon,W/2,448);
+    }
+
+    // Streak number
     skCX.font="900 280px Poppins,system-ui,sans-serif";
-    var sg=skCX.createLinearGradient(0,450,0,760);T.sG.forEach(function(c,i){sg.addColorStop(i/(T.sG.length-1),c);});
-    if(skTema==="matrix"){skCX.shadowBlur=28;skCX.shadowColor=T.a1;}
-    skCX.fillStyle=sg;skCX.textAlign="center";skCX.fillText(String(streak),W/2,745);skCX.shadowBlur=0;
-    skCX.font="700 72px Poppins,system-ui,sans-serif";skCX.fillStyle="rgba(255,255,255,0.88)";skCX.textAlign="center";skCX.fillText("DIAS SEGUIDOS",W/2,830);
-    skCX.font="400 36px Poppins,system-ui,sans-serif";skCX.fillStyle="rgba(255,255,255,0.38)";skCX.fillText("de estudo consistente",W/2,880);
+    var sg=skCX.createLinearGradient(0,450,0,760);
+    T.sG.forEach(function(c,i){sg.addColorStop(i/(T.sG.length-1),c);});
+    if(opts.tema==="matrix"){skCX.shadowBlur=28;skCX.shadowColor=T.a1;}
+    skCX.fillStyle=sg;skCX.textAlign="center";
+    skCX.fillText(String(opts.streak),W/2,745);
+    skCX.shadowBlur=0;
+
+    skCX.font="700 72px Poppins,system-ui,sans-serif";skCX.fillStyle="rgba(255,255,255,0.88)";
+    skCX.fillText("DIAS SEGUIDOS",W/2,830);
+    skCX.font="400 36px Poppins,system-ui,sans-serif";skCX.fillStyle="rgba(255,255,255,0.38)";
+    skCX.fillText("de estudo consistente",W/2,880);
+
     // Progress
-    var bx=80,by=936,bw=W-160,bh=16,prog=Math.min(streak/30,1);
-    skCX.beginPath();skRR(bx,by,bw,bh,8);skCX.fillStyle="rgba(255,255,255,0.06)";skCX.fill();
-    if(prog>0.01){var pg=skCX.createLinearGradient(bx,0,bx+bw,0);pg.addColorStop(0,T.a1);pg.addColorStop(1,T.a3);skCX.beginPath();skRR(bx,by,bw*prog,bh,8);skCX.fillStyle=pg;skCX.fill();skCX.beginPath();skCX.arc(bx+bw*prog,by+bh/2,10,0,Math.PI*2);skCX.fillStyle=T.a3;skCX.fill();}
-    skCX.font="26px Poppins,system-ui,sans-serif";skCX.fillStyle="rgba(255,255,255,0.32)";skCX.textAlign="left";skCX.fillText(Math.round(prog*100)+"% da meta de 30 dias",bx,by+52);
+    var bx=80,by=936,bw=W-160,bh=16,prog=Math.min(opts.streak/30,1);
+    skRR(bx,by,bw,bh,8);skCX.fillStyle="rgba(255,255,255,0.06)";skCX.fill();
+    if(prog>0.01){
+      var pg=skCX.createLinearGradient(bx,0,bx+bw,0);
+      pg.addColorStop(0,T.a1);pg.addColorStop(1,T.a3);
+      skRR(bx,by,bw*prog,bh,8);skCX.fillStyle=pg;skCX.fill();
+      skCX.beginPath();skCX.arc(bx+bw*prog,by+bh/2,10,0,Math.PI*2);skCX.fillStyle=T.a3;skCX.fill();
+    }
+    skCX.font="26px Poppins,system-ui,sans-serif";skCX.fillStyle="rgba(255,255,255,0.32)";skCX.textAlign="left";
+    skCX.fillText(Math.round(prog*100)+"% da meta de 30 dias",bx,by+52);
+
     // Clock
     var ckY=1210,r=230;
-    if(T.ck==="classic") skCkClassic(W/2,ckY,r,hrs,mins,T);
-    else if(T.ck==="digital") skCkDigital(W/2,ckY,hrs,mins,T);
-    else if(T.ck==="minimal") skCkMinimal(W/2,ckY,r,hrs,mins,T);
-    else if(T.ck==="roman")   skCkRoman(W/2,ckY,r,hrs,mins,T);
-    // Tempo label
-    skCX.font="600 34px Poppins,system-ui,sans-serif";skCX.fillStyle="rgba(255,255,255,0.38)";skCX.textAlign="center";skCX.fillText("TEMPO DE ESTUDO",W/2,1510);
-    var tg2=skCX.createLinearGradient(W/2-160,0,W/2+160,0);tg2.addColorStop(0,T.a1);tg2.addColorStop(1,T.a3);
-    skCX.font="700 72px Poppins,system-ui,sans-serif";skCX.fillStyle=tg2;skCX.textAlign="center";skCX.fillText(hrs+"h "+(mins<10?"0":"")+mins+"min",W/2,1588);
+    if(T.ck==="classic")      skCkClassic(W/2,ckY,r,opts.hrs,opts.mins,T);
+    else if(T.ck==="digital") skCkDigital(W/2,ckY,opts.hrs,opts.mins,T);
+    else if(T.ck==="minimal") skCkMinimal(W/2,ckY,r,opts.hrs,opts.mins,T);
+    else if(T.ck==="roman")   skCkRoman(W/2,ckY,r,opts.hrs,opts.mins,T);
+
+    // Tempo
+    skCX.font="600 34px Poppins,system-ui,sans-serif";skCX.fillStyle="rgba(255,255,255,0.38)";skCX.textAlign="center";
+    skCX.fillText("TEMPO DE ESTUDO",W/2,1510);
+    var tg2=skCX.createLinearGradient(W/2-160,0,W/2+160,0);
+    tg2.addColorStop(0,T.a1);tg2.addColorStop(1,T.a3);
+    skCX.font="700 72px Poppins,system-ui,sans-serif";skCX.fillStyle=tg2;
+    skCX.fillText(opts.hrs+"h "+(opts.mins<10?"0":"")+opts.mins+"min",W/2,1588);
+
     // Tag matéria
-    if(subj){skCX.font="700 34px Poppins,system-ui,sans-serif";var tw=skCX.measureText(subj).width+56,tx=W/2-tw/2,ty=1618;skCX.beginPath();skRR(tx,ty,tw,56,28);skCX.fillStyle=T.tag[0];skCX.fill();skCX.strokeStyle=T.tag[1];skCX.lineWidth=1;skCX.stroke();skCX.fillStyle=T.tag[2];skCX.textAlign="center";skCX.fillText(subj,W/2,1656);}
+    if(opts.subj){
+      skCX.font="700 34px Poppins,system-ui,sans-serif";
+      var tw=skCX.measureText(opts.subj).width+56,tx=W/2-tw/2,ty=1618;
+      skRR(tx,ty,tw,56,28);skCX.fillStyle=T.tag[0];skCX.fill();
+      skCX.strokeStyle=T.tag[1];skCX.lineWidth=1;skRR(tx,ty,tw,56,28);skCX.stroke();
+      skCX.fillStyle=T.tag[2];skCX.textAlign="center";skCX.fillText(opts.subj,W/2,1656);
+    }
+
     // Frase
-    skCX.font='italic 36px Poppins,system-ui,sans-serif';skCX.fillStyle="rgba(255,255,255,0.56)";skCX.textAlign="center";skWC('"'+phrase+'"',W/2,1730,W-100,52);
+    skCX.font='italic 36px Poppins,system-ui,sans-serif';
+    skCX.fillStyle="rgba(255,255,255,0.56)";skCX.textAlign="center";
+    skWC('"'+opts.phrase+'"',W/2,1730,W-100,52);
+
     // Data
     var ds=new Date().toLocaleDateString("pt-BR",{day:"numeric",month:"long",year:"numeric"});
-    skCX.font="26px Poppins,system-ui,sans-serif";skCX.fillStyle="rgba(255,255,255,0.18)";skCX.textAlign="center";skCX.fillText(ds,W/2,H-42);
+    skCX.font="26px Poppins,system-ui,sans-serif";skCX.fillStyle="rgba(255,255,255,0.18)";
+    skCX.fillText(ds,W/2,H-42);
   }
-  window.skDraw = skDraw;
 
+  // ── Estado e dados ─────────────────────────────────────────────
+  var skState = { streak:1, best:1, tier:null, tema:"fogo", name:"", subj:"", hrs:0, mins:30 };
+
+  function skBuildOpts(){
+    var s   = skInitStreak();
+    var t   = skTierFor(s.cnt);
+    var hm  = skTodayHM();
+    var name = (window.profile && window.profile.nome_preferido) ||
+               localStorage.getItem("ez-nome-aluno") ||
+               "Aluno";
+    var subj = skLastSubject();
+    skState = {
+      streak: s.cnt, best: s.best, tier: t, tema: t.tema,
+      name: name, subj: subj, hrs: hm.h, mins: hm.m,
+      phrase: skCurrentFrase()
+    };
+    return skState;
+  }
+
+  // ── Atualiza HERO (números + tier badge) ───────────────────────
+  function skUpdateHero(){
+    var s = skInitStreak();
+    var t = skTierFor(s.cnt);
+    var n = document.getElementById("sk-num");
+    var b = document.getElementById("sk-best");
+    var ti = document.getElementById("sk-tier-icon");
+    var tl = document.getElementById("sk-tier-lbl");
+    var h2 = document.getElementById("sk-hero-h2");
+    var sub = document.getElementById("sk-hero-sub");
+    var meta = document.getElementById("sk-empty-meta");
+    if(n) n.textContent = s.cnt;
+    if(b) b.textContent = s.best;
+    if(ti) ti.textContent = t.icon;
+    if(tl) tl.textContent = t.label;
+    if(h2) {
+      if (s.cnt === 1) h2.textContent = "Sua jornada começa hoje";
+      else if (s.cnt < 7) h2.textContent = "Você está pegando o ritmo";
+      else if (s.cnt < 15) h2.textContent = "Consistência impressionante";
+      else if (s.cnt < 30) h2.textContent = "Você está entre os melhores";
+      else h2.textContent = "Você é uma lenda viva 👑";
+    }
+    if(sub) sub.textContent = "Tema atual: " + t.icon + " " + t.label + " — desbloqueado pelo seu streak";
+    if(meta) {
+      var hm = skTodayHM();
+      meta.innerHTML = "Hoje você estudou <strong style='color:#22d3ee'>"+hm.h+"h "+(hm.m<10?"0":"")+hm.m+"min</strong> · Tema desbloqueado: <strong style='color:#22d3ee'>"+t.label+"</strong>";
+    }
+  }
+
+  // ── Tab abriu ──────────────────────────────────────────────────
+  window.skOnTabOpen = function(){
+    skUpdateHero();
+  };
+
+  // ── Botão GERAR ────────────────────────────────────────────────
+  window.skGenerate = function(){
+    skCV = document.getElementById("streakCanvas");
+    if(!skCV) return;
+    skCX = skCV.getContext("2d");
+
+    var opts = skBuildOpts();
+    skRender(opts);
+
+    // Esconde empty, mostra result
+    var empty = document.getElementById("sk-empty-state");
+    var result = document.getElementById("sk-result-state");
+    if(empty)  empty.style.display = "none";
+    if(result) result.style.display = "flex";
+
+    // Meta do resultado
+    var rt = document.getElementById("sk-result-tier");
+    if(rt) {
+      rt.innerHTML = "Tema <strong>" + opts.tier.icon + " " + opts.tier.label +
+        "</strong> · Streak de <strong>" + opts.streak + " dia"+(opts.streak===1?"":"s")+"</strong>" +
+        " · <strong>" + opts.hrs + "h " + (opts.mins<10?"0":"") + opts.mins + "min</strong> hoje";
+    }
+  };
+
+  // ── Regenerar com outra frase ──────────────────────────────────
+  window.skRegenerate = function(){
+    skNextFraseIndex();
+    var opts = skBuildOpts();
+    skRender(opts);
+  };
+
+  // ── Download PNG ───────────────────────────────────────────────
   window.skDownload = function(){
-    skDraw();
-    var nome=document.getElementById("sk-nome");
-    var a=document.createElement("a");
-    a.download="streak-"+skTema+"-"+(nome&&nome.value?nome.value.replace(/\s+/g,"-"):"aluno")+".png";
-    a.href=skCV.toDataURL("image/png");a.click();
+    if(!skCV) return;
+    var a = document.createElement("a");
+    var nm = (skState.name||"aluno").replace(/\s+/g,"-").toLowerCase();
+    a.download = "streak-"+skState.tema+"-"+nm+"-dia-"+skState.streak+".png";
+    a.href = skCV.toDataURL("image/png");
+    a.click();
+  };
+
+  // ── Compartilhar (Web Share API) ───────────────────────────────
+  window.skShare = function(){
+    if(!skCV) return;
+    skCV.toBlob(function(blob){
+      if(!blob){ window.skDownload(); return; }
+      var file = new File([blob], "streak-resumos-do-enzo.png", { type:"image/png" });
+      if (navigator.canShare && navigator.canShare({ files:[file] })) {
+        navigator.share({
+          files:[file],
+          title:"Meu streak no Resumos do Enzo",
+          text:"🔥 "+skState.streak+" dias seguidos estudando! @resumosdoenzo"
+        }).catch(function(){});
+      } else {
+        window.skDownload();
+        alert("📤 Card baixado! Agora é só abrir o Instagram e postar nos Stories.");
+      }
+    }, "image/png");
   };
 
   // ── Init ao authReady ──────────────────────────────────────────
-  document.addEventListener("authReady", function(e){
-    skStreak = skInitStreak();
-    var nomeEl = document.getElementById("sk-nome");
-    var phraseEl = document.getElementById("sk-phrase-txt");
-    if(phraseEl) phraseEl.textContent = skF();
-    // Preenche nome do perfil
-    function tryFillNome(){
-      if(window.profile && window.profile.nome_preferido && nomeEl && !nomeEl.value){
-        nomeEl.value = window.profile.nome_preferido;
-      }
-    }
-    tryFillNome();
-    setTimeout(tryFillNome, 500);
-    // Atualiza contador visual
-    var numEl=document.getElementById("sk-num");
-    var bestEl=document.getElementById("sk-best");
-    if(numEl) numEl.textContent=skStreak;
-    if(bestEl) bestEl.textContent=localStorage.getItem("ez-sk-best")||skStreak;
+  document.addEventListener("authReady", function(){
+    skInitStreak();
+    skUpdateHero();
   });
 
 })();
+
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function colKey(materia, tipo) {
@@ -1579,6 +1945,11 @@ function renderResumosGrid() {
 
 window.openMateria = function(key) {
   currentMateria = key;
+  // Salva última matéria aberta — usado no Streak Card
+  try {
+    var m = MATERIAS.find(function(mt){ return mt.key === key; });
+    if (m) localStorage.setItem("ez-last-materia", m.label || m.nome || key);
+  } catch(e) {}
   var searchBar = document.getElementById("searchBarWrap");
   if (searchBar) searchBar.style.display = "none";
   renderResumosGrid();
@@ -2258,19 +2629,6 @@ document.addEventListener("authReady", async function(e) {
   renderWelcome();
   renderResumosGrid();
   renderStore();
-
-  // ── Streak card: preenche nome e contadores após profile carregado ───────────
-  var skNomeInput = document.getElementById("sk-nome");
-  if (skNomeInput && profile && profile.nome_preferido) {
-    skNomeInput.value = profile.nome_preferido;
-  }
-  var skNumEl  = document.getElementById("sk-num");
-  var skBestEl = document.getElementById("sk-best");
-  var skCnt  = parseInt(localStorage.getItem("ez-sk-cnt"))  || 1;
-  var skBest = parseInt(localStorage.getItem("ez-sk-best")) || 1;
-  if (skNumEl)  skNumEl.textContent  = skCnt;
-  if (skBestEl) skBestEl.textContent = skBest;
-  if (typeof window.skDraw === "function") setTimeout(window.skDraw, 80);
 });
 
 })();
