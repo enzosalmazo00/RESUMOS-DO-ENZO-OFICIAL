@@ -21,14 +21,153 @@ var isCountdown    = false;
 var countdownGoal  = 0;          // meta em segundos
 var countdownDone  = false;
 
-// Notificações de pausa
-var notificacoes = [
-  { min: 30,  shown: false, msg: "💧 Ei! Você está estudando há <strong>30 minutos</strong> seguidos. Não se esqueça de beber água e dar uma respirada!" },
-  { min: 60,  shown: false, msg: "🦵 <strong>1 hora</strong> de estudo intenso! Hora de esticar as pernas, se hidratar e descansar os olhos por 5 minutinhos." },
-  { min: 90,  shown: false, msg: "🧠 <strong>1h30 de foco total!</strong> Seu cérebro agradece uma pausa. Levante, respire fundo — você merece!" },
-  { min: 120, shown: false, msg: "🏆 <strong>2 horas estudando!</strong> Isso é dedicação de verdade. Faça uma pausa maior — você está indo muito bem!" },
-  { min: 180, shown: false, msg: "⭐ <strong>3 horas!</strong> Você é incrível. Mas agora é obrigação: pare, coma algo e volte renovado(a)!" },
+// ── Notificações por marco de estudo ──────────────────────────────────────────
+// Sistema ROTATIVO: pool de 50 frases motivacionais sorteadas aleatoriamente,
+// combinadas com dicas de cuidado variadas. Cada marco mostra a confirmação
+// do tempo estudado + frase motivacional + dica de cuidado.
+// Cada marco só dispara UMA vez por dia (persistido no localStorage).
+
+// 50 frases motivacionais (sorteadas aleatoriamente a cada marco)
+var FRASES_MOTIVACIONAIS = [
+  "Essa prova já está cada vez mais perto da sua aprovação!",
+  "Cada página estudada hoje é um passo a menos até a aprovação.",
+  "Grandes resultados são construídos em pequenas sessões de foco.",
+  "Seu futuro agradece cada minuto investido agora.",
+  "Seu cérebro está absorvendo conhecimento neste exato momento.",
+  "A disciplina de hoje será o orgulho de amanhã.",
+  "Enquanto muitos desistiram, você continua aqui.",
+  "A aprovação pertence a quem persiste. Você já venceu mais uma etapa.",
+  "Seu esforço está se transformando em conhecimento sólido.",
+  "O segredo do sucesso está na constância.",
+  "Todo conhecimento acumulado hoje crescerá amanhã.",
+  "Você não está apenas estudando, está construindo sua carreira.",
+  "Cada minuto de estudo aproxima você do profissional que deseja ser.",
+  "O esforço que você faz agora será recompensado.",
+  "Seu progresso é real, mesmo quando parece lento. Continue firme.",
+  "Conhecimento acumulado diariamente gera resultados extraordinários.",
+  "Você sabe mais agora do que sabia há pouco tempo.",
+  "A consistência sempre vence a motivação passageira.",
+  "Seu objetivo está mais próximo do que imagina.",
+  "Você está investindo em algo que ninguém pode tirar de você: conhecimento.",
+  "Sua dedicação já coloca você à frente da maioria.",
+  "Sua aprovação está sendo construída agora mesmo.",
+  "Esse foco pode mudar o resultado de uma prova inteira.",
+  "Você acabou de completar mais uma etapa de progresso real.",
+  "Seu esforço de hoje será seu diferencial amanhã.",
+  "Seu cérebro trabalhou intensamente. Vale cuidar dele agora.",
+  "Tempo investido em você nunca é tempo perdido.",
+  "Excelente trabalho mantendo o foco até aqui!",
+  "Cada hora estudada é uma camada a mais de confiança para a prova.",
+  "Imagine a sensação de ver sua nota quando todo esse esforço valer a pena.",
+  "Você já venceu a parte mais difícil: permanecer estudando.",
+  "Grandes conquistas são construídas exatamente assim, uma hora de cada vez.",
+  "Seu conhecimento está se consolidando a cada revisão.",
+  "Você está treinando seu cérebro para performar quando mais precisar.",
+  "Seu futuro profissional está sendo construído agora.",
+  "O estudante consistente sempre supera quem depende apenas de motivação.",
+  "Você está demonstrando disciplina. Isso vale ouro em qualquer carreira.",
+  "Cada conceito aprendido hoje será uma questão a mais acertada amanhã.",
+  "A versão futura de você ficará orgulhosa deste momento.",
+  "Seu esforço de hoje pode mudar toda sua trajetória acadêmica.",
+  "Você já percorreu uma boa parte do caminho. Continue avançando.",
+  "Seu cérebro aprende melhor quando você cuida dele.",
+  "Pequenos avanços diários criam resultados extraordinários ao longo do tempo.",
+  "Não subestime o poder de mais uma sessão de estudos. Ela pode fazer toda a diferença.",
+  "Seu objetivo não está distante. Você está caminhando até ele neste exato momento.",
+  "O sucesso acadêmico é uma maratona, e você está mantendo o ritmo.",
+  "Mais uma pausa estratégica. Volte com tudo.",
+  "Você está transformando esforço em oportunidades futuras.",
+  "Se você chegou até aqui, consegue ir muito mais longe.",
+  "Cada minuto investido hoje é um investimento direto no seu futuro."
 ];
+
+// Dicas de cuidado (rotacionam junto com a frase motivacional)
+var DICAS_CUIDADO = [
+  "💧 Que tal beber um pouco de água antes de continuar?",
+  "🦵 Levante-se e alongue os ombros por 30 segundos.",
+  "👀 Descanse os olhos: olhe para um ponto distante por 20 segundos.",
+  "🫁 Respire fundo 3 vezes, devagar — oxigene o cérebro.",
+  "💧 Hidrate-se e siga firme!",
+  "🤸 Alongue o pescoço suavemente para os dois lados.",
+  "🚶 Dê 10 passos pela sala e volte renovado(a).",
+  "🍎 Que tal uma fruta ou um lanche leve? Energia certa multiplica o rendimento.",
+  "💧 Tome um gole d'água e prepare-se para mais uma rodada.",
+  "🤲 Alongue os pulsos e os dedos — você usa muito ao escrever.",
+  "🧘 Pause 1 minuto e respire calmamente.",
+  "🌿 Beba água e estique a coluna lentamente.",
+  "🦶 Tire os pés do chão por 30 segundos e mexa os tornozelos.",
+  "🍊 Já comeu bem hoje? Alimentação adequada potencializa a memória.",
+  "💆 Massageie suavemente as têmporas por alguns segundos."
+];
+
+// Sorteia uma frase motivacional + uma dica (sem repetir as últimas)
+var historicoFrases = [];
+var historicoDicas = [];
+function sortearFrase() {
+  var avail = FRASES_MOTIVACIONAIS.map(function(_, i){ return i; })
+                                   .filter(function(i){ return historicoFrases.indexOf(i) === -1; });
+  if (avail.length === 0) { historicoFrases = []; avail = FRASES_MOTIVACIONAIS.map(function(_, i){ return i; }); }
+  var idx = avail[Math.floor(Math.random() * avail.length)];
+  historicoFrases.push(idx);
+  if (historicoFrases.length > 10) historicoFrases.shift();
+  return FRASES_MOTIVACIONAIS[idx];
+}
+function sortearDica() {
+  var avail = DICAS_CUIDADO.map(function(_, i){ return i; })
+                            .filter(function(i){ return historicoDicas.indexOf(i) === -1; });
+  if (avail.length === 0) { historicoDicas = []; avail = DICAS_CUIDADO.map(function(_, i){ return i; }); }
+  var idx = avail[Math.floor(Math.random() * avail.length)];
+  historicoDicas.push(idx);
+  if (historicoDicas.length > 5) historicoDicas.shift();
+  return DICAS_CUIDADO[idx];
+}
+
+// Formata o tempo estudado em texto amigável
+function formatarTempoEstudado(minutos) {
+  if (minutos < 60) return minutos + " minutos";
+  var h = Math.floor(minutos / 60);
+  var m = minutos % 60;
+  if (m === 0) return h + (h === 1 ? " hora" : " horas");
+  return h + "h" + (m < 10 ? "0" + m : m) + " de estudo";
+}
+
+// Monta a mensagem completa para um marco específico
+function montarMensagem(minutos) {
+  var tempo = formatarTempoEstudado(minutos);
+  var emoji = ["🚀","📚","💪","🎯","🧠","🌟","🔥","🏆","📖","⚡","🌱","🎓","🏅","📈","🔬","💡","🚑"][Math.floor(Math.random() * 17)];
+  var frase = sortearFrase();
+  var dica = sortearDica();
+  return emoji + " <strong>" + tempo + " concluídos!</strong> " + frase +
+         "<br><span style='opacity:0.75;font-size:12px'>" + dica + "</span>";
+}
+
+// Marcos de tempo (em minutos) — apenas os pontos em que a notificação dispara.
+// A mensagem é gerada dinamicamente toda vez.
+var MARCOS_MIN = [30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360];
+
+// Chave do localStorage para marcos já notificados hoje
+function notifKey() {
+  return "ez-st-notif-" + new Date().toISOString().slice(0,10);
+}
+function loadShown() {
+  try { return JSON.parse(localStorage.getItem(notifKey()) || "[]"); }
+  catch(e) { return []; }
+}
+function saveShown(arr) {
+  try { localStorage.setItem(notifKey(), JSON.stringify(arr)); } catch(e) {}
+}
+// Limpa marcos de dias anteriores (housekeeping)
+function cleanOldNotifs() {
+  try {
+    var today = notifKey();
+    for (var i = localStorage.length - 1; i >= 0; i--) {
+      var k = localStorage.key(i);
+      if (k && k.indexOf("ez-st-notif-") === 0 && k !== today) {
+        localStorage.removeItem(k);
+      }
+    }
+  } catch(e) {}
+}
 
 // ── CSS ───────────────────────────────────────────────────────────────────────
 var css = [
@@ -236,14 +375,22 @@ function tick() {
     t.textContent = formatTime(elapsedSec());
   }
 
-  // Notificações de pausa (sempre baseadas em tempo decorrido)
+  // Notificações de pausa — persistente no localStorage, anti-cascata
   var min = elapsedSec() / 60;
-  notificacoes.forEach(function(n){
-    if (!n.shown && min >= n.min) {
-      n.shown = true;
-      showToast(n.msg);
+  var shownToday = loadShown();
+  var newShown = false;
+  MARCOS_MIN.forEach(function(marcoMin){
+    if (shownToday.indexOf(marcoMin) === -1 && min >= marcoMin) {
+      shownToday.push(marcoMin);
+      newShown = true;
+      // Só mostra toast se o marco foi atingido nos últimos 10 minutos
+      // (evita cascata quando o aluno volta com tempo acumulado)
+      if (min - marcoMin < 10) {
+        showToast(montarMensagem(marcoMin));
+      }
     }
   });
+  if (newShown) saveShown(shownToday);
 }
 
 function startCountdown(min) {
@@ -393,6 +540,7 @@ async function saveToSupabase() {
 // ── INIT ──────────────────────────────────────────────────────────────────────
 document.addEventListener("authReady", async function() {
   buildWidget();
+  cleanOldNotifs();  // Remove marcos de notificação de dias anteriores
   // Carrega minutos já estudados hoje (não zera ao recarregar a página)
   elapsedAtStart = (await loadTodayMinutes()) * 60;
   startTime = Date.now();
