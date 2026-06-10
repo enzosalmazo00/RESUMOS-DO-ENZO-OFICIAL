@@ -457,8 +457,10 @@ li { margin:5px 0; }
   <button onclick="showSection('frankstarling',this)">📏 Frank-Starling</button>
   <button onclick="showSection('bainbridge',this)">🔄 Bainbridge</button>
   <button onclick="showSection('ruidos',this)">🔊 Ruídos</button>
+  <button onclick="showSection('transporte',this)">🔬 Transporte</button>
   <button onclick="showSection('ecgondas',this)">📈 ECG Ondas</button>
   <button onclick="showSection('ecgeleto',this)">🔌 ECG Eletrodos</button>
+  <button onclick="showSection('pegadinhas',this)">⚠️ Pegadinhas</button>
   <button onclick="showSection('flashcards',this)">🃏 Flashcards</button>
   <button onclick="showSection('fillin',this)">✏️ Completar</button>
   <button onclick="showSection('quiz',this)">❓ Simulado</button>
@@ -472,7 +474,7 @@ li { margin:5px 0; }
 <div class="info-block">
   <div class="label">Visão Geral</div>
   <h4>Sobre este material</h4>
-  <p>Este resumo cobre o conteúdo de P2 de Biofísica Cardíaca organizado em 14 blocos temáticos: <strong>estrutura e função cardíaca</strong>, <strong>5 propriedades</strong>, <strong>automatismo</strong>, <strong>potenciais de ação</strong>, <strong>período refratário</strong>, <strong>sistema de condução</strong>, <strong>cálcio cardíaco</strong>, <strong>hemodinâmica</strong>, <strong>Lei de Frank-Starling</strong>, <strong>Reflexo de Bainbridge</strong>, <strong>ruídos cardíacos</strong> e <strong>ECG</strong>. Inclui 30 flashcards interativos, 5 questões de completar e simulado com 20 questões.</p>
+  <p>Este resumo cobre o conteúdo de P2 de Biofísica Cardíaca organizado em 14 blocos temáticos: <strong>estrutura e função cardíaca</strong>, <strong>5 propriedades</strong>, <strong>automatismo</strong>, <strong>potenciais de ação</strong>, <strong>período refratário</strong>, <strong>sistema de condução</strong>, <strong>cálcio cardíaco</strong>, <strong>hemodinâmica</strong>, <strong>Lei de Frank-Starling</strong>, <strong>Reflexo de Bainbridge</strong>, <strong>ruídos cardíacos</strong> e <strong>ECG</strong>. Inclui 49 flashcards interativos, 5 questões de completar e simulado com <strong>112 questões</strong> (gabaritado com questões reais de prova + V/F comentado), 50 flashcards e seção de pegadinhas de prova.</p>
 </div>
 
 <div class="info-block success">
@@ -732,10 +734,12 @@ li { margin:5px 0; }
 
 <div style="margin:24px 0;">
   <div class="sbar"><span class="sname">NSA → Aurículas</span><div class="strack"><div class="sfill" style="width:25%;background:linear-gradient(90deg,#e74c3c,#f9c94f);"></div></div><span class="sval">~1,0 m/s</span></div>
+  <div class="sbar"><span class="sname">Vias Internodais</span><div class="strack"><div class="sfill" style="width:28%;background:linear-gradient(90deg,#f9784f,#f9c94f);"></div></div><span class="sval" style="color:#f9c94f;">1–2 m/s</span></div>
+  <div class="sbar"><span class="sname">Músculo Auricular</span><div class="strack"><div class="sfill" style="width:11%;background:linear-gradient(90deg,#e74c3c,rgba(231,76,60,.5));"></div></div><span class="sval" style="color:#e74c3c;">0,3–0,5 m/s</span></div>
   <div class="sbar"><span class="sname">Nó AtrioVentricular (NAV)</span><div class="strack"><div class="sfill" style="width:1%;background:rgba(231,76,60,.6);"></div></div><span class="sval" style="color:#e74c3c">0,03 m/s 🐢</span></div>
   <div class="sbar"><span class="sname">Feixe de His</span><div class="strack"><div class="sfill" style="width:15%;background:linear-gradient(90deg,var(--accent),#7cb9fb);"></div></div><span class="sval" style="color:#7cb9fb">~0,6 m/s</span></div>
   <div class="sbar"><span class="sname">Fibras de Purkinje</span><div class="strack"><div class="sfill" style="width:100%;background:linear-gradient(90deg,#f9c94f,#fbd97f);"></div></div><span class="sval" style="color:#f9c94f">~4,0 m/s ⚡</span></div>
-  <div class="sbar"><span class="sname">Miocárdio Ventricular</span><div class="strack"><div class="sfill" style="width:9%;background:rgba(255,255,255,.25);"></div></div><span class="sval" style="color:var(--muted)">~0,3–0,4 m/s</span></div>
+  <div class="sbar"><span class="sname">Músculo Contrátil Ventricular</span><div class="strack"><div class="sfill" style="width:9%;background:rgba(255,255,255,.25);"></div></div><span class="sval" style="color:var(--muted)">~0,3–0,4 m/s</span></div>
 </div>
 
 <div class="t2c">
@@ -987,6 +991,142 @@ li { margin:5px 0; }
 </div>
 </div></div>
 
+<!-- ===== TRANSPORTE E MEMBRANA ===== -->
+<div id="transporte" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🔬</span> Módulo — Transporte de Membrana e Fisiologia Muscular</div>
+
+<div class="info-block blue">
+  <div class="label">💡 Conceitos Frequentes em Prova</div>
+  <p>Este módulo reúne conceitos de <strong>transporte de membrana</strong> (potencial de Nernst, difusão, transporte ativo/passivo, osmose, lipossolubilidade) e <strong>fisiologia muscular</strong> (músculo esquelético, liso unitário/multiunitário, titina, contração). Aparecem frequentemente nas questões de biofísica!</p>
+</div>
+
+<div class="sec-divider"><h3>Mapa de Conceitos de Transporte</h3></div>
+
+<div class="compare-table" style="border-radius:14px;overflow:hidden;margin-bottom:20px;">
+  <table style="width:100%;border-collapse:collapse;">
+    <thead><tr><th>Conceito</th><th>Definição</th><th>Gasta ATP?</th><th>Exemplo</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Difusão simples</strong></td><td>Energia cinética — movimento a favor do gradiente</td><td>Não</td><td>O₂, CO₂ pela membrana</td></tr>
+      <tr><td><strong>Difusão facilitada</strong></td><td>Via proteína transportadora, a favor do gradiente. Tem Vmax (saturação)</td><td>Não</td><td>Glicose (GLUT), íons via canais</td></tr>
+      <tr><td><strong>Transporte ativo</strong></td><td>Proteína transportadora CONTRA gradiente — necessita energia</td><td>Sim</td><td>Bomba Na⁺/K⁺ ATPase</td></tr>
+      <tr><td><strong>Osmose</strong></td><td>Difusão de água pelo gradiente osmótico. Pressão osmótica é a pressão que impede a osmose</td><td>Não</td><td>Água do hipotônico → hipertônico</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="cg2">
+  <div class="card-item">
+    <span class="card-ico">⚡</span>
+    <div class="card-t">Potencial de Nernst</div>
+    <div class="card-b">Nível de potencial elétrico através da membrana que <strong>impede a difusão líquida de um íon específico</strong>. É o equilíbrio entre a força elétrica e o gradiente químico daquele íon. Ex: K⁺ ≈ −86 mV, Na⁺ ≈ +61 mV.</div>
+  </div>
+  <div class="card-item">
+    <span class="card-ico">🧴</span>
+    <div class="card-t">Lipossolubilidade</div>
+    <div class="card-b">Fator que determina a <strong>rapidez com que uma substância atravessa a membrana lipídica</strong>. Quanto maior a lipossolubilidade, mais fácil e rápida a passagem pela bicamada. Gases e hormônios esteroidais são altamente lipossolúveis.</div>
+  </div>
+  <div class="card-item">
+    <span class="card-ico">🔁</span>
+    <div class="card-t">Retroalimentação Negativa</div>
+    <div class="card-b">Mecanismo de <strong>homeostase</strong>: quando um fator aumenta ou diminui, surgem mudanças que o fazem <strong>retornar ao valor médio</strong>. Corrije desvios. Ex: controle de pressão arterial, temperatura corporal.</div>
+  </div>
+  <div class="card-item">
+    <span class="card-ico">📈</span>
+    <div class="card-t">Retroalimentação Positiva</div>
+    <div class="card-b">Processo que <strong>amplifica o estímulo inicial</strong>. Ex: abertura de canais de Na⁺ no potencial de ação — mais Na⁺ entra → mais canais abrem → ainda mais Na⁺ entra (explosivo). Não é homeostático!</div>
+  </div>
+  <div class="card-item">
+    <span class="card-ico">🚀</span>
+    <div class="card-t">Vmax na Difusão Facilitada</div>
+    <div class="card-b">Como a difusão facilitada depende de proteínas transportadoras, há <strong>saturação</strong>. Quando todos os transportadores estão ocupados, o fluxo se aproxima de um <strong>máximo (Vmax)</strong>. A difusão simples NÃO tem esse limite.</div>
+  </div>
+  <div class="card-item">
+    <span class="card-ico">🌊</span>
+    <div class="card-t">Pressão Osmótica</div>
+    <div class="card-b">Pressão necessária para <strong>deter a osmose</strong> — impede que a água continue passando pelo gradiente osmótico. Quanto maior a concentração de solutos, maior a pressão osmótica. Determina o movimento de fluidos corporais.</div>
+  </div>
+</div>
+
+<div class="info-block danger">
+  <div class="label">❗ Armadilha Clássica — Pareamento de Colunas</div>
+  <ul>
+    <li><strong>Potencial de Nernst</strong> = nível de potencial que impede difusão líquida de um íon (NÃO é osmose)</li>
+    <li><strong>Lipossolubilidade</strong> = rapidez com que substância atravessa membrana (NÃO é transporte ativo)</li>
+    <li><strong>Difusão</strong> = energia cinética que gera movimento das moléculas (NÃO é contra gradiente)</li>
+    <li><strong>Transporte ativo</strong> = proteína transportadora CONTRA gradiente (NÃO é difusão)</li>
+    <li><strong>Pressão osmótica</strong> = pressão necessária para DETER osmose (NÃO é Nernst)</li>
+  </ul>
+</div>
+
+<div class="sec-divider"><h3>Fisiologia Muscular — Pontos de Prova</h3></div>
+
+<div class="t2c">
+  <div class="card-item">
+    <span class="card-ico">🦴</span>
+    <div class="card-t">Músculo Esquelético — Contração</div>
+    <div class="card-b">
+      <strong>Junção neuromuscular:</strong><br>
+      Potencial de ação no nervo → canais de <strong>Ca²⁺</strong> abrem no terminal nervoso → Ca²⁺ entra → fusão de vesículas → libera <strong>Acetilcolina (ACh)</strong> → despolarização muscular → contração.<br><br>
+      <em style="color:var(--muted)">⚠️ É o Ca²⁺ que desencadeia a liberação de ACh — NÃO o Na⁺ ou K⁺!</em>
+    </div>
+  </div>
+  <div class="card-item">
+    <span class="card-ico">🧬</span>
+    <div class="card-t">Titina — Proteína do Sarcômero</div>
+    <div class="card-b">
+      Proteína elástica gigante que <strong>mantém os filamentos de actina e miosina em posição</strong> no sarcômero. Funciona como mola molecular — garante elasticidade e alinhamento dos filamentos grossos.<br><br>
+      <em style="color:var(--muted)">Cuidado com nomes parecidos: <strong>Titina</strong> (correta) ≠ Tinina, Fibronina, Cistina.</em>
+    </div>
+  </div>
+</div>
+
+<div class="compare-table" style="border-radius:14px;overflow:hidden;margin-top:20px;">
+  <table style="width:100%;border-collapse:collapse;">
+    <thead><tr><th>Tipo Muscular</th><th>Funcionamento</th><th>Localização</th><th>Fibras independentes?</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Unitário (Liso)</strong></td><td>Muitas células contraem <strong>juntas como uma massa</strong> — acopladas eletricamente</td><td>Paredes da maioria das vísceras (intestino, útero, vasos)</td><td><strong>NÃO</strong> — contraem em conjunto</td></tr>
+      <tr><td><strong>Multiunitário (Liso)</strong></td><td>Cada fibra contrai <strong>independentemente</strong></td><td>Íris, músculos ciliares, vasos grandes</td><td><strong>SIM</strong> — independentes</td></tr>
+      <tr><td><strong>Esquelético</strong></td><td>Controlado por unidades motoras</td><td>Músculos voluntários</td><td>Sim (unidade motora)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="info-block warn">
+  <div class="label">⚠️ Músculo Liso Unitário — Característica Principal</div>
+  <p>O músculo liso <strong>unitário</strong> contrai como uma massa única — NÃO cada fibra independentemente! Independência de cada fibra = <strong>multiunitário</strong>. A contração no músculo liso é iniciada pela <strong>miosina quinase de cadeia leve</strong> (ativada por Ca²⁺-calmodulina) — NÃO a miosina fosfatase (que favorece relaxamento).</p>
+</div>
+
+<div class="sec-divider"><h3>Temperatura e Função Cardíaca</h3></div>
+
+<div class="compare-table" style="border-radius:14px;overflow:hidden;">
+  <table style="width:100%;border-collapse:collapse;">
+    <thead><tr><th>Condição</th><th>Efeito na FC</th><th>Mecanismo</th><th>Observação Clínica</th></tr></thead>
+    <tbody>
+      <tr><td><strong>↑ Temperatura (febre)</strong></td><td>↑↑ FC (taquicardia)</td><td>Permeabilidade iônica aumenta → rampa diastólica mais íngreme</td><td>Febre aumenta muito a FC</td></tr>
+      <tr><td><strong>↓ Temperatura (hipotermia)</strong></td><td>↓ FC (bradicardia)</td><td>Metabolismo reduzido → rampa mais lenta</td><td>Hipotermia induzida na cirurgia</td></tr>
+      <tr><td><strong>↑↑ Temperatura prolongada</strong></td><td>↑ FC + ↓ força</td><td>Desnaturação proteica, depleção metabólica</td><td>Pode debilitar/lesar o coração</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="info-block danger">
+  <div class="label">❗ Pegadinha Clássica — Temperatura e Permeabilidade</div>
+  <p>O calor <strong>AUMENTA</strong> a permeabilidade iônica (não reduz). Afirmativas dizendo "calor reduz permeabilidade iônica" são <strong>FALSAS</strong>. Temperatura ↑ = metabolismo ↑ = permeabilidade ↑ = FC ↑.</p>
+</div>
+
+<div class="sec-divider"><h3>Pressão Aórtica e Ciclo Cardíaco</h3></div>
+
+<div class="formula">
+  Pressão do VE para abrir válvula aórtica ≈ <strong>120 mmHg</strong> (pressão sistólica)<br>
+  Pós-carga = resistência aórtica + resistência vascular periférica<br><br>
+  Pré-carga → diástole → enchimento → VTD<br>
+  Pós-carga → sístole → ejeção → tensão nas paredes ventriculares<br><br>
+  Retorno venoso (veias cavas + seio coronário) → define PRECARGA (NÃO pós-carga!)
+</div>
+
+</div></div>
+
 <!-- ===== ECG ONDAS ===== -->
 <div id="ecgondas" class="section">
 <div class="container">
@@ -1113,11 +1253,115 @@ li { margin:5px 0; }
 </div>
 </div></div>
 
+<!-- ===== PEGADINHAS ===== -->
+<div id="pegadinhas" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">⚠️</span> Pegadinhas Identificadas nas Provas do Dr.</div>
+
+<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Armadilhas reais identificadas nas provas. Cada item mostra a afirmação como ela aparece e o porquê é errada.</p>
+
+<div class="info-block danger">
+  <div class="label">🔴 ALTA PRIORIDADE — Mais cobradas</div>
+  <h4>Canal de Ca²⁺ tipo L — Rápido ou Lento?</h4>
+  <p>❌ <em>"O canal de Ca²⁺ tipo L abre rapidamente."</em> → <strong>FALSO.</strong> Ca²⁺ tipo L = canal LENTO (fase 2, platô ~200ms). O canal RÁPIDO é o de Na⁺ (fase 0, ativa em décimos de ms). O professor inverte essa pergunta!</p>
+</div>
+
+<div class="info-block danger">
+  <div class="label">🔴 ALTA PRIORIDADE</div>
+  <h4>Bomba Cebadora — 80% ou 20%?</h4>
+  <p>❌ <em>"A sístole atrial (bomba cebadora) contribui com 80% do enchimento ventricular."</em> → <strong>FALSO.</strong> A aurícula contribui com apenas <strong>20–30%</strong>. Os 70–80% restantes ocorrem passivamente durante a diástole. A afirmação inversa (20%) é VERDADEIRA.</p>
+</div>
+
+<div class="info-block danger">
+  <div class="label">🔴 ALTA PRIORIDADE</div>
+  <h4>Tecido Fibroso conduz impulso?</h4>
+  <p>❌ <em>"O impulso passa do sincício atrial para o ventricular através do tecido fibroso."</em> → <strong>FALSO.</strong> O anel fibroso (esqueleto cardíaco) é <strong>ISOLANTE</strong> — bloqueia a condução. A única via elétrica é pelo <strong>Nó AV → Feixe de His → Purkinje</strong>.</p>
+</div>
+
+<div class="info-block warn">
+  <div class="label">🟡 MÉDIA PRIORIDADE</div>
+  <h4>Retorno Venoso = Pós-carga?</h4>
+  <p>❌ <em>"O retorno venoso é o principal fator da pós-carga."</em> → <strong>FALSO.</strong> Retorno venoso define a <strong>PRÉ-CARGA</strong> (enchimento diastólico/VTD). A pós-carga é a resistência vascular periférica/pressão aórtica contra a qual o ventrículo ejeta.</p>
+</div>
+
+<div class="info-block warn">
+  <div class="label">🟡 MÉDIA PRIORIDADE</div>
+  <h4>NAV = Estrutura mais RÁPIDA?</h4>
+  <p>❌ <em>"O nó AV é a estrutura mais rápida do sistema de condução."</em> → <strong>FALSO.</strong> O NAV é o <strong>MAIS LENTO</strong> (0,02–0,05 m/s). A mais rápida é a Fibra de Purkinje (1,5–4 m/s). Propósito do NAV lento: retraso intencional para enchimento ventricular.</p>
+</div>
+
+<div class="info-block warn">
+  <div class="label">🟡 MÉDIA PRIORIDADE</div>
+  <h4>Frank-Starling → quanto maior pré-carga, MENOR força?</h4>
+  <p>❌ <em>"A Lei de Frank-Starling afirma que quanto maior a pré-carga, menor a força de contração."</em> → <strong>FALSO.</strong> É o contrário: ↑ pré-carga → ↑ estiramento do sarcômero → ↑ força. (Só inverte em IC descompensada.)</p>
+</div>
+
+<div class="info-block warn">
+  <div class="label">🟡 MÉDIA PRIORIDADE</div>
+  <h4>B1 = Fechamento das Semilunares?</h4>
+  <p>❌ <em>"O primeiro ruído cardíaco é gerado pelo fechamento das válvulas semilunares."</em> → <strong>FALSO.</strong> B1 = fechamento das válvulas <strong>AV (mitral + tricúspide)</strong> — início da sístole. B2 = fechamento das semilunares (aórtica + pulmonar) — início da diástole.</p>
+</div>
+
+<div class="info-block warn">
+  <div class="label">🟡 MÉDIA PRIORIDADE</div>
+  <h4>ANP promove retenção de sódio?</h4>
+  <p>❌ <em>"O Peptídeo Natriurético Auricular (ANP) promove retenção de sódio e água."</em> → <strong>FALSO.</strong> ANP é <strong>natriurético</strong> = promove <strong>EXCREÇÃO</strong> de sódio e água → reduz volemia e pressão arterial. Age em resposta ao estiramento atrial (sobrecarga de volume).</p>
+</div>
+
+<div class="info-block warn">
+  <div class="label">🟡 MÉDIA PRIORIDADE</div>
+  <h4>Ausência de onda Q = patologia?</h4>
+  <p>❌ <em>"A ausência da onda Q no ECG indica obrigatoriamente patologia."</em> → <strong>FALSO.</strong> A onda Q pode ser fisiologicamente ausente em várias derivações. Onda Q patológica = larga (&gt;0,04s) e/ou profunda (&gt;25% da onda R).</p>
+</div>
+
+<div class="info-block blue">
+  <div class="label">⚡ CANAIS IÔNICOS — Resumo Anti-Pegadinha</div>
+  <h4>A tabela que você precisa saber</h4>
+  <div class="compare-table" style="border-radius:12px;overflow:hidden;margin-top:12px;">
+    <table style="width:100%;border-collapse:collapse;">
+      <thead><tr><th>Fase</th><th>Íon Principal</th><th>Canal</th><th>Velocidade</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Fase 0</strong> — despolarização</td><td>Na⁺ entra</td><td>Canal de Na⁺</td><td style="color:var(--green);">RÁPIDO ⚡</td></tr>
+        <tr><td><strong>Fase 1</strong> — repolarização inicial</td><td>K⁺ sai</td><td>Canal de K⁺ transitório</td><td>Rápido</td></tr>
+        <tr><td><strong>Fase 2</strong> — platô/meseta</td><td>Ca²⁺ entra ≈ K⁺ sai</td><td>Canal Ca²⁺ tipo L</td><td style="color:#e74c3c;">LENTO 🐢 (~200ms)</td></tr>
+        <tr><td><strong>Fase 3</strong> — repolarização final</td><td>K⁺ sai</td><td>Canal de K⁺</td><td>Progressivo</td></tr>
+        <tr><td><strong>Fase 4</strong> — repouso</td><td>Equilíbrio</td><td>Bomba Na⁺/K⁺</td><td>Contínuo</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:12px;"><strong>Ca²⁺ dupla função:</strong> (1) Fase 2 do PA — canal tipo L lento. (2) Acoplamento excitação-contração — CICR (Ca²⁺ do canal ativa mais Ca²⁺ do RS). Vago → ↑K⁺ → hiperpolarização do NSA → bradicardia/parada.</p>
+</div>
+
+<div class="info-block blue">
+  <div class="label">📋 ECG — Derivação DIII (Armadilha de Configuração)</div>
+  <h4>Configuração exata de cada derivação bipolar</h4>
+  <div class="compare-table" style="border-radius:12px;overflow:hidden;margin-top:12px;">
+    <table style="width:100%;border-collapse:collapse;">
+      <thead><tr><th>Derivação</th><th>Eletrodo (−) Negativo</th><th>Eletrodo (+) Positivo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>DI</strong></td><td>Braço Direito</td><td>Braço Esquerdo</td></tr>
+        <tr><td><strong>DII</strong></td><td>Braço Direito</td><td>Perna Esquerda</td></tr>
+        <tr><td><strong>DIII</strong></td><td style="color:#e74c3c;"><strong>Braço Esquerdo</strong></td><td style="color:var(--green);"><strong>Perna Esquerda</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:10px;">⚠️ Pegadinha: DIII tem eletrodo <strong>negativo no braço ESQUERDO</strong> — não direito! Não confundir com DI e DII.</p>
+</div>
+
+<div class="info-block success">
+  <div class="label">✓ Eixo Elétrico — Valores Cobrados na Prova</div>
+  <p>Eixo <strong>normal: 0° a +90°</strong>. Valor médio normal citado na prova: <strong>+60°</strong>.<br>
+  Desvio <strong>esquerdo</strong>: &lt; 0° (−30° a −90°) → HVE, BRFE.<br>
+  Desvio <strong>direito</strong>: &gt; +90° → HVD, TEP, BRDE.</p>
+</div>
+
+</div></div>
+
 <!-- ===== FLASHCARDS ===== -->
 <div id="flashcards" class="section">
 <div class="container">
 <div class="chapter-title"><span class="chap-icon">🃏</span> Flashcards — Revisão Ativa</div>
-<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Clique em cada cartão para girá-lo e revelar a resposta. 30 cartões cobrindo todos os módulos.</p>
+<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Clique em cada cartão para girá-lo e revelar a resposta. 49 cartões cobrindo todos os módulos + pegadinhas de prova.</p>
 <div class="flashcard-grid" id="flashcard-grid"></div>
 </div></div>
 
@@ -1132,8 +1376,8 @@ li { margin:5px 0; }
 <!-- ===== QUIZ ===== -->
 <div id="quiz" class="section">
 <div class="container">
-<div class="chapter-title"><span class="chap-icon">❓</span> Simulado P2 — 20 Questões</div>
-<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Múltipla escolha com correção e explicação imediata.</p>
+<div class="chapter-title"><span class="chap-icon">❓</span> Simulado P2 — 112 Questões</div>
+<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Múltipla escolha e Verdadeiro/Falso com correção e explicação imediata. Inclui questões reais de provas comentadas.</p>
 <div class="quiz-container" id="quiz-container"></div>
 </div></div>
 
@@ -1193,36 +1437,71 @@ window.addEventListener('scroll',()=>{
 
 // FLASHCARDS DATA
 const flashcards = [
+  // --- ESTRUTURA ---
   ["Estrutura","Formato dos cardiomiócitos","Ramificado (em Y) — diferente do músculo esquelético (cilíndrico). Facilita conexão elétrica em múltiplas direções. Discos intercalares de BAIXÍSSIMA resistência."],
   ["Estrutura","Por que o coração depende de Ca²⁺ extracelular?","O retículo sarcoplasmático cardíaco é menos desenvolvido → menor armazenamento de Ca²⁺ → NECESSITA OBRIGATORIAMENTE de Ca²⁺ extracelular. O músculo esquelético usa principalmente Ca²⁺ intracelular."],
-  ["Propriedades","Quais são as 5 propriedades cardíacas?","Inotropismo (contração), Cronotropismo (frequência), Dromotropismo (transmissão de potenciais), Batmotropismo (excitabilidade/resposta a estímulos), Lusitropismo (relaxamento)."],
-  ["Propriedades","Qual propriedade transmite potencial de estrutura para estrutura?","DROMOTROPISMO — não cronotropismo! Depende dos discos intercalares. ↓ Dromotropismo = bloqueios de condução."],
-  ["Automatismo","Quais são os 3 marca-passos e suas frequências?","NSA: 60–100 bpm (natural). NAV: 40–60 bpm (backup). Purkinje: 15–40 bpm (emergência — assume APENAS quando NSA e NAV falham)."],
-  ["Automatismo","Por que inotropismo e cronotropismo são inseparáveis?","Ambos dependem da entrada de Ca²⁺. ↑ Ca²⁺ = ↑ força (inotropismo) + ↑ frequência (cronotropismo) — simultâneo e inseparável!"],
-  ["Automatismo","O que é a rampa diastólica?","Entrada gradual de Ca²⁺ nas células automáticas durante a diástole → potencial sobe lentamente → ao atingir o umbral → dispara o potencial de ação. Determina a FC."],
+  ["Estrutura","O que são os Discos Intercalares e suas 3 estruturas?","Gap junctions (nexus): passagem de íons → condução elétrica rápida. Desmossomos: ancoragem mecânica. Zônula adherens: suporte estrutural. Juntos formam o SINCÍCIO FUNCIONAL — o coração bate como uma célula só."],
+  ["Estrutura","O que é o sincício funcional cardíaco? Quantos existem?","São dois: sincício ATRIAL e sincício VENTRICULAR. Separados pelo anel fibroso (isolante). A única conexão elétrica é pelo Feixe de His. Dentro de cada sincício, qualquer impulso ativa TODAS as células."],
+  // --- PROPRIEDADES ---
+  ["Propriedades","Quais são as 4 propriedades cardíacas cobradas na prova?","Cronotropismo (automatismo/FC), Batmotropismo (excitabilidade), Inotropismo (contratilidade/força), Dromotropismo (conductividade/condução). Alguns materiais acrescentam Lusitropismo (relaxamento)."],
+  ["Propriedades","Qual propriedade transmite potencial de estrutura para estrutura?","DROMOTROPISMO (conductividade) — não cronotropismo! Depende dos discos intercalares. ↓ Dromotropismo = bloqueios de condução."],
+  ["Propriedades","Batmotropismo vs Cronotropismo — qual é qual?","Batmotropismo = EXCITABILIDADE (capacidade de gerar PA quando estimulado). Cronotropismo = AUTOMATISMO/FREQUÊNCIA (capacidade de gerar impulsos rítmicos espontâneos). Diferentes!"],
+  // --- POTENCIAIS ---
+  ["Potenciais","Fase 0 do PA cardíaco — qual canal e qual velocidade?","Canal de Na⁺ RÁPIDO — ativa em décimos de milissegundo. O mais rápido de todos os canais. Responsável pela despolarização inicial explosiva."],
+  ["Potenciais","Fase 2 (platô/meseta) — qual canal e qual velocidade?","Canal de Ca²⁺ tipo L — LENTO, fica aberto por ~200–300 ms. Equilíbrio: Ca²⁺ entra ≈ K⁺ sai. EXCLUSIVO do coração. PEGADINHA: Ca²⁺ tipo L é lento, não rápido!"],
   ["Potenciais","A MESETA (Fase 2) — O que é e qual equilíbrio a mantém?","Dura ~200ms. Mantida pelo equilíbrio K⁺ saindo ≈ Ca²⁺ entrando. Característica EXCLUSIVA do PA cardíaco — nenhum outro tecido possui meseta!"],
-  ["Potenciais","Do umbral para o pico (fase 0), qual íon predomina?","Na⁺ rápido em QUALQUER célula excitável. A diferença está ANTES do umbral (Ca²⁺ na rampa automática cardíaca) e na MESETA (Ca²⁺ cardíaco)."],
-  ["Potenciais","Qual célula NUNCA tem linha horizontal de repouso?","Células automáticas (NSA, NAV, Purkinje) — estão sempre com rampa diastólica ascendente. Células contráteis têm linha de repouso estável na Fase 4 (−90 mV)."],
+  ["Potenciais","Qual a dupla função do Ca²⁺ no coração?","1) ELÉTRICA: Fase 2 do PA — canal tipo L lento sustenta o platô. 2) MECÂNICA: CICR (Ca²⁺ do canal L dispara liberação de Ca²⁺ do RS) → ativa troponina C → contração. Ca²⁺ = chave do coração!"],
+  ["Potenciais","Células nodais (NSA, NAV) — qual diferença do PA?","SEM fase 0 rápida de Na⁺ — dependem de Ca²⁺ tipo L para despolarização. Potencial de repouso mais positivo (~−55 mV). Despolarização lenta espontânea → rampa diastólica."],
+  // --- REFRATÁRIO ---
   ["Refratário","O que é o Período Refratário Absoluto (PRA)?","Célula completamente incapaz de responder — INDEPENDENTE da intensidade. Ocorre nas fases 0+1+2 (incluindo toda a meseta). Protege contra tetania cardíaca!"],
-  ["Refratário","Em qual fase do PA inicia o Período Refratário Relativo?","Início da Fase 3. Estímulos de MAIOR intensidade conseguem ativar a célula. Risco de fenômeno R sobre T → arritmias."],
-  ["Condução","Qual estrutura tem a MENOR velocidade de condução e por quê?","NAV — 0,03 m/s. Poucos discos intercalares. Propósito: retraso INTENCIONAL para aurículas terminarem de contrair antes dos ventrículos."],
-  ["Condução","Por que as Fibras de Purkinje conduzem tão rápido (~4 m/s)?","Abundância de discos intercalares. Purkinje é ~133× mais rápido que o NAV. Garante contração ventricular SINCRONIZADA — estímulo chega a todas as células simultaneamente."],
-  ["Cálcio","Relevância elétrica vs mecânica do Ca²⁺ no coração","Elétrica: gera rampa diastólica, mantém a meseta, determina cronotropismo. Mecânica: ativa troponina C → libera sítios actina-miosina → contração. AMBAS dependem de Ca²⁺!"],
-  ["Hemodinâmica","VS, VTD, VTS e DC — fórmulas e valores normais","VTD=120mL, VTS=50mL, VS=70mL. DC=VS×FC=70×80=5.600mL≈5,6L/min. FE=VS/VTD=70/120=58,3%≈60%."],
-  ["Hemodinâmica","FE < 40% significa o quê?","Disfunção sistólica grave — IC com FE reduzida. FE ≥ 50% com sintomas → IC com FE preservada (disfunção diastólica)."],
-  ["Frank-Starling","Enuncie a Lei de Frank-Starling.","Dentro dos LIMITES FISIOLÓGICOS, quanto maior o volume de sangue que chega na diástole → maior o estiramento → maior a força de contração → maior o volume ejetado."],
-  ["Frank-Starling","Pré-carga: quando se define e como se chama?","Define-se na DIÁSTOLE. Também chamada 'Sobrecarga de Volume'. Depende do retorno venoso. VTD ≈ 120 mL."],
-  ["Frank-Starling","De que depende a pós-carga?","Da resistência aórtica (RCA) e da resistência vascular periférica (RVP/RUA). Varia durante a SÍSTOLE VENTRICULAR."],
-  ["Bainbridge","O Reflexo de Bainbridge envolve qual estrutura e ajusta qual parâmetro?","AURÍCULA DIREITA. Mecanorreceptores de estiramento detectam distensão → ↑ FREQUÊNCIA CARDÍACA (cronotropismo). Complementa F-S: F-S ajusta força, Bainbridge ajusta frequência."],
-  ["Bainbridge","Por que o reflexo de Bainbridge está na aurícula DIREITA?","Porque é a aurícula direita que recebe o retorno venoso sistêmico pelas veias cavas superior e inferior."],
-  ["Ruídos","O que causa o B1 e o B2?","B1: fechamento das válvulas MITRAL e TRICÚSPIDE (AV) — início da sístole. B2: fechamento das válvulas AÓRTICA e PULMONAR (semilunares) — início da diástole."],
-  ["Ruídos","Qual ruído cardíaco é SEMPRE patológico?","B4 (galope presistólico) — SEMPRE patológico. Contração atrial forçada contra ventrículo com complacência reduzida (HVE, disfunção diastólica)."],
-  ["ECG Ondas","A onda P tem dois componentes. O que representa cada um?","Componente inicial: despolarização da AURÍCULA DIREITA. Componente final: despolarização da AURÍCULA ESQUERDA. Condução interatrial via Fascículo de Bachmann."],
-  ["ECG Ondas","O que representa cada onda do complexo QRS?","Q = base/septo (VD). R = despolarização do VENTRÍCULO ESQUERDO (ponta). S = base/VENTRÍCULO DIREITO. Alteração de R = problema no VE."],
-  ["ECG Ondas","Por que a repolarização auricular NÃO aparece no ECG?","A repolarização auricular existe, mas é encoberta pelo Complexo QRS — que ocorre simultaneamente e é muito mais intenso eletricamente."],
-  ["ECG Ondas","O Segmento ST corresponde a qual fase do PA?","Fase 2 (MESETA) — ventrículos em sístole elétrica plena. Supra-ST → IAM. Infra-ST → isquemia."],
-  ["ECG Eletrodos","Quantos eletrodos e derivações tem o ECG padrão?","10 eletrodos (9 ativos + 1 neutro = perna direita) → 12 derivações: 3 bipolares (D1,D2,D3) + 3 ampliadas (aVR,aVL,aVF) + 6 precordiais (V1-V6)."],
-  ["ECG Eletrodos","Como calcular o eixo elétrico pelas isodifásicas?","Encontrar derivação com ondas isodifásicas → o eixo está a 90° dela. Para saber qual dos dois lados: verificar D2. Se D2 positivo → sentido horário. Se negativo → anti-horário."],
+  ["Refratário","Por que o coração não entra em tetania?","Por causa do PERÍODO REFRATÁRIO ABSOLUTO: dura ~200ms (toda a meseta). O músculo só pode ser re-estimulado após relaxar. Sem isso, uma segunda contração antes do relaxamento = tetania = morte."],
+  // --- CONDUÇÃO ---
+  ["Condução","Velocidades completas do sistema de condução","NSA→Aurículas: ~1m/s · Vias Internodais: 1–2m/s · Músculo Atrial: 0,3–0,5m/s · NAV: 0,02–0,05m/s (MAIS LENTO) · Feixe His: ~0,6m/s · Purkinje: 1,5–4m/s (MAIS RÁPIDO) · Músculo Ventricular: 0,3–0,5m/s"],
+  ["Condução","Por que o NAV tem condução lenta (0,02–0,05 m/s)?","Retraso INTENCIONAL: permite que aurículas terminem de contrair completamente antes dos ventrículos se ativarem. Sem esse delay, a bomba cebadora atrial não completaria o enchimento ventricular."],
+  ["Condução","O que acontece quando o NSA falha? Quem assume?","NAV assume como marcapasso secundário: 40–60 bpm. Se NAV também falha, Purkinje assume: 15–40 bpm (emergência). A FC cai progressivamente a cada falha."],
+  ["Condução","Estimulação vagal máxima — o que acontece?","A FC pode cair a ZERO ou quase zero (asistolia temporária). ACh → ↑K⁺ → hiperpolarização do NSA → parada. O coração geralmente escapa após alguns segundos."],
+  // --- HEMODINÂMICA ---
+  ["Hemodinâmica","VS, VTD, VTS e DC — fórmulas e valores normais","VTD=120mL, VTS=50mL, VS=70mL (VS=VTD−VTS). DC=VS×FC=70×80=5.600mL≈5,6L/min. FE=VS/VTD=70/120=58,3%≈60%."],
+  ["Hemodinâmica","O que é Pré-carga e o que a define?","Tensão/estiramento da parede ventricular no FINAL DA DIÁSTOLE (VTD). Determinada pelo retorno venoso. ↑ retorno venoso = ↑ VTD = ↑ pré-carga. Lei de Frank-Starling depende dela."],
+  ["Hemodinâmica","O que é Pós-carga e o que a define?","Resistência contra a qual o ventrículo ejeta na SÍSTOLE. Principal fator: resistência vascular periférica + pressão aórtica (~120 mmHg). NÃO é o retorno venoso! Retorno venoso = pré-carga."],
+  ["Hemodinâmica","Pré-carga vs Pós-carga — resumo anti-confusão","Pré-carga = DIÁSTOLE = enchimento = retorno venoso = VTD ≈ 120 mL. Pós-carga = SÍSTOLE = resistência à ejeção = RVP + pressão aórtica. Uma é ANTES, outra é DEPOIS da contração."],
+  ["Hemodinâmica","Retorno venoso — o que é e como se relaciona com o DC?","Volume que retorna ao coração direito pelas veias cavas por minuto. Em estado estável: retorno venoso = débito cardíaco (~5 L/min). Aumenta com exercício, posição, fluidos."],
+  // --- FRANK-STARLING ---
+  ["Frank-Starling","Enuncie a Lei de Frank-Starling.","Dentro dos LIMITES FISIOLÓGICOS, quanto maior o volume na diástole → maior o estiramento do sarcômero → maior a sobreposição actina-miosina → maior a força → maior o VS ejetado."],
+  ["Frank-Starling","Frank-Starling FALHA em qual situação?","Em IC descompensada com estiramento excessivo — a curva cai (curva descendente). O sarcômero superestirado perde sobreposição ideal. Fora dos limites fisiológicos, mais volume = MENOS força."],
+  // --- BAINBRIDGE ---
+  ["Bainbridge","Mecanismo completo do Reflexo de Bainbridge","↑ Retorno venoso → distensão da AURÍCULA DIREITA → mecanorreceptores de estiramento ativados → impulso aferente → resposta simpática → ↑ FC (cronotropismo). Adaptação rápida ao volume."],
+  ["Bainbridge","Frank-Starling vs Bainbridge — diferença fundamental","Frank-Starling: atua nos VENTRÍCULOS → ajusta FORÇA (inotropismo). Bainbridge: atua na AURÍCULA DIREITA → ajusta FREQUÊNCIA (cronotropismo). Juntos durante exercício: ↑força + ↑FC = ↑↑DC."],
+  // --- ECG ONDAS ---
+  ["ECG Ondas","5 componentes do ECG e o que cada um representa","P = despolarização ATRIAL. PR = retraso no NAV. QRS = despolarização VENTRICULAR. ST = meseta/sístole elétrica (Fase 2 do PA). T = repolarização VENTRICULAR. Onda U = repolarização músculos papilares (inconstante)."],
+  ["ECG Ondas","Por que a repolarização auricular não aparece?","Existe, mas é encoberta pelo QRS — muito mais intenso eletricamente. Normal nunca visualizá-la. NÃO é patológico."],
+  ["ECG Ondas","Segmento ST normal e suas alterações","ST isoelétrico = Fase 2 (meseta) normal. Supra-ST = IAM (corrente de lesão, oclusão total). Infra-ST = isquemia subendocárdica, sobrecarga. MEGA-importante para prova!"],
+  ["ECG Ondas","Velocidade do papel e medidas básicas","25 mm/s (padrão). 1 quadradinho (1mm) = 0,04 s. 5 quadradinhos (5mm, quadrado grande) = 0,2 s. Calibração: 10mm = 1mV."],
+  // --- ECG DERIVAÇÕES ---
+  ["ECG Derivações","Derivações bipolares — configuração completa","DI: (−) Braço Dir / (+) Braço Esq. DII: (−) Braço Dir / (+) Perna Esq. DIII: (−) Braço ESQ / (+) Perna Esq. PEGADINHA: DIII tem negativo no braço ESQUERDO!"],
+  ["ECG Derivações","aVR — por que QRS é invertido?","aVR registra o coração de 'costas' — vetor elétrico aponta SE AFASTANDO do eletrodo. Por isso P, QRS e T aparecem invertidos/negativos. É NORMAL em aVR."],
+  ["ECG Derivações","V1 — por que QRS é predominantemente negativo?","O vetor de despolarização ventricular se afasta do eletrodo V1 (posicionado à direita). É NORMAL. QRS negativo em V1 ≠ patologia."],
+  ["ECG Derivações","Localização das precordiais V1–V6","V1: 4º EIC borda esternal DIREITA. V2: 4º EIC borda esternal ESQUERDA. V3: entre V2 e V4. V4: 5º EIC linha hemiclavicular. V5: 5º EIC linha axilar ANTERIOR. V6: 5º EIC linha axilar MÉDIA."],
+  ["ECG Derivações","Eixo elétrico — valores normais e desvios","Normal: 0° a +90° (médio: ~+60°). Desvio ESQUERDO: < 0° → HVE, BRFE. Desvio DIREITO: > +90° → HVD, TEP, BRDE. Técnica das isodifásicas: eixo ⊥ à derivação isodifásica."],
+  // --- RUÍDOS ---
+  ["Ruídos","O que causa cada ruído cardíaco?","B1 (TUM): fechamento valvas AV (mitral + tricúspide) → início da sístole. B2 (TÁ): fechamento valvas semilunares (aórtica + pulmonar) → início da diástole. B3: enchimento ventricular rápido. B4: SEMPRE patológico."],
+  // --- PEGADINHAS RÁPIDAS ---
+  ["⚠️ Pegadinha","Ca²⁺ tipo L — rápido ou lento?","LENTO! Canal de Ca²⁺ tipo L = fase 2 (platô), dura ~200ms. Canal RÁPIDO = Na⁺ (fase 0). O professor INVERTE essa pergunta! Resposta correta: Ca²⁺ tipo L = LENTO."],
+  ["⚠️ Pegadinha","Bomba cebadora — 80% ou 20%?","20–30%! A sístole atrial contribui com apenas 20–30% do enchimento ventricular. Os 70–80% ocorrem passivamente. FALSO afirmar 80%."],
+  ["⚠️ Pegadinha","Tecido fibroso conduz o impulso atrial-ventricular?","FALSO! O anel fibroso é ISOLANTE. A única via elétrica atrial→ventricular é pelo Nó AV → Feixe de His. O anel fibroso SEPARA os dois sincícios."],
+  ["⚠️ Pegadinha","Retorno venoso define pré-carga ou pós-carga?","PRÉ-CARGA! Retorno venoso → ↑ VTD → ↑ pré-carga. Pós-carga = resistência vascular periférica + pressão aórtica. Confundir isso é erro clássico."],
+  ["⚠️ Pegadinha","ANP — retém ou excreta sódio?","EXCRETA! ANP (Peptídeo Natriurético Auricular) é natriurético → promove excreção de Na⁺ e água → ↓ volemia → ↓ PA. Age em resposta ao estiramento atrial por sobrecarga de volume."],
+  // --- CICLO CARDÍACO ---
+  ["Ciclo Cardíaco","Quando as coronárias são mais perfundidas?","Durante a DIÁSTOLE ventricular. Na sístole, a pressão intramural alta comprime os vasos coronarianos. A relaxação diastólica permite fluxo máximo."],
+  ["Ciclo Cardíaco","Ciclo cardíaco completo — duração e fases","~0,8 s a 75 bpm. Sequência: diástole (enchimento passivo) → sístole atrial (bomba cebadora, ~20%) → contração isovolumétrica → ejeção ventricular → relaxamento isovolumétrico → diástole."],
+  // --- CANAIS IÔNICOS ---
+  ["Canais Iônicos","Fase a fase do PA cardíaco contrátil","Fase 4 (−90mV, repouso) → Fase 0 (Na⁺ rápido, despolarização) → Fase 1 (K⁺ sai, repolarização inicial) → Fase 2 (Ca²⁺ L = K⁺, MESETA ~200ms) → Fase 3 (K⁺ sai, repolarização final) → Fase 4."],
+  ["Canais Iônicos","Vago → bradicardia — mecanismo iônico","ACh (vago) → receptores M2 → abre canais de K⁺ → ↑K⁺ sai → hiperpolarização do NSA → rampa diastólica mais lenta → mais tempo para atingir umbral → ↓ FC."],
+  // --- CONTRAÇÃO ---
+  ["Contração","Sequência do acoplamento excitação-contração","PA → Ca²⁺ tipo L entra → dispara CICR do RS → ↑↑ Ca²⁺ citosólico → Ca²⁺ + troponina C → libera tropomiosina → sítio ativo da actina exposto → miosina se liga → contração."],
+  ["Contração","Fosfocreatina — 2ª fonte de ATP na contração","Fosfocreatina reconstitui ATP rapidamente (sem O₂). Sustenta o exercício por 8–10 segundos. Sequência ATP: ATP armazenado (2–3s) → Fosfocreatina (8–10s) → Glicólise → β-oxidação."],
+  // --- SINCÍCIO ---
+  ["Sincício","Por que o impulso não vai de volta dos ventrículos aos átrios?","O anel fibroso é isolante. A condução é UNIDIRECIONAL por design anatômico. Sincício atrial e ventricular são separados — o único caminho é descendente: NSA → NAV → His → Purkinje → ventrículo."],
 ];
 
 let fcInited = false;
@@ -1313,7 +1592,98 @@ const quizData = [
   { q:'Qual é o eixo elétrico cardíaco NORMAL?', opts:['-90° a 0°','0° a +90° somente','-30° a +90°','+90° a +180°'], cor:2, exp:'Eixo elétrico NORMAL: −30° a +90°. Desvio esquerdo: −30° a −90°. Desvio direito: +90° a +180°. Técnica rápida: D1 e aVF ambos positivos = normal!' },
   { q:'Para calcular o eixo pelas isodifásicas: após encontrar essa derivação, o que fazer?', opts:['O eixo é exatamente nessa derivação','O eixo está a 45°','O eixo está a 90° dessa derivação (verificar D2)','Dividir o ângulo por 2'], cor:2, exp:'O eixo elétrico está a 90° da derivação com ondas isodifásicas. Para saber qual dos dois lados: verificar D2. Se D2 positivo → sentido horário. Se negativo → anti-horário.' },
   { q:'Qual reflexo ajusta a FREQUÊNCIA (Bainbridge) e qual ajusta a FORÇA (Frank-Starling)?', opts:['Bainbridge ajusta FC · Frank-Starling ajusta força','Frank-Starling ajusta FC · Bainbridge ajusta força','Ambos ajustam FC e força igualmente','Nenhum — ajuste é pelo SNS exclusivamente'], cor:0, exp:'Reflexo de BAINBRIDGE (Aurícula Direita): ajusta FREQUÊNCIA CARDÍACA (cronotropismo). Lei de FRANK-STARLING (Ventrículos): ajusta FORÇA DE CONTRAÇÃO (inotropismo). Juntos: ↑FC + ↑Força = ↑↑↑ Débito!' },
+  // --- QUESTÕES DE PROVA REAIS (Q21 em diante) ---
+  { q:'[PROVA] A velocidade de condução das células do músculo auricular é:', opts:['1 a 2 m/s','0,3 a 0,5 m/s','1,5 a 4 m/s','0,03 m/s'], cor:1, exp:'O músculo auricular é miocárdio contrátil comum, com velocidade intermediária: 0,3–0,5 m/s. Não confundir: 1–2 m/s = vias internodais; 1,5–4 m/s = Purkinje; 0,03 m/s = NAV.' },
+  { q:'[PROVA] A velocidade de condução das vias internodais é:', opts:['1 a 2 m/s','0,3 a 0,5 m/s','1,5 a 4 m/s','0,03 m/s'], cor:0, exp:'Vias internodais conduzem mais rapidamente que o músculo atrial comum: 1–2 m/s. Levam o estímulo do NSA até o NAV. Pegadinha: não confundir com Purkinje (mais rápido ainda).' },
+  { q:'[PROVA] A velocidade de condução do nódulo auriculoventricular (NAV) é:', opts:['1 a 2 m/s','0,3 a 0,5 m/s','1,5 a 4 m/s','0,03 m/s'], cor:3, exp:'NAV = 0,03 m/s — o mais lento. Condução lenta INTENCIONAL: gera retraso fisiológico para que os átrios terminem de contrair antes que os ventrículos se ativem. Sem isso, a bomba seria ineficiente.' },
+  { q:'[PROVA] A velocidade de condução das fibras de Purkinje é:', opts:['1 a 2 m/s','0,3 a 0,5 m/s','1,5 a 4 m/s','0,03 m/s'], cor:2, exp:'Fibras de Purkinje: 1,5–4 m/s — a MAIOR velocidade de condução cardíaca. Garantem ativação rápida e sincronizada dos ventrículos. Resposta para "qual conduz mais rápido" = sempre Purkinje.' },
+  { q:'[PROVA] A velocidade de condução do músculo contrátil ventricular é:', opts:['1 a 2 m/s','0,3 a 0,5 m/s','1,5 a 4 m/s','0,03 m/s'], cor:1, exp:'Músculo ventricular contrátil: 0,3–0,5 m/s — velocidade intermediária, igual ao músculo auricular. Não confundir com o sistema especializado de Purkinje que é muito mais rápido.' },
+  { q:'[PROVA] A quantidade de sangue expulsa pelo coração por minuto denomina-se:', opts:['Gasto cardíaco','Pré-carga','Lei de Frank-Starling','Contração isovolumétrica'], cor:0, exp:'Gasto (Débito) Cardíaco = volume ejetado por minuto. GC = VS × FC. Pré-carga é enchimento; Frank-Starling explica a relação força-estiramento; contração isovolumétrica é fase do ciclo.' },
+  { q:'[PROVA] Qual derivação do ECG normalmente apresenta todas as ondas invertidas?', opts:['aVR','aVF','DI','DII'], cor:0, exp:'aVR observa o coração a partir do ombro direito — direção oposta ao vetor elétrico médio — por isso P, QRS e T tendem a ser negativos. aVF olha de baixo; DII é usada para ritmo.' },
+  { q:'[PROVA] O batmotropismo é a propriedade cardíaca relacionada com:', opts:['Condução do potencial de ação','Geração de potenciais de ação / excitabilidade','Capacidade de contração muscular','Geração de frequência cardíaca'], cor:1, exp:'Batmotropismo = excitabilidade: capacidade da célula cardíaca de responder a um estímulo e gerar potencial de ação. Dromotropismo = condução; Inotropismo = força; Cronotropismo = frequência.' },
+  { q:'[PROVA] O sangue que permanece de forma residual no ventrículo ao final da sístole chama-se:', opts:['Volume telediastólico','Volume sistólico','Volume telesistólico','Nenhuma das anteriores'], cor:2, exp:'VTS = Volume TelesistólicO = volume residual após a ejeção. VTD = volume ao final da diástole (cheio). Volume Sistólico = o que foi ejetado. VTS ≈ 50 mL normalmente.' },
+  { q:'[PROVA] O volume de sangue que chega ao coração pelas veias cavas e seio coronário define qual parâmetro?', opts:['Lei de Bainbridge','Lei de Laplace','Pré-carga','Pós-carga'], cor:2, exp:'Pré-carga = estiramento inicial das fibras ventriculares causado pelo enchimento ventricular. Retorno venoso → pré-carga. Pós-carga = resistência à ejeção. Bainbridge = reflexo de FC.' },
+  { q:'[PROVA] Em qual estrutura do sistema de condução se observa velocidade MUITO ALTA de condução?', opts:['Nódulo sinusal','Nódulo auriculoventricular','Fascículos de His','Fibras de Purkinje'], cor:3, exp:'Fibras de Purkinje = velocidade altíssima (~4 m/s). São especializadas para condução rápida. O NAV é o MAIS LENTO, não o mais rápido.' },
+  { q:'[PROVA] Para que ocorra o fechamento das válvulas auriculoventriculares, é necessário que ocorra:', opts:['Diástole auricular','Sístole ventricular','Diástole ventricular','Em todo momento'], cor:1, exp:'Quando a pressão ventricular sobe no início da SÍSTOLE VENTRICULAR, as válvulas AV se fecham para impedir refluxo para os átrios. Durante a diástole ventricular, as AV estão abertas para enchimento.' },
+  { q:'[PROVA] Se há alteração em DI, DII e aVL, qual eletrodo de membro deve ser suspeitado?', opts:['Braço direito','Braço esquerdo','Perna direita','Perna esquerda'], cor:0, exp:'DI, DII e aVL dependem do eletrodo do braço direito para formar os vetores. Alteração nessas 3 derivações → suspeitar do eletrodo do braço direito.' },
+  { q:'[PROVA] O reflexo de Bainbridge está relacionado principalmente com:', opts:['Distensão das fibras ventriculares','Contração rápida dos músculos esqueléticos','Regulação da força de contração auricular','Regulação da frequência cardíaca'], cor:3, exp:'Bainbridge = reflexo aurículo-cardíaco que regula a FREQUÊNCIA CARDÍACA. Quando aumenta retorno venoso e há distensão atrial → ↑ FC. Relacionado ao cronotropismo — não força contrátil.' },
+  { q:'[PROVA] Qual é o principal parâmetro que regula e define a pós-carga cardíaca?', opts:['Resistência vascular periférica','Elasticidade pulmonar','Fração de ejeção','Retorno venoso'], cor:0, exp:'Pós-carga = carga contra a qual o ventrículo ejeta. Aumenta quando aumenta a resistência vascular periférica / pressão arterial. Retorno venoso = pré-carga (não pós-carga).' },
+  { q:'[PROVA] Qual proteína mantém os filamentos de actina e miosina em posição no músculo esquelético?', opts:['Fibronina','Tinina','Cistina','Titina'], cor:3, exp:'TITINA — proteína elástica gigante que mantém o alinhamento dos filamentos grossos e contribui para a elasticidade do sarcômero. Pegadinha de nomes parecidos: Titina é a correta.' },
+  { q:'[PROVA] Para que ocorra contração do músculo esquelético, a acetilcolina é liberada porque:', opts:['Pequenas quantidades de K⁺ entram na fibra nervosa','Grandes quantidades de Na⁺ entram na membrana muscular','Quantidades de Ca²⁺ entram no terminal nervoso','Grandes quantidades de Cl⁻ entram no núcleo'], cor:2, exp:'Chegada do PA ao terminal pré-sináptico → abre canais de Ca²⁺. O Ca²⁺ que entra promove fusão de vesículas e libera ACh. O Na⁺ é importante no PA, mas a LIBERAÇÃO de ACh depende diretamente do Ca²⁺.' },
+  { q:'[PROVA] A carga contra a qual o coração contrai e exerce sua força contrátil denomina-se:', opts:['Pré-carga','Diástole','Pós-carga','Sístole'], cor:2, exp:'Pós-carga = pressão/resistência que o ventrículo precisa vencer para ejetar sangue. Pré-carga = enchimento antes da contração. Pós-carga varia durante a sístole ventricular.' },
+  { q:'[PROVA] As fibras musculares UNITÁRIAS se caracterizam por (marque o INCORRETO):', opts:['Poder contrair cada fibra independentemente das demais','Estar associadas por membranas aderidas','Ser massa de fibras que contraem juntas','Estarem nas paredes da maioria das vísceras'], cor:0, exp:'INCORRETO: contrair cada fibra independentemente é característica das fibras MULTIUNITÁRIAS. Fibras unitárias funcionam como massa — muitas células comunicam e contraem JUNTAS.' },
+  { q:'[PROVA] Sobre temperatura e função cardíaca, qual afirmação é correta?', opts:['Apenas febre aumenta a FC; hipotermia não tem efeito','Temperatura não afeta a FC','Aumento de temperatura reduz a permeabilidade iônica','Febre ↑ FC; hipotermia ↓ FC; calor excessivo prolongado pode debilitar o coração'], cor:3, exp:'Febre aumenta FC; hipotermia reduz FC; calor excessivo prolongado pode enfraquecer o coração. A pegadinha: o calor NÃO reduz permeabilidade — aumenta. Afirmações sobre redução de permeabilidade pelo calor são FALSAS.' },
+  { q:'[PROVA] Na curva pressão-volume ventricular, a onda T do ECG representa:', opts:['Repolarização auricular','Contração da aurícula','Repolarização do ventrículo','Despolarização do ventrículo'], cor:2, exp:'Onda T = repolarização ventricular (fase 3 do PA). Precede o relaxamento ventricular. QRS = despolarização ventricular; onda P = despolarização atrial.' },
+  { q:'[PROVA] O aumento do tônus simpático:', opts:['Diminui a pressão para cada volume','Aumenta a pressão para cada volume arterial ou venoso','Mantém a pressão igual','Não tem efeito sobre a pressão'], cor:1, exp:'Simpático causa vasoconstrição → tônus vascular ↑ → para o mesmo volume, a pressão é MAIOR. O parassimpático não tem o mesmo efeito vascular sistêmico amplo.' },
+  { q:'[PROVA] "O gasto cardíaco é controlado pela soma de todos os fluxos teciduais locais." Corresponde a qual parte da teoria básica da função circulatória?', opts:['Primeira parte','Segunda parte','Terceira parte','Quarta parte'], cor:0, exp:'Na teoria básica de Guyton, a PRIMEIRA PARTE: o fluxo para cada tecido é controlado conforme suas necessidades locais; o DC acompanha a soma desses fluxos. O professor costuma cobrar essa frase quase literal.' },
+  { q:'[PROVA] A enzima ativada para contração do músculo liso é a miosina quinase. Essa afirmação é:', opts:['Verdadeiro','Falso — é adenil ciclase','Falso — é fosfato desidrogenase','Falso — é miosina fosfatase'], cor:0, exp:'VERDADEIRO. No músculo liso, Ca²⁺-calmodulina ativa a MIOSINA QUINASE de cadeia leve → fosforilação da miosina → contração. Miosina fosfatase DESFOSFORILA a miosina → favorece relaxamento.' },
+  { q:'[PROVA] A pressão a ser gerada no ventrículo esquerdo para abrir a válvula aórtica é aproximadamente:', opts:['100 mmHg','60 mmHg','80 mmHg','120 mmHg'], cor:3, exp:'O ventrículo esquerdo precisa superar a pressão aórtica. Em condições didáticas usa-se ~120 mmHg (pressão sistólica). Esta é a resposta padrão para provas.' },
+  { q:'[PROVA] Lipossolubilidade, em pareamento, corresponde a:', opts:['Pressão necessária para deter osmose','Transporte contra gradiente','Fator que determina rapidez com que substância atravessa a membrana','Potencial que impede difusão líquida'], cor:2, exp:'Lipossolubilidade = fator que determina a RAPIDEZ de passagem pela bicamada lipídica. Quanto mais lipossolúvel, mais fácil a travessia. Não é osmose nem transporte ativo.' },
+  { q:'[PROVA] Potencial de Nernst corresponde a:', opts:['Pressão osmótica','Transporte ativo','Lipossolubilidade','Nível de potencial através da membrana que impede a difusão líquida de um íon'], cor:3, exp:'Potencial de Nernst = potencial elétrico necessário para equilibrar o gradiente químico de um íon específico, impedindo sua difusão líquida. NÃO é sinônimo de pressão osmótica nem potencial de ação total.' },
+  { q:'[PROVA] Difusão corresponde a:', opts:['Pressão necessária para deter osmose','Transporte contra gradiente','Fator lipossolúvel','Energia cinética que gera movimento normal das moléculas'], cor:3, exp:'Difusão = movimento espontâneo de moléculas pela energia cinética, do maior para menor gradiente. Quando exige energia contra o gradiente = transporte ativo.' },
+  { q:'[PROVA] Retroalimentação positiva corresponde a:', opts:['Retorno ao valor médio','Proteína transportadora contra gradiente','Lipossolubilidade','Processo que amplifica o estímulo, como abertura de canais de Na⁺ no PA'], cor:3, exp:'Feedback positivo AMPLIFICA a mudança inicial. No PA, entrada de Na⁺ abre mais canais de Na⁺ → ainda mais Na⁺ entra → explosivo. Feedback negativo CORRIGE e estabiliza.' },
+  { q:'[PROVA] Transporte ativo corresponde a:', opts:['Osmose','Proteína transportadora contra gradiente de concentração','Difusão simples','Energia cinética'], cor:1, exp:'Transporte ativo = usa energia (ATP) e proteína transportadora para mover substâncias CONTRA o gradiente. Ex: Bomba Na⁺/K⁺. Transporte passivo não gasta energia metabólica direta.' },
+  { q:'[PROVA] Vmax, na difusão facilitada, corresponde a:', opts:['Retroalimentação negativa','−86 mV','Transporte ativo','Na difusão facilitada, o fluxo se aproxima de um máximo'], cor:3, exp:'Vmax = saturação dos transportadores. Quando todos estão ocupados, o fluxo não aumenta mais — atinge o máximo. Difusão SIMPLES não tem Vmax porque não depende de transportadores.' },
+  { q:'[PROVA] Retroalimentação negativa corresponde a:', opts:['Se fator aumenta ou diminui, surgem mudanças que fazem retornar ao valor médio','−86 mV','Movimento contra gradiente','+61 mV'], cor:0, exp:'Feedback negativo = mecanismo de HOMEOSTASE. Corrije desvios e retorna ao valor de referência. Ex: controle de pressão arterial, temperatura. Feedback positivo amplifica — não corrige.' },
+  { q:'[PROVA] O complexo QRS marca:', opts:['Repolarização atrial','Despolarização e contração auricular','Despolarização e contração ventricular','Repolarização ventricular'], cor:2, exp:'QRS = despolarização ventricular, que desencadeia a contração dos ventrículos. Onda P = despolarização atrial. Onda T = repolarização ventricular. Repolarização atrial fica oculta pelo QRS.' },
+  { q:'[PROVA] A onda T marca:', opts:['Despolarização atrial','Despolarização ventricular','Contração auricular','Repolarização dos ventrículos'], cor:3, exp:'Onda T = repolarização ventricular (fase 3 do PA). Representa a recuperação elétrica dos ventrículos. NÃO representa repolarização atrial (que fica oculta no QRS).' },
+  { q:'[PROVA] A repolarização da aurícula no ECG:', opts:['É sempre a onda T','É o complexo QRS','É a onda P','Sua ausência visível não significa patologia'], cor:3, exp:'A repolarização atrial EXISTE mas fica mascarada pelo complexo QRS (muito mais intenso). Não visualizá-la é NORMAL — não é patologia.' },
+  { q:'[PROVA] A onda P marca:', opts:['Repolarização ventricular','Despolarização e contração auricular','Despolarização ventricular','Potencial de Nernst'], cor:1, exp:'Onda P = primeiro evento elétrico visível do ciclo. Despolarização dos átrios → contração atrial. Os dois componentes: inicial = AD; final = AE.' },
+  { q:'[PROVA] A onda Q:', opts:['Sempre indica infarto','Sempre deve estar ausente','É a primeira deflexão negativa do complexo QRS','É a repolarização ventricular'], cor:2, exp:'Por definição, onda Q = PRIMEIRA deflexão NEGATIVA antes da onda R. Pequenas Q podem ser fisiológicas. Ausência de Q não indica patologia. Q patológica = Q larga e profunda (>25% da onda R).' },
+  { q:'[PROVA] Derivação com ondas invertidas em condições normais:', opts:['V1','Período refratário','Pós-carga','aVR'], cor:3, exp:'aVR enxerga o vetor elétrico de forma oposta → ondas negativas em condições normais. Das mais repetidas em prova: aVR = todas as ondas invertidas normalmente.' },
+  { q:'[PROVA] Volume total no interior do ventrículo ao final do enchimento:', opts:['Volume telesistólico','Volume sistólico','Gasto cardíaco','Volume telediastólico'], cor:3, exp:'VTD = Volume Telediastólico = volume ao final da DIÁSTOLE, depois do enchimento completo ≈ 120 mL. VTS = volume residual após sístole.' },
+  { q:'[PROVA] Quantidade de sangue ejetada pelo coração em 1 minuto:', opts:['Volume telesistólico','Volume sistólico','Gasto cardíaco','Volume telediastólico'], cor:2, exp:'Gasto Cardíaco = sangue ejetado por MINUTO = VS × FC. Volume Sistólico é por batimento — não por minuto.' },
+  { q:'[PROVA] Derivação que usa o registro do eletrodo da perna esquerda:', opts:['aVR','aVL','aVF','V1'], cor:2, exp:'aVF olha o coração a partir dos pés (perna esquerda). aVR = braço direito. aVL = braço esquerdo.' },
+  { q:'[PROVA] Quantidade de sangue residual no interior do ventrículo ao final da sístole:', opts:['Volume telesistólico','Volume sistólico','Gasto cardíaco','Volume telediastólico'], cor:0, exp:'VTS = Volume Telesistólico = volume RESIDUAL após a contração ≈ 50 mL. A palavra "residual" entrega a resposta.' },
+  { q:'[PROVA] Período do potencial de membrana em que não se pode produzir novo PA enquanto a membrana segue despolarizada:', opts:['V1','Pós-carga','Período refratário','Unidade motora'], cor:2, exp:'Período Refratário (Absoluto) = célula incapaz de gerar novo PA — canais de Na⁺ inativados. Protege contra tetania cardíaca. Abrange fases 0+1+2 (toda a meseta).' },
+  { q:'[PROVA] Terminal de motoneurônio e grupo de fibras de músculo esquelético que ele inerva:', opts:['Período refratário','Pós-carga','aVR','Unidade motora'], cor:3, exp:'Unidade Motora = um neurônio motor somático e TODAS as fibras musculares que ele inerva. NÃO confundir com sincício funcional cardíaco.' },
+  { q:'[PROVA] Tensão nas paredes ventriculares durante a ejeção sanguínea na sístole:', opts:['Pré-carga','Período refratário','Pós-carga','Unidade motora'], cor:2, exp:'Pós-carga = tensão/resistência nas paredes ventriculares durante a EJEÇÃO (sístole). Pré-carga = enchimento antes da sístole.' },
+  { q:'[PROVA] Derivação obtida com eletrodo no 4° espaço intercostal direito, linha paraesternal:', opts:['V1','V2','aVR','aVF'], cor:0, exp:'V1 = 4° espaço intercostal DIREITO junto ao esterno (linha paraesternal direita). V2 = 4° espaço intercostal ESQUERDO. Posição clássica de prova.' },
+  { q:'[PROVA] A propriedade cardíaca de conduzir potenciais de ação denomina-se:', opts:['Cronotropismo','Batmotropismo','Inotropismo','Dromotropismo'], cor:3, exp:'Dromotropismo = condutividade = propagação do estímulo. Cronotropismo = frequência; Batmotropismo = excitabilidade; Inotropismo = força.' },
+  { q:'[PROVA] Durante a diástole, o enchimento normal dos ventrículos pode chegar a 100–120 mL e denomina-se:', opts:['Volume telediastólico','Volume sistólico','Volume telesistólico','Fração de ejeção'], cor:0, exp:'VTD = Volume Telediastólico ≈ 120 mL ao final da diástole. Volume Sistólico = o que é ejetado (≈70 mL). VTS = residual (≈50 mL).' },
+  { q:'[PROVA] Estrutura de união intercelular entre cardiomiócitos que permite passagem do potencial de ação:', opts:['Linha Z','Banda I','Discos intercalares','Túbulos T'], cor:2, exp:'Discos intercalares = unem cardiomiócitos + permitem comunicação elétrica via junções comunicantes (gap junctions) = baixíssima resistência → propagação rápida do PA. Túbulos T ajudam na excitação-contração mas não são a união intercelular.' },
+  // --- V/F comentados como questões MC ---
+  { q:'[V/F] As cordas tendíneas evitam que as valvas AV sejam empurradas para os átrios durante a sístole ventricular?', opts:['VERDADEIRO — ligam valvas AV aos músculos papilares, impedindo prolapso','FALSO — elas facilitam o prolapso valvar','FALSO — as cordas só existem no ventrículo esquerdo','FALSO — são encontradas apenas nas valvas semilunares'], cor:0, exp:'VERDADEIRO. Cordas tendíneas conectam valvas AV aos músculos papilares → impedem prolapso para os átrios durante o aumento de pressão sistólica ventricular.' },
+  { q:'[V/F] Para calcular frequência cardíaca no ECG, é necessário identificar a onda R especificamente em aVF?', opts:['VERDADEIRO — apenas aVF pode ser usada','FALSO — pode-se usar qualquer derivação com QRS nítido, frequentemente DII','VERDADEIRO — aVF é obrigatória','FALSO — usa-se exclusivamente V1'], cor:1, exp:'FALSO. A FC pode ser calculada pelos intervalos R-R em qualquer derivação com QRS nítido — frequentemente DII, que tem boa visualização. Não precisa ser especificamente aVF.' },
+  { q:'[V/F] A regulação fisiológica da força contrátil ventricular ocorre normalmente em coração normal?', opts:['FALSO — só ocorre em patologias','VERDADEIRO — pré-carga, pós-carga e SNS modulam a força mesmo em coração normal','FALSO — só o SNS regula a força','FALSO — a força é sempre constante'], cor:1, exp:'VERDADEIRO. Em coração SAUDÁVEL, variações fisiológicas de pré-carga, pós-carga e atividade simpática modulam continuamente a força contrátil.' },
+  { q:'[V/F] Os canais rápidos de Na⁺ se habilitam quando a célula alcança o potencial de umbral?', opts:['FALSO — habilitam-se espontaneamente','VERDADEIRO — nas células de resposta rápida, atingir o umbral abre os canais rápidos de Na⁺','FALSO — são canais de Ca²⁺ que se abrem no umbral','FALSO — abrem-se apenas no NAV'], cor:1, exp:'VERDADEIRO. Nas células de resposta rápida (miocárdio contrátil), atingir o potencial limiar abre os canais rápidos de Na⁺ → despolarização rápida da fase 0.' },
+  { q:'[V/F] Durante a ejeção ventricular, cerca de 70% do volume sistólico é ejetado no terço inicial da sístole?', opts:['FALSO — é ejetado de forma linear','VERDADEIRO — ejeção rápida no início, depois reduzida','FALSO — ejeção é maior no terço final','VERDADEIRO — mas apenas no ventrículo direito'], cor:1, exp:'VERDADEIRO. A ejeção RÁPIDA ocorre no início da sístole (maioria do VS). Depois há uma fase de ejeção reduzida. Isso é normal e fisiológico.' },
+  { q:'[V/F] Os potenciais de ação no coração se propagam pelo sistema de condução de forma UNIDIRECIONAL?', opts:['FALSO — podem ir e voltar','VERDADEIRO — sempre de proximal para distal (NSA → ventrículo), sem retroceder','FALSO — são bidirecionais no NAV','VERDADEIRO apenas nas fibras de Purkinje'], cor:1, exp:'VERDADEIRO. A condução cardíaca é SEMPRE unidirecional: NSA → vias internodais → NAV → His → Purkinje → ventrículos. Não pode retroceder fisiologicamente.' },
+  { q:'[V/F] A onda T pode estar invertida em algumas derivações?', opts:['FALSO — T sempre positiva em todas as derivações','VERDADEIRO — em aVR normalmente é negativa; inversões em outras derivações dependem do contexto','FALSO — inversão sempre indica IAM','VERDADEIRO — mas só nas derivações precordiais'], cor:1, exp:'VERDADEIRO. Em aVR, T normalmente é negativa. Em outras derivações, inversão de T pode indicar isquemia ou HVE — ou ser variante normal. O contexto clínico importa.' },
+  { q:'[V/F] Durante a diástole, o retorno venoso é o principal fator que define a pós-carga?', opts:['VERDADEIRO — retorno venoso = pós-carga','FALSO — retorno venoso define principalmente a PRÉ-carga. Pós-carga depende da resistência à ejeção','VERDADEIRO — ambos são a mesma coisa','FALSO — retorno venoso não afeta nem pré nem pós-carga'], cor:1, exp:'FALSO. Retorno venoso define principalmente a PRÉ-CARGA (VTD, enchimento). A pós-carga depende da resistência aórtica e da resistência vascular periférica.' },
+  { q:'[V/F] O reflexo de Bainbridge regula a adaptação da força de contração ventricular?', opts:['VERDADEIRO — é o principal regulador de força','FALSO — Bainbridge regula a FREQUÊNCIA cardíaca, não a força. Frank-Starling é que regula a força','VERDADEIRO — age nos ventrículos','VERDADEIRO — via receptores beta-adrenérgicos'], cor:1, exp:'FALSO. Bainbridge regula FREQUÊNCIA CARDÍACA (cronotropismo) por mecanorreceptores auriculares direitos. Frank-Starling regula FORÇA (inotropismo) nos ventrículos.' },
+  { q:'[V/F] Se não houver contração dos músculos pectíneos, a função cardíaca seguirá normal sem alteração?', opts:['VERDADEIRO — músculos pectíneos são vestigiais','FALSO — fazem parte da musculatura atrial; alterações comprometem a contribuição atrial ao enchimento ventricular','VERDADEIRO — ventrículos suprem completamente','VERDADEIRO — só existem no ventrículo esquerdo'], cor:1, exp:'FALSO. Músculos pectíneos = musculatura atrial especializada. Sua alteração pode comprometer a contribuição atrial ao enchimento ventricular (~20% do DC), embora a contração ventricular seja mais crucial para ejeção.' },
+  // --- NOVAS QUESTÕES — Canais Iônicos, Sincício, Ciclo Cardíaco ---
+  { q:'[ALT] Qual estrutura anatômica é responsável pela união elétrica e mecânica entre as células do miocárdio, permitindo o sincício funcional?', opts:['Junções tight (oclusivas)','Discos intercalares com gap junctions','Pontes de actina-miosina','Retículo sarcoplasmático'], cor:1, exp:'Discos intercalares com GAP JUNCTIONS (condução elétrica) + desmossomos (ancoragem mecânica) = sincício funcional. Gap junctions = baixa resistência → impulso se propaga como uma célula única.' },
+  { q:'[ALT] Sobre os canais iônicos no PA do miocárdio contrátil, qual é CORRETA?', opts:['Os canais de Ca²⁺ tipo L se abrem rapidamente e têm breve tempo de abertura','Os canais de Na⁺ são lentos e responsáveis pelo platô (fase 2)','Os canais de Na⁺ são rápidos (fase 0) e os canais de Ca²⁺ tipo L são lentos (fase 2)','O K⁺ é responsável pela despolarização rápida inicial'], cor:2, exp:'Na⁺ = canal RÁPIDO (fase 0, ativa em décimos de ms). Ca²⁺ tipo L = canal LENTO (fase 2, platô ~200–300ms). K⁺ = repolarização (fases 1, 3). O professor INVERTE essa questão nas provas!' },
+  { q:'[ALT] Qual derivação unipolar ampliada apresenta complexo QRS predominantemente NEGATIVO/INVERTIDO?', opts:['aVL','aVF','aVR','DII'], cor:2, exp:'aVR — o eletrodo registra o coração "de costas", com vetor oposto às outras derivações. P, QRS e T aparecem invertidos. É NORMAL em aVR.' },
+  { q:'[ALT] O estiramento da aurícula direita em resposta ao aumento do retorno venoso provoca aumento da FC por qual reflexo?', opts:['Reflexo de Cushing','Reflexo de Bainbridge','Reflexo de Bezold-Jarisch','Reflexo carotídeo'], cor:1, exp:'Reflexo de BAINBRIDGE. Distensão auricular direita → mecanorreceptores → resposta simpática → ↑ FC. Nome do fisiologista britânico Francis Arthur Bainbridge.' },
+  { q:'[ALT] A pré-carga ventricular é definida como:', opts:['A pressão aórtica contra a qual o ventrículo ejeta','O volume de sangue ejetado por batimento','O grau de tensão da parede ventricular no final da diástole, determinado pelo retorno venoso','A frequência de estimulação pelo nó SA'], cor:2, exp:'Pré-carga = tensão/estiramento da parede no final da DIÁSTOLE → determinada pelo VTD → depende do retorno venoso. Quanto maior o VTD, maior a pré-carga. Lei de Frank-Starling.' },
+  { q:'[ALT] Qual a configuração correta dos eletrodos na derivação DIII?', opts:['Positivo braço direito, negativo braço esquerdo','Negativo braço direito, positivo perna esquerda','Negativo braço esquerdo, positivo perna esquerda','Positivo braço esquerdo, negativo perna direita'], cor:2, exp:'DIII: (−) Braço ESQUERDO / (+) Perna Esquerda. PEGADINHA: o eletrodo negativo está no braço ESQUERDO — não no direito como em DI e DII.' },
+  { q:'[ALT] Um paciente faz ECG em ritmo sinusal. O QRS em V1 é predominantemente negativo. Isso é:', opts:['Sinal de infarto anterior','Normal — em V1 o vetor se afasta do eletrodo','Sinal de bloqueio de ramo esquerdo sempre','O mesmo achado que em aVF'], cor:1, exp:'NORMAL. Em V1, o vetor de despolarização ventricular aponta SE AFASTANDO do eletrodo (que fica na borda esternal direita). QRS negativo em V1 é fisiológico.' },
+  { q:'[V/F] O impulso elétrico passa do sincício atrial para o ventricular através do tecido fibroso do esqueleto cardíaco.', opts:['VERDADEIRO — o tecido fibroso conduz o impulso','FALSO — o anel fibroso é ISOLANTE. O impulso passa pelo Nó AV → Feixe de His, não pelo tecido fibroso','VERDADEIRO — via gap junctions do anel fibroso','FALSO — o impulso não passa para os ventrículos'], cor:1, exp:'FALSO. O anel fibroso (esqueleto cardíaco) é ISOLANTE — separa os dois sincícios. O único caminho elétrico atrial→ventricular é pelo Nó AV → Feixe de His → Purkinje.' },
+  { q:'[V/F] A estimulação máxima do nervo vago pode reduzir a frequência cardíaca a zero ou quase zero.', opts:['VERDADEIRO — ACh→↑K⁺→hiperpolarização do NSA→ parada ou quase','FALSO — o vago não consegue parar o coração','VERDADEIRO — mas só nos ventrículos','FALSO — apenas reduz para 40 bpm no máximo'], cor:0, exp:'VERDADEIRO. Estimulação vagal máxima → ACh → receptores M2 → abre canais de K⁺ → hiperpolarização do NSA → FC cai a zero (asistolia temporária). O coração geralmente escapa em segundos.' },
+  { q:'[V/F] A sístole atrial (bomba cebadora) é responsável por aproximadamente 80% do enchimento ventricular diastólico final.', opts:['VERDADEIRO — a aurícula bombeia 80%','FALSO — a aurícula contribui com apenas ~20–30%. Os 70–80% restantes são passivos','VERDADEIRO — em ritmo sinusal','FALSO — a aurícula não contribui para o enchimento'], cor:1, exp:'FALSO. A sístole atrial contribui com apenas ~20–30%. Os 70–80% do enchimento ventricular ocorrem PASSIVAMENTE durante a diástole. ATENÇÃO: afirmar 80% é pegadinha clássica!' },
+  { q:'[V/F] Os canais de Ca²⁺ tipo L se abrem lentamente e permanecem abertos por tempo prolongado no PA cardíaco.', opts:['VERDADEIRO — Ca²⁺ tipo L = lento, sustentado (~200–300 ms), responsável pelo platô','FALSO — Ca²⁺ tipo L abre rapidamente','VERDADEIRO — mas só nas células nodais','FALSO — Ca²⁺ tipo L é igual ao canal de Na⁺'], cor:0, exp:'VERDADEIRO. Ca²⁺ tipo L = canal LENTO, abre devagar e fica aberto por ~200–300 ms (fase 2, platô). Isso é O QUE DIFERENCIA o PA cardíaco. Canal de Na⁺ = RÁPIDO (fase 0).' },
+  { q:'[V/F] Em aVL, as ondas podem ser isodifásicas (nem predominantemente positivas nem negativas).', opts:['VERDADEIRO — aVL pode ser isodifásica dependendo do eixo elétrico','FALSO — aVL sempre tem QRS positivo','FALSO — aVL sempre tem QRS negativo','VERDADEIRO — mas isso sempre indica patologia'], cor:0, exp:'VERDADEIRO. aVL pode ser isodifásica — isso depende do eixo elétrico cardíaco. Se o eixo for perpendicular a aVL, as ondas ficam isodifásicas. É usado para cálculo do eixo.' },
+  { q:'[V/F] O primeiro ruído cardíaco (B1) é gerado pelo fechamento das válvulas semilunares.', opts:['VERDADEIRO — B1 = semilunares (aórtica+pulmonar)','FALSO — B1 = fechamento das valvas AV (mitral+tricúspide) no INÍCIO da sístole','VERDADEIRO — B1 = início da diástole','FALSO — B1 não tem causa valvular'], cor:1, exp:'FALSO. B1 = fechamento das valvas AV (MITRAL + TRICÚSPIDE) no início da sístole ventricular. B2 = fechamento das SEMILUNARES (aórtica + pulmonar) no início da diástole.' },
+  { q:'[V/F] O Peptídeo Natriurético Auricular (ANP) atua promovendo retenção de sódio e água.', opts:['VERDADEIRO — ANP retém Na⁺ para aumentar PA','FALSO — ANP é NATRIURÉTICO: promove EXCREÇÃO de Na⁺ e água, reduzindo volemia e PA','VERDADEIRO — age no túbulo proximal retendo Na⁺','FALSO — ANP não afeta o sódio'], cor:1, exp:'FALSO. ANP = Peptídeo NATRIURÉTICO Auricular → promove EXCREÇÃO de Na⁺ e água → ↓ volemia → ↓ PA. Liberado em resposta ao estiramento atrial (sobrecarga de volume).' },
+  { q:'[V/F] A ausência da onda Q no ECG indica obrigatoriamente patologia cardíaca.', opts:['VERDADEIRO — toda derivação deve ter onda Q','FALSO — ausência de Q pode ser normal. Q PATOLÓGICA = larga (>0,04s) e profunda (>25% da R)','VERDADEIRO — indica IAM silencioso','FALSO — onda Q não existe no ECG normal'], cor:1, exp:'FALSO. Onda Q pode ser fisiologicamente ausente em várias derivações. Q patológica = Q larga (>0,04s) e/ou profunda (>25% da onda R). Ausência de Q ≠ patologia obrigatória.' },
+  { q:'[V/F] As fibras de Purkinje possuem mais discos intercalares do que outras células cardíacas.', opts:['VERDADEIRO — abundância de discos intercalares explica sua alta velocidade (1,5–4 m/s)','FALSO — Purkinje tem menos discos que o miocárdio contrátil','VERDADEIRO — mas a velocidade é igual à do NAV','FALSO — Purkinje não tem discos intercalares'], cor:0, exp:'VERDADEIRO. Purkinje: abundância de discos intercalares → 1,5–4 m/s (mais rápido). NAV: poucos discos → 0,02–0,05 m/s (mais lento). Discos intercalares determinam diretamente a velocidade!' },
+  { q:'[V/F] A pós-carga é determinada principalmente pelo retorno venoso durante a diástole.', opts:['VERDADEIRO — retorno venoso aumenta pós-carga','FALSO — pós-carga é determinada pela resistência vascular periférica e pressão aórtica. Retorno venoso define PRÉ-carga','VERDADEIRO — ambos são a mesma coisa','FALSO — pós-carga é determinada pela FC'], cor:1, exp:'FALSO. Pós-carga = resistência vascular periférica + pressão aórtica (resitência à ejeção na sístole). Retorno venoso define PRÉ-CARGA (VTD, enchimento diastólico).' },
+  { q:'[ALT] Qual estrutura assume como marcapasso com frequência de 40–60 bpm quando o nó sinusal falha?', opts:['Fibras de Purkinje','Nó Atrioventricular (AV)','Feixe de His','Músculo auricular'], cor:1, exp:'NAV assume como marcapasso SECUNDÁRIO: 40–60 bpm. Sequência de falhas: NSA (60–100 bpm) → NAV (40–60 bpm) → Purkinje (15–40 bpm). A FC cai a cada falha do marcapasso superior.' },
+  { q:'[ALT] Na contração muscular, qual íon se liga à troponina C para liberar o sítio ativo da actina?', opts:['Na⁺','K⁺','Ca²⁺','Mg²⁺'], cor:2, exp:'Ca²⁺ se liga à TROPONINA C → modifica o complexo troponina-tropomiosina → libera o sítio ativo da actina → miosina se liga → contração. Sem Ca²⁺ = sem contração.' },
+  { q:'[ALT] Na contração isotônica, o que ocorre com o tônus e o comprimento muscular?', opts:['Tônus muda, comprimento fica igual','Tônus fica igual, comprimento muda','Ambos mudam em sentidos opostos','Ambos ficam iguais'], cor:1, exp:'Contração ISOTÔNICA = "tônus igual" → o comprimento MUDA (músculo encurta ou alonga). Contração ISOMÉTRICA = comprimento igual, mas o tônus (tensão) muda.' },
+  { q:'[ALT] A fração de ejeção em coração saudável é de aproximadamente:', opts:['30–40%','80–90%','~60%','~10%'], cor:2, exp:'FE normal ≈ 55–70% (valor didático: ~60%). FE = VS/VTD = 70/120 ≈ 58%. FE < 40% = IC sistólica grave. FE ≥ 50% com sintomas = IC com FE preservada (disfunção diastólica).' },
+  { q:'[ABERTA] Complete: O volume de sangue ejetado pelo VE a cada batimento em repouso (~70 mL) denomina-se:', opts:['Volume Telediastólico (VTD)','Volume Telesistólico (VTS)','Volume Sistólico (VS)','Débito Cardíaco (DC)'], cor:2, exp:'Volume Sistólico (VS) = volume EJETADO por batimento. VS = VTD − VTS = 120 − 50 = 70 mL. Não confundir com DC (por minuto) nem VTD (total no final da diástole).' },
+  { q:'[ABERTA] A velocidade padrão do papel no ECG convencional é:', opts:['10 mm/s','50 mm/s','25 mm/s','100 mm/s'], cor:2, exp:'25 mm/s é o padrão universal. Com essa velocidade: 1 mm (quadradinho) = 0,04 s; 5 mm (quadrado grande) = 0,2 s; 25 mm = 1 segundo.' },
+  { q:'[ABERTA] O grau de tensão/estiramento da parede ventricular no final da diástole, determinado pelo retorno venoso, denomina-se:', opts:['Pós-carga','Débito Cardíaco','Pré-carga','Fração de Ejeção'], cor:2, exp:'PRÉ-CARGA = tensão da parede ventricular no final da diástole. Determinada pelo retorno venoso e VTD. Quanto maior o retorno venoso → maior VTD → maior pré-carga → Lei de Frank-Starling.' },
+  { q:'[ALT] Qual é a 2ª fonte de ATP para a contração muscular e por quanto tempo sustenta o exercício?', opts:['Glicólise aeróbica — 30 min','ATP armazenado — 2–3 s','Fosfocreatina — 8–10 s','Beta-oxidação — 60 min'], cor:2, exp:'Fosfocreatina é a 2ª fonte: reconstitui ATP rapidamente, sustenta por 8–10 s. Sequência: ATP armazenado (2–3s) → Fosfocreatina (8–10s) → Glicólise anaeróbica → Glicólise aeróbica → β-oxidação.' },
+  { q:'[ALT] Um paciente perde o nó sinusal; o NAV assume com 56 VS × 53 FC. Qual o débito cardíaco resultante?', opts:['5.600 mL/min','4.200 mL/min','2.968 mL/min (~2,9 L)','1.500 mL/min'], cor:2, exp:'DC = VS × FC = 56 × 53 = 2.968 mL/min ≈ 2,9 L/min. Com NSA normal: 70×80=5.600 mL/min. Perder o NSA reduz quase 50% do débito — explica os sintomas graves de bloqueio sinoatrial.' },
+  { q:'[ALT] Qual é o segmento do ECG que, quando elevado ou deprimido, indica IAM ou isquemia?', opts:['Segmento PR','Intervalo RR','Segmento ST','Onda U'], cor:2, exp:'Segmento ST: isoelétrico = normal (Fase 2/meseta). Supra-ST = IAM (corrente de lesão, oclusão total). Infra-ST = isquemia subendocárdica. O mais importante da emergência cardíaca!' },
+  { q:'[ALT] Na contração isométrica, o que ocorre?', opts:['O comprimento muda, o tônus fica igual','O tônus muda, o comprimento fica igual','Ambos mudam','Nenhum muda'], cor:1, exp:'Contração ISOMÉTRICA = "comprimento igual" (iso=igual, métrico=comprimento) → o TÔNUS (tensão) muda, mas o músculo não encurta. Ex: segurar um peso estático sem mover o braço.' },
 ];
+
 
 let qIdx = 0, score = 0, quizInited = false;
 function initQuiz() {
