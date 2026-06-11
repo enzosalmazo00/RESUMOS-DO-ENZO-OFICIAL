@@ -358,13 +358,23 @@
     @media (max-width: 480px) {
       #ez-panel {
         bottom: 0; right: 0; left: 0;
-        width: 100%; height: 70vh;
+        width: 100%; height: 85vh; height: 85dvh;
+        max-height: 85dvh;
         border-radius: 20px 20px 0 0;
         border-bottom: none;
       }
       #ez-panel.open { transform: translateY(0) scale(1); }
       #ez-panel:not(.open) { transform: translateY(100%); }
       #ez-fab { bottom: 24px; right: 20px; }
+
+      /* ── FIX ZOOM iOS: input precisa ter font-size ≥ 16px ──────── */
+      /* Senão o Safari iOS dá zoom automático e quebra o layout */
+      #ez-input { font-size: 16px !important; }
+
+      /* Área de input respeita safe-area-inset-bottom (iPhones com Face ID) */
+      #ez-input-area {
+        padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+      }
     }
   `;
 
