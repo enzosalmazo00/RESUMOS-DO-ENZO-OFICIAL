@@ -3,254 +3,89 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Resumo de Microbiologia Teórica – Enzo Salmazo</title>
-<!-- PAGE_KEY: coluna "micro_teorica" na tabela profiles -->
+<title>Resumo de Microbiología P2 — Gram-Negativos — Enzo Salmazo</title>
 <script>window.PAGE_KEY = "microbiologia_p2";</script>
-<!-- 1. Oculta a página imediatamente (evita flash de conteúdo não autorizado) -->
 <script>document.documentElement.style.visibility = "hidden";</script>
-<!-- 2. Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<!-- 3. Guard compartilhado: checa sessão + is_approved + coluna micro_teorica -->
 <script src="auth-guard.js"></script>
-<!-- 4. Revela a página somente após auth OK -->
 <script>
   document.addEventListener("authReady", function () {
     document.documentElement.style.visibility = "visible";
   });
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
 :root {
-  --bg: #0a0d14; --bg2: #111520; --bg3: #161c2e;
-  --card: #1a2138; --card2: #1f2845;
-  --accent: #4f9cf9; --accent2: #38e8c0; --accent3: #f9784f; --accent4: #b84ff9;
-  --gold: #f9c94f; --red: #f95f5f; --green: #4ff984;
-  --text: #e8eaf6; --muted: #8892b0;
+  --bg: #0a0d14;
+  --bg2: #111520;
+  --bg3: #161c2e;
+  --card: #1a2138;
+  --card2: #1f2845;
+  --accent: #4f9cf9;
+  --accent2: #38e8c0;
+  --accent3: #f9784f;
+  --accent4: #b84ff9;
+  --gold: #f9c94f;
+  --red: #f95f5f;
+  --green: #4ff984;
+  --text: #e8eaf6;
+  --muted: #8892b0;
   --border: rgba(79,156,249,0.15);
   --shadow: 0 8px 40px rgba(0,0,0,0.5);
   --radius: 16px;
   --font-body: 'DM Sans', sans-serif;
   --font-display: 'Syne', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
-/* aliases */
---t1:var(--text); --t2:#a8b4cc; --t3:var(--muted);
---bdr:var(--border); --bdr-b:rgba(79,156,249,0.35); --card-h:var(--card2);
---red-b:#e74c3c; --blue:#4f9cf9; --blue-l:#7cb9fb;
---green-l:var(--green); --gold-l:#fbd97f;
---ac:var(--accent); --ac2:var(--accent2);
---tx:var(--text); --tx2:var(--muted);
 }
 
-*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
-body{font-family:var(--font-body);background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
-.page{display:none;}.page.active{display:block;min-height:calc(100vh - 120px);}
-::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--ac)}
-.top-nav{position:sticky;top:0;z-index:200;background:rgba(13,17,23,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.btn-home{background:var(--ac);color:#000;border:none;padding:8px 22px;border-radius:8px;font-weight:700;cursor:pointer;font-family:var(--font-body);font-size:14px;transition:all .2s;display:flex;align-items:center;gap:6px}
-.btn-home:hover{background:#00b896;transform:translateY(-1px)}
-.nav-lbl{font-family:'Playfair Display',serif;font-size:16px;color:var(--ac)}
-#page-cover{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:40px 20px;background:radial-gradient(ellipse 80% 80% at 50% -10%,#002240 0%,var(--bg) 70%);position:relative;overflow:hidden}
-#page-cover::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(0,212,170,.03) 60px,rgba(0,212,170,.03) 61px),repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(0,212,170,.03) 60px,rgba(0,212,170,.03) 61px);animation:gridA 40s linear infinite}
-@keyframes gridA{0%{transform:translate(0,0)}100%{transform:translate(61px,61px)}}
-.cov-in{position:relative;z-index:1;max-width:720px}
-.cov-badge{display:inline-block;background:rgba(0,212,170,.12);border:1px solid rgba(0,212,170,.4);color:var(--ac);padding:6px 20px;border-radius:50px;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:28px;animation:fuA .8s ease both}
-.cov-h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,4.2rem);font-weight:900;line-height:1.1;margin-bottom:12px;animation:fuA .8s .1s ease both}
-.cov-h1 em{color:var(--ac);font-style:normal}
-.cov-h2{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(.9rem,2.5vw,1.2rem);color:var(--tx2);margin-bottom:8px;animation:fuA .8s .2s ease both}
-.cov-author{font-size:1rem;color:var(--ac);margin-bottom:48px;animation:fuA .8s .3s ease both;font-weight:600;letter-spacing:.5px}
-.cov-stats{display:flex;gap:36px;flex-wrap:wrap;justify-content:center;margin-bottom:48px;animation:fuA .8s .4s ease both}
-.cov-sn{font-size:2.4rem;font-weight:900;font-family:'Playfair Display',serif;color:var(--ac)}
-.cov-sl{font-size:.68rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px}
-.btn-start{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#000;border:none;padding:18px 56px;border-radius:50px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:var(--font-body);letter-spacing:1px;transition:all .3s;animation:fuA .8s .5s ease both}
-.btn-start:hover{transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,212,170,.35)}
-@keyframes fuA{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-#page-dashboard{padding:0}
-.dash-top{padding:48px 20px 32px;max-width:1200px;margin:0 auto;text-align:center}
-.dash-h1{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.8rem);margin-bottom:8px}
-.dash-sub{color:var(--tx2);font-size:.95rem}
-.sec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;max-width:1200px;margin:0 auto;padding:0 20px 32px}
-.sc{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:28px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
-.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--sc)}
-.sc:hover{transform:translateY(-5px);border-color:var(--sc);box-shadow:0 16px 48px rgba(0,0,0,.4)}
-.sc-icon{font-size:2.2rem;margin-bottom:16px}
-.sc-nm{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--sc);margin-bottom:8px}
-.sc-ds{color:var(--tx2);font-size:.8rem;line-height:1.6}
-.sc-ct{display:inline-block;margin-top:14px;background:rgba(255,255,255,.05);border-radius:50px;padding:4px 14px;font-size:.7rem;color:var(--sc);font-weight:600}
-.dash-extra{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;max-width:1200px;margin:0 auto;padding:0 20px 60px}
-.dec{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:24px;cursor:pointer;transition:all .3s;text-align:center}
-.dec:hover{border-color:var(--ac);transform:translateY(-3px)}
-.dec-ic{font-size:2rem;margin-bottom:12px}
-.dec-nm{font-weight:700;font-size:1rem;color:var(--ac)}
-.dec-sub{color:var(--tx2);font-size:.75rem;margin-top:4px}
-.sec-hero{padding:48px 20px 28px;text-align:center;background:linear-gradient(180deg,var(--bg2) 0%,transparent 100%);border-bottom:1px solid var(--bd)}
-.sec-hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,4vw,2.4rem)}
-.sec-hero p{color:var(--tx2);margin-top:8px;font-size:.88rem}
-.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:24px;max-width:1140px;margin:0 auto;padding:32px 20px 60px}
-.fcw{perspective:1200px;height:500px}
-.fc{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.4,0,.2,1);cursor:pointer}
-.fc.flipped{transform:rotateY(180deg)}
-.fc-f,.fc-b{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:var(--r);overflow:hidden;border:1px solid var(--bd);display:flex;flex-direction:column}
-.fc-f{background:var(--bg2)}
-.fc-b{background:var(--bg2);transform:rotateY(180deg)}
-.fc-fh{padding:18px 20px;background:var(--sc);flex-shrink:0}
-.fc-nm{font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:#fff}
-.fc-g{display:inline-block;background:rgba(0,0,0,.3);color:rgba(255,255,255,.9);padding:2px 10px;border-radius:50px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:6px}
-.fc-fb{padding:14px 20px;flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
-.fc-row{display:flex;gap:8px}
-.fc-lbl{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--sc);min-width:86px;padding-top:1px;flex-shrink:0}
-.fc-val{font-size:.8rem;color:var(--tx);flex:1;line-height:1.55}
-.fc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
-.fc-tag{display:inline-block;background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:50px;padding:2px 9px;font-size:.7rem;color:var(--tx)}
-.fc-hint{text-align:center;padding:9px;color:var(--tx2);font-size:.68rem;border-top:1px solid var(--bd);flex-shrink:0}
-.fc-bh{padding:13px 20px;background:rgba(0,212,170,.08);border-bottom:1px solid var(--bd);flex-shrink:0}
-.fc-bt{font-family:'Playfair Display',serif;font-style:italic;font-size:.9rem;color:var(--ac)}
-.fc-bb{padding:13px 20px;flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
-.bs-t{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--sc);display:flex;align-items:center;gap:8px;margin-bottom:3px}
-.bs-t::after{content:'';flex:1;height:1px;background:var(--bd)}
-.tg-wrap{display:flex;flex-wrap:wrap;gap:5px}
-.tg{background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:50px;padding:3px 10px;font-size:.7rem;color:var(--tx)}
-.tg.tx{border-color:rgba(0,212,170,.4);background:rgba(0,212,170,.07);color:var(--ac)}
-.tg.rx{border-color:rgba(231,76,60,.4);background:rgba(231,76,60,.07);color:#e74c3c}
-.fc-sp{background:rgba(241,196,15,.07);border:1px solid rgba(241,196,15,.25);border-radius:10px;padding:10px 12px;font-size:.75rem;color:#f1c40f;line-height:1.55}
-.fc-ex{background:rgba(58,142,240,.07);border:1px solid rgba(58,142,240,.2);border-radius:10px;padding:10px 12px;font-size:.73rem;color:var(--ac2);line-height:1.55}
-#page-quiz{padding:0}
-.q-top{background:var(--bg2);border-bottom:1px solid var(--bd);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-.q-top h1{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--ac)}
-.q-ctr{font-size:.83rem;color:var(--tx2)}
-.prog-wrap{width:100%;height:4px;background:var(--bd)}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width .4s}
-.q-main{max-width:780px;margin:0 auto;padding:40px 20px}
-.q-num{font-size:.72rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
-.q-bact{display:inline-block;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);border-radius:50px;padding:3px 14px;font-size:.73px;color:var(--ac);font-weight:600;margin-bottom:16px;font-size:.73rem}
-.q-txt{font-size:1.05rem;line-height:1.78;color:var(--tx);margin-bottom:28px}
-.q-opts{display:flex;flex-direction:column;gap:10px}
-.q-opt{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:14px 20px;cursor:pointer;transition:all .2s;font-size:.9rem;color:var(--tx);text-align:left;display:flex;align-items:center;gap:14px;width:100%}
-.q-opt:hover{border-color:var(--ac);background:rgba(0,212,170,.05)}
-.q-opt.sel{border-color:var(--ac);background:rgba(0,212,170,.1)}
-.q-opt.correct{border-color:#27ae60;background:rgba(39,174,96,.12);color:#27ae60}
-.q-opt.wrong{border-color:#e74c3c;background:rgba(231,76,60,.08);color:#e74c3c}
-.q-lt{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;transition:all .2s}
-.q-opt.sel .q-lt{background:var(--ac);color:#000}
-.q-opt.correct .q-lt{background:#27ae60;color:#fff}
-.q-opt.wrong .q-lt{background:#e74c3c;color:#fff}
-.q-fb{margin-top:20px;padding:16px 20px;border-radius:12px;background:var(--bg3);border-left:4px solid var(--ac);display:none}
-.q-fb.show{display:block}
-.q-fb-t{font-weight:700;margin-bottom:8px;font-size:.9rem}
-.q-fb-t.ok{color:#27ae60}.q-fb-t.err{color:#e74c3c}
-.q-fb-p{font-size:.84rem;color:var(--tx2);line-height:1.65}
-.q-nav{display:flex;align-items:center;justify-content:space-between;margin-top:32px;flex-wrap:wrap;gap:12px}
-.btn-q{background:var(--ac);color:#000;border:none;padding:12px 32px;border-radius:10px;font-weight:700;cursor:pointer;font-family:var(--font-body);font-size:.95rem;transition:all .2s}
-.btn-q:hover{background:#00b896}.btn-q:disabled{opacity:.4;cursor:not-allowed}
-.btn-qs{background:transparent;border:1px solid var(--bd);color:var(--tx2);padding:12px 24px;border-radius:10px;font-size:.9rem;cursor:pointer;font-family:var(--font-body);transition:all .2s}
-.btn-qs:hover{border-color:var(--ac);color:var(--ac)}
-.qr{text-align:center;padding:60px 20px}
-.qr-score{font-size:5rem;font-weight:900;font-family:'Playfair Display',serif;color:var(--ac)}
-.qr-tot{color:var(--tx2);margin-bottom:8px}
-.qr-msg{font-size:1.2rem;font-family:'Playfair Display',serif;margin-bottom:40px}
-.qr-grid{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
-.qr-n{font-size:2rem;font-weight:700}.qr-l{font-size:.72rem;color:var(--tx2);text-transform:uppercase;letter-spacing:1px}
-.qr-ok{color:#27ae60}.qr-er{color:#e74c3c}
-#page-cases{padding:0}
-.cas-top{padding:48px 20px 28px;text-align:center;background:linear-gradient(180deg,var(--bg2),transparent);border-bottom:1px solid var(--bd)}
-.cas-top h1{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,4vw,2.4rem);color:var(--ac)}
-.cas-body{max-width:900px;margin:0 auto;padding:32px 20px 60px;display:flex;flex-direction:column;gap:48px}
-.cc{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
-.cc-hd{padding:22px 24px;background:var(--bg3);border-bottom:1px solid var(--bd)}
-.cc-num{font-size:.68rem;color:var(--ac);text-transform:uppercase;letter-spacing:3px;font-weight:700;margin-bottom:4px}
-.cc-ttl{font-family:'Playfair Display',serif;font-size:1.2rem}
-.cc-path{display:inline-block;margin-top:8px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);border-radius:50px;padding:3px 14px;font-size:.73rem;color:var(--ac);font-weight:600}
-.cc-bd{padding:24px}
-.cc-scen{background:var(--bg3);border-radius:12px;padding:18px 20px;margin-bottom:22px;border-left:4px solid var(--ac2)}
-.cc-scen p{font-size:.9rem;line-height:1.85;color:var(--tx)}
-.vitals{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:10px;margin-bottom:22px}
-.vt{background:var(--bg3);border-radius:10px;padding:12px;text-align:center}
-.vt-v{font-size:1.05rem;font-weight:700;color:var(--ac);font-family:'Fira Code',monospace}
-.vt-l{font-size:.62rem;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
-.cc-lab{background:var(--bg3);border-radius:12px;padding:14px 18px;margin-bottom:22px}
-.cc-lab-t{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--tx2);margin-bottom:10px}
-.lab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px}
-.li{display:flex;justify-content:space-between;font-size:.8rem;padding:2px 0}
-.li-k{color:var(--tx2)}.li-v{font-weight:600;font-family:'Fira Code',monospace;font-size:.77rem}
-.li-v.ab{color:#e74c3c}
-.cc-qs{display:flex;flex-direction:column;gap:16px}
-.cc-qn{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--ac);margin-bottom:5px}
-.cc-qt{font-size:.93rem;font-weight:600;color:var(--tx);margin-bottom:9px}
-.cc-ans{background:var(--bg3);border-radius:10px;overflow:hidden;border:1px solid transparent;transition:all .3s}
-.cc-ans.rev{border-color:rgba(0,212,170,.3)}
-.cc-ansbtn{width:100%;text-align:left;background:none;border:none;color:var(--tx2);padding:12px 16px;cursor:pointer;font-size:.8rem;font-family:var(--font-body);display:flex;align-items:center;gap:8px;transition:color .2s}
-.cc-ansbtn:hover{color:var(--ac)}
-.cc-anshid{padding:0 16px 14px;font-size:.86rem;line-height:1.75;color:var(--tx);display:none}
-.cc-ans.rev .cc-anshid{display:block}
-.rev-ic{transition:transform .3s}
-.cc-ans.rev .rev-ic{transform:rotate(90deg)}
-/* ═══ RESPONSIVE MOBILE ═══ */
-@media(max-width:768px){
-  /* Cover */
-  #page-cover{padding:32px 16px;}
-  .cov-t{font-size:clamp(2rem,8vw,3rem);}
-  .cov-st{font-size:.9rem;}
-  .cov-stats{gap:16px;flex-wrap:wrap;justify-content:center;}
-  .btn-start{padding:14px 36px;font-size:1rem;}
+* { margin:0; padding:0; box-sizing:border-box; }
 
-  /* Top nav */
-  .top-nav{padding:10px 14px;gap:10px;}
-  .btn-home{padding:7px 14px;font-size:13px;}
-  .nav-lbl{font-size:14px;}
-
-  /* Internal dashboard */
-  #page-dashboard .sec-grid{grid-template-columns:1fr;padding:16px;}
-  .sc{padding:20px;}
-  .dec{padding:16px;}
-
-  /* Flashcards */
-  .fc-grid{grid-template-columns:1fr;padding:16px 12px 40px;}
-  .fcw{height:520px;}
-  .fc-fh{padding:14px 16px;}
-  .fc-fb{padding:12px 14px;}
-  .fc-bb{padding:12px 14px;}
-
-  /* Section hero */
-  .sec-hero{padding:32px 16px 20px;}
-  .sec-hero h2{font-size:clamp(1.4rem,5vw,2rem);}
-
-  /* Grids → single column */
-  .sec-grid{grid-template-columns:1fr;}
-  .vitals{grid-template-columns:repeat(2,1fr);}
-  .lab-grid{grid-template-columns:1fr;}
-  .qr-grid{gap:16px;grid-template-columns:1fr;}
-
-  /* Quiz */
-  .q-card{padding:20px 16px;}
-  .q-opts{gap:8px;}
-  .q-opt{padding:10px 14px;font-size:.88rem;}
-
-  /* Cases */
-  .case-body{padding:16px;}
-  .case-hd{padding:14px 16px;}
-
-  /* Back button position */
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-@media(max-width:480px){
-  .fcw{height:580px;}
-  .cov-stats{gap:12px;}
-  #page-cover{padding:24px 12px;}
-  .cov-t{font-size:clamp(1.6rem,9vw,2.2rem);}
-  .fc-grid{padding:12px 8px 48px;}
-  .top-nav{padding:8px 10px;gap:8px;}
-  .btn-home{padding:6px 12px;font-size:12px;}
-  .nav-lbl{font-size:13px;}
-  .sec-hero{padding:24px 12px 16px;}
-  .sc{padding:16px;}
-}
+#particles { position:fixed; inset:0; z-index:0; pointer-events:none; }
 
-/* ── NAV PADRÃO BIOQUÍMICA ── */
+header {
+  position: relative; z-index:10;
+  text-align: center;
+  padding: 48px 24px 32px;
+  background: linear-gradient(180deg, rgba(79,156,249,0.08) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border);
+}
+header .badge {
+  display:inline-block;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight:600;
+  letter-spacing:2px; text-transform:uppercase;
+  padding: 4px 14px; border-radius:20px; margin-bottom:16px;
+}
+header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4vw, 44px);
+  font-weight: 800; letter-spacing:-1px;
+  background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent2) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip: text; margin-bottom:8px;
+}
+header .sub { color: var(--muted); font-size:13px; letter-spacing:1px; }
+header .by { margin-top:12px; color: var(--accent); font-family:var(--font-mono); font-size:12px; }
+header .verse { margin-top:8px; color: var(--gold); font-size:12px; font-style:italic; opacity:0.85; }
+
 nav.tabs {
   position:sticky; top:0; z-index:100;
   display:flex; gap:4px; flex-wrap:wrap;
-  background: rgba(10,13,20,0.97);
+  background: rgba(10,13,20,0.95);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   padding: 10px 16px;
   justify-content: center;
@@ -269,147 +104,595 @@ nav.tabs button.active {
   border-color: var(--accent);
   box-shadow: 0 0 20px rgba(79,156,249,0.4);
 }
-@media(max-width:768px){
-  nav.tabs{ flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; justify-content:flex-start; }
-  nav.tabs::-webkit-scrollbar{ display:none; }
-  nav.tabs button{ flex-shrink:0; white-space:nowrap; }
+
+.section { display:none; animation: fadeIn 0.4s ease; }
+.section.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+.container { max-width:1100px; margin:0 auto; padding: 32px 20px; position:relative; z-index:1; }
+
+.chapter-title {
+  font-family: var(--font-display); font-size:22px; font-weight:700;
+  color: var(--accent); margin-bottom:24px;
+  display:flex; align-items:center; gap:12px;
+}
+.chapter-title::after {
+  content:''; flex:1; height:1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+.chap-icon { font-size:24px; }
+
+.info-block {
+  background: var(--card2); border-left: 3px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  padding: 16px 20px; margin-bottom:20px;
+}
+.info-block.warn { border-color: var(--gold); }
+.info-block.danger { border-color: var(--red); }
+.info-block.success { border-color: var(--green); }
+.info-block .label {
+  font-family:var(--font-mono); font-size:10px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--muted); margin-bottom:8px;
+}
+.info-block h4 { font-family:var(--font-display); font-weight:700; margin-bottom:8px; font-size:15px; color:#fff; }
+.info-block p { color: var(--text); }
+.info-block ul, .info-block ol { padding-left:20px; margin-top:8px; color:var(--text); }
+.info-block li { margin:4px 0; }
+
+.compare-table {
+  width:100%; border-collapse:separate; border-spacing:0;
+  border-radius:var(--radius); overflow:hidden; margin-bottom:28px;
+}
+.compare-table th {
+  background: var(--card2); color:var(--accent);
+  font-family:var(--font-display); font-size:13px; font-weight:700;
+  padding:12px 16px; text-align:left;
+  border-bottom:1px solid var(--border);
+}
+.compare-table td {
+  background: var(--card); padding:10px 16px; font-size:13px;
+  border-bottom:1px solid rgba(255,255,255,0.04); color:var(--text);
+}
+.compare-table tr:last-child td { border-bottom:none; }
+.compare-table tr:hover td { background: var(--card2); }
+
+.sec-divider {
+  display:flex; align-items:center; gap:12px;
+  margin: 32px 0 20px;
+}
+.sec-divider h3 {
+  font-family:var(--font-display); font-weight:700; font-size:17px;
+  color:var(--accent3); white-space:nowrap;
+}
+.sec-divider::before, .sec-divider::after {
+  content:''; flex:1; height:1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
 }
 
-
-/* ── Nav override: Bioquímica pill style ── */
-.ntab,.nav-btn,.tab-btn,.btn-home{
-  background:var(--card)!important;
-  border:1px solid var(--border)!important;
-  border-bottom:1px solid var(--border)!important;
-  border-radius:8px!important;
-  color:var(--muted)!important;
-  font-family:var(--font-body)!important;
-  font-size:12px!important;
-  font-weight:600!important;
-  padding:6px 14px!important;
-  cursor:pointer!important;
-  transition:all 0.2s!important;
-  white-space:nowrap!important;
-  letter-spacing:0.3px!important;
-  text-transform:none!important;
-  flex-shrink:0!important;
-  flex:none!important;
-  min-width:auto!important;
-  display:inline-flex!important;
-  align-items:center!important;
-  gap:4px!important;
+/* FLASHCARDS */
+.flashcard-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(310px, 1fr));
+  gap:20px; margin-bottom:32px;
 }
-.ntab:hover,.nav-btn:hover,.tab-btn:hover{color:var(--accent)!important;border-color:var(--accent)!important;background:var(--card2)!important;}
-.ntab.active,.nav-btn.active,.tab-btn.active{background:var(--accent)!important;color:var(--bg)!important;border-color:var(--accent)!important;box-shadow:0 0 20px rgba(79,156,249,0.4)!important;}
-.nav-wrap,.nav-inner,.tab-nav-wrapper,.tab-nav{background:rgba(10,13,20,0.97)!important;backdrop-filter:blur(20px)!important;border-bottom:1px solid var(--border)!important;}
-body{background:var(--bg)!important;color:var(--text)!important;font-family:var(--font-body)!important;}
-h1,h2,.hero-t,.mod-title,.chapter-title,.cov-h1,.dash-h1,.sec-nm{font-family:var(--font-display)!important;}
-code,.fc-tag,.formula,.mono{font-family:var(--font-mono)!important;}
-
-/* ── Scroll fix desktop ── */
-html{overflow-x:hidden!important;overflow-y:auto!important;}
-body{overflow:visible!important;}
-
-/* ── Botão próxima seção ── */
-.next-btn{background:linear-gradient(135deg,var(--accent2,#38e8c0),var(--accent,#4f9cf9));color:#0a0d14;border:none;padding:1rem 2rem;border-radius:50px;font-family:var(--font-body);font-size:15px;font-weight:800;cursor:pointer;margin:3rem auto 1rem;display:block;text-align:center;transition:all .3s;max-width:380px;letter-spacing:.4px;}
-.next-btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(79,156,249,0.45);}
-
-/* ── BACK BTN FIXED ── */
-.back-btn-fixed {
-  position:fixed; bottom:24px; left:24px; z-index:9999;
-  display:flex; align-items:center; gap:9px;
-  padding:12px 26px;
-  background:rgba(10,13,20,0.93);
-  border:1.5px solid rgba(79,156,249,0.42);
-  border-radius:50px;
-  color:#e8eaf6;
-  font-size:13px; font-weight:600; letter-spacing:0.03em;
-  text-decoration:none;
-  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
-  box-shadow:0 4px 24px rgba(79,156,249,0.16);
-  transition:all .25s ease;
+.flashcard { perspective:1000px; height:500px; cursor:pointer; }
+.flashcard-inner {
+  position:relative; width:100%; height:100%;
+  transition: transform 0.65s cubic-bezier(0.4,0,0.2,1);
+  transform-style: preserve-3d;
 }
-.back-btn-fixed:hover {
-  background:rgba(79,156,249,0.14);
-  border-color:rgba(79,156,249,0.85);
-  transform:translateY(-3px);
-  box-shadow:0 8px 32px rgba(79,156,249,0.26);
+.flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+.flashcard-front, .flashcard-back {
+  position:absolute; inset:0; border-radius:var(--radius);
+  backface-visibility:hidden;
+  display:flex; flex-direction:column;
+  border: 1px solid var(--border); overflow:hidden;
 }
+.flashcard-front { background: var(--bg2); }
+.flashcard-back { transform: rotateY(180deg); background: var(--bg2); }
+.fc-header {
+  padding:18px 20px; flex-shrink:0;
+}
+.fc-name {
+  font-family: var(--font-display); font-style:italic;
+  font-size:1rem; color:#fff;
+}
+.fc-gram {
+  display:inline-block; background:rgba(0,0,0,.3);
+  color:rgba(255,255,255,.9); padding:2px 10px; border-radius:50px;
+  font-size:.65rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:1px; margin-top:6px;
+}
+.fc-body { padding:14px 20px; flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px; }
+.fc-row { display:flex; gap:8px; }
+.fc-lbl { font-size:.64rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; min-width:86px; padding-top:1px; flex-shrink:0; }
+.fc-val { font-size:.8rem; color:var(--text); flex:1; line-height:1.55; }
+.fc-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:2px; }
+.fc-tag-item { display:inline-block; background:rgba(255,255,255,.05); border:1px solid var(--border); border-radius:50px; padding:2px 9px; font-size:.7rem; color:var(--text); }
+.fc-hint { text-align:center; padding:9px; color:var(--muted); font-size:.68rem; border-top:1px solid var(--border); flex-shrink:0; }
+.fc-back-header { padding:13px 20px; border-bottom:1px solid var(--border); flex-shrink:0; }
+.fc-back-title { font-family:var(--font-display); font-style:italic; font-size:.9rem; }
+.fc-back-body { padding:13px 20px; flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:12px; }
+.bs-title { font-size:.63rem; font-weight:700; text-transform:uppercase; letter-spacing:2px; display:flex; align-items:center; gap:8px; margin-bottom:3px; }
+.bs-title::after { content:''; flex:1; height:1px; background:var(--border); }
+.tg-wrap { display:flex; flex-wrap:wrap; gap:5px; }
+.tg { background:rgba(255,255,255,.05); border:1px solid var(--border); border-radius:50px; padding:3px 10px; font-size:.7rem; color:var(--text); }
+.tg.tx { border-color:rgba(56,232,192,.4); background:rgba(56,232,192,.07); color:var(--accent2); }
+.tg.rx { border-color:rgba(231,76,60,.4); background:rgba(231,76,60,.07); color:#e74c3c; }
+.fc-sp { background:rgba(241,196,15,.07); border:1px solid rgba(241,196,15,.25); border-radius:10px; padding:10px 12px; font-size:.75rem; color:#f1c40f; line-height:1.55; }
+.fc-ex { background:rgba(58,142,240,.07); border:1px solid rgba(58,142,240,.2); border-radius:10px; padding:10px 12px; font-size:.73rem; color:var(--accent2); line-height:1.55; }
 
+/* QUIZ */
+.quiz-container { max-width:750px; margin:0 auto; }
+.quiz-progress-bar { height:4px; background:var(--card2); border-radius:4px; margin-bottom:28px; overflow:hidden; }
+.quiz-progress-fill { height:100%; border-radius:4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition:width 0.4s ease; }
+.quiz-num { font-family:var(--font-mono); font-size:12px; color:var(--muted); margin-bottom:8px; letter-spacing:1px; }
+.quiz-q { font-family:var(--font-display); font-size:18px; font-weight:700; color:#fff; margin-bottom:24px; line-height:1.5; }
+.quiz-opts { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+.quiz-opt {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:12px; padding:14px 18px;
+  cursor:pointer; transition:all 0.2s;
+  font-size:14px; text-align:left;
+  display:flex; align-items:flex-start; gap:12px;
+  color:var(--text); font-family:var(--font-body);
+}
+.quiz-opt:hover:not(.answered) { border-color:var(--accent); background:var(--card2); }
+.quiz-opt .opt-letter {
+  font-family:var(--font-mono); font-size:12px; font-weight:700;
+  color:var(--accent); min-width:20px;
+}
+.quiz-opt.correct { border-color:var(--green); background:rgba(79,249,132,0.08); }
+.quiz-opt.wrong { border-color:var(--red); background:rgba(249,95,95,0.08); }
+.quiz-opt.correct .opt-letter { color:var(--green); }
+.quiz-opt.wrong .opt-letter { color:var(--red); }
+.quiz-explain {
+  background: var(--card2); border-radius:12px; padding:18px 20px;
+  border-left:3px solid var(--accent2); margin-top:16px;
+  font-size:13px; line-height:1.7; color:var(--text);
+  display:none;
+}
+.quiz-explain.show { display:block; animation:fadeIn 0.3s ease; }
+.quiz-explain strong { color:var(--accent2); }
+.quiz-nav {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top:24px; flex-wrap:wrap; gap:12px;
+}
+.btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: var(--bg); font-family:var(--font-display);
+  font-weight:700; font-size:14px; border:none;
+  padding:10px 24px; border-radius:10px; cursor:pointer;
+  transition:all 0.2s; letter-spacing:0.5px;
+}
+.btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(79,156,249,0.4); }
+.score-card {
+  text-align:center; padding:48px 32px;
+  background:var(--card); border-radius:20px;
+  border:1px solid var(--border);
+}
+.score-big {
+  font-family:var(--font-display); font-size:72px; font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.score-msg { color:var(--muted); font-size:16px; margin-top:8px; }
+
+/* CLINICAL CASES */
+.cc { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; margin-bottom:32px; }
+.cc-hd { padding:22px 24px; background:var(--bg3); border-bottom:1px solid var(--border); }
+.cc-num { font-size:.68rem; color:var(--accent); text-transform:uppercase; letter-spacing:3px; font-weight:700; margin-bottom:4px; }
+.cc-ttl { font-family:var(--font-display); font-size:1.2rem; color:#fff; }
+.cc-path { display:inline-block; margin-top:8px; background:rgba(56,232,192,.1); border:1px solid rgba(56,232,192,.3); border-radius:50px; padding:3px 14px; font-size:.73rem; color:var(--accent2); font-weight:600; }
+.cc-bd { padding:24px; }
+.cc-scen { background:var(--bg3); border-radius:12px; padding:18px 20px; margin-bottom:22px; border-left:4px solid var(--accent2); }
+.cc-scen p { font-size:.9rem; line-height:1.85; color:var(--text); }
+.vitals { display:grid; grid-template-columns:repeat(auto-fill, minmax(105px, 1fr)); gap:10px; margin-bottom:22px; }
+.vt { background:var(--bg3); border-radius:10px; padding:12px; text-align:center; }
+.vt-v { font-size:1.05rem; font-weight:700; color:var(--accent); font-family:var(--font-mono); }
+.vt-l { font-size:.62rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-top:3px; }
+.cc-lab { background:var(--bg3); border-radius:12px; padding:14px 18px; margin-bottom:22px; }
+.cc-lab-t { font-size:.67rem; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:10px; }
+.lab-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(170px, 1fr)); gap:6px; }
+.li { display:flex; justify-content:space-between; font-size:.8rem; padding:2px 0; }
+.li-k { color:var(--muted); } .li-v { font-weight:600; font-family:var(--font-mono); font-size:.77rem; }
+.li-v.ab { color:#e74c3c; }
+.cc-qs { display:flex; flex-direction:column; gap:16px; }
+.cc-qn { font-size:.67rem; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--accent); margin-bottom:5px; }
+.cc-qt { font-size:.93rem; font-weight:600; color:var(--text); margin-bottom:9px; }
+.cc-ans { background:var(--bg3); border-radius:10px; overflow:hidden; border:1px solid transparent; transition:all .3s; }
+.cc-ans.rev { border-color:rgba(56,232,192,.3); }
+.cc-ansbtn { width:100%; text-align:left; background:none; border:none; color:var(--muted); padding:12px 16px; cursor:pointer; font-size:.8rem; font-family:var(--font-body); display:flex; align-items:center; gap:8px; transition:color .2s; }
+.cc-ansbtn:hover { color:var(--accent); }
+.cc-anshid { padding:0 16px 14px; font-size:.86rem; line-height:1.75; color:var(--text); display:none; }
+.cc-ans.rev .cc-anshid { display:block; }
+.rev-ic { transition:transform .3s; }
+.cc-ans.rev .rev-ic { transform:rotate(90deg); }
+
+#scrolltop {
+  position:fixed; bottom:24px; right:24px; z-index:200;
+  background:var(--accent); color:var(--bg);
+  width:40px; height:40px; border-radius:50%;
+  border:none; cursor:pointer; font-size:18px;
+  box-shadow:0 4px 20px rgba(79,156,249,0.4);
+  transition:all 0.2s; display:none;
+}
+#scrolltop:hover { transform:translateY(-2px); }
+
+p { margin: 8px 0; color: var(--text); }
+strong { color: #fff; }
+em { color: var(--accent2); }
+
+@media(max-width:768px) {
+  nav.tabs { flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding: 8px; gap: 6px; justify-content:flex-start; }
+  nav.tabs::-webkit-scrollbar { display: none; }
+  nav.tabs button { flex-shrink: 0; font-size:12px; padding:6px 12px; white-space:nowrap; }
+  .flashcard-grid { grid-template-columns: 1fr; }
+  .flashcard { height: 520px; }
+}
+@media(max-width:600px) {
+  header { padding: 32px 16px 24px; }
+  header h1 { font-size: clamp(20px, 7vw, 28px); }
+  .container { padding: 16px 14px; }
+  .flashcard { height: 560px; }
+}
+@media(max-width:380px) {
+  header h1 { font-size: 18px; }
+  nav.tabs button { font-size: 11px; padding: 5px 10px; }
+  .container { padding: 12px 10px; }
+}
 </style>
 </head>
 <body>
 
-<canvas id="particles-cover" style="position:fixed;inset:0;z-index:0;pointer-events:none;"></canvas>
+<canvas id="particles"></canvas>
 
-<!-- COVER (Imunologia-style) -->
-<div id="page-cover" class="page active" style="position:relative;z-index:1;">
-<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 24px 32px;background:linear-gradient(180deg,rgba(79,156,249,0.09) 0%,transparent 100%);border-bottom:1px solid var(--border);">
-  <div style="display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--bg);font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:16px;">🔬 Microbiología Médica · Gram-Negativos · 2026</div>
-  <h1 style="font-family:var(--font-display);font-size:clamp(26px,5vw,48px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--accent) 50%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;line-height:1.1;">Resumen de Microbiología<br>Bacterias Gram-Negativas</h1>
-  <p style="color:var(--muted);font-size:13px;letter-spacing:1px;margin-bottom:6px;">Enterobacteriáceas · Bacilos No Fermentadores · Haemophilus · Neisseria · Espiroquetas</p>
-  <p style="color:var(--accent2);font-family:var(--font-mono);font-size:12px;margin-bottom:8px;">⚡ Elaborado por Enzo Salmazo · Jawetz 28ª ed. · Dr. Marcos Rigonato</p>
-  <p style="color:var(--gold);font-size:12px;font-style:italic;opacity:0.85;margin-bottom:36px;">📖 "Mil caerán a tu lado y diez mil a tu diestra, pero a ti no te llegará" — Salmos 91:7</p>
-  <div style="display:flex;gap:36px;flex-wrap:wrap;justify-content:center;margin-bottom:40px;">
-    <div><div style="font-size:2.4rem;font-weight:900;font-family:var(--font-display);color:var(--accent);">24</div><div style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;">Microrganismos</div></div>
-    <div><div style="font-size:2.4rem;font-weight:900;font-family:var(--font-display);color:var(--accent);">6</div><div style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;">Seções</div></div>
-    <div><div style="font-size:2.4rem;font-weight:900;font-family:var(--font-display);color:var(--accent2);">63</div><div style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;">Questões</div></div>
-    <div><div style="font-size:2.4rem;font-weight:900;font-family:var(--font-display);color:var(--gold);">4</div><div style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;">Casos Clínicos</div></div>
-  </div>
-  <button class="btn-start" onclick="showPage('page-dashboard')">▶ Iniciar Estudos</button>
+<header>
+  <div class="badge">🔬 Microbiología Médica · Gram-Negativos · 2026</div>
+  <h1>Resumen de Microbiología P2<br>Bacterias Gram-Negativas</h1>
+  <p class="sub">Enterobacteriáceas · No Fermentadores · Haemophilus · Neisseria · Espiroquetas</p>
+  <p class="by">⚡ Elaborado por Enzo Salmazo · Jawetz 28ª ed. · Dr. Marcos Rigonato</p>
+  <p class="verse">📖 "Mil caerán a tu lado y diez mil a tu diestra, pero a ti no te llegará" — Salmos 91:7</p>
+</header>
+
+<nav class="tabs">
+  <button class="active" onclick="showSection('intro', this)">📖 Intro</button>
+  <button onclick="showSection('enterobac', this)">🦠 Enterobacteriaceae</button>
+  <button onclick="showSection('nonferment', this)">🧫 Curvos/NF</button>
+  <button onclick="showSection('haemoph', this)">🔬 Haemophilus</button>
+  <button onclick="showSection('neisseria', this)">💎 Neisseria</button>
+  <button onclick="showSection('others', this)">🌿 Otros/Espiroq.</button>
+  <button onclick="showSection('flashcards', this)">🃏 Flashcards</button>
+  <button onclick="showSection('treino', this)">📚 Treino (55Q)</button>
+  <button onclick="showSection('simulado', this)">📝 Provas</button>
+  <button onclick="showSection('cases', this)">🏥 Casos</button>
+</nav>
+
+<div id="intro" class="section active">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">📖</span> Introducción</div>
+<div class="info-block">
+  <div class="label">Visión General</div>
+  <h4>Sobre este material</h4>
+  <p>Este resumen organiza el contenido de la P2 de Microbiología en seis grandes bloques — <strong>Enterobacteriaceae</strong>, <strong>Bacilos Curvos/No Fermentadores</strong>, <strong>Haemophilus & similares</strong>, <strong>Neisseria</strong>, <strong>Otros Gram-Negativos + Espiroquetas</strong> — volcados al estudio de graduación en Medicina. Incluye <strong>24 flashcards interactivos</strong> de las bacterias que van a caer en la prueba, <strong>55 questões de treino</strong> nível prova, las <strong>preguntas exactas de pruebas anteriores</strong> con gabarito, y <strong>4 casos clínicos</strong> completos.</p>
 </div>
+<div class="info-block success">
+  <div class="label">Cómo estudiar</div>
+  <h4>Roteiro sugerido</h4>
+  <ol>
+    <li>Lea cada sección en orden (Enterobacteriaceae → Curvos/NF → Haemophilus → Neisseria → Otros/Espiroquetas).</li>
+    <li>Use los flashcards después de terminar la lectura para fijar conceptos.</li>
+    <li>Haga las <strong>55 questões de treino</strong> para testar seu conhecimento de todas as bactérias.</li>
+    <li>Revise as <strong>questões que já caíram em provas</strong> — são as perguntas exatas do modelo de exame.</li>
+    <li>Los casos clínicos integran todo el contenido en contextos reales.</li>
+  </ol>
+</div>
+<div class="sec-divider"><h3>Resumen de las 24 Bacterias</h3></div>
+<table class="compare-table">
+<tr><th>Sección</th><th>Bacterias</th><th>Cantidad</th></tr>
+<tr><td>🦠 Enterobacteriaceae</td><td>E. coli, Klebsiella (3 spp.), Serratia, Proteus, Shigella, Salmonella, Yersinia</td><td>9</td></tr>
+<tr><td>🧫 Curvos / No Fermentadores</td><td>Pseudomonas, Vibrio, Campylobacter, Helicobacter</td><td>4</td></tr>
+<tr><td>🔬 Haemophilaceae & Similares</td><td>H. influenzae, H. ducreyi, Bordetella, Pasteurella</td><td>4</td></tr>
+<tr><td>💎 Neisseriaceae</td><td>N. gonorrhoeae, N. meningitidis</td><td>2</td></tr>
+<tr><td>🌿 Otros Gram-Negativos</td><td>Fusobacterium, Gardnerella, Legionella</td><td>3</td></tr>
+<tr><td>🌀 Espiroquetas</td><td>Treponema pallidum, Leptospira interrogans</td><td>2</td></tr>
+</table>
+</div></div>
+
+<div id="enterobac" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🦠</span> Enterobacteriaceae</div>
+
+<div class="sec-divider"><h3>Klebsiella pneumoniae — Diferencias clave</h3></div>
+<div class="info-block danger">
+  <div class="label">Diferencia crítica</div>
+  <h4>K. pneumoniae vs E. coli</h4>
+  <p><strong>K. pneumoniae</strong> es <em>INMÓVIL</em> y posee <em>CÁPSULA</em>. <strong>E. coli</strong> es <em>MÓVIL</em> y <em>menos encapsulada</em>. Existe la cepa <strong>K. pneumoniae KPC</strong> (resistente a carbapenémicos) — los más potentes que tenemos — y ya existen cepas totalmente resistentes.</p>
+</div>
+<div class="info-block">
+  <div class="label">K. oxytoca</div>
+  <h4>Colitis hemorrágica por antibióticos</h4>
+  <p>K. oxytoca está muy involucrada en causar <strong>colitis hemorrágica</strong> porque es productora de <strong>tilivalina</strong> — el principal factor de virulencia. Está muy relacionada con el uso de antibióticos; la bacteria se aprovecha cuando otros ATB eliminan la flora, liberando la tilivalina que activa la inflamación intestinal.</p>
 </div>
 
-<!-- DASHBOARD -->
-<div id="page-dashboard" class="page">
-<div class="dash-top">
-<h1 class="dash-h1">Painel de Estudos</h1>
-<p class="dash-sub">Selecione uma seção para iniciar os flashcards ou vá direto para o quiz e casos clínicos</p>
+<div class="sec-divider"><h3>Salmonella — Tifoidea vs No-Tifoidea</h3></div>
+<div class="info-block">
+  <div class="label">Fiebre Tifoidea</div>
+  <h4>S. Typhi — Período de incubación 7-21 días</h4>
+  <p>Fase 1: <strong>fiebre progresiva</strong> + cefalea + malestar. Fase 2: <strong>bradicardia</strong> + <strong>roséola tifoide</strong> (manchas rosadas en el tronco) + esplenomegalia. Complicación grave: <strong>perforación del íleon</strong> (atacan las Placas de Peyer) + hemorragia. El paciente puede tener tenesmo y estreñimiento (no es una diarrea clásica). Tratamiento: <strong>ceftriaxona</strong> (prolongado).</p>
 </div>
-<div class="sec-grid" id="dash-secs"></div>
-<div style="max-width:1200px;margin:0 auto;padding:0 20px 16px"><p style="font-size:.72rem;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;font-weight:700">Avaliação &amp; Prática</p></div>
-<div class="dash-extra">
-<div class="dec" onclick="initQuiz();showPage('page-quiz')"><div class="dec-ic">📝</div><div class="dec-nm">Quiz — 50 Questões</div><div class="dec-sub">Estilo prova com gabarito comentado</div></div>
-<div class="dec" onclick="showPage('page-cases')"><div class="dec-ic">🏥</div><div class="dec-nm">Casos Clínicos</div><div class="dec-sub">4 casos completos — diagnóstico e tratamento</div></div>
-</div>
+<div class="info-block warn">
+  <div class="label">Gastroenteritis No-Typhi</div>
+  <h4>S. Enteritidis — Período 6-40 horas</h4>
+  <p>Diarrea abundante, fiebre 38-39°C, vómito, cólico abdominal. Duración 3-7 días. Relacionada al consumo de <strong>huevos</strong> (maionese), aves, sushi. <strong>AUTOLIMITADA</strong> — NO dar antibiótico a inmunocompetentes (prolonga excreción y selecciona resistencia). Zoonosis: aves, porcinos, bovinos.</p>
 </div>
 
-<!-- SECTION PAGES -->
-<div id="page-enterobac" class="page"></div>
-<div id="page-nonferment" class="page"></div>
-<div id="page-haemoph" class="page"></div>
-<div id="page-neisseria" class="page"></div>
-<div id="page-others" class="page"></div>
-<div id="page-spirochetes" class="page"></div>
-
-<!-- QUIZ -->
-<div id="page-quiz" class="page">
-<div class="top-nav">
-<button class="btn-home" onclick="showPage('page-dashboard')">🏠 Início</button>
-<span class="nav-lbl">Quiz de Microbiologia</span>
-</div>
-<div class="q-top">
-<h1>📝 Quiz — 50 Questões</h1>
-<span class="q-ctr" id="q-ctr">Questão 1 de 50</span>
-</div>
-<div class="prog-wrap"><div class="prog-fill" id="q-prog" style="width:2%"></div></div>
-<div class="q-main" id="q-main"></div>
+<div class="sec-divider"><h3>Shigella — Disentería bacilar</h3></div>
+<div class="info-block danger">
+  <div class="label">Toxina Shiga</div>
+  <h4>Bacilo Gram-Negativo INMÓVIL — productora de Toxina Shiga</h4>
+  <p>INMÓVIL (diferencia de Salmonella). La toxina Shiga <strong>inhibe la síntesis proteica</strong> y puede causar <strong>Síndrome Hemolítico Urémico (SHU)</strong>: anemia hemolítica + insuficiencia renal + trombocitopenia. Afecta locales cerrados (guarderías, presidios). <strong>Fase 1</strong>: enterotoxina → diarrea acuosa + cólico + fiebre. <strong>Fase 2</strong> (72h): invasión → diarrea hemorrágica con moco, tenesmo rectal intenso, 15-20 evacuaciones/día. Aspecto: <strong>gelatina de frambuesa/frutilla</strong>.</p>
 </div>
 
-<!-- CASES -->
-<div id="page-cases" class="page">
-<div class="top-nav">
-<button class="btn-home" onclick="showPage('page-dashboard')">🏠 Início</button>
-<span class="nav-lbl">Casos Clínicos</span>
+<div class="sec-divider"><h3>Proteus mirabilis — ITU con orina alcalina</h3></div>
+<div class="info-block">
+  <div class="label">Urease</div>
+  <h4>Productor de ureasa — motilidad en zigzag</h4>
+  <p>La ureasa transforma la urea en <strong>amonio + CO₂</strong> → orina con pH <em>ALCALINO</em> → se forman cristales de <strong>fosfato de amonio y magnesio (estruvita)</strong> → cálculos renales → pielonefritis obstructiva.</p>
 </div>
-<div class="cas-top">
-<h1>🏥 Casos Clínicos</h1>
-<p style="color:var(--tx2);margin-top:8px;font-size:.88rem">Identificação do patógeno · Exames · Tratamento de 1ª linha e resistência</p>
+<div class="info-block warn">
+  <div class="label">Diferencia clave</div>
+  <p><strong>Proteus</strong> = pH urinario ALCALINO + cristales de estruvita + nitrito ⊕. <strong>E. coli</strong> = pH urinario ÁCIDO + sin cristales + nitrito ⊕. Cistitis: disuria, polaquiuria, dolor suprapúbico, SIN fiebre. Pielonefritis: fiebre alta, escalofríos, dolor lumbar, náuseas.</p>
 </div>
-<div class="cas-body" id="cas-body"></div>
+
+<div class="sec-divider"><h3>Yersinia pestis — La Peste</h3></div>
+<div class="info-block danger">
+  <div class="label">Agente BSL-3</div>
+  <h4>Cocobacilo bipolar — Proteína F1 antifagocítica</h4>
+  <p><strong>Peste bubónica</strong> (más común): picadura de pulga → bubón (ganglios inflamados dolorosos, inguinal/axilar) → fiebre alta → sin tratamiento 50% mortalidad. <strong>Peste septicémica</strong>: bacteriemia masiva → CIVD → necrosis de extremidades → fallo multiorgánico. <strong>Peste neumónica primaria</strong>: transmisión por aerosol persona-persona → neumonía grave → óbito en 3 días sin tratamiento → mortalidad altísima. Tratamiento: <strong>estreptomicina IM</strong> (DOC clásico) o gentamicina IV.</p>
 </div>
+
+</div></div>
+
+<div id="nonferment" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🧫</span> Bacilos Curvos / No Fermentadores</div>
+
+<div class="sec-divider"><h3>Vibrio cholerae — Cólera</h3></div>
+<div class="info-block">
+  <div class="label">Morfología</div>
+  <h4>Bacilo Gram-Negativo curvo — forma de COMA (vírgula)</h4>
+  <p>Posee <strong>flagelos polares</strong> (buena movilidad), crece bien en <strong>pH ALCALINO</strong> (NO ácido — es sensible al HCl gástrico). Aeróbico y facultativo. Pacientes que usan <strong>IBP (omeprazol)</strong> tienen pH gástrico más alcalino → favorece la proliferación del V. cholerae.</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Toxina Colérica</div>
+  <h4>Mecanismo: Subunidad B (se une) + Subunidad A (efecto tóxico)</h4>
+  <p>Activa la <strong>adenilato ciclasa</strong> → ↑AMPc → <strong>hipersecreción de Cl⁻/H₂O</strong> por enterocitos → diarreia "agua de arroz" profusa → pérdida de hasta <strong>20-30L/día</strong> (hasta 1L/hora). Período de incubación: 5 días. <strong>Sin fiebre, sin tenesmo</strong>, cólico leve, vómitos, sed intensa.</p>
+</div>
+<div class="info-block warn">
+  <div class="label">Complicaciones</div>
+  <p>Principal: <strong>CHOQUE HIPOVOLÉMICO</strong> (deshidratación severa rápida). Mucosas secas, ojos hundidos, hipotensión, taquicardia. También: acidosis metabólica hipoclorémica, hipocalemia → arritmia → IRA pre-renal. Diagnóstico: microscopía de campo oscuro (movimiento en "cardumen de peces"). Tratamiento PRINCIPAL: <strong>REHIDRATACIÓN</strong> (oral o IV con Ringer Lactato). ATB adjuvante: doxiciclina VO. Alternativas: azitromicina, ciprofloxacino.</p>
+</div>
+
+<div class="sec-divider"><h3>Campylobacter jejuni — Enteritis + Guillain-Barré</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Bacilo Gram-Negativo forma de S / asa de gaviota — MICROAERÓFILO — 42°C</h4>
+  <p>Forma parte de la microbiota de <strong>AVES</strong>. Contaminación: alimentos crudos o mal cocidos (pollo a la parrilla mal pasado), agua no tratada. Transmisión persona-persona no se descarta.</p>
+</div>
+<div class="info-block">
+  <div class="label">Cuadro clínico</div>
+  <h4>Gastroenteritis AUTOLIMITADA (1-7 días, media 3)</h4>
+  <p>Fiebre, cefalea, mialgia → diarreia acuosa (puede tener sangre) → dolor abdominal tipo cólico, tenesmo, náusea, vómito. Dura 5-10 días. Puede simular <strong>apendicitis</strong>. Heces con sangre y leucocitos en el análisis.</p>
+</div>
+<div class="info-block danger">
+  <div class="label">⚠️ Síndrome de Guillain-Barré</div>
+  <h4>1 de cada 1.000 casos — Mimetismo molecular</h4>
+  <p>El <strong>LOS (lipooligosacárido)</strong> de C. jejuni imita los <strong>gangliósidos GM1 de la bainha de mielina</strong> → el sistema inmunológico crea anticorpos anti-LOS que atacan la mielina → <strong>parálisis ASCENDENTE</strong> (pies → arriba). Inicia 1-6 semanas post-infección. Puede llegar a <strong>parálisis respiratoria → óbito</strong>. Tratamiento: inmunosupresores + soporte ventilatorio.</p>
+</div>
+
+<div class="sec-divider"><h3>Helicobacter pylori — Gastrite → Cáncer</h3></div>
+<div class="info-block">
+  <div class="label">Urease</div>
+  <h4>Bacilo espiral/helicoidal — Microaerófilo — Productor de UREASA</h4>
+  <p>La ureasa convierte urea en amonio + CO₂ → <strong>neutraliza el pH ácido</strong> del estómago → permite que se adhiera a la mucosa gástrica. Es productor de <strong>CagA</strong> (toxina <em>carcinogénica</em>) con capacidad de inducir cáncer. Diagnóstico: <strong>test rápido de ureasa</strong> (biopsia endoscópica) + test respiratorio ¹³C-ureia (confirmar erradicación — tasa de cura 70-95%).</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Secuencia carcinogénica</div>
+  <p><strong>Gastritis crónica → Gastritis atrófica → Metaplasia intestinal → Displasia → Adenocarcinoma gástrico</strong>. El adenocarcinoma gástrico tiene pronóstico MUY MALO — diagnóstico generalmente tardío. Tratamiento: IBP (omeprazol/esomeprazol) + Amoxicilina + Claritromicina. Alternativa cuádruple: IBP + Metronidazol + Tetraciclina + Bismuto.</p>
+</div>
+
+<div class="sec-divider"><h3>Pseudomonas aeruginosa — El problema nosocomial</h3></div>
+<div class="info-block">
+  <div class="label">Pigmentos</div>
+  <h4>Bacilo Gram-Negativo — Aerobio ESTRICTO — Polar con flagelos</h4>
+  <p>Produce <strong>piocianina (AZUL)</strong> y <strong>pioverdina (VERDE)</strong> → coloración <em>azul-esverdeada</em>. Olor <strong>DULCE/adocicado</strong> (2-aminoacetofenona). Donde hay Pseudomonas, las secreciones son azul-esverdeadas con olor dulzón.</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Factores de virulencia</div>
+  <p>Exotoxina A (inhibe síntesis proteica — mismo mecanismo que toxina diftérica), elastasa (destruye tejido elástico), fosfolipasa C (daño en membrana), piocianina (daño oxidativo en cilias), y <strong>BIOFILM (biopelícula)</strong> — principal factor en FC: protege contra fagocitosis y ATB. Resistente a MÚLTIPLES antibióticos.</p>
+</div>
+<div class="info-block warn">
+  <div class="label">Infecciones</div>
+  <p>Neumonía nosocomial (secreción esverdeada), <strong>queimados</strong> (exsudado esverdeado + olor dulzón), FC (biofilm), ITU por catéter (orina esverdeada), bacteremia/sepse en neutropénicos. En la comunidad: otite, foliculite, infección córnea (lentes de contacto), endocardite en UDIV, osteomielite (diabéticos).</p>
+</div>
+
+</div></div>
+
+<div id="haemoph" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🔬</span> Haemophilus & Similares</div>
+
+<div class="sec-divider"><h3>Haemophilus influenzae — Cepas con y sin cápsula</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Cocobacilo Gram-Negativo pleomórfico — INMÓVIL — No esporulado</h4>
+  <p><strong>Con cápsula (tipo b)</strong> = más virulentos → causan <strong>meningite bacteriana</strong> y <strong>epiglotite</strong> (roja como cereza — EMERGENCIA, puede cerrar la vía aérea → intubar rápidamente). <strong>Sin cápsula</strong> (90% de la población) = menos virulentos → causan otite, sinusite, bronquite en DPOC. Primera línea: <strong>amoxicilina-clavulanato</strong>.</p>
+</div>
+
+<div class="sec-divider"><h3>Bordetella pertussis — Coqueluche (Tos ferina)</h3></div>
+<div class="info-block">
+  <div class="label">Cocobacilo GN</div>
+  <h4>Aerobio estricto — Inmóvil — Cápsula — Toxina Pertussis</h4>
+  <p>Factores de virulencia: toxina Pertussis (inhibe fagocitos), hemaglutinina filamentosa (adesión), fímbrias (adesión al epitelio ciliar), citotoxina traqueal (destruye epitelio).</p>
+</div>
+<div class="info-block danger">
+  <div class="label">3 Fases</div>
+  <h4>Catarral → Paroxística → Convalescencia</h4>
+  <p><strong>Fase Catarral</strong> (1-2 semanas): la MÁS CONTAGIOSA — rinorrea acuosa "salgadinha", tos leve. Parece resfriado común. Si se trata con <strong>eritromicina</strong> aquí, se reduce mucho el cuadro. <strong>Fase Paroxística</strong>: tos intensa que NO para → desgaste total → vómito → cianosis → apneia. En esta fase el ATB es INÚTIL (ya destruyó el epitelio ciliar) — tratamiento: <strong>OXIGENACIÓN + sedación + intubación</strong>. <strong>Fase Convalescencia</strong>: mejoría gradual.</p>
+</div>
+
+<div class="sec-divider"><h3>Pasteurella multocida — Mordeduras</h3></div>
+<div class="info-block">
+  <div class="label">Mordedura</div>
+  <p>Cocobacilo Gram-Negativo bipolar. Involucrada en <strong>mordeduras de gatos y perros</strong>. Celulite rápida con exudado y activación ganglionar. Tratamiento fácil: <strong>Penicilina G</strong> o amoxicilina-clavulanato.</p>
+</div>
+
+</div></div>
+
+<div id="neisseria" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">💎</span> Neisseriaceae</div>
+
+<div class="sec-divider"><h3>N. meningitidis — Meningococcemia</h3></div>
+<div class="info-block">
+  <div class="label">Diplococo GN</div>
+  <h4>Diplococo Gram-Negativo (grano de café) — CON cápsula — Aerobio — 37°C</h4>
+  <p>Serotipos: A, B, C, Y, W135. Vacuna tetravalente cubre A, C, Y, W — <strong>NO incluye tipo B</strong>. En Brasil y Paraguay el serotipo más frecuente es el <strong>B</strong> (el peor). El LOS (NO LPS) genera <strong>mimetismo</strong> con antígenos del SNC → produce exceso de citocinas (TNF, IL-1, IL-6) → cascata inflamatória → <strong>CIVD</strong> → Síndrome de <strong>Waterhouse-Friderichsen</strong> (hemorragia adrenal bilateral → insuficiencia adrenal).</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Clínica</div>
+  <h4>Meningite + Meningococcemia fulminante</h4>
+  <p>Fiebre, rigidez de nuca, fotofobia, fonofobia, signos de Kernig/Brudzinski. Lactantes: fontanela abaulada. LCR: leucocitos ↑, glucosa ↓ (bacteria consume), proteína ↑. Inicio 12-24h. ATB: <strong>Penicilina G cristalina o Ceftriaxona INMEDIATO</strong>. Meningococcemia fulminante: petequias → púrpura → CIVD → hipotensión → <strong>hasta 50% mortalidad</strong>.</p>
+</div>
+<div class="info-block success">
+  <div class="label">Profilaxis</div>
+  <p>Adultos: <strong>Ciprofloxacino 500mg DU</strong>. Niños/Gestantes: <strong>Ceftriaxona 125mg IM DU</strong>. Alternativa: Rifampicina 600mg 12/12h ×2 días.</p>
+</div>
+
+<div class="sec-divider"><h3>N. gonorrhoeae — Gonorrea</h3></div>
+<div class="info-block">
+  <div class="label">Diplococo GN</div>
+  <h4>Diplococo Gram-Negativo intracelular (dentro de PMN) — SIN cápsula</h4>
+  <p><strong>No posee cápsula</strong> (diferente del meningococo). Variación antigénica (escape inmune). Proteína Opa para invasión celular. IgA proteasa destruye inmunoglobulina de mucosa. Hombre: <strong>uretrite</strong>. Mujer: <strong>cervicite/salpingite</strong>. Diagnóstico: frotis de secreción uretral → diplococos GN intracelulares. Tratamiento: <strong>Ceftriaxona 500mg-1g IM DU</strong>.</p>
+</div>
+
+<div class="sec-divider"><h3>ISTs — Comparativo de úlceras genitales</h3></div>
+<table class="compare-table">
+<tr><th>Característica</th><th>Sífilis (T. pallidum)</th><th>Cancroide (H. ducreyi)</th><th>Donovanose (K. granulomatis)</th></tr>
+<tr><td><strong>Dolor</strong></td><td>INDOLORA</td><td>DOLOROSA</td><td>INDOLORA</td></tr>
+<tr><td><strong>Bordes</strong></td><td>Regulares, DUROS (indurados)</td><td>Irregulares, BLANDOS</td><td>Aspecto granulomatoso</td></tr>
+<tr><td><strong>Base/Fondo</strong></td><td>LIMPIA, úlcera ÚNICA</td><td>SUCIO, pueden ser múltiples</td><td>Sangra al manipular</td></tr>
+<tr><td><strong>Adenopatía</strong></td><td>Inguinal INDOLORA</td><td>Inguinal DOLOROSA (supurativa)</td><td>Puede estar AUSENTE</td></tr>
+<tr><td><strong>Tratamiento</strong></td><td>Penicilina benzatina 2.400.000 UI IM</td><td>Azitromicina 1g DU</td><td>Azitromicina 1g/semana ≥3 sem</td></tr>
+<tr><td><strong>Diagnóstico</strong></td><td>Microscopía campo oscuro</td><td>PCR / Clínico</td><td>Biopsia (Corpos de Donovan)</td></tr>
+</table>
+
+</div></div>
+
+<div id="others" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🌿</span> Otros Gram-Negativos & Espiroquetas</div>
+
+<div class="sec-divider"><h3>Fusobacterium necrophorum — Síndrome de Lemierre</h3></div>
+<div class="info-block danger">
+  <div class="label">Bacilo GN Anaerobio</div>
+  <h4>Faringitis → Tromboflebitis yugular → Émbolos sépticos pulmonares</h4>
+  <p>Bacilo Gram-Negativo <strong>anaerobio estricto</strong>. Causa <strong>Síndrome de Lemierre</strong>: faringitis/amigdalitis → libera toxinas → tromboflebitis de la <strong>vena yugular</strong> → émbolos sépticos → focos metastásicos <strong>pulmonares</strong>. Clínica: faringitis + fiebre + dolor/edema cervical lateral + embolia pulmonar séptica. Tratamiento: <strong>metronidazol IV ×4-6 semanas</strong>.</p>
+</div>
+
+<div class="sec-divider"><h3>Serratia marcescens — Pigmento rojo</h3></div>
+<div class="info-block">
+  <div class="label">Prodigiosina</div>
+  <h4>Bacilo Gram-Negativo — Pigmento ROJO (prodigiosina) a 25°C — Móvil</h4>
+  <p>Produce pigmento <strong>AVERMELHADO (prodigiosina)</strong> — <em>NO azul-esverdeado</em> (eso es Pseudomonas). Escarro/catarro más rosado/avermelhado = pensar en Serratia. Crece en UTI, sondas, casos de pneumonía nosocomial. Endocardite en usuarios de drogas. Colonias de coloración <strong>rojiza</strong>.</p>
+</div>
+
+<div class="sec-divider"><h3>Legionella pneumophila — Legionelosis vs Fiebre de Pontiac</h3></div>
+<div class="info-block">
+  <div class="label">Bacilo GN Aerobio</div>
+  <h4>Enfermedad del Legionario vs Fiebre de Pontiac — MISMO organismo</h4>
+  <p><strong>Legionelosis</strong> = neumonía SEVERA (lobar/multilobar) + fiebre alta + escalofríos + tos seca + puede producir diarrea + confusión mental. Mortalidad alta sin tratamiento. Requiere <strong>antibiótico</strong>. <strong>Fiebre de Pontiac</strong> = causada por antígenos de la bacteria → cuadro AUTOLIMITADO (fiebre, cefalea, mialgia, escalofríos) que dura 2-5 días → cura espontánea → <strong>NO requiere ATB</strong>. Transmisión: aerosol de agua contaminada (bañeras, torres de refrigeración, piscinas). <strong>NUNCA persona-persona</strong>. Grupo de riesgo: inmunodeprimidos, trabajadores con sistemas hidráulicos/AC, DPOC.</p>
+</div>
+
+<div class="sec-divider"><h3>Gardnerella vaginalis — Vaginosis bacteriana</h3></div>
+<div class="info-block">
+  <div class="label">Gram-Variable</div>
+  <h4>Criterios de Amsel (3 de 4)</h4>
+  <p>Bacilo pleomórfico <strong>Gram-variable</strong> (marca de Gardnerella). Criterios de Amsel: (1) Flujo vaginal homogéneo/grisáceo; (2) pH vaginal >4,5; (3) Test de aminas ⊕ con KOH (olor intenso a pescado); (4) <strong>Clue cells</strong> = células epiteliales cubiertas totalmente por bacilos (bordes irregulares) — visualizadas en microscopía óptica.</p>
+</div>
+<div class="info-block warn">
+  <div class="label">Diferencia clave</div>
+  <p><strong>VAGINOSIS</strong> = NO hay inflamación — es un desequilibrio de la flora (↓Lactobacillus, ↑Gardnerella). <strong>VAGINITIS</strong> = cuadro inflamatorio con leucocitos presentes → candidíasis o tricomonas. Tratamiento de Gardnerella: <strong>metronidazol 500mg 12/12h VO ×7 días</strong>.</p>
+</div>
+
+<div class="sec-divider"><h3>🌀 Treponema pallidum — Sífilis</h3></div>
+<div class="info-block">
+  <div class="label">Espiroqueta</div>
+  <h4>NO se tiñe con Gram — Diagnóstico: microscopía de campo oscuro — Anaerobio facultativo</h4>
+  <p><strong>Sífilis 1°</strong>: chancro duro — úlcera INDOLORA, base LIMPIA, bordes en "muro" — se cura en 3-6 semanas (a veces 1-2 semanas). <strong>Sífilis 2°</strong>: manchas eritematosas/maculares en palmas y plantas + condilomas (orales, anales) + adenopatía generalizada. <strong>Sífilis latente</strong>: sin síntomas, serología ⊕. <strong>Sífilis 3°</strong> (1-10 años después): gomas (destrucción de tejido/piel/mucosa), neurossífilis, aneurisma aórtico, aortitis. Tratamiento: <strong>Penicilina benzatina 2.400.000 UI IM (1.200.000 en cada nádega)</strong> — sífilis 1° y 2°. Neurossífilis: Penicilina G cristalina IV.</p>
+</div>
+
+<div class="sec-divider"><h3>🌀 Leptospira interrogans — Leptospirosis</h3></div>
+<div class="info-block">
+  <div class="label">Espiroqueta</div>
+  <h4>Forma de "?" (interrogans) — Contagio: orina de RATOS</h4>
+  <p><strong>Fase leptospirêmica</strong> (1ª semana): bacteria en SANGRE. Fiebre alta intensa, mialgia intensa en <strong>pantorrillas</strong> y lumbar, conjuntivite, bacteremia. Dura 4-7 días → <strong>mejoría transitória</strong>. <strong>Fase inmune</strong>: sale de circulación → parasita ÓRGANOS. Anticuerpos IgM aparecen, Leptospira desaparece de la sangre. Puede producir la <strong>Tríada clásica de Weil</strong>: (1) ICTERÍCIA; (2) INSUFICIENCIA RENAL; (3) HEMORRAGIA (incluyendo hemorragia conjuntival subconjuntival bilateral INDOLORA = patognomónico). Tratamiento leve: <strong>doxiciclina 100mg 12/12h ×7d VO</strong>. Grave: <strong>Penicilina G cristalina IV o Ceftriaxona IV ×7d</strong>.</p>
+</div>
+
+</div></div>
+
+<div id="flashcards" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🃏</span> Flashcards — 24 Bactérias</div>
+<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Clique em cada cartão para virar e revelar Diagnóstico & Tratamento. Todas as 24 bactérias que vão cair na prova.</p>
+<div class="flashcard-grid" id="flashcard-grid"></div>
+</div></div>
+
+<div id="simulado" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">📝</span> Questões que já Caíram em Provas</div>
+<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Preguntas exactas del modelo de examen de Microbiología P2. Sección I (alternativas correctas) y Sección II (Verdadero/Falso). Gabarito comentado.</p>
+<div class="quiz-container" id="quiz-container"></div>
+</div></div>
+
+<div id="treino" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">📚</span> Questões de Treino — 55 Questões</div>
+<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">55 questões nível prova cobrindo todas as 24 bactérias Gram-negativas. Gabarito comentado após cada resposta.</p>
+<div class="quiz-container" id="treino-container"></div>
+</div></div>
+
+<div id="cases" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🏥</span> Casos Clínicos</div>
+<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Identificação do patógeno · Exames · Tratamento de 1ª linha e resistência</p>
+<div id="cases-container"></div>
+</div></div>
+
+<button id="scrolltop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
+// ================================================================
+// TAB NAVIGATION (Bioquímica style)
+// ================================================================
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+  const sec = document.getElementById(id);
+  if(sec) { sec.classList.add('active'); window.scrollTo(0,0); }
+  if(btn) btn.classList.add('active');
+}
+
+// Scroll-to-top button
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrolltop');
+  if(btn) btn.style.display = window.scrollY > 400 ? 'block' : 'none';
+});
+
+// ================================================================
+// BACTERIA DATA (all 24)
+// ================================================================
 const sections=[
 {id:'enterobac',nm:'Enterobacteriaceae',ic:'🦠',c:'#e67e22',ds:'E. coli, Klebsiella (3 spp.), Serratia, Proteus, Shigella, Salmonella, Yersinia',ct:9},
 {id:'nonferment',nm:'Bacilos Curvos / Não-Fermentadores',ic:'🧫',c:'#3498db',ds:'Pseudomonas, Vibrio, Campylobacter, Helicobacter',ct:4},
@@ -1115,14 +1398,375 @@ quizData.push(...extraQuizData);
   animParticles();
 })();
 
+
+
+// ================================================================
+// EXAM SIMULADO (exact exam questions from model)
+// ================================================================
+const examData = [
+  // SECCIÓN I — ALTERNATIVAS CORRECTAS (12 puntos)
+  {q:"01. Recién nacido de 5 días presenta conjuntivitis purulenta, neumonía y sepsis. La madre tuvo parto vaginal sin profilaxis antibiótica. ¿Qué prueba confirma la presencia de Streptococcus agalactiae?", opts:["Catalasa","Prueba de CAMP","Sensibilidad a optoquina","Prueba PYR"], correct:1, explain:"La prueba de CAMP es positiva para S. agalactiae (Streptococcus del Grupo B). Demuestra hemólisis sinérgica con la β-hemolisina de S. aureus formando una flecha."},
+  {q:"02. Un paciente con fibrosis quística presenta una infección pulmonar grave. ¿Qué característica de Pseudomonas aeruginosa facilita su patogenicidad?", opts:["Producción de esporas","Formación de biopelículas","Capacidad de fermentar lactosa","Producción de toxinas beta"], correct:1, explain:"P. aeruginosa forma BIOFILM (biopelícula de alginato) que protege contra fagocitosis y antibióticos — principal mecanismo de persistencia en fibrose cística."},
+  {q:"03. Un paciente con ventilación mecánica desarrolla neumonía nosocomial con esputo rosado. ¿Qué pigmento produce la Serratia spp.?", opts:["Pirocianina","Prodigiosina","Carotenoides","Melanina"], correct:1, explain:"Serratia marcescens produce PRODIGIOSINA (pigmento rojo) a 22-25°C. Piocianina (azul) es de Pseudomonas aeruginosa."},
+  {q:"04. La principal complicación de una infección por Vibrio cholerae sin tratamiento adecuado es:", opts:["Perforación intestinal","Colitis pseudomembranosa","Choque hipovolémico","Disentería"], correct:2, explain:"V. cholerae causa diarrea profusa que puede llevar a pérdida de hasta 1L/hora de líquido → CHOQUE HIPOVOLÉMICO por deshidratación severa."},
+  {q:"05. Un joven de 20 años desarrolla tromboflebitis yugular y septicemia después de una faringitis. ¿Qué bacteria anaerobia es responsable de este cuadro conocido como enfermedad de Lemierre?", opts:["Fusobacterium nucleatum","Fusobacterium necrophorum","Bacteroides fragilis","Peptostreptococcus anaerobius"], correct:1, explain:"Fusobacterium necrophorum (NO nucleatum) causa la Síndrome de Lemierre: faringitis → tromboflebitis séptica de la vena yugular interna → embolia pulmonar séptica."},
+  {q:"06. Un adolescente de 16 años presenta acné vulgar severo. ¿Qué bacteria está principalmente involucrada en la patogénesis?", opts:["Staphylococcus epidermidis","Cutibacterium acnes","Corynebacterium minutissimum","Malassezia furfur"], correct:1, explain:"Cutibacterium acnes (anteriormente Propionibacterium acnes) es el principal agente involucrado en la patogénesis del acné vulgar, colonizando los folículos sebáceos."},
+  {q:"07. Hombre de 27 años con tos purulenta persistente, fiebre leve y exudado uretral. Se identifican diplococos gramnegativos intracelulares en el frotis uretral. ¿Cuál es el patógeno más probable?", opts:["Chlamydia trachomatis","Neisseria gonorrhoeae","Neisseria meningitidis","Klebsiella granulomatis"], correct:1, explain:"Diplococos Gram-negativos INTRACELULARES (dentro de PMN) en frotis uretral = Neisseria gonorrhoeae. Es el hallazgo patognomónico de la gonorrea masculina."},
+  {q:"08. ¿Cuál de las siguientes formas clínicas se asocia a Yersinia pestis transmitida por aerosoles?", opts:["Peste bubónica","Peste septicémica","Peste neumónica primaria","Adenitis mesentérica"], correct:2, explain:"La peste neumónica primaria se transmite por AEROSOLES persona a persona. Es la forma más grave y contagiosa — puede llevar a óbito en 3 días sin tratamiento."},
+  {q:"09. Hombre de 26 años con fiebre, cefalea y malestar general de 5 días. Luego desarrolla bradicardia, abdomen doloroso y manchas rosadas en el tronco. ¿Cuál es el diagnóstico más probable?", opts:["Salmonelosis no tifoidea","Fiebre tifoidea","Leptospirosis","Fiebre Q"], correct:1, explain:"Fiebre progresiva + bradicardia relativa + manchas rosadas en tronco (roséola tifoide) + esplenomegalia = FIEBRE TIFOIDEA por Salmonella Typhi."},
+  {q:"10. ¿Qué diferencia clave presenta el chancroide (Haemophilus ducreyi) en comparación con el chancro sifilítico?", opts:["El chancroide es indoloro y duro","El chancroide es doloroso y blando","El chancroide causa secreción uretral purulenta","El chancroide se acompaña de vesículas"], correct:1, explain:"Chancroide (H. ducreyi) = úlcera DOLOROSA con bordes BLANDOS. Chancro sifilítico (T. pallidum) = úlcera INDOLORA con bordes DUROS (indurados)."},
+  {q:"11. ¿Cuál es la prueba considerada Gold Standard para el diagnóstico de tuberculosis?", opts:["Prueba de tuberculina","Xpert MTB/RIF","Cultivo en Löwenstein-Jensen","Baciloscopía"], correct:2, explain:"El cultivo en medio de Löwenstein-Jensen es el GOLD STANDARD para el diagnóstico de tuberculosis. Xpert MTB/RIF es más rápido pero el cultivo sigue siendo el patrón de referencia."},
+  {q:"12. En un hospital, un brote de infecciones urinarias asociadas a catéteres revela bacterias gramnegativas encapsuladas, fermentadoras de lactosa y resistentes a carbapenémicos. ¿Cuál es el microorganismo más probable?", opts:["Escherichia coli","Klebsiella pneumoniae","Pseudomonas aeruginosa","Proteus mirabilis"], correct:1, explain:"Klebsiella pneumoniae: Gram-negativo ENCAPSULADO + fermenta LACTOSA (MacConkey rosa) + resistente a carbapenémicos (KPC). Pseudomonas NO fermenta lactosa. Proteus NO es encapsulado."},
+
+  // SECCIÓN II — VERDADERO / FALSO (5 puntos)
+  {q:"13. [V/F] La catalasa es la enzima que diferencia a S. aureus de otros estafilococos.", opts:["Verdadero","Falso"], correct:0, explain:"VERDADERO. La prueba de catalasa diferencia Staphylococcus (catalasa ⊕) de Streptococcus (catalasa ⊖). La COAGULASA diferencia S. aureus (coagulasa ⊕) de estafilococos coagulasa-negativos."},
+  {q:"14. [V/F] Las toxinas exfoliativas de S. aureus causan el síndrome de la piel escaldada.", opts:["Verdadero","Falso"], correct:0, explain:"VERDADERO. Las exfoliatinas A y B de S. aureus clivan la desmogleína-1 (proteína de adhesión epidérmica) → separación de la capa granulosa → síndrome de piel escaldada estafilocócica (SSSS)."},
+  {q:"15. [V/F] La leucocidina de Panton-Valentine está asociada a neumonía necrotizante grave.", opts:["Verdadero","Falso"], correct:0, explain:"VERDADERO. PVL (Panton-Valentine Leucocidina) forma poros en neutrófilos → destrucción masiva → neumonía necrotizante hemorrágica grave en jóvenes sanos. Asociada a CA-MRSA."},
+  {q:"16. [V/F] Staphylococcus saprophyticus es el principal causador de infección urinaria.", opts:["Verdadero","Falso"], correct:1, explain:"FALSO. El principal causador de ITU es Escherichia coli (80%). S. saprophyticus es la SEGUNDA causa en mujeres jóvenes sexualmente activas."},
+  {q:"17. [V/F] La coagulasa degrada el ácido hialurónico del tejido conectivo.", opts:["Verdadero","Falso"], correct:1, explain:"FALSO. La HIALURONIDASA degrada el ácido hialurónico. La COAGULASA convierte fibrinógeno en fibrina (formando coágulo protector alrededor de la bacteria)."}
+];
+
+// ================================================================
+// EXAM QUIZ ENGINE (Bioquímica style)
+// ================================================================
+let examState = {cur:0, score:0, answered:false};
+
+function renderExamQuiz() {
+  const c = document.getElementById('quiz-container');
+  if(examState.cur >= examData.length) {
+    const pct = Math.round((examState.score/examData.length)*100);
+    let msg = pct>=90?"🏆 Excelente! Dominio completo!":pct>=70?"✅ Buen desempeño! Continue revisando.":pct>=50?"📚 Razonable — revise los errores.":"💪 Relea el resumo y intente nuevamente!";
+    c.innerHTML = `<div class="score-card">
+      <div style="font-size:48px;margin-bottom:16px">🔬</div>
+      <div class="score-big">${examState.score}/${examData.length}</div>
+      <div style="font-size:24px;margin:8px 0;color:var(--accent2)">${pct}%</div>
+      <div class="score-msg">${msg}</div>
+      <button class="btn" style="margin-top:24px" onclick="restartExam()">🔄 Tentar Novamente</button>
+    </div>`;
+    return;
+  }
+  const q = examData[examState.cur];
+  const pct = Math.round((examState.cur/examData.length)*100);
+  const sectionTag = examState.cur < 12 ? '<span style="font-size:10px;font-weight:700;letter-spacing:0.1em;padding:3px 10px;border-radius:20px;background:rgba(79,156,249,0.12);border:1px solid rgba(79,156,249,0.3);color:var(--accent);margin-bottom:10px;display:inline-block;">I — ALTERNATIVA CORRECTA</span>' :
+                     '<span style="font-size:10px;font-weight:700;letter-spacing:0.1em;padding:3px 10px;border-radius:20px;background:rgba(249,121,79,0.12);border:1px solid rgba(249,121,79,0.3);color:var(--accent3);margin-bottom:10px;display:inline-block;">II — VERDADERO / FALSO</span>';
+
+  c.innerHTML = `
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
+    <div class="quiz-num">QUESTÃO ${examState.cur+1} DE ${examData.length} • Puntos: ${examState.score}</div>
+    ${sectionTag}
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-opts">
+      ${q.opts.map((o,i)=>`<button class="quiz-opt" onclick="selectExamAnswer(${i})" id="eopt-${i}"><span class="opt-letter">${String.fromCharCode(65+i)})</span><span>${o}</span></button>`).join('')}
+    </div>
+    <div class="quiz-explain" id="exam-explain"></div>
+    <div class="quiz-nav">
+      <span style="color:var(--muted);font-size:12px">${examState.score} aciertos</span>
+      <button class="btn" id="exam-next" onclick="nextExamQuestion()" style="display:none">Próxima →</button>
+    </div>`;
+  examState.answered = false;
+}
+
+function selectExamAnswer(idx) {
+  if(examState.answered) return;
+  examState.answered = true;
+  const q = examData[examState.cur];
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts.forEach(o=>o.classList.add('answered'));
+  opts[q.correct].classList.add('correct');
+  if(idx !== q.correct) opts[idx].classList.add('wrong');
+  else examState.score++;
+  const ex = document.getElementById('exam-explain');
+  ex.innerHTML = `<strong>${idx===q.correct?'✅ Correcto!':'❌ Incorrecto.'}</strong><br><br>${q.explain}`;
+  ex.classList.add('show');
+  document.getElementById('exam-next').style.display='block';
+}
+
+function nextExamQuestion() { examState.cur++; renderExamQuiz(); }
+function restartExam() { examState = {cur:0, score:0, answered:false}; renderExamQuiz(); }
+
+// ================================================================
+// FLASHCARD RENDERING (Bioquímica style with micro data)
+// ================================================================
+function renderFlashcards() {
+  const grid = document.getElementById('flashcard-grid');
+  if(!grid) return;
+  const secColors = {enterobac:'#e67e22',nonferment:'#3498db',haemoph:'#9b59b6',neisseria:'#e74c3c',others:'#1abc9c',spirochetes:'#f1c40f'};
+  grid.innerHTML = bacteria.map(b => {
+    const color = secColors[b.sec] || '#4f9cf9';
+    return `<div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <div class="fc-header" style="background:${color}">
+            <div class="fc-name">${b.nm}</div>
+            <span class="fc-gram">${b.g} · ${b.mo}</span>
+          </div>
+          <div class="fc-body">
+            <div class="fc-row"><span class="fc-lbl" style="color:${color}">Aerobiose</span><span class="fc-val">${b.ox}</span></div>
+            <div class="fc-row"><span class="fc-lbl" style="color:${color}">Fato-chave</span><span class="fc-val">${b.kf}</span></div>
+            <div class="fc-row"><span class="fc-lbl" style="color:${color}">Ágar/Meio</span><span class="fc-val">${b.ag}</span></div>
+            <div class="fc-row"><span class="fc-lbl" style="color:${color}">Doenças</span><div class="fc-tags">${b.dis.map(d=>'<span class="fc-tag-item">'+d+'</span>').join('')}</div></div>
+          </div>
+          <div class="fc-hint">↻ Toque para ver Diagnóstico & Tratamento</div>
+        </div>
+        <div class="flashcard-back">
+          <div class="fc-back-header" style="background:rgba(${color === '#e67e22' ? '230,126,34' : color === '#3498db' ? '52,152,219' : color === '#9b59b6' ? '155,89,182' : color === '#e74c3c' ? '231,76,60' : color === '#1abc9c' ? '26,188,156' : '241,196,15'},.08)">
+            <div class="fc-back-title" style="color:${color}">${b.nm}</div>
+          </div>
+          <div class="fc-back-body">
+            <div><div class="bs-title" style="color:${color}">Virulência</div><div class="tg-wrap">${b.vir.map(v=>'<span class="tg">'+v+'</span>').join('')}</div></div>
+            <div><div class="bs-title" style="color:${color}">Diagnóstico</div><div class="tg-wrap">${b.dx.map(d=>'<span class="tg">'+d+'</span>').join('')}</div></div>
+            <div><div class="bs-title" style="color:${color}">Tratamento 1ª linha</div><div class="tg-wrap">${b.tx1.map(t=>'<span class="tg tx">'+t+'</span>').join('')}</div></div>
+            <div><div class="bs-title" style="color:${color}">Resistência</div><div class="tg-wrap">${b.txR.map(t=>'<span class="tg rx">'+t+'</span>').join('')}</div></div>
+            <div class="fc-sp">${b.sp}</div>
+            <div class="fc-ex">💡 ${b.ex}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ================================================================
+// CLINICAL CASES RENDERING
+// ================================================================
+function renderClinicalCases() {
+  const container = document.getElementById('cases-container');
+  if(!container) return;
+  container.innerHTML = clinicalCases.map(cc => `
+    <div class="cc">
+      <div class="cc-hd">
+        <div class="cc-num">${cc.num}</div>
+        <div class="cc-ttl">${cc.ttl}</div>
+        <span class="cc-path">🦠 ${cc.path}</span>
+      </div>
+      <div class="cc-bd">
+        <div class="cc-scen"><p>${cc.scen}</p></div>
+        <p style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:10px">Sinais Vitais</p>
+        <div class="vitals">${cc.vitals.map(v=>'<div class="vt"><div class="vt-v">'+v.v+'</div><div class="vt-l">'+v.l+'</div></div>').join('')}</div>
+        <div class="cc-lab">
+          <div class="cc-lab-t">Exames Complementares</div>
+          <div class="lab-grid">${cc.labs.map(l=>'<div class="li"><span class="li-k">'+l.k+'</span><span class="li-v'+(l.ab?' ab':'')+'">'+l.v+'</span></div>').join('')}</div>
+        </div>
+        <div class="cc-qs">
+          ${cc.qs.map((q,qi) => `
+            <div>
+              <div class="cc-qn">${q.n}</div>
+              <div class="cc-qt">${q.q}</div>
+              <div class="cc-ans" id="cca-${cc.num.replace(/\s/g,'')}-${qi}">
+                <button class="cc-ansbtn" onclick="toggleCaseAnswer('cca-${cc.num.replace(/\s/g,'')}-${qi}')">
+                  <span class="rev-ic">▶</span> Clique para revelar a resposta
+                </button>
+                <div class="cc-anshid">${q.a}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleCaseAnswer(id) {
+  const el = document.getElementById(id);
+  if(el) el.classList.toggle('rev');
+}
+
+// ================================================================
+// PARTICLES (Bioquímica style)
+// ================================================================
+(function(){
+  const canvas = document.getElementById('particles');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  for(let i=0;i<60;i++){
+    particles.push({
+      x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+      r: Math.random()*2+0.5,
+      dx: (Math.random()-0.5)*0.3, dy: (Math.random()-0.5)*0.3,
+      alpha: Math.random()*0.4+0.1
+    });
+  }
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      p.x+=p.dx; p.y+=p.dy;
+      if(p.x<0||p.x>canvas.width) p.dx*=-1;
+      if(p.y<0||p.y>canvas.height) p.dy*=-1;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(79,156,249,${p.alpha})`; ctx.fill();
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// ================================================================
+// TRAINING QUESTIONS (50 questões de treino nível prova)
+// ================================================================
+const treinoData = [
+  // === ESCHERICHIA COLI ===
+  {q:"¿Cuál es la bacteria responsable del 80% de las infecciones del tracto urinario (ITU) comunitarias?", opts:["Klebsiella pneumoniae","Escherichia coli","Proteus mirabilis","Staphylococcus saprophyticus"], correct:1, explain:"E. coli es la causa más común de ITU (80-85%). Las fímbrias tipo P facilitan la adhesión al tracto urinario."},
+  {q:"Un recién nacido de 3 días presenta fiebre, letargia y abaulamiento de fontanela. La cultura del LCR evidencia bacilo Gram-negativo con cápsula K1. ¿Cuál es el agente?", opts:["Haemophilus influenzae tipo b","Listeria monocytogenes","Escherichia coli (K1)","Neisseria meningitidis"], correct:2, explain:"E. coli con cápsula K1 es la principal causa de meningitis Gram-negativa neonatal. K1 evade el complemento."},
+  {q:"¿Cuál es el resultado del IMViC para E. coli?", opts:["+ + + +","+ + - -","- - + +","- + - +"], correct:1, explain:"IMViC de E. coli = (++ - -): Indol ⊕ | Vermelho de Metila ⊕ | Voges-Proskauer ⊖ | Citrato ⊖."},
+  // === KLEBSIELLA ===
+  {q:"Hombre de 52 años, alcoolista, con escarro en 'geleia de groselha' y consolidación lobar con abaulamento de fissura. ¿Cuál es el agente?", opts:["Streptococcus pneumoniae","Klebsiella pneumoniae","Staphylococcus aureus","Pseudomonas aeruginosa"], correct:1, explain:"K. pneumoniae causa neumonía necrosante en alcoolistas. Escarro en 'geleia de groselha' + abaulamento de fissura = clásico."},
+  {q:"¿Cuál es la principal diferencia entre K. pneumoniae y E. coli?", opts:["K. pneumoniae es móvil y sin cápsula","K. pneumoniae es INMÓVIL y posee CÁPSULA","Ambas son idénticas bioquímicamente","K. pneumoniae fermenta lactosa y E. coli no"], correct:1, explain:"K. pneumoniae = INMÓVIL + CÁPSULA. E. coli = MÓVIL + menos encapsulada. Ambas fermentan lactosa."},
+  {q:"¿Cuál test bioquímico diferencia K. oxytoca de K. pneumoniae?", opts:["Urease","Voges-Proskauer","Indol","Citrato"], correct:2, explain:"K. oxytoca es INDOL POSITIVO; K. pneumoniae es Indol NEGATIVO. Es el principal diferenciador."},
+  {q:"¿Cuál toxina de K. oxytoca causa colitis hemorrágica asociada a antibióticos?", opts:["Toxina Shiga","Tilivalina","Toxina colérica","Exotoxina A"], correct:1, explain:"La tilivalina es el principal factor de virulencia de K. oxytoca, causando colitis hemorrágica cuando ATB eliminan la flora normal."},
+  // === SERRATIA ===
+  {q:"Una muestra bacteriana crece en MacConkey y produce pigmento rojo visible a 22°C pero NO a 37°C. DNase positivo. ¿Cuál es el microorganismo?", opts:["Chromobacterium violaceum","Serratia marcescens","Pseudomonas aeruginosa","Staphylococcus aureus"], correct:1, explain:"Serratia produce PRODIGIOSINA (rojo) a 22-25°C, NO a 37°C. Pseudomonas produce piocianina (azul)."},
+  {q:"¿En qué tipo de pacientes Serratia marcescens causa endocarditis con mayor frecuencia?", opts:["Pacientes con fibrose cística","Usuarios de drogas intravenosas","Quemados","Neonatos"], correct:1, explain:"S. marcescens es causa importante de endocarditis en usuarios de drogas IV, además de infecciones nosocomiales."},
+  // === PROTEUS ===
+  {q:"Paciente con ITU de repetición, urease fuertemente positiva, orina alcalina y cálculos renales. ¿Cuál tipo de cálculo y bacteria?", opts:["Oxalato de cálcio — E. coli","Ácido úrico — Klebsiella","Estruvita — Proteus mirabilis","Cistina — Serratia"], correct:2, explain:"Proteus → urease → amônio → pH alcalino → cristais de estruvita (fosfato de amônio e magnésio) → cálculos renais."},
+  {q:"¿Cuál es la diferencia del pH urinario entre infección por Proteus y E. coli?", opts:["Ambas producen orina ácida","Proteus = ácida, E. coli = alcalina","Proteus = ALCALINA, E. coli = ÁCIDA","No hay diferencia de pH"], correct:2, explain:"Proteus produce urease → urina ALCALINA + estruvita. E. coli → urina ÁCIDA + sin cristales. Ambas tienen nitrito ⊕."},
+  // === SHIGELLA ===
+  {q:"¿Cuál es la dosis infectante mínima de Shigella, que explica su alta transmisibilidad?", opts:["10⁶ organismos","10³ organismos","~10 organismos","10⁸ organismos"], correct:2, explain:"Shigella tiene una de las menores dosis infectantes: apenas ~10 organismos causan enfermedad."},
+  {q:"La Toxina Shiga (Stx1) de Shigella dysenteriae inhibe la síntesis proteica por cuál mecanismo?", opts:["ADP-ribosilación de Gs","Activación de adenilato ciclase","Clivaje del RNA ribossômico 28S","Formación de poros en membrana"], correct:2, explain:"Toxina Shiga cliva el rRNA 28S de la subunidad 60S → apoptose de células endoteliais → SHU."},
+  {q:"¿Cuál característica diferencia Shigella de Salmonella en el laboratorio?", opts:["Shigella fermenta lactosa","Shigella es H₂S positiva","Shigella es INMÓVIL","Shigella posee cápsula"], correct:2, explain:"Shigella = INMÓVIL, H₂S ⊖. Salmonella = MÓVIL, H₂S ⊕. Ambas no fermentan lactosa."},
+  // === SALMONELLA ===
+  {q:"¿Cuál examen tiene mayor sensibilidad para fiebre tifoidea en la 1ª semana?", opts:["Coprocultura","Test de Widal","Hemocultura","Urinocultura"], correct:2, explain:"Hemocultura = gold standard para febre tifoide na 1ª semana (bacteriemia primária). Coprocultura rende melhor na 2ª-3ª semana."},
+  {q:"¿Por qué NO se debe prescribir antibióticos para gastroenteritis por Salmonella no-Typhi?", opts:["Causa hepatotoxicidad","Prolonga el estado de portador y selecciona resistencia","Es contraindicado en diarrea","No penetra en mucosa"], correct:1, explain:"ATB en gastroenteritis no-Typhi prolonga la excreción fecal y selecciona resistencia, sin mejorar síntomas."},
+  {q:"¿Cuáles son los hallazgos clásicos de la fiebre tifoidea?", opts:["Diarrea acuosa profusa + vómitos","Fiebre progresiva + bradicardia relativa + roséola tifoide + esplenomegalia","Disentería con sangre y muco","Diarrea en agua de arroz sin fiebre"], correct:1, explain:"Fiebre en escalera + bradicardia relativa + manchas rosadas en tronco + esplenomegalia = febre tifóide clássica."},
+  // === YERSINIA ===
+  {q:"¿Cuál es el antibiótico de primera elección para la peste bubónica?", opts:["Penicilina G cristalina IV","Ceftriaxona IV","Estreptomicina IM (o gentamicina IV)","Eritromicina VO"], correct:2, explain:"Estreptomicina IM es el DOC clásico. Gentamicina IV es la alternativa más práctica. Doxiciclina VO para casos leves."},
+  {q:"¿Cuál forma de peste se transmite por aerosoles de persona a persona?", opts:["Bubónica","Septicémica","Neumónica primaria","Linfadenitis mesentérica"], correct:2, explain:"Peste neumónica primaria = transmisión por aerosol. La más grave — mortalidad casi 100% sin tratamiento en 3 días."},
+  // === PSEUDOMONAS ===
+  {q:"¿Cuál pigmento de P. aeruginosa genera especies reactivas de oxígeno y tiene actividad antimicrobiana?", opts:["Pioverdina","Prodigiosina","Piocianina","Violaceína"], correct:2, explain:"Piocianina (azul) genera H₂O₂ y O₂⁻ (ROS). Pioverdina (verde fluorescente) = sideróforo."},
+  {q:"La Exotoxina A de Pseudomonas aeruginosa comparte mecanismo con cuál toxina?", opts:["Toxina colérica","Toxina diftérica","Toxina pertussis","Toxina Shiga"], correct:1, explain:"Exotoxina A (P. aeruginosa) y Toxina Diftérica: ambas ADP-ribosilam EF-2 → inhiben síntesis proteica."},
+  {q:"Paciente neutropénico con lesión cutánea necrótica hemorrágica. ¿Cuál es el diagnóstico?", opts:["Furúnculo por S. aureus","Ecthyma gangrenosum por P. aeruginosa","Celulitis por S. pyogenes","Úlcera de pressão"], correct:1, explain:"Ecthyma gangrenosum = lesión necrótica en neutropénicos con sepse por P. aeruginosa. Mortalidad elevada."},
+  {q:"¿Cuál factor de virulencia permite a Pseudomonas persistir en pacientes con fibrose cística?", opts:["Exotoxina A","Piocianina","Alginato (biofilme)","LPS"], correct:2, explain:"El alginato forma BIOFILME que protege contra fagocitose y ATB. Es el principal mecanismo de persistencia en FC."},
+  // === VIBRIO ===
+  {q:"¿Cuál es el mecanismo de la toxina colérica?", opts:["Invasión epitelial","ADP-ribosilación de Gsα → ↑AMPc → hipersecreción","Formación de poros","Inhibición de síntesis proteica"], correct:1, explain:"CT: Subunidad B → GM1 → A1 ADP-ribosila Gsα → adenilato ciclase permanente → ↑AMPc → CFTR secreta Cl⁻/H₂O."},
+  {q:"¿Cuál es el tratamiento PRINCIPAL del cólera que reduce la mortalidad de >50% a <1%?", opts:["Doxiciclina 300mg DU","Azitromicina 1g DU","Rehidratación oral o IV adecuada","Ciprofloxacino 1g DU"], correct:2, explain:"La REHIDRATACIÓN es el pilar fundamental. ATB (doxiciclina, azitromicina) son adjuvantes."},
+  {q:"¿En cuál ágar seletivo crece V. cholerae y cómo son las colonias?", opts:["Hektoen — verdes","TCBS — AMARILLAS (fermenta sacarosa)","Thayer-Martin — acinzentadas","Bordet-Gengou — gotas de mercúrio"], correct:1, explain:"TCBS = ágar selectivo para Vibrio. V. cholerae fermenta sacarosa → colonias AMARILLAS."},
+  // === CAMPYLOBACTER ===
+  {q:"¿Cuál test bioquímico diferencia C. jejuni de C. coli?", opts:["Oxidase","Catalase","Hipurato","Urease"], correct:2, explain:"C. jejuni = Hipurato POSITIVO. C. coli = Hipurato NEGATIVO. Ambos oxidase ⊕, catalase ⊕, 42°C."},
+  {q:"¿Cuáles son las condiciones ideales de cultivo de Campylobacter?", opts:["Aerobiose a 37°C","Anaerobiose a 35°C","Microaerofilia (5% O₂) a 42°C en Skirrow","Aerobiose a 28°C en BCYE"], correct:2, explain:"Campylobacter es MICROAERÓFILO (5% O₂, 10% CO₂). T° ótima 42°C (intestino de aves). Ágar Skirrow/Campy."},
+  {q:"¿Cuál complicación neurológica grave puede ocurrir 1-3 semanas post-Campylobacter?", opts:["Meningitis bacteriana","Síndrome de Guillain-Barré","Neurocisticercose","Encefalitis"], correct:1, explain:"SGB: C. jejuni O:19 → LOS mimetiza GM1 → anticuerpos atacan bainha de mielina → parálisis ascendente."},
+  // === HELICOBACTER ===
+  {q:"¿Cuál factor de virulencia de H. pylori es considerado una oncoproteína?", opts:["Urease","VacA","CagA","BabA"], correct:2, explain:"CagA es inyectada en las células gástricas → reorganización del citoesqueleto → proliferación + inhibición apoptose → carcinogénese."},
+  {q:"¿Cuál es el gold standard no-invasivo para confirmar erradicación de H. pylori?", opts:["Sorología IgG","Endoscopía + biópsia","Test respiratorio con ¹³C-ureia","Cultura de suco gástrico"], correct:2, explain:"Test respiratorio ¹³C-ureia = gold standard post-tratamiento (>90% sens/esp). Hacer ≥4 sem post-ATB, suspender IBP 2 sem antes."},
+  {q:"¿Cuál es la secuencia carcinogénica del H. pylori?", opts:["Gastritis → úlcera → cáncer (directo)","Gastritis crónica → atrófica → metaplasia intestinal → displasia → adenocarcinoma","Gastritis → linfoma → adenocarcinoma","Úlcera → metaplasia → carcinoma in situ"], correct:1, explain:"Secuencia: gastritis crónica → atrófica → metaplasia intestinal → displasia → adenocarcinoma gástrico (pronóstico MUY malo)."},
+  // === HAEMOPHILUS INFLUENZAE ===
+  {q:"H. influenzae requiere dos factores de crecimiento. ¿Cuáles son?", opts:["Factores I y II","Factores X (hemina) y V (NAD)","L-cisteína y hierro","Colesterol y vitamina K"], correct:1, explain:"Factor X (hemina) + Factor V (NAD). Ágar chocolate los libera por hemólisis suave. S. aureus fornece Factor V (satelitismo)."},
+  {q:"Niño de 4 años no vacinado con fiebre súbita, disfagia, sialorrea y epiglote 'en cereza'. ¿Conducta?", opts:["Penicilina G IV","Ceftriaxona IV + GARANTIR VÍA AÉREA","Adrenalina inalatória","Laringoscopía directa"], correct:1, explain:"Epiglotite por Hib = EMERGENCIA. Via aérea es PRIORIDAD (intubación). Ceftriaxona IV. NO examinar garganta sin vía aérea segura."},
+  // === H. DUCREYI ===
+  {q:"Paciente con úlcera genital DOLOROSA, bordas irregulares/blandas, linfadenopatía supurativa. VDRL ⊖. ¿Diagnóstico?", opts:["Sífilis primaria","LGV (Chlamydia)","Cancroide (H. ducreyi)","Herpes genital"], correct:2, explain:"Cancroide = úlcera DOLOROSA + bordes BLANDOS + bubón mole supurativo. VDRL ⊖ exclui sífilis. Tto: azitromicina 1g DU."},
+  // === BORDETELLA ===
+  {q:"¿Cuál achado laboratorial es patognomónico de la fase paroxística de la coqueluche?", opts:["Neutrofilia >20.000","Eosinofilia >5.000","Linfocitose absoluta >15.000/μL","Trombocitopenia <50.000"], correct:2, explain:"Linfocitose absoluta (>15.000) na fase paroxística = patognomônico. Toxina Pertussis bloqueia migração de linfócitos."},
+  {q:"¿En cuál fase de la coqueluche el antibiótico es INÚTIL y se debe dar oxígeno?", opts:["Fase catarral","Fase paroxística","Fase de convalescência","En todas las fases"], correct:1, explain:"Fase paroxística: ATB ya no mejora (epitelio ciliar ya destruido). Tratamiento: OXIGENACIÓN + sedación + intubación si necesario."},
+  {q:"¿Cuál es el medio de cultura para B. pertussis y cómo son las colonias?", opts:["TCBS — amarillas","Thayer-Martin — acinzentadas","Bordet-Gengou — gotas de mercúrio","BCYE — blancas"], correct:2, explain:"Bordet-Gengou (glicerol + batata + sangue). Colonias con aspecto de 'gotas de mercúrio' (pequeñas, brillantes)."},
+  // === NEISSERIA GONORRHOEAE ===
+  {q:"¿Cómo diferencia N. gonorrhoeae de N. meningitidis por fermentación?", opts:["Gonococo fermenta glicose y maltose","Gonococo fermenta APENAS glicose; Meningococo = glicose + maltose","Gonococo fermenta glicose, maltose y lactose","Ambas fermentan apenas glicose"], correct:1, explain:"N. gonorrhoeae = APENAS glicose. N. meningitidis = glicose + MALTOSE. Mnemônico: Gonococo No gusta de Maltose."},
+  {q:"¿Cuál es la profilaxia ocular neonatal contra oftalmia neonatorum gonocócica?", opts:["Colírio de ceftriaxona 1%","Colírio de eritromicina 0,5%","Colírio de ciprofloxacino","Nitrato de prata 2%"], correct:1, explain:"Eritromicina 0,5% en ambos ojos al nacimiento. Cubre N. gonorrhoeae y Chlamydia trachomatis."},
+  // === NEISSERIA MENINGITIDIS ===
+  {q:"¿Cuál síndrome se caracteriza por hemorragia adrenal bilateral + CIVD + colapso circulatorio?", opts:["Síndrome de Reye","Síndrome de Lemierre","Síndrome de Waterhouse-Friderichsen","Síndrome de Stevens-Johnson"], correct:2, explain:"Waterhouse-Friderichsen: meningococcemia fulminante → CIVD → hemorragia adrenal bilateral → insuficiencia adrenal."},
+  {q:"¿Cuál es la profilaxia para contactos de un caso de enfermedad meningocócica?", opts:["Azitromicina 1g DU","Rifampicina 600mg 12/12h ×2d OU ciprofloxacino 500mg DU","Amoxicilina-clavulanato ×7d","Ceftriaxona 2g/dia ×3d"], correct:1, explain:"Adultos: ciprofloxacino 500mg DU (más práctico). Gestantes: ceftriaxona 250mg IM DU. Objetivo: eliminar portadores nasofaríngeos."},
+  // === FUSOBACTERIUM ===
+  {q:"Joven con faringite + fiebre persistente + trombo en vena yugular + nódulos cavitarios pulmonares. ¿Diagnóstico?", opts:["Abscesso retrofaríngeo","Síndrome de Lemierre","Tuberculosis miliar","Endocarditis derecha"], correct:1, explain:"Tríade de Lemierre: faringite recente + tromboflebite VJI + embolia pulmonar séptica (nódulos cavitarios). Agente: F. necrophorum."},
+  {q:"¿Cuál es el antibiótico de elección para Síndrome de Lemierre?", opts:["Cefalexina VO","Metronidazol IV ×4-6 semanas","Ciprofloxacino IV","Amoxicilina VO"], correct:1, explain:"Metronidazol IV = elección para F. necrophorum (anaerobio estricto). Duración mínima 4-6 semanas."},
+  // === GARDNERELLA ===
+  {q:"Mujer con corrimiento grisáceo, pH 5.2, Whiff test ⊕, clue cells >20%. ¿Diagnóstico y tratamiento?", opts:["Candidíase — fluconazol","Tricomoníase — metronidazol 2g DU","Vaginose bacteriana — metronidazol 500mg 12/12h ×7d","Vaginite atrófica — estrógeno"], correct:2, explain:"3/4 critérios de Amsel = VB. Metronidazol 500mg 12/12h VO ×7d. Candida: pH<4.5. Trichomonas: parasita móvil."},
+  {q:"¿Cuál es la diferencia entre vaginose y vaginite?", opts:["Son sinónimos","Vaginose = con inflamación; Vaginite = sin inflamación","Vaginose = desequilibrio flora SIN inflamación; Vaginite = con inflamación y leucocitos","Vaginose es causada por hongos; Vaginite por bacterias"], correct:2, explain:"VAGINOSE = desequilibrio (↓Lactobacilos, ↑Gardnerella), sin inflamación. VAGINITE = inflamación con leucocitos (Candida, Trichomonas)."},
+  // === LEGIONELLA ===
+  {q:"Paciente inmunosuprimido con neumonía grave, hiponatremia, diarrea y confusión mental. Escarro sin patógeno al Gram. ¿Diagnóstico rápido?", opts:["Hemocultura","Antígeno urinario de Legionella","PCR de lavado brônquico","Sorología IgG"], correct:1, explain:"Antígeno urinario (EIA) para Legionella sorogrupo 1 = gold standard rápido (sens. 80%, esp. >99%). β-lactámicos NO funcionan (intracelular)."},
+  {q:"¿Cuál es la diferencia entre Legionelosis y Fiebre de Pontiac?", opts:["Son enfermedades causadas por bacterias diferentes","Legionelosis = neumonía grave (necesita ATB); Pontiac = gripal autolimitada (NO necesita ATB)","Legionelosis es leve y Pontiac es grave","Pontiac tiene transmisión persona-persona"], correct:1, explain:"MISMO organismo. Legionelosis = neumonía severa. Pontiac = antígenos → síndrome gripal autolimitado 2-5 días. NUNCA transmisión persona-persona."},
+  // === TREPONEMA ===
+  {q:"¿Cuál examen permanece positivo para toda la vida y NO se usa para monitorar tratamiento de sífilis?", opts:["VDRL","RPR","FTA-ABS","Ninguno permanece positivo"], correct:2, explain:"FTA-ABS (treponêmico) = ⊕ para SIEMPRE. VDRL/RPR (não-treponêmicos) = deben caer ≥4× en 6 meses → monitorar."},
+  {q:"¿Cuál es el tratamiento de la neurossífilis?", opts:["Benzatina penicilina G IM ×3 semanas","Penicilina G cristalina IV 4/4h ×10-14 días","Doxiciclina VO ×28 días","Ceftriaxona IM DU"], correct:1, explain:"Neurossífilis = Penicilina G cristalina IV (altísimas dosis) ×10-14d. Benzatina IM NO alcanza concentraciones adecuadas en LCR."},
+  // === LEPTOSPIRA ===
+  {q:"¿Cuál es el examen más indicado en la fase aguda (1ª semana) de la leptospirosis?", opts:["MAT (Microscopic Agglutination Test)","Sorología IgG","PCR en sangre","ELISA IgM único"], correct:2, explain:"Fase leptospirêmica (1-7d): PCR en sangre = gold standard de fase aguda. MAT y ELISA IgM rinden a partir de la 2ª semana."},
+  {q:"¿Cuál es la tríada clásica de la Enfermedad de Weil?", opts:["Fiebre + cefalea + mialgia","Ictericia + insuficiencia renal + hemorragias","Diarrea + deshidratación + choque","Fiebre + bradicardia + manchas rosadas"], correct:1, explain:"Tríada de Weil: (1) ICTERICIA; (2) IRA; (3) HEMORRAGIAS (conjuntival bilateral indolor = patognomónico)."},
+  {q:"¿Cuál es el tratamiento para leptospirosis LEVE vs GRAVE?", opts:["Leve: penicilina IV; Grave: doxiciclina VO","Leve: doxiciclina 100mg VO; Grave: penicilina G cristalina IV o ceftriaxona IV","Leve: azitromicina; Grave: metronidazol","Ambas: ceftriaxona IV"], correct:1, explain:"Leve: doxiciclina 100mg 12/12h VO ×7d. Grave (Weil): Penicilina G cristalina 1.5M UI 6/6h IV ×7d o Ceftriaxona 1g IV/dia."},
+  // === PASTEURELLA ===
+  {q:"48h post-mordedura de gato, celulitis dolorosa. Cultura: cocobacilo Gram-negativo que NO crece en MacConkey. ¿Agente y antibiótico?", opts:["S. aureus — cefalexina","Capnocytophaga — meropenem","Pasteurella multocida — amoxicilina-clavulanato","Eikenella — clindamicina"], correct:2, explain:"P. multocida = mordedura de gato. NO crece en MacConkey. Amoxicilina-clavulanato = obrigatório. RESISTENTE a clindamicina y cefalexina!"},
+  // === K. GRANULOMATIS ===
+  {q:"¿Cuál achado histopatológico confirma el diagnóstico de Donovanose?", opts:["Células de Reed-Sternberg","Corpos de Donovan en macrófagos","Clue cells","Inclusiones intranucleares"], correct:1, explain:"Corpos de Donovan = bactérias (K. granulomatis) dentro de macrófagos, visualizados con Giemsa ou Warthin-Starry."}
+];
+
+let treinoState = {cur:0, score:0, answered:false};
+
+function renderTrainoQuiz() {
+  const c = document.getElementById('treino-container');
+  if(!c) return;
+  if(treinoState.cur >= treinoData.length) {
+    const pct = Math.round((treinoState.score/treinoData.length)*100);
+    let msg = pct>=90?"🏆 Excelente! Pronto para a P2!":pct>=70?"✅ Bom desempenho! Revise o que errou.":pct>=50?"📚 Precisa revisar o material.":"💪 Releia o resumo e tente novamente!";
+    c.innerHTML = `<div class="score-card">
+      <div style="font-size:48px;margin-bottom:16px">📚</div>
+      <div class="score-big">${treinoState.score}/${treinoData.length}</div>
+      <div style="font-size:24px;margin:8px 0;color:var(--accent2)">${pct}%</div>
+      <div class="score-msg">${msg}</div>
+      <button class="btn" style="margin-top:24px" onclick="restartTreino()">🔄 Tentar Novamente</button>
+    </div>`;
+    return;
+  }
+  const q = treinoData[treinoState.cur];
+  const pct = Math.round((treinoState.cur/treinoData.length)*100);
+  c.innerHTML = `
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
+    <div class="quiz-num">QUESTÃO ${treinoState.cur+1} DE ${treinoData.length} • Pontos: ${treinoState.score}</div>
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-opts">
+      ${q.opts.map((o,i)=>`<button class="quiz-opt" onclick="selectTreinoAnswer(${i})" id="topt-${i}"><span class="opt-letter">${String.fromCharCode(65+i)})</span><span>${o}</span></button>`).join('')}
+    </div>
+    <div class="quiz-explain" id="treino-explain"></div>
+    <div class="quiz-nav">
+      <span style="color:var(--muted);font-size:12px">${treinoState.score} aciertos</span>
+      <button class="btn" id="treino-next" onclick="nextTreinoQuestion()" style="display:none">Próxima →</button>
+    </div>`;
+  treinoState.answered = false;
+}
+
+function selectTreinoAnswer(idx) {
+  if(treinoState.answered) return;
+  treinoState.answered = true;
+  const q = treinoData[treinoState.cur];
+  const opts = document.querySelectorAll('#treino-container .quiz-opt');
+  opts.forEach(o=>o.classList.add('answered'));
+  opts[q.correct].classList.add('correct');
+  if(idx !== q.correct) opts[idx].classList.add('wrong');
+  else treinoState.score++;
+  const ex = document.getElementById('treino-explain');
+  ex.innerHTML = `<strong>${idx===q.correct?'✅ Correcto!':'❌ Incorrecto.'}</strong><br><br>${q.explain}`;
+  ex.classList.add('show');
+  document.getElementById('treino-next').style.display='block';
+}
+
+function nextTreinoQuestion() { treinoState.cur++; renderTrainoQuiz(); }
+function restartTreino() { treinoState = {cur:0, score:0, answered:false}; renderTrainoQuiz(); }
+
+// ================================================================
+// INIT
+// ================================================================
+document.addEventListener('DOMContentLoaded', () => {
+  renderFlashcards();
+  renderExamQuiz();
+  renderTrainoQuiz();
+  renderClinicalCases();
+});
 </script>
 
-
-
-
-
 <!-- Botão Voltar -->
-<a href="dashboard.html" class="back-btn-fixed">← Voltar</a>
+<a href="dashboard.html" style="
+  position:fixed; bottom:24px; left:24px; z-index:9999;
+  display:flex; align-items:center; gap:9px;
+  padding:12px 26px;
+  background:rgba(2,10,22,0.93);
+  border:1.5px solid rgba(79,156,249,0.42);
+  border-radius:50px;
+  color:#e8eaf6;
+  font-size:13px; font-weight:600; letter-spacing:0.03em;
+  text-decoration:none;
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  box-shadow:0 4px 24px rgba(79,156,249,0.16);
+  transition:all .25s ease;
+" onmouseover="this.style.background='rgba(79,156,249,0.14)';this.style.borderColor='rgba(79,156,249,0.85)';this.style.transform='translateY(-3px)'"
+   onmouseout="this.style.background='rgba(2,10,22,0.93)';this.style.borderColor='rgba(79,156,249,0.42)';this.style.transform='translateY(0)'">
+  ← Voltar
+</a>
+
 <script src="study-timer.js"></script>
 <script src="enzo-ia.js"></script>
 </body>
