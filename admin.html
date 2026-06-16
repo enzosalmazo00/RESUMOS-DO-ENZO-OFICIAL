@@ -603,6 +603,9 @@ document.addEventListener("click",function(e){
   else if(act==="grant")quickGrantAll(id,em);
   else if(act==="toggle"&&window.toggleResumo)toggleResumo(key);
   else if(act==="presente"&&window.togglePresente)togglePresente(key);
+  else if(act==="cupom-off")toggleCupom(id,false);
+  else if(act==="cupom-on")toggleCupom(id,true);
+  else if(act==="cupom-del")deletarCupom(id,b.dataset.code||"");
 });
 
 // ═══ CUPONS ═══
@@ -648,9 +651,9 @@ function renderCupons() {
       "</div>" +
       "<div class='cupom-actions'>" +
         (c.ativo
-          ? "<button class='btn-sm red' onclick='toggleCupom("" + c.id + "", false)'>Desativar</button>"
-          : "<button class='btn-sm green' onclick='toggleCupom("" + c.id + "", true)'>Ativar</button>") +
-        "<button class='btn-sm red' onclick='deletarCupom("" + c.id + "", "" + c.codigo + "")'>&#128465; Excluir</button>" +
+          ? "<button class='btn-sm red' data-act='cupom-off' data-id='" + c.id + "'>Desativar</button>"
+          : "<button class='btn-sm green' data-act='cupom-on' data-id='" + c.id + "'>Ativar</button>") +
+        "<button class='btn-sm red' data-act='cupom-del' data-id='" + c.id + "' data-code='" + c.codigo + "'>&#128465; Excluir</button>" +
       "</div>" +
     "</div>";
   }).join("");
@@ -692,7 +695,7 @@ window.criarCupom = async function() {
     document.getElementById("cupomExpira").value = "";
     await loadCupons();
   }
-  btn.disabled = false; btn.textContent = "\u2728 Criar cupom";
+  btn.disabled = false; btn.textContent = "✨ Criar cupom";
 };
 
 window.toggleCupom = async function(id, ativo) {
@@ -758,7 +761,7 @@ window.salvarPrecos = async function() {
   } else {
     showToast("Erro ao salvar preços!", "error");
   }
-  btn.disabled = false; btn.textContent = "\ud83d\udcbe Salvar preços";
+  btn.disabled = false; btn.textContent = "💾 Salvar preços";
 };
 
 // ═══ ONLINE USERS (Realtime Presence) ═══
