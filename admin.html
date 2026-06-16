@@ -358,8 +358,11 @@ async function init(){
     }
     hideOverlay();
     document.getElementById("adminEmail").textContent=session.user.email;
-    await Promise.all([loadAlunos(),loadOrders(),loadCupons(),loadPrecos()]);
-    setupOnlineCounter();
+    await Promise.all([loadAlunos(),loadOrders()]);
+    // Features novas — não bloqueiam o painel se falharem
+    try { await loadCupons(); } catch(e) { console.warn("cupons:", e); }
+    try { await loadPrecos(); } catch(e) { console.warn("precos:", e); }
+    try { setupOnlineCounter(); } catch(e) { console.warn("online:", e); }
   }catch(err){
     console.error("[admin] init error:",err);
     showOverlayError("Erro ao carregar painel.<br>Verifique sua conexao e tente novamente.");
