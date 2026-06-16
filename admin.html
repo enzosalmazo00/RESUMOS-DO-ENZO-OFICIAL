@@ -7,237 +7,298 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--cyan:#22d3ee;--cyan2:#06b6d4;--border:rgba(34,211,238,0.18);--red:#f87171;--green:#4ade80;--yellow:#fbbf24;}
+    :root{--cyan:#22d3ee;--cyan2:#06b6d4;--border:rgba(34,211,238,0.18);--red:#f87171;--green:#4ade80;--yellow:#fbbf24;--bg:#020d1a;--bg2:#010812;--card:rgba(34,211,238,0.04);--card-border:rgba(34,211,238,0.12);}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     html{height:100%;}
-    body{font-family:'Poppins',sans-serif;min-height:100%;background:linear-gradient(160deg,#020d1a 0%,#010812 50%,#020d1a 100%);color:#fff;overflow-x:hidden;}
+    body{font-family:'Poppins',sans-serif;min-height:100%;background:linear-gradient(160deg,var(--bg) 0%,var(--bg2) 50%,var(--bg) 100%);color:#fff;overflow-x:hidden;}
     body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(34,211,238,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,0.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
-    .container{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:32px 20px 60px;}
-    .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px;flex-wrap:wrap;gap:16px;}
+    .container{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:20px 20px 60px;}
+
+    /* ── HEADER ── */
+    .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+    .header-left{display:flex;align-items:center;gap:14px;}
     .logo{font-size:20px;font-weight:700;letter-spacing:-0.5px;}
     .logo span{background:linear-gradient(100deg,#22d3ee,#67e8f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
     .admin-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);color:#fbbf24;}
-    .header-right{display:flex;align-items:center;gap:12px;}
-    .btn-outline{padding:9px 20px;border:1px solid var(--border);border-radius:10px;background:transparent;color:#7dd3e8;font-family:'Poppins',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .25s;}
+    .header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .btn-outline{padding:8px 16px;border:1px solid var(--border);border-radius:10px;background:transparent;color:#7dd3e8;font-family:'Poppins',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .25s;}
     .btn-outline:hover{border-color:var(--cyan);background:rgba(34,211,238,0.06);color:#fff;}
-    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:32px;}
-    .stat-card{padding:20px 22px;border-radius:14px;background:rgba(34,211,238,0.04);border:1px solid rgba(34,211,238,0.12);}
-    .stat-label{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(125,211,232,0.5);margin-bottom:8px;}
-    .stat-value{font-size:28px;font-weight:700;color:#e2f8fc;letter-spacing:-1px;}
-    .stat-sub{font-size:11px;color:rgba(125,211,232,0.4);margin-top:4px;}
-    .search-bar{margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;}
-    .search-input{flex:1;min-width:200px;padding:11px 16px;background:rgba(255,255,255,0.04);border:1px solid rgba(34,211,238,0.14);border-radius:12px;color:#fff;font-size:14px;font-family:'Poppins',sans-serif;transition:all .25s;}
+    #adminEmail{font-size:12px;color:rgba(125,211,232,0.5);}
+    .refresh-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--border);background:transparent;color:#7dd3e8;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;}
+    .refresh-btn:hover{border-color:var(--cyan);background:rgba(34,211,238,0.06);color:#fff;}
+    .refresh-btn.spinning{animation:spin .8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    /* ── TABS ── */
+    .admin-tabs{display:flex;gap:4px;margin-bottom:24px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:14px;padding:4px;overflow-x:auto;}
+    .admin-tab{flex:1;min-width:0;padding:10px 12px;border:none;border-radius:10px;background:transparent;color:rgba(125,211,232,0.5);font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .25s;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px;}
+    .admin-tab:hover{color:#fff;background:rgba(34,211,238,0.06);}
+    .admin-tab.active{background:linear-gradient(135deg,rgba(34,211,238,0.18),rgba(6,182,212,0.10));border:1px solid rgba(34,211,238,0.30);color:#fff;box-shadow:0 4px 16px rgba(34,211,238,0.12);}
+    .admin-tab .tab-badge{padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700;background:rgba(34,211,238,0.15);color:rgba(34,211,238,0.7);}
+    .admin-tab.active .tab-badge{background:rgba(255,255,255,0.15);color:#fff;}
+    .tab-panel{display:none;}
+    .tab-panel.active{display:block;}
+    .tab-icon{font-size:14px;}
+
+    /* ── STATS ── */
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin-bottom:24px;}
+    .stat-card{padding:18px 20px;border-radius:14px;background:var(--card);border:1px solid var(--card-border);transition:all .25s;}
+    .stat-card:hover{border-color:rgba(34,211,238,0.25);background:rgba(34,211,238,0.06);}
+    .stat-label{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(125,211,232,0.5);margin-bottom:6px;}
+    .stat-value{font-size:26px;font-weight:700;color:#e2f8fc;letter-spacing:-1px;}
+    .stat-sub{font-size:10px;color:rgba(125,211,232,0.35);margin-top:3px;}
+    .stat-card.online{border-color:rgba(74,222,128,0.25);background:rgba(74,222,128,0.06);}
+    .stat-card.revenue{border-color:rgba(34,211,238,0.25);background:rgba(34,211,238,0.06);}
+    .online-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4ade80;margin-right:5px;animation:pulse-dot 1.5s infinite;}
+    @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.4);}}
+
+    /* ── SECTION TITLE ── */
+    .section-title{font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(34,211,238,0.5);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+    .section-title::after{content:'';flex:1;height:1px;background:rgba(34,211,238,0.1);}
+
+    /* ── SEARCH BAR ── */
+    .search-bar{margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;}
+    .search-input{flex:1;min-width:180px;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(34,211,238,0.14);border-radius:11px;color:#fff;font-size:13px;font-family:'Poppins',sans-serif;transition:all .25s;}
     .search-input::placeholder{color:rgba(255,255,255,0.2);}
     .search-input:focus{outline:none;border-color:var(--cyan);background:rgba(34,211,238,0.06);}
-    .filter-select{padding:11px 16px;background:rgba(255,255,255,0.04);border:1px solid rgba(34,211,238,0.14);border-radius:12px;color:#7dd3e8;font-family:'Poppins',sans-serif;font-size:13px;cursor:pointer;appearance:none;}
-    .table-wrap{border-radius:16px;border:1px solid rgba(34,211,238,0.12);overflow:hidden;margin-bottom:32px;}
+    .filter-select{padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(34,211,238,0.14);border-radius:11px;color:#7dd3e8;font-family:'Poppins',sans-serif;font-size:12px;cursor:pointer;appearance:none;}
+
+    /* ── TABLE ── */
+    .table-wrap{border-radius:14px;border:1px solid var(--card-border);overflow:hidden;margin-bottom:20px;}
     table{width:100%;border-collapse:collapse;}
     thead{background:rgba(34,211,238,0.06);}
-    th{padding:13px 16px;text-align:left;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(34,211,238,0.6);white-space:nowrap;}
-    td{padding:14px 16px;font-size:13px;color:#c0f0f8;border-top:1px solid rgba(34,211,238,0.06);vertical-align:middle;}
+    th{padding:11px 14px;text-align:left;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(34,211,238,0.6);white-space:nowrap;}
+    td{padding:12px 14px;font-size:12px;color:#c0f0f8;border-top:1px solid rgba(34,211,238,0.06);vertical-align:middle;}
     tr:hover td{background:rgba(34,211,238,0.03);}
-    .email-cell{font-size:12.5px;color:#e2f8fc;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .date-cell{font-size:12px;color:rgba(125,211,232,0.5);white-space:nowrap;}
-    .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+    .email-cell{font-size:12px;color:#e2f8fc;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .date-cell{font-size:11px;color:rgba(125,211,232,0.5);white-space:nowrap;}
+
+    /* ── BADGES ── */
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;}
     .badge-green{background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.25);color:#4ade80;}
     .badge-red{background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.25);color:#f87171;}
     .badge-yellow{background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.25);color:#fbbf24;}
     .badge-cyan{background:rgba(34,211,238,0.10);border:1px solid rgba(34,211,238,0.25);color:#22d3ee;}
-    .action-btn{padding:6px 14px;border-radius:8px;border:1px solid;font-size:11.5px;font-family:'Poppins',sans-serif;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;}
+
+    /* ── ACTION BUTTONS ── */
+    .action-btn{padding:5px 12px;border-radius:8px;border:1px solid;font-size:11px;font-family:'Poppins',sans-serif;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;}
     .action-btn.green{border-color:rgba(74,222,128,0.3);background:rgba(74,222,128,0.08);color:#4ade80;}
     .action-btn.green:hover{background:rgba(74,222,128,0.2);}
     .action-btn.red{border-color:rgba(248,113,113,0.3);background:rgba(248,113,113,0.08);color:#f87171;}
     .action-btn.red:hover{background:rgba(248,113,113,0.2);}
     .action-btn.cyan{border-color:rgba(34,211,238,0.3);background:rgba(34,211,238,0.08);color:#22d3ee;}
     .action-btn.cyan:hover{background:rgba(34,211,238,0.18);}
-    .actions-cell{display:flex;gap:6px;flex-wrap:wrap;}
-    .section-title{font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(34,211,238,0.5);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
-    .section-title::after{content:'';flex:1;height:1px;background:rgba(34,211,238,0.1);}
-    .loading{text-align:center;padding:40px;color:rgba(125,211,232,0.4);font-size:14px;}
-    .spinner-inline{display:inline-block;width:14px;height:14px;border:2px solid rgba(34,211,238,0.3);border-top-color:#22d3ee;border-radius:50%;animation:spin .8s linear infinite;margin-right:8px;vertical-align:middle;}
-    @keyframes spin{to{transform:rotate(360deg);}}
-    .toast{position:fixed;bottom:24px;right:24px;z-index:2000;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;animation:slideUp .3s ease;pointer-events:none;}
-    .toast.success{background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);color:#4ade80;}
-    .toast.error{background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.3);color:#f87171;}
-    @keyframes slideUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-    .modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(2,8,16,0.88);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s;}
-    .modal-overlay.open{opacity:1;pointer-events:all;}
-    .modal{width:100%;max-width:480px;background:linear-gradient(160deg,#020d1a,#010812);border:1px solid rgba(34,211,238,0.25);border-radius:20px;padding:28px;box-shadow:0 24px 64px rgba(0,0,0,0.6);transform:translateY(16px);transition:transform .3s;max-height:90vh;overflow-y:auto;}
-    .modal-overlay.open .modal{transform:translateY(0);}
-    .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;}
-    .modal-title{font-size:16px;font-weight:700;}
-    .modal-close{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:transparent;color:#7dd3e8;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
-    .modal-close:hover{background:rgba(34,211,238,0.1);color:#fff;}
-    .modal-email{font-size:13px;color:#7dd3e8;margin-bottom:20px;padding:10px 14px;background:rgba(34,211,238,0.06);border-radius:10px;word-break:break-all;}
-    .resumos-grid-modal{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;}
-    .resumo-toggle{padding:8px 6px;border-radius:10px;border:1px solid rgba(34,211,238,0.15);background:rgba(255,255,255,0.02);text-align:center;font-size:10.5px;font-weight:600;color:rgba(125,211,232,0.5);cursor:pointer;transition:all .2s;user-select:none;}
-    .resumo-toggle.on{background:rgba(74,222,128,0.12);border-color:rgba(74,222,128,0.3);color:#4ade80;}
-    .resumo-toggle:hover{border-color:rgba(34,211,238,0.35);}
-    .expiry-row{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
-    .expiry-row label{font-size:12px;color:rgba(125,211,232,0.6);flex-shrink:0;}
-    .expiry-input{flex:1;min-width:130px;padding:9px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(34,211,238,0.14);border-radius:10px;color:#fff;font-size:13px;font-family:'Poppins',sans-serif;}
-    .expiry-input:focus{outline:none;border-color:var(--cyan);}
-    .modal-actions{display:flex;gap:10px;flex-wrap:wrap;}
-    .btn-primary{flex:1;min-width:140px;padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,#22d3ee,#0891b2);color:#fff;font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;transition:all .25s;}
-    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(34,211,238,0.3);}
-    .btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
-    .btn-danger{min-width:120px;padding:12px 20px;border:1px solid rgba(248,113,113,0.3);border-radius:12px;background:rgba(248,113,113,0.08);color:#f87171;font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;transition:all .25s;}
-    .btn-danger:hover{background:rgba(248,113,113,0.2);}
-    /* MOBILE CARDS - hidden by default, shown via media query */
-    .cards-wrap{display:none;margin-bottom:24px;}
-    .aluno-card{background:rgba(34,211,238,0.04);border:1px solid rgba(34,211,238,0.14);border-radius:14px;padding:16px;margin-bottom:10px;}
-    .ac-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px;}
-    .ac-email{font-size:13px;color:#e2f8fc;font-weight:600;word-break:break-all;line-height:1.4;flex:1;}
-    .ac-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;font-size:11px;color:rgba(125,211,232,0.5);}
-    .ac-btn{display:block;width:100%;padding:13px;border-radius:10px;border:1px solid;font-size:13px;font-family:'Poppins',sans-serif;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;margin-bottom:8px;}
+    .actions-cell{display:flex;gap:5px;flex-wrap:wrap;}
+
+    /* ── MOBILE CARDS ── */
+    .cards-wrap{display:none;margin-bottom:16px;}
+    .aluno-card{background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:14px;margin-bottom:8px;}
+    .ac-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;}
+    .ac-email{font-size:12px;color:#e2f8fc;font-weight:600;word-break:break-all;line-height:1.4;flex:1;}
+    .ac-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;font-size:10px;color:rgba(125,211,232,0.5);}
+    .ac-btn{display:block;width:100%;padding:11px;border-radius:10px;border:1px solid;font-size:12px;font-family:'Poppins',sans-serif;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;margin-bottom:6px;}
     .ac-btn:last-child{margin-bottom:0;}
     .ac-btn.cyan{border-color:rgba(34,211,238,0.35);background:rgba(34,211,238,0.08);color:#22d3ee;}
     .ac-btn.green{border-color:rgba(74,222,128,0.35);background:rgba(74,222,128,0.08);color:#4ade80;}
     .ac-btn.red{border-color:rgba(248,113,113,0.35);background:rgba(248,113,113,0.08);color:#f87171;}
-    .order-card{background:rgba(34,211,238,0.03);border:1px solid rgba(34,211,238,0.10);border-radius:12px;padding:14px;margin-bottom:8px;}
-    .oc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;}
-    .oc-email{font-size:12px;color:#c0f0f8;word-break:break-all;flex:1;line-height:1.4;}
-    .oc-row2{font-size:12px;color:rgba(125,211,232,0.6);margin-bottom:6px;}
-    .oc-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;}
+    .order-card{background:rgba(34,211,238,0.03);border:1px solid rgba(34,211,238,0.10);border-radius:12px;padding:12px;margin-bottom:6px;}
+    .oc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:4px;}
+    .oc-email{font-size:11px;color:#c0f0f8;word-break:break-all;flex:1;line-height:1.4;}
+    .oc-row2{font-size:11px;color:rgba(125,211,232,0.6);margin-bottom:4px;}
+    .oc-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;}
+
+    /* ── FORM ELEMENTS (promoções) ── */
+    .form-card{padding:20px;border-radius:16px;border:1px solid var(--card-border);background:var(--card);margin-bottom:16px;}
+    .form-card-title{font-size:13px;font-weight:700;color:#e2f8fc;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+    .form-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;align-items:flex-end;}
+    .form-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px;}
+    .form-label{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(34,211,238,0.5);}
+    .form-input{padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(34,211,238,0.14);border-radius:10px;color:#fff;font-size:13px;font-family:'Poppins',sans-serif;transition:all .25s;}
+    .form-input:focus{outline:none;border-color:var(--cyan);background:rgba(34,211,238,0.06);}
+    .form-input::placeholder{color:rgba(255,255,255,0.2);}
+    .btn-create{padding:10px 20px;border:none;border-radius:10px;background:linear-gradient(135deg,#22d3ee,#0891b2);color:#fff;font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;transition:all .25s;white-space:nowrap;}
+    .btn-create:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(34,211,238,0.3);}
+    .btn-create:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+    .btn-sm{padding:5px 12px;border-radius:8px;border:1px solid;font-size:11px;font-family:'Poppins',sans-serif;font-weight:600;cursor:pointer;transition:all .2s;}
+    .btn-sm.green{border-color:rgba(74,222,128,0.3);background:rgba(74,222,128,0.08);color:#4ade80;}
+    .btn-sm.red{border-color:rgba(248,113,113,0.3);background:rgba(248,113,113,0.08);color:#f87171;}
+    .btn-sm:hover{filter:brightness(1.2);}
+    .cupom-row{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:var(--card);border:1px solid rgba(34,211,238,0.08);margin-bottom:8px;flex-wrap:wrap;}
+    .cupom-code{font-size:15px;font-weight:700;color:#22d3ee;letter-spacing:0.05em;font-family:monospace;}
+    .cupom-info{flex:1;min-width:150px;}
+    .cupom-meta{font-size:10px;color:rgba(125,211,232,0.5);display:flex;gap:10px;flex-wrap:wrap;margin-top:2px;}
+    .cupom-actions{display:flex;gap:6px;}
+    .price-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:var(--card);border:1px solid rgba(34,211,238,0.08);margin-bottom:8px;}
+    .price-label{font-size:12px;color:#e2f8fc;font-weight:600;flex:1;min-width:120px;}
+    .price-input{width:100px;padding:8px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(34,211,238,0.14);border-radius:8px;color:#22d3ee;font-size:14px;font-weight:700;font-family:'Poppins',sans-serif;text-align:right;}
+    .price-input:focus{outline:none;border-color:var(--cyan);}
+    .price-prefix{font-size:12px;color:rgba(125,211,232,0.5);font-weight:600;}
+    .empty-state{text-align:center;padding:24px;color:rgba(125,211,232,0.3);font-size:13px;}
+
+    /* ── OVERVIEW: Recent Activity ── */
+    .activity-list{display:flex;flex-direction:column;gap:6px;}
+    .activity-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:var(--card);border:1px solid rgba(34,211,238,0.06);font-size:12px;color:#c0f0f8;}
+    .activity-icon{font-size:16px;flex-shrink:0;}
+    .activity-text{flex:1;line-height:1.4;}
+    .activity-time{font-size:10px;color:rgba(125,211,232,0.4);white-space:nowrap;}
+
+    /* ── MODAL ── */
+    .modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(2,8,16,0.88);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s;}
+    .modal-overlay.open{opacity:1;pointer-events:all;}
+    .modal{width:100%;max-width:480px;background:linear-gradient(160deg,#020d1a,#010812);border:1px solid rgba(34,211,238,0.25);border-radius:20px;padding:24px;box-shadow:0 24px 64px rgba(0,0,0,0.6);transform:translateY(16px);transition:transform .3s;max-height:90vh;overflow-y:auto;}
+    .modal-overlay.open .modal{transform:translateY(0);}
+    .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+    .modal-title{font-size:15px;font-weight:700;}
+    .modal-close{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:transparent;color:#7dd3e8;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+    .modal-close:hover{background:rgba(34,211,238,0.1);color:#fff;}
+    .modal-email{font-size:12px;color:#7dd3e8;margin-bottom:16px;padding:8px 12px;background:rgba(34,211,238,0.06);border-radius:10px;word-break:break-all;}
+    .resumos-grid-modal{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:16px;}
+    .resumo-toggle{padding:7px 5px;border-radius:9px;border:1px solid rgba(34,211,238,0.15);background:rgba(255,255,255,0.02);text-align:center;font-size:10px;font-weight:600;color:rgba(125,211,232,0.5);cursor:pointer;transition:all .2s;user-select:none;}
+    .resumo-toggle.on{background:rgba(74,222,128,0.12);border-color:rgba(74,222,128,0.3);color:#4ade80;}
+    .resumo-toggle:hover{border-color:rgba(34,211,238,0.35);}
+    .expiry-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+    .expiry-row label{font-size:11px;color:rgba(125,211,232,0.6);flex-shrink:0;}
+    .expiry-input{flex:1;min-width:120px;padding:8px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(34,211,238,0.14);border-radius:10px;color:#fff;font-size:12px;font-family:'Poppins',sans-serif;}
+    .expiry-input:focus{outline:none;border-color:var(--cyan);}
+    .modal-actions{display:flex;gap:8px;flex-wrap:wrap;}
+    .btn-primary{flex:1;min-width:120px;padding:11px;border:none;border-radius:12px;background:linear-gradient(135deg,#22d3ee,#0891b2);color:#fff;font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;transition:all .25s;}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(34,211,238,0.3);}
+    .btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+    .btn-danger{min-width:100px;padding:11px 16px;border:1px solid rgba(248,113,113,0.3);border-radius:12px;background:rgba(248,113,113,0.08);color:#f87171;font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;transition:all .25s;}
+    .btn-danger:hover{background:rgba(248,113,113,0.2);}
+
+    /* ── TOAST ── */
+    .toast{position:fixed;bottom:24px;right:24px;z-index:2000;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;animation:slideUp .3s ease;pointer-events:none;}
+    .toast.success{background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);color:#4ade80;}
+    .toast.error{background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.3);color:#f87171;}
+    @keyframes slideUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+    .loading{text-align:center;padding:30px;color:rgba(125,211,232,0.4);font-size:13px;}
+    .spinner-inline{display:inline-block;width:14px;height:14px;border:2px solid rgba(34,211,238,0.3);border-top-color:#22d3ee;border-radius:50%;animation:spin .8s linear infinite;margin-right:6px;vertical-align:middle;}
+
+    /* ── RESPONSIVE ── */
+    .desktop-only{display:block;}
     @media(max-width:768px){
-      .container{padding:16px 12px 60px;}
-      .stats{grid-template-columns:1fr 1fr;gap:10px;}
-      .stat-card{padding:14px 16px;}
-      .stat-value{font-size:22px;}
-      .header{margin-bottom:20px;gap:10px;}
+      .container{padding:12px 10px 60px;}
+      .stats{grid-template-columns:1fr 1fr;gap:8px;}
+      .stat-value{font-size:20px;}
+      .header{margin-bottom:12px;gap:8px;}
       #adminEmail{display:none;}
-      .btn-outline{padding:7px 12px;font-size:12px;}
       .desktop-only{display:none !important;}
       .cards-wrap{display:block;}
+      .admin-tabs{gap:2px;padding:3px;}
+      .admin-tab{padding:8px 6px;font-size:11px;gap:4px;}
+      .tab-icon{font-size:13px;}
+      .tab-text{display:none;}
       .resumos-grid-modal{grid-template-columns:repeat(2,1fr);}
       .modal-actions{flex-direction:column;}
       .btn-primary,.btn-danger{width:100%;min-width:0;}
+      .form-row{flex-direction:column;}
+      .form-group{min-width:0;}
+      .cupom-row{flex-direction:column;align-items:flex-start;}
+      .cupom-actions{width:100%;}
+      .cupom-actions .btn-sm{flex:1;text-align:center;}
+      .price-item{flex-direction:column;align-items:stretch;}
+      .price-input{width:100%;}
     }
     @media(max-width:480px){
-      .logo{font-size:17px;}
+      .logo{font-size:16px;}
       .search-bar{flex-direction:column;}
       .filter-select,.search-input{width:100%;min-width:0;}
-    }
-
-    /* ── ONLINE PULSE ── */
-    .stat-card.online { border-color:rgba(74,222,128,0.25); background:rgba(74,222,128,0.06); }
-    .online-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#4ade80; margin-right:6px; animation:pulse-dot 1.5s infinite; }
-    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(1.4);} }
-
-    /* ── SECTION CARDS (promoções/cupons) ── */
-    .admin-section { margin-bottom:36px; }
-    .form-row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; align-items:flex-end; }
-    .form-group { display:flex; flex-direction:column; gap:4px; flex:1; min-width:120px; }
-    .form-label { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:rgba(34,211,238,0.5); }
-    .form-input { padding:10px 14px; background:rgba(255,255,255,0.04); border:1px solid rgba(34,211,238,0.14); border-radius:10px; color:#fff; font-size:13px; font-family:'Poppins',sans-serif; transition:all .25s; }
-    .form-input:focus { outline:none; border-color:var(--cyan); background:rgba(34,211,238,0.06); }
-    .form-input::placeholder { color:rgba(255,255,255,0.2); }
-    .form-card { padding:20px; border-radius:16px; border:1px solid rgba(34,211,238,0.12); background:rgba(34,211,238,0.03); margin-bottom:16px; }
-    .form-card-title { font-size:13px; font-weight:700; color:#e2f8fc; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
-    .btn-create { padding:10px 20px; border:none; border-radius:10px; background:linear-gradient(135deg,#22d3ee,#0891b2); color:#fff; font-size:13px; font-weight:600; font-family:'Poppins',sans-serif; cursor:pointer; transition:all .25s; white-space:nowrap; }
-    .btn-create:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(34,211,238,0.3); }
-    .btn-create:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
-    .btn-sm { padding:5px 12px; border-radius:8px; border:1px solid; font-size:11px; font-family:'Poppins',sans-serif; font-weight:600; cursor:pointer; transition:all .2s; }
-    .btn-sm.green { border-color:rgba(74,222,128,0.3); background:rgba(74,222,128,0.08); color:#4ade80; }
-    .btn-sm.red { border-color:rgba(248,113,113,0.3); background:rgba(248,113,113,0.08); color:#f87171; }
-    .btn-sm.yellow { border-color:rgba(251,191,36,0.3); background:rgba(251,191,36,0.08); color:#fbbf24; }
-    .btn-sm:hover { filter:brightness(1.2); }
-    .cupom-row { display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:12px; background:rgba(34,211,238,0.04); border:1px solid rgba(34,211,238,0.08); margin-bottom:8px; flex-wrap:wrap; }
-    .cupom-code { font-size:15px; font-weight:700; color:#22d3ee; letter-spacing:0.05em; font-family:monospace; }
-    .cupom-info { flex:1; min-width:150px; }
-    .cupom-meta { font-size:11px; color:rgba(125,211,232,0.5); display:flex; gap:12px; flex-wrap:wrap; margin-top:2px; }
-    .cupom-actions { display:flex; gap:6px; }
-    .price-item { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px; background:rgba(34,211,238,0.04); border:1px solid rgba(34,211,238,0.08); margin-bottom:8px; }
-    .price-label { font-size:13px; color:#e2f8fc; font-weight:600; flex:1; min-width:140px; }
-    .price-input { width:110px; padding:8px 12px; background:rgba(255,255,255,0.04); border:1px solid rgba(34,211,238,0.14); border-radius:8px; color:#22d3ee; font-size:15px; font-weight:700; font-family:'Poppins',sans-serif; text-align:right; }
-    .price-input:focus { outline:none; border-color:var(--cyan); }
-    .price-prefix { font-size:13px; color:rgba(125,211,232,0.5); font-weight:600; }
-    .empty-state { text-align:center; padding:24px; color:rgba(125,211,232,0.3); font-size:13px; }
-    @media(max-width:768px){
-      .form-row { flex-direction:column; }
-      .form-group { min-width:0; }
-      .cupom-row { flex-direction:column; align-items:flex-start; }
-      .cupom-actions { width:100%; }
-      .cupom-actions .btn-sm { flex:1; text-align:center; }
-      .price-item { flex-direction:column; align-items:stretch; }
-      .price-input { width:100%; }
     }
   </style>
 </head>
 <body>
 <div id="loadingOverlay" style="position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#020d1a 0%,#010812 50%,#020d1a 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;">
   <div style="width:36px;height:36px;border:3px solid rgba(34,211,238,0.2);border-top-color:#22d3ee;border-radius:50%;animation:spin .8s linear infinite;"></div>
-  <div style="font-family:Poppins,sans-serif;font-size:14px;color:rgba(125,211,232,0.6);">Verificando acesso…</div>
+  <div style="font-family:Poppins,sans-serif;font-size:14px;color:rgba(125,211,232,0.6);">Carregando painel...</div>
 </div>
-<script>setTimeout(function(){var ov=document.getElementById('loadingOverlay');if(ov&&ov.style.display!=='none'){ov.innerHTML='<div style="font-size:32px">&#9888;</div><div style="font-family:Poppins,sans-serif;font-size:14px;color:#fca5a5;text-align:center;padding:0 24px;line-height:1.6;">Tempo esgotado.<br>Verifique sua conexao e recarregue.</div><button onclick="location.reload()" style="margin-top:8px;padding:10px 24px;border:1px solid rgba(252,165,165,0.4);border-radius:10px;background:transparent;color:#fca5a5;font-family:Poppins,sans-serif;font-size:13px;cursor:pointer;">Recarregar</button>';}},8000);</script>
+<script>setTimeout(function(){var ov=document.getElementById('loadingOverlay');if(ov&&ov.style.display!=='none'){ov.innerHTML='<div style="font-size:32px">&#9888;</div><div style="font-family:Poppins,sans-serif;font-size:14px;color:#fca5a5;text-align:center;padding:0 24px;line-height:1.6;">Tempo esgotado.<br>Verifique sua conexao e recarregue.</div><button onclick="location.reload()" style="margin-top:8px;padding:10px 24px;border:1px solid rgba(252,165,165,0.4);border-radius:10px;background:transparent;color:#fca5a5;font-family:Poppins,sans-serif;font-size:13px;cursor:pointer;">Recarregar</button>';}},10000);</script>
+
 <div class="container">
+  <!-- HEADER -->
   <div class="header">
-    <div style="display:flex;align-items:center;gap:14px;">
+    <div class="header-left">
       <div class="logo">RESUMOS <span>ENZO</span></div>
       <div class="admin-badge">&#9881;&#65039; Admin</div>
     </div>
     <div class="header-right">
-      <span id="adminEmail" style="font-size:13px;color:rgba(125,211,232,0.5);"></span>
+      <span id="adminEmail"></span>
+      <button class="refresh-btn" id="refreshBtn" onclick="refreshAll()" title="Atualizar dados">&#8635;</button>
       <button class="btn-outline" onclick="goToDashboard()">&#8592; Dashboard</button>
-      <button class="btn-outline" onclick="doLogout()">Logout</button>
+      <button class="btn-outline" onclick="doLogout()">Sair</button>
     </div>
   </div>
 
-  <div class="stats" id="statsArea">
-    <div class="stat-card"><div class="stat-label">Total de Alunos</div><div class="stat-value" id="statAlunos">&#8212;</div><div class="stat-sub">contas cadastradas</div></div>
-    <div class="stat-card"><div class="stat-label">Com Acesso Ativo</div><div class="stat-value" id="statAtivos">&#8212;</div><div class="stat-sub">algum resumo liberado</div></div>
-    <div class="stat-card"><div class="stat-label">Total Recebido</div><div class="stat-value" id="statReceita">&#8212;</div><div class="stat-sub">pagamentos aprovados</div></div>
-    <div class="stat-card"><div class="stat-label">Pagtos Aprovados</div><div class="stat-value" id="statPagamentos">&#8212;</div><div class="stat-sub">pedidos confirmados</div></div>
-    <div class="stat-card"><div class="stat-label">Expiram em 7 dias</div><div class="stat-value" id="statExpirando">&#8212;</div><div class="stat-sub">precisam renovar</div></div>
-    <div class="stat-card online"><div class="stat-label"><span class="online-dot"></span>Online Agora</div><div class="stat-value" id="statOnline">0</div><div class="stat-sub">usuários conectados</div></div>
+  <!-- TABS -->
+  <div class="admin-tabs">
+    <button class="admin-tab active" onclick="switchAdminTab('overview')"><span class="tab-icon">&#128202;</span><span class="tab-text">Visão Geral</span></button>
+    <button class="admin-tab" onclick="switchAdminTab('alunos')"><span class="tab-icon">&#128101;</span><span class="tab-text">Alunos</span><span class="tab-badge" id="tabBadgeAlunos">0</span></button>
+    <button class="admin-tab" onclick="switchAdminTab('pagamentos')"><span class="tab-icon">&#128176;</span><span class="tab-text">Pagamentos</span></button>
+    <button class="admin-tab" onclick="switchAdminTab('promos')"><span class="tab-icon">&#127915;</span><span class="tab-text">Promoções</span></button>
   </div>
 
-  <div class="section-title">&#128101; Alunos</div>
-  <div class="search-bar">
-    <input class="search-input" id="searchInput" placeholder="&#128269; Buscar por email..." oninput="filterAlunos()">
-    <select class="filter-select" id="filterSelect" onchange="filterAlunos()">
-      <option value="all">Todos</option>
-      <option value="active">Com acesso ativo</option>
-      <option value="noAccess">Sem acesso</option>
-      <option value="expiring">Expirando em 7 dias</option>
-    </select>
-  </div>
-  <!-- Desktop -->
-  <div class="table-wrap desktop-only">
-    <table><thead><tr><th>Email</th><th>Resumos</th><th>Expira em</th><th>Ultimo login</th><th>Acoes</th></tr></thead>
-    <tbody id="alunosBody"><tr><td colspan="5" class="loading"><span class="spinner-inline"></span> Carregando...</td></tr></tbody></table>
-  </div>
-  <!-- Mobile -->
-  <div class="cards-wrap" id="alunosCards">
-    <div class="aluno-card"><div class="loading"><span class="spinner-inline"></span> Carregando...</div></div>
+  <!-- ═══ TAB: VISÃO GERAL ═══ -->
+  <div class="tab-panel active" id="panel-overview">
+    <div class="stats">
+      <div class="stat-card"><div class="stat-label">Total de Alunos</div><div class="stat-value" id="statAlunos">&#8212;</div><div class="stat-sub">contas cadastradas</div></div>
+      <div class="stat-card"><div class="stat-label">Com Acesso Ativo</div><div class="stat-value" id="statAtivos">&#8212;</div><div class="stat-sub">algum resumo liberado</div></div>
+      <div class="stat-card revenue"><div class="stat-label">Total Recebido</div><div class="stat-value" id="statReceita">&#8212;</div><div class="stat-sub">pagamentos aprovados</div></div>
+      <div class="stat-card"><div class="stat-label">Pagtos Aprovados</div><div class="stat-value" id="statPagamentos">&#8212;</div><div class="stat-sub">pedidos confirmados</div></div>
+      <div class="stat-card"><div class="stat-label">Expiram em 7 dias</div><div class="stat-value" id="statExpirando">&#8212;</div><div class="stat-sub">precisam renovar</div></div>
+      <div class="stat-card online"><div class="stat-label"><span class="online-dot"></span>Online Agora</div><div class="stat-value" id="statOnline">0</div><div class="stat-sub">usuários conectados</div></div>
+    </div>
+
+    <div class="section-title">&#128338; Atividade Recente</div>
+    <div class="activity-list" id="activityList">
+      <div class="loading"><span class="spinner-inline"></span> Carregando...</div>
+    </div>
   </div>
 
-  <div class="section-title">&#9989; Pagamentos Aprovados</div>
-  <!-- Desktop -->
-  <div class="table-wrap desktop-only">
-    <table><thead><tr><th>Email</th><th>Produto</th><th>Valor</th><th>Data</th></tr></thead>
-    <tbody id="pagamentosBody"><tr><td colspan="4" class="loading"><span class="spinner-inline"></span> Carregando...</td></tr></tbody></table>
-  </div>
-  <!-- Mobile -->
-  <div class="cards-wrap" id="pagamentosCards">
-    <div class="order-card"><div class="loading"><span class="spinner-inline"></span> Carregando...</div></div>
+  <!-- ═══ TAB: ALUNOS ═══ -->
+  <div class="tab-panel" id="panel-alunos">
+    <div class="section-title">&#128101; Gerenciar Alunos</div>
+    <div class="search-bar">
+      <input class="search-input" id="searchInput" placeholder="&#128269; Buscar por email..." oninput="filterAlunos()">
+      <select class="filter-select" id="filterSelect" onchange="filterAlunos()">
+        <option value="all">Todos</option>
+        <option value="active">Com acesso ativo</option>
+        <option value="noAccess">Sem acesso</option>
+        <option value="expiring">Expirando em 7 dias</option>
+      </select>
+    </div>
+    <div class="table-wrap desktop-only">
+      <table><thead><tr><th>Email</th><th>Resumos</th><th>Expira em</th><th>Ultimo login</th><th>Ações</th></tr></thead>
+      <tbody id="alunosBody"><tr><td colspan="5" class="loading"><span class="spinner-inline"></span> Carregando...</td></tr></tbody></table>
+    </div>
+    <div class="cards-wrap" id="alunosCards">
+      <div class="aluno-card"><div class="loading"><span class="spinner-inline"></span> Carregando...</div></div>
+    </div>
   </div>
 
-  <div class="section-title">&#128203; Todos os Pedidos Registrados</div>
-  <!-- Desktop -->
-  <div class="table-wrap desktop-only">
-    <table><thead><tr><th>Email</th><th>Produto</th><th>Valor</th><th>Status</th><th>Data</th></tr></thead>
-    <tbody id="ordersBody"><tr><td colspan="5" class="loading"><span class="spinner-inline"></span> Carregando...</td></tr></tbody></table>
-  </div>
-  <!-- Mobile -->
-  <div class="cards-wrap" id="ordersCards">
-    <div class="order-card"><div class="loading"><span class="spinner-inline"></span> Carregando...</div></div>
-  </div>
-</div>
+  <!-- ═══ TAB: PAGAMENTOS ═══ -->
+  <div class="tab-panel" id="panel-pagamentos">
+    <div class="section-title">&#9989; Pagamentos Aprovados</div>
+    <div class="table-wrap desktop-only">
+      <table><thead><tr><th>Email</th><th>Produto</th><th>Valor</th><th>Data</th></tr></thead>
+      <tbody id="pagamentosBody"><tr><td colspan="4" class="loading"><span class="spinner-inline"></span> Carregando...</td></tr></tbody></table>
+    </div>
+    <div class="cards-wrap" id="pagamentosCards">
+      <div class="order-card"><div class="loading"><span class="spinner-inline"></span> Carregando...</div></div>
+    </div>
 
+    <div class="section-title" style="margin-top:24px;">&#128203; Todos os Pedidos</div>
+    <div class="table-wrap desktop-only">
+      <table><thead><tr><th>Email</th><th>Produto</th><th>Valor</th><th>Status</th><th>Data</th></tr></thead>
+      <tbody id="ordersBody"><tr><td colspan="5" class="loading"><span class="spinner-inline"></span> Carregando...</td></tr></tbody></table>
+    </div>
+    <div class="cards-wrap" id="ordersCards">
+      <div class="order-card"><div class="loading"><span class="spinner-inline"></span> Carregando...</div></div>
+    </div>
+  </div>
 
-  <div class="section-title">&#127915; Cupons de Desconto</div>
-  <div class="admin-section">
+  <!-- ═══ TAB: PROMOÇÕES ═══ -->
+  <div class="tab-panel" id="panel-promos">
+    <div class="section-title">&#127915; Cupons de Desconto</div>
     <div class="form-card">
       <div class="form-card-title">&#10024; Criar Novo Cupom</div>
       <div class="form-row">
@@ -264,38 +325,35 @@
         </div>
       </div>
     </div>
-    <div id="cuponsLista">
-      <div class="empty-state"><span class="spinner-inline"></span> Carregando cupons...</div>
-    </div>
-  </div>
+    <div id="cuponsLista"><div class="empty-state"><span class="spinner-inline"></span> Carregando cupons...</div></div>
 
-  <div class="section-title">&#128176; Preços da Loja</div>
-  <div class="admin-section">
+    <div class="section-title" style="margin-top:28px;">&#128176; Preços da Loja</div>
     <div class="form-card">
-      <div class="form-card-title">&#128184; Alterar Preços dos Resumos</div>
+      <div class="form-card-title">&#128184; Alterar Preços</div>
       <div class="price-item">
-        <div class="price-label">&#128196; Preço unitário (1-2 itens)</div>
+        <div class="price-label">&#128196; Unitário (1-2 itens)</div>
         <span class="price-prefix">R$</span>
         <input class="price-input" id="precoUnit" type="number" step="0.01" min="0" value="15.00">
       </div>
       <div class="price-item">
-        <div class="price-label">&#128230; Preço combo (3+ itens)</div>
+        <div class="price-label">&#128230; Combo (3+ itens)</div>
         <span class="price-prefix">R$</span>
         <input class="price-input" id="precoCombo" type="number" step="0.01" min="0" value="12.00">
       </div>
       <div class="price-item">
-        <div class="price-label">&#128293; Preço pacote completo (7 itens)</div>
+        <div class="price-label">&#128293; Pacote completo (7)</div>
         <span class="price-prefix">R$</span>
         <input class="price-input" id="precoPack" type="number" step="0.01" min="0" value="69.90">
       </div>
-      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
         <button class="btn-create" id="btnSalvarPrecos" onclick="salvarPrecos()">&#128190; Salvar preços</button>
-        <span id="precoStatus" style="font-size:12px;color:rgba(125,211,232,0.4);display:flex;align-items:center;"></span>
+        <span id="precoStatus" style="font-size:11px;color:rgba(125,211,232,0.4);display:flex;align-items:center;"></span>
       </div>
     </div>
   </div>
+</div>
 
-<!-- MODAL -->
+<!-- MODAL ALUNO -->
 <div class="modal-overlay" id="modalAluno">
   <div class="modal">
     <div class="modal-header">
@@ -303,7 +361,7 @@
       <button class="modal-close" onclick="closeModal()">&#10005;</button>
     </div>
     <div class="modal-email" id="modalEmail">&#8212;</div>
-    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(34,211,238,0.5);margin-bottom:10px;">Resumos — clique para liberar/revogar</div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(34,211,238,0.5);margin-bottom:8px;">Resumos — clique para liberar/revogar</div>
     <div class="resumos-grid-modal" id="resumosGrid"></div>
     <div class="expiry-row">
       <label>Acesso ate:</label>
@@ -334,460 +392,192 @@ var RESUMOS_COLS=[
   {key:"imunologia_p1",label:"Imuno P1"},{key:"imunologia_p2",label:"Imuno P2"},{key:"imunologia_final",label:"Imuno Final"},
   {key:"pacote_p1",label:"Pacote P1"},{key:"pacote_p2",label:"Pacote P2"},{key:"pacote_final",label:"Pacote Final"}
 ];
-function hideOverlay(){
-  var ov=document.getElementById('loadingOverlay');
-  if(ov)ov.style.display='none';
-}
-function showOverlayError(msg){
-  var ov=document.getElementById('loadingOverlay');
-  if(ov){
-    ov.style.flexDirection='column';
-    ov.innerHTML="<div style='font-size:32px'>&#9888;</div><div style='font-family:Poppins,sans-serif;font-size:14px;color:#fca5a5;text-align:center;padding:0 24px;line-height:1.6;'>"+msg+"</div><button onclick='location.reload()' style='margin-top:8px;padding:10px 24px;border:1px solid rgba(252,165,165,0.4);border-radius:10px;background:transparent;color:#fca5a5;font-family:Poppins,sans-serif;font-size:13px;cursor:pointer;'>Recarregar</button>";
-  }
-}
+
+// ── TAB NAVIGATION ──
+window.switchAdminTab=function(tab){
+  document.querySelectorAll(".admin-tab").forEach(function(b,i){
+    var tabs=["overview","alunos","pagamentos","promos"];
+    b.classList.toggle("active",tabs[i]===tab);
+  });
+  document.querySelectorAll(".tab-panel").forEach(function(p){p.classList.remove("active");});
+  var panel=document.getElementById("panel-"+tab);
+  if(panel)panel.classList.add("active");
+};
+
+// ── REFRESH ──
+window.refreshAll=async function(){
+  var btn=document.getElementById("refreshBtn");
+  btn.classList.add("spinning");
+  try{await Promise.all([loadAlunos(),loadOrders()]);}catch(e){}
+  try{await loadCupons();}catch(e){}
+  try{await loadPrecos();}catch(e){}
+  btn.classList.remove("spinning");
+  showToast("&#9989; Dados atualizados!","success");
+};
+
+function hideOverlay(){var ov=document.getElementById('loadingOverlay');if(ov)ov.style.display='none';}
+function showOverlayError(msg){var ov=document.getElementById('loadingOverlay');if(ov){ov.style.flexDirection='column';ov.innerHTML="<div style='font-size:32px'>&#9888;</div><div style='font-family:Poppins,sans-serif;font-size:14px;color:#fca5a5;text-align:center;padding:0 24px;line-height:1.6;'>"+msg+"</div><button onclick='location.reload()' style='margin-top:8px;padding:10px 24px;border:1px solid rgba(252,165,165,0.4);border-radius:10px;background:transparent;color:#fca5a5;font-family:Poppins,sans-serif;font-size:13px;cursor:pointer;'>Recarregar</button>";}}
+
 async function init(){
   try{
     var r=await client.auth.getSession();
     var session=r&&r.data&&r.data.session?r.data.session:null;
     if(!session){window.location.replace("login.html");return;}
     var pr=await client.from("profiles").select("is_admin,email").eq("id",session.user.id).single();
-    if(!pr.data||!pr.data.is_admin){
-      hideOverlay();
-      alert("Acesso negado. Apenas administradores.");
-      window.location.replace("dashboard.html");return;
-    }
+    if(!pr.data||!pr.data.is_admin){hideOverlay();alert("Acesso negado.");window.location.replace("dashboard.html");return;}
     hideOverlay();
     document.getElementById("adminEmail").textContent=session.user.email;
     await Promise.all([loadAlunos(),loadOrders()]);
-    // Features novas — não bloqueiam o painel se falharem
-    try { await loadCupons(); } catch(e) { console.warn("cupons:", e); }
-    try { await loadPrecos(); } catch(e) { console.warn("precos:", e); }
-    try { setupOnlineCounter(); } catch(e) { console.warn("online:", e); }
+    try{await loadCupons();}catch(e){console.warn("cupons:",e);}
+    try{await loadPrecos();}catch(e){console.warn("precos:",e);}
+    try{setupOnlineCounter();}catch(e){console.warn("online:",e);}
+    renderActivity();
   }catch(err){
     console.error("[admin] init error:",err);
     showOverlayError("Erro ao carregar painel.<br>Verifique sua conexao e tente novamente.");
   }
 }
+
+// ── LOAD ALUNOS ──
 async function loadAlunos(){
   var r=await client.from("profiles").select("*").order("email");
   if(r.error){console.error(r.error);return;}
   allAlunos=r.data||[];
+  document.getElementById("tabBadgeAlunos").textContent=allAlunos.length;
   renderStats();renderAlunos(allAlunos);
 }
 function renderStats(){
   var ativos=allAlunos.filter(function(a){return RESUMOS_COLS.some(function(r){return a[r.key];});}).length;
-  var exp=allAlunos.filter(function(a){
-    if(!a.acesso_expira_em)return false;
-    var d=new Date(a.acesso_expira_em)-new Date();
-    return d>0&&d<7*24*60*60*1000;
-  }).length;
+  var exp=allAlunos.filter(function(a){if(!a.acesso_expira_em)return false;var d=new Date(a.acesso_expira_em)-new Date();return d>0&&d<7*24*60*60*1000;}).length;
   document.getElementById("statAlunos").textContent=allAlunos.length;
   document.getElementById("statAtivos").textContent=ativos;
   document.getElementById("statExpirando").textContent=exp;
 }
 function expInfo(a){
-  var str="—",color="",css="";
-  if(a.acesso_expira_em){
-    var e=new Date(a.acesso_expira_em),d=Math.ceil((e-new Date())/(1000*60*60*24));
+  var str="\u2014",color="",css="";
+  if(a.acesso_expira_em){var e=new Date(a.acesso_expira_em),d=Math.ceil((e-new Date())/(1000*60*60*24));
     if(d<0){str="Expirado";color="#f87171";css="color:#f87171";}
     else if(d<=7){str=d+"d rest.";color="#fbbf24";css="color:#fbbf24";}
-    else{str=e.toLocaleDateString("pt-BR");color="rgba(125,211,232,0.5)";}
-  }
+    else{str=e.toLocaleDateString("pt-BR");color="rgba(125,211,232,0.5)";}}
   return{str:str,color:color,css:css};
 }
 function renderAlunos(list){
-  var tbody=document.getElementById("alunosBody");
-  var cards=document.getElementById("alunosCards");
-  if(!list||!list.length){
-    var em="<div style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);font-size:13px;'>Nenhum aluno encontrado</div>";
-    tbody.innerHTML="<tr><td colspan='5' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum aluno encontrado</td></tr>";
-    cards.innerHTML=em;return;
-  }
+  var tbody=document.getElementById("alunosBody"),cards=document.getElementById("alunosCards");
+  if(!list||!list.length){var em="<div style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);font-size:13px;'>Nenhum aluno encontrado</div>";
+    tbody.innerHTML="<tr><td colspan='5' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum aluno</td></tr>";cards.innerHTML=em;return;}
   var rows="",cds="";
   list.forEach(function(a){
     var cnt=RESUMOS_COLS.filter(function(r){return a[r.key];}).length;
-    var ei=expInfo(a);
-    var ll=a.last_login?new Date(a.last_login).toLocaleDateString("pt-BR"):"—";
-    var adm=a.is_admin?"<span class='badge badge-yellow' style='font-size:10px;margin-left:4px;'>Admin</span>":"";
+    var ei=expInfo(a);var ll=a.last_login?new Date(a.last_login).toLocaleDateString("pt-BR"):"\u2014";
+    var adm=a.is_admin?"<span class='badge badge-yellow' style='font-size:9px;margin-left:4px;'>Admin</span>":"";
     var bdg="<span class='badge "+(cnt>0?"badge-green":"badge-red")+"'>"+(cnt>0?cnt+" resumo"+(cnt>1?"s":""):"Nenhum")+"</span>";
-    rows+="<tr>"+
-      "<td class='email-cell'>"+(a.email||"—")+adm+"</td>"+
-      "<td>"+bdg+"</td>"+
-      "<td style='"+ei.css+";font-size:12px;'>"+ei.str+"</td>"+
-      "<td class='date-cell'>"+ll+"</td>"+
-      "<td><div class='actions-cell'>"+
-        "<button class='action-btn cyan' data-id='"+a.id+"' data-act='edit'>&#9998;&#65039; Editar</button>"+
-        (cnt>0
-          ?"<button class='action-btn red' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"'  data-act='revoke'>&#128683; Revogar</button>"
-          :"<button class='action-btn green' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"'  data-act='grant'>&#9989; Liberar tudo</button>")+
-      "</div></td></tr>";
-    cds+="<div class='aluno-card'>"+
-      "<div class='ac-top'><div class='ac-email'>"+(a.email||"—")+(a.is_admin?" <span class='badge badge-yellow' style='font-size:9px;'>Admin</span>":"")+"</div><div>"+bdg+"</div></div>"+
-      "<div class='ac-meta'>"+
-        (ei.str!=="—"?"<span style='color:"+(ei.color||"rgba(125,211,232,0.5)")+"'>&#8987; "+ei.str+"</span>":"")+
-        "<span>&#128197; "+ll+"</span>"+
-      "</div>"+
-      "<button class='ac-btn cyan' data-id='"+a.id+"' data-act='edit'>&#9998;&#65039; Editar acesso</button>"+
-      (cnt>0
-        ?"<button class='ac-btn red' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"'  data-act='revoke'>&#128683; Revogar todos os acessos</button>"
-        :"<button class='ac-btn green' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"'  data-act='grant'>&#9989; Liberar todos os resumos</button>")+
-    "</div>";
+    rows+="<tr><td class='email-cell'>"+(a.email||"\u2014")+adm+"</td><td>"+bdg+"</td><td style='"+ei.css+";font-size:11px;'>"+ei.str+"</td><td class='date-cell'>"+ll+"</td><td><div class='actions-cell'>"+"<button class='action-btn cyan' data-id='"+a.id+"' data-act='edit'>&#9998;&#65039;</button>"+(cnt>0?"<button class='action-btn red' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='revoke'>Revogar</button>":"<button class='action-btn green' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='grant'>Liberar</button>")+"</div></td></tr>";
+    cds+="<div class='aluno-card'><div class='ac-top'><div class='ac-email'>"+(a.email||"\u2014")+adm+"</div><div>"+bdg+"</div></div><div class='ac-meta'>"+(ei.str!=="\u2014"?"<span style='color:"+(ei.color||"rgba(125,211,232,0.5)")+"'>&#8987; "+ei.str+"</span>":"")+"<span>&#128197; "+ll+"</span></div><button class='ac-btn cyan' data-id='"+a.id+"' data-act='edit'>&#9998;&#65039; Editar acesso</button>"+(cnt>0?"<button class='ac-btn red' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='revoke'>&#128683; Revogar</button>":"<button class='ac-btn green' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='grant'>&#9989; Liberar tudo</button>")+"</div>";
   });
   tbody.innerHTML=rows;cards.innerHTML=cds;
 }
 window.filterAlunos=function(){
   var s=document.getElementById("searchInput").value.toLowerCase();
   var f=document.getElementById("filterSelect").value;
-  var r=allAlunos.filter(function(a){
-    if(s&&!(a.email||"").toLowerCase().includes(s))return false;
+  var r=allAlunos.filter(function(a){if(s&&!(a.email||"").toLowerCase().includes(s))return false;
     if(f==="active")return RESUMOS_COLS.some(function(r){return a[r.key];});
     if(f==="noAccess")return!RESUMOS_COLS.some(function(r){return a[r.key];});
-    if(f==="expiring"){
-      if(!a.acesso_expira_em)return false;
-      var d=new Date(a.acesso_expira_em)-new Date();
-      return d>0&&d<7*24*60*60*1000;
-    }
-    return true;
-  });
+    if(f==="expiring"){if(!a.acesso_expira_em)return false;var d=new Date(a.acesso_expira_em)-new Date();return d>0&&d<7*24*60*60*1000;}
+    return true;});
   renderAlunos(r);
 };
+
+// ── LOAD ORDERS ──
 async function loadOrders(){
   var r=await client.from("orders").select("*, profiles(email)").order("criado_em",{ascending:false}).limit(50);
   var pagTb=document.getElementById("pagamentosBody"),pagC=document.getElementById("pagamentosCards");
   var allTb=document.getElementById("ordersBody"),allC=document.getElementById("ordersCards");
   if(r.error||!r.data||!r.data.length){
     var nd="<div style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);font-size:13px;'>Nenhum registro</div>";
-    pagTb.innerHTML="<tr><td colspan='4' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum registro</td></tr>";
-    pagC.innerHTML=nd;allTb.innerHTML="<tr><td colspan='5' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum registro</td></tr>";
-    allC.innerHTML=nd;
-    document.getElementById("statPagamentos").textContent="0";
-    document.getElementById("statReceita").textContent="R$ 0";
-    return;
-  }
-  var data=r.data;
-  var approved=data.filter(function(o){return o.status==="approved";});
+    pagTb.innerHTML="<tr><td colspan='4' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum registro</td></tr>";pagC.innerHTML=nd;
+    allTb.innerHTML="<tr><td colspan='5' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum registro</td></tr>";allC.innerHTML=nd;
+    document.getElementById("statPagamentos").textContent="0";document.getElementById("statReceita").textContent="R$ 0";return;}
+  var data=r.data;var approved=data.filter(function(o){return o.status==="approved";});
   var total=approved.reduce(function(s,o){return s+parseFloat(o.valor||0);},0);
   document.getElementById("statPagamentos").textContent=approved.length;
   document.getElementById("statReceita").textContent="R$ "+total.toFixed(2).replace(".",",");
-  function sbadge(o){
-    return o.status==="approved"?"<span class='badge badge-green'>&#9989; Aprovado</span>":
-      o.status==="pending"?"<span class='badge badge-yellow'>&#9203; Pendente</span>":
-      "<span class='badge badge-red'>&#10060; "+o.status+"</span>";
-  }
-  // Pagamentos aprovados
-  if(!approved.length){
-    pagTb.innerHTML="<tr><td colspan='4' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum pagamento aprovado ainda</td></tr>";
-    pagC.innerHTML="<div style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);font-size:13px;'>Nenhum pagamento aprovado ainda</div>";
-  } else {
-    var pr="",pc="";
-    approved.forEach(function(o){
-      var em=o.profiles&&o.profiles.email?o.profiles.email:"—";
-      var pd=o.produto_nome||o.produto_key||"—";
-      var vl="R$ "+parseFloat(o.valor).toFixed(2).replace(".",",");
-      var dt=new Date(o.criado_em).toLocaleDateString("pt-BR");
-      pr+="<tr><td class='email-cell'>"+em+"</td><td style='font-size:12px;'>"+pd+"</td><td style='color:#22d3ee;font-weight:600;'>"+vl+"</td><td class='date-cell'>"+dt+"</td></tr>";
-      pc+="<div class='order-card'><div class='oc-top'><div class='oc-email'>"+em+"</div><span class='badge badge-green'>&#9989; Aprovado</span></div><div class='oc-row2'>"+pd+"</div><div class='oc-bottom'><span style='color:#22d3ee;font-weight:700;font-size:15px;'>"+vl+"</span><span style='font-size:11px;color:rgba(125,211,232,0.4);'>"+dt+"</span></div></div>";
-    });
-    pagTb.innerHTML=pr;pagC.innerHTML=pc;
-  }
-  // Todos os pedidos
-  var ar="",ac="";
-  data.forEach(function(o){
-    var em=o.profiles&&o.profiles.email?o.profiles.email:"—";
-    var pd=o.produto_nome||o.produto_key||"—";
-    var vl="R$ "+parseFloat(o.valor).toFixed(2).replace(".",",");
-    var dt=new Date(o.criado_em).toLocaleDateString("pt-BR");
-    var sb=sbadge(o);
-    ar+="<tr><td class='email-cell'>"+em+"</td><td style='font-size:12px;'>"+pd+"</td><td style='color:#22d3ee;font-weight:600;'>"+vl+"</td><td>"+sb+"</td><td class='date-cell'>"+dt+"</td></tr>";
-    ac+="<div class='order-card'><div class='oc-top'><div class='oc-email'>"+em+"</div>"+sb+"</div><div class='oc-row2'>"+pd+"</div><div class='oc-bottom'><span style='color:#22d3ee;font-weight:700;font-size:15px;'>"+vl+"</span><span style='font-size:11px;color:rgba(125,211,232,0.4);'>"+dt+"</span></div></div>";
-  });
+  function sbadge(o){return o.status==="approved"?"<span class='badge badge-green'>&#9989; Aprovado</span>":o.status==="pending"?"<span class='badge badge-yellow'>&#9203; Pendente</span>":"<span class='badge badge-red'>&#10060; "+o.status+"</span>";}
+  if(!approved.length){pagTb.innerHTML="<tr><td colspan='4' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum aprovado</td></tr>";pagC.innerHTML="<div style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);font-size:13px;'>Nenhum aprovado</div>";}
+  else{var pr="",pc="";approved.forEach(function(o){var em=o.profiles&&o.profiles.email?o.profiles.email:"\u2014";var pd=o.produto_nome||o.produto_key||"\u2014";var vl="R$ "+parseFloat(o.valor).toFixed(2).replace(".",",");var dt=new Date(o.criado_em).toLocaleDateString("pt-BR");
+    pr+="<tr><td class='email-cell'>"+em+"</td><td style='font-size:11px;'>"+pd+"</td><td style='color:#22d3ee;font-weight:600;'>"+vl+"</td><td class='date-cell'>"+dt+"</td></tr>";
+    pc+="<div class='order-card'><div class='oc-top'><div class='oc-email'>"+em+"</div><span class='badge badge-green'>&#9989;</span></div><div class='oc-row2'>"+pd+"</div><div class='oc-bottom'><span style='color:#22d3ee;font-weight:700;font-size:14px;'>"+vl+"</span><span style='font-size:10px;color:rgba(125,211,232,0.4);'>"+dt+"</span></div></div>";});
+    pagTb.innerHTML=pr;pagC.innerHTML=pc;}
+  var ar="",ac="";data.forEach(function(o){var em=o.profiles&&o.profiles.email?o.profiles.email:"\u2014";var pd=o.produto_nome||o.produto_key||"\u2014";var vl="R$ "+parseFloat(o.valor).toFixed(2).replace(".",",");var dt=new Date(o.criado_em).toLocaleDateString("pt-BR");var sb=sbadge(o);
+    ar+="<tr><td class='email-cell'>"+em+"</td><td style='font-size:11px;'>"+pd+"</td><td style='color:#22d3ee;font-weight:600;'>"+vl+"</td><td>"+sb+"</td><td class='date-cell'>"+dt+"</td></tr>";
+    ac+="<div class='order-card'><div class='oc-top'><div class='oc-email'>"+em+"</div>"+sb+"</div><div class='oc-row2'>"+pd+"</div><div class='oc-bottom'><span style='color:#22d3ee;font-weight:700;font-size:14px;'>"+vl+"</span><span style='font-size:10px;color:rgba(125,211,232,0.4);'>"+dt+"</span></div></div>";});
   allTb.innerHTML=ar;allC.innerHTML=ac;
 }
-window.openModal=function(id){
-  currentAluno=allAlunos.find(function(a){return a.id===id;});
-  if(!currentAluno)return;
-  document.getElementById("modalEmail").textContent=currentAluno.email||"—";
-  document.getElementById("expiryInput").value=currentAluno.acesso_expira_em?currentAluno.acesso_expira_em.substring(0,10):"";
-  currentToggles={};
-  RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=!!currentAluno[r.key];});
-  renderResumosGrid();
-  document.getElementById("modalAluno").classList.add("open");
-};
-function renderResumosGrid(){
-  var g=document.getElementById("resumosGrid");
-  var pr=(currentAluno&&currentAluno.resumos_presente)||[];
-  g.innerHTML=RESUMOS_COLS.map(function(r){
-    var on=currentToggles[r.key],ip=pr.includes(r.key);
-    return"<div style='display:flex;gap:4px;align-items:stretch;'>"+
-      "<div class='resumo-toggle "+(on?"on":"")+"' style='flex:1' data-key='"+r.key+"' data-act='toggle'>"+(on?"&#9989; ":"&#128274; ")+r.label+"</div>"+
-      (on?"<div title='Marcar como presente' style='padding:4px 8px;border-radius:10px;cursor:pointer;font-size:14px;border:1px solid rgba(251,191,36,"+(ip?"0.5":"0.15")+");background:rgba(251,191,36,"+(ip?"0.15":"0.04")+");display:flex;align-items:center;justify-content:center;' data-key='"+r.key+"' data-act='presente'>&#127873;</div>":"")+
-    "</div>";
-  }).join("");
+
+// ── ACTIVITY FEED ──
+function renderActivity(){
+  var el=document.getElementById("activityList");
+  var items=[];
+  // Recent orders
+  var recentOrders=allAlunos.length?[]:[]; // placeholder
+  // Build from alunos data
+  var expiring=allAlunos.filter(function(a){if(!a.acesso_expira_em)return false;var d=new Date(a.acesso_expira_em)-new Date();return d>0&&d<7*24*60*60*1000;});
+  var noAccess=allAlunos.filter(function(a){return!RESUMOS_COLS.some(function(r){return a[r.key];});});
+  var ativos=allAlunos.filter(function(a){return RESUMOS_COLS.some(function(r){return a[r.key];});});
+
+  if(expiring.length>0)items.push({icon:"&#9888;&#65039;",text:"<strong>"+expiring.length+" aluno"+(expiring.length>1?"s":"")+"</strong> com acesso expirando em 7 dias",color:"#fbbf24"});
+  if(noAccess.length>0)items.push({icon:"&#128274;",text:"<strong>"+noAccess.length+" aluno"+(noAccess.length>1?"s":"")+"</strong> cadastrado"+(noAccess.length>1?"s":"")+" sem nenhum acesso",color:"rgba(248,113,113,0.7)"});
+  items.push({icon:"&#128101;",text:"<strong>"+allAlunos.length+"</strong> alunos cadastrados, <strong>"+ativos.length+"</strong> com acesso ativo",color:"rgba(34,211,238,0.7)"});
+  items.push({icon:"&#128161;",text:"Use as abas acima para gerenciar alunos, pagamentos e promoções",color:"rgba(125,211,232,0.4)"});
+
+  el.innerHTML=items.map(function(it){return"<div class='activity-item'><span class='activity-icon'>"+it.icon+"</span><span class='activity-text' style='color:"+it.color+"'>"+it.text+"</span></div>";}).join("");
 }
+
+// ── MODAL ──
+window.openModal=function(id){currentAluno=allAlunos.find(function(a){return a.id===id;});if(!currentAluno)return;document.getElementById("modalEmail").textContent=currentAluno.email||"\u2014";document.getElementById("expiryInput").value=currentAluno.acesso_expira_em?currentAluno.acesso_expira_em.substring(0,10):"";currentToggles={};RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=!!currentAluno[r.key];});renderResumosGrid();document.getElementById("modalAluno").classList.add("open");};
+function renderResumosGrid(){var g=document.getElementById("resumosGrid");var pr=(currentAluno&&currentAluno.resumos_presente)||[];g.innerHTML=RESUMOS_COLS.map(function(r){var on=currentToggles[r.key],ip=pr.includes(r.key);return"<div style='display:flex;gap:4px;align-items:stretch;'><div class='resumo-toggle "+(on?"on":"")+"' style='flex:1' data-key='"+r.key+"' data-act='toggle'>"+(on?"&#9989; ":"&#128274; ")+r.label+"</div>"+(on?"<div title='Presente' style='padding:4px 8px;border-radius:10px;cursor:pointer;font-size:14px;border:1px solid rgba(251,191,36,"+(ip?"0.5":"0.15")+");background:rgba(251,191,36,"+(ip?"0.15":"0.04")+");display:flex;align-items:center;justify-content:center;' data-key='"+r.key+"' data-act='presente'>&#127873;</div>":"")+"</div>";}).join("");}
 window.toggleResumo=function(k){currentToggles[k]=!currentToggles[k];renderResumosGrid();};
-window.togglePresente=function(k){
-  if(!currentAluno)return;
-  var p=(currentAluno.resumos_presente||[]).slice(),i=p.indexOf(k);
-  if(i>=0)p.splice(i,1);else p.push(k);
-  currentAluno.resumos_presente=p;renderResumosGrid();
-};
-window.set50Days=function(){
-  var d=new Date();d.setDate(d.getDate()+50);
-  document.getElementById("expiryInput").value=d.toISOString().substring(0,10);
-};
+window.togglePresente=function(k){if(!currentAluno)return;var p=(currentAluno.resumos_presente||[]).slice(),i=p.indexOf(k);if(i>=0)p.splice(i,1);else p.push(k);currentAluno.resumos_presente=p;renderResumosGrid();};
+window.set50Days=function(){var d=new Date();d.setDate(d.getDate()+50);document.getElementById("expiryInput").value=d.toISOString().substring(0,10);};
 window.closeModal=function(){document.getElementById("modalAluno").classList.remove("open");currentAluno=null;};
-window.saveAluno=async function(){
-  if(!currentAluno)return;
-  var btn=document.getElementById("saveBtn");btn.disabled=true;btn.textContent="Salvando...";
-  var u={};
-  var ev=document.getElementById("expiryInput").value;
-  var expiraIso=ev?new Date(ev).toISOString():null;
-  u.acesso_expira_em=expiraIso;
-  RESUMOS_COLS.forEach(function(r){
-    var antes=!!currentAluno[r.key];
-    var agora=!!currentToggles[r.key];
-    u[r.key]=agora;
-    if(agora && !antes && expiraIso){
-      // Acabou de ser ativado → grava nova data
-      u[r.key+"_expira"]=expiraIso;
-    } else if(!agora){
-      // Desativado → limpa data
-      u[r.key+"_expira"]=null;
-    }
-    // Se já estava ativado → NÃO altera a data individual (preserva)
-  });
-  u.resumos_presente=currentAluno.resumos_presente||[];
-  var res=await client.from("profiles").update(u).eq("id",currentAluno.id);
-  if(res.error)showToast("Erro ao salvar!","error");
-  else{showToast("&#9989; Salvo com sucesso!","success");closeModal();await loadAlunos();}
-  btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";
-};
-window.revokeAll=async function(){
-  if(!currentAluno)return;
-  if(!confirm("Revogar TODOS os acessos de "+currentAluno.email+"?"))return;
-  RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=false;});
-  document.getElementById("expiryInput").value="";
-  renderResumosGrid();showToast("Clique em Salvar para confirmar","success");
-};
-window.quickRevoke=async function(id,emailEnc){
-  var email=decodeURIComponent(emailEnc);
-  if(!confirm("Revogar todos os acessos de "+email+"?"))return;
-  var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=false;u[r.key+"_expira"]=null;});u.acesso_expira_em=null;
-  var res=await client.from("profiles").update(u).eq("id",id);
-  if(res.error)showToast("Erro!","error");
-  else{showToast("&#9989; Acessos revogados!","success");await loadAlunos();}
-};
-window.quickGrantAll=async function(id,emailEnc){
-  var email=decodeURIComponent(emailEnc);
-  if(!confirm("Liberar TODOS os resumos para "+email+"?"))return;
-  var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=true;});u.acesso_expira_em=null;
-  var res=await client.from("profiles").update(u).eq("id",id);
-  if(res.error)showToast("Erro!","error");
-  else{showToast("&#9989; Acessos liberados!","success");await loadAlunos();}
-};
-function showToast(msg,type){
-  var t=document.createElement("div");t.className="toast "+type;t.innerHTML=msg;
-  document.body.appendChild(t);setTimeout(function(){t.remove();},3000);
-}
+window.saveAluno=async function(){if(!currentAluno)return;var btn=document.getElementById("saveBtn");btn.disabled=true;btn.textContent="Salvando...";var u={};var ev=document.getElementById("expiryInput").value;var expiraIso=ev?new Date(ev).toISOString():null;u.acesso_expira_em=expiraIso;RESUMOS_COLS.forEach(function(r){var antes=!!currentAluno[r.key];var agora=!!currentToggles[r.key];u[r.key]=agora;if(agora&&!antes&&expiraIso){u[r.key+"_expira"]=expiraIso;}else if(!agora){u[r.key+"_expira"]=null;}});u.resumos_presente=currentAluno.resumos_presente||[];var res=await client.from("profiles").update(u).eq("id",currentAluno.id);if(res.error)showToast("Erro ao salvar!","error");else{showToast("&#9989; Salvo!","success");closeModal();await loadAlunos();renderActivity();}btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";};
+window.revokeAll=async function(){if(!currentAluno)return;if(!confirm("Revogar TODOS os acessos de "+currentAluno.email+"?"))return;RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=false;});document.getElementById("expiryInput").value="";renderResumosGrid();showToast("Clique em Salvar para confirmar","success");};
+window.quickRevoke=async function(id,emailEnc){var email=decodeURIComponent(emailEnc);if(!confirm("Revogar todos de "+email+"?"))return;var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=false;u[r.key+"_expira"]=null;});u.acesso_expira_em=null;var res=await client.from("profiles").update(u).eq("id",id);if(res.error)showToast("Erro!","error");else{showToast("&#9989; Revogado!","success");await loadAlunos();renderActivity();}};
+window.quickGrantAll=async function(id,emailEnc){var email=decodeURIComponent(emailEnc);if(!confirm("Liberar TODOS para "+email+"?"))return;var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=true;});u.acesso_expira_em=null;var res=await client.from("profiles").update(u).eq("id",id);if(res.error)showToast("Erro!","error");else{showToast("&#9989; Liberado!","success");await loadAlunos();renderActivity();}};
+
+function showToast(msg,type){var t=document.createElement("div");t.className="toast "+type;t.innerHTML=msg;document.body.appendChild(t);setTimeout(function(){t.remove();},3000);}
 window.goToDashboard=function(){window.location.href="dashboard.html";};
 window.doLogout=async function(){await client.auth.signOut();window.location.replace("login.html");};
 
-// Event delegation global para botoes de acao
-document.addEventListener("click",function(e){
-  var b=e.target.closest("[data-act]");
-  if(!b)return;
-  var id=b.dataset.id||"", em=b.dataset.email||"",
-      key=b.dataset.key||"", act=b.dataset.act;
-  if(act==="edit")openModal(id);
-  else if(act==="revoke")quickRevoke(id,em);
-  else if(act==="grant")quickGrantAll(id,em);
-  else if(act==="toggle"&&window.toggleResumo)toggleResumo(key);
-  else if(act==="presente"&&window.togglePresente)togglePresente(key);
-  else if(act==="cupom-off")toggleCupom(id,false);
-  else if(act==="cupom-on")toggleCupom(id,true);
-  else if(act==="cupom-del")deletarCupom(id,b.dataset.code||"");
+// ── EVENT DELEGATION ──
+document.addEventListener("click",function(e){var b=e.target.closest("[data-act]");if(!b)return;var id=b.dataset.id||"",em=b.dataset.email||"",key=b.dataset.key||"",act=b.dataset.act;
+  if(act==="edit")openModal(id);else if(act==="revoke")quickRevoke(id,em);else if(act==="grant")quickGrantAll(id,em);else if(act==="toggle"&&window.toggleResumo)toggleResumo(key);else if(act==="presente"&&window.togglePresente)togglePresente(key);else if(act==="cupom-off")toggleCupom(id,false);else if(act==="cupom-on")toggleCupom(id,true);else if(act==="cupom-del")deletarCupom(id,b.dataset.code||"");
 });
 
 // ═══ CUPONS ═══
-var allCupons = [];
-
-async function loadCupons() {
-  var r = await client.from("cupons").select("*").order("created_at", {ascending: false});
-  if (r.error) { console.error("Erro cupons:", r.error); document.getElementById("cuponsLista").innerHTML = '<div class="empty-state">Erro ao carregar cupons</div>'; return; }
-  allCupons = r.data || [];
-  renderCupons();
-}
-
-function renderCupons() {
-  var el = document.getElementById("cuponsLista");
-  if (!allCupons.length) {
-    el.innerHTML = '<div class="empty-state">Nenhum cupom criado ainda</div>';
-    return;
-  }
-  el.innerHTML = allCupons.map(function(c) {
-    var expirado = c.expira_em && new Date(c.expira_em) < new Date();
-    var esgotado = c.max_usos && c.usos >= c.max_usos;
-    var statusBadge = !c.ativo
-      ? "<span class='badge badge-red' style='font-size:10px;'>Inativo</span>"
-      : expirado
-        ? "<span class='badge badge-red' style='font-size:10px;'>Expirado</span>"
-        : esgotado
-          ? "<span class='badge badge-yellow' style='font-size:10px;'>Esgotado</span>"
-          : "<span class='badge badge-green' style='font-size:10px;'>Ativo</span>";
-    var expStr = c.expira_em ? new Date(c.expira_em).toLocaleDateString("pt-BR") : "Sem expiração";
-    var usosStr = c.max_usos ? c.usos + "/" + c.max_usos : c.usos + " (ilimitado)";
-    return "<div class='cupom-row'>" +
-      "<div class='cupom-info'>" +
-        "<div style='display:flex;align-items:center;gap:8px;flex-wrap:wrap;'>" +
-          "<span class='cupom-code'>" + c.codigo + "</span>" +
-          "<span class='badge badge-cyan' style='font-size:11px;font-weight:700;'>-" + c.desconto_pct + "%</span>" +
-          statusBadge +
-        "</div>" +
-        "<div class='cupom-meta'>" +
-          "<span>&#128197; " + expStr + "</span>" +
-          "<span>&#128100; " + usosStr + " usos</span>" +
-          "<span>&#128197; Criado " + new Date(c.created_at).toLocaleDateString("pt-BR") + "</span>" +
-        "</div>" +
-      "</div>" +
-      "<div class='cupom-actions'>" +
-        (c.ativo
-          ? "<button class='btn-sm red' data-act='cupom-off' data-id='" + c.id + "'>Desativar</button>"
-          : "<button class='btn-sm green' data-act='cupom-on' data-id='" + c.id + "'>Ativar</button>") +
-        "<button class='btn-sm red' data-act='cupom-del' data-id='" + c.id + "' data-code='" + c.codigo + "'>&#128465; Excluir</button>" +
-      "</div>" +
-    "</div>";
+var allCupons=[];
+async function loadCupons(){var r=await client.from("cupons").select("*").order("created_at",{ascending:false});if(r.error){console.error(r.error);return;}allCupons=r.data||[];renderCupons();}
+function renderCupons(){
+  var el=document.getElementById("cuponsLista");
+  if(!allCupons.length){el.innerHTML='<div class="empty-state">Nenhum cupom criado ainda</div>';return;}
+  el.innerHTML=allCupons.map(function(c){
+    var expirado=c.expira_em&&new Date(c.expira_em)<new Date();
+    var esgotado=c.max_usos&&c.usos>=c.max_usos;
+    var statusBadge=!c.ativo?"<span class='badge badge-red' style='font-size:9px;'>Inativo</span>":expirado?"<span class='badge badge-red' style='font-size:9px;'>Expirado</span>":esgotado?"<span class='badge badge-yellow' style='font-size:9px;'>Esgotado</span>":"<span class='badge badge-green' style='font-size:9px;'>Ativo</span>";
+    var expStr=c.expira_em?new Date(c.expira_em).toLocaleDateString("pt-BR"):"Sem expiração";
+    var usosStr=c.max_usos?c.usos+"/"+c.max_usos:c.usos+" (ilimitado)";
+    return"<div class='cupom-row'><div class='cupom-info'><div style='display:flex;align-items:center;gap:6px;flex-wrap:wrap;'><span class='cupom-code'>"+c.codigo+"</span><span class='badge badge-cyan' style='font-size:10px;font-weight:700;'>-"+c.desconto_pct+"%</span>"+statusBadge+"</div><div class='cupom-meta'><span>&#128197; "+expStr+"</span><span>&#128100; "+usosStr+"</span></div></div><div class='cupom-actions'>"+(c.ativo?"<button class='btn-sm red' data-act='cupom-off' data-id='"+c.id+"'>Desativar</button>":"<button class='btn-sm green' data-act='cupom-on' data-id='"+c.id+"'>Ativar</button>")+"<button class='btn-sm red' data-act='cupom-del' data-id='"+c.id+"' data-code='"+c.codigo+"'>&#128465;</button></div></div>";
   }).join("");
 }
-
-window.criarCupom = async function() {
-  var codigo = (document.getElementById("cupomCodigo").value || "").trim().toUpperCase();
-  var desconto = parseInt(document.getElementById("cupomDesconto").value);
-  var maxUsos = document.getElementById("cupomMaxUsos").value ? parseInt(document.getElementById("cupomMaxUsos").value) : null;
-  var expira = document.getElementById("cupomExpira").value || null;
-
-  if (!codigo) { showToast("Digite o código do cupom!", "error"); return; }
-  if (!desconto || desconto < 1 || desconto > 100) { showToast("Desconto deve ser entre 1 e 100%!", "error"); return; }
-
-  var btn = document.getElementById("btnCriarCupom");
-  btn.disabled = true; btn.textContent = "Criando...";
-
-  var payload = {
-    codigo: codigo,
-    desconto_pct: desconto,
-    max_usos: maxUsos,
-    expira_em: expira ? new Date(expira).toISOString() : null,
-    ativo: true,
-    usos: 0
-  };
-
-  var r = await client.from("cupons").insert(payload);
-  if (r.error) {
-    if (r.error.message && r.error.message.includes("duplicate")) {
-      showToast("Cupom '" + codigo + "' já existe!", "error");
-    } else {
-      showToast("Erro ao criar cupom: " + (r.error.message || "desconhecido"), "error");
-    }
-  } else {
-    showToast("&#9989; Cupom " + codigo + " criado! (-" + desconto + "%)", "success");
-    document.getElementById("cupomCodigo").value = "";
-    document.getElementById("cupomDesconto").value = "";
-    document.getElementById("cupomMaxUsos").value = "";
-    document.getElementById("cupomExpira").value = "";
-    await loadCupons();
-  }
-  btn.disabled = false; btn.textContent = "✨ Criar cupom";
-};
-
-window.toggleCupom = async function(id, ativo) {
-  var r = await client.from("cupons").update({ ativo: ativo }).eq("id", id);
-  if (r.error) showToast("Erro!", "error");
-  else { showToast(ativo ? "&#9989; Cupom ativado!" : "Cupom desativado.", ativo ? "success" : "error"); await loadCupons(); }
-};
-
-window.deletarCupom = async function(id, codigo) {
-  if (!confirm("Excluir o cupom " + codigo + "?")) return;
-  var r = await client.from("cupons").delete().eq("id", id);
-  if (r.error) showToast("Erro ao excluir!", "error");
-  else { showToast("Cupom excluído.", "success"); await loadCupons(); }
-};
+window.criarCupom=async function(){var codigo=(document.getElementById("cupomCodigo").value||"").trim().toUpperCase();var desconto=parseInt(document.getElementById("cupomDesconto").value);var maxUsos=document.getElementById("cupomMaxUsos").value?parseInt(document.getElementById("cupomMaxUsos").value):null;var expira=document.getElementById("cupomExpira").value||null;if(!codigo){showToast("Digite o código!","error");return;}if(!desconto||desconto<1||desconto>100){showToast("Desconto 1-100%!","error");return;}var btn=document.getElementById("btnCriarCupom");btn.disabled=true;btn.textContent="Criando...";var payload={codigo:codigo,desconto_pct:desconto,max_usos:maxUsos,expira_em:expira?new Date(expira+"T23:59:59").toISOString():null,ativo:true,usos:0};var r=await client.from("cupons").insert(payload);if(r.error){if(r.error.message&&r.error.message.includes("duplicate"))showToast("Cupom j\u00e1 existe!","error");else showToast("Erro: "+(r.error.message||""),"error");}else{showToast("&#9989; Cupom "+codigo+" criado! (-"+desconto+"%)","success");document.getElementById("cupomCodigo").value="";document.getElementById("cupomDesconto").value="";document.getElementById("cupomMaxUsos").value="";document.getElementById("cupomExpira").value="";await loadCupons();}btn.disabled=false;btn.textContent="\u2728 Criar cupom";};
+window.toggleCupom=async function(id,ativo){var r=await client.from("cupons").update({ativo:ativo}).eq("id",id);if(r.error)showToast("Erro!","error");else{showToast(ativo?"&#9989; Ativado!":"Desativado.",ativo?"success":"error");await loadCupons();}};
+window.deletarCupom=async function(id,codigo){if(!confirm("Excluir cupom "+codigo+"?"))return;var r=await client.from("cupons").delete().eq("id",id);if(r.error)showToast("Erro!","error");else{showToast("Exclu\u00eddo.","success");await loadCupons();}};
 
 // ═══ PREÇOS ═══
-async function loadPrecos() {
-  try {
-    var r = await client.from("config").select("*").in("chave", ["preco_unit", "preco_combo3", "preco_pack"]);
-    if (r.data && r.data.length) {
-      r.data.forEach(function(c) {
-        if (c.chave === "preco_unit") document.getElementById("precoUnit").value = parseFloat(c.valor).toFixed(2);
-        if (c.chave === "preco_combo3") document.getElementById("precoCombo").value = parseFloat(c.valor).toFixed(2);
-        if (c.chave === "preco_pack") document.getElementById("precoPack").value = parseFloat(c.valor).toFixed(2);
-      });
-      document.getElementById("precoStatus").textContent = "Preços carregados do banco";
-    } else {
-      document.getElementById("precoStatus").textContent = "Usando valores padrão (não salvos ainda)";
-    }
-  } catch(e) {
-    document.getElementById("precoStatus").textContent = "Usando valores padrão";
-  }
-}
+async function loadPrecos(){try{var r=await client.from("config").select("*").in("chave",["preco_unit","preco_combo3","preco_pack"]);if(r.data&&r.data.length){r.data.forEach(function(c){if(c.chave==="preco_unit")document.getElementById("precoUnit").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_combo3")document.getElementById("precoCombo").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_pack")document.getElementById("precoPack").value=parseFloat(c.valor).toFixed(2);});document.getElementById("precoStatus").textContent="Carregado do banco";}else{document.getElementById("precoStatus").textContent="Valores padr\u00e3o";}}catch(e){document.getElementById("precoStatus").textContent="Valores padr\u00e3o";}}
+window.salvarPrecos=async function(){var unit=parseFloat(document.getElementById("precoUnit").value);var combo=parseFloat(document.getElementById("precoCombo").value);var pack=parseFloat(document.getElementById("precoPack").value);if(isNaN(unit)||isNaN(combo)||isNaN(pack)||unit<=0||combo<=0||pack<=0){showToast("Preencha corretamente!","error");return;}var btn=document.getElementById("btnSalvarPrecos");btn.disabled=true;btn.textContent="Salvando...";var precos=[{chave:"preco_unit",valor:unit.toString()},{chave:"preco_combo3",valor:combo.toString()},{chave:"preco_pack",valor:pack.toString()}];var ok=true;for(var i=0;i<precos.length;i++){var p=precos[i];var r=await client.from("config").upsert({chave:p.chave,valor:p.valor},{onConflict:"chave"});if(r.error){ok=false;console.error(r.error);}}if(ok){showToast("&#9989; Pre\u00e7os salvos!","success");document.getElementById("precoStatus").innerHTML="<span style='color:#4ade80;'>&#9989; Salvo!</span>";}else showToast("Erro!","error");btn.disabled=false;btn.textContent="💾 Salvar preços";};
 
-window.salvarPrecos = async function() {
-  var unit = parseFloat(document.getElementById("precoUnit").value);
-  var combo = parseFloat(document.getElementById("precoCombo").value);
-  var pack = parseFloat(document.getElementById("precoPack").value);
-
-  if (isNaN(unit) || isNaN(combo) || isNaN(pack) || unit <= 0 || combo <= 0 || pack <= 0) {
-    showToast("Preencha todos os preços corretamente!", "error"); return;
-  }
-
-  var btn = document.getElementById("btnSalvarPrecos");
-  btn.disabled = true; btn.textContent = "Salvando...";
-
-  var precos = [
-    { chave: "preco_unit", valor: unit.toString() },
-    { chave: "preco_combo3", valor: combo.toString() },
-    { chave: "preco_pack", valor: pack.toString() }
-  ];
-
-  var ok = true;
-  for (var i = 0; i < precos.length; i++) {
-    var p = precos[i];
-    var r = await client.from("config").upsert({ chave: p.chave, valor: p.valor }, { onConflict: "chave" });
-    if (r.error) { ok = false; console.error(r.error); }
-  }
-
-  if (ok) {
-    showToast("&#9989; Preços atualizados com sucesso!", "success");
-    document.getElementById("precoStatus").innerHTML = "<span style='color:#4ade80;'>&#9989; Salvo!</span>";
-  } else {
-    showToast("Erro ao salvar preços!", "error");
-  }
-  btn.disabled = false; btn.textContent = "💾 Salvar preços";
-};
-
-// ═══ ONLINE USERS (Realtime Presence) ═══
-var onlineChannel = null;
-
-function setupOnlineCounter() {
-  try {
-    onlineChannel = client.channel("online-users", { config: { presence: { key: "admin-watcher" } } });
-    
-    onlineChannel.on("presence", { event: "sync" }, function() {
-      var state = onlineChannel.presenceState();
-      var count = 0;
-      Object.keys(state).forEach(function(k) { count += state[k].length; });
-      document.getElementById("statOnline").textContent = count;
-    });
-
-    onlineChannel.subscribe(function(status) {
-      if (status === "SUBSCRIBED") {
-        onlineChannel.track({ online_at: new Date().toISOString(), role: "admin" });
-      }
-    });
-  } catch(e) {
-    console.warn("Presence error:", e);
-    document.getElementById("statOnline").textContent = "—";
-  }
-}
+// ═══ ONLINE ═══
+function setupOnlineCounter(){try{var ch=client.channel("online-users",{config:{presence:{key:"admin-watcher"}}});ch.on("presence",{event:"sync"},function(){var s=ch.presenceState();var c=0;Object.keys(s).forEach(function(k){c+=s[k].length;});document.getElementById("statOnline").textContent=c;});ch.subscribe(function(st){if(st==="SUBSCRIBED")ch.track({online_at:new Date().toISOString(),role:"admin"});});}catch(e){console.warn("Presence:",e);document.getElementById("statOnline").textContent="\u2014";}}
 
 init();
 })();
