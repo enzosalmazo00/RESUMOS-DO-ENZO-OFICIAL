@@ -540,7 +540,10 @@ async function saveToSupabase() {
 
     var client = window.authClient;
     var session = window.authSession;
-    if (!client || !session) return;
+    if (!client || !session) {
+      console.warn("[study-timer] save skipped: no client or session");
+      return;
+    }
 
     var totalMin = Math.floor(elapsedSec() / 60);
     if (totalMin < 1) return;
@@ -555,7 +558,10 @@ async function saveToSupabase() {
       streak_dias: streak
     };
 
-    await client.from("estudo_diario").upsert(payload, { onConflict: "user_id,data,materia" });
+    var res = await client.from("estudo_diario").upsert(payload, { onConflict: "user_id,data,materia" });
+    if (res.error) {
+      console.error("[study-timer] SAVE ERROR:", res.error.message, res.error);
+    }
   } catch(e) { console.warn("[study-timer] save error:", e); }
 }
 
@@ -572,27 +578,45 @@ document.addEventListener("authReady", async function() {
   // Salva no Supabase a cada 30s
   saveInterval = setInterval(saveToSupabase, 30000);
 
-  // Salva imediatamente após 60s (pega quem fecha rápido a aba)
-  setTimeout(saveToSupabase, 60000);
+  // Salva imediatamente após 30s (pega quem fecha rápido a aba)
+  setTimeout(saveToSupabase, 30000);
 });
 
 // Para o timer + salva quando fecha a página
 window.addEventListener("beforeunload", function() {
   if (timerInterval) clearInterval(timerInterval);
   if (saveInterval) clearInterval(saveInterval);
-  // Salva síncrono via sendBeacon (única forma confiável no unload)
+  // Salva via sendBeacon direto na REST API do Supabase (funciona no unload)
   try {
     var session = window.authSession;
-    if (session && elapsedSec() >= 60) {
+    var materia = getCurrentMateria();
+    if (session && materia && elapsedSec() >= 60) {
       var totalMin = Math.floor(elapsedSec() / 60);
       var payload = {
         user_id: session.user.id,
         data: todayStr(),
-        minutos: totalMin
+        materia: materia,
+        minutos: totalMin,
+        streak_dias: 1
       };
-      // Tentativa final - pode não chegar, mas tentamos
-      navigator.sendBeacon &&
-        navigator.sendBeacon("/study-timer-save", JSON.stringify(payload));
+      var url = "https://chqhdmjqnjjdatowfyif.supabase.co/rest/v1/estudo_diario?" +
+        "on_conflict=user_id,data,materia";
+      var headers = {
+        "Content-Type": "application/json",
+        "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNocWhkbWpxbmpqZGF0b3dmeWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDc0MDAsImV4cCI6MjA5NTgyMzQwMH0.v_7y0YD9R1LvFJkz9Vr_zJX0_CE2lo8OY5xX-KtVcFk",
+        "Authorization": "Bearer " + session.access_token,
+        "Prefer": "resolution=merge-duplicates"
+      };
+      if (navigator.sendBeacon) {
+        var blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
+        // sendBeacon não suporta headers customizados, então usa fetch keepalive
+        fetch(url, {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(payload),
+          keepalive: true
+        }).catch(function(){});
+      }
     }
   } catch(e) {}
 });
@@ -602,6 +626,37 @@ document.addEventListener("visibilitychange", function() {
   if (document.visibilityState === "hidden") {
     saveToSupabase();
   }
+});
+
+// pagehide é mais confiável que beforeunload no mobile (iOS/Android)
+window.addEventListener("pagehide", function() {
+  try {
+    var session = window.authSession;
+    var materia = getCurrentMateria();
+    if (session && materia && elapsedSec() >= 60) {
+      var totalMin = Math.floor(elapsedSec() / 60);
+      var payload = {
+        user_id: session.user.id,
+        data: todayStr(),
+        materia: materia,
+        minutos: totalMin,
+        streak_dias: 1
+      };
+      var url = "https://chqhdmjqnjjdatowfyif.supabase.co/rest/v1/estudo_diario?" +
+        "on_conflict=user_id,data,materia";
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNocWhkbWpxbmpqZGF0b3dmeWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDc0MDAsImV4cCI6MjA5NTgyMzQwMH0.v_7y0YD9R1LvFJkz9Vr_zJX0_CE2lo8OY5xX-KtVcFk",
+          "Authorization": "Bearer " + session.access_token,
+          "Prefer": "resolution=merge-duplicates"
+        },
+        body: JSON.stringify(payload),
+        keepalive: true
+      }).catch(function(){});
+    }
+  } catch(e) {}
 });
 
 })();
