@@ -118,6 +118,50 @@
       .search-bar{flex-direction:column;}
       .filter-select,.search-input{width:100%;min-width:0;}
     }
+
+    /* ── ONLINE PULSE ── */
+    .stat-card.online { border-color:rgba(74,222,128,0.25); background:rgba(74,222,128,0.06); }
+    .online-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#4ade80; margin-right:6px; animation:pulse-dot 1.5s infinite; }
+    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(1.4);} }
+
+    /* ── SECTION CARDS (promoções/cupons) ── */
+    .admin-section { margin-bottom:36px; }
+    .form-row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; align-items:flex-end; }
+    .form-group { display:flex; flex-direction:column; gap:4px; flex:1; min-width:120px; }
+    .form-label { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:rgba(34,211,238,0.5); }
+    .form-input { padding:10px 14px; background:rgba(255,255,255,0.04); border:1px solid rgba(34,211,238,0.14); border-radius:10px; color:#fff; font-size:13px; font-family:'Poppins',sans-serif; transition:all .25s; }
+    .form-input:focus { outline:none; border-color:var(--cyan); background:rgba(34,211,238,0.06); }
+    .form-input::placeholder { color:rgba(255,255,255,0.2); }
+    .form-card { padding:20px; border-radius:16px; border:1px solid rgba(34,211,238,0.12); background:rgba(34,211,238,0.03); margin-bottom:16px; }
+    .form-card-title { font-size:13px; font-weight:700; color:#e2f8fc; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+    .btn-create { padding:10px 20px; border:none; border-radius:10px; background:linear-gradient(135deg,#22d3ee,#0891b2); color:#fff; font-size:13px; font-weight:600; font-family:'Poppins',sans-serif; cursor:pointer; transition:all .25s; white-space:nowrap; }
+    .btn-create:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(34,211,238,0.3); }
+    .btn-create:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+    .btn-sm { padding:5px 12px; border-radius:8px; border:1px solid; font-size:11px; font-family:'Poppins',sans-serif; font-weight:600; cursor:pointer; transition:all .2s; }
+    .btn-sm.green { border-color:rgba(74,222,128,0.3); background:rgba(74,222,128,0.08); color:#4ade80; }
+    .btn-sm.red { border-color:rgba(248,113,113,0.3); background:rgba(248,113,113,0.08); color:#f87171; }
+    .btn-sm.yellow { border-color:rgba(251,191,36,0.3); background:rgba(251,191,36,0.08); color:#fbbf24; }
+    .btn-sm:hover { filter:brightness(1.2); }
+    .cupom-row { display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:12px; background:rgba(34,211,238,0.04); border:1px solid rgba(34,211,238,0.08); margin-bottom:8px; flex-wrap:wrap; }
+    .cupom-code { font-size:15px; font-weight:700; color:#22d3ee; letter-spacing:0.05em; font-family:monospace; }
+    .cupom-info { flex:1; min-width:150px; }
+    .cupom-meta { font-size:11px; color:rgba(125,211,232,0.5); display:flex; gap:12px; flex-wrap:wrap; margin-top:2px; }
+    .cupom-actions { display:flex; gap:6px; }
+    .price-item { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px; background:rgba(34,211,238,0.04); border:1px solid rgba(34,211,238,0.08); margin-bottom:8px; }
+    .price-label { font-size:13px; color:#e2f8fc; font-weight:600; flex:1; min-width:140px; }
+    .price-input { width:110px; padding:8px 12px; background:rgba(255,255,255,0.04); border:1px solid rgba(34,211,238,0.14); border-radius:8px; color:#22d3ee; font-size:15px; font-weight:700; font-family:'Poppins',sans-serif; text-align:right; }
+    .price-input:focus { outline:none; border-color:var(--cyan); }
+    .price-prefix { font-size:13px; color:rgba(125,211,232,0.5); font-weight:600; }
+    .empty-state { text-align:center; padding:24px; color:rgba(125,211,232,0.3); font-size:13px; }
+    @media(max-width:768px){
+      .form-row { flex-direction:column; }
+      .form-group { min-width:0; }
+      .cupom-row { flex-direction:column; align-items:flex-start; }
+      .cupom-actions { width:100%; }
+      .cupom-actions .btn-sm { flex:1; text-align:center; }
+      .price-item { flex-direction:column; align-items:stretch; }
+      .price-input { width:100%; }
+    }
   </style>
 </head>
 <body>
@@ -145,6 +189,7 @@
     <div class="stat-card"><div class="stat-label">Total Recebido</div><div class="stat-value" id="statReceita">&#8212;</div><div class="stat-sub">pagamentos aprovados</div></div>
     <div class="stat-card"><div class="stat-label">Pagtos Aprovados</div><div class="stat-value" id="statPagamentos">&#8212;</div><div class="stat-sub">pedidos confirmados</div></div>
     <div class="stat-card"><div class="stat-label">Expiram em 7 dias</div><div class="stat-value" id="statExpirando">&#8212;</div><div class="stat-sub">precisam renovar</div></div>
+    <div class="stat-card online"><div class="stat-label"><span class="online-dot"></span>Online Agora</div><div class="stat-value" id="statOnline">0</div><div class="stat-sub">usuários conectados</div></div>
   </div>
 
   <div class="section-title">&#128101; Alunos</div>
@@ -189,6 +234,66 @@
     <div class="order-card"><div class="loading"><span class="spinner-inline"></span> Carregando...</div></div>
   </div>
 </div>
+
+
+  <div class="section-title">&#127915; Cupons de Desconto</div>
+  <div class="admin-section">
+    <div class="form-card">
+      <div class="form-card-title">&#10024; Criar Novo Cupom</div>
+      <div class="form-row">
+        <div class="form-group" style="flex:2;">
+          <div class="form-label">Código do cupom</div>
+          <input class="form-input" id="cupomCodigo" placeholder="Ex: PROVA20, DESCONTO50..." style="text-transform:uppercase;">
+        </div>
+        <div class="form-group" style="flex:1;">
+          <div class="form-label">Desconto (%)</div>
+          <input class="form-input" id="cupomDesconto" type="number" min="1" max="100" placeholder="Ex: 20">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Máx. de usos (vazio = ilimitado)</div>
+          <input class="form-input" id="cupomMaxUsos" type="number" min="1" placeholder="Ilimitado">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Expira em (vazio = sem expiração)</div>
+          <input class="form-input" id="cupomExpira" type="date">
+        </div>
+        <div style="display:flex;align-items:flex-end;">
+          <button class="btn-create" id="btnCriarCupom" onclick="criarCupom()">&#10024; Criar cupom</button>
+        </div>
+      </div>
+    </div>
+    <div id="cuponsLista">
+      <div class="empty-state"><span class="spinner-inline"></span> Carregando cupons...</div>
+    </div>
+  </div>
+
+  <div class="section-title">&#128176; Preços da Loja</div>
+  <div class="admin-section">
+    <div class="form-card">
+      <div class="form-card-title">&#128184; Alterar Preços dos Resumos</div>
+      <div class="price-item">
+        <div class="price-label">&#128196; Preço unitário (1-2 itens)</div>
+        <span class="price-prefix">R$</span>
+        <input class="price-input" id="precoUnit" type="number" step="0.01" min="0" value="15.00">
+      </div>
+      <div class="price-item">
+        <div class="price-label">&#128230; Preço combo (3+ itens)</div>
+        <span class="price-prefix">R$</span>
+        <input class="price-input" id="precoCombo" type="number" step="0.01" min="0" value="12.00">
+      </div>
+      <div class="price-item">
+        <div class="price-label">&#128293; Preço pacote completo (7 itens)</div>
+        <span class="price-prefix">R$</span>
+        <input class="price-input" id="precoPack" type="number" step="0.01" min="0" value="69.90">
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+        <button class="btn-create" id="btnSalvarPrecos" onclick="salvarPrecos()">&#128190; Salvar preços</button>
+        <span id="precoStatus" style="font-size:12px;color:rgba(125,211,232,0.4);display:flex;align-items:center;"></span>
+      </div>
+    </div>
+  </div>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modalAluno">
@@ -253,7 +358,8 @@ async function init(){
     }
     hideOverlay();
     document.getElementById("adminEmail").textContent=session.user.email;
-    await Promise.all([loadAlunos(),loadOrders()]);
+    await Promise.all([loadAlunos(),loadOrders(),loadCupons(),loadPrecos()]);
+    setupOnlineCounter();
   }catch(err){
     console.error("[admin] init error:",err);
     showOverlayError("Erro ao carregar painel.<br>Verifique sua conexao e tente novamente.");
@@ -495,6 +601,188 @@ document.addEventListener("click",function(e){
   else if(act==="toggle"&&window.toggleResumo)toggleResumo(key);
   else if(act==="presente"&&window.togglePresente)togglePresente(key);
 });
+
+// ═══ CUPONS ═══
+var allCupons = [];
+
+async function loadCupons() {
+  var r = await client.from("cupons").select("*").order("created_at", {ascending: false});
+  if (r.error) { console.error("Erro cupons:", r.error); document.getElementById("cuponsLista").innerHTML = '<div class="empty-state">Erro ao carregar cupons</div>'; return; }
+  allCupons = r.data || [];
+  renderCupons();
+}
+
+function renderCupons() {
+  var el = document.getElementById("cuponsLista");
+  if (!allCupons.length) {
+    el.innerHTML = '<div class="empty-state">Nenhum cupom criado ainda</div>';
+    return;
+  }
+  el.innerHTML = allCupons.map(function(c) {
+    var expirado = c.expira_em && new Date(c.expira_em) < new Date();
+    var esgotado = c.max_usos && c.usos >= c.max_usos;
+    var statusBadge = !c.ativo
+      ? "<span class='badge badge-red' style='font-size:10px;'>Inativo</span>"
+      : expirado
+        ? "<span class='badge badge-red' style='font-size:10px;'>Expirado</span>"
+        : esgotado
+          ? "<span class='badge badge-yellow' style='font-size:10px;'>Esgotado</span>"
+          : "<span class='badge badge-green' style='font-size:10px;'>Ativo</span>";
+    var expStr = c.expira_em ? new Date(c.expira_em).toLocaleDateString("pt-BR") : "Sem expiração";
+    var usosStr = c.max_usos ? c.usos + "/" + c.max_usos : c.usos + " (ilimitado)";
+    return "<div class='cupom-row'>" +
+      "<div class='cupom-info'>" +
+        "<div style='display:flex;align-items:center;gap:8px;flex-wrap:wrap;'>" +
+          "<span class='cupom-code'>" + c.codigo + "</span>" +
+          "<span class='badge badge-cyan' style='font-size:11px;font-weight:700;'>-" + c.desconto_pct + "%</span>" +
+          statusBadge +
+        "</div>" +
+        "<div class='cupom-meta'>" +
+          "<span>&#128197; " + expStr + "</span>" +
+          "<span>&#128100; " + usosStr + " usos</span>" +
+          "<span>&#128197; Criado " + new Date(c.created_at).toLocaleDateString("pt-BR") + "</span>" +
+        "</div>" +
+      "</div>" +
+      "<div class='cupom-actions'>" +
+        (c.ativo
+          ? "<button class='btn-sm red' onclick='toggleCupom("" + c.id + "", false)'>Desativar</button>"
+          : "<button class='btn-sm green' onclick='toggleCupom("" + c.id + "", true)'>Ativar</button>") +
+        "<button class='btn-sm red' onclick='deletarCupom("" + c.id + "", "" + c.codigo + "")'>&#128465; Excluir</button>" +
+      "</div>" +
+    "</div>";
+  }).join("");
+}
+
+window.criarCupom = async function() {
+  var codigo = (document.getElementById("cupomCodigo").value || "").trim().toUpperCase();
+  var desconto = parseInt(document.getElementById("cupomDesconto").value);
+  var maxUsos = document.getElementById("cupomMaxUsos").value ? parseInt(document.getElementById("cupomMaxUsos").value) : null;
+  var expira = document.getElementById("cupomExpira").value || null;
+
+  if (!codigo) { showToast("Digite o código do cupom!", "error"); return; }
+  if (!desconto || desconto < 1 || desconto > 100) { showToast("Desconto deve ser entre 1 e 100%!", "error"); return; }
+
+  var btn = document.getElementById("btnCriarCupom");
+  btn.disabled = true; btn.textContent = "Criando...";
+
+  var payload = {
+    codigo: codigo,
+    desconto_pct: desconto,
+    max_usos: maxUsos,
+    expira_em: expira ? new Date(expira).toISOString() : null,
+    ativo: true,
+    usos: 0
+  };
+
+  var r = await client.from("cupons").insert(payload);
+  if (r.error) {
+    if (r.error.message && r.error.message.includes("duplicate")) {
+      showToast("Cupom '" + codigo + "' já existe!", "error");
+    } else {
+      showToast("Erro ao criar cupom: " + (r.error.message || "desconhecido"), "error");
+    }
+  } else {
+    showToast("&#9989; Cupom " + codigo + " criado! (-" + desconto + "%)", "success");
+    document.getElementById("cupomCodigo").value = "";
+    document.getElementById("cupomDesconto").value = "";
+    document.getElementById("cupomMaxUsos").value = "";
+    document.getElementById("cupomExpira").value = "";
+    await loadCupons();
+  }
+  btn.disabled = false; btn.textContent = "\u2728 Criar cupom";
+};
+
+window.toggleCupom = async function(id, ativo) {
+  var r = await client.from("cupons").update({ ativo: ativo }).eq("id", id);
+  if (r.error) showToast("Erro!", "error");
+  else { showToast(ativo ? "&#9989; Cupom ativado!" : "Cupom desativado.", ativo ? "success" : "error"); await loadCupons(); }
+};
+
+window.deletarCupom = async function(id, codigo) {
+  if (!confirm("Excluir o cupom " + codigo + "?")) return;
+  var r = await client.from("cupons").delete().eq("id", id);
+  if (r.error) showToast("Erro ao excluir!", "error");
+  else { showToast("Cupom excluído.", "success"); await loadCupons(); }
+};
+
+// ═══ PREÇOS ═══
+async function loadPrecos() {
+  try {
+    var r = await client.from("config").select("*").in("chave", ["preco_unit", "preco_combo3", "preco_pack"]);
+    if (r.data && r.data.length) {
+      r.data.forEach(function(c) {
+        if (c.chave === "preco_unit") document.getElementById("precoUnit").value = parseFloat(c.valor).toFixed(2);
+        if (c.chave === "preco_combo3") document.getElementById("precoCombo").value = parseFloat(c.valor).toFixed(2);
+        if (c.chave === "preco_pack") document.getElementById("precoPack").value = parseFloat(c.valor).toFixed(2);
+      });
+      document.getElementById("precoStatus").textContent = "Preços carregados do banco";
+    } else {
+      document.getElementById("precoStatus").textContent = "Usando valores padrão (não salvos ainda)";
+    }
+  } catch(e) {
+    document.getElementById("precoStatus").textContent = "Usando valores padrão";
+  }
+}
+
+window.salvarPrecos = async function() {
+  var unit = parseFloat(document.getElementById("precoUnit").value);
+  var combo = parseFloat(document.getElementById("precoCombo").value);
+  var pack = parseFloat(document.getElementById("precoPack").value);
+
+  if (isNaN(unit) || isNaN(combo) || isNaN(pack) || unit <= 0 || combo <= 0 || pack <= 0) {
+    showToast("Preencha todos os preços corretamente!", "error"); return;
+  }
+
+  var btn = document.getElementById("btnSalvarPrecos");
+  btn.disabled = true; btn.textContent = "Salvando...";
+
+  var precos = [
+    { chave: "preco_unit", valor: unit.toString() },
+    { chave: "preco_combo3", valor: combo.toString() },
+    { chave: "preco_pack", valor: pack.toString() }
+  ];
+
+  var ok = true;
+  for (var i = 0; i < precos.length; i++) {
+    var p = precos[i];
+    var r = await client.from("config").upsert({ chave: p.chave, valor: p.valor }, { onConflict: "chave" });
+    if (r.error) { ok = false; console.error(r.error); }
+  }
+
+  if (ok) {
+    showToast("&#9989; Preços atualizados com sucesso!", "success");
+    document.getElementById("precoStatus").innerHTML = "<span style='color:#4ade80;'>&#9989; Salvo!</span>";
+  } else {
+    showToast("Erro ao salvar preços!", "error");
+  }
+  btn.disabled = false; btn.textContent = "\ud83d\udcbe Salvar preços";
+};
+
+// ═══ ONLINE USERS (Realtime Presence) ═══
+var onlineChannel = null;
+
+function setupOnlineCounter() {
+  try {
+    onlineChannel = client.channel("online-users", { config: { presence: { key: "admin-watcher" } } });
+    
+    onlineChannel.on("presence", { event: "sync" }, function() {
+      var state = onlineChannel.presenceState();
+      var count = 0;
+      Object.keys(state).forEach(function(k) { count += state[k].length; });
+      document.getElementById("statOnline").textContent = count;
+    });
+
+    onlineChannel.subscribe(function(status) {
+      if (status === "SUBSCRIBED") {
+        onlineChannel.track({ online_at: new Date().toISOString(), role: "admin" });
+      }
+    });
+  } catch(e) {
+    console.warn("Presence error:", e);
+    document.getElementById("statOnline").textContent = "—";
+  }
+}
+
 init();
 })();
 </script>

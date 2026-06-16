@@ -272,6 +272,24 @@
     .store-terms li { font-size:12px; color:rgba(125,211,232,0.55); line-height:1.6; }
     .store-terms li strong { color:rgba(125,211,232,0.85); }
 
+
+    /* ── CUPOM NO CARRINHO ── */
+    .cart-cupom-area { padding:0 0 12px; }
+    .cart-cupom-row { display:flex; gap:8px; align-items:stretch; }
+    .cart-cupom-input { flex:1; padding:10px 14px; background:rgba(255,255,255,0.04); border:1px solid rgba(34,211,238,0.14); border-radius:10px; color:#fff; font-size:13px; font-family:'Poppins',sans-serif; text-transform:uppercase; letter-spacing:0.05em; transition:all .25s; }
+    .cart-cupom-input::placeholder { color:rgba(255,255,255,0.2); text-transform:none; letter-spacing:0; }
+    .cart-cupom-input:focus { outline:none; border-color:var(--cyan); background:rgba(34,211,238,0.06); }
+    .cart-cupom-input.valid { border-color:rgba(74,222,128,0.5); background:rgba(74,222,128,0.06); }
+    .cart-cupom-input.invalid { border-color:rgba(248,113,113,0.5); background:rgba(248,113,113,0.06); }
+    .cart-cupom-btn { padding:10px 16px; border-radius:10px; border:1px solid rgba(34,211,238,0.25); background:rgba(34,211,238,0.1); color:#22d3ee; font-size:12px; font-weight:600; font-family:'Poppins',sans-serif; cursor:pointer; transition:all .2s; white-space:nowrap; }
+    .cart-cupom-btn:hover { background:rgba(34,211,238,0.2); border-color:rgba(34,211,238,0.4); }
+    .cart-cupom-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .cart-cupom-btn.remove { border-color:rgba(248,113,113,0.25); background:rgba(248,113,113,0.08); color:#f87171; }
+    .cart-cupom-status { font-size:11px; margin-top:6px; line-height:1.4; }
+    .cart-cupom-status.success { color:#4ade80; }
+    .cart-cupom-status.error { color:#f87171; }
+    .cart-summary-row.cupom-discount { color:#a78bfa; }
+
     /* ── MODAL PIX ── */
     .modal-overlay {
       position:fixed; inset:0; z-index:1000;
@@ -1090,6 +1108,13 @@
 
   <div class="cart-footer" id="cartFooter" style="display:none;">
     <div class="cart-combo-hint" id="cartComboHint"></div>
+    <div class="cart-cupom-area">
+      <div class="cart-cupom-row">
+        <input class="cart-cupom-input" id="cupomInput" placeholder="Código do cupom" maxlength="30">
+        <button class="cart-cupom-btn" id="cupomBtn" onclick="aplicarCupom()">Aplicar</button>
+      </div>
+      <div class="cart-cupom-status" id="cupomStatus"></div>
+    </div>
     <div class="cart-summary" id="cartSummary">
       <div class="cart-summary-row">
         <span>Subtotal</span>
@@ -1098,6 +1123,10 @@
       <div class="cart-summary-row desconto" id="cartDescontoRow" style="display:none;">
         <span>🏷️ Desconto pacote</span>
         <span id="cartDesconto">- R$ 0,00</span>
+      </div>
+      <div class="cart-summary-row cupom-discount" id="cartCupomRow" style="display:none;">
+        <span id="cartCupomLabel">🎟️ Cupom</span>
+        <span id="cartCupomDesconto">- R$ 0,00</span>
       </div>
       <div class="cart-summary-row total">
         <span>Total</span>
@@ -1192,6 +1221,9 @@ var cart = []; // [{key, label, emoji, preco, tipo}]
 var PRECO_UNIT = 15.00;
 var PRECO_COMBO3 = 12.00; // 3+ itens = 20% off
 var PRECO_PACK = 69.90;   // 7 itens = 33% off
+
+// ── Cupom aplicado ──
+var cupomAplicado = null; // { codigo, desconto_pct }
 
 // ── Navegação estilo Google Drive ─────────────────────────────────────────────
 var currentMateria = null; // null = vista pastas | "bioquimica" = vista interna
@@ -2504,6 +2536,7 @@ window.addComboToCart = function() {
 
 window.removeFromCart = function(key) {
   cart = cart.filter(function(c){ return c.key !== key; });
+  if (cart.length === 0 && cupomAplicado) { removerCupom(); }
   updateCartUI();
   renderStoreGrid();
 };
@@ -2545,7 +2578,17 @@ function calcCartTotal() {
     descLabel = "";
   }
 
-  return { subtotal, desconto, total, descLabel };
+  // Aplica cupom se existir
+  var cupomDesconto = 0;
+  var cupomLabel = "";
+  if (cupomAplicado && cupomAplicado.desconto_pct > 0) {
+    cupomDesconto = Math.round(total * (cupomAplicado.desconto_pct / 100) * 100) / 100;
+    total = Math.round((total - cupomDesconto) * 100) / 100;
+    if (total < 0) total = 0;
+    cupomLabel = "🎟️ Cupom " + cupomAplicado.codigo + " (-" + cupomAplicado.desconto_pct + "%)";
+  }
+
+  return { subtotal, desconto, total, descLabel, cupomDesconto, cupomLabel };
 }
 
 function formatPrice(v) {
@@ -2616,7 +2659,30 @@ function updateCartUI() {
   } else {
     descontoRow.style.display = "none";
   }
+  // Cupom discount row
+  var cupomRow = document.getElementById("cartCupomRow");
+  if (calc.cupomDesconto > 0) {
+    cupomRow.style.display = "flex";
+    document.getElementById("cartCupomLabel").textContent = calc.cupomLabel;
+    document.getElementById("cartCupomDesconto").textContent = "- " + formatPrice(calc.cupomDesconto);
+  } else {
+    cupomRow.style.display = "none";
+  }
+
   document.getElementById("cartTotal").textContent = formatPrice(calc.total);
+
+  // Update cupom input state
+  var cupomInput = document.getElementById("cupomInput");
+  var cupomBtn = document.getElementById("cupomBtn");
+  if (cupomAplicado) {
+    cupomInput.value = cupomAplicado.codigo;
+    cupomInput.disabled = true;
+    cupomInput.classList.add("valid");
+    cupomInput.classList.remove("invalid");
+    cupomBtn.textContent = "Remover";
+    cupomBtn.className = "cart-cupom-btn remove";
+    cupomBtn.onclick = function(){ removerCupom(); };
+  }
 }
 
 window.checkoutCart = function() {
@@ -2628,7 +2694,8 @@ window.checkoutCart = function() {
   // Se for 1 item só, usa fluxo normal
   if (keys.length === 1) {
     var item = cart[0];
-    initPayment(item.key, item.label, item.preco);
+    var singleCalc = calcCartTotal();
+    initPayment(item.key, item.label, singleCalc.total);
     closeCart();
     return;
   }
@@ -2715,8 +2782,112 @@ window.initPaymentMultiple = async function(productKeys, productName, totalPrice
   }
 };
 
+
+// ── CUPOM: Aplicar e Remover ─────────────────────────────────────────────────
+window.aplicarCupom = async function() {
+  var codigo = (document.getElementById("cupomInput").value || "").trim().toUpperCase();
+  var statusEl = document.getElementById("cupomStatus");
+  var inputEl = document.getElementById("cupomInput");
+  var btnEl = document.getElementById("cupomBtn");
+
+  if (!codigo) {
+    statusEl.textContent = "Digite um código de cupom.";
+    statusEl.className = "cart-cupom-status error";
+    return;
+  }
+
+  btnEl.disabled = true;
+  btnEl.textContent = "Verificando...";
+  statusEl.textContent = "";
+
+  try {
+    var r = await window.authClient.from("cupons").select("*").eq("codigo", codigo).eq("ativo", true).single();
+
+    if (r.error || !r.data) {
+      statusEl.textContent = "Cupom inválido ou inexistente.";
+      statusEl.className = "cart-cupom-status error";
+      inputEl.classList.add("invalid");
+      inputEl.classList.remove("valid");
+      btnEl.disabled = false;
+      btnEl.textContent = "Aplicar";
+      return;
+    }
+
+    var cupom = r.data;
+
+    // Verifica expiração
+    if (cupom.expira_em && new Date(cupom.expira_em) < new Date()) {
+      statusEl.textContent = "Este cupom já expirou.";
+      statusEl.className = "cart-cupom-status error";
+      inputEl.classList.add("invalid");
+      btnEl.disabled = false;
+      btnEl.textContent = "Aplicar";
+      return;
+    }
+
+    // Verifica uso máximo
+    if (cupom.max_usos && cupom.usos >= cupom.max_usos) {
+      statusEl.textContent = "Este cupom atingiu o limite de usos.";
+      statusEl.className = "cart-cupom-status error";
+      inputEl.classList.add("invalid");
+      btnEl.disabled = false;
+      btnEl.textContent = "Aplicar";
+      return;
+    }
+
+    // Cupom válido!
+    cupomAplicado = { codigo: cupom.codigo, desconto_pct: cupom.desconto_pct, id: cupom.id };
+    statusEl.textContent = "✅ Cupom aplicado! Desconto de " + cupom.desconto_pct + "% no total.";
+    statusEl.className = "cart-cupom-status success";
+    inputEl.classList.remove("invalid");
+    inputEl.classList.add("valid");
+    inputEl.disabled = true;
+    btnEl.textContent = "Remover";
+    btnEl.className = "cart-cupom-btn remove";
+    btnEl.disabled = false;
+    btnEl.onclick = function(){ removerCupom(); };
+
+    updateCartUI();
+
+  } catch(err) {
+    console.error("Erro ao validar cupom:", err);
+    statusEl.textContent = "Erro ao verificar cupom. Tente novamente.";
+    statusEl.className = "cart-cupom-status error";
+    btnEl.disabled = false;
+    btnEl.textContent = "Aplicar";
+  }
+};
+
+window.removerCupom = function() {
+  cupomAplicado = null;
+  var inputEl = document.getElementById("cupomInput");
+  var btnEl = document.getElementById("cupomBtn");
+  var statusEl = document.getElementById("cupomStatus");
+
+  inputEl.value = "";
+  inputEl.disabled = false;
+  inputEl.classList.remove("valid", "invalid");
+  btnEl.textContent = "Aplicar";
+  btnEl.className = "cart-cupom-btn";
+  btnEl.onclick = function(){ aplicarCupom(); };
+  statusEl.textContent = "";
+
+  updateCartUI();
+};
+
 // ── Renderiza loja ────────────────────────────────────────────────────────────
 function renderStore() {
+  // Update combo card prices dynamically
+  var oldPrice = MATERIAS.length * PRECO_UNIT;
+  var comboOld = document.querySelector(".combo-preco-old");
+  var comboNew = document.querySelector(".combo-preco-new");
+  var comboBtn = document.getElementById("combo-p2-btn");
+  if (comboOld) comboOld.textContent = formatPrice(oldPrice);
+  if (comboNew) comboNew.textContent = formatPrice(PRECO_PACK);
+  // Update store section subtitle
+  var storeSubtitle = document.querySelector(".store-section-title span");
+  if (storeSubtitle) storeSubtitle.innerHTML = formatPrice(PRECO_UNIT) + " unit · <span style='color:#4ade80;'>" + formatPrice(PRECO_COMBO3) + " com 3+</span>";
+
   renderStoreGrid();
 }
 
@@ -2741,7 +2912,7 @@ function renderStoreGrid() {
       '<span class="produto-emoji">' + m.emoji + '</span>' +
       '<div class="produto-nome">' + m.label + '</div>' +
       '<div class="produto-sub">P2 · 3º Semestre · 50 dias</div>' +
-      '<div class="produto-preco">R$ 15,00<span>/resumo</span></div>' +
+      '<div class="produto-preco">' + formatPrice(PRECO_UNIT) + '<span>/resumo</span></div>' +
       '<button class="' + btnClass + '"' + (owned ? ' disabled' : ' onclick="addToCart(\'' + key + '\')"') + '>' + btnLabel + '</button>';
 
     grid.appendChild(card);
@@ -2928,6 +3099,19 @@ document.addEventListener("authReady", async function(e) {
     console.warn("[dashboard] Erro ao carregar acessos:", err);
   }
 
+
+  // ── Carregar preços dinâmicos do banco ──────────────────────────────────────
+  try {
+    var precosRes = await window.authClient.from("config").select("*").in("chave", ["preco_unit", "preco_combo3", "preco_pack"]);
+    if (precosRes.data && precosRes.data.length) {
+      precosRes.data.forEach(function(c) {
+        if (c.chave === "preco_unit")   PRECO_UNIT   = parseFloat(c.valor);
+        if (c.chave === "preco_combo3") PRECO_COMBO3 = parseFloat(c.valor);
+        if (c.chave === "preco_pack")   PRECO_PACK   = parseFloat(c.valor);
+      });
+    }
+  } catch(e) { console.warn("[dashboard] Preços dinâmicos não carregados, usando padrão:", e); }
+
   // Mostrar botão admin só para o admin
   if (profile && profile.is_admin) {
     var adminBtn = document.getElementById("adminBtn");
@@ -2936,6 +3120,20 @@ document.addEventListener("authReady", async function(e) {
 
   statusArea.style.display = "none";
   mainContent.style.display = "block";
+
+
+  // ── Presence: marcar usuário como online ──────────────────────────────────
+  try {
+    var presenceChannel = window.authClient.channel("online-users");
+    presenceChannel.subscribe(function(status) {
+      if (status === "SUBSCRIBED") {
+        presenceChannel.track({
+          user_id: session.user.id,
+          online_at: new Date().toISOString()
+        });
+      }
+    });
+  } catch(e) { console.warn("Presence error:", e); }
 
   renderExpiryBadge();
   renderWelcome();
