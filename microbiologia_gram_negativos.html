@@ -351,7 +351,7 @@ em { color: var(--accent2); }
   <div class="badge">🔬 Microbiología Médica · P2 · 2026</div>
   <h1>Resumen de Microbiología P2</h1>
   <p class="sub">Gram-Negativos · Gram-Positivos · Enterobacteriáceas · No Fermentadores · Neisseria · Espiroquetas</p>
-  <p class="by">⚡ Elaborado por Enzo Salmazo · Jawetz 28ª ed. · Dr. Marcos Rigonato</p>
+  <p class="by">⚡ Elaborado por Enzo Salmazo · Jawetz 28ª ed.</p>
   <p class="verse">📖 "Mil caerán a tu lado y diez mil a tu diestra, pero a ti no te llegará" — Salmos 91:7</p>
 </header>
 
@@ -364,7 +364,7 @@ em { color: var(--accent2); }
   <button onclick="showSection('others', this)">🌿 Otros/Espiroq.</button>
   <button onclick="showSection('flashcards', this)">🃏 Flashcards</button>
   <button onclick="showSection('treino', this)">📚 Treino (55Q)</button>
-  <button onclick="showSection('simulado', this)">📝 Provas</button>
+  <button onclick="showSection('simulado', this)">📝 Provas (35Q)</button>
   <button onclick="showSection('cases', this)">🏥 Casos</button>
 </nav>
 
@@ -374,7 +374,7 @@ em { color: var(--accent2); }
 <div class="info-block">
   <div class="label">Visión General</div>
   <h4>Sobre este material</h4>
-  <p>Este resumen organiza el contenido de la P2 de Microbiología en seis grandes bloques — <strong>Enterobacteriaceae</strong>, <strong>Bacilos Curvos/No Fermentadores</strong>, <strong>Haemophilus & similares</strong>, <strong>Neisseria</strong>, <strong>Otros Gram-Negativos + Espiroquetas</strong> — además de questões sobre Gram-positivos (Staphylococcus, Streptococcus, Cutibacterium), volcados al estudio de graduación en Medicina. Incluye <strong>24 flashcards interactivos</strong>, <strong>55 questões de treino</strong> nível prova, las <strong>preguntas exactas de pruebas anteriores</strong> con gabarito, y <strong>4 casos clínicos</strong> completos.</p>
+  <p>Este resumen organiza el contenido de la P2 de Microbiología en seis grandes bloques — <strong>Enterobacteriaceae</strong>, <strong>Bacilos Curvos/No Fermentadores</strong>, <strong>Haemophilus & similares</strong>, <strong>Neisseria</strong>, <strong>Otros Gram-Negativos + Espiroquetas</strong> — además de questões sobre Gram-positivos (Staphylococcus, Streptococcus, Cutibacterium), volcados al estudio de graduación en Medicina. Incluye <strong>24 flashcards interactivos</strong>, <strong>55 questões de treino</strong>, <strong>35 questões de provas anteriores</strong> (2 provas completas com gabarito), y <strong>4 casos clínicos</strong>. Total: <strong>90 questões</strong>.</p>
 </div>
 <div class="info-block success">
   <div class="label">Cómo estudiar</div>
@@ -383,8 +383,8 @@ em { color: var(--accent2); }
     <li>Lea cada sección en orden (Enterobacteriaceae → Curvos/NF → Haemophilus → Neisseria → Otros/Espiroquetas).</li>
     <li>Use los flashcards después de terminar la lectura para fijar conceptos.</li>
     <li>Haga las <strong>55 questões de treino</strong> para testar seu conhecimento de todas as bactérias.</li>
-    <li>Revise as <strong>questões que já caíram em provas</strong> — são as perguntas exatas do modelo de exame.</li>
-    <li>Los casos clínicos integran todo el contenido en contextos reales.</li>
+    <li>Revise as <strong>35 questões de provas anteriores</strong> (Prova 1: 17Q + Prova 2: 18Q) — são perguntas exatas de exames passados.</li>
+    <li>Os <strong>4 casos clínicos</strong> integram todo o conteúdo em contextos reais.</li>
   </ol>
 </div>
 <div class="sec-divider"><h3>Resumen de las 24 Bacterias</h3></div>
@@ -652,7 +652,7 @@ em { color: var(--accent2); }
 <div id="simulado" class="section">
 <div class="container">
 <div class="chapter-title"><span class="chap-icon">📝</span> Questões que já Caíram em Provas</div>
-<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Preguntas exactas del modelo de examen de Microbiología P2. Sección I (alternativas correctas) y Sección II (Verdadero/Falso). Gabarito comentado.</p>
+<p style="color:var(--muted);font-size:13px;margin-bottom:24px;"><strong>Prova 1</strong>: 17 questões — alternativas + V/F. <strong>Prova 2</strong>: 18 questões — alternativas + V/F. Total: <strong>35 questões</strong> com gabarito comentado.</p>
 <div class="quiz-container" id="quiz-container"></div>
 </div></div>
 
@@ -1422,8 +1422,34 @@ const examData = [
   {q:"13. [V/F] La catalasa es la enzima que diferencia a S. aureus de otros estafilococos.", opts:["Verdadero","Falso"], correct:0, explain:"VERDADERO. La prueba de catalasa diferencia Staphylococcus (catalasa ⊕) de Streptococcus (catalasa ⊖). La COAGULASA diferencia S. aureus (coagulasa ⊕) de estafilococos coagulasa-negativos."},
   {q:"14. [V/F] Las toxinas exfoliativas de S. aureus causan el síndrome de la piel escaldada.", opts:["Verdadero","Falso"], correct:0, explain:"VERDADERO. Las exfoliatinas A y B de S. aureus clivan la desmogleína-1 (proteína de adhesión epidérmica) → separación de la capa granulosa → síndrome de piel escaldada estafilocócica (SSSS)."},
   {q:"15. [V/F] La leucocidina de Panton-Valentine está asociada a neumonía necrotizante grave.", opts:["Verdadero","Falso"], correct:0, explain:"VERDADERO. PVL (Panton-Valentine Leucocidina) forma poros en neutrófilos → destrucción masiva → neumonía necrotizante hemorrágica grave en jóvenes sanos. Asociada a CA-MRSA."},
-  {q:"16. [V/F] Staphylococcus saprophyticus es el principal causador de infección urinaria.", opts:["Verdadero","Falso"], correct:1, explain:"FALSO. El principal causador de ITU es Escherichia coli (80%). S. saprophyticus es la SEGUNDA causa en mujeres jóvenes sexualmente activas."},
-  {q:"17. [V/F] La coagulasa degrada el ácido hialurónico del tejido conectivo.", opts:["Verdadero","Falso"], correct:1, explain:"FALSO. La HIALURONIDASA degrada el ácido hialurónico. La COAGULASA convierte fibrinógeno en fibrina (formando coágulo protector alrededor de la bacteria)."}
+  {q:"16. [V/F] Staphylococcus saprophyticus es el principal causador de infección urinaria.", opts:["Verdadero","Falso"], correct:1, explain:"FALSO. El principal causador de ITU es Escherichia coli (80%). S. saprophyticus es la SEGUNDA causa en mujeres jóvenes sexualmente activas.", prova:1},
+  {q:"17. [V/F] La coagulasa degrada el ácido hialurónico del tejido conectivo.", opts:["Verdadero","Falso"], correct:1, explain:"FALSO. La HIALURONIDASA degrada el ácido hialurónico. La COAGULASA convierte fibrinógeno en fibrina (formando coágulo protector alrededor de la bacteria).", prova:1},
+
+  // ═══════════════════════════════════════════════════════════
+  // PROVA 2 — UCP
+  // ═══════════════════════════════════════════════════════════
+
+  // SECCIÓN I — ALTERNATIVAS CORRECTAS (12P)
+  {q:"18. En el laboratorio se reciben heces de un paciente con sospecha de cólera. El técnico debe preparar el medio de cultivo. ¿Cuál es el pH óptimo en el que crece mejor Vibrio cholerae?", opts:["pH 5.0-6.0 (ácido)","pH 7.0-7.5 (neutro)","pH 8.5-9.5 (alcalino)","pH 4.0-4.5 (muy ácido)"], correct:2, explain:"V. cholerae crece óptimamente en pH ALCALINO (8.5-9.5). El medio TCBS tiene pH 8.6. Es SENSIBLE al ácido clorhídrico del estómago — por eso pacientes con IBP (omeprazol) tienen mayor riesgo.", prova:2},
+  {q:"19. Un paciente de 65 años con diabetes es ingresado en la UCI tras una cirugía mayor. Presenta fiebre y secreción purulenta de color verdoso en la herida quirúrgica, tinción de Gram se observa bacilos Gramnegativos. ¿Cuál es el patógeno más probable?", opts:["Staphylococcus aureus","Pseudomonas aeruginosa","Escherichia coli","Streptococcus pneumoniae"], correct:1, explain:"Secreción verdosa + bacilos Gram-negativos + UCI + diabético = Pseudomonas aeruginosa. Produce piocianina (azul) y pioverdina (verde) → coloración azul-esverdeada. S. aureus es Gram-positivo.", prova:2},
+  {q:"20. Un usuario de drogas intravenosas (UDIV) de 28 años presenta fiebre alta, soplo cardíaco nuevo de regurgitación tricuspídea y múltiples embolias pulmonares sépticas. Los hemocultivos son positivos para un bacilo gramnegativo con colonias pigmentadas rojas. ¿Cuál es el agente causal más probable y la infección que desarrolló?", opts:["Pseudomonas aeruginosa; endocarditis de válvula aórtica","Serratia marcescens; endocarditis de válvula tricúspide","Staphylococcus aureus; endocarditis derecha","Klebsiella pneumoniae; bacteriemia por catéter venoso"], correct:1, explain:"Colonias pigmentadas ROJAS (prodigiosina) + UDIV + endocarditis tricuspídea = Serratia marcescens. S. aureus es Gram-positivo y no produce colonias rojas. Pseudomonas produce pigmento azul-esverdeado, no rojo.", prova:2},
+  {q:"21. Un paciente con sonda urinaria de larga duración desarrolla cálculos coraliformes. El análisis muestra cristales de estruvita. ¿Qué bacteria alcaliniza la orina?", opts:["Escherichia coli","Klebsiella","Proteus mirabilis","Enterococcus"], correct:2, explain:"Proteus mirabilis: urease ⊕⊕⊕ → convierte urea en amonio + CO₂ → pH ALCALINO → cristales de estruvita (fosfato de amonio y magnesio) → cálculos coraliformes. E. coli causa ITU pero con pH ácido y sin estruvita.", prova:2},
+  {q:"22. Una mujer de 28 años consulta por flujo vaginal grisáceo con olor a pescado, especialmente después del coito. El pH vaginal es 5.2. ¿Cuál es el diagnóstico más probable?", opts:["Candidiasis vaginal","Tricomoniasis","Vaginosis bacteriana","Vaginitis bacteriana"], correct:2, explain:"Flujo grisáceo + olor a pescado (peor post-coito por semen alcalino) + pH >4.5 = VAGINOSIS bacteriana (Gardnerella vaginalis). Candidíasis tiene pH <4.5 y flujo blanco grumoso. Vaginitis tendría leucocitos.", prova:2},
+  {q:"23. Un hombre de 60 años fumador desarrolla neumonía severa después de un viaje en crucero. Presenta fiebre alta, tos no productiva y diarrea, diagnóstico microbiológico Bacilo Gramnegativo aeróbico. ¿Cuál es el diagnóstico más probable?", opts:["Neumonía por Streptococcus pneumoniae","Legionelosis","Neumonía por Mycoplasma","Neumonía viral"], correct:1, explain:"Neumonía severa + crucero (torres de refrigeración/agua) + diarrea + bacilo GN aeróbico = LEGIONELOSIS (L. pneumophila). S. pneumoniae es Gram-positivo. Mycoplasma no se tiñe por Gram.", prova:2},
+  {q:"24. Un paciente quemado con quemaduras del 40% de la superficie corporal desarrolla infección de la herida con exudado de coloración azul-verdosa y olor dulzón característico. ¿Cuál es el agente más probable y qué pigmento produce esta coloración?", opts:["Serratia marcescens; prodigiosina roja","Pseudomonas aeruginosa; prodigiosina","Klebsiella pneumoniae; pigmento capsular verdoso","Pseudomonas aeruginosa; piocianina"], correct:3, explain:"Exudado AZUL-VERDOSO + olor DULZÓN (2-aminoacetofenona) + quemados = Pseudomonas aeruginosa. El pigmento es PIOCIANINA (azul) + pioverdina (verde). Prodigiosina es ROJA y es de Serratia.", prova:2},
+  {q:"25. Un médico explica la diferencia entre vaginosis bacteriana y vaginitis. Un estudiante pregunta por qué no se llama 'vaginitis' si hay infección. ¿Por qué la vaginosis bacteriana se denomina 'vaginosis' y no 'vaginitis'?", opts:["Porque solo afecta la vagina y no el cuello uterino","Porque no hay inflamación y sí un desequilibrio de la flora bacteriana","Porque el agente causal no es un patógeno sino flora normal","Porque la inflamación ocurre solo en el cuello uterino"], correct:1, explain:"VAGINOSIS = desequilibrio de la flora (↓Lactobacillus ↑Gardnerella) SIN inflamación, SIN leucocitos. VAGINITIS = proceso inflamatorio CON leucocitos (Candida, Trichomonas). El sufijo '-osis' indica proceso no inflamatorio.", prova:2},
+  {q:"26. Una mujer de 27 años con gonorrea cervical no tratada desarrolla dolor pélvico intenso, fiebre, cervicitis y secreción mucopurulenta. La ecografía muestra engrosamiento de trompas uterinas. ¿Qué complicación tardía grave puede ocurrir si esta infección no se trata adecuadamente?", opts:["Cáncer de cuello uterino","Quiste ovárico hemorrágico","Cistitis intersticial crónica","Salpingitis con riesgo de esterilidad"], correct:3, explain:"Gonorrea cervical no tratada → ascensión → salpingitis (inflamación de trompas) → DIP (enfermedad inflamatoria pélvica) → adherencias tubáricas → ESTERILIDAD. Es la complicación reproductiva más temida.", prova:2},
+  {q:"27. Hombre mordido por un gato desarrolla celulitis de rápida progresión con linfadenitis regional. El cultivo revela cocobacilos gramnegativos. ¿Qué bacteria es la causa más probable?", opts:["Bartonella henselae","Pasteurella multocida","Capnocytophaga canimorsus","Streptococcus pyogenes"], correct:1, explain:"Mordedura de GATO + celulitis rápida (<24-48h) + cocobacilo Gram-negativo = Pasteurella multocida. Bartonella causa enfermedad por arañazo (no mordedura). Tratamiento: amoxicilina-clavulanato o penicilina G.", prova:2},
+  {q:"28. ¿Cuál es el principal mecanismo de acción de la toxina colérica producida por Vibrio cholerae?", opts:["Inhibición de la síntesis de proteínas ribosomales","Activación de la adenilato ciclasa y aumento del AMPc","Activación del guanilato ciclasa","Bloqueo del canal de sodio"], correct:1, explain:"Toxina colérica: Subunidad B→GM1 → Subunidad A1 ADP-ribosila la proteína Gsα → ACTIVA adenilato ciclasa de forma PERMANENTE → ↑AMPc → CFTR secreta Cl⁻ → H₂O por osmose → diarrea profusa.", prova:2},
+  {q:"29. ¿Qué manifestación extragenital más común se puede observar en una infección diseminada por gonococo?", opts:["Hepatitis fulminante","Meningitis","Artritis séptica","Endocarditis"], correct:2, explain:"La infección gonocócica diseminada (DGI) se manifiesta principalmente como ARTRITIS SÉPTICA (monoarticular o poliarticular migratoria) + dermatitis (pústulas) + tenosinovitis. Es la forma extragenital más común.", prova:2},
+
+  // SECCIÓN II — VERDADERO / FALSO (6P)
+  {q:"30. [V/F] La fiebre de Pontiac es autolimitada y con neumonía, no requiere antibióticos; la enfermedad del Legionario causa neumonía grave con alta mortalidad.", opts:["Verdadero","Falso"], correct:1, explain:"FALSO. La fiebre de Pontiac es autolimitada y SIN neumonía (solo síndrome gripal). La enfermedad del Legionario SÍ causa neumonía grave. El error está en decir que Pontiac tiene neumonía.", prova:2},
+  {q:"31. [V/F] Un paciente joven con meningitis meningocócica confirmada evoluciona a hipotensión refractaria, CIVD, insuficiencia suprarrenal e insuficiencia multiorgánica. Este síndrome de meningococcemia fulminante con insuficiencia suprarrenal se denomina Síndrome de Stevens-Johnson.", opts:["Verdadero","Falso"], correct:1, explain:"FALSO. Se denomina Síndrome de WATERHOUSE-FRIDERICHSEN (hemorragia adrenal bilateral + CIVD + insuficiencia suprarrenal). Stevens-Johnson es una reacción cutánea grave por fármacos — NO tiene relación con meningococo.", prova:2},
+  {q:"32. [V/F] Proteus mirabilis produce pielonefritis obstructiva por cálculos de estruvita (por su ureasa), mientras E. coli típicamente produce pielonefritis sin cálculos.", opts:["Verdadero","Falso"], correct:0, explain:"VERDADERO. Proteus = urease ⊕ → pH alcalino → cristales de estruvita → cálculos → pielonefritis obstructiva. E. coli = causa más común de pielonefritis pero NO produce cálculos (pH ácido, sin urease relevante).", prova:2},
+  {q:"33. [V/F] La morfología microscópica característica que tienen los meningococos son diplococos gramnegativos sin cápsula.", opts:["Verdadero","Falso"], correct:1, explain:"FALSO. N. meningitidis (meningococo) son diplococos Gram-negativos CON CÁPSULA. La cápsula es el principal factor de virulencia (sorotipos A, B, C, W, Y). El que NO tiene cápsula es N. gonorrhoeae.", prova:2},
+  {q:"34. [V/F] La otitis externa maligna es causada por Pseudomonas aeruginosa en paciente diabético.", opts:["Verdadero","Falso"], correct:0, explain:"VERDADERO. Otitis externa maligna (necrosante) es causada por P. aeruginosa, especialmente en pacientes DIABÉTICOS y ancianos. Puede extenderse al hueso temporal → osteomielitis de base de cráneo.", prova:2},
+  {q:"35. [V/F] Colitis hemorrágica asociada a antibióticos por Klebsiella oxytoca está asociada a producción de tilivalina.", opts:["Verdadero","Falso"], correct:0, explain:"VERDADERO. K. oxytoca produce TILIVALINA — una citotoxina que causa colitis hemorrágica en pacientes que usaron antibióticos. Se resuelve con suspensión del ATB causador.", prova:2}
 ];
 
 // ================================================================
@@ -1447,8 +1473,12 @@ function renderExamQuiz() {
   }
   const q = examData[examState.cur];
   const pct = Math.round((examState.cur/examData.length)*100);
-  const sectionTag = examState.cur < 12 ? '<span style="font-size:10px;font-weight:700;letter-spacing:0.1em;padding:3px 10px;border-radius:20px;background:rgba(79,156,249,0.12);border:1px solid rgba(79,156,249,0.3);color:var(--accent);margin-bottom:10px;display:inline-block;">I — ALTERNATIVA CORRECTA</span>' :
-                     '<span style="font-size:10px;font-weight:700;letter-spacing:0.1em;padding:3px 10px;border-radius:20px;background:rgba(249,121,79,0.12);border:1px solid rgba(249,121,79,0.3);color:var(--accent3);margin-bottom:10px;display:inline-block;">II — VERDADERO / FALSO</span>';
+  const isVF = q.opts.length === 2 && (q.opts[0]==='Verdadero'||q.opts[0]==='Verdadeiro');
+  const provaNum = q.prova || 1;
+  const provaColor = provaNum===1 ? 'var(--accent)' : 'var(--accent3)';
+  const sectionTag = isVF
+    ? `<span style="font-size:10px;font-weight:700;letter-spacing:0.1em;padding:3px 10px;border-radius:20px;background:rgba(249,121,79,0.12);border:1px solid rgba(249,121,79,0.3);color:var(--accent3);margin-bottom:10px;display:inline-block;">PROVA ${provaNum} — V / F</span>`
+    : `<span style="font-size:10px;font-weight:700;letter-spacing:0.1em;padding:3px 10px;border-radius:20px;background:rgba(79,156,249,0.12);border:1px solid ${provaColor};color:${provaColor};margin-bottom:10px;display:inline-block;">PROVA ${provaNum} — ALTERNATIVA CORRECTA</span>`;
 
   c.innerHTML = `
     <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
