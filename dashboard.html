@@ -256,6 +256,24 @@
     .cart-item-remove:hover { background:rgba(248,113,113,0.12); color:#f87171; }
     .cart-combo-hint { padding:12px 14px; border-radius:12px; background:rgba(74,222,128,0.06); border:1px solid rgba(74,222,128,0.2); font-size:12px; color:rgba(74,222,128,0.8); line-height:1.5; display:none; }
     .cart-combo-hint.visible { display:block; }
+
+    /* Cupom */
+    .cart-cupom { padding:0; margin-bottom:10px; }
+    .cart-cupom-row { display:flex; gap:6px; }
+    .cart-cupom-input { flex:1; padding:9px 12px; border-radius:9px; border:1px solid rgba(34,211,238,0.18); background:rgba(255,255,255,0.04); color:#e2f8fc; font-size:12px; font-family:'Poppins',sans-serif; outline:none; transition:border-color .2s; text-transform:uppercase; }
+    .cart-cupom-input::placeholder { color:rgba(125,211,232,0.3); text-transform:none; }
+    .cart-cupom-input:focus { border-color:var(--cyan); background:rgba(34,211,238,0.06); }
+    .cart-cupom-btn { padding:9px 14px; border-radius:9px; border:1px solid rgba(34,211,238,0.25); background:rgba(34,211,238,0.1); color:#22d3ee; font-size:11px; font-weight:600; font-family:'Poppins',sans-serif; cursor:pointer; transition:all .2s; white-space:nowrap; }
+    .cart-cupom-btn:hover { background:rgba(34,211,238,0.2); border-color:rgba(34,211,238,0.5); }
+    .cart-cupom-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .cart-cupom-msg { font-size:11px; margin-top:5px; line-height:1.3; }
+    .cart-cupom-msg.ok { color:#4ade80; }
+    .cart-cupom-msg.err { color:#f87171; }
+    .cart-cupom-applied { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border-radius:9px; background:rgba(168,85,247,0.08); border:1px solid rgba(168,85,247,0.2); }
+    .cart-cupom-applied-text { font-size:11px; font-weight:600; color:rgba(168,85,247,0.9); }
+    .cart-cupom-remove { background:none; border:none; color:rgba(248,113,113,0.6); font-size:12px; cursor:pointer; padding:2px 6px; }
+    .cart-cupom-remove:hover { color:#f87171; }
+    .cart-summary-row.cupom-row { color:rgba(168,85,247,0.9); }
     .cart-footer { padding:18px 20px; padding-bottom:calc(18px + env(safe-area-inset-bottom, 0px)); border-top:1px solid rgba(34,211,238,0.1); flex-shrink:0; }
     .cart-summary { margin-bottom:14px; display:flex; flex-direction:column; gap:7px; }
     .cart-summary-row { display:flex; justify-content:space-between; font-size:13px; color:rgba(125,211,232,0.5); }
@@ -1090,6 +1108,20 @@
 
   <div class="cart-footer" id="cartFooter" style="display:none;">
     <div class="cart-combo-hint" id="cartComboHint"></div>
+
+    <!-- CUPOM -->
+    <div class="cart-cupom" id="cartCupomArea">
+      <div class="cart-cupom-row" id="cupomInputRow">
+        <input type="text" class="cart-cupom-input" id="cupomInput" placeholder="Código do cupom" maxlength="30" autocomplete="off">
+        <button class="cart-cupom-btn" id="cupomBtn" onclick="aplicarCupom()">Aplicar</button>
+      </div>
+      <div class="cart-cupom-msg" id="cupomMsg"></div>
+      <div class="cart-cupom-applied" id="cupomApplied" style="display:none;">
+        <span class="cart-cupom-applied-text" id="cupomAppliedText"></span>
+        <button class="cart-cupom-remove" onclick="removerCupom()">✕ Remover</button>
+      </div>
+    </div>
+
     <div class="cart-summary" id="cartSummary">
       <div class="cart-summary-row">
         <span>Subtotal</span>
@@ -1098,6 +1130,10 @@
       <div class="cart-summary-row desconto" id="cartDescontoRow" style="display:none;">
         <span>🏷️ Desconto pacote</span>
         <span id="cartDesconto">- R$ 0,00</span>
+      </div>
+      <div class="cart-summary-row cupom-row" id="cartCupomRow" style="display:none;">
+        <span id="cartCupomLabel">🎟️ Cupom</span>
+        <span id="cartCupomDesconto">- R$ 0,00</span>
       </div>
       <div class="cart-summary-row total">
         <span>Total</span>
@@ -2552,6 +2588,65 @@ function formatPrice(v) {
   return "R$ " + v.toFixed(2).replace(".", ",");
 }
 
+/* ── Cupom ──────────────────────────────────────────────────────────────────── */
+var cupomAtivo = null; // { codigo, desconto_pct }
+
+window.aplicarCupom = async function() {
+  var input = document.getElementById("cupomInput");
+  var msg = document.getElementById("cupomMsg");
+  var btn = document.getElementById("cupomBtn");
+  var code = (input.value || "").trim().toUpperCase();
+
+  if (!code) { msg.className = "cart-cupom-msg err"; msg.textContent = "Digite um código."; return; }
+
+  btn.disabled = true; btn.textContent = "Validando…";
+  msg.className = "cart-cupom-msg"; msg.textContent = "";
+
+  try {
+    var res = await window.authClient
+      .from("cupons")
+      .select("*")
+      .eq("codigo", code)
+      .single();
+
+    if (!res.data) { msg.className = "cart-cupom-msg err"; msg.textContent = "Cupom não encontrado."; btn.disabled = false; btn.textContent = "Aplicar"; return; }
+
+    var c = res.data;
+    if (!c.ativo) { msg.className = "cart-cupom-msg err"; msg.textContent = "Cupom inativo."; btn.disabled = false; btn.textContent = "Aplicar"; return; }
+    if (c.expira_em && new Date(c.expira_em) < new Date()) { msg.className = "cart-cupom-msg err"; msg.textContent = "Cupom expirado."; btn.disabled = false; btn.textContent = "Aplicar"; return; }
+    if (c.max_usos && c.usos >= c.max_usos) { msg.className = "cart-cupom-msg err"; msg.textContent = "Cupom esgotado."; btn.disabled = false; btn.textContent = "Aplicar"; return; }
+
+    // Válido!
+    cupomAtivo = { codigo: c.codigo, desconto_pct: c.desconto_pct };
+    document.getElementById("cupomInputRow").style.display = "none";
+    msg.className = "cart-cupom-msg"; msg.textContent = "";
+    var applied = document.getElementById("cupomApplied");
+    applied.style.display = "flex";
+    document.getElementById("cupomAppliedText").textContent = "🎟️ " + c.codigo + " — " + c.desconto_pct + "% OFF";
+    updateCartUI();
+  } catch(e) {
+    msg.className = "cart-cupom-msg err";
+    msg.textContent = "Erro ao validar. Tente novamente.";
+    console.warn("Cupom error:", e);
+  }
+  btn.disabled = false; btn.textContent = "Aplicar";
+};
+
+window.removerCupom = function() {
+  cupomAtivo = null;
+  document.getElementById("cupomInputRow").style.display = "flex";
+  document.getElementById("cupomInput").value = "";
+  document.getElementById("cupomApplied").style.display = "none";
+  document.getElementById("cupomMsg").textContent = "";
+  updateCartUI();
+};
+
+// Enter no input de cupom
+document.addEventListener("DOMContentLoaded", function() {
+  var ci = document.getElementById("cupomInput");
+  if (ci) ci.addEventListener("keydown", function(e) { if (e.key === "Enter") aplicarCupom(); });
+});
+
 function updateCartUI() {
   var n = cart.length;
   var fab = document.getElementById("cartFab");
@@ -2617,6 +2712,19 @@ function updateCartUI() {
     descontoRow.style.display = "none";
   }
   document.getElementById("cartTotal").textContent = formatPrice(calc.total);
+
+  // Cupom aplicado
+  var cupomRow = document.getElementById("cartCupomRow");
+  if (cupomAtivo && calc.total > 0) {
+    var cupomVal = Math.round(calc.total * cupomAtivo.desconto_pct) / 100;
+    var totalComCupom = Math.max(0, calc.total - cupomVal);
+    cupomRow.style.display = "flex";
+    document.getElementById("cartCupomLabel").textContent = "🎟️ Cupom " + cupomAtivo.codigo + " (" + cupomAtivo.desconto_pct + "%)";
+    document.getElementById("cartCupomDesconto").textContent = "- " + formatPrice(cupomVal);
+    document.getElementById("cartTotal").textContent = formatPrice(totalComCupom);
+  } else {
+    cupomRow.style.display = "none";
+  }
 }
 
 window.checkoutCart = function() {
@@ -2625,16 +2733,23 @@ window.checkoutCart = function() {
   var nomes = cart.map(function(c){ return c.label; }).join(", ");
   var keys = cart.map(function(c){ return c.key; });
 
+  // Aplica cupom ao total
+  var finalTotal = calc.total;
+  if (cupomAtivo && finalTotal > 0) {
+    var cupomVal = Math.round(finalTotal * cupomAtivo.desconto_pct) / 100;
+    finalTotal = Math.max(0, finalTotal - cupomVal);
+  }
+
   // Se for 1 item só, usa fluxo normal
   if (keys.length === 1) {
     var item = cart[0];
-    initPayment(item.key, item.label, item.preco);
+    initPayment(item.key, item.label, finalTotal);
     closeCart();
     return;
   }
 
   // Múltiplos: manda lista completa
-  initPaymentMultiple(keys, nomes, calc.total);
+  initPaymentMultiple(keys, nomes, finalTotal);
   closeCart();
 };
 
@@ -2947,6 +3062,6 @@ document.addEventListener("authReady", async function(e) {
 </script>
 
 <script src="enzo-ia.js"></script>
-<script src="mascote-copa.js"></script> <!-- ⚽ Copa 2026 — remover após o mundial -->
+<script src="mascote-copa.js"></script>
 </body>
 </html>
