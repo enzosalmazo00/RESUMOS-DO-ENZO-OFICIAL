@@ -128,6 +128,8 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
   .compare-table{font-size:12px}
   .compare-table th,.compare-table td{padding:8px 10px}
 }
+.back-btn{position:fixed;bottom:24px;left:24px;z-index:9999;display:flex;align-items:center;gap:9px;padding:12px 26px;background:rgba(10,13,20,0.93);border:1.5px solid rgba(79,156,249,0.42);border-radius:50px;color:#e8eaf6;font-size:13px;font-weight:600;letter-spacing:0.03em;text-decoration:none;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 4px 24px rgba(79,156,249,0.16),inset 0 1px 0 rgba(255,255,255,0.04);transition:all .25s ease}
+.back-btn:hover{background:rgba(79,156,249,0.14);border-color:rgba(79,156,249,0.85)}
 </style>
 </head>
 <body>
@@ -170,6 +172,7 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
 </nav>
 
 <button id="scrolltop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<a class="back-btn" href="dashboard.html">← Volver</a>
 
 <!-- ════════════════════════════════════════════════ INTRO ════════════════════════════════════════════════ -->
 <div id="intro" class="section active">
@@ -1900,6 +1903,186 @@ const QD=[
    cr:'B',ex:'Isquemia renal → ↑ Renina. Angiotensinógeno (hígado) → Ang I. ECA (pulmón) → Ang II. Ang II → vasoconstricción + aldosterona (suprarrenal) → retención Na⁺ + H₂O → ↑ PA.'},
   {t:'ab',c:'Integr.',n:50,q:'Compare el mecanismo de contracción del músculo esquelético, liso y cardíaco respecto al papel del Ca²⁺.',
    ex:'ESQUELÉTICO: Ca²⁺ viene del RS (no necesita Ca²⁺ extracelular). Ca²⁺ se une a Troponina C → tropomiosina se desplaza → sitios activos expuestos → contracción.\n\nLISO: Ca²⁺ viene principalmente del LEC. NO tiene troponina. Ca²⁺ se une a calmodulina → MLCK → fosforila miosina → contracción. Relajación: MLCP retira fosfato.\n\nCARDÍACO: Ca²⁺ viene tanto del RS como del LEC (fase 2 del PA cardíaco — meseta). Se une a Troponina C (como esquelético). La meseta de Ca²⁺ sostiene la contracción prolongada y el período refractario largo (0,25–0,30 s) impide tetanización.'},
+
+  // ════════════════════════════════════════════════════════════════════════════
+  // NUEVAS PREGUNTAS — Quiz Renal PA (del archivo quiz6)
+  // ════════════════════════════════════════════════════════════════════════════
+
+  // Cap 19-21 — Control Renal de la PA (18 preguntas del quiz6)
+  {t:'mc',c:'19',n:51,q:'¿Cómo actúa el sistema de líquidos renal-corporal para controlar la PA?',
+   o:[{l:'A',v:'Actúa rápidamente (segundos) con efecto débil y transitorio'},{l:'B',v:'Actúa LENTO pero PODEROSO — si volumen ↑ → riñones excretan exceso → PA normaliza'},{l:'C',v:'Actúa moderadamente rápido (minutos) con efecto permanente'},{l:'D',v:'Solo actúa cuando el SNS falla'}],
+   cr:'B',ex:'Sistema renal-corporal: LENTO pero PODEROSÍSIMO. Tiene ganancia de retroalimentación casi INFINITA a largo plazo — el único sistema que puede sostener cambios crónicos de PA.'},
+  {t:'mc',c:'19',n:52,q:'Con PA de 200 mmHg, ¿cuánto es la diuresis comparada con PA normal (100 mmHg)?',
+   o:[{l:'A',v:'El doble de lo normal (2×)'},{l:'B',v:'El triple (3×)'},{l:'C',v:'Entre 4 y 6 veces lo normal'},{l:'D',v:'10 veces lo normal'}],
+   cr:'C',ex:'Diuresis por presión: PA 50→diuresis ≈ 0. PA 100→normal (1×). PA 200→4-6× lo normal. Un pequeño ↑PA duplica la eliminación renal de agua.'},
+  {t:'mc',c:'19',n:53,q:'¿Qué es la natriuresis por presión?',
+   o:[{l:'A',v:'Eliminación de K⁺ inducida por ↑PA; independiente de la diuresis'},{l:'B',v:'Aumento de eliminación de Na⁺ que acompaña al ↑diuresis cuando sube la PA'},{l:'C',v:'Retención de Na⁺ por los riñones cuando la PA disminuye'},{l:'D',v:'Secreción de aldosterona en respuesta al ↑PA'}],
+   cr:'B',ex:'Natriuresis por presión: ↑PA → ↑producción de orina (diuresis) + ↑eliminación de Na⁺ en proporción similar. Ambas contribuyen a reducir LEC y normalizar PA.'},
+  {t:'mc',c:'19',n:54,q:'¿Cuál es la cascada completa del sistema renina-angiotensina?',
+   o:[{l:'A',v:'Hipotensión → Aldosterona → Angiotensinógeno → Ang I → ECA (hígado) → Ang II'},{l:'B',v:'Hipotensión → Renina (riñón) → Angiotensinógeno (hígado) → Ang I → ECA (pulmón) → Ang II'},{l:'C',v:'Hipotensión → ECA (pulmón) → Angiotensinógeno → Renina → Ang I → Ang II'},{l:'D',v:'Hipotensión → Angiotensinasa → Ang I → Renina → Ang II'}],
+   cr:'B',ex:'Cascada SRA: Hipotensión → RENINA (células yuxtaglomerulares) → ANGIOTENSINÓGENO (hígado) → ANG I → ECA en PULMÓN → ANG II (vida media 1-2 min).'},
+  {t:'mc',c:'19',n:55,q:'¿Cuáles son los 3 mecanismos que estimulan la liberación de renina?',
+   o:[{l:'A',v:'↑PA, ↑NaCl en túbulo distal, ↑tono parasimpático'},{l:'B',v:'↓PA en art. aferente; ↓NaCl en mácula densa; ↑actividad del SNS'},{l:'C',v:'↓PA, ↑renina sérica, activación del complemento'},{l:'D',v:'↑Osmolalidad, ↓ADH, ↑aldosterona'}],
+   cr:'B',ex:'3 mecanismos: (1) Barorreceptores en células YUXTAGLOMERULARES detectan ↓presión; (2) ↓NaCl en MÁCULA DENSA; (3) ↑SNS. Los tres se activan en hipotensión/hipovolemia.'},
+  {t:'mc',c:'19',n:56,q:'¿Por cuáles dos mecanismos la Angiotensina II retiene sal y agua?',
+   o:[{l:'A',v:'Vasoconstricción eferente + inhibición de hormona natriurética auricular'},{l:'B',v:'Acción directa sobre túbulos (retención Na⁺/H₂O) + estimulación de aldosterona en suprarrenales'},{l:'C',v:'Inhibición de ECA + estimulación de ADH'},{l:'D',v:'Vasoconstricción arteriolar + ↑presión glomerular'}],
+   cr:'B',ex:'Ang II retiene Na⁺/H₂O por: (1) Acción DIRECTA sobre túbulos renales; (2) Estimula ALDOSTERONA en suprarrenales → ↑reabsorción Na⁺ y H₂O. IECA y ARA-II bloquean ambas vías.'},
+  {t:'mc',c:'19',n:57,q:'¿Cuál es la función integradora del SRA respecto a la ingesta de sal?',
+   o:[{l:'A',v:'Amplifica los cambios de PA ante variaciones de ingesta'},{l:'B',v:'Permite ingerir cantidades muy pequeñas o grandes de sal sin cambios importantes de PA'},{l:'C',v:'Regula exclusivamente la excreción de K⁺'},{l:'D',v:'Solo actúa con ingesta <1 g/día'}],
+   cr:'B',ex:'SRA como "tampón": mucha sal → ↑PA → ↓renina/ang → ↓retención → PA normaliza. Poca sal → lo opuesto. Permite adaptación a ingestas MUY VARIABLES sin cambiar PA.'},
+  {t:'mc',c:'19',n:58,q:'¿Por qué la sal aumenta la PA MÁS que la ingesta de agua pura?',
+   o:[{l:'A',v:'La sal tiene mayor peso molecular'},{l:'B',v:'El agua se excreta rápidamente; la sal ↑osmolalidad → sed + ↑ADH → ↑volumen LEC'},{l:'C',v:'La sal estimula directamente los barorreceptores'},{l:'D',v:'La sal inhibe la renina'}],
+   cr:'B',ex:'Agua pura: excretada casi igual de rápido. NaCl se acumula → ↑osmolalidad → (1) centro de la sed → más agua; (2) ↑ADH → ↑reabsorción → ↑LEC → ↑PA.'},
+  {t:'mc',c:'19',n:59,q:'¿Por qué la curva de eliminación renal CRÓNICA es más pronunciada que la AGUDA?',
+   o:[{l:'A',v:'Mayor FG crónica'},{l:'B',v:'Los efectos hormonales indirectos (SRA, aldosterona, ADH) amplifican la respuesta'},{l:'C',v:'↓Resistencia vascular renal con el tiempo'},{l:'D',v:'Los barorreceptores se adaptan'}],
+   cr:'B',ex:'A largo plazo entran en juego EFECTOS HORMONALES INDIRECTOS: SRA, aldosterona, ADH, péptidos natriuréticos. Pequeños cambios crónicos de PA → grandes cambios en excreción.'},
+  {t:'tf',c:'19',n:60,q:'Un aumento aislado de la RPT puede mantener la hipertensión a largo plazo si el riñón es normal.',
+   cr:'F',ex:'FALSO. ↑RPT sola NO mantiene HTA crónica con riñón normal. El riñón excreta el exceso → PA vuelve a normal en ~1 día. Para HTA crónica se necesita alterar la función renal.'},
+  {t:'mc',c:'19',n:61,q:'¿Cuáles son los DOS únicos determinantes de la PA media a largo plazo?',
+   o:[{l:'A',v:'FC y volumen sistólico'},{l:'B',v:'RPT y elasticidad arterial'},{l:'C',v:'Desplazamiento de la curva de eliminación renal + nivel de ingesta de sal/agua'},{l:'D',v:'Tono simpático y angiotensina II'}],
+   cr:'C',ex:'Los 2 ÚNICOS determinantes a LARGO PLAZO: (1) Desplazamiento de la CURVA DE ELIMINACIÓN RENAL; (2) Nivel de INGESTA DE SAL Y AGUA. RPT, FC solo afectan a corto plazo.'},
+  {t:'mc',c:'19',n:62,q:'¿Cuál es la cadena causal por la que ↑LEC eleva la PA?',
+   o:[{l:'A',v:'↑LEC → ↑RPT directamente → ↑PA'},{l:'B',v:'↑LEC → ↑vol sanguíneo → ↑presión llenado → ↑retorno venoso → ↑GC → autorregulación → ↑RPT → ↑PA'},{l:'C',v:'↑LEC → ↑ADH → ↑RPT → ↑PA'},{l:'D',v:'↑LEC → ↑renina → ↑Ang II → ↑PA'}],
+   cr:'B',ex:'↑LEC → ↑vol sanguíneo → ↑presión llenado circulatoria media → ↑retorno venoso → ↑GC → AUTORREGULACIÓN vascular → ↑RPT → ↑PA → ↑excreción renal.'},
+  {t:'mc',c:'20',n:63,q:'HTA crónica = PAM > 110 mmHg. ¿Cuáles son los 3 efectos letales principales?',
+   o:[{l:'A',v:'Cefalea, edema y fatiga crónica'},{l:'B',v:'Sobrecarga cardíaca → IC; infarto cerebral; lesión renal → insuficiencia renal'},{l:'C',v:'Retinopatía, neuropatía y nefropatía'},{l:'D',v:'HVI, microalbuminuria y retinopatía'}],
+   cr:'B',ex:'3 causas de muerte en HTA grave: (1) SOBRECARGA CARDÍACA → IC + cardiopatía coronaria; (2) INFARTO CEREBRAL; (3) LESIÓN RENAL → insuficiencia renal → uremia → muerte.'},
+  {t:'mc',c:'20',n:64,q:'En HTA por deterioro renal, ¿qué es el factor CAUSAL real?',
+   o:[{l:'A',v:'↑GC por desplazamiento de Frank-Starling'},{l:'B',v:'↑RESISTENCIA RENAL (curva de eliminación se desplaza hacia PA más altas)'},{l:'C',v:'Rigidez aórtica'},{l:'D',v:'Exceso de aldosterona'}],
+   cr:'B',ex:'El factor causal es ↑RESISTENCIA RENAL que desplaza la curva de eliminación hacia PA más altas. La RPT elevada es CONSECUENCIA (autorregulación), no causa primaria.'},
+  {t:'mc',c:'20',n:65,q:'En la hipertensión de Goldblatt con riñón único, ¿qué sucede?',
+   o:[{l:'A',v:'HTA inmediata por dolor; se resuelve sola'},{l:'B',v:'Constricción → ↓presión distal → isquemia → SRA activado → vasoconstricción → ↑PA sistémica'},{l:'C',v:'Barorreceptores renales → descarga simpática masiva'},{l:'D',v:'Retención inmediata de Na⁺/H₂O → ↑LEC → HTA por ↑GC'}],
+   cr:'B',ex:'Goldblatt: constricción art. renal → ↓presión distal → isquemia → renina ↑↑ → Ang II → PA sistémica ↑ → presión DISTAL se normaliza → PA se estabiliza en nivel elevado.'},
+  {t:'mc',c:'20',n:66,q:'¿Por cuáles 3 mecanismos la obesidad causa hipertensión primaria?',
+   o:[{l:'A',v:'↑FC, ↑VS y rigidez arterial'},{l:'B',v:'↑GC por flujo adiposo; ↑SNS por LEPTINA (adipocitos→hipotálamo→vasomotor); natriuresis alterada'},{l:'C',v:'↑RPT por inflamación endotelial, ↑Ang II, ↑ADH'},{l:'D',v:'↑Aldosterona, ↑cortisol, ↑endotelina'}],
+   cr:'B',ex:'HTA/obesidad: (1) ↑GC por flujo al tejido adiposo; (2) LEPTINA → hipotálamo → centro vasomotor → ↑SNS + ↑Ang II + aldosterona; (3) Natriuresis por presión ALTERADA.'},
+  {t:'mc',c:'20',n:67,q:'¿Cuál es el mecanismo por el cual la leptina contribuye a la HTA?',
+   o:[{l:'A',v:'Vasoconstricción directa sobre vasos'},{l:'B',v:'Adipocitos → leptina → hipotálamo → centro vasomotor → ↑SNS + ↑Ang II/aldosterona → ↑PA'},{l:'C',v:'Inhibición de renina'},{l:'D',v:'Hipersensibilidad de barorreceptores'}],
+   cr:'B',ex:'Leptina (adipokina): adipocitos → leptina → receptores HIPOTÁLAMO → centro VASOMOTOR bulbar → (1) ↑SNS + (2) ↑Ang II y aldosterona → retención Na⁺/H₂O + vasoconstricción.'},
+  {t:'tf',c:'19',n:68,q:'El sistema renal-corporal tiene ganancia de retroalimentación casi infinita porque corrige cualquier desviación crónica de PA sin error residual permanente.',
+   cr:'V',ex:'VERDADERO. Es el ÚNICO sistema con ganancia casi infinita: ↑PA → riñones excretan exceso → PA baja al punto de equilibrio. Ningún otro sistema tiene esta capacidad a largo plazo.'},
+
+  // ════════════════════════════════════════════════════════════════════════════
+  // NUEVAS PREGUNTAS ADICIONAIS — Todos los capítulos
+  // ════════════════════════════════════════════════════════════════════════════
+
+  // Cap 1
+  {t:'mc',c:'1',n:69,q:'¿Cuál es el ión predominante del LEC?',
+   o:[{l:'A',v:'K⁺'},{l:'B',v:'Na⁺'},{l:'C',v:'Mg²⁺'},{l:'D',v:'PO₄³⁻'}],
+   cr:'B',ex:'Na⁺ es el principal catión del LEC (140 mEq/L). K⁺ predomina en el LIC (140 mEq/L). Gradiente mantenido por bomba Na⁺/K⁺ ATPasa.'},
+  {t:'tf',c:'1',n:70,q:'El parto (oxitocina) y la coagulación son ejemplos de retroalimentación negativa.',
+   cr:'F',ex:'FALSO. Son ejemplos de retroalimentación POSITIVA: la respuesta AMPLIFICA el estímulo hasta un evento final. Negativa: la respuesta se OPONE al estímulo.'},
+
+  // Cap 4
+  {t:'mc',c:'4',n:71,q:'La difusión facilitada se diferencia de la difusión simple porque:',
+   o:[{l:'A',v:'Requiere ATP directamente'},{l:'B',v:'Utiliza proteínas transportadoras y tiene velocidad máxima (Vmax)'},{l:'C',v:'Es contra gradiente'},{l:'D',v:'Solo transporta iones'}],
+   cr:'B',ex:'Difusión facilitada: usa proteínas transportadoras (o canales), pasiva (a favor del gradiente), pero tiene SATURACIÓN (Vmax). Ej: GLUT para glucosa.'},
+  {t:'tf',c:'4',n:72,q:'La ósmosis es el movimiento neto de agua a través de una membrana semipermeable desde la zona de MAYOR osmolaridad hacia la de MENOR.',
+   cr:'F',ex:'FALSO. La ósmosis va de MENOR a MAYOR osmolaridad (de donde hay más agua libre hacia donde hay menos). El agua "sigue" a los solutos.'},
+
+  // Cap 5
+  {t:'mc',c:'5',n:73,q:'¿Cuál es el potencial de reposo de una neurona típica?',
+   o:[{l:'A',v:'-90 mV'},{l:'B',v:'-70 mV'},{l:'C',v:'-55 mV'},{l:'D',v:'-40 mV'}],
+   cr:'B',ex:'Neurona: -70 mV. Músculo esquelético: -85 a -90 mV. El umbral del PA es ~-55 mV (se necesita despolarización de 15-30 mV).'},
+  {t:'tf',c:'5',n:74,q:'Durante la fase de despolarización del PA, los canales de Na⁺ se abren y Na⁺ entra masivamente a la célula.',
+   cr:'V',ex:'VERDADERO. Fase de despolarización: canales Na⁺ voltaje-dependientes se abren → Na⁺ entra masivamente → potencial sube de -70 a +30 mV. Duración ~0,1 ms en neurona.'},
+
+  // Cap 6
+  {t:'mc',c:'6',n:75,q:'¿Cuántos sitios activos de actina cubre una molécula de tropomiosina?',
+   o:[{l:'A',v:'3 sitios'},{l:'B',v:'5 sitios'},{l:'C',v:'7 sitios'},{l:'D',v:'10 sitios'}],
+   cr:'C',ex:'Cada tropomiosina cubre 7 sitios activos de actina. Cuando Ca²⁺ se une a troponina C → tropomiosina rota → sitios expuestos → puentes cruzados.'},
+  {t:'tf',c:'6',n:76,q:'El ATP es necesario tanto para la contracción (golpe de fuerza) como para el desprendimiento de la cabeza de miosina.',
+   cr:'V',ex:'VERDADERO. (1) ATP se hidroliza para "amartillar" la cabeza → golpe de fuerza; (2) Nuevo ATP se une para DESPRENDER la cabeza de la actina. Sin ATP: rigor mortis.'},
+
+  // Cap 7
+  {t:'tf',c:'7',n:77,q:'La calsequestrina almacena hasta 40 iones de Ca²⁺ por molécula dentro del RS.',
+   cr:'V',ex:'VERDADERO. Calsequestrina: proteína que almacena Ca²⁺ dentro del RS, capaz de ligar ~40 Ca²⁺/molécula. Permite concentrar Ca²⁺ sin ↑osmolaridad.'},
+  {t:'mc',c:'7',n:78,q:'La secuencia correcta de la excitación-contracción en músculo esquelético es:',
+   o:[{l:'A',v:'ACh → PA sarcolema → Túbulo T → DHPR → RyR → Ca²⁺ liberado → contracción'},{l:'B',v:'ACh → RyR → DHPR → Ca²⁺ → PA → contracción'},{l:'C',v:'PA → ACh → calsequestrina → Ca²⁺ → SERCA → contracción'},{l:'D',v:'DHPR → ACh → PA → RyR → tropomiosina → contracción'}],
+   cr:'A',ex:'Secuencia: ACh en UNM → PPM → PA en sarcolema → viaja por túbulos T → DHPR (sensor voltaje) → activa RyR1 → Ca²⁺ sale del RS → se une a troponina C → contracción.'},
+
+  // Cap 8
+  {t:'mc',c:'8',n:79,q:'¿Qué enzima fosforila la cadena ligera de miosina en el músculo liso?',
+   o:[{l:'A',v:'SERCA'},{l:'B',v:'MLCK (cinasa de cadena ligera de miosina)'},{l:'C',v:'MLCP (fosfatasa)'},{l:'D',v:'Calsequestrina'}],
+   cr:'B',ex:'MLCK: fosforila la cabeza de miosina para iniciar contracción. Secuencia: Ca²⁺ + calmodulina → activa MLCK → fosforila miosina → contracción. MLCP = relajación (desfosforila).'},
+  {t:'tf',c:'8',n:80,q:'El mecanismo de cerrojo (latch state) del músculo liso permite mantener la contracción con muy bajo consumo de ATP.',
+   cr:'V',ex:'VERDADERO. Latch state: miosina se DESFOSFORILA pero permanece unida a actina → contracción tónica con 1/10 a 1/300 del ATP normal. Clave en vasos, esfínteres, útero.'},
+
+  // Cap 9
+  {t:'mc',c:'9',n:81,q:'¿Cuál es la duración del PA cardíaco ventricular y por qué es importante?',
+   o:[{l:'A',v:'1 ms — igual que neurona'},{l:'B',v:'15-50 ms — como músculo esquelético'},{l:'C',v:'200-300 ms con meseta por Ca²⁺ — impide tetanización'},{l:'D',v:'500-800 ms — solo para llenado'}],
+   cr:'C',ex:'PA cardíaco ventricular: 200-300 ms. La MESETA (fase 2) por canales L de Ca²⁺ sostiene la contracción. El período refractario largo (0,25-0,30 s) IMPIDE la tetanización.'},
+  {t:'mc',c:'9',n:82,q:'¿Qué ion es responsable de la fase 2 (meseta) del PA cardíaco?',
+   o:[{l:'A',v:'Na⁺ (canales rápidos)'},{l:'B',v:'K⁺ (rectificador tardío)'},{l:'C',v:'Ca²⁺ (canales L tipo lentos)'},{l:'D',v:'Cl⁻'}],
+   cr:'C',ex:'Fase 2: canales L de Ca²⁺ (lentos) se abren → Ca²⁺ entra → sostiene despolarización → MESETA. Simultáneamente ↓permeabilidad K⁺ → prolonga la meseta.'},
+
+  // Cap 10
+  {t:'mc',c:'10',n:83,q:'¿Cuál es la frecuencia intrínseca del nodo SA?',
+   o:[{l:'A',v:'20-40 lpm'},{l:'B',v:'40-60 lpm'},{l:'C',v:'70-80 lpm'},{l:'D',v:'100-120 lpm'}],
+   cr:'C',ex:'Nodo SA: 70-80 lpm (marcapasos primario). Nodo AV: 40-60. Haz de His: 20-40. Purkinje: 15-40. Si SA falla → escape AV a 40-60 lpm.'},
+  {t:'tf',c:'10',n:84,q:'El retraso en el nodo AV (~0,09 s) es perjudicial y debería ser eliminado.',
+   cr:'F',ex:'FALSO. El retraso AV (0,09 s) es FUNDAMENTAL: permite que las aurículas terminen de contraerse y llenar los ventrículos ANTES de que estos se contraigan. Sin él: ↓ eficiencia.'},
+
+  // Cap 11
+  {t:'mc',c:'11',n:85,q:'¿Qué onda del ECG representa la despolarización ventricular?',
+   o:[{l:'A',v:'Onda P'},{l:'B',v:'Complejo QRS'},{l:'C',v:'Onda T'},{l:'D',v:'Segmento ST'}],
+   cr:'B',ex:'P = despolarización auricular. QRS = despolarización ventricular (0,06-0,10 s). T = repolarización ventricular. La repolarización auricular está oculta por QRS.'},
+  {t:'mc',c:'11',n:86,q:'Un intervalo PR normal dura:',
+   o:[{l:'A',v:'0,04-0,06 s'},{l:'B',v:'0,12-0,20 s'},{l:'C',v:'0,30-0,40 s'},{l:'D',v:'0,50 s'}],
+   cr:'B',ex:'PR normal: 0,12-0,20 s. Incluye conducción auricular + retraso AV. PR > 0,20 s = bloqueo AV de primer grado.'},
+
+  // Cap 14
+  {t:'mc',c:'14',n:87,q:'La ley de Poiseuille establece que el flujo es proporcional a:',
+   o:[{l:'A',v:'Radio² × Longitud'},{l:'B',v:'Radio⁴ / (Viscosidad × Longitud)'},{l:'C',v:'Presión × Viscosidad'},{l:'D',v:'Longitud × Radio²'}],
+   cr:'B',ex:'Poiseuille: Q = ΔP × π × r⁴ / (8 × η × L). El radio a la CUARTA potencia es el factor dominante. Duplicar r → flujo 16× mayor.'},
+  {t:'tf',c:'14',n:88,q:'El número de Reynolds predice cuándo el flujo pasa de laminar a turbulento; valores > 200 indican turbulencia.',
+   cr:'F',ex:'FALSO. Flujo TURBULENTO se produce con Re > 2000 (no 200). Re = (v × d × ρ)/η. La turbulencia causa soplos. Anemia → ↓viscosidad → ↑Re → soplos funcionales.'},
+
+  // Cap 15
+  {t:'mc',c:'15',n:89,q:'¿Cuánto mide la presión arterial media (PAM) con PAS=120 y PAD=80?',
+   o:[{l:'A',v:'100 mmHg'},{l:'B',v:'93 mmHg'},{l:'C',v:'80 mmHg'},{l:'D',v:'120 mmHg'}],
+   cr:'B',ex:'PAM = PAD + (PAS − PAD)/3 = 80 + 40/3 = 80 + 13 = 93 mmHg. La diástole dura más que la sístole, por eso no es un promedio simple.'},
+  {t:'tf',c:'15',n:90,q:'Los sonidos de Korotkoff aparecen cuando la presión del manguito está entre la PAS y la PAD.',
+   cr:'V',ex:'VERDADERO. Fase I: primer sonido = PAS (flujo intermitente turbulento). Fase V: desaparecen los sonidos = PAD (flujo laminar continuo).'},
+
+  // Cap 16
+  {t:'mc',c:'16',n:91,q:'¿Cuáles son las 4 fuerzas de Starling en la microcirculación?',
+   o:[{l:'A',v:'Presión hidrostática capilar, presión oncótica capilar, presión intersticial, presión oncótica intersticial'},{l:'B',v:'Presión arterial, presión venosa, presión linfática, presión osmótica'},{l:'C',v:'Presión sistólica, diastólica, media y de pulso'},{l:'D',v:'Presión glomerular, tubular, peritubular y capsular'}],
+   cr:'A',ex:'4 fuerzas de Starling: Pc (hidrostática capilar→filtra), πc (oncótica capilar→reabsorbe), Pi (intersticial→reabsorbe), πi (oncótica intersticial→filtra). PFN = Pc − πc − Pi + πi.'},
+
+  // Cap 17
+  {t:'mc',c:'17',n:92,q:'El principal vasodilatador local metabólico es:',
+   o:[{l:'A',v:'Endotelina'},{l:'B',v:'Adenosina'},{l:'C',v:'Angiotensina II'},{l:'D',v:'Noradrenalina'}],
+   cr:'B',ex:'Adenosina: principal vasodilatador metabólico local. ↑Metabolismo → ↑ATP consumido → ↑adenosina → vasodilatación → ↑flujo. Otras: CO₂, H⁺, K⁺, NO.'},
+  {t:'tf',c:'17',n:93,q:'El NO (óxido nítrico) es un vasoconstrictor liberado por el endotelio.',
+   cr:'F',ex:'FALSO. NO = vasodilatador endotelial. Acetilcolina → endotelio → eNOS → NO → GMPc → relajación músculo liso. La endotelina es vasoconstrictora.'},
+
+  // Cap 18
+  {t:'mc',c:'18',n:94,q:'Los barorreceptores carotídeos responden a:',
+   o:[{l:'A',v:'Cambios de PA solo por encima de 200 mmHg'},{l:'B',v:'Presiones entre 60-180 mmHg, con máxima sensibilidad alrededor de 100 mmHg'},{l:'C',v:'Solo hipotensión por debajo de 40 mmHg'},{l:'D',v:'Cambios de temperatura sanguínea'}],
+   cr:'B',ex:'Barorreceptores carotídeos: rango 60-180 mmHg, sensibilidad máxima ~100 mmHg. Adaptan en 1-2 días → no controlan PA a largo plazo. Son del seno carotídeo (IX par) y arco aórtico (X par).'},
+  {t:'tf',c:'18',n:95,q:'La respuesta isquémica del SNC es el mecanismo de emergencia más potente para elevar la PA.',
+   cr:'V',ex:'VERDADERO. Isquemia cerebral (PA < 60 mmHg) → respuesta masiva del centro vasomotor → vasoconstricción extrema. Es el "último recurso" del cuerpo para perfundir el cerebro.'},
+
+  // Cap 25
+  {t:'mc',c:'25',n:96,q:'El edema extracelular se produce por acumulación de líquido en:',
+   o:[{l:'A',v:'El interior de las células'},{l:'B',v:'El espacio intersticial'},{l:'C',v:'Los vasos sanguíneos'},{l:'D',v:'El LIC exclusivamente'}],
+   cr:'B',ex:'Edema extracelular = acumulación en INTERSTICIO. Causas: ↑Pc (IC, obstrucción venosa), ↓πc (hipoalbuminemia), ↑permeabilidad (inflamación), obstrucción linfática.'},
+  {t:'tf',c:'25',n:97,q:'Una solución de NaCl al 3% es hipertónica y causa crenación celular (deshidratación).',
+   cr:'V',ex:'VERDADERO. NaCl 3% ≈ 1.027 mOsm/L (vs. corporal 282) → HIPERTÓNICA → agua sale de las células por ósmosis → célula se deshidrata/crena.'},
+
+  // Cap 26
+  {t:'mc',c:'26',n:98,q:'¿Cuántas funciones principales tiene el riñón?',
+   o:[{l:'A',v:'3 funciones'},{l:'B',v:'5 funciones'},{l:'C',v:'8 funciones'},{l:'D',v:'12 funciones'}],
+   cr:'C',ex:'8 funciones: (1) Excreción; (2) Regular volumen/osmolaridad; (3) Equilibrio electrolítico; (4) Equilibrio ácido-base; (5) Gluconeogénesis; (6) Eritropoyetina; (7) Vitamina D activa; (8) Degradar hormonas.'},
+  {t:'mc',c:'26',n:99,q:'¿Qué tipo de nefrona tiene asas de Henle largas que penetran la médula profunda?',
+   o:[{l:'A',v:'Nefronas corticales'},{l:'B',v:'Nefronas yuxtamedulares'},{l:'C',v:'Nefronas periglomerulares'},{l:'D',v:'Todas las nefronas'}],
+   cr:'B',ex:'Yuxtamedulares (~20-30%): glomérulos cerca de la médula, asas LARGAS hasta la papila. Fundamentales para concentrar la orina. Corticales (~70-80%): asas cortas.'},
+
+  // Cap 27
+  {t:'mc',c:'27',n:100,q:'La membrana glomerular tiene 3 capas. ¿Cuáles son?',
+   o:[{l:'A',v:'Epitelio simple, lámina propia, serosa'},{l:'B',v:'Endotelio fenestrado, membrana basal, podocitos (con pedicelos)'},{l:'C',v:'Epitelio cúbico, colágeno tipo I, células mesangiales'},{l:'D',v:'Músculo liso, elastina, adventicia'}],
+   cr:'B',ex:'3 capas: (1) ENDOTELIO fenestrado (poros grandes pero carga negativa); (2) MEMBRANA BASAL (colágeno IV + proteoglicanos negativos); (3) PODOCITOS con pedicelos y diafragmas de filtración.'},
 ];
 
 let QS={c:0,w:0,a:0};

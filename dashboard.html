@@ -1233,6 +1233,8 @@ var cart = []; // [{key, label, emoji, preco, tipo}]
 var PRECO_UNIT = 15.00;
 var PRECO_COMBO3 = 12.00; // 3+ itens = 20% off
 var PRECO_PACK = 69.90;   // 7 itens = 33% off
+var PRECO_FINAL = 20.00;  // Finais: R$ 20 unitário
+var PRECO_PACK_FINAL = 89.90; // Pacote 7 finais
 
 // ── Navegação estilo Google Drive ─────────────────────────────────────────────
 var currentMateria = null; // null = vista pastas | "bioquimica" = vista interna
@@ -2566,12 +2568,21 @@ window.goToStore = function() { switchTab("loja"); };
 function cartKey(m) { return m.key + "_p2"; }
 
 window.addToCart = function(key) {
-  var m = MATERIAS.find(function(x){ return x.key+"_p2" === key; });
+  // Detectar se é P2 ou Final
+  var isFinal = key.indexOf("_final") !== -1;
+  var m;
+  if (isFinal) {
+    m = MATERIAS.find(function(x){ return x.key+"_final" === key; });
+  } else {
+    m = MATERIAS.find(function(x){ return x.key+"_p2" === key; });
+  }
   if (!m) return;
   if (cart.find(function(c){ return c.key === key; })) {
     removeFromCart(key); return;
   }
-  cart.push({ key: key, label: m.label + " — P2", emoji: m.emoji, preco: PRECO_UNIT });
+  var preco = isFinal ? PRECO_FINAL : PRECO_UNIT;
+  var tipoLabel = isFinal ? "Final" : "P2";
+  cart.push({ key: key, label: m.label + " — " + tipoLabel, emoji: m.emoji, preco: preco, tipo: isFinal ? "final" : "p2" });
   updateCartUI();
   renderStoreGrid();
 };
@@ -2581,9 +2592,10 @@ window.addComboToCart = function() {
   var naoAdquiridos = MATERIAS.filter(function(m){ return !hasAccess(m,"p2"); });
   if (naoAdquiridos.length === 0) { alert("Você já possui todos os resumos de P2!"); return; }
 
-  cart = [];
+  // Remove itens P2 do carrinho (mantém finais se houver)
+  cart = cart.filter(function(c){ return c.tipo === "final"; });
   naoAdquiridos.forEach(function(m) {
-    cart.push({ key: m.key+"_p2", label: m.label+" — P2", emoji: m.emoji, preco: PRECO_UNIT, isCombo: true });
+    cart.push({ key: m.key+"_p2", label: m.label+" — P2", emoji: m.emoji, preco: PRECO_UNIT, tipo: "p2", isCombo: true });
   });
   updateCartUI();
   renderStoreGrid();
@@ -2608,32 +2620,47 @@ window.closeCart = function() {
 
 function calcCartTotal() {
   var n = cart.length;
-  var subtotal = n * PRECO_UNIT;
-  var total, desconto, descLabel;
+  if (n === 0) return { subtotal: 0, desconto: 0, total: 0, descLabel: "" };
 
-  // Opção C: 1-2 = R$15, 3-6 = R$12 (20% off), 7 = R$69,90 (33% off)
+  // Separar itens P2 e Final
+  var p2Items = cart.filter(function(c){ return c.tipo !== "final"; });
+  var finalItems = cart.filter(function(c){ return c.tipo === "final"; });
+
+  var subtotalP2 = p2Items.length * PRECO_UNIT;
+  var subtotalFinal = finalItems.length * PRECO_FINAL;
+  var subtotal = subtotalP2 + subtotalFinal;
+
+  var totalP2 = subtotalP2;
+  var totalFinal = subtotalFinal;
+  var descLabel = "";
+
+  // Desconto P2: pacote completo ou 3+
   var p2NaoAdquiridos = MATERIAS.filter(function(m){ return !hasAccess(m,"p2"); });
-  var todasNoCarrinho = p2NaoAdquiridos.length === MATERIAS.length &&
+  var todasP2NoCarrinho = p2NaoAdquiridos.length === MATERIAS.length &&
     MATERIAS.every(function(m){ return cart.find(function(c){ return c.key === m.key+"_p2"; }); });
 
-  if (todasNoCarrinho) {
-    // Pacote completo (7 itens)
-    total = PRECO_PACK;
-    desconto = subtotal - total;
-    descLabel = "🏷️ Pacote completo (33% off)";
-  } else if (n >= 3) {
-    // 3+ itens: 20% de desconto
-    total = n * PRECO_COMBO3;
-    desconto = subtotal - total;
-    descLabel = "🏷️ Desconto 3+ itens (20% off)";
-  } else {
-    // 1-2 itens: sem desconto
-    total = subtotal;
-    desconto = 0;
-    descLabel = "";
+  if (todasP2NoCarrinho) {
+    totalP2 = PRECO_PACK;
+    descLabel = "🏷️ Pacote P2 completo (33% off)";
+  } else if (p2Items.length >= 3) {
+    totalP2 = p2Items.length * PRECO_COMBO3;
+    descLabel = "🏷️ Desconto P2 3+ itens (20% off)";
   }
 
-  return { subtotal, desconto, total, descLabel };
+  // Desconto Final: pacote completo
+  var finalReady = MATERIAS.filter(function(m){ return m.finalReady; });
+  var todasFinalNoCarrinho = finalReady.length === MATERIAS.length &&
+    MATERIAS.every(function(m){ return cart.find(function(c){ return c.key === m.key+"_final"; }); });
+
+  if (todasFinalNoCarrinho) {
+    totalFinal = PRECO_PACK_FINAL;
+    descLabel += (descLabel ? " + " : "") + "🏷️ Pacote Final completo";
+  }
+
+  var total = totalP2 + totalFinal;
+  var desconto = subtotal - total;
+
+  return { subtotal: subtotal, desconto: desconto, total: total, descLabel: descLabel };
 }
 
 function formatPrice(v) {
@@ -2737,16 +2764,17 @@ function updateCartUI() {
   var calc = calcCartTotal();
   footer.style.display = "block";
 
-  // Dica inteligente baseada na Opção C
+  // Dica inteligente
+  var p2InCart = cart.filter(function(c){ return c.tipo !== "final"; });
   var p2NaoAdquiridos = MATERIAS.filter(function(m){ return !hasAccess(m,"p2"); });
   var faltamParaPacote = p2NaoAdquiridos.filter(function(m){ return !cart.find(function(c){ return c.key === m.key+"_p2"; }); }).length;
-  var faltamPara3 = Math.max(0, 3 - n);
+  var faltamPara3 = Math.max(0, 3 - p2InCart.length);
 
-  if (faltamPara3 > 0) {
-    comboHint.textContent = "💡 Adicione mais " + faltamPara3 + " item" + (faltamPara3>1?"s":"") + " para ganhar 20% de desconto!";
+  if (p2InCart.length > 0 && faltamPara3 > 0) {
+    comboHint.textContent = "💡 Adicione mais " + faltamPara3 + " P2 para ganhar 20% de desconto!";
     comboHint.classList.add("visible");
-  } else if (n >= 3 && faltamParaPacote > 0 && p2NaoAdquiridos.length === MATERIAS.length) {
-    comboHint.textContent = "🔥 Faltam " + faltamParaPacote + " matéria" + (faltamParaPacote>1?"s":"") + " para o pacote completo com 33% off!";
+  } else if (p2InCart.length >= 3 && faltamParaPacote > 0 && p2NaoAdquiridos.length === MATERIAS.length) {
+    comboHint.textContent = "🔥 Faltam " + faltamParaPacote + " P2 para o pacote completo com 33% off!";
     comboHint.classList.add("visible");
   } else {
     comboHint.classList.remove("visible");
