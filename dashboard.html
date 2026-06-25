@@ -989,11 +989,16 @@
         <div class="store-grid" id="store-grid-p2"></div>
       </div>
 
-      <!-- FINAIS EM BREVE -->
+      <!-- FINAIS -->
       <div class="store-section">
-        <div class="store-section-title" style="color:rgba(251,191,36,0.45);">🎓 Final — Em breve</div>
-        <div style="padding:16px 20px;border-radius:14px;border:1px solid rgba(251,191,36,0.15);background:rgba(251,191,36,0.04);font-size:13px;color:rgba(251,191,36,0.5);text-align:center;">
-          Os resumos das provas finais serão disponibilizados em breve.
+        <div class="store-section-title" style="color:rgba(74,222,128,0.7);">🎓 Final
+          <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
+            R$ 20,00 unit
+          </span>
+        </div>
+        <div class="store-grid" id="store-grid-final"></div>
+        <div id="store-final-breve" style="padding:16px 20px;border-radius:14px;border:1px solid rgba(251,191,36,0.15);background:rgba(251,191,36,0.04);font-size:13px;color:rgba(251,191,36,0.5);text-align:center;margin-top:10px;display:none;">
+          As demais finais serão disponibilizadas em breve.
         </div>
       </div>
 
@@ -1199,13 +1204,13 @@
 
 // ── Dados das matérias ────────────────────────────────────────────────────────
 var MATERIAS = [
-  { key:"bioquimica",    label:"Bioquímica",    emoji:"📚", desc:"Bases moleculares e metabolismo.",          file_p1:"bioquimica_p1.html",    file_p2:"resumo_bioquimica_p2.html",  file_final:"bioquimica_final.html"    },
-  { key:"biofisica",     label:"Biofísica",     emoji:"⚡", desc:"Física aplicada à medicina.",               file_p1:"biofisica_p1.html",     file_p2:"biofisica.html",             file_final:"biofisica_final.html"     },
-  { key:"genetica",      label:"Genética",      emoji:"🧬", desc:"Herança e mutações genéticas.",            file_p1:"genetica_p1.html",      file_p2:"genetica_p2_enzo.html",      file_final:"genetica_final.html"      },
-  { key:"fisiologia",    label:"Fisiologia",    emoji:"❤️", desc:"Funcionamento dos sistemas humanos.",      file_p1:"fisiologia_p1.html",    file_p2:"fisiologia_p2_enzo.html",    file_final:"fisiologia_final.html"    },
-  { key:"microbiologia", label:"Microbiologia", emoji:"🦠", desc:"Microrganismos e patologias.",             file_p1:"microbiologia_p1.html", file_p2:"microbiologia_gram_negativos.html", file_final:"microbiologia_final.html" },
-  { key:"micro_pratica", label:"Micro Prática", emoji:"🧫", desc:"Identificação e técnicas laboratoriais.",  file_p1:"micro_pratica_p1.html", file_p2:"micro_pratica.html",          file_final:"micro_pratica_final.html" },
-  { key:"imunologia",    label:"Imunologia",    emoji:"🛡️", desc:"Sistema imune e respostas do organismo.", file_p1:"imunologia_p1.html",    file_p2:"resumo_imunologia_p2.html",  file_final:"imunologia_final.html"    },
+  { key:"bioquimica",    label:"Bioquímica",    emoji:"📚", desc:"Bases moleculares e metabolismo.",          file_p1:"bioquimica_p1.html",    file_p2:"resumo_bioquimica_p2.html",  file_final:"bioquimica_final.html",    finalReady:false },
+  { key:"biofisica",     label:"Biofísica",     emoji:"⚡", desc:"Física aplicada à medicina.",               file_p1:"biofisica_p1.html",     file_p2:"biofisica.html",             file_final:"biofisica_final.html",     finalReady:false },
+  { key:"genetica",      label:"Genética",      emoji:"🧬", desc:"Herança e mutações genéticas.",            file_p1:"genetica_p1.html",      file_p2:"genetica_p2_enzo.html",      file_final:"genetica_final.html",      finalReady:false },
+  { key:"fisiologia",    label:"Fisiologia",    emoji:"❤️", desc:"Funcionamento dos sistemas humanos.",      file_p1:"fisiologia_p1.html",    file_p2:"fisiologia_p2_enzo.html",    file_final:"fisiologia_final.html",    finalReady:true  },
+  { key:"microbiologia", label:"Microbiologia", emoji:"🦠", desc:"Microrganismos e patologias.",             file_p1:"microbiologia_p1.html", file_p2:"microbiologia_gram_negativos.html", file_final:"microbiologia_final.html", finalReady:false },
+  { key:"micro_pratica", label:"Micro Prática", emoji:"🧫", desc:"Identificação e técnicas laboratoriais.",  file_p1:"micro_pratica_p1.html", file_p2:"micro_pratica.html",          file_final:"micro_pratica_final.html", finalReady:false },
+  { key:"imunologia",    label:"Imunologia",    emoji:"🛡️", desc:"Sistema imune e respostas do organismo.", file_p1:"imunologia_p1.html",    file_p2:"resumo_imunologia_p2.html",  file_final:"imunologia_final.html",    finalReady:false },
 ];
 
 var PROVAS = [
@@ -2345,6 +2350,15 @@ function renderPastas() {
     var diasP2  = daysLeftForResumo(m, "p2");
     var diasStr = diasP2 !== null ? diasP2 + " dias restantes" : "Acesso permanente";
 
+    var acFinal    = m.finalReady ? hasAccess(m, "final") : false;
+    var diasFinal  = m.finalReady ? daysLeftForResumo(m, "final") : null;
+    var diasFStr   = diasFinal !== null ? diasFinal + " dias restantes" : "Acesso permanente";
+    var finalStatusHtml = !m.finalReady
+      ? '<div class="folder-status-item" style="color:rgba(251,191,36,0.5);">🔜 Final em breve</div>'
+      : (acFinal
+          ? '<div class="folder-status-item" style="color:#4ade80;">✓ Final · ' + diasFStr + '</div>'
+          : '<div class="folder-status-item" style="color:rgba(251,191,36,0.5);">🔒 Final disponível</div>');
+
     materiasHtml +=
       '<div class="folder-card" onclick="openMateria(\'' + m.key + '\')">' +
         '<span class="folder-emoji">' + m.emoji + '</span>' +
@@ -2354,7 +2368,7 @@ function renderPastas() {
           (acP2
             ? '<div class="folder-status-item" style="color:#22d3ee;">✓ P2 · ' + diasStr + '</div>'
             : '<div class="folder-status-item" style="color:rgba(125,211,232,0.35);">🔒 P2 bloqueado</div>') +
-          '<div class="folder-status-item" style="color:rgba(251,191,36,0.5);">🔜 Final em breve</div>' +
+          finalStatusHtml +
         '</div>' +
       '</div>';
   });
@@ -2476,14 +2490,52 @@ function renderMateriaInterna(key) {
     grid.appendChild(p2locked);
   }
 
-  // Card Final — Em breve
-  var final = document.createElement("div");
-  final.className = "resumo-card soon";
-  final.innerHTML =
-    '<span class="card-emoji">' + m.emoji + '</span>' +
-    '<div class="card-title" style="color:rgba(251,191,36,0.6);">' + m.label + ' — Final</div>' +
-    '<div class="card-desc">' + m.desc + '</div>' +
-    '<div class="soon-badge"><span class="soon-dot"></span> Em breve</div>';
+  // Card Final — Dinâmico (como P2 se pronto, senão Em breve)
+  if (m.finalReady) {
+    var acFinal = hasAccess(m, "final");
+    var diasFinal = daysLeftForResumo(m, "final");
+
+    if (acFinal) {
+      var expiryFinalHtml = diasFinal !== null
+        ? '<div style="font-size:10px;color:' + (diasFinal <= 7 ? '#fbbf24' : 'rgba(74,222,128,0.6)') + ';margin-top:6px;">' +
+            (diasFinal <= 7 ? '⚠️ Expira em ' : '⏱️ ') + diasFinal + ' dia' + (diasFinal===1?'':'s') + (diasFinal > 7 ? ' restantes' : '') +
+          '</div>'
+        : '';
+
+      var presentes = profile.resumos_presente || [];
+      var ehPresenteF = presentes.includes(m.key + "_final");
+
+      var finalCard = document.createElement("a");
+      finalCard.className = "resumo-card unlocked";
+      finalCard.href = m.file_final;
+      finalCard.style.position = "relative";
+      finalCard.style.borderColor = "rgba(74,222,128,0.25)";
+      finalCard.innerHTML =
+        (ehPresenteF ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>' : '') +
+        '<span class="card-emoji">' + m.emoji + '</span>' +
+        '<div class="card-title" style="color:#4ade80;">' + m.label + ' — Final</div>' +
+        '<div class="card-desc">' + m.desc + '</div>' + expiryFinalHtml;
+      grid.appendChild(finalCard);
+    } else {
+      var finalLocked = document.createElement("div");
+      finalLocked.className = "resumo-card locked";
+      finalLocked.innerHTML =
+        '<span class="card-emoji">' + m.emoji + '</span>' +
+        '<div class="card-title" style="color:rgba(74,222,128,0.6);">' + m.label + ' — Final</div>' +
+        '<div class="card-desc">' + m.desc + '</div>' +
+        '<div class="lock-badge" onclick="goToStore()" style="background:rgba(74,222,128,0.08);border-color:rgba(74,222,128,0.3);color:#4ade80;">🔒 Comprar acesso</div>';
+      grid.appendChild(finalLocked);
+    }
+  } else {
+    var finalSoon = document.createElement("div");
+    finalSoon.className = "resumo-card soon";
+    finalSoon.innerHTML =
+      '<span class="card-emoji">' + m.emoji + '</span>' +
+      '<div class="card-title" style="color:rgba(251,191,36,0.6);">' + m.label + ' — Final</div>' +
+      '<div class="card-desc">' + m.desc + '</div>' +
+      '<div class="soon-badge"><span class="soon-dot"></span> Em breve</div>';
+    grid.appendChild(finalSoon);
+  }
   grid.appendChild(final);
 }
 
@@ -2873,6 +2925,45 @@ function renderStoreGrid() {
       comboBtn.textContent = "🛒 Adicionar pacote ao carrinho — R$ 69,90";
       comboBtn.disabled = false;
     }
+  }
+
+  // ── Final store grid ──
+  renderStoreGridFinal();
+}
+
+function renderStoreGridFinal() {
+  var grid = document.getElementById("store-grid-final");
+  var breveMsg = document.getElementById("store-final-breve");
+  if (!grid) return;
+  grid.innerHTML = "";
+
+  var readyMaterias = MATERIAS.filter(function(m){ return m.finalReady; });
+  var pendingCount = MATERIAS.length - readyMaterias.length;
+
+  readyMaterias.forEach(function(m) {
+    var key = m.key + "_final";
+    var owned = hasAccess(m, "final");
+    var inCart = !!cart.find(function(c){ return c.key === key; });
+
+    var card = document.createElement("div");
+    card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
+
+    var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "+ Adicionar");
+    var btnClass = "add-btn" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
+
+    card.innerHTML =
+      '<span class="tag-popular" style="background:rgba(74,222,128,0.12);color:#4ade80;border-color:rgba(74,222,128,0.3);">Novo</span>' +
+      '<span class="produto-emoji">' + m.emoji + '</span>' +
+      '<div class="produto-nome">' + m.label + '</div>' +
+      '<div class="produto-sub" style="color:rgba(74,222,128,0.5);">Final · 3º Semestre · 50 dias</div>' +
+      '<div class="produto-preco">R$ 20,00<span>/resumo</span></div>' +
+      '<button class="' + btnClass + '"' + (owned ? ' disabled' : ' onclick="addToCart(\'' + key + '\')"') + '>' + btnLabel + '</button>';
+
+    grid.appendChild(card);
+  });
+
+  if (breveMsg) {
+    breveMsg.style.display = pendingCount > 0 ? "block" : "none";
   }
 }
 
