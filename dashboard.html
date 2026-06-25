@@ -989,11 +989,33 @@
         <div class="store-grid" id="store-grid-p2"></div>
       </div>
 
-      <!-- FINAIS -->
+      <!-- COMBO FINAL -->
+      <div class="store-section" id="store-combo-final-section" style="display:none;">
+        <div class="store-section-title" style="color:#4ade80;">🎓 Pacote Final</div>
+        <div class="combo-card" id="combo-final-card" style="border-color:rgba(74,222,128,0.25);background:linear-gradient(135deg,rgba(74,222,128,0.06) 0%,rgba(6,182,212,0.04) 100%);">
+          <div class="combo-header">
+            <div>
+              <div class="combo-title" style="color:#4ade80;">🎓 Pacote Completo Final</div>
+              <div class="combo-sub">Todos os 7 resumos finais — 3º Semestre</div>
+            </div>
+            <div class="combo-preco-box">
+              <div class="combo-preco-old" id="combo-final-old">R$ 174,93</div>
+              <div class="combo-preco-new" style="color:#4ade80;">R$ 89,90</div>
+              <div class="combo-desconto" style="background:rgba(74,222,128,0.12);color:#4ade80;border-color:rgba(74,222,128,0.3);">🏷️ 49% off</div>
+            </div>
+          </div>
+          <div class="combo-materias" id="combo-final-tags"></div>
+          <button class="combo-btn" id="combo-final-btn" onclick="addComboFinalToCart()" style="background:linear-gradient(135deg,#4ade80,#22d3ee);">
+            🛒 Adicionar pacote ao carrinho — R$ 89,90
+          </button>
+        </div>
+      </div>
+
+      <!-- FINAIS INDIVIDUAIS -->
       <div class="store-section">
         <div class="store-section-title" style="color:rgba(74,222,128,0.7);">🎓 Final
           <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
-            R$ 20,00 unit
+            R$ 24,99 unit
           </span>
         </div>
         <div class="store-grid" id="store-grid-final"></div>
@@ -1216,7 +1238,7 @@ var MATERIAS = [
 var PROVAS = [
   { tipo:"p1",    label:"P1",    preco_unit:15.00, preco_pack:69.90 },
   { tipo:"p2",    label:"P2",    preco_unit:15.00, preco_pack:69.90 },
-  { tipo:"final", label:"Final", preco_unit:20.00, preco_pack:89.90 },
+  { tipo:"final", label:"Final", preco_unit:24.99, preco_pack:89.90 },
 ];
 
 // ── Estado ────────────────────────────────────────────────────────────────────
@@ -1233,7 +1255,7 @@ var cart = []; // [{key, label, emoji, preco, tipo}]
 var PRECO_UNIT = 15.00;
 var PRECO_COMBO3 = 12.00; // 3+ itens = 20% off
 var PRECO_PACK = 69.90;   // 7 itens = 33% off
-var PRECO_FINAL = 20.00;  // Finais: R$ 20 unitário
+var PRECO_FINAL = 24.99;  // Finais: R$ 24,99 unitário
 var PRECO_PACK_FINAL = 89.90; // Pacote 7 finais
 
 // ── Navegação estilo Google Drive ─────────────────────────────────────────────
@@ -2959,6 +2981,20 @@ function renderStoreGrid() {
   renderStoreGridFinal();
 }
 
+window.addComboFinalToCart = function() {
+  var readyMaterias = MATERIAS.filter(function(m){ return m.finalReady && !hasAccess(m,"final"); });
+  if (readyMaterias.length === 0) { alert("Você já possui todos os resumos finais disponíveis!"); return; }
+
+  // Remove itens Final do carrinho (mantém P2)
+  cart = cart.filter(function(c){ return c.tipo !== "final"; });
+  readyMaterias.forEach(function(m) {
+    cart.push({ key: m.key+"_final", label: m.label+" — Final", emoji: m.emoji, preco: PRECO_FINAL, tipo: "final", isCombo: true });
+  });
+  updateCartUI();
+  renderStoreGrid();
+  openCart();
+};
+
 function renderStoreGridFinal() {
   var grid = document.getElementById("store-grid-final");
   var breveMsg = document.getElementById("store-final-breve");
@@ -2984,7 +3020,7 @@ function renderStoreGridFinal() {
       '<span class="produto-emoji">' + m.emoji + '</span>' +
       '<div class="produto-nome">' + m.label + '</div>' +
       '<div class="produto-sub" style="color:rgba(74,222,128,0.5);">Final · 3º Semestre · 50 dias</div>' +
-      '<div class="produto-preco">R$ 20,00<span>/resumo</span></div>' +
+      '<div class="produto-preco">R$ 24,99<span>/resumo</span></div>' +
       '<button class="' + btnClass + '"' + (owned ? ' disabled' : ' onclick="addToCart(\'' + key + '\')"') + '>' + btnLabel + '</button>';
 
     grid.appendChild(card);
@@ -2992,6 +3028,41 @@ function renderStoreGridFinal() {
 
   if (breveMsg) {
     breveMsg.style.display = pendingCount > 0 ? "block" : "none";
+  }
+
+  // Combo Final card
+  var comboSection = document.getElementById("store-combo-final-section");
+  var comboBtn = document.getElementById("combo-final-btn");
+  var comboTags = document.getElementById("combo-final-tags");
+  var comboOld = document.getElementById("combo-final-old");
+
+  if (comboSection && readyMaterias.length > 0) {
+    comboSection.style.display = "block";
+    // Tags
+    if (comboTags) {
+      comboTags.innerHTML = MATERIAS.map(function(m) {
+        var ready = m.finalReady;
+        var style = ready ? "" : "opacity:0.3;";
+        return '<span class="combo-tag" style="' + style + '">' + m.emoji + ' ' + m.label + (ready ? '' : ' 🔜') + '</span>';
+      }).join("");
+    }
+    // Old price
+    if (comboOld) {
+      comboOld.textContent = "R$ " + (MATERIAS.length * PRECO_FINAL).toFixed(2).replace(".",",");
+    }
+    // Button state
+    if (comboBtn) {
+      var finaisNaoAdquiridas = readyMaterias.filter(function(m){ return !hasAccess(m,"final"); });
+      if (finaisNaoAdquiridas.length === 0) {
+        comboBtn.textContent = "✅ Você já possui todos os resumos finais disponíveis";
+        comboBtn.disabled = true;
+      } else {
+        comboBtn.textContent = "🛒 Adicionar pacote ao carrinho — R$ 89,90";
+        comboBtn.disabled = false;
+      }
+    }
+  } else if (comboSection) {
+    comboSection.style.display = "none";
   }
 }
 
