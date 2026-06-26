@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumen Final — Microbiología I · Enzo Salmazo</title>
+<script>window.PAGE_KEY = "microbiologia_final";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>
+  document.addEventListener("authReady", function () {
+    document.documentElement.style.visibility = "visible";
+  });
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --bg: #0a0d14;
+  --bg2: #111520;
+  --bg3: #161c2e;
+  --card: #1a2138;
+  --card2: #1f2845;
+  --accent: #4f9cf9;
+  --accent2: #38e8c0;
+  --accent3: #f9784f;
+  --accent4: #b84ff9;
+  --gold: #f9c94f;
+  --red: #f95f5f;
+  --green: #4ff984;
+  --text: #e8eaf6;
+  --muted: #8892b0;
+  --border: rgba(79,156,249,0.15);
+  --shadow: 0 8px 40px rgba(0,0,0,0.5);
+  --radius: 16px;
+  --font-body: 'DM Sans', sans-serif;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#particles { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+header {
+  position: relative; z-index:10;
+  text-align: center;
+  padding: 48px 24px 32px;
+  background: linear-gradient(180deg, rgba(79,156,249,0.08) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border);
+}
+header .badge {
+  display:inline-block;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight:600;
+  letter-spacing:2px; text-transform:uppercase;
+  padding: 4px 14px; border-radius:20px; margin-bottom:16px;
+}
+header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4vw, 44px);
+  font-weight: 800; letter-spacing:-1px;
+  background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent2) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip: text; margin-bottom:8px;
+}
+header .sub { color: var(--muted); font-size:13px; letter-spacing:1px; }
+header .by { margin-top:12px; color: var(--accent); font-family:var(--font-mono); font-size:12px; }
+header .verse { margin-top:8px; color: var(--gold); font-size:12px; font-style:italic; opacity:0.85; }
+
+nav.tabs {
+  position:sticky; top:0; z-index:100;
+  display:flex; gap:4px; flex-wrap:wrap;
+  background: rgba(10,13,20,0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  justify-content: center;
+}
+nav.tabs button {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: var(--font-body); font-size:12px; font-weight:600;
+  padding: 6px 14px; border-radius: 8px; cursor:pointer;
+  transition: all 0.2s; letter-spacing: 0.3px;
+}
+nav.tabs button:hover { color: var(--accent); border-color: var(--accent); }
+nav.tabs button.active {
+  background: var(--accent); color: var(--bg);
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(79,156,249,0.4);
+}
+
+.section { display:none; animation: fadeIn 0.4s ease; }
+.section.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+.container { max-width:1100px; margin:0 auto; padding: 32px 20px; position:relative; z-index:1; }
+
+.chapter-title {
+  font-family: var(--font-display); font-size:22px; font-weight:700;
+  color: var(--accent); margin-bottom:24px;
+  display:flex; align-items:center; gap:12px;
+}
+.chapter-title::after {
+  content:''; flex:1; height:1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+.chap-icon { font-size:24px; }
+
+.info-block {
+  background: var(--card2); border-left: 3px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  padding: 16px 20px; margin-bottom:20px;
+}
+.info-block.warn { border-color: var(--gold); }
+.info-block.danger { border-color: var(--red); }
+.info-block.success { border-color: var(--green); }
+.info-block .label {
+  font-family:var(--font-mono); font-size:10px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--muted); margin-bottom:8px;
+}
+.info-block h4 { font-family:var(--font-display); font-weight:700; margin-bottom:8px; font-size:15px; color:#fff; }
+.info-block p { color: var(--text); }
+.info-block ul, .info-block ol { padding-left:20px; margin-top:8px; color:var(--text); }
+.info-block li { margin:4px 0; }
+
+.compare-table {
+  width:100%; border-collapse:separate; border-spacing:0;
+  border-radius:var(--radius); overflow:hidden; margin-bottom:28px;
+}
+.compare-table th {
+  background: var(--card2); color:var(--accent);
+  font-family:var(--font-display); font-size:13px; font-weight:700;
+  padding:12px 16px; text-align:left;
+  border-bottom:1px solid var(--border);
+}
+.compare-table td {
+  background: var(--card); padding:10px 16px; font-size:13px;
+  border-bottom:1px solid rgba(255,255,255,0.04); color:var(--text);
+}
+.compare-table tr:last-child td { border-bottom:none; }
+.compare-table tr:hover td { background: var(--card2); }
+
+.sec-divider {
+  display:flex; align-items:center; gap:12px;
+  margin: 32px 0 20px;
+}
+.sec-divider h3 {
+  font-family:var(--font-display); font-weight:700; font-size:17px;
+  color:var(--accent3); white-space:nowrap;
+}
+.sec-divider::before, .sec-divider::after {
+  content:''; flex:1; height:1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+/* FLASHCARDS */
+.flashcard-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(310px, 1fr));
+  gap:20px; margin-bottom:32px;
+}
+.flashcard { perspective:1000px; height:520px; cursor:pointer; }
+.flashcard-inner {
+  position:relative; width:100%; height:100%;
+  transition: transform 0.65s cubic-bezier(0.4,0,0.2,1);
+  transform-style: preserve-3d;
+}
+.flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+.flashcard-front, .flashcard-back {
+  position:absolute; inset:0; border-radius:var(--radius);
+  backface-visibility:hidden;
+  display:flex; flex-direction:column;
+  border: 1px solid var(--border); overflow:auto;
+}
+.flashcard-front { background: var(--bg2); }
+.flashcard-back { transform: rotateY(180deg); background: var(--bg2); }
+.fc-header { padding:16px 18px; flex-shrink:0; border-bottom:1px solid var(--border); }
+.fc-name { font-family:var(--font-display); font-style:italic; font-size:1rem; color:#fff; }
+.fc-gram { display:inline-block; background:rgba(0,0,0,.3); padding:2px 8px; border-radius:6px; font-size:11px; color:var(--accent2); margin-top:4px; font-family:var(--font-mono); }
+.fc-body { padding:14px 18px; flex:1; overflow-y:auto; }
+.fc-row { display:flex; gap:8px; margin-bottom:10px; font-size:13px; }
+.fc-lbl { color:var(--accent); font-weight:600; min-width:90px; font-size:12px; }
+.fc-val { color:var(--text); flex:1; }
+.fc-tags { display:flex; flex-wrap:wrap; gap:4px; }
+.fc-tag { background:rgba(79,156,249,0.1); border:1px solid var(--border); padding:2px 8px; border-radius:6px; font-size:11px; color:var(--accent2); }
+.fc-hint { text-align:center; padding:10px; font-size:11px; color:var(--muted); border-top:1px solid var(--border); }
+
+/* QUIZ */
+.quiz-progress-bar { width:100%; height:6px; background:var(--card); border-radius:3px; margin-bottom:16px; overflow:hidden; }
+.quiz-progress-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:3px; transition:width 0.4s; }
+.quiz-num { font-family:var(--font-mono); font-size:12px; color:var(--muted); margin-bottom:12px; }
+.quiz-q { font-size:15px; font-weight:600; color:#fff; margin-bottom:16px; line-height:1.5; }
+.quiz-context { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 16px; font-size:13px; color:var(--muted); margin-bottom:16px; }
+.quiz-opts { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+.quiz-opt {
+  background:var(--card); border:1px solid var(--border); border-radius:12px;
+  padding:14px 18px; cursor:pointer; text-align:left;
+  font-size:14px; color:var(--text); transition:all 0.2s;
+  display:flex; gap:10px; align-items:flex-start;
+}
+.quiz-opt:hover:not(.answered) { border-color:var(--accent); background:var(--card2); }
+.quiz-opt .opt-letter { color:var(--accent); font-weight:700; font-family:var(--font-mono); }
+.quiz-opt.correct { border-color:var(--green); background:rgba(79,249,132,0.1); }
+.quiz-opt.wrong { border-color:var(--red); background:rgba(249,95,95,0.1); }
+.quiz-opt.answered { pointer-events:none; }
+.quiz-explain { display:none; background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:16px; font-size:13px; color:var(--text); margin-bottom:16px; }
+.quiz-explain.show { display:block; }
+.quiz-nav { display:flex; justify-content:space-between; align-items:center; }
+.btn { background:var(--accent); color:var(--bg); border:none; padding:10px 24px; border-radius:10px; font-weight:700; cursor:pointer; font-size:13px; transition:all 0.2s; }
+.btn:hover { transform:translateY(-2px); box-shadow:0 4px 20px rgba(79,156,249,0.4); }
+.score-card { text-align:center; padding:40px 20px; }
+.score-big { font-family:var(--font-display); font-size:64px; font-weight:800; color:var(--accent); }
+.score-msg { font-size:18px; color:var(--accent2); margin-top:8px; }
+
+/* SCROLL TOP */
+#scrolltop {
+  position:fixed; bottom:80px; right:20px; z-index:999;
+  width:44px; height:44px; border-radius:50%;
+  background:var(--accent); color:var(--bg); border:none;
+  font-size:20px; cursor:pointer; display:none;
+  box-shadow:0 4px 20px rgba(79,156,249,0.4);
+}
+
+/* RESPONSIVE */
+@media(max-width:600px) {
+  .flashcard { height: 560px; }
+  .compare-table { font-size:12px; }
+  .compare-table th, .compare-table td { padding:8px 10px; }
+}
+@media(max-width:380px) {
+  header h1 { font-size: 18px; }
+  nav.tabs button { font-size: 11px; padding: 5px 10px; }
+  .container { padding: 12px 10px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<header>
+  <div class="badge">🔬 Microbiología I · Examen Final · 2026</div>
+  <h1>Resumen Final — Microbiología I</h1>
+  <p class="sub">27 Organismos · Cocos Gram+ · Cocos Gram- · BGN · Micobacterias · BGP</p>
+  <p class="by">⚡ Elaborado por Enzo Salmazo · Jawetz 28ª ed. / Murray 9ª ed.</p>
+  <p class="verse">📖 "Mil caerán a tu lado y diez mil a tu diestra, pero a ti no te llegará" — Salmos 91:7</p>
+</header>
+
+<nav class="tabs">
+  <button class="active" onclick="showSection('intro', this)">📖 Intro</button>
+  <button onclick="showSection('cocosGP', this)">🟡 Cocos G+</button>
+  <button onclick="showSection('cocosGN', this)">🔴 Cocos G-</button>
+  <button onclick="showSection('bgnEntero', this)">🦠 BGN Entero</button>
+  <button onclick="showSection('bgnOther', this)">🧫 BGN Otros</button>
+  <button onclick="showSection('mico', this)">🫁 Micobacterias</button>
+  <button onclick="showSection('bgp', this)">🟢 BGP</button>
+  <button onclick="showSection('flashcards', this)">🃏 Flashcards</button>
+  <button onclick="showSection('quiz', this)">📝 Quiz (100Q)</button>
+</nav>
+
+<!-- ═══════════ INTRO ═══════════ -->
+<div id="intro" class="section active">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">📖</span> Introducción — Examen Final</div>
+<div class="info-block">
+  <div class="label">Visión General</div>
+  <h4>Contenido del Examen Final Práctico y Teórico</h4>
+  <p>Este resumen cubre los <strong>27 organismos</strong> definidos por el equipo docente (Dr. Rigonato, Dr. Jacobi, Dra. Maria Helena, Dra. Sady, Dra. Santusa, Dra. Ana Lucia, Dr. Angel) para el examen final de Microbiología I. Incluye <strong>27 flashcards interativos</strong> y <strong>100 questões de quiz</strong> con gabarito comentado. Todo lo que necesitas para aprobar la Final.</p>
+</div>
+<div class="info-block success">
+  <div class="label">Cómo estudiar</div>
+  <h4>Roteiro sugerido</h4>
+  <ol>
+    <li>Lea cada sección en orden (Cocos G+ → Cocos G- → BGN Entero → BGN Otros → Micobacterias → BGP).</li>
+    <li>Use los <strong>27 flashcards</strong> para fijar cada organismo.</li>
+    <li>Haga las <strong>100 questões</strong> — incluye preguntas de provas anteriores y questões nível examen.</li>
+  </ol>
+</div>
+<div class="sec-divider"><h3>Los 27 Organismos del Examen</h3></div>
+<table class="compare-table">
+<tr><th>Grupo</th><th>Organismos</th><th>N°</th></tr>
+<tr><td>🟡 Cocos Gram+</td><td>S. aureus, S. epidermidis, S. saprophyticus, S. pyogenes, S. agalactiae, S. pneumoniae</td><td>6</td></tr>
+<tr><td>🔴 Cocos Gram-</td><td>N. gonorrhoeae, N. meningitidis</td><td>2</td></tr>
+<tr><td>🦠 BGN Enterobact.</td><td>E. coli, K. pneumoniae, K. granulomatis, Salmonella, Shigella</td><td>5</td></tr>
+<tr><td>🧫 BGN Otros</td><td>Pseudomonas, H. influenzae, H. ducreyi, H. pylori, C. jejuni</td><td>5</td></tr>
+<tr><td>🫁 Micobacterias</td><td>M. tuberculosis</td><td>1</td></tr>
+<tr><td>🟢 BGP</td><td>Listeria, C. tetani, C. botulinum, C. difficile, C. perfringens, B. cereus, B. anthracis</td><td>7+1 (Corynebacterium diphtheriae)</td></tr>
+</table>
+</div></div>
+
+<!-- ═══════════ COCOS GRAM-POSITIVOS ═══════════ -->
+<div id="cocosGP" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🟡</span> Cocos Gram-Positivos</div>
+
+<div class="sec-divider"><h3>Staphylococcus aureus — El rey de las infecciones</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Coco Gram+ en racimos — Catalasa ⊕ — Coagulasa ⊕ — β-hemolítico</h4>
+  <p>Coloniza <strong>fosas nasales anteriores</strong> (30% de la población). Es el Staphylococcus más virulento. Crece en <strong>agar manitol-sal</strong> (MSA): colonias AMARILLAS (fermenta manitol). Diferenciación clave: <strong>Coagulasa ⊕</strong> (único Staphylococcus coagulasa-positivo clínicamente relevante).</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Factores de virulencia</div>
+  <h4>Toxinas + Enzimas + Proteínas de superficie</h4>
+  <p><strong>Proteína A</strong>: se une a la porción Fc de IgG → impide opsonización. <strong>Coagulasa</strong>: convierte fibrinógeno en fibrina → capa protectora. <strong>Toxinas</strong>: α-hemolisina (formadora de poros), TSST-1 (superantígeno → síndrome de shock tóxico), enterotoxinas A-E (intoxicación alimentaria — TERMOESTABLES, pre-formadas), leucocidina de Panton-Valentine (PVL → neumonía necrotizante en MRSA-CA). <strong>Enzimas</strong>: β-lactamasa (penicilinasa), lipasa, hialuronidasa, DNasa.</p>
+</div>
+<div class="info-block warn">
+  <div class="label">Infecciones</div>
+  <p><strong>Piel</strong>: foliculitis, furúnculos, carbunco (=múltiples folículos), impétigo ampolloso, celulitis, abscesos. <strong>Sistémicas</strong>: bacteriemia, endocarditis aguda (válvula nativa y protésica), osteomielitis hematógena (niños), artritis séptica. <strong>Toxigénicas</strong>: síndrome de shock tóxico (TSST-1), síndrome de piel escaldada (exfoliatinas A y B), intoxicación alimentaria (1-6h post-ingesta, vómitos predominantes). <strong>Diferencia furúnculo vs carbunco</strong>: furúnculo = infección de UN solo folículo piloso; carbunco = infección de MÚLTIPLES folículos pilosos en una región, con múltiples orificios supurativos.</p>
+</div>
+<div class="info-block success">
+  <div class="label">Tratamiento</div>
+  <p><strong>MSSA</strong>: oxacilina IV (grave), cefalexina VO (leve). <strong>MRSA</strong>: vancomicina IV (gold standard), daptomicina, linezolid. <strong>MRSA-CA</strong> (comunitario): TMP-SMX, clindamicina, doxiciclina. <strong>VISA/VRSA</strong>: daptomicina, linezolid. Abscesos: drenaje + ATB.</p>
+</div>
+
+<div class="sec-divider"><h3>Staphylococcus epidermidis — El de los dispositivos</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Coco Gram+ en racimos — Catalasa ⊕ — Coagulasa ⊖ — NO fermenta manitol</h4>
+  <p>Parte de la <strong>microbiota cutánea normal</strong>. Colonias BLANCAS en MSA (no fermenta manitol). Principal agente de infecciones asociadas a <strong>dispositivos médicos</strong> (catéteres, prótesis, válvulas cardíacas). Factor de virulencia clave: <strong>BIOFILM</strong> (biopelícula de polisacárido PIA/PNAG) que protege contra ATB y fagocitosis.</p>
+</div>
+<div class="info-block warn">
+  <div class="label">Infecciones y Tratamiento</div>
+  <p>Endocarditis de <strong>válvula protésica</strong> (precoz <2 meses), infección de catéter venoso central, infección de derivaciones ventriculoperitoneales (DVP), infección de implantes ortopédicos. Tratamiento: <strong>retirar el dispositivo</strong> + vancomicina ± rifampicina ± gentamicina. Sin retirar el dispositivo, la cura es improbable por el biofilm.</p>
+</div>
+
+<div class="sec-divider"><h3>Staphylococcus saprophyticus — El de la ITU en joven</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Coco Gram+ — Catalasa ⊕ — Coagulasa ⊖ — Resistente a novobiocina</h4>
+  <p>Segunda causa de ITU en <strong>mujeres jóvenes sexualmente activas</strong> (después de E. coli). Se diferencia de S. epidermidis por la <strong>resistencia a novobiocina</strong> (S. epidermidis es sensible). Produce <strong>ureasa</strong> → facilita colonización del tracto urinario. Tratamiento: TMP-SMX o nitrofurantoína VO.</p>
+</div>
+
+<div class="sec-divider"><h3>Streptococcus pyogenes — Grupo A (GAS)</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Coco Gram+ en cadenas — Catalasa ⊖ — β-hemolítico — Grupo A de Lancefield</h4>
+  <p>β-hemólisis completa en agar sangre. Sensible a <strong>bacitracina</strong> (diferenciador clave). PYR ⊕. Factor de virulencia principal: <strong>Proteína M</strong> — antifagocítica, responsable del mimetismo molecular con tejido cardíaco (fiebre reumática).</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Enfermedades</div>
+  <h4>Supurativas + No supurativas (post-estreptocócicas)</h4>
+  <p><strong>Supurativas</strong>: faringitis (angina estreptocócica — la más común), impétigo, celulitis, erisipela (bordes bien definidos), fascitis necrotizante ("bacteria come-carne"), síndrome de shock tóxico estreptocócico. <strong>No supurativas (post-estreptocócicas)</strong>: <strong>Fiebre Reumática</strong> (2-3 semanas post-faringitis → artritis migratoria, carditis, corea de Sydenham, eritema marginado, nódulos subcutáneos — criterios de Jones) y <strong>Glomerulonefritis difusa aguda post-estreptocócica</strong> (GNDA — por reacción cruzada inmunológica con antígenos renales → edema, hipertensión, hematuria, oliguria).</p>
+</div>
+<div class="info-block warn">
+  <div class="label">⚠️ Fiebre Reumática — Mecanismo inmunológico</div>
+  <p>Los anticuerpos producidos contra la <strong>Proteína M de S. pyogenes</strong> (NO de S. aureus) presentan <strong>reacción cruzada</strong> con antígenos del tejido cardíaco, articulaciones, piel y sistema nervioso central. NO es invasión directa. La prevención es el tratamiento adecuado de la faringitis con <strong>penicilina</strong>.</p>
+</div>
+<div class="info-block success">
+  <div class="label">Tratamiento</div>
+  <p>Faringitis: <strong>penicilina V VO ×10 días</strong> o penicilina benzatina 1.200.000 UI IM DU. Alergia: azitromicina. Fascitis necrotizante: penicilina G + clindamicina IV + desbridamiento quirúrgico URGENTE. <strong>S. pyogenes NUNCA desarrolla resistencia a penicilina.</strong></p>
+</div>
+
+<div class="sec-divider"><h3>Streptococcus agalactiae — Grupo B (GBS)</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Coco Gram+ en cadenas — β-hemolítico — Grupo B — CAMP ⊕ — Hipurato ⊕</h4>
+  <p>Coloniza <strong>vagina y recto</strong> (20-30% de gestantes). Principal causa de <strong>sepsis y meningitis neonatal</strong> de inicio precoz (primeras 72h). Test de CAMP: potenciación de hemólisis con S. aureus (flecha de hemólisis). Screening: cultivo vaginal-rectal a las <strong>35-37 semanas</strong>.</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Prevención</div>
+  <p>Profilaxis intraparto con <strong>penicilina G IV</strong> (o ampicilina) iniciada ≥4h antes del parto. Indicaciones: cultivo ⊕, bacteriuria por GBS, antecedente de RN con infección por GBS, parto prematuro, RPM >18h, fiebre intraparto.</p>
+</div>
+
+<div class="sec-divider"><h3>Streptococcus pneumoniae — Neumococo</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Diplococo Gram+ lanceolado — α-hemolítico — Sensible a optoquina — Soluble en bilis</h4>
+  <p>Principal causa de <strong>neumonía comunitaria</strong>, <strong>meningitis bacteriana en adultos</strong>, <strong>otitis media en niños</strong>, y sinusitis. Cápsula polisacárida = principal factor de virulencia (>90 serotipos). Se diferencia de Streptococcus del grupo viridans por: <strong>sensibilidad a optoquina</strong> y <strong>solubilidad en bilis (sales biliares)</strong>. Produce <strong>α-hemólisis</strong> (hemólisis parcial — zona verde en agar sangue). S. pneumoniae coloniza la <strong>nasofaringe</strong> y puede diseminarse al oído medio a través de la <strong>trompa de Eustaquio</strong>, especialmente tras infecciones virales respiratorias que obstruyen el drenaje normal.</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Virulencia</div>
+  <p><strong>Cápsula</strong> (antifagocítica — principal factor), <strong>neumolisina</strong> (citotoxina → daño alveolar, activa complemento), <strong>proteasa de IgA1</strong>, <strong>autolisina (LytA)</strong> → lisis bacteriana → liberación de neumolisina y fragmentos inflamatorios, <strong>fosforilcolina</strong> (adhesina al PAFr). Vacunas: PCV13 (conjugada, niños) y PPSV23 (polisacárida, adultos >65 y grupos de riesgo).</p>
+</div>
+<div class="info-block success">
+  <div class="label">Tratamiento</div>
+  <p>Neumonía: amoxicilina VO (leve) o ceftriaxona IV (grave). Meningitis: <strong>ceftriaxona + vancomicina</strong> (empírico, por cepas resistentes). Otitis: amoxicilina VO. Resistencia: alteración de PBP (no β-lactamasa).</p>
+</div>
+
+<div class="sec-divider"><h3>Streptococcus del grupo viridans — Endocarditis</h3></div>
+<div class="info-block warn">
+  <div class="label">Diferencial clínico</div>
+  <h4>S. sanguis + S. mitis — Microbiota oral — Endocarditis subaguda</h4>
+  <p>Forman parte de la <strong>microbiota oral</strong>. α-hemolíticos como el neumococo PERO <strong>resistentes a optoquina</strong> e <strong>insolubles en bilis</strong>. Pueden causar <strong>bacteriemia transitoria</strong> durante procedimientos dentales → endocarditis infecciosa subaguda en pacientes con <strong>cardiopatía valvular preexistente</strong> (fiebre reumática previa). Son el grupo de Streptococcus más frecuentemente implicado en la endocarditis post-procedimiento dental.</p>
+</div>
+
+</div></div>
+
+<!-- ═══════════ COCOS GRAM-NEGATIVOS ═══════════ -->
+<div id="cocosGN" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🔴</span> Cocos Gram-Negativos — Neisseria</div>
+
+<div class="sec-divider"><h3>Neisseria meningitidis — Meningococcemia</h3></div>
+<div class="info-block">
+  <div class="label">Diplococo GN</div>
+  <h4>Diplococo Gram- (grão de café) — CON cápsula — Oxidasa ⊕ — Fermenta glucosa Y maltosa</h4>
+  <p>Serotipos: A, B, C, Y, W135. Vacuna tetravalente cubre A, C, Y, W — <strong>NO incluye tipo B</strong>. Coloniza <strong>nasofaringe</strong>. El LOS genera mimetismo molecular → exceso de citocinas (TNF, IL-1, IL-6) → cascata inflamatória → <strong>CIVD</strong> → Síndrome de <strong>Waterhouse-Friderichsen</strong> (hemorragia adrenal bilateral → insuficiencia adrenal aguda).</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Clínica</div>
+  <h4>Meningitis + Meningococcemia fulminante</h4>
+  <p>Fiebre, rigidez de nuca, fotofobia, signos de Kernig/Brudzinski. Lactantes: fontanela abaulada. LCR: leucocitos ↑ (PMN), glucosa ↓, proteína ↑. Meningococcemia: petequias → púrpura → CIVD → hipotensión → <strong>50% mortalidad</strong>. ATB: <strong>Ceftriaxona o Penicilina G cristalina IV INMEDIATO</strong>.</p>
+</div>
+<div class="info-block success">
+  <div class="label">Profilaxis contactos</div>
+  <p>Adultos: <strong>Ciprofloxacino 500mg DU</strong>. Niños/Gestantes: <strong>Ceftriaxona IM DU</strong>. Alternativa: Rifampicina 600mg 12/12h ×2 días.</p>
+</div>
+
+<div class="sec-divider"><h3>Neisseria gonorrhoeae — Gonorrea</h3></div>
+<div class="info-block">
+  <div class="label">Diplococo GN</div>
+  <h4>Diplococo Gram- intracelular (dentro de PMN) — SIN cápsula — Fermenta SOLO glucosa</h4>
+  <p><strong>No posee cápsula</strong> (diferente del meningococo). Fermenta solo glucosa (NO maltosa). Medio selectivo: <strong>Thayer-Martin</strong> (chocolate + VCN). Variación antigénica de pili → escape inmune. Proteína Opa, IgA proteasa.</p>
+</div>
+<div class="info-block warn">
+  <div class="label">Infecciones</div>
+  <p>Hombre: <strong>uretritis</strong> (secreción purulenta). Mujer: <strong>cervicitis</strong> (frecuentemente asintomática) → salpingitis → DIP → esterilidad. Neonatos: <strong>oftalmia neonatal</strong> (profilaxis con colirio de nitrato de plata o eritromicina). Infección diseminada: artritis séptica + dermatitis + tenosinovitis. Tratamiento: <strong>Ceftriaxona 500mg-1g IM DU + Azitromicina 1g VO DU</strong>.</p>
+</div>
+
+<div class="sec-divider"><h3>Diferenciación N. meningitidis vs N. gonorrhoeae</h3></div>
+<table class="compare-table">
+<tr><th>Característica</th><th>N. meningitidis</th><th>N. gonorrhoeae</th></tr>
+<tr><td><strong>Cápsula</strong></td><td>SÍ (principal factor)</td><td>NO</td></tr>
+<tr><td><strong>Fermentación</strong></td><td>Glucosa + Maltosa</td><td>SOLO Glucosa</td></tr>
+<tr><td><strong>Medio</strong></td><td>Chocolate + CO₂</td><td>Thayer-Martin</td></tr>
+<tr><td><strong>Transmisión</strong></td><td>Gotitas respiratorias</td><td>Sexual / parto</td></tr>
+<tr><td><strong>Infección principal</strong></td><td>Meningitis, meningococcemia</td><td>Uretritis, cervicitis, DIP</td></tr>
+</table>
+
+</div></div>
+
+<!-- ═══════════ BGN ENTEROBACTERIACEAE ═══════════ -->
+<div id="bgnEntero" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🦠</span> Bacilos Gram-Negativos — Enterobacteriaceae</div>
+
+<div class="sec-divider"><h3>Escherichia coli — Principal causa de ITU</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Bacilo Gram- — Anaerobio facultativo — Fermenta lactosa — IMViC: ++--</h4>
+  <p>Principal causa de ITU (80%). MacConkey: colonias ROSA (fermenta lactosa). EMB: brilho metálico-verde. <strong>IMViC de E. coli: Indol ⊕ | VMR ⊕ | VP ⊖ | Citrato ⊖</strong>. Cápsula K1: meningite neonatal. Cepas patogénicas intestinales: EPEC, ETEC, EHEC (O157:H7 → SHU), EIEC, EAEC.</p>
+</div>
+<div class="info-block danger">
+  <div class="label">EHEC O157:H7</div>
+  <p>Toxina tipo Shiga (Stx1, Stx2) → colitis hemorrágica → <strong>Síndrome Hemolítico-Urémico (SHU)</strong>: anemia hemolítica microangiopática + trombocitopenia + insuficiencia renal aguda. Afecta niños <5 años. <strong>NO dar antibiótico</strong> (↑ liberación de toxina).</p>
+</div>
+<div class="info-block success">
+  <div class="label">Tratamiento</div>
+  <p>ITU simple: TMP-SMX o nitrofurantoína VO. ITU complicada: ceftriaxona IV. Meningitis neonatal: ampicilina + gentamicina. ESBL ⊕: meropenem. KPC: ceftazidima-avibactam.</p>
+</div>
+
+<div class="sec-divider"><h3>Klebsiella pneumoniae — Pneumonía del alcoolista</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Bacilo Gram- encapsulado — Colonias MUCOIDE en MacConkey — Inmóvil</h4>
+  <p>"Escarro en geleia de groselha" (esputo en jalea de grosella) — <strong>pneumonía necrosante en alcoolistas</strong> y diabéticos. Cápsula muy espessa = principal factor de virulencia. MacConkey: colonias ROSA MUCOIDE. IMViC: - + + + (Indol ⊖, VP ⊕, Citrato ⊕, Urease ⊕). ESKAPE pathogen.</p>
+</div>
+<div class="info-block danger">
+  <div class="label">⚠️ KPC — Emergencia global</div>
+  <p><strong>KPC (Klebsiella Carbapenemase)</strong>: resistencia a carbapenems → tratamiento: ceftazidima-avibactam. NDM (metalo-β-lactamasa): aztreonam-avibactam, cefiderocol. Última línea: polimixina B.</p>
+</div>
+
+<div class="sec-divider"><h3>Klebsiella granulomatis — Donovanose</h3></div>
+<div class="info-block">
+  <div class="label">IST</div>
+  <h4>Cocobacilo Gram- intracelular — NO cultivable en medios convencionales</h4>
+  <p><strong>Donovanose (Granuloma inguinal)</strong>: úlceras genitais INDOLORAS, progresivas, que sangran al manipular. Diagnóstico: biopsia → <strong>Corpos de Donovan</strong> (bacterias dentro de macrófagos — coloración de Giemsa). Tratamiento: <strong>Azitromicina 1g/semana VO ≥3 semanas</strong> (hasta cicatrización).</p>
+</div>
+
+<div class="sec-divider"><h3>Salmonella spp. — Fiebre tifoidea y gastroenteritis</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Bacilo Gram- — Móvil (flagelos) — NO fermenta lactosa — H₂S ⊕</h4>
+  <p>MacConkey: colonias INCOLORAS (no fermenta lactosa). SS agar: colonias con centro negro (H₂S). Dos grupos principales: <strong>S. Typhi</strong> (fiebre tifoidea — enfermedad sistémica) y <strong>S. no-Typhi</strong> (gastroenteritis — la más común). Fuente: huevos, pollo, agua contaminada.</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Fiebre Tifoidea</div>
+  <p>S. Typhi: fiebre escalonada progresiva (1ª semana → 2ª semana → meseta alta), bradicardia relativa, esplenomegalia, manchas roseoladas abdominales, constipación (NO diarrea al inicio). Complicación: perforación intestinal (3ª semana), hemorragia. Portadores crónicos: vesícula biliar. Tratamiento: <strong>ciprofloxacino, ceftriaxona o azitromicina</strong>.</p>
+</div>
+
+<div class="sec-divider"><h3>Shigella spp. — Disentería bacilar</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Bacilo Gram- — INMÓVIL — NO fermenta lactosa — H₂S ⊖ — NO produce gas</h4>
+  <p>4 especies: S. dysenteriae (A — más grave, produce toxina de Shiga), S. flexneri (B — más común en países en desarrollo), S. boydii (C), S. sonnei (D — más común en países desarrollados). Dosis infectante MUY BAJA: <strong>10-200 bacterias</strong> (persona-persona). Invade mucosa del colon → diarrea con SANGRE y MOCO (disentería) + tenesmo + fiebre. <strong>S. dysenteriae tipo 1</strong>: produce toxina de Shiga → puede causar SHU (como EHEC). Tratamiento: ciprofloxacino o azitromicina.</p>
+</div>
+
+</div></div>
+
+<!-- ═══════════ BGN OTROS ═══════════ -->
+<div id="bgnOther" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🧫</span> BGN — Otros Gram-Negativos</div>
+
+<div class="sec-divider"><h3>Pseudomonas aeruginosa — El problema nosocomial</h3></div>
+<div class="info-block">
+  <div class="label">Pigmentos</div>
+  <h4>Bacilo Gram- — Aerobio ESTRICTO — Flagelos polares — Oxidasa ⊕</h4>
+  <p>Produce <strong>piocianina (AZUL)</strong> y <strong>pioverdina (VERDE)</strong> → coloración <em>azul-esverdeada</em>. Olor <strong>DULCE/adocicado</strong> (2-aminoacetofenona). NO fermenta lactosa (MacConkey: incolora). Crece a <strong>42°C</strong>.</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Infecciones</div>
+  <p>Neumonía nosocomial (VM), queimados (exsudado esverdeado), fibrosis quística (biofilm crónico), ITU por catéter, otitis externa maligna (diabéticos), foliculitis de "jacuzzi", endocarditis en UDIV, osteomielitis (herida punzante del pie a través de tenis). Factores de virulencia: <strong>Exotoxina A</strong> (inhibe síntesis proteica — mismo mecanismo que toxina diftérica = EF-2), <strong>biofilm</strong>, elastasa, piocianina (daño oxidativo). Tratamiento: <strong>piperacilina-tazobactam, cefepima, meropenem o ciprofloxacino</strong>. Doble cobertura en sepsis grave.</p>
+</div>
+
+<div class="sec-divider"><h3>Haemophilus influenzae — Meningitis y epiglotitis</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Cocobacilo Gram- pleomórfico — Necesita factores X (hemina) y V (NAD)</h4>
+  <p>Crece en <strong>agar CHOCOLATE</strong> (NO en agar sangre). Fenómeno de <strong>satelitismo</strong> con S. aureus (S. aureus libera factor V). Con cápsula tipo b (Hib) = más virulentos → meningitis y epiglotitis ("cereja vermelha" — EMERGENCIA de vía aérea). Sin cápsula = otitis media, sinusitis, bronquitis. <strong>Vacuna Hib</strong> redujo drásticamente la incidencia. Tratamiento: <strong>ceftriaxona</strong> (meningitis), amoxicilina-clavulanato (otitis).</p>
+</div>
+
+<div class="sec-divider"><h3>Haemophilus ducreyi — Cancroide</h3></div>
+<div class="info-block">
+  <div class="label">IST</div>
+  <h4>Cocobacilo Gram- — Cadenas "cardume de peixes" — Difícil de cultivar</h4>
+  <p><strong>Cancroide (Cancro mole)</strong>: úlcera genital <strong>DOLOROSA</strong>, bordes <strong>MOLES</strong> (blandos, irregulares), base sucia, pueden ser múltiples. Linfadenopatía inguinal <strong>DOLOROSA y supurativa</strong> (bubón que puede fistulizar). Cofactor para transmisión de HIV. Tratamiento: <strong>Azitromicina 1g DU VO</strong> o Ceftriaxona 250mg IM DU.</p>
+</div>
+
+<div class="sec-divider"><h3>Comparativo — Úlceras genitais</h3></div>
+<table class="compare-table">
+<tr><th>Característica</th><th>Sífilis</th><th>Cancroide</th><th>Donovanose</th></tr>
+<tr><td><strong>Dolor</strong></td><td>INDOLORA</td><td>DOLOROSA</td><td>INDOLORA</td></tr>
+<tr><td><strong>Bordes</strong></td><td>Regulares, DUROS</td><td>Irregulares, BLANDOS</td><td>Granulomatosos</td></tr>
+<tr><td><strong>Base</strong></td><td>Limpia, única</td><td>Sucia, múltiples</td><td>Sangra</td></tr>
+<tr><td><strong>Adenopatía</strong></td><td>Indolora</td><td>Dolorosa supurativa</td><td>Puede faltar</td></tr>
+<tr><td><strong>Tratamiento</strong></td><td>Penicilina benzatina IM</td><td>Azitromicina 1g DU</td><td>Azitromicina 1g/sem ≥3 sem</td></tr>
+</table>
+
+<div class="sec-divider"><h3>Helicobacter pylori — Gastritis → Cáncer</h3></div>
+<div class="info-block">
+  <div class="label">Urease</div>
+  <h4>Bacilo espiral/helicoidal — Microaerófilo — Urease ⊕⊕⊕</h4>
+  <p>Urease convierte urea en amonio + CO₂ → neutraliza el pH ácido → coloniza mucosa gástrica. Carcinógeno Grupo I (OMS). Secuencia carcinogénica: <strong>Gastritis crónica → Atrófica → Metaplasia intestinal → Displasia → Adenocarcinoma gástrico</strong>. Produce CagA (oncoproteína) y VacA (vacuolización). Diagnóstico: <strong>test respiratorio ¹³C-urea</strong> (no invasivo, gold standard post-tratamiento), antígeno fecal, endoscopia + CLO test. Tratamiento: <strong>IBP + Claritromicina + Amoxicilina ×14 días</strong>. Alternativa: cuádruple con bismuto.</p>
+</div>
+
+<div class="sec-divider"><h3>Campylobacter jejuni — Enteritis + Guillain-Barré</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Bacilo Gram- en S/asa de gaviota — Microaerófilo — 42°C — Oxidasa ⊕</h4>
+  <p>Reservorio: <strong>AVES</strong> (pollo). Gastroenteritis autolimitada (1-7 días): fiebre, diarrea (puede ser sanguinolenta), dolor abdominal tipo cólico, tenesmo. Puede simular apendicitis. Complicación grave: <strong>Síndrome de Guillain-Barré</strong> (1/1000 casos) — LOS de C. jejuni imita gangliósidos GM1 → anticuerpos atacan mielina → parálisis ASCENDENTE. Tratamiento: azitromicina (cuando indicado); SGB = inmunosupresores + soporte ventilatorio.</p>
+</div>
+
+</div></div>
+
+<!-- ═══════════ MICOBACTERIAS ═══════════ -->
+<div id="mico" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🫁</span> Micobacterias</div>
+
+<div class="sec-divider"><h3>Mycobacterium tuberculosis — Tuberculosis</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Bacilo Ácido-Alcohol Resistente (BAAR) — Aerobio estricto — Crecimiento LENTO</h4>
+  <p><strong>NO se tiñe con Gram</strong>. Coloración de <strong>Ziehl-Neelsen</strong> (fucsina fenicada): BAAR rosados sobre fondo azul. Pared celular rica en <strong>ácidos micólicos</strong> (60% de la pared) → resistencia a desecación, álcali, ácidos, detergentes. <strong>Aerobio estricto</strong> → predilección por ápices pulmonares (mayor pO₂). Crecimiento muy lento: 2-8 semanas en <strong>medio Löwenstein-Jensen</strong> (colonias "rugosas color mostaza"). Multiplicación: 15-20h (vs 20min de E. coli).</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Patogenia</div>
+  <h4>Infección primaria → Latencia → Reactivación</h4>
+  <p><strong>Infección primaria</strong>: inhalación de aerosoles → alvéolos → macrófagos alveolares → multiplicación intracelular → <strong>Complejo de Ghon</strong> (nódulo parenquimatoso + adenopatía hiliar). Respuesta inmune mediada por <strong>células T CD4+ (TH1)</strong> → granuloma caseoso (con necrosis central) → contención. <strong>Latencia</strong>: 90% de los infectados → ILTB (PPD/IGRA ⊕, RX normal, asintomáticos). <strong>Reactivación</strong>: 5-10% → TB activa (inmunodepresión, HIV, diabetes, desnutrición). Predilección: segmentos apicales y posteriores de lóbulos superiores.</p>
+</div>
+<div class="info-block warn">
+  <div class="label">Clínica</div>
+  <p><strong>TB pulmonar</strong>: tos productiva >2-3 semanas, hemoptisis, fiebre vespertina, sudoración nocturna, pérdida ponderal. RX: infiltrados apicales, cavernas. <strong>TB extrapulmonar</strong>: pleural (más común en HIV ⊖), ganglionar (más común en HIV ⊕), miliar (diseminación hematógena — "granos de mijo"), meníngea, osteoarticular (Mal de Pott — vértebras), genitourinaria, peritoneal, pericárdica.</p>
+</div>
+<div class="info-block">
+  <div class="label">Diagnóstico</div>
+  <p><strong>Baciloscopia (BAAR)</strong>: Ziehl-Neelsen en esputo — rápido, barato, específico (sens. ~60%). <strong>Cultura</strong>: Löwenstein-Jensen (gold standard — 2-8 sem) o MGIT/BACTEC (líquido, 1-3 sem). <strong>GeneXpert/Xpert MTB/RIF</strong>: PCR rápida (2h), detecta M. tuberculosis + resistencia a rifampicina. <strong>PPD (Mantoux)</strong>: endurecimiento ≥5mm (HIV, contactos), ≥10mm (grupos de riesgo), ≥15mm (población general). <strong>IGRA</strong>: no influenciado por BCG.</p>
+</div>
+<div class="info-block success">
+  <div class="label">Tratamiento</div>
+  <h4>Esquema RIPE — 6 meses</h4>
+  <p><strong>Fase intensiva (2 meses)</strong>: RIPE → Rifampicina + Isoniazida + Pirazinamida + Etambutol. <strong>Fase de mantenimiento (4 meses)</strong>: RI → Rifampicina + Isoniazida. Mecanismos: <strong>Rifampicina</strong> = inhibe RNA polimerasa (orina/secreciones anaranjadas). <strong>Isoniazida</strong> = inhibe síntesis de ácidos micólicos (hepatotóxica, neuropatía periférica — dar piridoxina/B6). <strong>Pirazinamida</strong> = actúa en pH ácido intracelular. <strong>Etambutol</strong> = inhibe arabinosiltransferasa (neuritis óptica — test de visión de colores). MDR-TB: resistencia a rifampicina + isoniazida → régimen alternativo ×18-20 meses.</p>
+</div>
+
+</div></div>
+
+<!-- ═══════════ BACILOS GRAM-POSITIVOS ═══════════ -->
+<div id="bgp" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🟢</span> Bacilos Gram-Positivos</div>
+
+<div class="sec-divider"><h3>Listeria monocytogenes — Meningitis neonatal</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Bacilo Gram+ corto — β-hemolítico — Catalasa ⊕ — Motilidad a 25°C ("tumbling")</h4>
+  <p>Anaerobio facultativo. Capaz de <strong>crecer a 4°C</strong> (refrigerador — "cold enrichment"). Motilidad característica a 25°C (flagelos peritricos) pero INMÓVIL a 37°C. Crece <strong>intracelularmente</strong> en macrófagos → propulsión por polimerización de actina ("comet tail" = "cola de cometa"). Fuente: leche no pasteurizada, quesos blandos, embutidos, vegetales contaminados.</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Grupos de riesgo</div>
+  <p><strong>Neonatos</strong>: meningitis, sepsis neonatal (granulomatosis infantiséptica = forma diseminada grave). <strong>Gestantes</strong>: bacteriemia con aborto/parto prematuro — la gestante presenta cuadro gripal leve, pero el feto sufre. <strong>Inmunocomprometidos</strong>: meningitis (3ª causa después de S. pneumoniae y N. meningitidis). <strong>Ancianos</strong>. Tratamiento: <strong>Ampicilina IV ± Gentamicina</strong>. ⚠️ Resistente a cefalosporinas (NO usar ceftriaxona empírico en neonatos sin ampliar).</p>
+</div>
+
+<div class="sec-divider"><h3>Corynebacterium diphtheriae — Difteria</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Bacilo Gram+ pleomórfico (forma de "letras chinas") — Gránulos metacromáticos (Babes-Ernst)</h4>
+  <p>NO todas las cepas producen toxina diftérica. La capacidad de producir toxina se adquiere mediante <strong>transducción por un bacteriófago lisogénico (fago β/corynephage)</strong> que porta el gen <em>tox</em>. Solo cepas <strong>lisogenizadas</strong> son toxigénicas. La toxina diftérica inhibe <strong>EF-2 (factor de elongación 2)</strong> → detiene síntesis proteica → muerte celular.</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Clínica</div>
+  <p>Forma faríngea: <strong>pseudomembrana grisácea adherente</strong> en amígdalas/faringe (no se desprende fácilmente — al intentar, sangra). Cuello de toro (adenopatía cervical masiva). Complicaciones: <strong>miocarditis</strong> (toxina llega al corazón), neuropatía (parálisis del paladar, nervios craneanos). Prevención: <strong>Vacuna DTP</strong> (toxoide diftérico). Tratamiento: <strong>Antitoxina diftérica + Eritromicina o Penicilina</strong>.</p>
+</div>
+
+<div class="sec-divider"><h3>Clostridium perfringens — Gangrena gaseosa</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Bacilo Gram+ grande — Anaerobio ESTRICTO — Formador de esporas — Doble hemólisis</h4>
+  <p><strong>Tipo de metabolismo: Anaerobio ESTRICTO</strong> (NO es facultativo, NO es microaerófilo). Produce múltiples toxinas, siendo la más importante la <strong>Toxina Alfa (α) = Lecitinasa / Fosfolipasa C</strong>. La toxina alfa <strong>degrada lecitina de las membranas celulares</strong> → destrucción tisular masiva → <strong>hemólisis + destrucción tisular</strong>. ⚠️ La toxina alfa NO inhibe la síntesis proteica ribosomal (eso es lo que hacen la toxina diftérica y la Exotoxina A de Pseudomonas).</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Gangrena gaseosa (Mionecrosis clostridial)</div>
+  <p>Herida contaminada con tierra/suelo → esporas germinan en tejido isquémico/necrótico (anaerobio) → multiplicación → producción de gas (crepitación a la palpación) → destrucción muscular masiva → toxemia → shock → muerte rápida. RX: gas en tejidos blandos. Tratamiento: <strong>desbridamiento quirúrgico URGENTE + Penicilina G + Clindamicina IV</strong> (clindamicina inhibe producción de toxinas). Cámara hiperbárica (adjuvante).</p>
+</div>
+<div class="info-block warn">
+  <div class="label">Intoxicación alimentaria</div>
+  <p>Enterotoxina (diferente de la toxina alfa): carnes recalentadas → diarrea acuosa y cólico (6-24h), autolimitada. Diferencia de S. aureus: S. aureus = predominan VÓMITOS (1-6h); C. perfringens = predomina DIARREA (8-16h).</p>
+</div>
+
+<div class="sec-divider"><h3>Clostridium tetani — Tétanos</h3></div>
+<div class="info-block">
+  <div class="label">Toxina</div>
+  <h4>Bacilo Gram+ — Anaerobio estricto — Espora terminal ("palillo de tambor")</h4>
+  <p>Produce <strong>Tetanospasmina</strong> (2ª toxina más potente después de la botulínica). Mecanismo: migra por transporte retrógrado axonal → SNC → <strong>bloquea la liberación de neurotransmisores INHIBITORIOS (GABA y Glicina)</strong> en interneuronas de la médula espinal → <strong>PARÁLISIS ESPÁSTICA</strong> (contracción muscular sin relajación). Clínica: trismus (mandíbula trabada), risa sardónica, opistótonos, espasmos reflejos. Puede causar paro respiratorio por espasmo de músculos respiratorios. Tratamiento: <strong>Inmunoglobulina antitetánica (TIG) + Metronidazol + sedación/relajantes musculares + cuidados intensivos</strong>. Prevención: <strong>Vacuna DTP (toxoide tetánico)</strong>.</p>
+</div>
+
+<div class="sec-divider"><h3>Clostridium botulinum — Botulismo</h3></div>
+<div class="info-block">
+  <div class="label">Toxina</div>
+  <h4>Bacilo Gram+ — Anaerobio estricto — Toxina botulínica = MÁS POTENTE conocida</h4>
+  <p>Produce <strong>Toxina botulínica</strong> (7 tipos: A-G). Mecanismo: <strong>bloquea la liberación de ACETILCOLINA (ACh)</strong> en la unión neuromuscular (placa motora) → <strong>PARÁLISIS FLÁCIDA</strong> (sin contracción muscular). ⚠️ NO bloquea GABA ni glicina (eso es el tétanos). NO causa parálisis espástica.</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Formas clínicas</div>
+  <p><strong>Botulismo alimentario</strong> (adultos — más común): ingestión de toxina PREFORMADA en conservas caseras mal esterilizadas (pH >4,6, anaerobio). Incubación: 12-72h. Síntomas: visión doble (diplopía), disfagia, disartria, ptosis palpebral → <strong>parálisis DESCENDENTE simétrica</strong> (de nervios craneanos hacia abajo) → SIN fiebre, estado de conciencia NORMAL. Puede progresar a parálisis respiratoria → muerte. <strong>Botulismo infantil</strong> (<1 año): ingestión de esporas (MIEL → contraindicada en <1 año) → germinan en intestino → producen toxina in situ. <strong>Botulismo de heridas</strong>: similar al tétanos (esporas en herida contaminada). Tratamiento: <strong>Antitoxina botulínica + soporte ventilatorio</strong>.</p>
+</div>
+<div class="info-block warn">
+  <div class="label">⚠️ DIFERENCIA CLAVE: Tétanos vs Botulismo</div>
+  <p><strong>Tétanos</strong> = bloquea GABA/Glicina → parálisis ESPÁSTICA (músculos contraídos). <strong>Botulismo</strong> = bloquea ACh → parálisis FLÁCIDA (músculos relajados). Tétanos = ASCENDENTE. Botulismo = DESCENDENTE.</p>
+</div>
+
+<div class="sec-divider"><h3>Clostridioides difficile — Colitis pseudomembranosa</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Bacilo Gram+ — Anaerobio estricto — Principal causa de diarrea nosocomial por ATB</h4>
+  <p>Causa más importante de <strong>diarrea asociada a antibióticos</strong> (especialmente clindamicina, cefalosporinas, fluoroquinolonas, ampicilina). Produce 2 toxinas: <strong>Toxina A (enterotoxina)</strong> = provoca <strong>inflamación y diarrea</strong> (atrae neutrófilos, secreción de fluidos); <strong>Toxina B (citotoxina)</strong> = <strong>destrucción del citoesqueleto</strong> (más potente, efecto citopático). Ambas toxinas glucosilan las proteínas Rho GTPasas → desorganización del citoesqueleto de actina → daño epitelial.</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Colitis pseudomembranosa</div>
+  <p>Diarrea acuosa profusa, fiebre, dolor abdominal. Colonoscopía: <strong>pseudomembranas amarillentas</strong> adheridas a mucosa inflamada. Cepa hipervirulenta: <strong>NAP1/BI/027</strong> (produce mayor cantidad de toxinas + toxina binaria CDT). Diagnóstico: <strong>Toxina A/B en heces (ELISA/PCR)</strong>. Tratamiento: <strong>1° episodio</strong>: Vancomicina VO 125mg 6/6h ×10 días (o Fidaxomicina). <strong>Recurrencia</strong>: Fidaxomicina o trasplante de microbiota fecal (TMF). ⚠️ Metronidazol solo para casos leves si no hay vancomicina disponible.</p>
+</div>
+
+<div class="sec-divider"><h3>Bacillus cereus — Intoxicación alimentaria</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Bacilo Gram+ grande — Aerobio — Formador de esporas — Móvil</h4>
+  <p>Dos síndromes: <strong>Emético</strong> (toxina cereulida, TERMOESTABLE, preformada): asociado a <strong>arroz frito</strong> recalentado → vómitos intensos 1-6h post-ingesta (similar a S. aureus). <strong>Diarreico</strong> (enterotoxina, TERMOLÁBIL, producida in vivo): diarrea acuosa y cólico 8-16h (similar a C. perfringens). Ambos autolimitados. Tratamiento: hidratación y soporte.</p>
+</div>
+
+<div class="sec-divider"><h3>Bacillus anthracis — Ántrax (Carbunco)</h3></div>
+<div class="info-block">
+  <div class="label">Características</div>
+  <h4>Bacilo Gram+ grande — Aerobio — Formador de esporas — INMÓVIL — CON CÁPSULA</h4>
+  <p>Único Bacillus con cápsula (de <strong>ácido poli-D-glutámico</strong> — polipeptídica, NO polisacárida). <strong>Inmóvil</strong> (diferencia de B. cereus que es móvil). Esporas muy resistentes en el suelo (décadas). Toxina tripartita: <strong>Antígeno Protector (PA) + Factor Letal (LF) + Factor Edematoso (EF)</strong>. PA+LF = Toxina Letal (macrólisis de macrófagos). PA+EF = Toxina Edematosa (↑AMPc → edema).</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Formas clínicas</div>
+  <p><strong>Ántrax cutáneo</strong> (95%, más común): pápula → vesícula → <strong>escara negra necrótica indolora</strong> con edema periférico. Mortalidad sin tratamiento: 20%. <strong>Ántrax inhalatorio</strong> (la más letal): inhalación de esporas → mediastinitis hemorrágica → mortalidad >85% sin tratamiento. RX: ensanchamiento mediastinal. <strong>Ántrax gastrointestinal</strong>: ingestión de carne contaminada → ulceración intestinal, ascitis hemorrágica. Tratamiento: <strong>Ciprofloxacino o Doxiciclina</strong> (cutáneo). Inhalatorio: ciprofloxacino IV + antitoxina.</p>
+</div>
+
+<div class="sec-divider"><h3>Diferencias entre toxinas de Clostridium</h3></div>
+<table class="compare-table">
+<tr><th>Clostridium</th><th>Toxina principal</th><th>Mecanismo</th><th>Resultado</th></tr>
+<tr><td><strong>C. tetani</strong></td><td>Tetanospasmina</td><td>Bloquea GABA/Glicina (SNC)</td><td>Parálisis ESPÁSTICA</td></tr>
+<tr><td><strong>C. botulinum</strong></td><td>Toxina botulínica</td><td>Bloquea ACh (placa motora)</td><td>Parálisis FLÁCIDA</td></tr>
+<tr><td><strong>C. difficile</strong></td><td>Toxina A + B</td><td>Glucosila Rho GTPasas</td><td>Diarrea + colitis</td></tr>
+<tr><td><strong>C. perfringens</strong></td><td>Toxina Alfa (fosfolipasa C)</td><td>Degrada lecitina de membrana</td><td>Hemólisis + gangrena</td></tr>
+</table>
+
+</div></div>
+
+<!-- ═══════════ FLASHCARDS ═══════════ -->
+<div id="flashcards" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🃏</span> Flashcards — 27 Organismos</div>
+<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Clique em cada cartão para virar e revelar Diagnóstico & Tratamento.</p>
+<div class="flashcard-grid" id="flashcard-grid"></div>
+</div></div>
+
+<!-- ═══════════ QUIZ 100Q ═══════════ -->
+<div id="quiz" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">📝</span> Quiz Final — 100 Questões</div>
+<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">100 questões cobrindo os 27 organismos do exame final. Inclui questões de provas anteriores e questões nível exame. Gabarito comentado após cada resposta.</p>
+<div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress" style="width:0%"></div></div>
+<div class="quiz-num" id="quiz-counter">QUESTÃO 1 DE 100</div>
+<div id="quiz-container"></div>
+</div></div>
+
+<button id="scrolltop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ════════════════════════════════════════
+// PARTICLES
+// ════════════════════════════════════════
+(function(){
+  const c=document.getElementById('particles'),x=c.getContext('2d');
+  let w,h,pts=[];
+  function resize(){w=c.width=innerWidth;h=c.height=innerHeight;pts=[];for(let i=0;i<60;i++)pts.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.5+.5,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3,a:Math.random()*.3+.1});}
+  function draw(){x.clearRect(0,0,w,h);pts.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>w)p.dx*=-1;if(p.y<0||p.y>h)p.dy*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=`rgba(79,156,249,${p.a})`;x.fill();});requestAnimationFrame(draw);}
+  resize();draw();addEventListener('resize',resize);
+})();
+
+// ════════════════════════════════════════
+// TAB NAVIGATION
+// ════════════════════════════════════════
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+  const sec = document.getElementById(id);
+  if(sec) { sec.classList.add('active'); window.scrollTo(0,0); }
+  if(btn) btn.classList.add('active');
+}
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrolltop');
+  if(btn) btn.style.display = window.scrollY > 400 ? 'block' : 'none';
+});
+
+// ════════════════════════════════════════
+// FLASHCARD DATA (27 organisms)
+// ════════════════════════════════════════
+const flashcardData = [
+// COCOS GRAM+
+{nm:'Staphylococcus aureus',g:'Coco Gram+ · Racimos',ox:'Anaerobio Facultativo',key:'Catalasa ⊕ · Coagulasa ⊕ · β-hemolítico · MSA: colonias amarillas',dis:['Foliculitis/furúnculo/carbunco','Bacteriemia','Endocarditis aguda','Osteomielitis','Shock tóxico','Intox. alimentaria (1-6h)'],dx:'Coagulasa ⊕ (diferencial clave). MSA: fermenta manitol. Gram: cocos en racimos.',tx:'MSSA: oxacilina IV. MRSA: vancomicina IV. CA-MRSA: TMP-SMX, clindamicina.'},
+{nm:'Staphylococcus epidermidis',g:'Coco Gram+ · Racimos',ox:'Anaerobio Facultativo',key:'Catalasa ⊕ · Coagulasa ⊖ · NO fermenta manitol · BIOFILM',dis:['Endocarditis válvula protésica','Infección de catéter','Infección de DVP','Infección de implantes'],dx:'Coagulasa ⊖. MSA: colonias blancas. Novobiocina: SENSIBLE.',tx:'Retirar dispositivo + Vancomicina ± Rifampicina ± Gentamicina.'},
+{nm:'Staphylococcus saprophyticus',g:'Coco Gram+ · Racimos',ox:'Anaerobio Facultativo',key:'Catalasa ⊕ · Coagulasa ⊖ · Resistente a NOVOBIOCINA · Ureasa ⊕',dis:['ITU en mujeres jóvenes (2ª causa después de E. coli)'],dx:'Coagulasa ⊖. Novobiocina: RESISTENTE (diferencia de S. epidermidis). Ureasa ⊕.',tx:'TMP-SMX o Nitrofurantoína VO.'},
+{nm:'Streptococcus pyogenes',g:'Coco Gram+ · Cadenas',ox:'Anaerobio Facultativo',key:'Catalasa ⊖ · β-hemolítico · Grupo A · Bacitracina SENSIBLE · PYR ⊕ · Proteína M',dis:['Faringitis','Erisipela/Celulitis','Impétigo','Fascitis necrotizante','Fiebre Reumática','GNDA'],dx:'β-hemólisis. Bacitracina sensible. PYR ⊕. ASO elevada (post-estreptocócico).',tx:'Penicilina V VO o Benzatina IM (faringitis). Penicilina G + Clindamicina (fascitis). NUNCA resistente a penicilina.'},
+{nm:'Streptococcus agalactiae',g:'Coco Gram+ · Cadenas',ox:'Anaerobio Facultativo',key:'Catalasa ⊖ · β-hemolítico · Grupo B · CAMP ⊕ · Hipurato ⊕',dis:['Sepsis neonatal precoz','Meningitis neonatal','Infección puerperal','ITU en gestantes'],dx:'CAMP ⊕ (flecha de hemólisis con S. aureus). Hipurato ⊕. Screening 35-37 sem.',tx:'Penicilina G o Ampicilina IV (profilaxis intraparto ≥4h antes del parto).'},
+{nm:'Streptococcus pneumoniae',g:'Diplococo Gram+ lanceolado',ox:'Anaerobio Facultativo',key:'Catalasa ⊖ · α-hemolítico · SENSIBLE a optoquina · SOLUBLE en bilis · Cápsula',dis:['Neumonía comunitaria (1ª causa)','Meningitis en adultos','Otitis media (niños)','Sinusitis'],dx:'α-hemólisis. Optoquina SENSIBLE. Bilis SOLUBLE. Quellung ⊕ (hinchazón capsular).',tx:'Neumonía: amoxicilina/ceftriaxona. Meningitis: ceftriaxona + vancomicina (empírico). Vacunas: PCV13, PPSV23.'},
+// COCOS GRAM-
+{nm:'Neisseria meningitidis',g:'Diplococo Gram- (café)',ox:'Aerobio (5% CO₂)',key:'Oxidasa ⊕ · CON cápsula · Fermenta glucosa + maltosa · LOS',dis:['Meningitis','Meningococcemia fulminante','Waterhouse-Friderichsen (insuf. adrenal)'],dx:'Diplococo GN en LCR. Aglutinación en látex. LCR: ↑leuc, ↓gluc, ↑prot.',tx:'Ceftriaxona o Penicilina G IV. Profilaxis: Ciprofloxacino 500mg DU (adultos).'},
+{nm:'Neisseria gonorrhoeae',g:'Diplococo Gram- intracelular',ox:'Aerobio (5% CO₂)',key:'Oxidasa ⊕ · SIN cápsula · Fermenta SOLO glucosa · Thayer-Martin',dis:['Uretritis','Cervicitis → DIP → Esterilidad','Oftalmia neonatal','Artritis gonocócica diseminada'],dx:'Diplococos GN intracelulares en PMN. Thayer-Martin. PCR (NAAT).',tx:'Ceftriaxona 500mg-1g IM DU + Azitromicina 1g VO DU.'},
+// BGN ENTEROBACTERIACEAE
+{nm:'Escherichia coli',g:'Bacilo Gram-',ox:'Anaerobio Facultativo',key:'Fermenta lactosa · MacConkey ROSA · IMViC: ++-- · Principal causa de ITU (80%)',dis:['ITU (80%)','Meningitis neonatal (K1)','Gastroenteritis (ETEC/EHEC/EPEC)','SHU (EHEC O157:H7)'],dx:'MacConkey: rosa. IMViC: ++--. EMB: brilho metálico-verde.',tx:'ITU: TMP-SMX/Nitrofurantoína. Grave: Ceftriaxona. ESBL: Meropenem. EHEC: NO ATB.'},
+{nm:'Klebsiella pneumoniae',g:'Bacilo Gram- encapsulado',ox:'Anaerobio Facultativo',key:'Inmóvil · MacConkey MUCOIDE · "Geleia de groselha" · ESKAPE · KPC',dis:['Neumonía necrosante (alcoolistas)','ITU nosocomial','Sepse','Absceso hepático (hvKP)'],dx:'MacConkey: mucoide rosa. Teste do fio ⊕ (hvKP). Indol ⊖.',tx:'Sin ESBL: ceftriaxona. ESBL: meropenem. KPC: ceftazidima-avibactam. NDM: cefiderocol.'},
+{nm:'Klebsiella granulomatis',g:'Cocobacilo Gram- intracelular',ox:'Anaerobio Facultativo',key:'NO cultivable · Donovanose · Corpos de Donovan · Úlcera INDOLORA',dis:['Donovanose (granuloma inguinal)'],dx:'Biopsia: Corpos de Donovan en macrófagos (Giemsa). PCR.',tx:'Azitromicina 1g/semana VO ≥3 semanas hasta cicatrización.'},
+{nm:'Salmonella spp.',g:'Bacilo Gram-',ox:'Anaerobio Facultativo',key:'Móvil · NO fermenta lactosa · H₂S ⊕ · Fiebre tifoidea (S. Typhi)',dis:['Fiebre tifoidea (S. Typhi)','Gastroenteritis (S. no-Typhi)','Bacteriemia','Osteomielitis (falcémicos)'],dx:'MacConkey: incolora. SS agar: centro negro (H₂S). Hemocultivo (1ª sem). Coprocultivo.',tx:'Tifoidea: Ciprofloxacino/Ceftriaxona/Azitromicina. Gastroenteritis: hidratación (autolimitada).'},
+{nm:'Shigella spp.',g:'Bacilo Gram-',ox:'Anaerobio Facultativo',key:'INMÓVIL · NO fermenta lactosa · H₂S ⊖ · Dosis infectante BAJA (10-200) · Disentería',dis:['Disentería bacilar (diarrea con sangre + moco)','SHU (S. dysenteriae tipo 1)'],dx:'MacConkey: incolora. H₂S ⊖. Inmóvil. Coprocultivo.',tx:'Ciprofloxacino o Azitromicina. Hidratación.'},
+// BGN OTROS
+{nm:'Pseudomonas aeruginosa',g:'Bacilo Gram-',ox:'Aerobio ESTRICTO',key:'Oxidasa ⊕ · Piocianina (azul) + Pioverdina (verde) · Olor dulce · Biofilm · 42°C',dis:['Neumonía nosocomial','Queimados','Fibrosis quística','ITU por catéter','Otitis externa maligna'],dx:'Colonias azul-esverdeadas. Olor adocicado. Oxidasa ⊕. NO fermenta lactosa.',tx:'Piperacilina-tazobactam, Cefepima, Meropenem, Ciprofloxacino. Doble cobertura en sepsis.'},
+{nm:'Haemophilus influenzae',g:'Cocobacilo Gram-',ox:'Anaerobio Facultativo',key:'Factores X (hemina) + V (NAD) · Agar CHOCOLATE · Satelitismo · Hib = meningitis + epiglotitis',dis:['Meningitis (Hib, <5 años)','Epiglotitis ("cereja vermelha")','Otitis media','Sinusitis'],dx:'Agar chocolate. Satelitismo con S. aureus. Discos X+V.',tx:'Meningitis: ceftriaxona IV. Otitis: amoxicilina-clavulanato. Vacuna Hib.'},
+{nm:'Haemophilus ducreyi',g:'Cocobacilo Gram-',ox:'Anaerobio Facultativo',key:'Cancroide · Úlcera DOLOROSA · Bordes BLANDOS · Bubón supurativo · Cofactor HIV',dis:['Cancroide (cancro mole)'],dx:'Clínico (principal). Gram: cardume de peixes. PCR.',tx:'Azitromicina 1g DU VO o Ceftriaxona 250mg IM DU.'},
+{nm:'Helicobacter pylori',g:'Bacilo espiral Gram-',ox:'Microaerófilo',key:'Urease ⊕⊕⊕ · CagA (oncoproteína) · Carcinógeno Grupo I (OMS)',dis:['Gastritis crónica','Úlcera péptica','Adenocarcinoma gástrico','Linfoma MALT'],dx:'Test respiratorio ¹³C-urea. Antígeno fecal. Endoscopia + CLO test. Histología.',tx:'IBP + Claritromicina + Amoxicilina ×14 días. Cuádruple con Bismuto (alternativa).'},
+{nm:'Campylobacter jejuni',g:'Bacilo Gram- curvo (S/asa)',ox:'Microaerófilo',key:'42°C · Oxidasa ⊕ · Reservatorio: AVES · Guillain-Barré (1/1000)',dis:['Gastroenteritis (autolimitada)','Síndrome de Guillain-Barré'],dx:'Cultivo 42°C microaerófilo. Hipurato ⊕ = C. jejuni.',tx:'Azitromicina (cuando indicado). SGB: soporte + inmunoterapia.'},
+// MICOBACTERIAS
+{nm:'Mycobacterium tuberculosis',g:'BAAR (Ácido-Alcohol Resistente)',ox:'Aerobio Estricto',key:'Ziehl-Neelsen · Ácidos micólicos · Crecimiento lento (2-8 sem) · Löwenstein-Jensen · Granuloma caseoso',dis:['TB pulmonar','TB miliar','TB meníngea','TB pleural','Mal de Pott'],dx:'Baciloscopia BAAR (Ziehl-Neelsen). Cultura L-J/MGIT. GeneXpert (PCR). PPD/IGRA.',tx:'RIPE 6 meses: 2 meses RIPE + 4 meses RI. Rifampicina + Isoniazida + Pirazinamida + Etambutol.'},
+// BGP
+{nm:'Listeria monocytogenes',g:'Bacilo Gram+ corto',ox:'Anaerobio Facultativo',key:'β-hemolítico · Catalasa ⊕ · Crece a 4°C · Motilidad a 25°C · Intracelular (cola de cometa)',dis:['Meningitis neonatal/inmunocomprometidos','Sepsis neonatal','Aborto/parto prematuro','Granulomatosis infantiséptica'],dx:'Hemocultivo/LCR. Motilidad a 25°C. Catalasa ⊕ (diferencia de Streptococcus).',tx:'Ampicilina IV ± Gentamicina. ⚠️ Resistente a cefalosporinas.'},
+{nm:'Corynebacterium diphtheriae',g:'Bacilo Gram+ pleomórfico',ox:'Anaerobio Facultativo',key:'"Letras chinas" · Gránulos metacromáticos · Toxina = fago lisogénico (gen tox) · Inhibe EF-2',dis:['Difteria faríngea (pseudomembrana)','Miocarditis tóxica','Neuropatía diftérica'],dx:'Medio Löffler/telurito de potasio. Test de Elek (producción de toxina). Gram: letras chinas.',tx:'Antitoxina diftérica + Eritromicina o Penicilina. Vacuna DTP (prevención).'},
+{nm:'Clostridium perfringens',g:'Bacilo Gram+ grande',ox:'Anaerobio ESTRICTO',key:'Toxina Alfa = Lecitinasa/Fosfolipasa C · Hemólisis + destrucción tisular · Gangrena gaseosa',dis:['Gangrena gaseosa (mionecrosis)','Intoxicación alimentaria (diarrea 8-16h)','Enteritis necrotizante'],dx:'Gas en tejidos (RX). Gram: bacilos GP grandes sin esporas visibles. Cultivo anaerobio.',tx:'Desbridamiento quirúrgico URGENTE + Penicilina G + Clindamicina IV. Cámara hiperbárica.'},
+{nm:'Clostridium tetani',g:'Bacilo Gram+ (palillo de tambor)',ox:'Anaerobio Estricto',key:'Tetanospasmina · Bloquea GABA/Glicina · Parálisis ESPÁSTICA · Espora terminal',dis:['Tétanos (trismus, opistótonos, espasmos)'],dx:'CLÍNICO (no se cultiva de rutina). Historia de herida + ausencia de vacunación.',tx:'TIG (inmunoglobulina) + Metronidazol + Sedación + UCI. Prevención: Vacuna DTP.'},
+{nm:'Clostridium botulinum',g:'Bacilo Gram+',ox:'Anaerobio Estricto',key:'Toxina MÁS POTENTE · Bloquea ACh · Parálisis FLÁCIDA · Conservas caseras · MIEL (<1 año)',dis:['Botulismo alimentario (conservas)','Botulismo infantil (miel)','Botulismo de heridas'],dx:'Clínico: parálisis descendente + diplopía + disfagia + SIN fiebre. Toxina en suero/heces.',tx:'Antitoxina botulínica + Soporte ventilatorio. Infantil: BIG-IV (BabyBIG).'},
+{nm:'Clostridioides difficile',g:'Bacilo Gram+',ox:'Anaerobio Estricto',key:'Toxina A (enterotoxina: diarrea) + Toxina B (citotoxina) · Colitis pseudomembranosa · Post-ATB',dis:['Diarrea asociada a ATB','Colitis pseudomembranosa','Megacolon tóxico'],dx:'Toxina A/B en heces (ELISA, PCR). Colonoscopía: pseudomembranas amarillentas.',tx:'Vancomicina VO 125mg 6/6h ×10d. Recurrencia: Fidaxomicina o TMF.'},
+{nm:'Bacillus cereus',g:'Bacilo Gram+ grande',ox:'Aerobio',key:'Esporas · 2 síndromes: EMÉTICO (arroz frito, 1-6h, cereulida) + DIARREICO (8-16h, enterotoxina)',dis:['Síndrome emético (arroz frito)','Síndrome diarreico','Endoftalmitis post-trauma'],dx:'Clínico (intoxicación alimentaria). Cultivo de alimento sospechoso.',tx:'Autolimitado. Hidratación y soporte.'},
+{nm:'Bacillus anthracis',g:'Bacilo Gram+ grande',ox:'Aerobio',key:'INMÓVIL · CON CÁPSULA (ác. poli-D-glutámico) · Toxina tripartita (PA+LF+EF) · Escara negra',dis:['Ántrax cutáneo (escara negra)','Ántrax inhalatorio (mediastinitis)','Ántrax gastrointestinal'],dx:'Gram: bacilos GP grandes en cadenas "bambú". Cultivo: colonias "medusa head". PCR.',tx:'Cutáneo: Ciprofloxacino o Doxiciclina VO. Inhalatorio: Ciprofloxacino IV + Antitoxina.'}
+];
+
+// ════════════════════════════════════════
+// RENDER FLASHCARDS
+// ════════════════════════════════════════
+function renderFlashcards(){
+  const grid = document.getElementById('flashcard-grid');
+  grid.innerHTML = flashcardData.map((fc,i) => `
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <div class="fc-header">
+            <div class="fc-name">${fc.nm}</div>
+            <span class="fc-gram">${fc.g} · ${fc.ox}</span>
+          </div>
+          <div class="fc-body">
+            <div class="fc-row"><span class="fc-lbl">Fato-chave</span><span class="fc-val">${fc.key}</span></div>
+            <div class="fc-row"><span class="fc-lbl">Doenças</span><div class="fc-tags">${fc.dis.map(d=>`<span class="fc-tag">${d}</span>`).join('')}</div></div>
+          </div>
+          <div class="fc-hint">↻ Toque para ver Diagnóstico & Tratamento</div>
+        </div>
+        <div class="flashcard-back">
+          <div class="fc-header">
+            <div class="fc-name">${fc.nm}</div>
+            <span class="fc-gram">DIAGNÓSTICO & TRATAMENTO</span>
+          </div>
+          <div class="fc-body">
+            <div class="fc-row"><span class="fc-lbl">Diagnóstico</span><span class="fc-val">${fc.dx}</span></div>
+            <div class="fc-row"><span class="fc-lbl">Tratamento</span><span class="fc-val">${fc.tx}</span></div>
+          </div>
+          <div class="fc-hint">↻ Toque para voltar</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ════════════════════════════════════════
+// QUIZ DATA — 100 QUESTÕES
+// ════════════════════════════════════════
+const quizData = [
+// ── STAPHYLOCOCCUS (1-10) ──
+{q:"01. Médico de urgencias recibe a un joven de 20 años con carbunco en la región posterior del cuello: lesión eritematosa extensa con múltiples orificios supurativos, fiebre y afectación del estado general. ¿Cuál es la diferencia principal entre furunculosis y carbunco?",opts:["La furunculosis afecta múltiples folículos y el carbunco solo uno","El carbunco es infección extensa de múltiples folículos pilosos en una región, mientras que la furunculosis es infección localizada de un solo folículo","El carbunco es causado por Bacillus anthracis y no por S. aureus","La furunculosis requiere hospitalización y el carbunco no"],correct:1,explain:"El CARBUNCO estafilocócico = infección de MÚLTIPLES folículos pilosos en una región con orificios supurativos. FURÚNCULO = infección de UN solo folículo. Ambos causados por S. aureus. No confundir con carbunco/ántrax (Bacillus anthracis)."},
+{q:"02. ¿Cuál de las siguientes pruebas diferencia S. aureus de otros Staphylococcus?",opts:["Catalasa","Coagulasa","Bacitracina","Optoquina"],correct:1,explain:"COAGULASA ⊕ diferencia S. aureus (coagulasa positivo) de S. epidermidis y S. saprophyticus (coagulasa negativos). Catalasa ⊕ diferencia Staphylococcus de Streptococcus. Bacitracina = S. pyogenes. Optoquina = S. pneumoniae."},
+{q:"03. ¿Qué prueba diferencia S. saprophyticus de S. epidermidis?",opts:["Coagulasa","Catalasa","Novobiocina","Bacitracina"],correct:2,explain:"Ambos son coagulasa ⊖. S. saprophyticus es RESISTENTE a novobiocina; S. epidermidis es SENSIBLE a novobiocina. S. saprophyticus causa ITU en mujeres jóvenes."},
+{q:"04. Un paciente con válvula protésica desarrolla fiebre a los 45 días de la cirugía. Los hemocultivos crecen Staphylococcus coagulasa-negativo. ¿Cuál es el agente más probable?",opts:["S. aureus","S. saprophyticus","S. epidermidis","S. lugdunensis"],correct:2,explain:"S. epidermidis = principal causa de endocarditis de válvula PROTÉSICA precoz (<2 meses). Forma BIOFILM (PIA/PNAG). Tratamiento: retirar prótesis + vancomicina."},
+{q:"05. La intoxicación alimentaria por S. aureus se caracteriza por:",opts:["Diarrea profusa 12-24h después de la ingesta","Vómitos predominantes 1-6h después de la ingesta, sin fiebre","Fiebre alta con diarrea sanguinolenta","Parálisis descendente 18-36h después"],correct:1,explain:"S. aureus: enterotoxinas TERMOESTABLES preformadas. Inicio RÁPIDO (1-6h). Predominan VÓMITOS. Sin fiebre. Autolimitado en 24h. Diferencia de C. perfringens (diarrea 8-16h)."},
+{q:"06. ¿Cuál es el mecanismo inmunológico principal que explica el daño cardíaco en la fiebre reumática?",opts:["Invasión directa del tejido cardíaco por S. pyogenes","Reacción cruzada de anticuerpos contra proteína M con antígenos del tejido cardíaco","Depósito de inmunocomplejos antígeno-anticuerpo en válvulas cardíacas","Producción de exotoxinas que dañan directamente el miocardio"],correct:1,explain:"Fiebre reumática: anticuerpos anti-proteína M de S. pyogenes presentan REACCIÓN CRUZADA (mimetismo molecular) con antígenos del tejido cardíaco, articulaciones, piel y SNC. NO es invasión directa ni toxinas."},
+{q:"07. Un niño de 10 años presenta fiebre, artritis migratoria en rodillas y codos, carditis, eritema marginado 3 semanas después de faringitis por S. pyogenes no tratada. ¿Cuál es el diagnóstico?",opts:["Endocarditis infecciosa","Fiebre Reumática (criterios de Jones)","Glomerulonefritis post-estreptocócica","Artritis reactiva"],correct:1,explain:"Cuadro clásico de Fiebre Reumática: artritis migratoria, carditis, eritema marginado son criterios MAYORES de Jones. Ocurre 2-3 semanas post-faringitis por S. pyogenes (Grupo A). Prevención: tratar faringitis con penicilina."},
+{q:"08. La glomerulonefritis difusa aguda post-estreptocócica se desarrolla por:",opts:["Invasión directa del riñón por S. pyogenes","Toxinas estreptocócicas nefrotóxicas directas","Reacción cruzada inmunológica con antígenos renales / depósito de inmunocomplejos","Infección renal ascendente desde la vejiga"],correct:2,explain:"GNDA post-estreptocócica: reacción inmunológica → depósito de complejos inmunes en glomérulos → activación de complemento (C3 ↓) → inflamación → edema, hipertensión, hematuria. NO es invasión directa."},
+{q:"09. Un paciente de 45 años con antecedente de fiebre reumática presenta cardiopatía valvular y requiere extracción dental. ¿Cuál grupo de Streptococcus es el más frecuentemente implicado en la endocarditis post-procedimiento dental?",opts:["S. pyogenes — coloniza la faringe","Streptococcus del grupo viridans (S. sanguis, S. mitis) — forman parte de la microbiota oral","S. pneumoniae — coloniza nasofaringe","S. agalactiae — coloniza mucosa oral"],correct:1,explain:"Streptococcus viridans (S. sanguis, S. mitis): microbiota ORAL. Procedimientos dentales → bacteriemia transitoria → se adhieren a válvulas dañadas → endocarditis SUBAGUDA. NO S. pyogenes (causa faringitis, no endocarditis dental)."},
+{q:"10. ¿Cómo se diferencia S. pneumoniae de los Streptococcus del grupo viridans?",opts:["S. pneumoniae es β-hemolítico","S. pneumoniae es sensible a optoquina y soluble en bilis","S. pneumoniae es resistente a optoquina","S. pneumoniae no tiene cápsula"],correct:1,explain:"Ambos son α-hemolíticos. S. pneumoniae: SENSIBLE a optoquina, SOLUBLE en bilis. Viridans: RESISTENTES a optoquina, INSOLUBLES en bilis. Esto es clave para diferenciarlos en el laboratorio."},
+// ── S. pneumoniae / S. agalactiae (11-15) ──
+{q:"11. S. pneumoniae produce beta-hemólisis y se diferencia de los viridans por su sensibilidad a optoquina.",opts:["Verdadero","Falso"],correct:1,explain:"FALSO. S. pneumoniae produce α-HEMÓLISIS (hemólisis parcial — zona VERDE), NO β-hemólisis. Es correcto que se diferencia de viridans por sensibilidad a optoquina, pero la hemólisis es ALFA, no beta."},
+{q:"12. S. pneumoniae coloniza la nasofaringe y puede diseminarse al oído medio a través de la trompa de Eustaquio, especialmente tras infecciones virales respiratorias que obstruyen el drenaje normal.",opts:["Verdadero","Falso"],correct:0,explain:"VERDADERO. S. pneumoniae coloniza la nasofaringe y las IVR virales causan edema/obstrucción de la trompa de Eustaquio → acumulación de secreciones → otitis media aguda (OMA). Es la causa más frecuente de OMA junto con H. influenzae y M. catarrhalis."},
+{q:"13. Paciente de 2 años consulta por fiebre alta, otalgia derecha y llanto persistente. Otoscopia: membrana timpánica abombada y eritematosa. Sin vacunación completa. El cultivo del líquido timpánico crece diplococos Gram-positivos lanceolados, α-hemolíticos. ¿Cuál es el agente más probable?",opts:["S. agalactiae","S. pneumoniae","S. pyogenes","S. viridans"],correct:1,explain:"Diplococos GP lanceolados + α-hemolíticos + otitis media en niño = S. pneumoniae (neumococo). S. agalactiae = Grupo B (neonatos). S. pyogenes = β-hemolítico (faringitis). S. viridans = endocarditis, no otitis."},
+{q:"14. ¿Cuál es la indicación para screening de S. agalactiae en gestantes?",opts:["Primer trimestre (8-12 semanas)","Segundo trimestre (20-24 semanas)","Tercer trimestre (35-37 semanas)","Solo si hay factores de riesgo"],correct:2,explain:"Screening de GBS (S. agalactiae): cultivo vaginal-rectal a las 35-37 semanas de gestación. Si positivo: profilaxis intraparto con penicilina G IV iniciada ≥4h antes del parto para prevenir sepsis neonatal precoz."},
+{q:"15. La fiebre reumática tiene base inmunológica: los anticuerpos producidos contra la proteína M de S. aureus presentan reacción cruzada con antígenos del tejido cardíaco, articulaciones, piel y sistema nervioso central.",opts:["Verdadero","Falso"],correct:1,explain:"FALSO. La proteína M es de S. PYOGENES (Grupo A), NO de S. aureus. Los anticuerpos anti-proteína M de S. pyogenes son los que presentan reacción cruzada con antígenos cardíacos, articulares, cutáneos y del SNC."},
+// ── NEISSERIA (16-20) ──
+{q:"16. ¿Qué fermentación diferencia N. meningitidis de N. gonorrhoeae?",opts:["N. meningitidis fermenta solo glucosa","N. gonorrhoeae fermenta glucosa + maltosa","N. meningitidis fermenta glucosa + maltosa","Ambas fermentan solo glucosa"],correct:2,explain:"N. meningitidis: fermenta glucosa + MALTOSA. N. gonorrhoeae: fermenta SOLO glucosa. Regla mnemónica: MeNingococo = Maltosa."},
+{q:"17. ¿Cuál es la diferencia clave en cuanto a cápsula entre N. meningitidis y N. gonorrhoeae?",opts:["Ambas tienen cápsula","Ninguna tiene cápsula","N. meningitidis tiene cápsula, N. gonorrhoeae NO","N. gonorrhoeae tiene cápsula, N. meningitidis NO"],correct:2,explain:"N. meningitidis: CON cápsula (principal factor de virulencia — serotipos A,B,C,W,Y). N. gonorrhoeae: SIN cápsula (usa variación antigénica de pili y proteína Opa para evadir inmunidad)."},
+{q:"18. El síndrome de Waterhouse-Friderichsen se caracteriza por:",opts:["Glomerulonefritis aguda post-meningocócica","Hemorragia adrenal bilateral con insuficiencia adrenal aguda","Parálisis facial por N. meningitidis","Artritis séptica gonocócica"],correct:1,explain:"Waterhouse-Friderichsen: meningococcemia fulminante → CIVD → hemorragia adrenal BILATERAL → insuficiencia adrenal aguda → shock. Mortalidad muy alta. Tratamiento: ATB inmediato + soporte + corticoides."},
+{q:"19. Una mujer de 27 años con gonorrea cervical no tratada. ¿Qué complicación tardía grave puede ocurrir?",opts:["Cáncer de cuello uterino","Meningitis gonocócica","Cistitis intersticial","Salpingitis con riesgo de esterilidad"],correct:3,explain:"Gonorrea cervical no tratada → ascensión → salpingitis (trompas) → DIP → adherencias tubáricas → ESTERILIDAD. Es la complicación reproductiva más temida de la gonorrea."},
+{q:"20. La morfología microscópica de los meningococos son diplococos Gram-negativos sin cápsula.",opts:["Verdadero","Falso"],correct:1,explain:"FALSO. N. meningitidis son diplococos Gram-negativos CON CÁPSULA. La cápsula es el principal factor de virulencia. El que NO tiene cápsula es N. gonorrhoeae."},
+// ── E. coli / Klebsiella / Salmonella / Shigella (21-35) ──
+{q:"21. ¿Cuál es el resultado del IMViC para E. coli?",opts:["- + + +","+ + - -","+ - + -","- - + +"],correct:1,explain:"IMViC de E. coli: Indol ⊕ | Vermelho de Metila ⊕ | Voges-Proskauer ⊖ | Citrato ⊖ = (+ + - -). Klebsiella pneumoniae: (- + + +)."},
+{q:"22. ¿Qué cepa de E. coli produce SHU y por qué NO se debe dar antibiótico?",opts:["ETEC — porque los ATB causan alergia","EHEC O157:H7 — porque los ATB aumentan la liberación de toxina Shiga","EPEC — porque es resistente a todo","EIEC — porque el ATB no alcanza el intestino"],correct:1,explain:"EHEC (Enterohemorragica) O157:H7 produce toxina Shiga → SHU. ATB causan LISIS bacteriana → ↑ liberación de toxina Shiga → PEOR pronóstico. Tratamiento: hidratación y soporte."},
+{q:"23. Un paciente con sonda urinaria de larga duración desarrolla cálculos coraliformes. El análisis muestra cristales de estruvita. ¿Qué bacteria alcaliniza la orina?",opts:["Escherichia coli","Klebsiella pneumoniae","Proteus mirabilis","Enterococcus"],correct:2,explain:"Proteus mirabilis: urease ⊕⊕⊕ → convierte urea en amonio + CO₂ → pH ALCALINO → cristales de estruvita (MgNH₄PO₄) → cálculos coraliformes. E. coli causa ITU con pH ácido, sin estruvita."},
+{q:"24. ¿Cuál es la principal diferencia entre Salmonella y Shigella en cuanto a movilidad?",opts:["Ambas son inmóviles","Salmonella es móvil, Shigella es INMÓVIL","Shigella es móvil, Salmonella es inmóvil","Ambas son altamente móviles"],correct:1,explain:"Salmonella: MÓVIL (flagelos peritricos). Shigella: INMÓVIL. Además: Salmonella produce H₂S ⊕; Shigella H₂S ⊖. Ambas no fermentan lactosa (MacConkey: incoloras)."},
+{q:"25. La fiebre tifoidea se caracteriza inicialmente por:",opts:["Diarrea profusa sanguinolenta desde el primer día","Fiebre escalonada progresiva con bradicardia relativa","Vómitos intensos sin fiebre","Erupción vesicular difusa"],correct:1,explain:"Fiebre tifoidea (S. Typhi): fiebre escalonada (aumenta cada día), bradicardia relativa (disociación temperatura-pulso), esplenomegalia, manchas roseoladas. Constipación al inicio (NO diarrea). Diarrea puede aparecer en 2ª-3ª semana."},
+{q:"26. ¿Cuál es la característica que diferencia la disentería por Shigella de la gastroenteritis por Salmonella?",opts:["Shigella produce diarrea acuosa sin sangre","Shigella produce diarrea con SANGRE y MOCO (disentería) con tenesmo","Salmonella produce diarrea sanguinolenta y Shigella no","Shigella se transmite solo por alimentos"],correct:1,explain:"Shigella invade mucosa del colon → diarrea con SANGRE y MOCO + tenesmo + fiebre = DISENTERÍA. Salmonella no-Typhi: gastroenteritis con diarrea más acuosa (puede tener sangre pero predomina acuosa)."},
+{q:"27. Escarro en 'jalea de grosella' con neumonía necrosante en un alcoolista. ¿Cuál es el agente?",opts:["S. pneumoniae","Pseudomonas aeruginosa","Klebsiella pneumoniae","Legionella pneumophila"],correct:2,explain:"Escarro en 'geleia de groselha' (jalea de grosella/currant jelly) + neumonía necrosante + alcoolista = Klebsiella pneumoniae. Cápsula mucoide. ESKAPE pathogen. MacConkey: colonias rosa mucoide."},
+{q:"28. ¿Cuál IST tropical produce úlceras genitales indoloras con Cuerpos de Donovan en la biopsia?",opts:["Sífilis primaria","Cancroide","Donovanose (K. granulomatis)","Herpes genital"],correct:2,explain:"Donovanose = K. granulomatis. Úlceras INDOLORAS progresivas que sangran al manipular. Diagnóstico histológico: Corpos de Donovan = bactérias dentro de macrófagos (Giemsa). No cultivable. Tratamiento: azitromicina semanal."},
+// ── PSEUDOMONAS / HAEMOPHILUS / H. PYLORI / CAMPYLOBACTER (29-45) ──
+{q:"29. Un paciente quemado desarrolla exudado azul-verdoso con olor dulzón. ¿Cuál es el agente y qué pigmento produce?",opts:["Serratia marcescens; prodigiosina roja","Pseudomonas aeruginosa; piocianina (azul) + pioverdina (verde)","Klebsiella pneumoniae; pigmento capsular","S. aureus; pigmento dorado"],correct:1,explain:"Exudado AZUL-VERDOSO + olor DULZÓN = Pseudomonas aeruginosa. Piocianina (azul) + Pioverdina (verde). Prodigiosina ROJA = Serratia marcescens."},
+{q:"30. ¿Cuál es el tipo de metabolismo de Pseudomonas aeruginosa?",opts:["Anaerobio estricto","Anaerobio facultativo","Aerobio ESTRICTO","Microaerófilo"],correct:2,explain:"Pseudomonas aeruginosa = AEROBIO ESTRICTO (obligado). Necesita O₂ para crecer. Crece a 42°C. Oxidasa ⊕. Es un no fermentador."},
+{q:"31. ¿Cuál es una bacteria aerobia estricta?",opts:["Escherichia coli","Clostridium botulinum","Mycobacterium tuberculosis","Helicobacter pylori"],correct:2,explain:"M. tuberculosis = AEROBIO ESTRICTO (por eso prefiere ápices pulmonares con mayor pO₂). E. coli = anaerobio facultativo. C. botulinum = anaerobio estricto. H. pylori = microaerófilo."},
+{q:"32. Haemophilus influenzae crece en qué medio especial y por qué?",opts:["MacConkey — porque fermenta lactosa","Agar CHOCOLATE — porque libera factores X (hemina) y V (NAD) del eritrocito lisado","Agar sangre — porque necesita sangre intacta","Thayer-Martin — porque es selectivo para Haemophilus"],correct:1,explain:"H. influenzae necesita factores X (hemina) y V (NAD). El agar CHOCOLATE lisa eritrocitos → libera ambos factores. En agar sangre NO crece (factores están dentro de eritrocitos intactos). Satelitismo: S. aureus libera factor V → H. influenzae crece al redor."},
+{q:"33. ¿Cuál es la complicación grave post-infección por Campylobacter jejuni que involucra el sistema nervioso?",opts:["Meningitis bacteriana","Encefalitis viral","Síndrome de Guillain-Barré (parálisis ascendente)","Neuritis óptica"],correct:2,explain:"SGB post-Campylobacter: LOS de C. jejuni mimetiza gangliósidos GM1 de la mielina → anticuerpos anti-LOS atacan mielina → polineuropatía desmielinizante → parálisis ASCENDENTE (de pies hacia arriba). 1/1000 casos."},
+{q:"34. El test respiratorio con ¹³C-urea se usa para diagnosticar:",opts:["Tuberculosis pulmonar","Infección por Helicobacter pylori","Neumonía por Legionella","Botulismo"],correct:1,explain:"Test respiratorio ¹³C-urea: H. pylori posee UREASE → hidroliza la urea marcada con ¹³C → libera ¹³CO₂ que se detecta en el aire espirado. Gold standard NO invasivo para confirmar erradicación post-tratamiento."},
+{q:"35. ¿Cuál es la secuencia carcinogénica asociada a H. pylori?",opts:["Esofagitis → Barrett → Adenocarcinoma esofágico","Gastritis crónica → Gastritis atrófica → Metaplasia intestinal → Displasia → Adenocarcinoma gástrico","Úlcera duodenal → Perforación → Cáncer","Gastritis aguda → Linfoma inmediato"],correct:1,explain:"H. pylori (Carcinógeno Grupo I — OMS): Gastritis crónica → Atrófica → Metaplasia intestinal → Displasia → Adenocarcinoma gástrico. CagA = oncoproteína bacteriana. Pronóstico generalmente malo."},
+{q:"36. ¿Cuál es el mecanismo de acción de la Exotoxina A de Pseudomonas aeruginosa?",opts:["Bloquea la liberación de acetilcolina","Activa la adenilato ciclasa","Inhibe la síntesis proteica (inactiva EF-2 por ADP-ribosilación)","Degrada fosfolípidos de membrana"],correct:2,explain:"Exotoxina A de Pseudomonas = ADP-ribosila EF-2 (Factor de Elongación 2) → inhibe síntesis proteica. MISMO mecanismo que la toxina diftérica (C. diphtheriae). Diferente de la toxina alfa de C. perfringens (fosfolipasa C)."},
+{q:"37. ¿Cuál manifestación clínica es característica del ántrax cutáneo?",opts:["Lesión necrótica con escara NEGRA indolora","Dificultad respiratoria","Lesiones en forma de petequias","Erupción pustulosa generalizada"],correct:0,explain:"Ántrax cutáneo (B. anthracis): pápula → vesícula → ESCARA NEGRA necrótica INDOLORA con edema periférico (edema gelatinoso). Es la forma más común (95%) y menos letal."},
+{q:"38. ¿Cómo se adquiere comúnmente el botulismo en adultos?",opts:["Consumo de alimentos enlatados en casa sin esterilización adecuada","Inhalación de esporas","Mordedura de un insecto","Consumo de miel"],correct:0,explain:"Botulismo ALIMENTARIO en adultos: ingesta de TOXINA PREFORMADA en conservas caseras mal esterilizadas (pH >4.6, ambiente anaerobio). La miel causa botulismo INFANTIL (<1 año — esporas germinan in vivo). Inhalación es rara (bioterrorismo)."},
+// ── CLOSTRIDIUM (39-55) ──
+{q:"39. ¿Qué efecto tiene la alfa-toxina de Clostridium perfringens?",opts:["Provoca hemólisis y destrucción tisular (lecitinasa/fosfolipasa C)","Inhibe la liberación de GABA","Actúa como superantígeno","Provoca diarrea acuosa"],correct:0,explain:"Toxina ALFA de C. perfringens = LECITINASA (fosfolipasa C): degrada lecitina de membranas celulares → HEMÓLISIS + DESTRUCCIÓN TISULAR masiva → gangrena gaseosa."},
+{q:"40. ¿Qué tipo de metabolismo tiene Clostridium perfringens?",opts:["Anaerobio estricto","Aerobio obligado","Microaerófilo","Anaerobio facultativo"],correct:0,explain:"C. perfringens = ANAEROBIO ESTRICTO. Todos los Clostridium son anaerobios estrictos (tetani, botulinum, difficile, perfringens). Germinan en tejidos isquémicos/necróticos donde hay bajo O₂."},
+{q:"41. ¿Cuál función cumple la toxina A de C. difficile?",opts:["Es una enterotoxina que provoca inflamación y diarrea","Es una neurotoxina que inhibe la contracción muscular","Es una hemolisina que destruye glóbulos rojos","Actúa como un factor de adhesión"],correct:0,explain:"Toxina A de C. difficile = ENTEROTOXINA: atrae neutrófilos, provoca secreción de fluidos → INFLAMACIÓN y DIARREA. Toxina B = CITOTOXINA (destruye citoesqueleto — más potente). Ambas glucosilan Rho GTPasas."},
+{q:"42. La toxina alfa (lecitinasa o fosfolipasa C) de C. perfringens inhibe la síntesis proteica ribosomal de las células del huésped.",opts:["Verdadero","Falso"],correct:1,explain:"FALSO. La toxina alfa de C. perfringens es una LECITINASA/FOSFOLIPASA C que DEGRADA LECITINA de membranas celulares → hemólisis + necrosis tisular. NO inhibe síntesis proteica. Las que inhiben síntesis proteica (EF-2) son la toxina diftérica y la Exotoxina A de Pseudomonas."},
+{q:"43. Una mujer de 28 años ingiere conservas caseras de ejotes preparadas la semana anterior. 18 horas después presenta visión doble, dificultad para deglutir y hablar, sin fiebre. Conciencia normal. Progresivamente desarrolla parálisis descendente. El mecanismo de la toxina es bloquear la liberación de glicina y GABA en neuronas inhibitorias, causando parálisis espástica.",opts:["Verdadero","Falso"],correct:1,explain:"FALSO. Este cuadro es BOTULISMO (C. botulinum): conservas caseras + diplopía + disfagia + parálisis DESCENDENTE + sin fiebre + conciencia normal. La toxina botulínica bloquea la liberación de ACETILCOLINA (ACh) en la unión neuromuscular → parálisis FLÁCIDA (no espástica). El que bloquea GABA/Glicina causando parálisis ESPÁSTICA es la tetanospasmina del C. TETANI."},
+{q:"44. Mujer de 35 años consulta por visión borrosa, dificultad para hablar y debilidad progresiva en brazos y piernas. Refiere haber consumido hace 24 horas una conserva de vegetales con olor y sabor inusuales. Presenta ptosis palpebral, diplopía, disartria y dificultad para deglutir, hipotonía y ausencia de reflejos, sin fiebre ni alteraciones de conciencia. A) ¿Cuál es el microorganismo involucrado?",opts:["Clostridium tetani","Clostridium botulinum","Clostridium perfringens","Listeria monocytogenes"],correct:1,explain:"C. botulinum: conserva casera + ptosis + diplopía + disartria + disfagia + hipotonía + arreflexia + SIN fiebre + conciencia NORMAL = parálisis FLÁCIDA DESCENDENTE típica del botulismo alimentario."},
+{q:"45. ¿Cuál es el mecanismo de acción de la toxina botulínica?",opts:["Bloquea la liberación de GABA y glicina","Inhibe la síntesis proteica (EF-2)","Bloquea la liberación de acetilcolina en la unión neuromuscular","Activa la adenilato ciclasa de forma permanente"],correct:2,explain:"Toxina botulínica: se une a las proteínas SNARE en la terminación nerviosa → BLOQUEA la liberación de ACETILCOLINA (ACh) en la placa motora → parálisis FLÁCIDA. Es la toxina más potente conocida. Uso terapéutico: Botox."},
+{q:"46. ¿Cuál Clostridium produce parálisis ESPÁSTICA y cuál produce parálisis FLÁCIDA?",opts:["C. tetani = flácida; C. botulinum = espástica","C. tetani = espástica; C. botulinum = flácida","Ambos producen parálisis flácida","Ambos producen parálisis espástica"],correct:1,explain:"C. TETANI: bloquea GABA/Glicina (SNC) → parálisis ESPÁSTICA (músculos contraídos: trismus, opistótonos). C. BOTULINUM: bloquea ACh (placa motora) → parálisis FLÁCIDA (músculos relajados: ptosis, disfagia)."},
+{q:"47. ¿Cuál es el tratamiento de primera línea para C. difficile?",opts:["Metronidazol VO","Vancomicina VO","Ciprofloxacino VO","Clindamicina VO"],correct:1,explain:"C. difficile: 1ª línea actual = VANCOMICINA VO 125mg 6/6h ×10 días (o Fidaxomicina). Metronidazol solo para casos leves si no hay vancomicina. Clindamicina es una de las CAUSAS de C. difficile (NO tratamiento)."},
+{q:"48. ¿Cómo adquiere Corynebacterium diphtheriae la capacidad de producir toxina?",opts:["Por mutación espontánea","Mediante transducción por un bacteriófago lisogénico","A través de conjugación","Por transformación con plásmidos"],correct:1,explain:"C. diphtheriae adquiere el gen tox (toxina diftérica) mediante TRANSDUCCIÓN por un BACTERIÓFAGO LISOGÉNICO (fago β/corynephage). Solo cepas lisogenizadas son toxigénicas. La toxina inhibe EF-2 → detiene síntesis proteica."},
+{q:"49. ¿Cuál es la espora característica de C. tetani?",opts:["Espora central","Espora subterminal","Espora TERMINAL (palillo de tambor/drumstick)","No produce esporas"],correct:2,explain:"C. tetani: espora TERMINAL que le da aspecto de 'palillo de tambor' (drumstick). C. perfringens: esporas subterminal (raramente vistas). C. botulinum: espora subterminal."},
+{q:"50. ¿Por qué la miel está contraindicada en menores de 1 año?",opts:["Porque contiene toxina botulínica preformada","Porque contiene esporas de C. botulinum que germinan en el intestino inmaduro","Porque causa alergia en neonatos","Porque contiene bacterias de C. tetani"],correct:1,explain:"Miel puede contener ESPORAS de C. botulinum. En <1 año: flora intestinal inmadura → esporas germinan → producen toxina IN SITU → botulismo infantil (constipación, hipotonía → 'floppy baby'). En adultos la flora normal impide la germinación."},
+// ── MYCOBACTERIUM TUBERCULOSIS (51-60) ──
+{q:"51. ¿Cuál es la coloración utilizada para detectar M. tuberculosis?",opts:["Gram","Giemsa","Ziehl-Neelsen (baciloscopia BAAR)","PAS"],correct:2,explain:"M. tuberculosis NO se tiñe con Gram. Se usa ZIEHL-NEELSEN: fucsina fenicada → calentamiento → decoloración con ácido-alcohol → contracoloración con azul de metileno. BAAR = bacilos rosados sobre fondo azul. Ácidos micólicos impiden la penetración de cristal violeta del Gram."},
+{q:"52. ¿Por qué M. tuberculosis prefiere los ápices pulmonares?",opts:["Porque hay menos macrófagos","Porque es aerobio estricto y los ápices tienen mayor pO₂","Porque hay menor flujo sanguíneo","Porque la temperatura es más baja"],correct:1,explain:"M. tuberculosis = AEROBIO ESTRICTO. Los ápices pulmonares tienen la mayor relación V/Q (ventilación/perfusión) → mayor presión parcial de O₂ → ambiente ideal para este aerobio. También hay menor flujo sanguíneo → menor llegada de células inmunes."},
+{q:"53. ¿Cuál es el esquema de tratamiento para TB y su duración?",opts:["Amoxicilina + Metronidazol × 2 semanas","RIPE × 6 meses (2 meses RIPE + 4 meses RI)","Vancomicina × 4 semanas","Doxiciclina × 3 meses"],correct:1,explain:"TB = RIPE 6 meses: Fase INTENSIVA (2 meses): Rifampicina + Isoniazida + Pirazinamida + Etambutol. Fase MANTENIMIENTO (4 meses): Rifampicina + Isoniazida. Rifampicina = RNA pol. Isoniazida = ácidos micólicos."},
+{q:"54. ¿Cuál fármaco anti-TB causa orina/secreciones anaranjadas?",opts:["Isoniazida","Pirazinamida","Rifampicina","Etambutol"],correct:2,explain:"RIFAMPICINA: inhibe RNA polimerasa DNA-dependiente. Efecto adverso clásico: coloración ANARANJADA de orina, lágrimas, sudor, saliva. También hepatotóxica e inductor enzimático potente (P450)."},
+{q:"55. ¿Cuál fármaco anti-TB puede causar neuritis óptica?",opts:["Rifampicina","Isoniazida","Pirazinamida","Etambutol"],correct:3,explain:"ETAMBUTOL: inhibe arabinosiltransferasa → síntesis de arabinogalactano de pared. Efecto adverso: NEURITIS ÓPTICA (disminución de agudeza visual, dificultad para distinguir colores rojo-verde). Monitorizar visión."},
+{q:"56. ¿Cuál es el GeneXpert/Xpert MTB/RIF y qué detecta?",opts:["Cultivo automatizado que detecta M. tuberculosis en 1 semana","PCR rápida (2h) que detecta M. tuberculosis + resistencia a rifampicina","Prueba serológica de anticuerpos","Test cutáneo como el PPD"],correct:1,explain:"GeneXpert = PCR automatizada en tiempo real. Resultados en ~2 HORAS. Detecta: (1) ADN de M. tuberculosis y (2) mutaciones en gen rpoB = resistencia a RIFAMPICINA. Revolucionó el diagnóstico de TB y MDR-TB."},
+{q:"57. ¿Qué es el Complejo de Ghon?",opts:["Granuloma caseoso + caverna pulmonar","Nódulo parenquimatoso + adenopatía hiliar (infección primaria)","Derrame pleural tuberculoso","Tuberculosis miliar diseminada"],correct:1,explain:"Complejo de Ghon = hallazgo de infección PRIMARIA por TB: nódulo parenquimatoso (generalmente en lóbulo medio/inferior) + adenopatía hiliar ipsilateral. Si calcifica = Complejo de Ranke. No indica enfermedad activa."},
+{q:"58. ¿Cuál es la causa más común de TB extrapulmonar en pacientes HIV ⊕?",opts:["Pleural","Ganglionar (adenitis TB)","Meníngea","Miliar"],correct:1,explain:"En HIV ⊕: TB ganglionar (adenitis/linfadenitis tuberculosa) es la forma EXTRAPULMONAR más común. En HIV ⊖: TB pleural es la más común. HIV ⊕ severo (<200 CD4): TB miliar y meníngea aumentan."},
+{q:"59. PPD ≥5mm se considera positivo en:",opts:["Cualquier persona","Solo diabéticos","HIV ⊕, contactos recientes de TB activa, inmunodeprimidos","Solo niños vacunados con BCG"],correct:2,explain:"PPD ≥5mm = positivo en: HIV ⊕, contactos recientes de TB activa, inmunodeprimidos (trasplantados, >15mg/día prednisona), lesiones fibróticas en RX. ≥10mm: grupos de riesgo (profesionales de salud, prisioneros). ≥15mm: población general."},
+{q:"60. ¿Cuál es la principal causa de muerte en tuberculosis no tratada?",opts:["Insuficiencia hepática","Insuficiencia respiratoria + hemoptisis masiva","Insuficiencia renal","Meningitis"],correct:1,explain:"TB pulmonar no tratada: destrucción progresiva del parénquima pulmonar → cavernas → hemoptisis masiva (erosión de vasos) + insuficiencia respiratoria → muerte. Mortalidad histórica ~50% sin tratamiento."},
+// ── LISTERIA / BACILLUS (61-70) ──
+{q:"61. ¿Cuál bacteria Gram-positiva puede crecer a 4°C (refrigerador)?",opts:["Staphylococcus aureus","Listeria monocytogenes","Bacillus anthracis","Clostridium perfringens"],correct:1,explain:"Listeria monocytogenes: capaz de crecer a 4°C ('cold enrichment'). Fuente: alimentos refrigerados (leche no pasteurizada, quesos blandos, embutidos). Motilidad a 25°C (flagelos), inmóvil a 37°C."},
+{q:"62. ¿Por qué Listeria es resistente a cefalosporinas?",opts:["Porque produce β-lactamasa","Porque tiene PBP3 alterada con baja afinidad por cefalosporinas","Porque tiene pared celular impermeable","Porque es intracelular y las cefalosporinas no penetran"],correct:1,explain:"Listeria tiene PBP3 con baja afinidad por cefalosporinas → resistencia intrínseca. Por eso en meningitis neonatal o de inmunocomprometidos se usa AMPICILINA (no ceftriaxona sola). En sospecha de Listeria: ampliar cobertura con ampicilina."},
+{q:"63. ¿Cuál Bacillus es INMÓVIL y posee CÁPSULA?",opts:["Bacillus cereus","Bacillus subtilis","Bacillus anthracis","Bacillus megaterium"],correct:2,explain:"B. anthracis: INMÓVIL + CÁPSULA (ácido poli-D-glutámico). Es el único Bacillus con estas dos características. B. cereus: MÓVIL + SIN cápsula. La inmovilidad y cápsula diferencian B. anthracis en el laboratorio."},
+{q:"64. ¿Cuál síndrome de B. cereus se asocia con arroz frito recalentado?",opts:["Síndrome diarreico","Síndrome emético (cereulida)","Bacteriemia","Endoftalmitis"],correct:1,explain:"Síndrome EMÉTICO: toxina CEREULIDA (termoestable, preformada) → arroz frito recalentado → vómitos intensos 1-6h. Síndrome DIARREICO: enterotoxina (termolábil, in vivo) → diarrea 8-16h."},
+{q:"65. ¿Cuál es la forma más letal de ántrax?",opts:["Cutáneo","Gastrointestinal","Inhalatorio","Meníngeo"],correct:2,explain:"Ántrax INHALATORIO: mortalidad >85% sin tratamiento. Inhalación de esporas → mediastinitis hemorrágica → RX: ensanchamiento mediastinal. Ántrax cutáneo = más común pero menos letal (20% sin Tx). Ántrax gastrointestinal = intermedio."},
+{q:"66. Meningitis en un neonato <7 días. Los tres agentes más comunes son:",opts:["S. pneumoniae, N. meningitidis, H. influenzae","S. agalactiae (GBS), E. coli (K1), Listeria monocytogenes","S. aureus, P. aeruginosa, Klebsiella","S. pyogenes, Salmonella, Shigella"],correct:1,explain:"Meningitis neonatal precoz (<7 días): S. agalactiae (GBS), E. coli (K1), Listeria. En adultos: S. pneumoniae, N. meningitidis. En niños 2m-5a: S. pneumoniae, N. meningitidis, H. influenzae."},
+{q:"67. ¿Cuál toxina inhibe EF-2 (Factor de Elongación 2)?",opts:["Toxina alfa de C. perfringens","Toxina botulínica","Toxina diftérica de C. diphtheriae","Tetanospasmina"],correct:2,explain:"Toxina diftérica: ADP-ribosila EF-2 → inhibe síntesis proteica → muerte celular. La Exotoxina A de Pseudomonas tiene el MISMO mecanismo. Toxina alfa = fosfolipasa C. Botulínica = bloquea ACh. Tetanospasmina = bloquea GABA/Glicina."},
+{q:"68. ¿Cuál es la vacuna que previene difteria, tétanos y pertussis?",opts:["BCG","PCV13","DTP (o DTaP)","PPSV23"],correct:2,explain:"DTP: Difteria (toxoide diftérico) + Tétanos (toxoide tetánico) + Pertussis (pertussis acelular en DTaP). BCG = TB. PCV13 = neumococo conjugada. PPSV23 = neumococo polisacárida."},
+{q:"69. La pseudomembrana diftérica se localiza en:",opts:["Esófago","Amígdalas y faringe (grisácea, adherente)","Colon","Pulmón"],correct:1,explain:"Pseudomembrana diftérica: grisácea, adherente a amígdalas y faringe. Al intentar desprenderla → SANGRA. Formada por fibrina, células inflamatorias, bacterias y restos epiteliales. Puede obstruir la vía aérea."},
+{q:"70. ¿Cuál Clostridium está más frecuentemente asociado a diarrea nosocomial post-antibiótico?",opts:["C. perfringens","C. botulinum","C. tetani","Clostridioides difficile"],correct:3,explain:"C. difficile: principal causa de diarrea nosocomial asociada a ATB. Factores de riesgo: uso de clindamicina, cefalosporinas, fluoroquinolonas; hospitalización prolongada; edad avanzada; IBP."},
+// ── PREGUNTAS INTEGRADAS / MIXTAS (71-100) ──
+{q:"71. ¿Cuál bacteria produce la toxina más potente conocida?",opts:["Clostridium tetani","Clostridium botulinum","Bacillus anthracis","Corynebacterium diphtheriae"],correct:1,explain:"Toxina botulínica de C. botulinum = LA MÁS POTENTE conocida. Se estima que 1 gramo podría matar 1 millón de personas. Tetanospasmina = 2ª más potente. Uso terapéutico de toxina botulínica: Botox."},
+{q:"72. Un hombre mordido por un gato desarrolla celulitis rápida <24h. Cocobacilo Gram-negativo. ¿Agente?",opts:["Bartonella henselae","Pasteurella multocida","S. aureus","Streptococcus pyogenes"],correct:1,explain:"Mordedura de GATO + celulitis rápida (<24-48h) + cocobacilo GN = Pasteurella multocida. Bartonella = arañazo (no mordedura). S. aureus = GP, no GN. Tratamiento: amoxicilina-clavulanato."},
+{q:"73. ¿Cuál es la principal función de la cápsula bacteriana?",opts:["Regular la división celular","Proteger contra la fagocitosis","Facilitar la replicación del ADN","Transportar nutrientes al interior de la célula"],correct:1,explain:"Cápsula: ANTIFAGOCÍTICA. Protege a la bacteria contra la fagocitosis por PMN y macrófagos. Ejemplos: S. pneumoniae, N. meningitidis, K. pneumoniae, H. influenzae tipo b, B. anthracis."},
+{q:"74. ¿Cuál ATB es de primera línea para meningitis meningocócica?",opts:["Vancomicina","Metronidazol","Ceftriaxona","Ciprofloxacino"],correct:2,explain:"Meningitis meningocócica: CEFTRIAXONA IV (o Penicilina G cristalina) INMEDIATAMENTE. No esperar resultados. Ciprofloxacino se usa para PROFILAXIS de contactos (no tratamiento)."},
+{q:"75. Paciente con fibrosis quística tiene infecciones pulmonares recurrentes con secreción verdosa. ¿Agente?",opts:["S. pneumoniae","M. tuberculosis","Pseudomonas aeruginosa","K. pneumoniae"],correct:2,explain:"Fibrosis quística: colonización crónica por Pseudomonas aeruginosa que forma BIOFILM. Secreción verdosa (piocianina + pioverdina). Difícil erradicar por el biofilm. Tratamiento: tobramicina inhalada + antipseudomonal sistémico."},
+{q:"76. ¿Cuál bacteria NO fermenta lactosa en MacConkey?",opts:["E. coli","Klebsiella pneumoniae","Salmonella spp.","Ninguna de las anteriores"],correct:2,explain:"Salmonella: NO fermenta lactosa → MacConkey INCOLORA. E. coli y Klebsiella fermentan lactosa → MacConkey ROSA/MUCOIDE. Regla: las patógenas intestinales (Salmonella, Shigella) no fermentan lactosa; los colonizadores normales (E. coli, Klebsiella) sí."},
+{q:"77. ¿Cuál es el mecanismo de resistencia de MRSA?",opts:["Producción de β-lactamasa","Modificación del gen mecA → PBP2a alterada","Bomba de eflujo","Permeabilidad reducida"],correct:1,explain:"MRSA: gen mecA → codifica PBP2a (proteína de unión a penicilina alterada) con baja afinidad por TODOS los β-lactámicos (penicilinas, cefalosporinas, carbapenems). Por eso se usa vancomicina."},
+{q:"78. ¿Cuál es la toxina de S. aureus responsable del síndrome de shock tóxico?",opts:["Enterotoxina A","TSST-1 (Toxin de Shock Tóxico tipo 1)","Exfoliatina","Leucocidina de Panton-Valentine"],correct:1,explain:"TSST-1: SUPERANTÍGENO → activa masivamente linfocitos T → liberación excesiva de citocinas (tormenta de citocinas) → fiebre alta, hipotensión, rash eritrodérmico difuso, descamación, fallo multiorgánico. Asociado a tampones."},
+{q:"79. Proteus mirabilis produce pielonefritis obstructiva por cálculos de estruvita, mientras E. coli típicamente produce pielonefritis sin cálculos.",opts:["Verdadero","Falso"],correct:0,explain:"VERDADERO. Proteus = urease ⊕ → pH alcalino → estruvita → cálculos → pielonefritis obstructiva. E. coli = causa más común de pielonefritis pero NO produce cálculos (pH ácido, sin urease relevante)."},
+{q:"80. ¿Cuál bacteria causa el síndrome de Lemierre?",opts:["Streptococcus pyogenes","Staphylococcus aureus","Fusobacterium necrophorum","Pseudomonas aeruginosa"],correct:2,explain:"Síndrome de Lemierre: Fusobacterium necrophorum (anaerobio estricto). Faringitis → tromboflebitis yugular interna → embolias pulmonares sépticas. Tratamiento: metronidazol IV ×4-6 semanas."},
+{q:"81. ¿Cuál es la dosis infectante de Shigella?",opts:["10⁶-10⁸ bacterias","10⁴-10⁵ bacterias","10-200 bacterias (MUY baja)","1 bacteria"],correct:2,explain:"Shigella: dosis infectante extremadamente BAJA → 10-200 bacterias. Por eso la transmisión persona-persona (fecal-oral directa) es muy eficiente, especialmente en guarderías y prisiones."},
+{q:"82. ¿Cuál prueba diagnóstica detecta antígeno de Legionella en orina?",opts:["Urocultivo","Antígeno urinario de Legionella","PPD","VDRL"],correct:1,explain:"Antígeno urinario de Legionella: gold standard RÁPIDO para detección de L. pneumophila serogrupo 1. Resultado en 15 min. Permanece positivo semanas después de la infección. Legionelosis: neumonía + diarrea + hiponatremia."},
+{q:"83. ¿Cuál vaginosis NO presenta inflamación (sin leucocitos)?",opts:["Candidiasis vaginal","Tricomoniasis","Vaginosis bacteriana (Gardnerella vaginalis)","Vaginitis atrófica"],correct:2,explain:"VAGINOSIS bacteriana (Gardnerella): desequilibrio de flora (↓Lactobacillus ↑Gardnerella). SIN inflamación → SIN leucocitos. Sufijo '-osis' = no inflamatorio. Criterios de Amsel: flujo grisáceo, pH >4.5, aminas ⊕, Clue cells."},
+{q:"84. ¿Cuál es el principal mecanismo de la toxina colérica?",opts:["Inhibe síntesis proteica","Activa adenilato ciclasa → ↑AMPc → secreción de Cl⁻/H₂O","Bloquea ACh","Degrada fosfolípidos de membrana"],correct:1,explain:"Toxina colérica: Subunidad B se une a GM1 → Subunidad A1 ADP-ribosila Gsα → activa ADENILATO CICLASA de forma PERMANENTE → ↑AMPc → CFTR secreta Cl⁻ → H₂O sigue por osmosis → diarrea 'agua de arroz' profusa."},
+{q:"85. ¿Cuál bacteria produce el 'sinal do polegar' (thumb sign) en RX lateral de cuello?",opts:["S. pneumoniae","H. influenzae tipo b (epiglotitis)","S. pyogenes","C. diphtheriae"],correct:1,explain:"Thumb sign = epiglote edematizada en RX lateral → epiglotitis por H. influenzae tipo b (Hib). EMERGENCIA de vía aérea: NO examinar garganta sin vía aérea segura → intubar primero. Vacuna Hib redujo drásticamente."},
+{q:"86. Bordetella pertussis causa coqueluche. ¿Cuál es la fase MÁS CONTAGIOSA?",opts:["Paroxística","Convalescencia","Catarral (la más contagiosa — parece resfriado)","Fase de incubación"],correct:2,explain:"Fase CATARRAL (1-2 semanas): MÁS CONTAGIOSA. Parece resfriado común. Si se trata con macrólidos aquí, se reduce el cuadro. Fase Paroxística: tos intensa + guincho + cianose → ATB ya es INÚTIL (daño epitelial irreversible)."},
+{q:"87. ¿Cuál Streptococcus NUNCA desarrolla resistencia a penicilina?",opts:["S. pneumoniae","S. agalactiae","S. pyogenes","S. viridans"],correct:2,explain:"S. PYOGENES (Grupo A): NUNCA ha desarrollado resistencia a penicilina en la historia. Penicilina sigue siendo primera línea. S. pneumoniae SÍ puede tener resistencia (alteración de PBP, no β-lactamasa)."},
+{q:"88. ¿Cuál es el principal factor de virulencia de S. pneumoniae?",opts:["Proteína M","Toxina TSST-1","Cápsula polisacárida","Biofilm"],correct:2,explain:"S. pneumoniae: CÁPSULA polisacárida = principal factor de virulencia. >90 serotipos. Antifagocítica. Base de las vacunas (PCV13 = 13 serotipos conjugados; PPSV23 = 23 serotipos polisacáridos)."},
+{q:"89. ¿Cuál bacteria causa diarrea 'agua de arroz'?",opts:["E. coli ETEC","Vibrio cholerae","Shigella dysenteriae","Campylobacter jejuni"],correct:1,explain:"V. cholerae: toxina colérica → diarrea 'agua de arroz' profusa (hasta 20-30L/día). Sin fiebre, sin sangre, sin tenesmo. Principal complicación: CHOQUE HIPOVOLÉMICO. Tratamiento: REHIDRATACIÓN (oral/IV)."},
+{q:"90. ¿Cuál es la profilaxis para contactos de meningococo en adultos?",opts:["Penicilina benzatina IM","Amoxicilina VO ×7 días","Ciprofloxacino 500mg DU VO","Vancomicina IV"],correct:2,explain:"Profilaxis meningocócica en adultos: CIPROFLOXACINO 500mg DOSIS ÚNICA VO. En niños/gestantes: Ceftriaxona IM DU. Alternativa: Rifampicina 600mg 12/12h ×2 días."},
+{q:"91. ¿Cuál efecto adverso se asocia con Isoniazida?",opts:["Orina anaranjada","Neuritis óptica","Neuropatía periférica (dar piridoxina/B6)","Hiperuricemia"],correct:2,explain:"Isoniazida: neuropatía periférica (interfiere con metabolismo de piridoxina/vitamina B6). Prevención: suplementar con piridoxina (B6). También hepatotóxica. Pirazinamida = hiperuricemia. Etambutol = neuritis óptica."},
+{q:"92. ¿Cuál bacteria necesita crecer a 42°C en condiciones microaerófilas?",opts:["E. coli","Campylobacter jejuni","S. pneumoniae","M. tuberculosis"],correct:1,explain:"C. jejuni: crece a 42°C (temperatura intestinal de aves) en ambiente MICROAERÓFILO (5% O₂, 10% CO₂). Oxidasa ⊕, catalasa ⊕. Reservorio: aves domésticas (pollo)."},
+{q:"93. Staphylococcus se diferencia de Streptococcus por:",opts:["Tinción de Gram","Prueba de CATALASA (Staphylococcus ⊕, Streptococcus ⊖)","Coagulasa","Optoquina"],correct:1,explain:"CATALASA diferencia los dos géneros: Staphylococcus = catalasa ⊕ (descompone H₂O₂ → O₂ + H₂O → burbujas). Streptococcus = catalasa ⊖. Después de eso: coagulasa diferencia dentro de Staphylococcus."},
+{q:"94. ¿Cuál microorganismo causa úlcera péptica y está asociado a linfoma MALT?",opts:["E. coli","H. pylori","S. typhi","C. jejuni"],correct:1,explain:"H. pylori: causa gastritis crónica, úlcera péptica y está asociado a LINFOMA MALT gástrico. El tratamiento de erradicación de H. pylori puede causar REGRESIÓN del linfoma MALT en estadios tempranos."},
+{q:"95. ¿Cuál medio se usa para cultivar M. tuberculosis?",opts:["Agar sangre","MacConkey","Löwenstein-Jensen (huevo + verde malaquita)","Agar chocolate"],correct:2,explain:"Löwenstein-Jensen: medio sólido a base de huevo + verde malaquita (inhibidor de contaminantes). Colonias 'rugosas color mostaza' en 2-8 semanas. Medio líquido: MGIT/BACTEC (más rápido: 1-3 semanas)."},
+{q:"96. ¿Cuál es el diagnóstico rápido para tuberculosis con detección de resistencia?",opts:["Baciloscopia","Cultura en Löwenstein-Jensen","GeneXpert/Xpert MTB/RIF (PCR en 2h)","PPD"],correct:2,explain:"GeneXpert = PCR automatizada: resultado en ~2h. Detecta M. tuberculosis + resistencia a rifampicina (mutación rpoB). Sensibilidad superior a baciloscopia. Recomendado por OMS como test inicial."},
+{q:"97. ¿Cuál es el reservatorio de C. jejuni?",opts:["Cerdos","Bovinos","Aves (pollo)","Ratas"],correct:2,explain:"C. jejuni: reservatorio = AVES domésticas (pollo). Temperatura intestinal de aves ~42°C = óptimo crecimiento. Contaminación: pollo mal cocido, leche no pasteurizada. Leptospira = ratas. Salmonella = huevos/pollo."},
+{q:"98. ¿Cuál ATB se usa para tratar faringitis por S. pyogenes en alérgicos a penicilina?",opts:["Vancomicina","Metronidazol","Azitromicina","Ciprofloxacino"],correct:2,explain:"Faringitis por GAS en alérgicos a penicilina: AZITROMICINA (o claritromicina). Ciprofloxacino NO cubre bien Gram-positivos. Vancomicina se reserva para infecciones graves por MRSA. Metronidazol = anaerobios."},
+{q:"99. ¿Por qué S. pneumoniae se llama 'neumococo'?",opts:["Porque coloniza los neumocitos","Porque es la principal causa de neumonía comunitaria","Porque solo afecta el pulmón","Porque tiene forma neumática"],correct:1,explain:"'Neumococo' = principal causa de NEUMONÍA adquirida en la comunidad (NAC). También causa meningitis (1ª en adultos), otitis media (1ª en niños), sinusitis. No solo afecta pulmón — el nombre viene de su asociación histórica principal con neumonía."},
+{q:"100. Un paciente inmunocomprometido presenta meningitis. El LCR muestra bacilos Gram-positivos cortos con motilidad 'tumbling'. ¿Cuál es el agente y cuál ATB NO se debe usar?",opts:["Listeria monocytogenes — NO usar cefalosporinas","S. pneumoniae — NO usar penicilina","N. meningitidis — NO usar vancomicina","E. coli — NO usar ampicilina"],correct:0,explain:"Bacilos GP cortos + motilidad tumbling + inmunocomprometido = LISTERIA monocytogenes. ⚠️ Resistente a CEFALOSPORINAS (PBP3 alterada). Tratamiento: AMPICILINA ± Gentamicina. Por eso en meningitis de neonatos/ancianos/HIV: agregar ampicilina al esquema empírico."}
+];
+
+// ════════════════════════════════════════
+// QUIZ ENGINE
+// ════════════════════════════════════════
+let currentQ = 0, score = 0, answered = false, selectedIdx = -1;
+
+function renderQuiz(){
+  const total = quizData.length;
+  const q = quizData[currentQ];
+  const pct = ((currentQ)/total*100).toFixed(0);
+  document.getElementById('quiz-progress-bar').style.width = pct+'%';
+  document.getElementById('quiz-progress-text').textContent = `Pregunta ${currentQ+1} de ${total}`;
+  document.getElementById('quiz-score').textContent = `Aciertos: ${score}/${currentQ}`;
+  let html = `<div class="quiz-question">${q.q}</div><div class="quiz-options">`;
+  q.opts.forEach((o,i) => {
+    html += `<button class="quiz-opt" onclick="selectAnswer(${i})">${o}</button>`;
+  });
+  html += `</div><div class="quiz-explain" id="quiz-explain" style="display:none"></div>`;
+  html += `<button class="quiz-next" id="quiz-next" style="display:none" onclick="nextQuestion()">Siguiente →</button>`;
+  document.getElementById('quiz-body').innerHTML = html;
+  answered = false; selectedIdx = -1;
+}
+
+function selectAnswer(idx){
+  if(answered) return;
+  answered = true; selectedIdx = idx;
+  const q = quizData[currentQ];
+  const btns = document.querySelectorAll('.quiz-opt');
+  btns.forEach((b,i) => {
+    b.style.pointerEvents = 'none';
+    if(i === q.correct) { b.classList.add('correct'); b.style.background='rgba(56,232,192,0.15)'; b.style.borderColor='#38e8c0'; b.style.color='#38e8c0'; }
+    if(i === idx && idx !== q.correct) { b.classList.add('wrong'); b.style.background='rgba(255,95,95,0.15)'; b.style.borderColor='#ff5f5f'; b.style.color='#ff5f5f'; }
+  });
+  if(idx === q.correct) score++;
+  const expl = document.getElementById('quiz-explain');
+  expl.innerHTML = `<strong>${idx===q.correct?'✅ ¡Correcto!':'❌ Incorrecto'}</strong><br>${q.explain}`;
+  expl.style.display = 'block';
+  expl.style.background = idx===q.correct ? 'rgba(56,232,192,0.08)' : 'rgba(255,95,95,0.08)';
+  expl.style.border = `1px solid ${idx===q.correct?'#38e8c0':'#ff5f5f'}`;
+  expl.style.borderRadius = '12px';
+  expl.style.padding = '1rem';
+  expl.style.marginTop = '1rem';
+  expl.style.lineHeight = '1.6';
+  document.getElementById('quiz-next').style.display = 'block';
+  document.getElementById('quiz-score').textContent = `Aciertos: ${score}/${currentQ+1}`;
+}
+
+function nextQuestion(){
+  currentQ++;
+  if(currentQ >= quizData.length){
+    const pct = (score/quizData.length*100).toFixed(1);
+    let emoji = pct>=90?'🏆':pct>=70?'🎉':pct>=50?'💪':'📚';
+    document.getElementById('quiz-progress-bar').style.width = '100%';
+    document.getElementById('quiz-body').innerHTML = `
+      <div style="text-align:center;padding:2rem">
+        <div style="font-size:3rem;margin-bottom:1rem">${emoji}</div>
+        <h2 style="color:var(--accent);margin-bottom:.5rem">¡Quiz Finalizado!</h2>
+        <p style="font-size:1.3rem;color:var(--text)">Puntuación: <strong style="color:var(--accent2)">${score}/${quizData.length}</strong> (${pct}%)</p>
+        <button class="quiz-next" onclick="restartQuiz()" style="display:inline-block;margin-top:1.5rem">🔄 Reiniciar Quiz</button>
+      </div>`;
+    return;
+  }
+  renderQuiz();
+}
+
+function restartQuiz(){
+  currentQ = 0; score = 0; renderQuiz();
+}
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  renderFlashcards();
+  renderQuiz();
+  document.querySelector('nav.tabs button').click();
+});
+
+</script>
+
+<!-- VOLVER -->
+<a href="dashboard.html" style="position:fixed;bottom:24px;left:24px;z-index:9999;background:rgba(79,156,249,0.12);border:1px solid rgba(79,156,249,0.3);color:#4f9cf9;padding:10px 20px;border-radius:30px;text-decoration:none;font-weight:600;font-size:0.85rem;backdrop-filter:blur(10px);transition:all .3s ease;display:flex;align-items:center;gap:8px;" onmouseover="this.style.background='rgba(79,156,249,0.25)'" onmouseout="this.style.background='rgba(79,156,249,0.12)'">
+  ← Volver
+</a>
+
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
+</body>
+</html>
