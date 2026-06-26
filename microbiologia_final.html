@@ -201,32 +201,37 @@ nav.tabs button.active {
 .fc-hint { text-align:center; padding:10px; font-size:11px; color:var(--muted); border-top:1px solid var(--border); }
 
 /* QUIZ */
-.quiz-progress-bar { width:100%; height:6px; background:var(--card); border-radius:3px; margin-bottom:16px; overflow:hidden; }
-.quiz-progress-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:3px; transition:width 0.4s; }
-.quiz-num { font-family:var(--font-mono); font-size:12px; color:var(--muted); margin-bottom:12px; }
-.quiz-q { font-size:15px; font-weight:600; color:#fff; margin-bottom:16px; line-height:1.5; }
-.quiz-context { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 16px; font-size:13px; color:var(--muted); margin-bottom:16px; }
-.quiz-opts { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
-.quiz-opt {
-  background:var(--card); border:1px solid var(--border); border-radius:12px;
-  padding:14px 18px; cursor:pointer; text-align:left;
-  font-size:14px; color:var(--text); transition:all 0.2s;
-  display:flex; gap:10px; align-items:flex-start;
-}
-.quiz-opt:hover:not(.answered) { border-color:var(--accent); background:var(--card2); }
-.quiz-opt .opt-letter { color:var(--accent); font-weight:700; font-family:var(--font-mono); }
-.quiz-opt.correct { border-color:var(--green); background:rgba(79,249,132,0.1); }
-.quiz-opt.wrong { border-color:var(--red); background:rgba(249,95,95,0.1); }
-.quiz-opt.answered { pointer-events:none; }
-.quiz-explain { display:none; background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:16px; font-size:13px; color:var(--text); margin-bottom:16px; }
-.quiz-explain.show { display:block; }
-.quiz-nav { display:flex; justify-content:space-between; align-items:center; }
-.btn { background:var(--accent); color:var(--bg); border:none; padding:10px 24px; border-radius:10px; font-weight:700; cursor:pointer; font-size:13px; transition:all 0.2s; }
+/* QUIZ CARDS */
+.quiz-score-bar { background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:10px 18px; font-family:var(--font-mono); font-size:13px; color:var(--muted); margin-bottom:24px; text-align:center; position:sticky; top:58px; z-index:50; backdrop-filter:blur(16px); }
+.quiz-score-bar strong { color:var(--accent2); }
+.q-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin-bottom:20px; }
+.q-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+.q-num { font-family:var(--font-mono); font-size:12px; color:var(--muted); letter-spacing:1px; }
+.q-badges { display:flex; gap:6px; align-items:center; }
+.q-badge { padding:3px 10px; border-radius:6px; font-family:var(--font-mono); font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.q-badge.mc { background:rgba(184,79,249,0.15); color:var(--accent4); border:1px solid rgba(184,79,249,0.3); }
+.q-badge.vf { background:rgba(249,120,79,0.15); color:var(--accent3); border:1px solid rgba(249,120,79,0.3); }
+.q-badge.caso { background:rgba(56,232,192,0.15); color:var(--accent2); border:1px solid rgba(56,232,192,0.3); }
+.q-text { font-size:15px; font-weight:600; color:#fff; line-height:1.6; margin-bottom:18px; }
+.q-opts { display:flex; flex-direction:column; gap:10px; }
+.q-opt { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:14px 18px; cursor:pointer; text-align:left; font-size:14px; color:var(--text); transition:all .25s; display:flex; gap:12px; align-items:flex-start; }
+.q-opt:hover:not(.done) { border-color:var(--accent); background:var(--card2); }
+.q-opt .q-letter { color:var(--accent); font-weight:700; font-family:var(--font-mono); font-size:14px; min-width:22px; }
+.q-opt.correct { border-color:var(--green); background:rgba(79,249,132,0.1); }
+.q-opt.correct .q-letter { color:var(--green); }
+.q-opt.wrong { border-color:var(--red); background:rgba(249,95,95,0.1); }
+.q-opt.wrong .q-letter { color:var(--red); }
+.q-opt.done { pointer-events:none; opacity:0.7; }
+.q-opt.correct.done, .q-opt.wrong.done { opacity:1; }
+.q-vf { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.q-vf .q-opt { justify-content:center; text-align:center; font-weight:700; font-size:15px; }
+.q-explain { display:none; background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:16px; font-size:13px; color:var(--text); margin-top:14px; line-height:1.6; }
+.q-explain.show { display:block; }
+.btn { background:var(--accent); color:var(--bg); border:none; padding:10px 24px; border-radius:10px; font-weight:700; cursor:pointer; font-size:13px; transition:all 0.2s; white-space:nowrap; }
 .btn:hover { transform:translateY(-2px); box-shadow:0 4px 20px rgba(79,156,249,0.4); }
-.score-card { text-align:center; padding:40px 20px; }
-.score-big { font-family:var(--font-display); font-size:64px; font-weight:800; color:var(--accent); }
-.score-msg { font-size:18px; color:var(--accent2); margin-top:8px; }
-.prova-badge { display:inline-block; padding:2px 10px; border-radius:6px; font-family:var(--font-mono); font-size:10px; font-weight:700; letter-spacing:1px; margin-bottom:8px; }
+
+/* PROVA BADGES */
+.prova-badge { display:inline-block; padding:3px 10px; border-radius:6px; font-family:var(--font-mono); font-size:10px; font-weight:700; letter-spacing:1px; }
 .prova-badge.p1 { background:rgba(79,156,249,0.15); color:var(--accent); border:1px solid rgba(79,156,249,0.3); }
 .prova-badge.p2a { background:rgba(56,232,192,0.15); color:var(--accent2); border:1px solid rgba(56,232,192,0.3); }
 .prova-badge.p2b { background:rgba(249,120,79,0.15); color:var(--accent3); border:1px solid rgba(249,120,79,0.3); }
@@ -713,18 +718,22 @@ nav.tabs button.active {
 <div id="quiz" class="section">
 <div class="container">
 <div class="chapter-title"><span class="chap-icon">📝</span> Quiz Final — 100 Questões</div>
-<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">100 questões cobrindo os 27 organismos do exame final. Gabarito comentado após cada resposta.</p>
-<div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress-bar" style="width:0%"></div></div>
-<div style="display:flex;justify-content:space-between;margin-bottom:12px"><span class="quiz-num" id="quiz-progress-text">Pregunta 1 de 100</span><span class="quiz-num" id="quiz-score">Aciertos: 0/0</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+  <p style="color:var(--muted);font-size:13px;">100 questões cobrindo os 27 organismos. Gabarito comentado.</p>
+  <button class="btn" onclick="restartQuiz()">🔄 Reiniciar Quiz</button>
+</div>
+<div class="quiz-score-bar" id="quiz-scorebar">Aciertos: <strong>0</strong> / 0</div>
 <div id="quiz-body"></div>
 </div></div>
 
 <div id="provas" class="section">
 <div class="container">
 <div class="chapter-title"><span class="chap-icon">📋</span> Questões de Provas Antigas</div>
-<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Todas as questões que já caíram em provas anteriores de Microbiología I — com gabarito comentado. Organizadas por prova.</p>
-<div class="quiz-progress-bar"><div class="quiz-progress-fill" id="prova-progress-bar" style="width:0%"></div></div>
-<div style="display:flex;justify-content:space-between;margin-bottom:12px"><span class="quiz-num" id="prova-progress-text">Pregunta 1</span><span class="quiz-num" id="prova-score">Aciertos: 0/0</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+  <p style="color:var(--muted);font-size:13px;">Todas as questões que já caíram em provas anteriores — com gabarito comentado.</p>
+  <button class="btn" onclick="restartProva()">🔄 Reiniciar</button>
+</div>
+<div class="quiz-score-bar" id="prova-scorebar">Aciertos: <strong>0</strong> / 0</div>
 <div id="prova-body"></div>
 </div></div>
 
@@ -946,200 +955,125 @@ const quizData = [
 {q:"100. Un paciente inmunocomprometido presenta meningitis. El LCR muestra bacilos Gram-positivos cortos con motilidad 'tumbling'. ¿Cuál es el agente y cuál ATB NO se debe usar?",opts:["Listeria monocytogenes — NO usar cefalosporinas","S. pneumoniae — NO usar penicilina","N. meningitidis — NO usar vancomicina","E. coli — NO usar ampicilina"],correct:0,explain:"Bacilos GP cortos + motilidad tumbling + inmunocomprometido = LISTERIA monocytogenes. ⚠️ Resistente a CEFALOSPORINAS (PBP3 alterada). Tratamiento: AMPICILINA ± Gentamicina. Por eso en meningitis de neonatos/ancianos/HIV: agregar ampicilina al esquema empírico."}
 ];
 
+
 // ════════════════════════════════════════
-// QUIZ ENGINE
+// QUIZ ENGINE (ALL CARDS)
 // ════════════════════════════════════════
-let currentQ = 0, score = 0, answered = false, selectedIdx = -1;
+let quizScore=0, quizAnswered=0;
+const letters=['A','B','C','D','E','F'];
+
+function isVF(opts){ return opts.length===2 && (opts[0].match(/^Verdader/i) || opts[1].match(/^Falso/i)); }
 
 function renderQuiz(){
-  const total = quizData.length;
-  const q = quizData[currentQ];
-  const pct = ((currentQ)/total*100).toFixed(0);
-  document.getElementById('quiz-progress-bar').style.width = pct+'%';
-  document.getElementById('quiz-progress-text').textContent = `Pregunta ${currentQ+1} de ${total}`;
-  document.getElementById('quiz-score').textContent = `Aciertos: ${score}/${currentQ}`;
-  let html = `<div class="quiz-question">${q.q}</div><div class="quiz-options">`;
-  q.opts.forEach((o,i) => {
-    html += `<button class="quiz-opt" onclick="selectAnswer(${i})">${o}</button>`;
+  quizScore=0; quizAnswered=0;
+  updateScorebar('quiz-scorebar',0,0);
+  let html='';
+  quizData.forEach((q,i)=>{
+    const vf=isVF(q.opts);
+    const tipo=vf?'V O F':'MÚLTIPLA ESCOLHA';
+    const badgeCls=vf?'vf':'mc';
+    html+=`<div class="q-card" id="qcard-${i}">`;
+    html+=`<div class="q-header"><span class="q-num">Pregunta ${i+1}</span><div class="q-badges"><span class="q-badge ${badgeCls}">${tipo}</span></div></div>`;
+    html+=`<div class="q-text">${q.q}</div>`;
+    if(vf){
+      html+=`<div class="q-vf">`;
+      html+=`<button class="q-opt" data-qi="${i}" data-oi="0" onclick="pickQuiz(${i},0)"><span class="q-letter">✅</span> VERDADERO</button>`;
+      html+=`<button class="q-opt" data-qi="${i}" data-oi="1" onclick="pickQuiz(${i},1)"><span class="q-letter">❌</span> FALSO</button>`;
+      html+=`</div>`;
+    } else {
+      html+=`<div class="q-opts">`;
+      q.opts.forEach((o,j)=>{
+        html+=`<button class="q-opt" data-qi="${i}" data-oi="${j}" onclick="pickQuiz(${i},${j})"><span class="q-letter">${letters[j]})</span> ${o}</button>`;
+      });
+      html+=`</div>`;
+    }
+    html+=`<div class="q-explain" id="qexp-${i}"></div>`;
+    html+=`</div>`;
   });
-  html += `</div><div class="quiz-explain" id="quiz-explain" style="display:none"></div>`;
-  html += `<button class="quiz-next" id="quiz-next" style="display:none" onclick="nextQuestion()">Siguiente →</button>`;
-  document.getElementById('quiz-body').innerHTML = html;
-  answered = false; selectedIdx = -1;
+  document.getElementById('quiz-body').innerHTML=html;
 }
 
-function selectAnswer(idx){
-  if(answered) return;
-  answered = true; selectedIdx = idx;
-  const q = quizData[currentQ];
-  const btns = document.querySelectorAll('.quiz-opt');
-  btns.forEach((b,i) => {
-    b.style.pointerEvents = 'none';
-    if(i === q.correct) { b.classList.add('correct'); b.style.background='rgba(56,232,192,0.15)'; b.style.borderColor='#38e8c0'; b.style.color='#38e8c0'; }
-    if(i === idx && idx !== q.correct) { b.classList.add('wrong'); b.style.background='rgba(255,95,95,0.15)'; b.style.borderColor='#ff5f5f'; b.style.color='#ff5f5f'; }
+function pickQuiz(qi,oi){
+  const card=document.getElementById('qcard-'+qi);
+  if(card.dataset.answered) return;
+  card.dataset.answered='1';
+  const q=quizData[qi];
+  const btns=card.querySelectorAll('.q-opt');
+  btns.forEach((b,i)=>{
+    b.classList.add('done');
+    if(i===q.correct) b.classList.add('correct');
+    if(i===oi && oi!==q.correct) b.classList.add('wrong');
   });
-  if(idx === q.correct) score++;
-  const expl = document.getElementById('quiz-explain');
-  expl.innerHTML = `<strong>${idx===q.correct?'✅ ¡Correcto!':'❌ Incorrecto'}</strong><br>${q.explain}`;
-  expl.style.display = 'block';
-  expl.style.background = idx===q.correct ? 'rgba(56,232,192,0.08)' : 'rgba(255,95,95,0.08)';
-  expl.style.border = `1px solid ${idx===q.correct?'#38e8c0':'#ff5f5f'}`;
-  expl.style.borderRadius = '12px';
-  expl.style.padding = '1rem';
-  expl.style.marginTop = '1rem';
-  expl.style.lineHeight = '1.6';
-  document.getElementById('quiz-next').style.display = 'block';
-  document.getElementById('quiz-score').textContent = `Aciertos: ${score}/${currentQ+1}`;
+  if(oi===q.correct) quizScore++;
+  quizAnswered++;
+  updateScorebar('quiz-scorebar',quizScore,quizAnswered);
+  const expl=document.getElementById('qexp-'+qi);
+  expl.innerHTML=`<strong>${oi===q.correct?'✅ ¡Correcto!':'❌ Incorrecto'}</strong><br>${q.explain}`;
+  expl.style.borderColor=oi===q.correct?'var(--green)':'var(--red)';
+  expl.classList.add('show');
 }
 
-function nextQuestion(){
-  currentQ++;
-  if(currentQ >= quizData.length){
-    const pct = (score/quizData.length*100).toFixed(1);
-    let emoji = pct>=90?'🏆':pct>=70?'🎉':pct>=50?'💪':'📚';
-    document.getElementById('quiz-progress-bar').style.width = '100%';
-    document.getElementById('quiz-body').innerHTML = `
-      <div style="text-align:center;padding:2rem">
-        <div style="font-size:3rem;margin-bottom:1rem">${emoji}</div>
-        <h2 style="color:var(--accent);margin-bottom:.5rem">¡Quiz Finalizado!</h2>
-        <p style="font-size:1.3rem;color:var(--text)">Puntuación: <strong style="color:var(--accent2)">${score}/${quizData.length}</strong> (${pct}%)</p>
-        <button class="quiz-next" onclick="restartQuiz()" style="display:inline-block;margin-top:1.5rem">🔄 Reiniciar Quiz</button>
-      </div>`;
-    return;
-  }
-  renderQuiz();
-}
-
-function restartQuiz(){
-  currentQ = 0; score = 0; renderQuiz();
-}
+function restartQuiz(){ renderQuiz(); window.scrollTo(0, document.getElementById('quiz').offsetTop - 60); }
 
 // ════════════════════════════════════════
-// PROVAS ANTIGAS DATA
+// PROVAS ENGINE (ALL CARDS)
 // ════════════════════════════════════════
-const provasData = [
-// ── PROVA 1 (P1 — Gram-Positivos & Clostridium) ──
-{prova:"P1",badge:"p1",q:"01. Médico de urgencias recibe a un joven de 20 años con carbunco en la región posterior del cuello: lesión eritematosa extensa con múltiples orificios supurativos, fiebre y afectación del estado general. ¿Cuál es la diferencia principal entre furunculosis y carbunco?",opts:["La furunculosis afecta múltiples folículos y el carbunco solo uno","El carbunco es infección extensa de múltiples folículos pilosos en una región, mientras que la furunculosis es infección localizada de un solo folículo","El carbunco es causado por Bacillus anthracis y no por S. aureus","La furunculosis requiere hospitalización y el carbunco no"],correct:1,explain:"CARBUNCO estafilocócico = infección de MÚLTIPLES folículos pilosos. FURÚNCULO = UN solo folículo. Ambos por S. aureus."},
-{prova:"P1",badge:"p1",q:"02. ¿Cuál es una función principal de la cápsula bacteriana?",opts:["Regular la división celular","Proteger contra la fagocitosis","Facilitar la replicación del ADN","Transportar nutrientes al interior de la célula"],correct:1,explain:"Cápsula = principal función ANTIFAGOCÍTICA. Impide que los fagocitos engloben la bacteria."},
-{prova:"P1",badge:"p1",q:"03. ¿Es un ejemplo de bacteria aerobia estricta?",opts:["Escherichia coli","Clostridium botulinum","Mycobacterium tuberculosis","Helicobacter pylori"],correct:2,explain:"M. tuberculosis = AEROBIO ESTRICTO. Por eso prefiere los ÁPICES pulmonares (mayor presión de O₂). E. coli = anaerobio facultativo. Clostridium = anaerobio estricto."},
-{prova:"P1",badge:"p1",q:"04. Paciente de 2 años con fiebre alta, otalgia derecha y llanto persistente. Otoscopía: membrana timpánica abombada y eritematosa. Sin vacunación completa. Cultivo del líquido timpánico: diplococos Gram-positivos lanceolados, α-hemolíticos. ¿Cuál es el agente más probable?",opts:["S. agalactiae","S. pneumoniae","S. pyogenes","S. viridans"],correct:1,explain:"Diplococos GP lanceolados + α-hemolíticos + otitis media en niño = S. PNEUMONIAE (1ª causa de otitis media en niños)."},
-{prova:"P1",badge:"p1",q:"05. ¿Cómo se adquiere comúnmente el botulismo en adultos?",opts:["Consumo de alimentos enlatados en casa sin esterilización adecuada","Inhalación de esporas","Mordedura de un insecto","Consumo de miel"],correct:0,explain:"Botulismo alimentario en ADULTOS = conservas caseras mal esterilizadas (anaerobiosis → esporas germinan → toxina preformada). Miel = botulismo INFANTIL (<1 año)."},
-{prova:"P1",badge:"p1",q:"06. ¿Qué manifestación clínica es característica del ántrax cutáneo?",opts:["Lesión necrótica con escara negra","Dificultad respiratoria","Lesiones en forma de petequias por toda la piel","Erupción pustulosa generalizada"],correct:0,explain:"Ántrax CUTÁNEO = pápula → vesícula → ESCARA NEGRA indolora con edema perilesional. 'Ántrax' viene del griego 'anthrax' = carbón (por la escara negra)."},
-{prova:"P1",badge:"p1",q:"07. Un niño de 10 años presenta fiebre, artritis migratoria en rodillas y codos, carditis y eritema marginado 3 semanas después de faringitis por S. pyogenes no tratada. ¿Cuál es el mecanismo inmunológico principal que explica el daño cardíaco?",opts:["Invasión directa del tejido cardíaco por S. pyogenes","Reacción cruzada de anticuerpos contra proteína M con antígenos del tejido cardíaco","Depósito de inmunocomplejos antígeno-anticuerpo en válvulas cardíacas","Producción de exotoxinas que dañan directamente el miocardio"],correct:1,explain:"Fiebre reumática: anticuerpos anti-proteína M → REACCIÓN CRUZADA (mimetismo molecular) con antígenos del tejido cardíaco."},
-{prova:"P1",badge:"p1",q:"08. ¿Qué efecto tiene la alfa-toxina de Clostridium perfringens?",opts:["Provoca hemólisis y destrucción tisular","Inhibe la liberación de GABA","Actúa como superantígeno","Provoca diarrea acuosa"],correct:0,explain:"Toxina ALFA de C. perfringens = FOSFOLIPASA C (lecitinasa) → degrada membranas celulares → HEMÓLISIS + destrucción tisular → gangrena gaseosa."},
-{prova:"P1",badge:"p1",q:"09. ¿Qué tipo de metabolismo tiene Clostridium perfringens?",opts:["Anaerobio estricto","Aerobio obligado","Microaerófilo","Anaerobio facultativo"],correct:0,explain:"TODOS los Clostridium son ANAEROBIOS ESTRICTOS y formadores de ESPORAS."},
-{prova:"P1",badge:"p1",q:"10. ¿Cuál función cumple la toxina A de C. difficile?",opts:["Es una enterotoxina que provoca inflamación y diarrea","Es una neurotoxina que inhibe la contracción muscular","Es una hemolisina que destruye glóbulos rojos","Actúa como un factor de adhesión"],correct:0,explain:"Toxina A = ENTEROTOXINA → inflamación intestinal + diarrea. Toxina B = CITOTOXINA → destrucción del citoesqueleto (10x más potente). Ambas causan colitis pseudomembranosa."},
-{prova:"P1",badge:"p1",q:"11. Algunas cepas de C. diphtheriae producen toxina diftérica mientras que otras no. ¿Cómo adquiere C. diphtheriae la capacidad de producir toxina?",opts:["Por mutación espontánea","Mediante transducción por un bacteriófago lisogénico","A través de conjugación","Por transformación con plásmidos"],correct:1,explain:"Toxina diftérica es codificada por el gen tox del FAGO β (bacteriófago lisogénico). Sin fago → sin toxina. TRANSDUCCIÓN lisogénica."},
-{prova:"P1",badge:"p1",q:"12. Paciente de 45 años con antecedente de fiebre reumática presenta cardiopatía valvular conocida. Requiere extracción dental. ¿Cuál grupo de Streptococcus es el más frecuentemente implicado en la endocarditis post-procedimiento dental?",opts:["S. pyogenes — coloniza faringe","Streptococcus del grupo viridans (S. sanguis y S. mitis) — microbiota oral","S. pneumoniae — coloniza nasofaringe","S. agalactiae — coloniza mucosa oral en adultos"],correct:1,explain:"S. VIRIDANS (grupo viridans) = microbiota ORAL normal. Procedimiento dental → bacteriemia transitoria → se adhieren a válvulas dañadas → endocarditis SUBAGUDA."},
-{prova:"P1",badge:"p1",q:"13. [V/F] La toxina alfa de C. perfringens (lecitinasa o fosfolipasa C) inhibe la síntesis proteica ribosomal de las células del huésped.",opts:["Verdadero","Falso"],correct:1,explain:"FALSO. La toxina alfa = FOSFOLIPASA C → degrada FOSFOLÍPIDOS de membrana (lecitina) → lisis celular. NO inhibe síntesis proteica (eso es la toxina diftérica/Pseudomonas exotoxina A)."},
-{prova:"P1",badge:"p1",q:"14. [V/F] Una mujer de 28 años ingiere conservas caseras de ejotes. 18 horas después presenta visión doble, dificultad para deglutir y hablar, sin fiebre. Progresivamente desarrolla parálisis descendente. El mecanismo de acción de la toxina responsable es bloquear la liberación de glicina y GABA en neuronas inhibitorias, causando parálisis espástica.",opts:["Verdadero","Falso"],correct:1,explain:"FALSO (2 errores): (1) Botulismo bloquea la liberación de ACETILCOLINA (no glicina/GABA) en la unión neuromuscular. (2) Causa parálisis FLÁCIDA (no espástica). Tétanos sí bloquea glicina/GABA → parálisis espástica."},
-{prova:"P1",badge:"p1",q:"15. [V/F] La glomerulonefritis difusa aguda post-estreptocócica se desarrolla por reacción cruzada inmunológica con antígenos renales.",opts:["Verdadera","Falso"],correct:0,explain:"VERDADERO. GNDA post-estreptocócica: depósito de inmunocomplejos + reacción cruzada con antígenos glomerulares → inflamación → hematuria + proteinuria + edema + hipertensión."},
-{prova:"P1",badge:"p1",q:"16. [V/F] S. pneumoniae coloniza la nasofaringe y puede diseminarse al oído medio a través de la trompa de Eustaquio, especialmente tras infecciones virales respiratorias que obstruyen el drenaje normal.",opts:["Verdadero","Falso"],correct:0,explain:"VERDADERO. S. pneumoniae coloniza nasofaringe → IVAS viral → edema → obstrucción de trompa de Eustaquio → diseminación al oído medio → otitis media aguda."},
-{prova:"P1",badge:"p1",q:"17. [V/F] La fiebre reumática tiene base inmunológica: los anticuerpos producidos contra la proteína M de S. aureus presentan reacción cruzada con antígenos del tejido cardíaco, articulaciones, piel y sistema nervioso central.",opts:["Verdadero","Falso"],correct:1,explain:"FALSO. Es la proteína M de S. PYOGENES (Grupo A), NO de S. aureus. S. aureus no causa fiebre reumática."},
-{prova:"P1",badge:"p1",q:"18. [V/F] S. pneumoniae produce beta-hemólisis y se diferencia de los viridans por su sensibilidad a optoquina.",opts:["Verdadero","Falso"],correct:1,explain:"FALSO. S. pneumoniae produce ALFA-hemólisis (hemólisis parcial = halo verdoso), NO beta-hemólisis. Sí se diferencia de viridans por sensibilidad a optoquina (neumococo = sensible; viridans = resistente)."},
-{prova:"P1",badge:"p1",q:"19. [Caso Clínico] Mujer de 35 años consulta por visión borrosa, dificultad para hablar y debilidad progresiva en brazos y piernas. Refiere haber consumido hace 24 horas una conserva casera de vegetales con olor y sabor inusuales. Presenta ptosis palpebral, diplopía, disartria y dificultad para deglutir. Sin fiebre ni alteraciones del estado de conciencia. ¿Cuál es el microrganismo involucrado?",opts:["Clostridium tetani","Clostridium botulinum","Clostridium difficile","Listeria monocytogenes"],correct:1,explain:"Conserva casera + parálisis DESCENDENTE (pares craneales → extremidades) + sin fiebre + consciencia preservada = BOTULISMO por C. botulinum. Toxina botulínica bloquea liberación de ACh."},
-// ── PROVA 2A (P2 — Gram-Negativos, versión A) ──
-{prova:"P2-A",badge:"p2a",q:"01. Recién nacido de 5 días presenta conjuntivitis purulenta, neumonía y sepsis. La madre tuvo parto vaginal sin profilaxis antibiótica. ¿Qué prueba confirma la presencia de Streptococcus agalactiae?",opts:["Catalasa","Prueba de CAMP","Sensibilidad a optoquina","Prueba PYR"],correct:1,explain:"S. agalactiae (Grupo B): CAMP ⊕ → flecha de hemólisis ampliada con S. aureus. Sepsis neonatal precoz = <7 días de vida."},
-{prova:"P2-A",badge:"p2a",q:"02. Un paciente con fibrosis quística presenta una infección pulmonar grave. ¿Qué característica de Pseudomonas aeruginosa facilita su patogenicidad?",opts:["Producción de esporas","Formación de biopelículas","Capacidad de fermentar lactosa","Producción de toxinas beta"],correct:1,explain:"Pseudomonas: BIOFILM (biopelícula) = principal factor en fibrosis quística. Protege contra fagocitosis y ATB. Pseudomonas NO forma esporas y NO fermenta lactosa."},
-{prova:"P2-A",badge:"p2a",q:"03. Un paciente con ventilación mecánica desarrolla neumonía nosocomial con esputo rosado. ¿Qué pigmento produce la Serratia spp?",opts:["Pirocianina","Prodigiosina","Carotenoides","Melanina"],correct:1,explain:"Serratia marcescens produce PRODIGIOSINA = pigmento ROJO/ROSADO. Piocianina (azul) = Pseudomonas. Esputo rosado en ventilación mecánica + nosocomial = pensar en Serratia."},
-{prova:"P2-A",badge:"p2a",q:"04. La principal complicación de una infección por Vibrio cholerae sin tratamiento adecuado es:",opts:["Perforación intestinal","Colitis pseudomembranosa","Choque hipovolémico","Disentería"],correct:2,explain:"V. cholerae → diarrea profusa 'agua de arroz' (hasta 20-30L/día) → CHOQUE HIPOVOLÉMICO = principal causa de muerte. Tratamiento principal: REHIDRATACIÓN."},
-{prova:"P2-A",badge:"p2a",q:"05. Un joven de 20 años desarrolla tromboflebitis yugular y septicemia después de una faringitis. ¿Qué bacteria anaerobia es responsable de este cuadro conocido como enfermedad de Lemierre?",opts:["Fusobacterium nucleatum","Fusobacterium necrophorum","Bacteroides fragilis","Peptostreptococcus anaerobius"],correct:1,explain:"Síndrome de Lemierre = Fusobacterium NECROPHORUM (NO nucleatum). Tríada: faringitis + tromboflebitis yugular + émbolos sépticos pulmonares."},
-{prova:"P2-A",badge:"p2a",q:"06. Un adolescente de 16 años presenta acné vulgar severo. ¿Qué bacteria está principalmente involucrada en la patogénesis?",opts:["Staphylococcus epidermidis","Cutibacterium acnes","Corynebacterium minutissimum","Malassezia furfur"],correct:1,explain:"Cutibacterium acnes (antes Propionibacterium acnes): anaerobio, coloniza folículos sebáceos → inflamación → acné. C. minutissimum = eritrasma. Malassezia = pitiriasis versicolor."},
-{prova:"P2-A",badge:"p2a",q:"07. Paciente quemado con quemaduras del 40% de la superficie corporal desarrolla infección de la herida con exudado de coloración azul-verdosa y olor dulzón. ¿Cuál es el agente más probable y qué pigmento produce?",opts:["Serratia marcescens; prodigiosina roja","Pseudomonas aeruginosa; prodigiosina","Klebsiella pneumoniae; pigmento capsular verdoso","Pseudomonas aeruginosa; piocianina"],correct:3,explain:"Exudado AZUL-VERDOSO + olor DULZÓN = Pseudomonas aeruginosa. Pigmento = PIOCIANINA (azul) + pioverdina (verde). Prodigiosina es ROJA de Serratia."},
-{prova:"P2-A",badge:"p2a",q:"08. Un médico explica la diferencia entre vaginosis bacteriana y vaginitis. ¿Por qué la vaginosis bacteriana se denomina 'vaginosis' y no 'vaginitis'?",opts:["Porque solo afecta la vagina y no el cuello uterino","Porque no hay inflamación y sí un desequilibrio de la flora bacteriana","Porque el agente causal no es un patógeno sino flora normal","Porque la inflamación ocurre solo en el cuello uterino"],correct:1,explain:"VAGINOSIS = desequilibrio de flora (↓Lactobacillus ↑Gardnerella) SIN inflamación, SIN leucocitos. VAGINITIS = proceso inflamatorio CON leucocitos."},
-{prova:"P2-A",badge:"p2a",q:"09. Mujer de 27 años con gonorrea cervical no tratada desarrolla dolor pélvico intenso, fiebre, cervicitis y secreción mucopurulenta. La ecografía muestra engrosamiento de trompas uterinas. ¿Qué complicación tardía grave puede ocurrir?",opts:["Cáncer de cuello uterino","Quiste ovárico hemorrágico","Cistitis intersticial crónica","Salpingitis con riesgo de esterilidad"],correct:3,explain:"Gonorrea cervical no tratada → ascensión → salpingitis → DIP → adherencias tubáricas → ESTERILIDAD."},
-{prova:"P2-A",badge:"p2a",q:"10. Hombre mordido por un gato desarrolla celulitis de rápida progresión con linfadenitis regional. El cultivo revela cocobacilos gramnegativos. ¿Qué bacteria es la causa más probable?",opts:["Bartonella henselae","Pasteurella multocida","Capnocytophaga canimorsus","Streptococcus pyogenes"],correct:1,explain:"Mordedura de GATO + celulitis rápida (<24-48h) + cocobacilo GN = Pasteurella multocida. Bartonella = arañazo (no mordedura)."},
-{prova:"P2-A",badge:"p2a",q:"11. ¿Cuál es el principal mecanismo de acción de la toxina colérica producida por Vibrio cholerae?",opts:["Inhibición de la síntesis de proteínas ribosomales","Activación de la adenilato ciclasa y aumento del AMPc","Activación del guanilato ciclasa","Bloqueo del canal de sodio"],correct:1,explain:"Toxina colérica: Subunidad A1 ADP-ribosila Gsα → activa ADENILATO CICLASA permanentemente → ↑AMPc → CFTR secreta Cl⁻ → H₂O por osmosis → diarrea profusa."},
-{prova:"P2-A",badge:"p2a",q:"12. ¿Qué manifestación extragenital más común se puede observar en una infección diseminada por gonococo?",opts:["Hepatitis fulminante","Meningitis","Artritis séptica","Endocarditis"],correct:2,explain:"Infección gonocócica diseminada (DGI): ARTRITIS SÉPTICA + dermatitis (pústulas) + tenosinovitis = forma extragenital más común."},
-{prova:"P2-A",badge:"p2a",q:"13. [V/F] La fiebre de Pontiac es autolimitada y con neumonía, no requiere antibióticos; la enfermedad del Legionario causa neumonía grave con alta mortalidad.",opts:["Verdadero","Falso"],correct:1,explain:"FALSO. Fiebre de Pontiac es autolimitada y SIN neumonía (solo síndrome gripal). El error está en decir que Pontiac tiene neumonía."},
-{prova:"P2-A",badge:"p2a",q:"14. [V/F] Un paciente joven con meningitis meningocócica confirmada evoluciona a hipotensión refractaria, CIVD, insuficiencia suprarrenal e insuficiencia multiorgánica. Este síndrome se denomina Síndrome de Stevens-Johnson.",opts:["Verdadero","Falso"],correct:1,explain:"FALSO. Se denomina Síndrome de WATERHOUSE-FRIDERICHSEN (hemorragia adrenal bilateral + CIVD). Stevens-Johnson es reacción cutánea grave por FÁRMACOS."},
-{prova:"P2-A",badge:"p2a",q:"15. [V/F] Proteus mirabilis produce pielonefritis obstructiva por cálculos de estruvita (por su ureasa), mientras E. coli típicamente produce pielonefritis sin cálculos.",opts:["Verdadero","Falso"],correct:0,explain:"VERDADERO. Proteus = ureasa ⊕ → pH alcalino → cristales de estruvita → cálculos → pielonefritis obstructiva. E. coli = principal causa de pielonefritis pero sin cálculos."},
-{prova:"P2-A",badge:"p2a",q:"16. [V/F] La morfología microscópica característica que tienen los meningococos son diplococos gramnegativos sin cápsula.",opts:["Verdadero","Falso"],correct:1,explain:"FALSO. N. meningitidis = diplococos GN CON CÁPSULA. La cápsula es el principal factor de virulencia. El que NO tiene cápsula es N. gonorrhoeae."},
-{prova:"P2-A",badge:"p2a",q:"17. [V/F] La Otitis externa maligna es causada por Pseudomonas aeruginosa en paciente diabético.",opts:["Verdadero","Falso"],correct:0,explain:"VERDADERO. Otitis externa maligna (necrotizante) = Pseudomonas aeruginosa en diabéticos/ancianos. Invasión del hueso temporal → osteomielitis → puede ser fatal."},
-{prova:"P2-A",badge:"p2a",q:"18. [V/F] Colitis hemorrágica asociada a antibióticos por Klebsiella oxytoca está asociada a producción de tilivalina.",opts:["Verdadero","Falso"],correct:0,explain:"VERDADERO. K. oxytoca produce TILIVALINA (citotoxina) → colitis hemorrágica asociada a ATB. Diferente de C. difficile que causa colitis pseudomembranosa."},
-// ── PROVA 2B (P2 — Gram-Negativos, versión B) ──
-{prova:"P2-B",badge:"p2b",q:"01. En el laboratorio se reciben heces de un paciente con sospecha de cólera. ¿Cuál es el pH óptimo en el que crece mejor Vibrio cholerae?",opts:["pH 5.0-6.0 (ácido)","pH 7.0-7.5 (neutro)","pH 8.5-9.5 (alcalino)","pH 4.0-4.5 (muy ácido)"],correct:2,explain:"V. cholerae crece óptimamente en pH ALCALINO (8.5-9.5). Medio TCBS tiene pH 8.6. Es SENSIBLE al ácido clorhídrico del estómago."},
-{prova:"P2-B",badge:"p2b",q:"02. Paciente de 65 años con diabetes ingresado en UCI tras cirugía mayor. Fiebre y secreción purulenta color verdoso en herida quirúrgica, tinción de Gram muestra bacilos Gramnegativos. ¿Cuál es el patógeno más probable?",opts:["Staphylococcus aureus","Pseudomonas aeruginosa","Escherichia coli","Streptococcus pneumoniae"],correct:1,explain:"Secreción VERDOSA + bacilos GN + UCI + diabético = Pseudomonas aeruginosa. Piocianina (azul) + pioverdina (verde)."},
-{prova:"P2-B",badge:"p2b",q:"03. Un UDIV de 28 años presenta fiebre alta, soplo cardíaco nuevo de regurgitación tricuspídea y múltiples embolias pulmonares sépticas. Hemocultivos positivos para bacilo gramnegativo con colonias pigmentadas rojas. ¿Cuál es el agente causal?",opts:["Pseudomonas aeruginosa; endocarditis de válvula aórtica","Serratia marcescens; endocarditis de válvula tricúspide","Staphylococcus aureus; endocarditis derecha","Klebsiella pneumoniae; bacteriemia por catéter"],correct:1,explain:"Colonias pigmentadas ROJAS (prodigiosina) + UDIV + endocarditis tricuspídea = Serratia marcescens."},
-{prova:"P2-B",badge:"p2b",q:"04. Paciente con sonda urinaria de larga duración desarrolla cálculos coraliformes. El análisis muestra cristales de estruvita. ¿Qué bacteria alcaliniza la orina?",opts:["Escherichia coli","Klebsiella","Proteus mirabilis","Enterococcus"],correct:2,explain:"Proteus mirabilis: ureasa ⊕⊕⊕ → urea → amonio + CO₂ → pH ALCALINO → cristales de estruvita (fosfato de amonio y magnesio)."},
-{prova:"P2-B",badge:"p2b",q:"05. Mujer de 28 años consulta por flujo vaginal grisáceo con olor a pescado, especialmente después del coito. pH vaginal 5.2. ¿Cuál es el diagnóstico más probable?",opts:["Candidiasis vaginal","Tricomoniasis","Vaginosis bacteriana","Vaginitis bacteriana"],correct:2,explain:"Flujo grisáceo + olor a pescado (peor post-coito) + pH >4.5 = VAGINOSIS bacteriana (Gardnerella). Candidiasis: pH <4.5, flujo blanco grumoso."},
-{prova:"P2-B",badge:"p2b",q:"06. Hombre de 60 años fumador desarrolla neumonía severa después de un viaje en crucero. Fiebre alta, tos no productiva y diarrea. Bacilo Gramnegativo aeróbico. ¿Cuál es el diagnóstico más probable?",opts:["Neumonía por Streptococcus pneumoniae","Legionelosis","Neumonía por Mycoplasma","Neumonía viral"],correct:1,explain:"Neumonía severa + crucero (torres de refrigeración) + diarrea + BGN aeróbico = LEGIONELOSIS (L. pneumophila)."},
-{prova:"P2-B",badge:"p2b",q:"07. Hombre de 27 años con tos purulenta persistente, fiebre leve y exudado uretral. Se identifican diplococos gramnegativos intracelulares en el frotis uretral. ¿Cuál es el patógeno más probable?",opts:["Chlamydia trachomatis","Neisseria gonorrhoeae","Neisseria meningitidis","Klebsiella granulomatis"],correct:1,explain:"Diplococos GN INTRACELULARES en frotis uretral = N. gonorrhoeae. Diagnóstico clásico: diplococos dentro de PMN (neutrófilos)."},
-{prova:"P2-B",badge:"p2b",q:"08. ¿Cuál de las siguientes formas clínicas se asocia a Yersinia pestis transmitida por aerosoles?",opts:["Peste bubónica","Peste septicémica","Peste neumónica primaria","Adenitis mesentérica"],correct:2,explain:"Peste NEUMÓNICA primaria = transmisión por AEROSOLES persona-persona. Neumonía grave → óbito en 3 días sin tratamiento. Peste bubónica = picadura de pulga."},
-{prova:"P2-B",badge:"p2b",q:"09. Hombre de 26 años con fiebre, cefalea y malestar general de 5 días. Luego desarrolla bradicardia, abdomen doloroso y manchas rosadas en el tronco. ¿Cuál es el diagnóstico más probable?",opts:["Salmonelosis no tifoidea","Fiebre tifoidea","Leptospirosis","Fiebre Q"],correct:1,explain:"Fiebre + bradicardia relativa + manchas rosadas en tronco (roséolas tifoideas) + dolor abdominal = FIEBRE TIFOIDEA (Salmonella Typhi)."},
-{prova:"P2-B",badge:"p2b",q:"10. ¿Qué diferencia clave presenta el chancroide (Haemophilus ducreyi) en comparación con el chancro sifilítico?",opts:["El chancroide es indoloro y duro","El chancroide es doloroso y blando","El chancroide causa secreción uretral purulenta","El chancroide se acompaña de vesículas"],correct:1,explain:"Chancroide (H. ducreyi) = úlcera DOLOROSA + bordes BLANDOS/irregulares + linfadenopatía supurativa. Chancro sifilítico = INDOLORO + bordes DUROS (indurados)."},
-{prova:"P2-B",badge:"p2b",q:"11. ¿Cuál es la prueba considerada Gold Standard para el diagnóstico de tuberculosis?",opts:["Prueba de tuberculina","Xpert MTB/RIF","Cultivo en Löwenstein-Jensen","Baciloscopía"],correct:2,explain:"CULTIVO en Löwenstein-Jensen = GOLD STANDARD (medio sólido, huevo + verde malaquita). Colonias rugosas 2-8 semanas. Xpert MTB/RIF = diagnóstico RÁPIDO (2h) pero cultivo sigue siendo el estándar."},
-{prova:"P2-B",badge:"p2b",q:"12. En un hospital, un brote de ITU asociadas a catéteres revela bacterias gramnegativas encapsuladas, fermentadoras de lactosa y resistentes a carbapenémicos. ¿Cuál es el microorganismo más probable?",opts:["Escherichia coli","Klebsiella pneumoniae","Pseudomonas aeruginosa","Proteus mirabilis"],correct:1,explain:"GN encapsulada + fermenta lactosa + resistente a carbapenémicos = Klebsiella pneumoniae (KPC). Pseudomonas NO fermenta lactosa. Proteus NO fermenta lactosa."},
-// ── PROVA 3 (Provas mistas — V/F + Caso) ──
-{prova:"P3",badge:"p3",q:"13. [V/F] La catalasa es la enzima que diferencia a S. aureus de otros estafilococos.",opts:["Verdadero","Falso"],correct:1,explain:"FALSO. Catalasa diferencia Staphylococcus (⊕) de Streptococcus (⊖). Lo que diferencia S. aureus de OTROS estafilococos es la COAGULASA (aureus = ⊕, epidermidis/saprophyticus = ⊖)."},
-{prova:"P3",badge:"p3",q:"14. [V/F] Las toxinas exfoliativas de S. aureus causan el síndrome de la piel escaldada.",opts:["Verdadero","Falso"],correct:0,explain:"VERDADERO. Toxinas exfoliativas A y B = serina proteasas → clivaje de desmogleína-1 → separación de la epidermis → síndrome de piel escaldada estafilocócica (SSSS). Principalmente en neonatos/niños."},
-{prova:"P3",badge:"p3",q:"15. [V/F] La leucocidina de Panton-Valentine está asociada a neumonía necrotizante grave.",opts:["Verdadero","Falso"],correct:0,explain:"VERDADERO. PVL (Panton-Valentine Leucocidina) = toxina formadora de poros → destruye neutrófilos y monocitos → neumonía NECROTIZANTE grave + abscesos cutáneos. Asociada a CA-MRSA."},
-{prova:"P3",badge:"p3",q:"16. [V/F] Staphylococcus saprophyticus es el principal causador de infección urinaria.",opts:["Verdadero","Falso"],correct:1,explain:"FALSO. El principal causador de ITU es E. COLI (80%). S. saprophyticus es la 2ª causa en mujeres jóvenes sexualmente activas."},
-{prova:"P3",badge:"p3",q:"17. [V/F] La coagulasa degrada el ácido hialurónico del tejido conectivo.",opts:["Verdadero","Falso"],correct:1,explain:"FALSO. La HIALURONIDASA degrada ácido hialurónico. La COAGULASA convierte fibrinógeno en fibrina → formación de coágulo protector alrededor de la bacteria."},
-{prova:"P3",badge:"p3",q:"18. [Caso Clínico] Hombre de 32 años con diarrea líquida profusa (8-10 deposiciones/día), inicialmente sin sangre pero que después presenta moco y estrías sanguinolentas. Fiebre hasta 39°C. Consumió pollo a la parrilla que pudo no estar bien cocido y leche sin pasteurizar en una granja. Bacilos Gram negativos curvos, que crecen en atmósfera microaerófila a 42°C, catalasa ⊕, oxidasa ⊕, hidrólisis del hipurato positiva. ¿Cuál es el agente etiológico?",opts:["Salmonella enteritidis","Campylobacter jejuni","Vibrio cholerae","Shigella dysenteriae"],correct:1,explain:"BGN curvos + microaerófilo + 42°C + catalasa ⊕ + oxidasa ⊕ + hipurato ⊕ + pollo mal cocido + leche sin pasteurizar = CAMPYLOBACTER JEJUNI. Reservorio: AVES (pollo)."}
-];
-
-// ════════════════════════════════════════
-// PROVAS ENGINE
-// ════════════════════════════════════════
-let pQ=0, pScore=0, pAnswered=false;
+let provaScore=0, provaAnswered=0;
 
 function renderProva(){
-  const total=provasData.length;
-  const q=provasData[pQ];
-  const pct=(pQ/total*100).toFixed(0);
-  document.getElementById('prova-progress-bar').style.width=pct+'%';
-  document.getElementById('prova-progress-text').textContent=`Pregunta ${pQ+1} de ${total}`;
-  document.getElementById('prova-score').textContent=`Aciertos: ${pScore}/${pQ}`;
-  let html=`<span class="prova-badge ${q.badge}">${q.prova}</span>`;
-  html+=`<div class="quiz-question" style="font-size:15px;font-weight:600;color:#fff;margin-bottom:16px;line-height:1.5">${q.q}</div><div class="quiz-options">`;
-  q.opts.forEach((o,i)=>{html+=`<button class="quiz-opt" onclick="selectProva(${i})">${o}</button>`;});
-  html+=`</div><div class="quiz-explain" id="prova-explain" style="display:none"></div>`;
-  html+=`<button class="quiz-next" id="prova-next" style="display:none" onclick="nextProva()">Siguiente →</button>`;
-  document.getElementById('prova-body').innerHTML=html;
-  pAnswered=false;
-}
-
-function selectProva(idx){
-  if(pAnswered) return;
-  pAnswered=true;
-  const q=provasData[pQ];
-  const btns=document.querySelectorAll('#prova-body .quiz-opt');
-  btns.forEach((b,i)=>{
-    b.style.pointerEvents='none';
-    if(i===q.correct){b.style.background='rgba(56,232,192,0.15)';b.style.borderColor='#38e8c0';b.style.color='#38e8c0';}
-    if(i===idx&&idx!==q.correct){b.style.background='rgba(255,95,95,0.15)';b.style.borderColor='#ff5f5f';b.style.color='#ff5f5f';}
+  provaScore=0; provaAnswered=0;
+  updateScorebar('prova-scorebar',0,0);
+  let html='';
+  provasData.forEach((q,i)=>{
+    const vf=isVF(q.opts);
+    const tipo=vf?'V O F':'MÚLTIPLA ESCOLHA';
+    const badgeCls=vf?'vf':'mc';
+    html+=`<div class="q-card" id="pcard-${i}">`;
+    html+=`<div class="q-header"><span class="q-num">Pregunta ${i+1}</span><div class="q-badges"><span class="prova-badge ${q.badge}">${q.prova}</span><span class="q-badge ${badgeCls}">${tipo}</span></div></div>`;
+    html+=`<div class="q-text">${q.q}</div>`;
+    if(vf){
+      html+=`<div class="q-vf">`;
+      html+=`<button class="q-opt" onclick="pickProva(${i},0)"><span class="q-letter">✅</span> VERDADERO</button>`;
+      html+=`<button class="q-opt" onclick="pickProva(${i},1)"><span class="q-letter">❌</span> FALSO</button>`;
+      html+=`</div>`;
+    } else {
+      html+=`<div class="q-opts">`;
+      q.opts.forEach((o,j)=>{
+        html+=`<button class="q-opt" onclick="pickProva(${i},${j})"><span class="q-letter">${letters[j]})</span> ${o}</button>`;
+      });
+      html+=`</div>`;
+    }
+    html+=`<div class="q-explain" id="pexp-${i}"></div>`;
+    html+=`</div>`;
   });
-  if(idx===q.correct) pScore++;
-  const expl=document.getElementById('prova-explain');
-  expl.innerHTML=`<strong>${idx===q.correct?'✅ ¡Correcto!':'❌ Incorrecto'}</strong><br>${q.explain}`;
-  expl.style.display='block';
-  expl.style.background=idx===q.correct?'rgba(56,232,192,0.08)':'rgba(255,95,95,0.08)';
-  expl.style.border=`1px solid ${idx===q.correct?'#38e8c0':'#ff5f5f'}`;
-  expl.style.borderRadius='12px';expl.style.padding='1rem';expl.style.marginTop='1rem';expl.style.lineHeight='1.6';
-  document.getElementById('prova-next').style.display='block';
-  document.getElementById('prova-score').textContent=`Aciertos: ${pScore}/${pQ+1}`;
+  document.getElementById('prova-body').innerHTML=html;
 }
 
-function nextProva(){
-  pQ++;
-  if(pQ>=provasData.length){
-    const pct=(pScore/provasData.length*100).toFixed(1);
-    let emoji=pct>=90?'🏆':pct>=70?'🎉':pct>=50?'💪':'📚';
-    document.getElementById('prova-progress-bar').style.width='100%';
-    document.getElementById('prova-body').innerHTML=`
-      <div style="text-align:center;padding:2rem">
-        <div style="font-size:3rem;margin-bottom:1rem">${emoji}</div>
-        <h2 style="color:var(--accent);margin-bottom:.5rem">¡Provas Finalizadas!</h2>
-        <p style="font-size:1.3rem;color:var(--text)">Puntuación: <strong style="color:var(--accent2)">${pScore}/${provasData.length}</strong> (${pct}%)</p>
-        <button class="quiz-next" onclick="restartProva()" style="display:inline-block;margin-top:1.5rem">🔄 Reiniciar Provas</button>
-      </div>`;
-    return;
-  }
-  renderProva();
+function pickProva(qi,oi){
+  const card=document.getElementById('pcard-'+qi);
+  if(card.dataset.answered) return;
+  card.dataset.answered='1';
+  const q=provasData[qi];
+  const btns=card.querySelectorAll('.q-opt');
+  btns.forEach((b,i)=>{
+    b.classList.add('done');
+    if(i===q.correct) b.classList.add('correct');
+    if(i===oi && oi!==q.correct) b.classList.add('wrong');
+  });
+  if(oi===q.correct) provaScore++;
+  provaAnswered++;
+  updateScorebar('prova-scorebar',provaScore,provaAnswered);
+  const expl=document.getElementById('pexp-'+qi);
+  expl.innerHTML=`<strong>${oi===q.correct?'✅ ¡Correcto!':'❌ Incorrecto'}</strong><br>${q.explain}`;
+  expl.style.borderColor=oi===q.correct?'var(--green)':'var(--red)';
+  expl.classList.add('show');
 }
 
-function restartProva(){ pQ=0; pScore=0; renderProva(); }
+function restartProva(){ renderProva(); window.scrollTo(0, document.getElementById('provas').offsetTop - 60); }
+
+function updateScorebar(id,s,a){
+  document.getElementById(id).innerHTML=`Aciertos: <strong>${s}</strong> / ${a}`;
+}
 
 // ════════════════════════════════════════
 // INIT
