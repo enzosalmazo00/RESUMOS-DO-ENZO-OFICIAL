@@ -673,205 +673,219 @@ nav.tabs button.active{background:var(--accent4);color:var(--bg);border-color:va
 </div></div>
 
 <!-- ============== SCRIPTS ============== -->
+<!-- ============== SCRIPTS ============== -->
 <script>
-// Expõe funções usadas em onclick= inline ao escopo global ANTES do DOMContentLoaded
-window.showSection = function(id, btn){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+// ── PARTÍCULAS ──
+(function(){
+  const c=document.getElementById('particles');
+  const x=c.getContext('2d');
+  let p=[];
+  function rs(){c.width=innerWidth;c.height=innerHeight;}
+  rs(); window.addEventListener('resize',rs);
+  for(let i=0;i<55;i++) p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5});
+  (function draw(){
+    x.clearRect(0,0,c.width,c.height);
+    p.forEach(pt=>{pt.x=(pt.x+pt.vx+c.width)%c.width;pt.y=(pt.y+pt.vy+c.height)%c.height;x.beginPath();x.arc(pt.x,pt.y,pt.r,0,Math.PI*2);x.fillStyle='rgba(184,79,249,0.12)';x.fill();});
+    for(let i=0;i<p.length;i++)for(let j=i+1;j<p.length;j++){const dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<110){x.beginPath();x.moveTo(p[i].x,p[i].y);x.lineTo(p[j].x,p[j].y);x.strokeStyle=`rgba(79,156,249,${.05*(1-d/110)})`;x.lineWidth=.5;x.stroke();}}
+    requestAnimationFrame(draw);
+  })();
+})();
+
+// ── SCROLL TOP ──
+window.addEventListener('scroll',function(){
+  document.getElementById('scrolltop').style.display=window.scrollY>400?'block':'none';
+});
+
+// ── TABS ──
+function showSection(id,btn){
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('nav.tabs button').forEach(function(b){b.classList.remove('active');});
   document.getElementById(id).classList.add('active');
   btn.classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
-};
-window.toggleProva = function(hdr){
+}
+
+// ── PROVAS ──
+function toggleProva(hdr){
   hdr.classList.toggle('open');
   hdr.nextElementSibling.classList.toggle('open');
-};
-window.shuffleFC = function(){
-  const a=[...fcData];
-  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
-  renderFC(a);
-};
-window.resetFC = function(){ renderFC(fcData); };
-window.resetQuiz = function(){ if(!confirm('Reiniciar o quiz?'))return; renderQuiz(); };
-window.pickMC = function(qi,oi){
-  const card=document.getElementById('qc'+qi);
-  if(card.dataset.done)return;
-  card.dataset.done='1';
-  const q=qData[qi];
-  card.querySelectorAll('.mc-opt').forEach((b,j)=>{b.classList.add('done');if(j===q.c)b.classList.add('correct');if(j===oi&&oi!==q.c)b.classList.add('wrong');});
-  const ok=oi===q.c;
-  if(ok)score++;answered++;else answered++;
-  showResult(qi,ok);
-};
-window.pickVOF = function(qi,chosen){
-  const card=document.getElementById('qc'+qi);
-  if(card.dataset.done)return;
-  card.dataset.done='1';
-  const q=qData[qi];
-  card.querySelectorAll('.vof-btn').forEach(b=>b.classList.add('done'));
-  const ok=chosen===q.c;
-  const vbtn=card.querySelector('.vb'),fbtn=card.querySelector('.fb');
-  if(ok){(chosen?vbtn:fbtn).classList.add('correct');}
-  else{(chosen?vbtn:fbtn).classList.add('wrong');(q.c?vbtn:fbtn).classList.add('correct');}
-  if(ok)score++;answered++;else answered++;
-  showResult(qi,ok);
-};
-
-document.addEventListener('DOMContentLoaded', function(){
-
-// PARTICLES
-const canvas=document.getElementById('particles');
-const ctx=canvas.getContext('2d');
-let pts=[];
-function resizeCanvas(){canvas.width=innerWidth;canvas.height=innerHeight;}
-resizeCanvas();window.addEventListener('resize',resizeCanvas);
-for(let i=0;i<55;i++){pts.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5});}
-function drawPts(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  pts.forEach(p=>{p.x=(p.x+p.vx+canvas.width)%canvas.width;p.y=(p.y+p.vy+canvas.height)%canvas.height;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(184,79,249,0.12)';ctx.fill();});
-  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<110){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(79,156,249,${.05*(1-d/110)})`;ctx.lineWidth=.5;ctx.stroke();}}
-  requestAnimationFrame(drawPts);
 }
-drawPts();
 
-// SCROLL TOP
-window.addEventListener('scroll',()=>{document.getElementById('scrolltop').style.display=window.scrollY>400?'block':'none';});
-
-// FLASHCARDS DATA
-const fcData=[
+// ── FLASHCARDS ──
+var fcData=[
   {cat:'Inato',q:'Quais células da imunidade inata estão SEMPRE ativas?',a:'Neutrófilos, macrófagos, NK, mastócitos e células dendríticas. Respondem imediatamente sem necessidade de ativação prévia.'},
-  {cat:'Inato',q:'O que são PAMPs e onde são reconhecidos?',a:'Padrões Moleculares Associados a Patógenos — estruturas conservadas nos patógenos. Reconhecidos pelos receptores Toll-like (TLRs) da imunidade INATA.'},
-  {cat:'Inato',q:'TLR 4 reconhece o quê? E o TLR 5?',a:'TLR 4 → LPS de bactérias Gram– (lipopolissacarídeo). TLR 5 → flagelina (flagelos bacterianos). Macete: TLR 4=Gram-4, TLR 5=Fla5elina.'},
+  {cat:'Inato',q:'O que são PAMPs e onde são reconhecidos?',a:'Padrões Moleculares Associados a Patógenos. Reconhecidos pelos receptores Toll-like (TLRs) da imunidade INATA.'},
+  {cat:'Inato',q:'TLR 4 reconhece o quê? E o TLR 5?',a:'TLR 4 → LPS de bactérias Gram–. TLR 5 → flagelina. Macete: TLR 4=Gram-4, TLR 5=Fla5elina.'},
   {cat:'Inato',q:'NK mata células tumorais como? Por fagocitose?',a:'NÃO! NK usa CITOTOXICIDADE (perforina e granzimas). Não faz fagocitose. Reconhece células que perderam MHC I.'},
-  {cat:'Inato',q:'O que é piroptose e em qual célula ocorre?',a:'Morte inflamatória programada do MACRÓFAGO (não neutrófilo). Libera IL-1β, IL-18 e conteúdo inflamatório → inflamação local.'},
-  {cat:'Inato',q:'Via alternativa do complemento depende de anticorpos?',a:'NÃO — é INDEPENDENTE de anticorpos. Ativada diretamente pela superfície bacteriana. Via clássica sim depende de anticorpos (IgG ou IgM).'},
-  {cat:'Inato',q:'Qual dendrítica tem função antiviral?',a:'Célula dendrítica PLASMOCITOIDE → especializada em produzir IFN-α e IFN-β (interferon tipo I) → principal resposta antiviral inata.'},
-  {cat:'Inato',q:'Sequência correta da resposta inata (C→B→D→A→E)?',a:'C: Identificação de PAMPs → B: TLR ativam → D: Quimiocinas/selectinas → A: Fagossomo + lisossomo → E: Interleucinas liberadas.'},
-  {cat:'Adaptativo',q:'MHC I vs MHC II — qual apresenta para quem?',a:'MHC I → presente em TODAS as células nucleadas → apresenta para CD8+ (citotóxico). MHC II → só APCs → apresenta para CD4+ (helper).'},
-  {cat:'Adaptativo',q:'TH1, TH2 e TH17 — alvos e moléculas chave',a:'TH1 → intracelulares → IFN-γ (ativa macrófago). TH2 → helmintos → IL-4, IL-5, IL-13 (eosinófilos). TH17 → bactérias extrac./fungos → IL-17, IL-22.'},
-  {cat:'Adaptativo',q:'T Regulador — proteína reguladora e função',a:'Proteína FoxP3. Função: controlar e regular a resposta imune evitando excessos. Origem: timo (central) ou linfonodos (periférico).'},
-  {cat:'Adaptativo',q:'Como ocorre a tolerância central do linfócito T?',a:'No TIMO. mTEC apresenta antígenos próprios. Se o Lt T reconhece → apoptose. Proteína AIRE participa. Elimina células autorreativas antes de saírem para circulação.'},
-  {cat:'Anticorpos',q:'IgA — onde está? IgG — o que atravessa?',a:'IgA = mucosas (intestino, saliva, leite materno). IgG = soro (mais abundante). IgG = ÚNICA que atravessa a placenta → imunidade passiva do feto.'},
-  {cat:'Anticorpos',q:'IgM — quando é produzida? Qual ativa melhor o complemento?',a:'IgM = 1ª a ser produzida → indica infecção AGUDA/recente. Pentâmero → ativa complemento muito eficientemente. IgM + via clássica.'},
-  {cat:'Anticorpos',q:'IgE — onde se liga? Relação com IgG4?',a:'IgE liga-se à membrana dos mastócitos e basófilos → desgranulação → reação alérgica. IgG4 bloqueia IgE → previne alergia (temporariamente).'},
-  {cat:'Hipersensib.',q:'Hipersensibilidade Tipo I — mecanismo resumido',a:'IgE + mastócito. 1º contato: sensibilização (sem sintomas). 2º+ contato: alérgeno → IgE → desgranulação → histamina → vasodilatação, broncoespasmo.'},
-  {cat:'Hipersensib.',q:'Tipo II vs Tipo III — diferença fundamental',a:'Tipo II: antígeno FIXO na célula → efeito LOCALIZADO (ex: miastenia gravis). Tipo III: imunocomplexos CIRCULANTES → depósito → efeito SISTÊMICO (ex: GNPE, LES).'},
-  {cat:'Hipersensib.',q:'GNPE — mecanismo correto?',a:'GNPE = DEPÓSITO DE IMUNOCOMPLEXOS nos glomérulos (Tipo III). NÃO é reação cruzada com antígenos renais. Febre reumática é que tem reação cruzada (Tipo II).'},
-  {cat:'Hipersensib.',q:'Tipo IV — Tardia — por quê depois de 48h?',a:'Mediada por LINFÓCITOS T (TH1 + TH17) — resposta celular. NÃO anticorpos. Tempo necessário para ativar e recrutar células T. Ex: PPD, dermatite de contato, rejeição tardia.'},
-  {cat:'Transplante',q:'4 tipos de transplante por origem',a:'Autólogo (mesmo indivíduo) → sem rejeito. Singênico (gêmeos idênticos) → sem rejeito. Alogênico (mesma espécie) → há rejeito. Xenogênico (espécies diferentes) → muito rejeito.'},
-  {cat:'Transplante',q:'3 tipos de rejeito e seus mecanismos',a:'Hiperagudo: minutos, Ac pré-formados + incompatibilidade ABO. Agudo: semanas, Ac + TCD4/CD8. Crônico: meses/anos, macrófagos.'},
-  {cat:'Transplante',q:'GVHD — o que é e em qual transplante ocorre?',a:'Doença do enxerto contra hospedeiro (Graft vs. Host Disease). Na medula óssea: É A MEDULA que rejeita o corpo do hospedeiro. Requer compatibilidade de 75–80%.'},
-  {cat:'Privilégio',q:'4 barreiras com privilégio imunitário',a:'BHO (Hemato-Ocular): córnea avascular, PD-L1. BHE (Hemato-Encefálica): microglía, NÃO tem privilégio estrito! BHT (testicular): testosterona, TGF-β. BHP (placentária): PD-L1.'},
-  {cat:'Privilégio',q:'O cérebro tem privilégio imunitário ESTRITO?',a:'NÃO! O cérebro ABRE MÃO do seu privilégio quando necessário para se defender. Essa abertura gera inflamação e dano. A microglía é responsável pela defesa local.'},
-  {cat:'Tumores',q:'TSA vs TAA — diferença',a:'TSA (tumor-specific antigen) = só em células tumorais, não em células sãs. TAA (tumor-associated antigen) = presente também em células normais, mas SUPEREXPRESSO no tumor. Ex: HER2 (câncer de mama).'},
-  {cat:'Tumores',q:'Como o tumor evade o sistema imune?',a:'↓ MHC I → TCD8+ não reconhece. Expressa PD-L1 → blinda contra linfócitos T. Recruta T Reguladores → suprime sistema imune. Libera IL-10 → evita defesa. Angiogênese via macrófago alternativo.'},
+  {cat:'Inato',q:'O que é piroptose e em qual célula ocorre?',a:'Morte inflamatória programada do MACRÓFAGO (não neutrófilo). Libera IL-1β, IL-18 → inflamação local.'},
+  {cat:'Inato',q:'Via alternativa do complemento depende de anticorpos?',a:'NÃO — é INDEPENDENTE de anticorpos. Ativada diretamente pela superfície bacteriana. Via clássica depende de IgG ou IgM.'},
+  {cat:'Inato',q:'Qual dendrítica tem função antiviral?',a:'Célula dendrítica PLASMOCITOIDE → produz IFN-α e IFN-β (interferon tipo I) → principal resposta antiviral inata.'},
+  {cat:'Inato',q:'Sequência da resposta inata (C→D→B→A→E)?',a:'C: identificação de PAMPs → D: TLR ligam → B: quimiocinas/selectinas → A: fagossomo+lisossomo → E: interleucinas.'},
+  {cat:'Adaptativo',q:'MHC I vs MHC II — qual apresenta para quem?',a:'MHC I → todas células nucleadas → CD8+ (citotóxico). MHC II → só APCs → CD4+ (helper).'},
+  {cat:'Adaptativo',q:'TH1, TH2 e TH17 — alvos e moléculas chave',a:'TH1 → intracelulares → IFN-γ. TH2 → helmintos → IL-4, IL-5, IL-13. TH17 → fungos/bact.extrac. → IL-17, IL-22.'},
+  {cat:'Adaptativo',q:'T Regulador — proteína reguladora e função',a:'Proteína FoxP3. Controla e regula a resposta imune evitando excessos. Origem: timo (central) ou linfonodos (periférico).'},
+  {cat:'Adaptativo',q:'Como ocorre a tolerância central do linfócito T?',a:'No TIMO. mTEC apresenta antígenos próprios. Se reconhece → apoptose. Proteína AIRE participa. Elimina células autorreativas.'},
+  {cat:'Anticorpos',q:'IgA — onde está? IgG — o que atravessa?',a:'IgA = mucosas (intestino, saliva, leite materno). IgG = soro (mais abundante). IgG = ÚNICA que atravessa a placenta.'},
+  {cat:'Anticorpos',q:'IgM — quando é produzida?',a:'IgM = 1ª produzida → indica infecção AGUDA/recente. Pentâmero → ativa complemento via clássica muito eficientemente.'},
+  {cat:'Anticorpos',q:'IgE — onde se liga? Relação com IgG4?',a:'IgE liga-se à membrana dos mastócitos → desgranulação → reação alérgica. IgG4 bloqueia IgE → previne alergia (temporariamente).'},
+  {cat:'Hipersensib.',q:'Hipersensibilidade Tipo I — mecanismo resumido',a:'IgE + mastócito. 1º contato: sensibilização (sem sintomas). 2º+ contato: alérgeno → IgE → desgranulação → histamina → broncoespasmo.'},
+  {cat:'Hipersensib.',q:'Tipo II vs Tipo III — diferença fundamental',a:'Tipo II: antígeno FIXO → efeito LOCALIZADO. Tipo III: imunocomplexos CIRCULANTES → depósito → efeito SISTÊMICO (GNPE, LES).'},
+  {cat:'Hipersensib.',q:'GNPE — mecanismo correto?',a:'GNPE = DEPÓSITO DE IMUNOCOMPLEXOS nos glomérulos (Tipo III). NÃO reação cruzada com antígenos renais (isso é febre reumática).'},
+  {cat:'Hipersensib.',q:'Tipo IV — Tardia — por quê depois de 48h?',a:'Mediada por TH1 + TH17 (resposta celular). NÃO anticorpos. Tempo para ativar e recrutar células T. Ex: PPD, dermatite de contato.'},
+  {cat:'Transplante',q:'4 tipos de transplante por origem',a:'Autólogo (mesmo indivíduo) → sem rejeito. Singênico (gêmeos idênticos) → sem rejeito. Alogênico → há rejeito. Xenogênico → muito rejeito.'},
+  {cat:'Transplante',q:'3 tipos de rejeito e seus mecanismos',a:'Hiperagudo: minutos, Ac pré-formados + ABO. Agudo: semanas, Ac + TCD4/CD8. Crônico: meses/anos, macrófagos.'},
+  {cat:'Transplante',q:'GVHD — o que é e em qual transplante ocorre?',a:'Graft vs. Host Disease — medula óssea: É A MEDULA que rejeita o corpo do receptor. Requer compatibilidade de 75–80%.'},
+  {cat:'Privilégio',q:'4 barreiras com privilégio imunitário',a:'BHO (Hemato-Ocular): córnea avascular, PD-L1. BHE (Hemato-Encefálica): NÃO tem privilégio estrito! BHT (testicular): testosterona, TGF-β. BHP (placentária): PD-L1.'},
+  {cat:'Privilégio',q:'O cérebro tem privilégio imunitário ESTRITO?',a:'NÃO! O cérebro ABRE MÃO do seu privilégio quando necessário para se defender. Microglía realiza a defesa local.'},
+  {cat:'Tumores',q:'TSA vs TAA — diferença',a:'TSA = só em células tumorais (neo-antígeno). TAA = presente em células normais mas SUPEREXPRESSO no tumor. Ex: HER2 (câncer de mama).'},
+  {cat:'Tumores',q:'Como o tumor evade o sistema imune?',a:'↓ MHC I → TCD8+ não reconhece. Expressa PD-L1 → blinda linfócitos T. Recruta T Reguladores. Libera IL-10. Angiogênese via macrófago alternativo.'},
 ];
 
-let fcShown=0;
+var fcShown=0;
 function renderFC(data){
-  const g=document.getElementById('fc-grid');g.innerHTML='';fcShown=0;
-  data.forEach(fc=>{
-    const d=document.createElement('div');d.className='fc-card';
-    d.innerHTML=`<div class="fc-inner">
-      <div class="fc-front"><div class="fc-cat">${fc.cat}</div><div class="fc-q">${fc.q}</div><div class="fc-hint">Clique para revelar</div></div>
-      <div class="fc-back"><div class="fc-answer-label">Resposta</div><div class="fc-a">${fc.a}</div></div>
-    </div>`;
-    d.addEventListener('click',()=>{const was=d.classList.contains('flipped');d.classList.toggle('flipped');fcShown+=was?-1:1;fcShown=Math.max(0,fcShown);document.getElementById('fc-counter').textContent=`${fcShown} / ${data.length} revelados`;});
+  var g=document.getElementById('fc-grid');
+  g.innerHTML=''; fcShown=0;
+  data.forEach(function(fc){
+    var d=document.createElement('div');
+    d.className='fc-card';
+    d.innerHTML='<div class="fc-inner"><div class="fc-front"><div class="fc-cat">'+fc.cat+'</div><div class="fc-q">'+fc.q+'</div><div class="fc-hint">Clique para revelar</div></div><div class="fc-back"><div class="fc-answer-label">Resposta</div><div class="fc-a">'+fc.a+'</div></div></div>';
+    d.addEventListener('click',function(){
+      var was=d.classList.contains('flipped');
+      d.classList.toggle('flipped');
+      fcShown+=was?-1:1;
+      if(fcShown<0)fcShown=0;
+      document.getElementById('fc-counter').textContent=fcShown+' / '+data.length+' revelados';
+    });
     g.appendChild(d);
   });
-  document.getElementById('fc-counter').textContent=`0 / ${data.length} revelados`;
+  document.getElementById('fc-counter').textContent='0 / '+data.length+' revelados';
 }
+function shuffleFC(){
+  var a=fcData.slice();
+  for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+  renderFC(a);
+}
+function resetFC(){ renderFC(fcData); }
 renderFC(fcData);
 
-// QUIZ DATA
-const qData=[
-  // MC
+// ── QUIZ ──
+var qData=[
   {t:'mc',q:'Principal anticorpo da mucosa:',o:['IgM','IgG','IgA','IgE','IgD'],c:2,e:'IgA protege superfícies mucosas — trato digestivo, respiratório, saliva, lágrimas, leite materno.'},
   {t:'mc',q:'Identifica células cancerígenas:',o:['Células dendríticas','Células NK','Linfócitos T CD4+','Macrófagos','Células fagocíticas'],c:1,e:'Células NK reconhecem e destroem células tumorais e infectadas por vírus sem necessitar de MHC.'},
-  {t:'mc',q:'Anticorpo em maior concentração na parte líquida do sangue (soro):',o:['IgA','IgM','IgG','IgD','IgE'],c:2,e:'IgG é o anticorpo mais abundante no soro sanguíneo. Único que atravessa a placenta.'},
-  {t:'mc',q:'Anticorpo que se liga à membrana do mastócito:',o:['IgA','IgD','IgM','IgG','IgE'],c:4,e:'IgE liga-se aos receptores FcεRI dos mastócitos e basófilos → desgranulação → reação alérgica.'},
+  {t:'mc',q:'Anticorpo em maior concentração no soro:',o:['IgA','IgM','IgG','IgD','IgE'],c:2,e:'IgG é o anticorpo mais abundante no soro sanguíneo. Único que atravessa a placenta.'},
+  {t:'mc',q:'Anticorpo que se liga à membrana do mastócito:',o:['IgA','IgD','IgM','IgG','IgE'],c:4,e:'IgE liga-se aos receptores FcεRI dos mastócitos → desgranulação → reação alérgica.'},
   {t:'mc',q:'Células especializadas em ativar linfócitos T virgens:',o:['Linfócito B','Macrófago','Células dendríticas','NK','Granulócitos'],c:2,e:'Células dendríticas maduras são as APCs mais eficientes para ativar linfócitos T virgens nos linfonodos.'},
   {t:'mc',q:'Função principal do MHC:',o:['Ativar diretamente as células','Capturar e degradar antígenos','Apresentar antígenos a células T','Produzir anticorpos'],c:2,e:'MHC apresenta fragmentos peptídicos de antígenos na superfície celular para reconhecimento por linfócitos T.'},
-  {t:'mc',q:'TLR 4 reconhece:',o:['Peptídeoglicano (Gram+)','LPS de bactérias Gram−','Flagelina bacteriana','RNA viral','DNA bacteriano CpG'],c:1,e:'TLR 4 reconhece lipopolissacarídeo (LPS) da parede de bactérias Gram-negativas. TLR 4 = Gram-4.'},
-  {t:'mc',q:'TLR 5 reconhece:',o:['LPS','Peptídeoglicano','Flagelina','dsRNA viral','DNA CpG'],c:2,e:'TLR 5 reconhece flagelina — proteína dos flagelos bacterianos. Macete: TLR 5 = Fla5elina.'},
-  {t:'mc',q:'TLR que reconhece RNA viral de fita simples (ssRNA):',o:['TLR 2','TLR 4','TLR 5','TLR 7 e 8','TLR 9'],c:3,e:'TLR 7 e 8 reconhecem ssRNA viral. TLR 3 reconhece dsRNA viral. TLR 9 reconhece DNA CpG.'},
-  {t:'mc',q:'Via do complemento INDEPENDENTE de anticorpos:',o:['Via Clássica','Via das Lectinas','Via Alternativa','Todas dependem de Ac'],c:2,e:'Via Alternativa é ativada diretamente pela superfície bacteriana SEM necessidade de anticorpos. Via Clássica SIM depende de IgG/IgM.'},
-  {t:'mc',q:'Qual imunoglobulina atravessa a placenta?',o:['IgA','IgM','IgE','IgG','IgD'],c:3,e:'IgG é a ÚNICA que atravessa a placenta via receptor FcRn → imunidade passiva neonatal nos primeiros meses de vida.'},
-  {t:'mc',q:'Piroptose ocorre em qual célula?',o:['Neutrófilo','Linfócito T','Macrófago','Mastócito','Célula NK'],c:2,e:'Piroptose = morte inflamatória programada do MACRÓFAGO (não neutrófilo). Libera IL-1β e IL-18 → inflamação local.'},
-  {t:'mc',q:'Hipersensibilidade Tipo IV — mecanismo:',o:['IgE + mastócito','IgG + IgM direto nas células','Imunocomplexos circulantes','TH1 + TH17 (resposta celular >48h)'],c:3,e:'Tipo IV = tardia/celular. Mediada por linfócitos T (TH1 + TH17). NÃO envolve anticorpos. Ocorre após 48h.'},
-  {t:'mc',q:'GNPE (glomerulonefrite pós-estreptocócica) — mecanismo:',o:['Reação cruzada com antígenos renais','Invasão direta do glomérulo','Depósito de imunocomplexos nos glomérulos','Citotoxicidade por NK'],c:2,e:'GNPE = Hipersensibilidade Tipo III → depósito de imunocomplexos (Ag+Ac) nos glomérulos → ativação do complemento → nefrite.'},
-  {t:'mc',q:'Febre reumática — mecanismo imunológico correto:',o:['Invasão direta do coração por S. pyogenes','Reação cruzada da proteína M com tecido cardíaco','Depósito de imunocomplexos nas válvulas','Exotoxinas que danificam diretamente o miocárdio'],c:1,e:'Reação cruzada (Tipo II): proteína M de S. pyogenes similar à miosina cardíaca → anticorpos anti-proteína M atacam o coração.'},
-  {t:'mc',q:'Transplante que MAIS frequentemente causa GVHD:',o:['Rim','Fígado','Coração','Medula óssea'],c:3,e:'GVHD (Graft vs. Host Disease): ocorre no transplante de medula óssea. A medula do doador rejeita o corpo do receptor.'},
-  {t:'mc',q:'Tipo de rejeito por anticorpos pré-formados + incompatibilidade ABO:',o:['Crônico','Agudo','Hiperagudo','GVHD'],c:2,e:'Rejeito HIPERAGUDO: ocorre em minutos/horas. Anticorpos pré-formados + incompatibilidade ABO → trombose vascular imediata.'},
-  {t:'mc',q:'Qual barreira com privilégio imunitário NÃO tem privilégio ESTRITO?',o:['Barreira hemato-ocular','Barreira hemato-encefálica','Barreira hemato-testicular','Barreira hemato-placentária'],c:1,e:'O CÉREBRO (BHE) não tem privilégio estrito. Abre mão do privilégio para se defender quando necessário. A microglía é a célula de defesa cerebral.'},
-  {t:'mc',q:'Qual molécula está presente em olhos, testículos e placenta para bloquear linfócitos T?',o:['TGF-β','Testosterona','PD-L1','Indolamina'],c:2,e:'PD-L1 é a molécula bloqueadora de linfócitos T presente nas principais barreiras de privilégio imunitário (BHO, BHT, BHP).'},
-  {t:'mc',q:'TSA vs TAA — qual é exclusivo de células tumorais?',o:['TAA','TSA (neo-antígeno)','Ambos são exclusivos','Nenhum é exclusivo'],c:1,e:'TSA (Tumor-Specific Antigen) = só em células tumorais, NÃO em células sãs. TAA = presente em células normais mas SUPEREXPRESSO no tumor.'},
-  {t:'mc',q:'Como o tumor evade o TCD8+?',o:['Produzindo mais IgE','Diminuindo a expressão de MHC I','Ativando NK','Liberando IL-12'],c:1,e:'Tumor ↓ MHC I → TCD8+ não reconhece a célula. A NK então entra em ação reconhecendo a AUSÊNCIA de MHC I → elimina a célula.'},
-  {t:'mc',q:'Imunoglobulina que indica infecção AGUDA ou recente:',o:['IgG','IgA','IgM','IgE','IgD'],c:2,e:'IgM = primeiro anticorpo produzido em resposta a um novo antígeno (resposta primária). Presença de IgM → infecção AGUDA ou recente.'},
-  // VOF
+  {t:'mc',q:'TLR 4 reconhece:',o:['Peptídeoglicano Gram+','LPS de bactérias Gram−','Flagelina bacteriana','RNA viral','DNA bacteriano CpG'],c:1,e:'TLR 4 reconhece LPS da parede de bactérias Gram-negativas. Macete: TLR 4 = Gram-4.'},
+  {t:'mc',q:'TLR 5 reconhece:',o:['LPS','Peptídeoglicano','Flagelina','dsRNA viral','DNA CpG'],c:2,e:'TLR 5 reconhece flagelina dos flagelos bacterianos. Macete: TLR 5 = Fla5elina.'},
+  {t:'mc',q:'Via do complemento INDEPENDENTE de anticorpos:',o:['Via Clássica','Via das Lectinas','Via Alternativa','Todas dependem de Ac'],c:2,e:'Via Alternativa ativada diretamente pela superfície bacteriana SEM anticorpos. Via Clássica depende de IgG/IgM.'},
+  {t:'mc',q:'Qual imunoglobulina atravessa a placenta?',o:['IgA','IgM','IgE','IgG','IgD'],c:3,e:'IgG é a ÚNICA que atravessa a placenta → imunidade passiva neonatal nos primeiros meses de vida.'},
+  {t:'mc',q:'Piroptose ocorre em qual célula?',o:['Neutrófilo','Linfócito T','Macrófago','Mastócito','Célula NK'],c:2,e:'Piroptose = morte inflamatória do MACRÓFAGO (não neutrófilo). Libera IL-1β e IL-18.'},
+  {t:'mc',q:'Hipersensibilidade Tipo IV — mecanismo:',o:['IgE + mastócito','IgG + IgM nas células','Imunocomplexos circulantes','TH1 + TH17 (celular >48h)'],c:3,e:'Tipo IV = tardia/celular. Mediada por TH1 + TH17. NÃO envolve anticorpos. Ocorre após 48h.'},
+  {t:'mc',q:'GNPE — mecanismo correto:',o:['Reação cruzada com antígenos renais','Invasão direta do glomérulo','Depósito de imunocomplexos nos glomérulos','Citotoxicidade por NK'],c:2,e:'GNPE = Tipo III → depósito de imunocomplexos (Ag+Ac) nos glomérulos → nefrite.'},
+  {t:'mc',q:'Febre reumática — mecanismo imunológico correto:',o:['Invasão direta por S. pyogenes','Reação cruzada da proteína M com tecido cardíaco','Depósito de imunocomplexos nas válvulas','Exotoxinas no miocárdio'],c:1,e:'Reação cruzada (Tipo II): proteína M de S. pyogenes similar à miosina cardíaca → Ac atacam o coração.'},
+  {t:'mc',q:'Transplante que mais causa GVHD:',o:['Rim','Fígado','Coração','Medula óssea'],c:3,e:'GVHD ocorre no transplante de medula óssea. A medula do doador rejeita o corpo do receptor.'},
+  {t:'mc',q:'Tipo de rejeito por Ac pré-formados + incompatibilidade ABO:',o:['Crônico','Agudo','Hiperagudo','GVHD'],c:2,e:'Rejeito HIPERAGUDO: ocorre em minutos/horas. Anticorpos pré-formados + incompatibilidade ABO → trombose imediata.'},
+  {t:'mc',q:'Barreira com privilégio imunitário SEM privilégio estrito:',o:['Hemato-ocular','Hemato-encefálica','Hemato-testicular','Hemato-placentária'],c:1,e:'O CÉREBRO (BHE) abre mão do privilégio para se defender quando necessário. Microglía faz a defesa local.'},
+  {t:'mc',q:'Molécula que bloqueia linfócitos T em olhos, testículos e placenta:',o:['TGF-β','Testosterona','PD-L1','Indolamina'],c:2,e:'PD-L1 é a molécula bloqueadora de linfócitos T nas principais barreiras de privilégio imunitário.'},
+  {t:'mc',q:'TSA vs TAA — qual é exclusivo de células tumorais?',o:['TAA','TSA (neo-antígeno)','Ambos são exclusivos','Nenhum'],c:1,e:'TSA = só em células tumorais. TAA = presente em células normais mas SUPEREXPRESSO no tumor.'},
+  {t:'mc',q:'Como o tumor evade o TCD8+?',o:['Produzindo mais IgE','Diminuindo expressão de MHC I','Ativando NK','Liberando IL-12'],c:1,e:'Tumor ↓ MHC I → TCD8+ não reconhece. NK reconhece a AUSÊNCIA de MHC I e elimina a célula.'},
+  {t:'mc',q:'Imunoglobulina que indica infecção AGUDA ou recente:',o:['IgG','IgA','IgM','IgE','IgD'],c:2,e:'IgM = primeiro anticorpo produzido em uma resposta primária. Presença de IgM → infecção AGUDA ou recente.'},
   {t:'vof',q:'[V/F] Anticorpos atuam no meio intracelular.',c:false,e:'FALSO. Anticorpos atuam EXCLUSIVAMENTE no meio extracelular. Não penetram nas células.'},
-  {t:'vof',q:'[V/F] Os mastócitos são células da imunidade inata fixas nos tecidos que liberam mediadores químicos.',c:true,e:'VERDADEIRO. Mastócitos estão nos tecidos (sob pele, mucosas) e liberam histamina, prostaglandinas, leucotrienos em resposta a estímulos.'},
-  {t:'vof',q:'[V/F] Os linfócitos NK são células da imunidade adaptativa.',c:false,e:'FALSO. NK = imunidade INATA. Não precisam de ativação prévia nem de MHC para agir. Eliminam por citotoxicidade, não por fagocitose.'},
-  {t:'vof',q:'[V/F] PAMPs são reconhecidos pelos receptores da imunidade adaptativa.',c:false,e:'FALSO. PAMPs são reconhecidos pelos receptores da imunidade INATA (TLRs). Imunidade adaptativa reconhece antígenos específicos via linfócitos T e B.'},
-  {t:'vof',q:'[V/F] Via alternativa do complemento depende de anticorpos.',c:false,e:'FALSO. Via alternativa = INDEPENDENTE de anticorpos. Ativada diretamente pela superfície bacteriana. Via CLÁSSICA sim depende de IgG/IgM.'},
-  {t:'vof',q:'[V/F] Vacinas são um mecanismo de imunidade ativa artificial.',c:true,e:'VERDADEIRO. Vacinas induzem o próprio organismo a montar resposta imune (ativa) via estímulo artificial.'},
-  {t:'vof',q:'[V/F] A piroptose ocorre em situações de estresse do neutrófilo.',c:false,e:'FALSO. Piroptose = morte inflamatória do MACRÓFAGO (não neutrófilo). Libera IL-1β e IL-18.'},
-  {t:'vof',q:'[V/F] IgM é o anticorpo que se liga à membrana do mastócito.',c:false,e:'FALSO. IgE é que se liga aos receptores FcεRI dos mastócitos. IgM não tem essa função.'},
-  {t:'vof',q:'[V/F] Imunidade celular é mediada principalmente por linfócitos B.',c:false,e:'FALSO. Imunidade celular = linfócitos T (CD4+ helper e CD8+ citotóxico). Linfócitos B → imunidade HUMORAL.'},
-  {t:'vof',q:'[V/F] Células dendríticas plasmocitoides têm como principal função a produção de interferon tipo I.',c:true,e:'VERDADEIRO. Cd Plasmocitoide → especializada em IFN-α e IFN-β (interferon tipo I) → principal resposta antiviral.'},
-  {t:'vof',q:'[V/F] O cérebro tem privilégio imunitário estrito.',c:false,e:'FALSO. O cérebro NÃO tem privilégio estrito — abre mão do privilégio para se defender. A microglía realiza a defesa local e poda sináptica.'},
-  {t:'vof',q:'[V/F] PD-L1 está presente em olhos, testículos e placenta para bloquear linfócitos T.',c:true,e:'VERDADEIRO. PD-L1 é molécula bloqueadora de linfócitos T presente nas principais barreiras de privilégio imunitário.'},
+  {t:'vof',q:'[V/F] Os mastócitos são células da imunidade inata fixas nos tecidos que liberam mediadores químicos.',c:true,e:'VERDADEIRO. Mastócitos estão nos tecidos e liberam histamina, prostaglandinas, leucotrienos em resposta a estímulos.'},
+  {t:'vof',q:'[V/F] Os linfócitos NK são células da imunidade adaptativa.',c:false,e:'FALSO. NK = imunidade INATA. Eliminam por citotoxicidade, não por fagocitose.'},
+  {t:'vof',q:'[V/F] PAMPs são reconhecidos pelos receptores da imunidade adaptativa.',c:false,e:'FALSO. PAMPs são reconhecidos pelos TLRs da imunidade INATA.'},
+  {t:'vof',q:'[V/F] Via alternativa do complemento depende de anticorpos.',c:false,e:'FALSO. Via alternativa = INDEPENDENTE de anticorpos. Ativada diretamente pela superfície bacteriana.'},
+  {t:'vof',q:'[V/F] Vacinas são um mecanismo de imunidade ativa artificial.',c:true,e:'VERDADEIRO. Vacinas induzem o próprio organismo a montar resposta imune ativa via estímulo artificial.'},
+  {t:'vof',q:'[V/F] A piroptose ocorre em situações de estresse do neutrófilo.',c:false,e:'FALSO. Piroptose = morte inflamatória do MACRÓFAGO (não neutrófilo).'},
+  {t:'vof',q:'[V/F] IgM é o anticorpo que se liga à membrana do mastócito.',c:false,e:'FALSO. IgE é que se liga aos receptores FcεRI dos mastócitos.'},
+  {t:'vof',q:'[V/F] Imunidade celular é mediada principalmente por linfócitos B.',c:false,e:'FALSO. Imunidade celular = linfócitos T. Linfócitos B → imunidade HUMORAL.'},
+  {t:'vof',q:'[V/F] Células dendríticas plasmocitoides têm como principal função a produção de interferon tipo I.',c:true,e:'VERDADEIRO. Cd Plasmocitoide → especializada em IFN-α e IFN-β → principal resposta antiviral.'},
+  {t:'vof',q:'[V/F] O cérebro tem privilégio imunitário estrito.',c:false,e:'FALSO. O cérebro NÃO tem privilégio estrito — abre mão do privilégio para se defender. Microglía faz a defesa local.'},
+  {t:'vof',q:'[V/F] PD-L1 está presente em olhos, testículos e placenta para bloquear linfócitos T.',c:true,e:'VERDADEIRO. PD-L1 é molécula bloqueadora de linfócitos T nas principais barreiras de privilégio imunitário.'},
   {t:'vof',q:'[V/F] Via clássica do complemento é ativada por IgG ou IgM ligados ao antígeno.',c:true,e:'VERDADEIRO. Via clássica depende de anticorpos (IgG ou IgM). IgM é mais eficiente por ser pentâmero.'},
-  {t:'vof',q:'[V/F] Hipersensibilidade Tipo IV ocorre após 48h e é mediada por linfócitos T.',c:true,e:'VERDADEIRO. Tipo IV = tardia/celular. TH1 + TH17. NÃO envolve anticorpos. >48h (tempo de ativar células T).'},
-  {t:'vof',q:'[V/F] Hipersensibilidade Tipo II: antígeno é circulante e o efeito é sistêmico.',c:false,e:'FALSO. Tipo II: antígeno é FIXO na célula → efeito LOCALIZADO. Tipo III é que tem imunocomplexos CIRCULANTES → efeito sistêmico.'},
-  {t:'vof',q:'[V/F] O tumor pode evadir o TCD8+ diminuindo a expressão de MHC I.',c:true,e:'VERDADEIRO. ↓ MHC I → TCD8+ não reconhece. A NK então entra reconhecendo a AUSÊNCIA de MHC I → elimina a célula.'},
-  {t:'vof',q:'[V/F] A terapia CAR-T modifica geneticamente células T do paciente para atacar células tumorais específicas.',c:true,e:'VERDADEIRO. CAR-T: extração e modificação genética de células T → reintroduzidas para atacar especificamente tumores.'},
+  {t:'vof',q:'[V/F] Hipersensibilidade Tipo IV ocorre após 48h e é mediada por linfócitos T.',c:true,e:'VERDADEIRO. Tipo IV = tardia/celular. TH1 + TH17. NÃO envolve anticorpos. >48h.'},
+  {t:'vof',q:'[V/F] Hipersensibilidade Tipo II: antígeno é circulante e efeito é sistêmico.',c:false,e:'FALSO. Tipo II: antígeno FIXO na célula → efeito LOCALIZADO. Tipo III: imunocomplexos CIRCULANTES → sistêmico.'},
+  {t:'vof',q:'[V/F] O tumor pode evadir o TCD8+ diminuindo a expressão de MHC I.',c:true,e:'VERDADEIRO. ↓ MHC I → TCD8+ não reconhece. NK reconhece AUSÊNCIA de MHC I e elimina.'},
+  {t:'vof',q:'[V/F] A terapia CAR-T modifica geneticamente células T do paciente para atacar células tumorais.',c:true,e:'VERDADEIRO. CAR-T: extração e modificação genética de células T → reintroduzidas para atacar tumores especificamente.'},
 ];
 
-let score=0,answered=0;
-const LET=['A','B','C','D','E'];
+var score=0, answered=0;
+var LET=['A','B','C','D','E'];
 
 function renderQuiz(){
-  score=0;answered=0;
+  score=0; answered=0;
   updateScore();
-  const body=document.getElementById('quiz-body');
+  var body=document.getElementById('quiz-body');
   body.innerHTML='';
-  qData.forEach((q,i)=>{
-    const div=document.createElement('div');
+  qData.forEach(function(q,i){
+    var div=document.createElement('div');
     div.className='qcard';
     div.id='qc'+i;
-    const badge=q.t==='mc'?'<span class="qcard-badge mc">MÚLTIPLA ESCOLHA</span>':'<span class="qcard-badge vof">V O F</span>';
-    let opts='';
+    var badge=q.t==='mc'?'<span class="qcard-badge mc">MÚLTIPLA ESCOLHA</span>':'<span class="qcard-badge vof">V O F</span>';
+    var opts='';
     if(q.t==='mc'){
       opts='<div class="mc-opts">';
-      q.o.forEach((o,j)=>opts+=`<button class="mc-opt" onclick="pickMC(${i},${j})"><span class="mc-letter">${LET[j]}</span><span>${o}</span></button>`);
+      q.o.forEach(function(o,j){opts+='<button class="mc-opt" onclick="pickMC('+i+','+j+')"><span class="mc-letter">'+LET[j]+'</span><span>'+o+'</span></button>';});
       opts+='</div>';
-    }else{
-      opts=`<div class="vof-row"><button class="vof-btn vb" onclick="pickVOF(${i},true)">✓ VERDADEIRO</button><button class="vof-btn fb" onclick="pickVOF(${i},false)">✗ FALSO</button></div>`;
+    } else {
+      opts='<div class="vof-row"><button class="vof-btn vb" onclick="pickVOF('+i+',true)">✓ VERDADEIRO</button><button class="vof-btn fb" onclick="pickVOF('+i+',false)">✗ FALSO</button></div>';
     }
-    div.innerHTML=`<div class="qcard-top"><span class="qcard-num">Q${String(i+1).padStart(2,'0')}</span>${badge}<span class="qcard-q">${q.q.replace('[V/F] ','')}</span></div>${opts}<div class="qres" id="qr${i}"></div><div class="qexpl" id="qe${i}">💡 ${q.e}</div>`;
+    div.innerHTML='<div class="qcard-top"><span class="qcard-num">Q'+String(i+1).padStart(2,'0')+'</span>'+badge+'<span class="qcard-q">'+q.q.replace('[V/F] ','')+'</span></div>'+opts+'<div class="qres" id="qr'+i+'"></div><div class="qexpl" id="qe'+i+'">💡 '+q.e+'</div>';
     body.appendChild(div);
   });
 }
 
+function pickMC(qi,oi){
+  var card=document.getElementById('qc'+qi);
+  if(card.dataset.done) return;
+  card.dataset.done='1';
+  var q=qData[qi];
+  var btns=card.querySelectorAll('.mc-opt');
+  btns.forEach(function(b,j){
+    b.classList.add('done');
+    if(j===q.c) b.classList.add('correct');
+    if(j===oi && oi!==q.c) b.classList.add('wrong');
+  });
+  var ok=oi===q.c;
+  if(ok) score++;
+  answered++;
+  showResult(qi,ok);
+}
+
+function pickVOF(qi,chosen){
+  var card=document.getElementById('qc'+qi);
+  if(card.dataset.done) return;
+  card.dataset.done='1';
+  var q=qData[qi];
+  card.querySelectorAll('.vof-btn').forEach(function(b){b.classList.add('done');});
+  var ok=chosen===q.c;
+  var vbtn=card.querySelector('.vb'), fbtn=card.querySelector('.fb');
+  if(ok){ (chosen?vbtn:fbtn).classList.add('correct'); }
+  else { (chosen?vbtn:fbtn).classList.add('wrong'); (q.c?vbtn:fbtn).classList.add('correct'); }
+  if(ok) score++;
+  answered++;
+  showResult(qi,ok);
+}
+
 function showResult(qi,ok){
   updateScore();
-  const r=document.getElementById('qr'+qi);
+  var r=document.getElementById('qr'+qi);
   r.className='qres show '+(ok?'ok':'err');
   r.textContent=ok?'✅ Correto!':'❌ Incorreto';
   document.getElementById('qe'+qi).classList.add('show');
 }
 
 function updateScore(){
-  const pct=answered?Math.round(score/answered*100):0;
+  var pct=answered?Math.round(score/answered*100):0;
   document.getElementById('score-display').textContent=score;
-  document.getElementById('score-fill').style.width=`${(score/qData.length)*100}%`;
-  document.getElementById('pct-display').textContent=`${pct}%`;
+  document.getElementById('score-fill').style.width=(score/qData.length*100)+'%';
+  document.getElementById('pct-display').textContent=pct+'%';
 }
 
-renderQuiz();
+function resetQuiz(){ if(!confirm('Reiniciar o quiz?')) return; renderQuiz(); }
 
-}); // fim DOMContentLoaded
+renderQuiz();
 </script>
 
 <script src="study-timer.js"></script>
