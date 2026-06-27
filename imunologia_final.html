@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Imunologia Final — Resumos do Enzo</title>
+<script>window.PAGE_KEY = "imunologia_final";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>document.addEventListener("authReady",function(){document.documentElement.style.visibility="visible";});</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{
+  --bg:#0a0d14; --bg2:#111520; --bg3:#161c2e;
+  --card:#1a2138; --card2:#1f2845;
+  --accent:#4f9cf9; --accent2:#38e8c0; --accent3:#f97b4f; --accent4:#b84ff9;
+  --gold:#f9c94f; --red:#f95f5f; --green:#4ff984;
+  --text:#e8ecf4; --muted:#8892b0;
+  --border:rgba(79,156,249,0.15);
+  --radius:14px; --radius-lg:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.7;min-height:100vh;overflow-x:hidden}
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* HEADER */
+header{position:relative;z-index:10;text-align:center;padding:56px 24px 36px;background:linear-gradient(180deg,rgba(184,79,249,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border)}
+header .badge{display:inline-block;background:linear-gradient(135deg,var(--accent4),var(--accent2));color:var(--bg);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 16px;border-radius:20px;margin-bottom:16px}
+header h1{font-family:'Syne',sans-serif;font-size:clamp(22px,4vw,42px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--accent4) 40%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}
+header .sub{color:var(--muted);font-size:13px;letter-spacing:.5px;max-width:600px;margin:0 auto}
+header .verse{margin-top:12px;color:var(--gold);font-size:12px;font-style:italic;opacity:.85}
+
+/* TABS NAV */
+nav.tabs{position:sticky;top:0;z-index:100;display:flex;gap:4px;flex-wrap:wrap;background:rgba(10,13,20,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:10px 16px;justify-content:center}
+nav.tabs button{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:6px 13px;border-radius:8px;cursor:pointer;transition:all .2s;white-space:nowrap}
+nav.tabs button:hover{color:var(--accent4);border-color:var(--accent4)}
+nav.tabs button.active{background:var(--accent4);color:var(--bg);border-color:var(--accent4);box-shadow:0 0 18px rgba(184,79,249,.4)}
+
+/* SECTIONS */
+.section{display:none;animation:fadeIn .4s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.container{max-width:1080px;margin:0 auto;padding:32px 20px;position:relative;z-index:1}
+
+/* CHAPTER TITLE */
+.chapter-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--accent4);margin-bottom:24px;display:flex;align-items:center;gap:12px}
+.chapter-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+.chap-icon{font-size:24px}
+
+/* SECTION DIVIDER */
+.sec-divider{display:flex;align-items:center;gap:12px;margin:28px 0 16px}
+.sec-divider h3{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--accent2);white-space:nowrap}
+.sec-divider::before,.sec-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+
+/* INFO BLOCKS */
+.info-block{background:var(--card2);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:18px}
+.info-block.warn{border-color:var(--gold)}
+.info-block.danger{border-color:var(--red)}
+.info-block.success{border-color:var(--green)}
+.info-block.purple{border-color:var(--accent4)}
+.info-block .label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.info-block h4{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:8px}
+.info-block p,.info-block li{color:var(--text);font-size:14px}
+.info-block ul,.info-block ol{padding-left:20px;margin-top:8px}
+.info-block li{margin:4px 0}
+
+/* TABLE */
+.compare-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
+.compare-table th{background:var(--card2);color:var(--accent);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;padding:11px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.compare-table td{background:var(--card);padding:10px 14px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text);vertical-align:top}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table tr:hover td{background:var(--card2)}
+
+/* 2 col grid */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr};nav.tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start}}
+
+/* BADGE */
+.badge-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;padding:2px 8px;border-radius:50px;margin-left:6px;vertical-align:middle}
+.badge-tag.blue{background:rgba(79,156,249,.18);color:var(--accent);border:1px solid rgba(79,156,249,.3)}
+.badge-tag.green{background:rgba(56,232,192,.18);color:var(--accent2);border:1px solid rgba(56,232,192,.3)}
+.badge-tag.red{background:rgba(249,95,95,.18);color:var(--red);border:1px solid rgba(249,95,95,.3)}
+.badge-tag.purple{background:rgba(184,79,249,.18);color:var(--accent4);border:1px solid rgba(184,79,249,.3)}
+
+/* FLASHCARDS */
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:8px}
+.fc-card{height:220px;perspective:900px;cursor:pointer}
+.fc-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,0,.2,1)}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-front,.fc-back{position:absolute;inset:0;border-radius:var(--radius);backface-visibility:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20px;border:1px solid var(--border);overflow:auto}
+.fc-front{background:var(--card)}
+.fc-back{background:linear-gradient(135deg,var(--card2),var(--bg3));border-color:var(--accent4);transform:rotateY(180deg)}
+.fc-cat{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--accent4);text-transform:uppercase;margin-bottom:10px;background:rgba(184,79,249,.1);padding:2px 8px;border-radius:50px;border:1px solid rgba(184,79,249,.2)}
+.fc-q{font-size:14px;font-weight:600;color:#fff;line-height:1.5}
+.fc-hint{font-size:11px;color:var(--muted);margin-top:12px}
+.fc-answer-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+.fc-a{font-size:13px;color:var(--accent2);line-height:1.5}
+
+/* QUIZ SCORE BAR */
+.quiz-score-bar{position:sticky;top:58px;z-index:50;background:rgba(17,21,32,.97);border:1px solid var(--border);border-radius:10px;padding:12px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;backdrop-filter:blur(16px);flex-wrap:wrap}
+.score-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted)}
+.score-num strong{color:var(--accent2);font-size:15px}
+.score-bar-wrap{flex:1;min-width:100px;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.score-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent4),var(--accent2));border-radius:3px;transition:width .4s}
+.quiz-reset-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:50px;cursor:pointer;font-size:12px;font-family:'JetBrains Mono',monospace;transition:all .2s;margin-left:auto}
+.quiz-reset-btn:hover{background:var(--red);color:#fff;border-color:var(--red)}
+
+/* Q CARDS */
+.qcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px}
+.qcard-top{display:flex;gap:10px;align-items:flex-start;margin-bottom:14px}
+.qcard-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:2px 8px;flex-shrink:0;margin-top:2px}
+.qcard-badge{font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 9px;border-radius:50px;flex-shrink:0;margin-top:3px}
+.qcard-badge.mc{background:rgba(79,156,249,.15);color:var(--accent);border:1px solid rgba(79,156,249,.25)}
+.qcard-badge.vof{background:rgba(56,232,192,.15);color:var(--accent2);border:1px solid rgba(56,232,192,.25)}
+.qcard-q{font-size:14px;line-height:1.6;flex:1}
+.mc-opts{display:flex;flex-direction:column;gap:8px}
+.mc-opt{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:13px;color:var(--muted);transition:all .2s;display:flex;align-items:flex-start;gap:10px}
+.mc-opt:hover:not(.done){background:var(--card2);border-color:var(--accent4);color:var(--text)}
+.mc-opt.correct{background:rgba(79,249,132,.08);border-color:var(--green);color:var(--green)}
+.mc-opt.wrong{background:rgba(249,95,95,.08);border-color:var(--red);color:var(--red)}
+.mc-opt.done{cursor:default}
+.mc-letter{font-family:'JetBrains Mono',monospace;font-size:12px;width:22px;height:22px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mc-opt.correct .mc-letter{background:var(--green);color:var(--bg);border-color:var(--green)}
+.mc-opt.wrong .mc-letter{background:var(--red);color:#fff;border-color:var(--red)}
+.vof-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vof-btn{padding:11px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);cursor:pointer;font-size:13px;font-family:'Syne',sans-serif;font-weight:700;transition:all .2s;text-align:center}
+.vof-btn:hover:not(.done){transform:translateY(-1px)}
+.vof-btn.vb:hover:not(.done){background:rgba(56,232,192,.1);border-color:var(--accent2);color:var(--accent2)}
+.vof-btn.fb:hover:not(.done){background:rgba(249,95,95,.1);border-color:var(--red);color:var(--red)}
+.vof-btn.correct{background:rgba(56,232,192,.15);border-color:var(--accent2);color:var(--accent2)}
+.vof-btn.wrong{background:rgba(249,95,95,.15);border-color:var(--red);color:var(--red)}
+.vof-btn.done{cursor:default}
+.qexpl{display:none;margin-top:12px;padding:12px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--muted);line-height:1.6}
+.qexpl.show{display:block}
+.qres{display:none;margin-top:10px;font-size:13px;font-weight:600}
+.qres.show{display:flex;align-items:center;gap:6px}
+.qres.ok{color:var(--green)}
+.qres.err{color:var(--red)}
+
+/* PROVAS ANTIGAS */
+.prova-block{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px}
+.prova-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;transition:background .2s}
+.prova-hdr:hover{background:var(--card2)}
+.prova-hdr h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;flex:1}
+.prova-hdr .meta{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-right:12px}
+.prova-hdr .chev{color:var(--muted);transition:transform .2s}
+.prova-hdr.open .chev{transform:rotate(180deg)}
+.prova-body{display:none;border-top:1px solid var(--border);padding:20px}
+.prova-body.open{display:block}
+.prova-q{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.04)}
+.prova-q:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.prova-q-text{font-size:13.5px;margin-bottom:10px;line-height:1.6;color:var(--text)}
+.prova-ans{background:rgba(56,232,192,.06);border:1px solid rgba(56,232,192,.2);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--accent2)}
+.prova-ans strong{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);display:block;margin-bottom:4px}
+
+/* SCROLLTOP */
+#scrolltop{position:fixed;bottom:80px;right:20px;z-index:999;width:42px;height:42px;border-radius:50%;background:var(--accent4);color:var(--bg);border:none;font-size:18px;cursor:pointer;display:none;box-shadow:0 4px 18px rgba(184,79,249,.4)}
+
+/* VOLVER BTN */
+#back-btn{position:fixed;bottom:24px;left:24px;z-index:9999;background:rgba(184,79,249,.12);border:1px solid rgba(184,79,249,.3);color:var(--accent4);padding:10px 20px;border-radius:30px;text-decoration:none;font-weight:600;font-size:.85rem;backdrop-filter:blur(10px);transition:all .3s ease;display:flex;align-items:center;gap:8px}
+#back-btn:hover{background:rgba(184,79,249,.25)}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<a href="dashboard.html" id="back-btn">← Volver</a>
+<button id="scrolltop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<header>
+  <div class="badge">🛡️ Imunologia · Exame Final · 2026</div>
+  <h1>Resumo Final — Imunologia</h1>
+  <p class="sub">Imunidade Inata & Adaptativa · Anticorpos · Hipersensibilidades · Transplantes · Privilégio Imunitário · Imunologia Tumoral · Microbiologia Clínica</p>
+  <p class="verse">📖 "O Senhor é o meu pastor, nada me faltará." — Salmos 23:1</p>
+</header>
+
+<nav class="tabs">
+  <button class="active" onclick="showSection('intro',this)">📖 Intro</button>
+  <button onclick="showSection('inato',this)">🛡️ Inato</button>
+  <button onclick="showSection('adaptativo',this)">🔬 Adaptativo</button>
+  <button onclick="showSection('anticorpos',this)">💉 Anticorpos</button>
+  <button onclick="showSection('hipersen',this)">⚠️ Hipersensib.</button>
+  <button onclick="showSection('transplante',this)">🫀 Transplante</button>
+  <button onclick="showSection('privilegio',this)">🔒 Privilégio</button>
+  <button onclick="showSection('tumores',this)">🔬 Tumores</button>
+  <button onclick="showSection('micro',this)">🦠 Micro Clínica</button>
+  <button onclick="showSection('flashcards',this)">🃏 Flashcards</button>
+  <button onclick="showSection('quiz',this)">📝 Quiz (70Q)</button>
+  <button onclick="showSection('provas',this)">📋 Provas</button>
+</nav>
+
+<!-- ============== INTRO ============== -->
+<div id="intro" class="section active">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">📖</span> Introdução — Exame Final</div>
+<div class="info-block purple">
+  <div class="label">Visão Geral</div>
+  <h4>Conteúdo: P1 + P2 + Microbiologia Clínica (Provas)</h4>
+  <p>Este resumo cobre <strong>toda a matéria de Imunologia</strong> para o exame final — inclui imunidade inata e adaptativa (P1), linfócitos T/B, anticorpos, hipersensibilidades, transplantes, privilégio imunitário e imunologia tumoral (P2), mais o conteúdo de microbiologia clínica das provas fotografadas (Streptococcus, Clostridium, Bacillus). Inclui <strong>30+ flashcards 3D, 70 questões</strong> e as questões reais das provas antigas com gabarito.</p>
+</div>
+<div class="info-block success">
+  <div class="label">Roteiro de Estudo</div>
+  <h4>Sequência sugerida</h4>
+  <ol>
+    <li>Leia Inato → Adaptativo → Anticorpos (P1 consolidado)</li>
+    <li>Hipersensibilidades → Transplante → Privilégio → Tumores (P2)</li>
+    <li>Micro Clínica (Streptococcus, Clostridium, Bacillus)</li>
+    <li>Flashcards para fixar os conceitos-chave</li>
+    <li>70 questões de quiz + Provas Antigas com gabarito</li>
+  </ol>
+</div>
+<div class="sec-divider"><h3>Temário Completo</h3></div>
+<table class="compare-table">
+<tr><th>Bloco</th><th>Temas</th><th>Prova</th></tr>
+<tr><td>🛡️ Imunidade Inata</td><td>PAMPs, TLRs, células (neutrófilo, macrófago, NK, mastócito, dendrítica), diapedese, complemento</td><td>P1</td></tr>
+<tr><td>🔬 Imunidade Adaptativa</td><td>Linfócitos T (CD4+, CD8+), subtipos TH1/TH2/TH17/Treg, linfócitos B, tolerância, MHC</td><td>P1+P2</td></tr>
+<tr><td>💉 Anticorpos</td><td>IgA, IgM, IgG, IgE, IgD, sistema complemento, ADCC, evasão bacteriana</td><td>P1+P2</td></tr>
+<tr><td>⚠️ Hipersensibilidades</td><td>Tipo I (IgE/mastócito), Tipo II (citotóxica), Tipo III (imunocomplexos), Tipo IV (celular/tardia)</td><td>P2</td></tr>
+<tr><td>🫀 Transplante</td><td>Tipos, rejeição (hiperaguda/aguda/crônica), ABO, GVHD, imunossupressão</td><td>P2</td></tr>
+<tr><td>🔒 Privilégio Imunitário</td><td>BHO (olho), BHE (cérebro), BHT (testículo), BHP (placenta), PD-L1, TGF-β</td><td>P2</td></tr>
+<tr><td>🔬 Imunologia Tumoral</td><td>TSA/TAA, vigilância imunológica, evasão tumoral, imunoterapia, CAR-T</td><td>P2</td></tr>
+<tr><td>🦠 Micro Clínica</td><td>Streptococcus, Clostridium, Bacillus anthracis, C. diphtheriae, M. tuberculosis</td><td>P2 provas</td></tr>
+</table>
+</div></div>
+
+<!-- ============== IMUNIDADE INATA ============== -->
+<div id="inato" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🛡️</span> Imunidade Inata</div>
+
+<div class="info-block">
+  <div class="label">Conceito Fundamental</div>
+  <h4>Células SEMPRE ativas — resposta rápida e inespecífica</h4>
+  <p>A imunidade inata é a <strong>primeira linha de defesa</strong>. Reconhece padrões moleculares comuns aos patógenos (PAMPs) via receptores Toll-like (TLRs). Não tem memória imunológica. Células: <strong>neutrófilos, macrófagos, células NK, mastócitos e células dendríticas</strong>.</p>
+</div>
+
+<div class="sec-divider"><h3>PAMPs & TLRs</h3></div>
+<div class="info-block warn">
+  <div class="label">PAMP = Padrão Molecular Associado a Patógeno</div>
+  <h4>Estruturas conservadas em patógenos reconhecidas pelos receptores inatos</h4>
+  <p>Exemplos: LPS (Gram-), peptídeoglicano (Gram+), flagelina, RNA viral, DNA bacteriano. <strong>DAMPs</strong> = Padrões Moleculares Associados a Dano (sinais de células próprias danificadas).</p>
+</div>
+<table class="compare-table">
+<tr><th>TLR</th><th>Reconhece</th><th>Bactéria/Vírus</th></tr>
+<tr><td><strong>TLR 1, 2, 6</strong></td><td>Peptídeoglicano, ácido lipoteicoico</td><td>Gram+ (Staphylococcus, Streptococcus)</td></tr>
+<tr><td><strong>TLR 4</strong></td><td>LPS (lipopolissacarídeo)</td><td>Gram– (E. coli, Pseudomonas)</td></tr>
+<tr><td><strong>TLR 5</strong></td><td>Flagelina (flagelos)</td><td>Salmonella, H. pylori</td></tr>
+<tr><td><strong>TLR 3, 7, 8</strong></td><td>dsRNA / ssRNA viral</td><td>Vírus (influenza, dengue, RSV)</td></tr>
+<tr><td><strong>TLR 9</strong></td><td>DNA CpG bacteriano/viral</td><td>M. tuberculosis, herpesvírus</td></tr>
+</table>
+<div class="info-block success">
+  <div class="label">Macete</div>
+  <p><strong>TLR 4</strong> = Gram <strong>4</strong>-negativa (LPS). <strong>TLR 5</strong> = Fla<strong>5</strong>elina. <strong>TLR 9</strong> = DNA (9 letras → DNA CpG). <strong>TLR 3/7/8</strong> = RNA viral.</p>
+</div>
+
+<div class="sec-divider"><h3>Células da Imunidade Inata</h3></div>
+<table class="compare-table">
+<tr><th>Célula</th><th>Função Principal</th><th>Detalhes Importantes</th></tr>
+<tr><td><strong>Neutrófilo (PMN)</strong></td><td>Fagocitose — 1ª célula a chegar</td><td>40–60% dos leucócitos. Pus = neutrófilos mortos. Faz NET (armadilha extracelular de DNA). Vida ~48h.</td></tr>
+<tr><td><strong>Macrófago</strong></td><td>Fagocitose + APC + piroptose</td><td>Deriva do monócito. Piroptose = morte inflamatória do MACRÓFAGO (não neutrófilo). Sistema mononuclear.</td></tr>
+<tr><td><strong>Mastócito</strong></td><td>Libera mediadores químicos (histamina)</td><td>Fixos nos tecidos. Liga IgE na membrana → desgranulação.</td></tr>
+<tr><td><strong>Célula NK</strong></td><td>Elimina células tumorais/infectadas</td><td>NÃO precisa de MHC. Elimina por citotoxicidade (perforina/granzimas), NÃO por fagocitose.</td></tr>
+<tr><td><strong>Dendrítica clássica</strong></td><td>APC profissional — ativa Lt virgens</td><td>Captura Ag nos tecidos → migra ao linfonodo → ativa CD4+ e CD8+.</td></tr>
+<tr><td><strong>Dendrítica plasmocitoide</strong></td><td>Produção de interferon tipo I</td><td>Especializada em IFN-α e IFN-β → resposta antiviral.</td></tr>
+<tr><td><strong>Eosinófilo</strong></td><td>Combate parasitas e alergias</td><td>SEM capacidade fagocítica clássica. Degranula contra helmintos.</td></tr>
+</table>
+<div class="info-block danger">
+  <div class="label">⚠️ ARMADILHA DE PROVA</div>
+  <p><strong>"NK elimina por fagocitose"</strong> → FALSO. NK usa citotoxicidade (perforina/granzimas). <strong>"Piroptose ocorre no neutrófilo"</strong> → FALSO. Piroptose = macrófago. <strong>"PAMPs são reconhecidos pela imunidade adaptativa"</strong> → FALSO. PAMPs → imunidade INATA (TLRs).</p>
+</div>
+
+<div class="sec-divider"><h3>Diapedese — Como o leucócito sai do vaso</h3></div>
+<div class="info-block">
+  <div class="label">4 Passos</div>
+  <h4>Seleção → Quimiocinas → Integrinas → Transmigração</h4>
+  <ol>
+    <li><strong>Rolamento</strong>: selectinas (L no leucócito, E e P no endotélio) — ligação fraca.</li>
+    <li><strong>Ativação</strong>: quimiocinas sinalizam → ativam integrinas no leucócito.</li>
+    <li><strong>Adesão firme</strong>: integrinas (LFA-1 → ICAM-1; VLA-4 → VCAM-1) — ligação forte.</li>
+    <li><strong>Transmigração</strong>: o leucócito "espreme" entre as células do endotélio → entra no tecido.</li>
+  </ol>
+</div>
+
+<div class="sec-divider"><h3>Sequência da Resposta Inata (Pergunta de Ordenação)</h3></div>
+<div class="info-block success">
+  <div class="label">Ordem Correta = C → B → D → A → E</div>
+  <p><strong>C.</strong> Identificação e separação de células próprias vs. com PAMPs → <strong>B.</strong> Ligação dos receptores Toll-like às moléculas estranhas → <strong>D.</strong> Liberação de selectinas, integrinas e quimiocinas → <strong>A.</strong> Digestão → formação de fagossomos que se fundem com lisossomos → <strong>E.</strong> Digestão concluída → estímulo para liberação de interleucinas.</p>
+</div>
+
+<div class="sec-divider"><h3>Sistema Complemento</h3></div>
+<table class="compare-table">
+<tr><th>Via</th><th>Ativação</th><th>Independe de Ac?</th></tr>
+<tr><td><strong>Clássica</strong></td><td>IgG ou IgM ligados ao antígeno</td><td>❌ DEPENDE de anticorpos</td></tr>
+<tr><td><strong>Alternativa</strong></td><td>Superfície bacteriana (LPS, mananas)</td><td>✅ INDEPENDENTE de anticorpos</td></tr>
+<tr><td><strong>Lectinas</strong></td><td>Manose na superfície bacteriana (MBL)</td><td>✅ INDEPENDENTE de anticorpos</td></tr>
+</table>
+<div class="info-block warn">
+  <div class="label">Todas convergem para o MAC</div>
+  <p><strong>MAC = Complexo de Ataque à Membrana</strong> → perfura a membrana bacteriana → lise. Funções do complemento: opsonização (facilita fagocitose), quimiotaxia (atrai células) e lise direta (MAC).</p>
+</div>
+
+<div class="sec-divider"><h3>Imunidade Ativa vs Passiva</h3></div>
+<table class="compare-table">
+<tr><th>Tipo</th><th>Natural</th><th>Artificial</th></tr>
+<tr><td><strong>ATIVA</strong> (o corpo produz)</td><td>Infecção natural</td><td>Vacina — imunidade ativa artificial</td></tr>
+<tr><td><strong>PASSIVA</strong> (recebe pronto)</td><td>IgG transplacentária + IgA leite materno</td><td>Soroterapia — anticorpos pré-formados</td></tr>
+</table>
+</div></div>
+
+<!-- ============== ADAPTATIVO ============== -->
+<div id="adaptativo" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🔬</span> Imunidade Adaptativa</div>
+
+<div class="info-block">
+  <div class="label">Conceito</div>
+  <h4>Células precisam ser ATIVADAS — específica e com memória</h4>
+  <p>A imunidade adaptativa é ativada pela inata. Características exclusivas: <strong>especificidade, diversidade, memória imunológica, tolerância ao próprio, seleção clonal</strong>. Dois braços: <strong>Humoral</strong> (linfócito B/anticorpos → extracelular) e <strong>Celular</strong> (linfócito T → intracelular).</p>
+</div>
+
+<div class="sec-divider"><h3>MHC — Apresentação de Antígenos</h3></div>
+<div class="info-block warn">
+  <div class="label">Regra de Ouro</div>
+  <h4>MHC I → CD8+ | MHC II → CD4+</h4>
+  <p><strong>MHC I:</strong> expresso em TODAS as células nucleadas → apresenta peptídeos intracelulares → reconhecido por linfócitos T CD8+ (citotóxicos). <strong>MHC II:</strong> só APCs (dendríticas, macrófagos, linfócito B) → apresenta peptídeos extracelulares → reconhecido por linfócitos T CD4+ (helper).</p>
+</div>
+
+<div class="sec-divider"><h3>Linfócito T CD4+ — Subtipos</h3></div>
+<div class="info-block danger">
+  <div class="label">⭐ PROVA — VIH mata linfócitos TCD4+</div>
+  <p>O linfócito TCD4+ dirige toda a resposta imune celular. Sua destruição progressiva pelo VIH gera imunodeficiência severa (SIDA).</p>
+</div>
+<table class="compare-table">
+<tr><th>Subtipo</th><th>Alvo</th><th>Moléculas Chave</th><th>Efeito Deletério</th></tr>
+<tr><td><strong>TH1</strong></td><td>Microrganismos intracelulares (bactérias, vírus)</td><td><strong>IFN-γ</strong> → ativa macrófagos (via clássica)</td><td>Lesão tecidual, doença autoimune inflamatória</td></tr>
+<tr><td><strong>TH2</strong></td><td>Parasitas / helmintos</td><td><strong>IL-4, IL-5, IL-13</strong> → eosinófilos, mastócitos, macrófagos (via alternativa)</td><td>Reações alérgicas</td></tr>
+<tr><td><strong>TH17</strong></td><td>Bactérias extracelulares e fungos</td><td><strong>IL-17</strong> (monocitos) e <strong>IL-22</strong> (neutrófilos) → reforço de barreiras</td><td>Inflamação crônica, doenças autoimunes</td></tr>
+<tr><td><strong>T Folicular</strong></td><td>Ajuda o linfócito B</td><td>TH1 ativado → IgG; TH2 ativado → IgE</td><td>—</td></tr>
+<tr><td><strong>T Regulador (Treg)</strong></td><td>Controle negativo do sistema imune</td><td><strong>FoxP3</strong>. Origem: timo (central) ou linfonodos (periférico)</td><td>Supressão excessiva → imunodeficiência</td></tr>
+</table>
+
+<div class="sec-divider"><h3>Linfócito T CD8+ — Citotóxico</h3></div>
+<div class="info-block success">
+  <h4>Única função: converter-se em célula citolítica</h4>
+  <p>Reconhece antígenos via <strong>MHC I</strong> → libera <strong>perforinas e granzimas</strong> → apoptose da célula infectada ou tumoral. Estratégia de evasão tumoral: célula cancerosa para de expressar MHC I → TCD8+ não a reconhece → entra a NK (reconhece ausência de MHC I).</p>
+</div>
+
+<div class="sec-divider"><h3>Tolerância Imunológica</h3></div>
+<div class="grid2">
+<div class="info-block">
+  <div class="label">Tolerância Central — Linfócito T</div>
+  <h4>Ocorre no TIMO</h4>
+  <p>A célula epitelial medular tímica (mTEC) apresenta antígenos próprios. Se o linfócito T reconhece o antígeno próprio → <strong>apoptose</strong>. Proteína <strong>AIRE</strong> participa nesse processo.</p>
+</div>
+<div class="info-block warn">
+  <div class="label">Tolerância Periférica</div>
+  <h4>Nos linfonodos — 3 mecanismos</h4>
+  <p><strong>1. Anergia:</strong> ausência do coestimulador B7.<br><strong>2. Supressão:</strong> T Regulador compete por B7 via CTLA-4.<br><strong>3. Eliminação:</strong> apoptose da célula autorreativa.</p>
+</div>
+</div>
+<div class="info-block">
+  <div class="label">Tolerância — Linfócito B</div>
+  <h4>Controle Central na Medula Óssea</h4>
+  <p>Se o Lb reconhece um antígeno próprio forte → <strong>troca de receptor</strong> ou <strong>apoptose</strong>. Se reconhece antígeno próprio fraco → permanece <strong>anérgico</strong>.</p>
+</div>
+</div></div>
+
+<!-- ============== ANTICORPOS ============== -->
+<div id="anticorpos" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">💉</span> Anticorpos & Sistema Complemento</div>
+
+<div class="info-block">
+  <div class="label">O que são</div>
+  <h4>Proteínas produzidas por linfócitos B → atuam no meio EXTRACELULAR</h4>
+  <p>Produzidas por linfócitos B diferenciados em plasmócitos. Funções: <strong>opsonização</strong> (marcam patógenos para fagocitose), <strong>neutralização</strong> (bloqueiam toxinas/vírus), <strong>ativação do complemento</strong>, ADCC (citotoxicidade dependente de anticorpos via NK).</p>
+</div>
+
+<div class="sec-divider"><h3>5 Classes de Imunoglobulinas</h3></div>
+<table class="compare-table">
+<tr><th>Ig</th><th>Localização / Função</th><th>Notas Clínicas</th></tr>
+<tr><td><strong>IgG</strong></td><td>Maior concentração no soro; resposta secundária</td><td>ÚNICA que atravessa a placenta. IgG4 = inmunomoduladora (bloqueia IgE temporariamente).</td></tr>
+<tr><td><strong>IgA</strong></td><td>Principal da mucosa (intestino, saliva, lágrimas, leite)</td><td>IgA1 e IgA2. Proteção de superfícies mucosas.</td></tr>
+<tr><td><strong>IgM</strong></td><td>1ª Ig produzida na infecção aguda (resposta primária)</td><td>Pentâmero. Indica infecção RECENTE. Ativa complemento eficientemente.</td></tr>
+<tr><td><strong>IgE</strong></td><td>Liga-se à membrana do mastócito e basófilo</td><td>Alergias e helmintos. Desgranulação → histamina.</td></tr>
+<tr><td><strong>IgD</strong></td><td>Receptor na superfície do linfócito B virgem</td><td>Raramente secretada.</td></tr>
+</table>
+<div class="info-block success">
+  <div class="label">Macetes de Prova</div>
+  <p><strong>Mucosa:</strong> IgA = A de Área de superfície. <strong>Mastócito:</strong> IgE = E de alErgia. <strong>Soro:</strong> IgG = maior Quantidade. <strong>Placenta:</strong> IgG = única que atravessa. <strong>Aguda:</strong> IgM = Mais imediata.</p>
+</div>
+
+<div class="sec-divider"><h3>Mecanismos de Defesa por Tipo de Patógeno</h3></div>
+<table class="compare-table">
+<tr><th>Tipo de Patógeno</th><th>Imunidade Inata</th><th>Imunidade Adaptativa</th></tr>
+<tr><td>Bactérias extracelulares</td><td>Complemento + fagocitose</td><td>IgG, IgM, IgA (anticorpos)</td></tr>
+<tr><td>Bactérias intracelulares</td><td>Fagócitos + NK</td><td>TCD8+ (citotóxico) + ADCC</td></tr>
+<tr><td>Vírus</td><td>Interferons + NK</td><td>Anticorpos + TCD8+</td></tr>
+<tr><td>Fungos / Protozoários</td><td>Fagocitose</td><td>TH1 (intracelular) + TH17</td></tr>
+<tr><td>Helmintos / Parasitas</td><td>—</td><td>TH2 → eosinófilos + IgE</td></tr>
+</table>
+
+<div class="sec-divider"><h3>Estratégias de Evasão Bacteriana</h3></div>
+<div class="info-block danger">
+  <ul>
+    <li><strong>Cápsula:</strong> resistência à fagocitose (S. pneumoniae, H. influenzae).</li>
+    <li><strong>Superantígenos:</strong> estimulam massivamente a resposta imunológica (S. aureus).</li>
+    <li><strong>Ácido siálico:</strong> resistência ao complemento (N. meningitidis).</li>
+    <li><strong>Variação de antígenos:</strong> impede produção de anticorpos eficazes (Influenza).</li>
+  </ul>
+</div>
+</div></div>
+
+<!-- ============== HIPERSENSIBILIDADES ============== -->
+<div id="hipersen" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">⚠️</span> Hipersensibilidades — 4 Tipos</div>
+
+<div class="info-block danger">
+  <div class="label">Conceito Fundamental</div>
+  <h4>Resposta imunológica EXAGERADA que gera perjuízo ao organismo</h4>
+  <p>O que muda entre os tipos é o <strong>mecanismo imunológico</strong> e o <strong>tempo de resposta</strong>. Quando o controle negativo falha → ocorre hipersensibilidade.</p>
+</div>
+
+<div class="sec-divider"><h3>Visão Geral — 4 Tipos</h3></div>
+<table class="compare-table">
+<tr><th>Tipo</th><th>Nome</th><th>Mecanismo</th><th>Tempo</th><th>Exemplo</th></tr>
+<tr><td><strong>I</strong></td><td>Imediata / Alérgica</td><td>IgE + mastócitos → histamina</td><td>Minutos</td><td>Anafilaxia, asma, rinite alérgica</td></tr>
+<tr><td><strong>II</strong></td><td>Citotóxica por Ac</td><td>IgM + IgG atacam células próprias</td><td>Horas</td><td>Doença de Graves, miastenia gravis, eritroblastose fetal, febre reumática</td></tr>
+<tr><td><strong>III</strong></td><td>Complexo Imunológico</td><td>Depósito de Ag+Ac → complemento → neutrófilos</td><td>Horas/dias</td><td>Vasculite, LES, GNPE, artrite pós-dengue/chikungunya</td></tr>
+<tr><td><strong>IV</strong></td><td>Tardia / Celular</td><td>TH1 + TH17 (resposta celular)</td><td>>48h</td><td>Dermatite de contato, PPD (tuberculina), rejeição tardia</td></tr>
+</table>
+
+<div class="sec-divider"><h3>Tipo I — Imediata/Alérgica</h3></div>
+<div class="info-block">
+  <div class="label">Fase de Sensibilização (1º contato)</div>
+  <h4>IgE + Mastócito → Desgranulação → Histamina</h4>
+  <ol>
+    <li>Alérgeno ativa TH2 → secreção de <strong>IL-4 e IL-13</strong>.</li>
+    <li>Estas IL estimulam o Lb a produzir <strong>IgE</strong>.</li>
+    <li>IgE se une aos <strong>mastócitos</strong> (que ficam sensibilizados).</li>
+    <li>No 1º contato: <em>sem sintomas</em>.</li>
+  </ol>
+</div>
+<div class="info-block warn">
+  <div class="label">2º contato em diante — Fase Efetora</div>
+  <p>Alérgeno se une à IgE no mastócito → <strong>desgranulação</strong> → histamina, leucotrienos, prostaglandinas → vasodilatação, edema, broncoespasmo → com exposições repetidas → <strong>choque anafiláctico</strong>.</p>
+</div>
+<div class="info-block danger">
+  <div class="label">Anafiláctico vs Anafilactoide</div>
+  <p><strong>Anafiláctico:</strong> reação histamínica (IgE + mastócito). <strong>Anafilactoide:</strong> reação celular (neutrófilos, eosinófilos) — SEM IgE. Clinicamente idênticos. <strong>Tratamento para ambos:</strong> Adrenalina/Epinefrina + antihistamínico + corticoide.</p>
+</div>
+
+<div class="sec-divider"><h3>Tipo II — Citotóxica</h3></div>
+<div class="info-block">
+  <p>IgM e IgG se unem diretamente a antígenos na <strong>superfície celular própria</strong> → opsonização → fagocitose ou disfunção celular.</p>
+  <ul>
+    <li><strong>Doença de Graves:</strong> Ac estimula receptor de TSH → hipersecreção hormonal.</li>
+    <li><strong>Miastenia gravis:</strong> Ac bloqueia receptores de ACh → paralisia flácida.</li>
+    <li><strong>Eritroblastose fetal:</strong> mãe Rh– sensibilizada → IgG anti-Rh cruza placenta → ataca hemácias do feto Rh+.</li>
+    <li><strong>Febre reumática:</strong> mimetismo molecular — proteína M do S. pyogenes similar à miosina cardíaca → Ac atacam o coração.</li>
+  </ul>
+</div>
+
+<div class="sec-divider"><h3>Tipo III vs II — Diferença Chave</h3></div>
+<div class="info-block warn">
+  <p><strong>Tipo II:</strong> antígeno FIXO na célula → efeito LOCALIZADO. <strong>Tipo III:</strong> complexos Ag+Ac circulantes → depósito em qualquer lugar → efeito SISTÊMICO (glomérulos, sinovial, vasos). GNPE = depósito de imunocomplexos (NÃO reação cruzada!).</p>
+</div>
+
+<div class="sec-divider"><h3>Tipo IV — Tardia (Celular)</h3></div>
+<div class="info-block purple">
+  <p>Mediada por <strong>linfócitos T (TH1 + TH17)</strong>. NÃO envolve anticorpos. Ocorre <strong>após 48h</strong>. Exemplos: PPD (prova da tuberculina), dermatite de contato (níquel, látex), rejeição tardia de transplante.</p>
+</div>
+</div></div>
+
+<!-- ============== TRANSPLANTE ============== -->
+<div id="transplante" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🫀</span> Transplantes & Imunologia do Rejeito</div>
+
+<div class="sec-divider"><h3>Classificação por Origem do Doador</h3></div>
+<table class="compare-table">
+<tr><th>Tipo</th><th>Origem</th><th>Rejeito</th></tr>
+<tr><td><strong>Autólogo</strong></td><td>Do mesmo indivíduo para si mesmo (ex: enxerto de pele)</td><td>❌ Sem rejeito</td></tr>
+<tr><td><strong>Singênico</strong></td><td>Entre gêmeos idênticos (mesma carga genética)</td><td>❌ Sem rejeito</td></tr>
+<tr><td><strong>Alogênico</strong></td><td>Mesma espécie, geneticamente diferentes (compatibilidade MHC ≥30%; medula ≥75–80%)</td><td>✅ Há rejeito</td></tr>
+<tr><td><strong>Xenogênico</strong></td><td>Espécies diferentes (ex: porco → humano). Antígenos = xenoantígenos</td><td>✅✅ Muito rejeito</td></tr>
+</table>
+
+<div class="sec-divider"><h3>Tipos de Rejeito</h3></div>
+<table class="compare-table">
+<tr><th>Tipo de Rejeito</th><th>Tempo</th><th>Mecanismo</th></tr>
+<tr><td><strong>Hiperagudo</strong></td><td>Minutos/horas</td><td>Anticorpos pré-formados + incompatibilidade ABO</td></tr>
+<tr><td><strong>Agudo</strong></td><td>Semanas (início ~15 dias)</td><td>Anticorpos pré-formados + linfócitos TCD4+ e TCD8+</td></tr>
+<tr><td><strong>Crônico</strong></td><td>Meses/anos</td><td>Resposta de macrófagos</td></tr>
+</table>
+
+<div class="info-block warn">
+  <div class="label">GVHD — Medula Óssea</div>
+  <h4>Na medula óssea: É A MEDULA que rejeita o corpo do hospedeiro</h4>
+  <p>Doença de injerto contra hospedeiro (GVHD). Requer compatibilidade de <strong>75–80%</strong>. Em transplantes de órgãos sólidos: inibe NK e TCD8+ com imunossupressão.</p>
+</div>
+
+<div class="sec-divider"><h3>Sistema ABO & Compatibilidade</h3></div>
+<div class="info-block success">
+  <ul>
+    <li><strong>O−:</strong> doador universal (clássico).</li>
+    <li><strong>AB+:</strong> receptor universal.</li>
+    <li><strong>Rh dourado:</strong> sem nenhum antígeno → qualquer sangue aceita. Principalmente em mulheres.</li>
+    <li><strong>O falso (Bombay):</strong> ausência de fucose → não aceita sangue O−.</li>
+  </ul>
+</div>
+</div></div>
+
+<!-- ============== PRIVILÉGIO IMUNITÁRIO ============== -->
+<div id="privilegio" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🔒</span> Privilégio Imunitário</div>
+
+<div class="info-block">
+  <div class="label">Conceito</div>
+  <h4>Regiões com mecanismos especiais para limitar o ataque imunológico</h4>
+  <p>Objetivo: preservar funções vinculadas à <strong>sobrevivência e reprodução</strong> do indivíduo. Moléculas chave: <strong>PD-L1</strong> (bloqueia linfócitos T), <strong>TGF-β</strong> (antiinflamatório), indolamina (antimicrobiano local).</p>
+</div>
+
+<div class="sec-divider"><h3>As 4 Barreiras</h3></div>
+<table class="compare-table">
+<tr><th>Barreira</th><th>Sigla</th><th>Características Chave</th></tr>
+<tr><td><strong>Hemato-Ocular</strong></td><td>BHO</td><td>Córnea avascular. Sem linfáticos. Humor vítreo/aquoso: neuropeptídeos + indolamina. Secreção de <strong>PD-L1 e TGF-β</strong>.</td></tr>
+<tr><td><strong>Hemato-Encefálica</strong></td><td>BHE</td><td>Hermeticamente fechada. Microglía = defesa + reparação sináptica. ⚠️ <strong>NÃO tem privilégio estrito</strong>: abre levemente para defesa quando necessário.</td></tr>
+<tr><td><strong>Hemato-Testicular</strong></td><td>BHT</td><td>Grande ação de <strong>TGF-β e testosterona</strong> (efeito antiinflamatório). PD-L1. Células de Leydig e Sertoli.</td></tr>
+<tr><td><strong>Hemato-Placentária</strong></td><td>BHP</td><td>Rica em <strong>PD-L1</strong> (evita que a mãe ataque o feto). Barreira física contra células imunes maternas.</td></tr>
+</table>
+<div class="info-block danger">
+  <div class="label">⭐ PROVA — Armadilha</div>
+  <h4>O CÉREBRO NÃO tem privilégio imunitário estrito</h4>
+  <p>O cérebro <strong>abre mão</strong> do seu privilégio para se defender quando necessário. Essa abertura gera inflamação e dano. A microglía é responsável pela defesa cerebral, poda sináptica e plasticidade.</p>
+</div>
+</div></div>
+
+<!-- ============== IMUNOLOGIA TUMORAL ============== -->
+<div id="tumores" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🔬</span> Imunologia Tumoral</div>
+
+<div class="info-block">
+  <div class="label">Vigilância Imunológica</div>
+  <h4>Todo dia o organismo produz células mutadas — o sistema imune as elimina</h4>
+  <p>O organismo não desenvolve tumores continuamente porque existe o <strong>mecanismo de vigilância imunológica</strong>. Quando esse mecanismo falha → tumor se instala.</p>
+</div>
+
+<div class="sec-divider"><h3>Tipos de Antígenos Tumorais</h3></div>
+<table class="compare-table">
+<tr><th>Tipo</th><th>Descrição</th><th>Exemplo</th></tr>
+<tr><td><strong>TSA / Neo-antígeno</strong></td><td>SÓ em células tumorais. NÃO presente em células sãs.</td><td>Mutações exclusivas do tumor</td></tr>
+<tr><td><strong>TAA</strong> (Associado ao Tumor)</td><td>Presente também em células normais, mas <strong>superexpresso</strong> no tumor.</td><td>HER2 (câncer de mama), CEA (adenocarcinoma)</td></tr>
+</table>
+
+<div class="sec-divider"><h3>Mecanismo de Eliminação</h3></div>
+<div class="info-block success">
+  <h4>TCD8+ via MHC I → NK via ausência de MHC I</h4>
+  <p><strong>TCD8+:</strong> reconhece proteínas anômalas via MHC I → perforinas/granzimas → apoptose tumoral. <strong>Evasão:</strong> tumor para de expressar MHC I → TCD8+ não reconhece. <strong>NK:</strong> reconhece AUSÊNCIA de MHC I → elimina a célula. Macrófago via clássica também pode eliminar.</p>
+</div>
+
+<div class="sec-divider"><h3>Mecanismos de Evasão Tumoral</h3></div>
+<div class="info-block danger">
+  <ul>
+    <li>↓ Expressão de <strong>MHC I</strong> → evasão do TCD8+.</li>
+    <li>Recrutamento de <strong>macrófagos via alternativa</strong> → angiogênese tumoral.</li>
+    <li>Recrutamento de <strong>T Reguladores</strong> → supressão do sistema imune.</li>
+    <li>Expressão de <strong>PD-L1</strong> → blinda a célula tumoral dos linfócitos T.</li>
+    <li>Liberação de <strong>IL-10</strong> → evita recrutamento de células de defesa.</li>
+  </ul>
+</div>
+
+<div class="sec-divider"><h3>Imunoterapia</h3></div>
+<div class="info-block warn">
+  <ul>
+    <li><strong>Inibidores de checkpoints:</strong> bloqueiam PD-1/PD-L1 ou CTLA-4 → liberam o freio imunológico para atacar o tumor.</li>
+    <li><strong>Terapia CAR-T:</strong> extração e modificação genética de células T do paciente → atacam especificamente células tumorais.</li>
+  </ul>
+</div>
+</div></div>
+
+<!-- ============== MICRO CLÍNICA ============== -->
+<div id="micro" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🦠</span> Microbiologia Clínica — Provas</div>
+
+<div class="sec-divider"><h3>Streptococcus</h3></div>
+<table class="compare-table">
+<tr><th>Espécie</th><th>Hemólise</th><th>Diferenciação</th><th>Doença Principal</th></tr>
+<tr><td><em>S. pyogenes</em></td><td><strong>Beta (β)</strong></td><td>Grupo A; proteína M; optoquina-resistente</td><td>Faringite, febre reumática, escarlatina</td></tr>
+<tr><td><em>S. pneumoniae</em></td><td><strong>Alfa (α)</strong></td><td>Diplococo lanceolado capsulado; optoquina-<strong>sensível</strong></td><td>Pneumonia, otite média, meningite</td></tr>
+<tr><td>Grupo <em>viridans</em></td><td><strong>Alfa (α)</strong></td><td>Microbiota oral; NÃO sensível à optoquina</td><td>Endocardite pós-dental</td></tr>
+<tr><td><em>S. agalactiae</em></td><td><strong>Beta (β)</strong></td><td>Grupo B; coloniza mucosa oral adultos</td><td>Infecção neonatal</td></tr>
+</table>
+<div class="info-block danger">
+  <div class="label">⭐ PROVA Q18</div>
+  <p><em>S. pneumoniae</em> produz hemólise <strong>ALFA</strong>, não beta. "Beta-hemólise em S. pneumoniae" = FALSO. Diferencia-se dos viridans pela sensibilidade à <strong>optoquina</strong>.</p>
+</div>
+<div class="info-block warn">
+  <div class="label">Febre Reumática (Q07 e Q17)</div>
+  <p>Anticorpos anti-proteína M de <strong>S. pyogenes</strong> (NÃO S. aureus!) reagem cruzadamente com antígenos cardíacos → cardite. Mecanismo = <strong>reação cruzada/mimetismo molecular</strong>. GNPE = depósito de imunocomplexos (diferente da febre reumática!).</p>
+</div>
+<div class="info-block">
+  <div class="label">Caso Clínico — Otite Média (Q04)</div>
+  <p>Criança 2 anos, febre, otalgia, cultivo timpânico: diplococos Gram+, alfa-hemolíticos, lanceolados → <strong>S. pneumoniae</strong>. Coloniza nasofaringe → via tuba de Eustáquio (obstruída por infecção viral) → ouvido médio.</p>
+</div>
+<div class="info-block">
+  <div class="label">Endocardite pós-dental (Q12)</div>
+  <p>Grupo <strong>viridans</strong> (S. sanguis, S. mitis) = principal agente. Microbiota oral → bacteriemia transitória no procedimento → válvulas cardíacas danificadas. Profilaxia: amoxicilina antes do procedimento.</p>
+</div>
+
+<div class="sec-divider"><h3>Clostridium</h3></div>
+<table class="compare-table">
+<tr><th>Espécie</th><th>Toxina</th><th>Mecanismo</th><th>Doença</th></tr>
+<tr><td><em>C. botulinum</em></td><td>Toxina botulínica</td><td>Cliva proteínas SNARE → bloqueia <strong>ACh</strong> → paralisia <strong>FLÁCIDA</strong> descendente</td><td>Botulismo</td></tr>
+<tr><td><em>C. tetani</em></td><td>Tetanospasmina</td><td>Bloqueia <strong>GABA e glicina</strong> (neurônios inibitórios) → paralisia <strong>ESPÁSTICA</strong></td><td>Tétano</td></tr>
+<tr><td><em>C. perfringens</em></td><td>Toxina Alfa (lecitinase/fosfolipase C)</td><td>Destrói membranas → <strong>hemólise e necrose tecidual</strong></td><td>Gangrena gasosa, intoxicação alimentar</td></tr>
+<tr><td><em>C. difficile</em></td><td>Toxina A (enterotoxina) + Toxina B (citotoxina)</td><td>A → inflamação e diarreia; B → destrói actina</td><td>Colite pseudomembranosa</td></tr>
+</table>
+<div class="info-block danger">
+  <div class="label">⭐ PROVA Q13 — Armadilha</div>
+  <p>Toxina alfa de C. perfringens = lecitinase → <strong>destrói membranas (hemólise)</strong>, NÃO inibe síntese proteica ribosomal. Síntese proteica é inibida pela <strong>toxina diftérica</strong>.</p>
+</div>
+<div class="info-block danger">
+  <div class="label">⭐ PROVA Q14 — Armadilha</div>
+  <p>Conserva de ejotes → C. botulinum → bloqueia <strong>ACh</strong> → paralisia <strong>FLÁCIDA</strong> descendente. SEM febre (não há invasão bacteriana, só toxina pré-formada). O mecanismo de GABA/glicina = tétano → paralisia ESPÁSTICA.</p>
+</div>
+<div class="info-block success">
+  <div class="label">Caso Clínico Botulismo (Q19)</div>
+  <p><strong>A) Microrganismo:</strong> Clostridium botulinum — bacilo Gram+, anaeróbio estrito, formador de esporos. <strong>B) Mecanismo:</strong> toxina cliva proteínas SNARE → impede fusão de vesículas sinápticas → sem liberação de ACh → paralisia flácida descendente.</p>
+</div>
+
+<div class="sec-divider"><h3>Outros Importantes</h3></div>
+<table class="compare-table">
+<tr><th>Microrganismo</th><th>Ponto-Chave de Prova</th></tr>
+<tr><td><em>Bacillus anthracis</em></td><td>Ântrax cutâneo: lesão necrótica com escara negra (pústula maligna). Carbunco ≠ ântrax: carbunco = S. aureus em múltiplos folículos.</td></tr>
+<tr><td><em>Corynebacterium diphtheriae</em></td><td>Toxigênico por <strong>transdução via bacteriófago lisogênico</strong> (fago β). NÃO por mutação espontânea, conjugação ou transformação.</td></tr>
+<tr><td><em>Mycobacterium tuberculosis</em></td><td><strong>Aeróbio estrito</strong>. Preferencialmente ápices pulmonares (mais O₂).</td></tr>
+<tr><td>Cápsula bacteriana</td><td>Função principal: <strong>proteger contra a fagocitose</strong>.</td></tr>
+</table>
+<table class="compare-table">
+<tr><th>Metabolismo</th><th>Exemplos</th></tr>
+<tr><td>Aeróbio estrito</td><td>M. tuberculosis, Pseudomonas aeruginosa</td></tr>
+<tr><td>Anaeróbio estrito</td><td>C. botulinum, C. tetani</td></tr>
+<tr><td>Anaeróbio facultativo</td><td>C. perfringens, E. coli, S. aureus</td></tr>
+<tr><td>Microaerófilo</td><td>Helicobacter pylori, Campylobacter</td></tr>
+</table>
+</div></div>
+
+<!-- ============== FLASHCARDS ============== -->
+<div id="flashcards" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🃏</span> Flashcards — Clique para revelar</div>
+<div style="display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap">
+  <button onclick="shuffleFC()" style="background:var(--card);border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:50px;cursor:pointer;font-size:13px">🔀 Embaralhar</button>
+  <button onclick="resetFC()" style="background:var(--card);border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:50px;cursor:pointer;font-size:13px">↺ Resetar</button>
+  <span id="fc-counter" style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px;margin-left:auto;align-self:center">0 / 0 revelados</span>
+</div>
+<div class="fc-grid" id="fc-grid"></div>
+</div></div>
+
+<!-- ============== QUIZ 70Q ============== -->
+<div id="quiz" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">📝</span> Quiz Final — 70 Questões</div>
+<div class="quiz-score-bar">
+  <div class="score-num">Acertos: <strong id="score-display">0</strong></div>
+  <div class="score-bar-wrap"><div class="score-bar-fill" id="score-fill" style="width:0%"></div></div>
+  <div class="score-num" id="pct-display">0%</div>
+  <button class="quiz-reset-btn" onclick="resetQuiz()">↺ Reiniciar</button>
+</div>
+<div id="quiz-body"></div>
+</div></div>
+
+<!-- ============== PROVAS ANTIGAS ============== -->
+<div id="provas" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">📋</span> Provas Antigas com Gabarito</div>
+
+<div class="prova-block">
+  <div class="prova-hdr" onclick="toggleProva(this)">
+    <h3>Prova P1 — Imunidade Inata & Adaptativa</h3>
+    <span class="meta">Múltipla Escolha + V/F · ~27Q</span>
+    <span class="chev">▼</span>
+  </div>
+  <div class="prova-body">
+    <div class="prova-q"><div class="prova-q-text"><strong>1.</strong> É o principal anticorpo da mucosa: a) IgM  b) IgG  c) IgA  d) IgE  e) IgD</div><div class="prova-ans"><strong>GABARITO: C — IgA</strong> Predomina nas secreções mucosas: trato digestivo, respiratório, saliva, lágrimas, leite materno.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>2.</strong> Tem como função a identificação de células cancerígenas: a) Células dendríticas  b) Células NK  c) Linfócitos T CD4+  d) Macrófagos  e) Células fagocíticas</div><div class="prova-ans"><strong>GABARITO: B — Células NK</strong> Natural Killers reconhecem e destroem células tumorais e infectadas por vírus sem necessitar de MHC.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>3.</strong> Anticorpos em maior concentração na parte líquida do sangue: a) IgA  b) IgM  c) IgG  d) IgD  e) IgE</div><div class="prova-ans"><strong>GABARITO: C — IgG</strong> Anticorpo mais abundante no soro. Único que atravessa a placenta → imunidade passiva ao feto.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>4.</strong> Anticorpo que se liga à membrana do mastócito: a) IgA  b) IgD  c) IgM  d) IgG  e) IgE</div><div class="prova-ans"><strong>GABARITO: E — IgE</strong> Liga-se aos receptores FcεRI dos mastócitos e basófilos → quando encontra alérgeno → desgranulação → reação alérgica.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>5.</strong> São células especializadas em ativar linfócitos T virgens: a) Lb  b) Macrófagos  c) Células dendríticas  d) NK  e) Granulócitos</div><div class="prova-ans"><strong>GABARITO: C — Células dendríticas</strong> APCs profissionais mais eficientes para ativar linfócitos T virgens nos linfonodos.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>6.</strong> Função principal do MHC: a) Ativar diretamente as células  b) Capturar e degradar antígenos  c) Apresentar antígenos a células T  d) Produzir anticorpos</div><div class="prova-ans"><strong>GABARITO: C</strong> MHC apresenta fragmentos peptídicos de antígenos na superfície celular para reconhecimento por linfócitos T.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>7.</strong> Função principal dos anticorpos na resposta humoral: a) Fagocitose de células infectadas  b) Inibir replicação viral intracelular  c) Neutralizar e eliminar patógenos extracelulares  d) Ativar diretamente células T</div><div class="prova-ans"><strong>GABARITO: C</strong> Anticorpos atuam no meio EXTRACELULAR. Não entram nas células.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>8.</strong> Principal função do complemento: a) Ativar células T para intracelulares  b) Mediar resposta adaptativa  c) Destruir intracelulares  d) Promover fagocitose de patógenos extracelulares</div><div class="prova-ans"><strong>GABARITO: D</strong> Complemento → opsonização (facilita fagocitose), quimiotaxia, lise direta (MAC). Principal contra patógenos extracelulares.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>5 (enunciado falso).</strong> Qual dos seguintes é FALSO? a) Dendríticas podem se diferenciar com efeitos antivirais  b) Sistema humoral libera anticorpos  c) Sistema fagocítico mononuclear = apresentação de antígenos  d) Linfócitos NK reconhecem e eliminam células cancerígenas por FAGOCITOSE  e) Complemento por opsonização e MAC pode destruir células invasoras.</div><div class="prova-ans"><strong>GABARITO: D — FALSO</strong> NK elimina por CITOTOXICIDADE (perforina/granzimas), NÃO por fagocitose.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>Ordenação (6–10):</strong> Ordene os eventos da resposta inata: a) Digestão → fagossomos + lisossomos  b) Liberação de selectinas, integrinas e quimiocinas  c) Identificação e separação de células próprias vs. com PAMPs  d) Ligação dos receptores Toll-like às moléculas estranhas  e) Digestão concluída → liberação de interleucinas</div><div class="prova-ans"><strong>GABARITO:</strong> 6-C, 7-B (D), 8-D (B), 9-A, 10-E → Ordem: C → D → B → A → E</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>V/F 11–27:</strong><br>
+    11. Anticorpos atuam no meio intracelular. (F — EXTRACELULAR)<br>
+    12. Mastócitos são células da imunidade inata fixas nos tecidos que liberam mediadores. (V)<br>
+    13. Linfócitos NK são células da imunidade adaptativa. (F — INATA)<br>
+    14. A piroptose ocorre em situações de estresse do NEUTRÓFILO. (F — MACRÓFAGO)<br>
+    15. Via alternativa do complemento depende de anticorpos. (F — INDEPENDENTE)<br>
+    16. Imunidade humoral é mediada por Lb. (V)<br>
+    17. Mastócitos liberam mediadores químicos (V)<br>
+    18. NK são da imunidade adaptativa (F)<br>
+    19. MHC II é expresso em APCs (V)<br>
+    20. Dendríticas se encontram principalmente nos gânglios linfáticos. (F — estão nos tecidos periféricos primeiro)<br>
+    21. PAMPs reconhecidas pela imunidade adaptativa. (F — INATA/TLRs)<br>
+    22. Eosinófilos = sem capacidade fagocítica. (V)<br>
+    23. Linfócitos B são da imunidade adaptativa. (V)<br>
+    24. Imunidade celular tem o Lb como principal célula. (F — Lt)<br>
+    25. MHC II apresenta antígenos a linfócitos T CD4+. (V)<br>
+    26. Anticorpos estão presentes na porção líquida do sangue (soro). (V)<br>
+    27. Vacinas = imunidade ativa artificial. (V)</div>
+    <div class="prova-ans"><strong>GABARITO:</strong> F, V, F, F, F, V, V, F, V, F, F, V, V, F, V, V, V</div></div>
+  </div>
+</div>
+
+<div class="prova-block">
+  <div class="prova-hdr" onclick="toggleProva(this)">
+    <h3>Prova P2 — Streptococcus, Clostridium, Bacillus</h3>
+    <span class="meta">Múltipla Escolha + V/F + Caso Clínico · 19Q</span>
+    <span class="chev">▼</span>
+  </div>
+  <div class="prova-body">
+    <div class="prova-q"><div class="prova-q-text"><strong>01.</strong> Diferença principal entre furunculose e carbunco?</div><div class="prova-ans"><strong>B — Carbunco = infecção extensa de múltiplos folículos pilosos em uma região; furunculose = infecção localizada de um único folículo.</strong></div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>02.</strong> Função principal da cápsula bacteriana?</div><div class="prova-ans"><strong>B — Proteger contra a fagocitose.</strong></div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>03.</strong> Exemplo de bactéria aeróbia estrita?</div><div class="prova-ans"><strong>C — Mycobacterium tuberculosis.</strong> E. coli = facultativo; C. botulinum = anaeróbio estrito; H. pylori = microaerófilo.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>04.</strong> Criança 2 anos, otalgia, cultivo: diplococos Gram+, alfa-hemolíticos, lanceolados. Agente mais provável?</div><div class="prova-ans"><strong>B — S. pneumoniae.</strong> Coloniza nasofaringe → tuba de Eustáquio → ouvido médio. Diplococo lanceolado, alfa-hemolítico, sensível à optoquina.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>05.</strong> Como se adquire botulismo em adultos?</div><div class="prova-ans"><strong>A — Consumo de alimentos enlatados em casa sem esterilização adequada.</strong> Toxina pré-formada é ingerida e absorvida pelo trato GI.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>06.</strong> Manifestação clínica característica do ântrax cutâneo?</div><div class="prova-ans"><strong>A — Lesão necrótica com escara negra (pústula maligna).</strong> Pápula → vesícula → úlcera com crosta negra indolor.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>07.</strong> Criança 10 anos, febre, artrite migratória, cardite, eritema marginado 3 semanas após faringite por S. pyogenes. Mecanismo imunológico?</div><div class="prova-ans"><strong>B — Reação cruzada de anticorpos contra proteína M de S. pyogenes com antígenos do tecido cardíaco.</strong></div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>08.</strong> Efeito da alfa-toxina de Clostridium perfringens?</div><div class="prova-ans"><strong>A — Provoca hemólise e destruição tecidual.</strong> É uma lecitinase (fosfolipase C) que degrada fosfolipídios das membranas celulares.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>09.</strong> Tipo de metabolismo de C. perfringens?</div><div class="prova-ans"><strong>D — Anaeróbio facultativo.</strong></div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>10.</strong> Função da Toxina A de C. difficile?</div><div class="prova-ans"><strong>A — Enterotoxina que provoca inflamação e diarreia.</strong> Toxina B = citotoxina que destrói actina.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>11.</strong> Como C. diphtheriae adquire capacidade de produzir toxina?</div><div class="prova-ans"><strong>B — Por transducção via bacteriófago lisogênico.</strong> O fago β carrega o gene tox e o insere no DNA bacteriano.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>12.</strong> Grupo de Streptococcus mais frequente na endocardite pós-procedimento dental?</div><div class="prova-ans"><strong>B — Streptococcus do grupo viridans (S. sanguis, S. mitis).</strong> Microbiota oral → bacteriemia transitória → válvulas cardíacas danificadas.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>13.</strong> [V/F] Toxina alfa de C. perfringens (lecitinase) inibe a síntese proteica ribosomal.</div><div class="prova-ans"><strong>FALSO.</strong> Lecitinase destrói MEMBRANAS CELULARES → hemólise e gangrena. Síntese proteica ribosomal é inibida pela toxina DIFTÉRICA.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>14.</strong> [V/F] Conserva de ejotes → paralisia descendente → mecanismo = bloquear GABA/glicina → paralisia espástica.</div><div class="prova-ans"><strong>FALSO.</strong> C. botulinum → bloqueia ACh → paralisia FLÁCIDA. GABA/glicina = tétano → paralisia ESPÁSTICA.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>15.</strong> [V/F] GNPE se desenvolve por reação cruzada imunológica com antígenos renais.</div><div class="prova-ans"><strong>FALSO.</strong> GNPE = DEPÓSITO DE IMUNOCOMPLEXOS (Ag-Ac) nos glomérulos. Reação cruzada com tecido cardíaco = febre reumática.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>16.</strong> [V/F] S. pneumoniae coloniza nasofaringe e pode diseminar ao ouvido médio via tuba de Eustáquio.</div><div class="prova-ans"><strong>VERDADEIRO.</strong> Especialmente após infecções virais que obstruem a drenagem normal.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>17.</strong> [V/F] Febre reumática: anticorpos contra proteína M de S. AUREUS reagem cruzadamente com antígenos cardíacos.</div><div class="prova-ans"><strong>FALSO.</strong> É S. PYOGENES, não S. aureus.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>18.</strong> [V/F] S. pneumoniae produz beta-hemólise e se diferencia dos viridans por sensibilidade à optoquina.</div><div class="prova-ans"><strong>FALSO.</strong> S. pneumoniae produz hemólise ALFA (não beta). Correto: sensível à optoquina.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>19. Caso Clínico:</strong> Mulher 35 anos, visão borrada, dificuldade para falar/deglutir, fraqueza progressiva, após conserva caseira. A) Microrganismo? B) Mecanismo da toxina?</div><div class="prova-ans"><strong>A) Clostridium botulinum:</strong> bacilo Gram+, anaeróbio estrito, formador de esporos. <strong>B) Mecanismo:</strong> toxina cliva proteínas SNARE → impede fusão de vesículas sinápticas → sem liberação de ACh → paralisia flácida descendente. Sem febre (sem invasão bacteriana — só toxina pré-formada).</div></div>
+  </div>
+</div>
+
+<div class="prova-block">
+  <div class="prova-hdr" onclick="toggleProva(this)">
+    <h3>Completar Enunciados — Seção IV</h3>
+    <span class="meta">Completar palavras · 5Q</span>
+    <span class="chev">▼</span>
+  </div>
+  <div class="prova-body">
+    <div class="prova-q"><div class="prova-q-text"><strong>16.</strong> A imunidade humoral, mediada por _______, possui elevado efeito contra infecções produzindo anticorpos. A. Lb  B. LT  C. NK  D. Macrófagos</div><div class="prova-ans"><strong>A — Lb (Linfócito B)</strong></div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>17.</strong> Algumas bactérias possuem camada S reconhecida como _______ pelo sistema inato. A. VAMP  B. PAMP  C. DAMP  D. ANTICUERPO</div><div class="prova-ans"><strong>B — PAMP</strong></div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>18.</strong> As células do sistema imunológico _______ estão todas ativas.</div><div class="prova-ans"><strong>Inato</strong></div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>19.</strong> Enquanto que as células do sistema imunológico _______ precisam ser ativadas.</div><div class="prova-ans"><strong>Adaptativo</strong></div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>20.</strong> As células dendríticas _______ possuem funções antivirais. A. Adaptativo  B. Inato  C. Cd. Clássica  D. Cd. Plasmocitoide</div><div class="prova-ans"><strong>D — Cd. Plasmocitoide</strong> → Especializada em IFN tipo I (antiviral).</div></div>
+  </div>
+</div>
+
+</div></div>
+
+<!-- ============== SCRIPTS ============== -->
+<script>
+// PARTICLES
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+let pts=[];
+function resizeCanvas(){canvas.width=innerWidth;canvas.height=innerHeight;}
+resizeCanvas();window.addEventListener('resize',resizeCanvas);
+for(let i=0;i<55;i++){pts.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5});}
+function drawPts(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  pts.forEach(p=>{p.x=(p.x+p.vx+canvas.width)%canvas.width;p.y=(p.y+p.vy+canvas.height)%canvas.height;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(184,79,249,0.12)';ctx.fill();});
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<110){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(79,156,249,${.05*(1-d/110)})`;ctx.lineWidth=.5;ctx.stroke();}}
+  requestAnimationFrame(drawPts);
+}
+drawPts();
+
+// SCROLL TOP
+window.addEventListener('scroll',()=>{document.getElementById('scrolltop').style.display=window.scrollY>400?'block':'none';});
+
+// TABS
+function showSection(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// PROVAS
+function toggleProva(hdr){
+  hdr.classList.toggle('open');
+  hdr.nextElementSibling.classList.toggle('open');
+}
+
+// FLASHCARDS DATA
+const fcData=[
+  {cat:'Inato',q:'Quais células da imunidade inata estão SEMPRE ativas?',a:'Neutrófilos, macrófagos, NK, mastócitos e células dendríticas. Respondem imediatamente sem necessidade de ativação prévia.'},
+  {cat:'Inato',q:'O que são PAMPs e onde são reconhecidos?',a:'Padrões Moleculares Associados a Patógenos — estruturas conservadas nos patógenos. Reconhecidos pelos receptores Toll-like (TLRs) da imunidade INATA.'},
+  {cat:'Inato',q:'TLR 4 reconhece o quê? E o TLR 5?',a:'TLR 4 → LPS de bactérias Gram– (lipopolissacarídeo). TLR 5 → flagelina (flagelos bacterianos). Macete: TLR 4=Gram-4, TLR 5=Fla5elina.'},
+  {cat:'Inato',q:'NK mata células tumorais como? Por fagocitose?',a:'NÃO! NK usa CITOTOXICIDADE (perforina e granzimas). Não faz fagocitose. Reconhece células que perderam MHC I.'},
+  {cat:'Inato',q:'O que é piroptose e em qual célula ocorre?',a:'Morte inflamatória programada do MACRÓFAGO (não neutrófilo). Libera IL-1β, IL-18 e conteúdo inflamatório → inflamação local.'},
+  {cat:'Inato',q:'Via alternativa do complemento depende de anticorpos?',a:'NÃO — é INDEPENDENTE de anticorpos. Ativada diretamente pela superfície bacteriana. Via clássica sim depende de anticorpos (IgG ou IgM).'},
+  {cat:'Inato',q:'Qual dendrítica tem função antiviral?',a:'Célula dendrítica PLASMOCITOIDE → especializada em produzir IFN-α e IFN-β (interferon tipo I) → principal resposta antiviral inata.'},
+  {cat:'Inato',q:'Sequência correta da resposta inata (C→B→D→A→E)?',a:'C: Identificação de PAMPs → B: TLR ativam → D: Quimiocinas/selectinas → A: Fagossomo + lisossomo → E: Interleucinas liberadas.'},
+  {cat:'Adaptativo',q:'MHC I vs MHC II — qual apresenta para quem?',a:'MHC I → presente em TODAS as células nucleadas → apresenta para CD8+ (citotóxico). MHC II → só APCs → apresenta para CD4+ (helper).'},
+  {cat:'Adaptativo',q:'TH1, TH2 e TH17 — alvos e moléculas chave',a:'TH1 → intracelulares → IFN-γ (ativa macrófago). TH2 → helmintos → IL-4, IL-5, IL-13 (eosinófilos). TH17 → bactérias extrac./fungos → IL-17, IL-22.'},
+  {cat:'Adaptativo',q:'T Regulador — proteína reguladora e função',a:'Proteína FoxP3. Função: controlar e regular a resposta imune evitando excessos. Origem: timo (central) ou linfonodos (periférico).'},
+  {cat:'Adaptativo',q:'Como ocorre a tolerância central do linfócito T?',a:'No TIMO. mTEC apresenta antígenos próprios. Se o Lt T reconhece → apoptose. Proteína AIRE participa. Elimina células autorreativas antes de saírem para circulação.'},
+  {cat:'Anticorpos',q:'IgA — onde está? IgG — o que atravessa?',a:'IgA = mucosas (intestino, saliva, leite materno). IgG = soro (mais abundante). IgG = ÚNICA que atravessa a placenta → imunidade passiva do feto.'},
+  {cat:'Anticorpos',q:'IgM — quando é produzida? Qual ativa melhor o complemento?',a:'IgM = 1ª a ser produzida → indica infecção AGUDA/recente. Pentâmero → ativa complemento muito eficientemente. IgM + via clássica.'},
+  {cat:'Anticorpos',q:'IgE — onde se liga? Relação com IgG4?',a:'IgE liga-se à membrana dos mastócitos e basófilos → desgranulação → reação alérgica. IgG4 bloqueia IgE → previne alergia (temporariamente).'},
+  {cat:'Hipersensib.',q:'Hipersensibilidade Tipo I — mecanismo resumido',a:'IgE + mastócito. 1º contato: sensibilização (sem sintomas). 2º+ contato: alérgeno → IgE → desgranulação → histamina → vasodilatação, broncoespasmo.'},
+  {cat:'Hipersensib.',q:'Tipo II vs Tipo III — diferença fundamental',a:'Tipo II: antígeno FIXO na célula → efeito LOCALIZADO (ex: miastenia gravis). Tipo III: imunocomplexos CIRCULANTES → depósito → efeito SISTÊMICO (ex: GNPE, LES).'},
+  {cat:'Hipersensib.',q:'GNPE — mecanismo correto?',a:'GNPE = DEPÓSITO DE IMUNOCOMPLEXOS nos glomérulos (Tipo III). NÃO é reação cruzada com antígenos renais. Febre reumática é que tem reação cruzada (Tipo II).'},
+  {cat:'Hipersensib.',q:'Tipo IV — Tardia — por quê depois de 48h?',a:'Mediada por LINFÓCITOS T (TH1 + TH17) — resposta celular. NÃO anticorpos. Tempo necessário para ativar e recrutar células T. Ex: PPD, dermatite de contato, rejeição tardia.'},
+  {cat:'Transplante',q:'4 tipos de transplante por origem',a:'Autólogo (mesmo indivíduo) → sem rejeito. Singênico (gêmeos idênticos) → sem rejeito. Alogênico (mesma espécie) → há rejeito. Xenogênico (espécies diferentes) → muito rejeito.'},
+  {cat:'Transplante',q:'3 tipos de rejeito e seus mecanismos',a:'Hiperagudo: minutos, Ac pré-formados + incompatibilidade ABO. Agudo: semanas, Ac + TCD4/CD8. Crônico: meses/anos, macrófagos.'},
+  {cat:'Transplante',q:'GVHD — o que é e em qual transplante ocorre?',a:'Doença do enxerto contra hospedeiro (Graft vs. Host Disease). Na medula óssea: É A MEDULA que rejeita o corpo do hospedeiro. Requer compatibilidade de 75–80%.'},
+  {cat:'Privilégio',q:'4 barreiras com privilégio imunitário',a:'BHO (Hemato-Ocular): córnea avascular, PD-L1. BHE (Hemato-Encefálica): microglía, NÃO tem privilégio estrito! BHT (testicular): testosterona, TGF-β. BHP (placentária): PD-L1.'},
+  {cat:'Privilégio',q:'O cérebro tem privilégio imunitário ESTRITO?',a:'NÃO! O cérebro ABRE MÃO do seu privilégio quando necessário para se defender. Essa abertura gera inflamação e dano. A microglía é responsável pela defesa local.'},
+  {cat:'Tumores',q:'TSA vs TAA — diferença',a:'TSA (tumor-specific antigen) = só em células tumorais, não em células sãs. TAA (tumor-associated antigen) = presente também em células normais, mas SUPEREXPRESSO no tumor. Ex: HER2 (câncer de mama).'},
+  {cat:'Tumores',q:'Como o tumor evade o sistema imune?',a:'↓ MHC I → TCD8+ não reconhece. Expressa PD-L1 → blinda contra linfócitos T. Recruta T Reguladores → suprime sistema imune. Libera IL-10 → evita defesa. Angiogênese via macrófago alternativo.'},
+  {cat:'Micro',q:'S. pneumoniae — hemólise e diferenciação dos viridans',a:'Alfa-hemólise (NÃO beta!). Diplococo lanceolado, Gram+, capsulado. Diferencia-se dos viridans pela sensibilidade à OPTOQUINA.'},
+  {cat:'Micro',q:'Botulismo vs Tétano — mecanismo e tipo de paralisia',a:'Botulismo (C. botulinum): bloqueia ACh → paralisia FLÁCIDA descendente. Tétano (C. tetani): bloqueia GABA/glicina (inibitórios) → paralisia ESPÁSTICA (trismo, opistótono).'},
+  {cat:'Micro',q:'Toxina alfa de C. perfringens — o que faz?',a:'É uma LECITINASE (fosfolipase C) → destrói membranas celulares → hemólise e necrose tecidual → gangrena gasosa. NÃO inibe síntese proteica (essa é a toxina diftérica).'},
+  {cat:'Micro',q:'Como C. diphtheriae adquire capacidade toxigênica?',a:'Por TRANSDUÇÃO via bacteriófago lisogênico (fago β). O gene tox é carregado pelo fago e inserido no DNA bacteriano. Cepas sem o fago são atóxicas.'},
+];
+
+let fcShown=0;
+function renderFC(data){
+  const g=document.getElementById('fc-grid');g.innerHTML='';fcShown=0;
+  data.forEach(fc=>{
+    const d=document.createElement('div');d.className='fc-card';
+    d.innerHTML=`<div class="fc-inner">
+      <div class="fc-front"><div class="fc-cat">${fc.cat}</div><div class="fc-q">${fc.q}</div><div class="fc-hint">Clique para revelar</div></div>
+      <div class="fc-back"><div class="fc-answer-label">Resposta</div><div class="fc-a">${fc.a}</div></div>
+    </div>`;
+    d.addEventListener('click',()=>{const was=d.classList.contains('flipped');d.classList.toggle('flipped');fcShown+=was?-1:1;fcShown=Math.max(0,fcShown);document.getElementById('fc-counter').textContent=`${fcShown} / ${data.length} revelados`;});
+    g.appendChild(d);
+  });
+  document.getElementById('fc-counter').textContent=`0 / ${data.length} revelados`;
+}
+function shuffleFC(){const a=[...fcData];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}renderFC(a);}
+function resetFC(){renderFC(fcData);}
+renderFC(fcData);
+
+// QUIZ DATA
+const qData=[
+  // MC
+  {t:'mc',q:'Principal anticorpo da mucosa:',o:['IgM','IgG','IgA','IgE','IgD'],c:2,e:'IgA protege superfícies mucosas — trato digestivo, respiratório, saliva, lágrimas, leite materno.'},
+  {t:'mc',q:'Identifica células cancerígenas:',o:['Células dendríticas','Células NK','Linfócitos T CD4+','Macrófagos','Células fagocíticas'],c:1,e:'Células NK reconhecem e destroem células tumorais e infectadas por vírus sem necessitar de MHC.'},
+  {t:'mc',q:'Anticorpo em maior concentração na parte líquida do sangue (soro):',o:['IgA','IgM','IgG','IgD','IgE'],c:2,e:'IgG é o anticorpo mais abundante no soro sanguíneo. Único que atravessa a placenta.'},
+  {t:'mc',q:'Anticorpo que se liga à membrana do mastócito:',o:['IgA','IgD','IgM','IgG','IgE'],c:4,e:'IgE liga-se aos receptores FcεRI dos mastócitos e basófilos → desgranulação → reação alérgica.'},
+  {t:'mc',q:'Células especializadas em ativar linfócitos T virgens:',o:['Linfócito B','Macrófago','Células dendríticas','NK','Granulócitos'],c:2,e:'Células dendríticas maduras são as APCs mais eficientes para ativar linfócitos T virgens nos linfonodos.'},
+  {t:'mc',q:'Função principal do MHC:',o:['Ativar diretamente as células','Capturar e degradar antígenos','Apresentar antígenos a células T','Produzir anticorpos'],c:2,e:'MHC apresenta fragmentos peptídicos de antígenos na superfície celular para reconhecimento por linfócitos T.'},
+  {t:'mc',q:'TLR 4 reconhece:',o:['Peptídeoglicano (Gram+)','LPS de bactérias Gram−','Flagelina bacteriana','RNA viral','DNA bacteriano CpG'],c:1,e:'TLR 4 reconhece lipopolissacarídeo (LPS) da parede de bactérias Gram-negativas. TLR 4 = Gram-4.'},
+  {t:'mc',q:'TLR 5 reconhece:',o:['LPS','Peptídeoglicano','Flagelina','dsRNA viral','DNA CpG'],c:2,e:'TLR 5 reconhece flagelina — proteína dos flagelos bacterianos. Macete: TLR 5 = Fla5elina.'},
+  {t:'mc',q:'TLR que reconhece RNA viral de fita simples (ssRNA):',o:['TLR 2','TLR 4','TLR 5','TLR 7 e 8','TLR 9'],c:3,e:'TLR 7 e 8 reconhecem ssRNA viral. TLR 3 reconhece dsRNA viral. TLR 9 reconhece DNA CpG.'},
+  {t:'mc',q:'Via do complemento INDEPENDENTE de anticorpos:',o:['Via Clássica','Via das Lectinas','Via Alternativa','Todas dependem de Ac'],c:2,e:'Via Alternativa é ativada diretamente pela superfície bacteriana SEM necessidade de anticorpos. Via Clássica SIM depende de IgG/IgM.'},
+  {t:'mc',q:'Qual imunoglobulina atravessa a placenta?',o:['IgA','IgM','IgE','IgG','IgD'],c:3,e:'IgG é a ÚNICA que atravessa a placenta via receptor FcRn → imunidade passiva neonatal nos primeiros meses de vida.'},
+  {t:'mc',q:'Piroptose ocorre em qual célula?',o:['Neutrófilo','Linfócito T','Macrófago','Mastócito','Célula NK'],c:2,e:'Piroptose = morte inflamatória programada do MACRÓFAGO (não neutrófilo). Libera IL-1β e IL-18 → inflamação local.'},
+  {t:'mc',q:'Hipersensibilidade Tipo IV — mecanismo:',o:['IgE + mastócito','IgG + IgM direto nas células','Imunocomplexos circulantes','TH1 + TH17 (resposta celular >48h)'],c:3,e:'Tipo IV = tardia/celular. Mediada por linfócitos T (TH1 + TH17). NÃO envolve anticorpos. Ocorre após 48h.'},
+  {t:'mc',q:'GNPE (glomerulonefrite pós-estreptocócica) — mecanismo:',o:['Reação cruzada com antígenos renais','Invasão direta do glomérulo','Depósito de imunocomplexos nos glomérulos','Citotoxicidade por NK'],c:2,e:'GNPE = Hipersensibilidade Tipo III → depósito de imunocomplexos (Ag+Ac) nos glomérulos → ativação do complemento → nefrite.'},
+  {t:'mc',q:'Febre reumática — mecanismo imunológico correto:',o:['Invasão direta do coração por S. pyogenes','Reação cruzada da proteína M com tecido cardíaco','Depósito de imunocomplexos nas válvulas','Exotoxinas que danificam diretamente o miocárdio'],c:1,e:'Reação cruzada (Tipo II): proteína M de S. pyogenes similar à miosina cardíaca → anticorpos anti-proteína M atacam o coração.'},
+  {t:'mc',q:'Transplante que MAIS frequentemente causa GVHD:',o:['Rim','Fígado','Coração','Medula óssea'],c:3,e:'GVHD (Graft vs. Host Disease): ocorre no transplante de medula óssea. A medula do doador rejeita o corpo do receptor.'},
+  {t:'mc',q:'Tipo de rejeito por anticorpos pré-formados + incompatibilidade ABO:',o:['Crônico','Agudo','Hiperagudo','GVHD'],c:2,e:'Rejeito HIPERAGUDO: ocorre em minutos/horas. Anticorpos pré-formados + incompatibilidade ABO → trombose vascular imediata.'},
+  {t:'mc',q:'Qual barreira com privilégio imunitário NÃO tem privilégio ESTRITO?',o:['Barreira hemato-ocular','Barreira hemato-encefálica','Barreira hemato-testicular','Barreira hemato-placentária'],c:1,e:'O CÉREBRO (BHE) não tem privilégio estrito. Abre mão do privilégio para se defender quando necessário. A microglía é a célula de defesa cerebral.'},
+  {t:'mc',q:'Qual molécula está presente em olhos, testículos e placenta para bloquear linfócitos T?',o:['TGF-β','Testosterona','PD-L1','Indolamina'],c:2,e:'PD-L1 é a molécula bloqueadora de linfócitos T presente nas principais barreiras de privilégio imunitário (BHO, BHT, BHP).'},
+  {t:'mc',q:'TSA vs TAA — qual é exclusivo de células tumorais?',o:['TAA','TSA (neo-antígeno)','Ambos são exclusivos','Nenhum é exclusivo'],c:1,e:'TSA (Tumor-Specific Antigen) = só em células tumorais, NÃO em células sãs. TAA = presente em células normais mas SUPEREXPRESSO no tumor.'},
+  {t:'mc',q:'Como o tumor evade o TCD8+?',o:['Produzindo mais IgE','Diminuindo a expressão de MHC I','Ativando NK','Liberando IL-12'],c:1,e:'Tumor ↓ MHC I → TCD8+ não reconhece a célula. A NK então entra em ação reconhecendo a AUSÊNCIA de MHC I → elimina a célula.'},
+  {t:'mc',q:'S. pneumoniae produz qual tipo de hemólise?',o:['Beta-hemólise','Alfa-hemólise','Gama-hemólise (nenhuma)','Delta-hemólise'],c:1,e:'S. pneumoniae = alfa-hemolítico (parcial, esverdeada). NÃO beta. Diferencia-se dos viridans pela sensibilidade à optoquina.'},
+  {t:'mc',q:'Agente mais provável: criança 2 anos, otalgia, diplococos Gram+, alfa-hemolíticos, lanceolados no cultivo timpânico:',o:['S. agalactiae','S. pneumoniae','S. pyogenes','S. viridans'],c:1,e:'S. pneumoniae: diplococo lanceolado, Gram+, alfa-hemolítico, sensível à optoquina. Coloniza nasofaringe → tuba de Eustáquio → ouvido médio.'},
+  {t:'mc',q:'Mecanismo da toxina botulínica:',o:['Bloqueia GABA/glicina → espasmo','Cliva proteínas SNARE → bloqueia ACh → paralisia flácida','Inibe síntese proteica ribosomal','Ativa superantígenos'],c:1,e:'C. botulinum → toxina zinc-endopeptidase → cliva proteínas SNARE → impede fusão vesicular → sem ACh → paralisia FLÁCIDA descendente.'},
+  {t:'mc',q:'Toxina alfa de C. perfringens = lecitinase. O que faz?',o:['Inibe síntese proteica ribosomal','Bloqueia ACh','Destrói membranas celulares (hemólise e necrose)','Bloqueia GABA/glicina'],c:2,e:'Lecitinase = fosfolipase C → degrada fosfolipídios das membranas → hemólise e necrose → gangrena gasosa. NÃO inibe síntese proteica.'},
+  {t:'mc',q:'Como C. diphtheriae adquire capacidade toxigênica?',o:['Mutação espontânea','Transdução por bacteriófago lisogênico','Conjugação','Transformação por plasmídio'],c:1,e:'Gene tox carregado pelo fago β (corinefago) → transdução lisogênica. Cepas sem o fago são atóxicas/não patogênicas.'},
+  {t:'mc',q:'Tipo de metabolismo de C. perfringens:',o:['Anaeróbio estrito','Aeróbio obrigado','Microaerófilo','Anaeróbio facultativo'],c:3,e:'C. perfringens = anaeróbio facultativo. C. botulinum e C. tetani são anaeróbios ESTRITOS. M. tuberculosis = aeróbio estrito.'},
+  {t:'mc',q:'Grupo Streptococcus mais frequente na endocardite pós-dental:',o:['S. pyogenes','Grupo viridans (S. sanguis, S. mitis)','S. pneumoniae','S. agalactiae'],c:1,e:'Viridans = microbiota oral → bacteriemia transitória durante procedimentos dentais → colonização de válvulas danificadas.'},
+  {t:'mc',q:'Manifestação do ântrax cutâneo:',o:['Lesão necrótica com escara negra (pústula maligna)','Dificuldade respiratória','Erupção pustulosa generalizada','Petéquias difusas'],c:0,e:'Ântrax cutâneo: pápula → vesícula → úlcera com escara necrótica negra indolor (pústula maligna). Mais comum e menos grave.'},
+  {t:'mc',q:'Imunoglobulina que indica infecção AGUDA ou recente:',o:['IgG','IgA','IgM','IgE','IgD'],c:2,e:'IgM = primeiro anticorpo produzido em resposta a um novo antígeno (resposta primária). Presença de IgM → infecção AGUDA ou recente.'},
+  {t:'mc',q:'M. tuberculosis é classificado como:',o:['Anaeróbio estrito','Aeróbio estrito','Anaeróbio facultativo','Microaerófilo'],c:1,e:'M. tuberculosis = aeróbio ESTRITO → preferencialmente ápices pulmonares (maior pO₂). Contrário: C. botulinum = anaeróbio estrito.'},
+  // VOF
+  {t:'vof',q:'[V/F] Anticorpos atuam no meio intracelular.',c:false,e:'FALSO. Anticorpos atuam EXCLUSIVAMENTE no meio extracelular. Não penetram nas células.'},
+  {t:'vof',q:'[V/F] Os mastócitos são células da imunidade inata fixas nos tecidos que liberam mediadores químicos.',c:true,e:'VERDADEIRO. Mastócitos estão nos tecidos (sob pele, mucosas) e liberam histamina, prostaglandinas, leucotrienos em resposta a estímulos.'},
+  {t:'vof',q:'[V/F] Os linfócitos NK são células da imunidade adaptativa.',c:false,e:'FALSO. NK = imunidade INATA. Não precisam de ativação prévia nem de MHC para agir. Eliminam por citotoxicidade, não por fagocitose.'},
+  {t:'vof',q:'[V/F] PAMPs são reconhecidos pelos receptores da imunidade adaptativa.',c:false,e:'FALSO. PAMPs são reconhecidos pelos receptores da imunidade INATA (TLRs). Imunidade adaptativa reconhece antígenos específicos via linfócitos T e B.'},
+  {t:'vof',q:'[V/F] Via alternativa do complemento depende de anticorpos.',c:false,e:'FALSO. Via alternativa = INDEPENDENTE de anticorpos. Ativada diretamente pela superfície bacteriana. Via CLÁSSICA sim depende de IgG/IgM.'},
+  {t:'vof',q:'[V/F] Vacinas são um mecanismo de imunidade ativa artificial.',c:true,e:'VERDADEIRO. Vacinas induzem o próprio organismo a montar resposta imune (ativa) via estímulo artificial.'},
+  {t:'vof',q:'[V/F] A piroptose ocorre em situações de estresse do neutrófilo.',c:false,e:'FALSO. Piroptose = morte inflamatória do MACRÓFAGO (não neutrófilo). Libera IL-1β e IL-18.'},
+  {t:'vof',q:'[V/F] IgM é o anticorpo que se liga à membrana do mastócito.',c:false,e:'FALSO. IgE é que se liga aos receptores FcεRI dos mastócitos. IgM não tem essa função.'},
+  {t:'vof',q:'[V/F] S. pneumoniae produz beta-hemólise.',c:false,e:'FALSO. S. pneumoniae produz hemólise ALFA (parcial, esverdeada). É sensível à optoquina e se diferencia dos viridans por isso.'},
+  {t:'vof',q:'[V/F] A febre reumática tem base imunológica: anticorpos contra proteína M de S. pyogenes reagem cruzadamente com antígenos cardíacos.',c:true,e:'VERDADEIRO. Reação cruzada (mimetismo molecular): proteína M similar à miosina cardíaca → anticorpos atacam o coração.'},
+  {t:'vof',q:'[V/F] GNPE se desenvolve por reação cruzada imunológica com antígenos renais.',c:false,e:'FALSO. GNPE = DEPÓSITO DE IMUNOCOMPLEXOS (Tipo III) nos glomérulos. Febre reumática é que tem reação cruzada (Tipo II).'},
+  {t:'vof',q:'[V/F] S. pneumoniae pode diseminar ao ouvido médio via tuba de Eustáquio.',c:true,e:'VERDADEIRO. Coloniza nasofaringe → infecção viral obstrui tuba de Eustáquio → ascende ao ouvido médio.'},
+  {t:'vof',q:'[V/F] Toxina alfa de C. perfringens (lecitinase) inibe a síntese proteica ribosomal.',c:false,e:'FALSO. Lecitinase destrói MEMBRANAS CELULARES → hemólise e necrose. Síntese proteica ribosomal é inibida pela toxina DIFTÉRICA.'},
+  {t:'vof',q:'[V/F] Conserva de ejotes → paralisia descendente = mecanismo por bloqueio de GABA/glicina.',c:false,e:'FALSO. Conserva → C. botulinum → bloqueia ACh → paralisia FLÁCIDA. GABA/glicina = tétano → paralisia ESPÁSTICA.'},
+  {t:'vof',q:'[V/F] Grupo viridans é o principal agente de endocardite pós-procedimento dental.',c:true,e:'VERDADEIRO. S. sanguis e S. mitis = microbiota oral → bacteriemia transitória → colonizam válvulas cardíacas danificadas.'},
+  {t:'vof',q:'[V/F] Imunidade celular é mediada principalmente por linfócitos B.',c:false,e:'FALSO. Imunidade celular = linfócitos T (CD4+ helper e CD8+ citotóxico). Linfócitos B → imunidade HUMORAL.'},
+  {t:'vof',q:'[V/F] Células dendríticas plasmocitoides têm como principal função a produção de interferon tipo I.',c:true,e:'VERDADEIRO. Cd Plasmocitoide → especializada em IFN-α e IFN-β (interferon tipo I) → principal resposta antiviral.'},
+  {t:'vof',q:'[V/F] O cérebro tem privilégio imunitário estrito.',c:false,e:'FALSO. O cérebro NÃO tem privilégio estrito — abre mão do privilégio para se defender. A microglía realiza a defesa local e poda sináptica.'},
+  {t:'vof',q:'[V/F] PD-L1 está presente em olhos, testículos e placenta para bloquear linfócitos T.',c:true,e:'VERDADEIRO. PD-L1 é molécula bloqueadora de linfócitos T presente nas principais barreiras de privilégio imunitário.'},
+  {t:'vof',q:'[V/F] Via clássica do complemento é ativada por IgG ou IgM ligados ao antígeno.',c:true,e:'VERDADEIRO. Via clássica depende de anticorpos (IgG ou IgM). IgM é mais eficiente por ser pentâmero.'},
+  {t:'vof',q:'[V/F] Hipersensibilidade Tipo IV ocorre após 48h e é mediada por linfócitos T.',c:true,e:'VERDADEIRO. Tipo IV = tardia/celular. TH1 + TH17. NÃO envolve anticorpos. >48h (tempo de ativar células T).'},
+  {t:'vof',q:'[V/F] Hipersensibilidade Tipo II: antígeno é circulante e o efeito é sistêmico.',c:false,e:'FALSO. Tipo II: antígeno é FIXO na célula → efeito LOCALIZADO. Tipo III é que tem imunocomplexos CIRCULANTES → efeito sistêmico.'},
+  {t:'vof',q:'[V/F] O tumor pode evadir o TCD8+ diminuindo a expressão de MHC I.',c:true,e:'VERDADEIRO. ↓ MHC I → TCD8+ não reconhece. A NK então entra reconhecendo a AUSÊNCIA de MHC I → elimina a célula.'},
+  {t:'vof',q:'[V/F] C. perfringens é anaeróbio estrito.',c:false,e:'FALSO. C. perfringens é anaeróbio FACULTATIVO. C. botulinum e C. tetani são anaeróbios estritos.'},
+  {t:'vof',q:'[V/F] Febre reumática: anticorpos contra proteína M de S. AUREUS causam reação cruzada com o coração.',c:false,e:'FALSO. É S. PYOGENES, não S. aureus. S. aureus não causa febre reumática.'},
+  {t:'vof',q:'[V/F] NK são células da imunidade inata que eliminam células tumorais por citotoxicidade.',c:true,e:'VERDADEIRO. NK = imunidade INATA. Elimina por CITOTOXICIDADE (perforina/granzimas), NÃO por fagocitose.'},
+  {t:'vof',q:'[V/F] A terapia CAR-T modifica geneticamente células T do paciente para atacar células tumorais específicas.',c:true,e:'VERDADEIRO. CAR-T: extração e modificação genética de células T → reintroduzidas para atacar especificamente tumores.'},
+];
+
+let score=0,answered=0;
+const LET=['A','B','C','D','E'];
+
+function renderQuiz(){
+  score=0;answered=0;
+  updateScore();
+  const body=document.getElementById('quiz-body');
+  body.innerHTML='';
+  qData.forEach((q,i)=>{
+    const div=document.createElement('div');
+    div.className='qcard';
+    div.id='qc'+i;
+    const badge=q.t==='mc'?'<span class="qcard-badge mc">MÚLTIPLA ESCOLHA</span>':'<span class="qcard-badge vof">V O F</span>';
+    let opts='';
+    if(q.t==='mc'){
+      opts='<div class="mc-opts">';
+      q.o.forEach((o,j)=>opts+=`<button class="mc-opt" onclick="pickMC(${i},${j})" data-i="${j}"><span class="mc-letter">${LET[j]}</span><span>${o}</span></button>`);
+      opts+='</div>';
+    }else{
+      opts=`<div class="vof-row"><button class="vof-btn vb" onclick="pickVOF(${i},true)">✓ VERDADEIRO</button><button class="vof-btn fb" onclick="pickVOF(${i},false)">✗ FALSO</button></div>`;
+    }
+    div.innerHTML=`<div class="qcard-top"><span class="qcard-num">Q${String(i+1).padStart(2,'0')}</span>${badge}<span class="qcard-q">${q.q.replace('[V/F] ','')}</span></div>${opts}<div class="qres" id="qr${i}"></div><div class="qexpl" id="qe${i}">💡 ${q.e}</div>`;
+    body.appendChild(div);
+  });
+}
+
+function pickMC(qi,oi){
+  const card=document.getElementById('qc'+qi);
+  if(card.dataset.done)return;
+  card.dataset.done='1';
+  const q=qData[qi];
+  card.querySelectorAll('.mc-opt').forEach((b,j)=>{b.classList.add('done');if(j===q.c)b.classList.add('correct');if(j===oi&&oi!==q.c)b.classList.add('wrong');});
+  const ok=oi===q.c;
+  if(ok)score++;answered++;
+  else answered++;
+  showResult(qi,ok);
+}
+
+function pickVOF(qi,chosen){
+  const card=document.getElementById('qc'+qi);
+  if(card.dataset.done)return;
+  card.dataset.done='1';
+  const q=qData[qi];
+  card.querySelectorAll('.vof-btn').forEach(b=>b.classList.add('done'));
+  const ok=chosen===q.c;
+  const vbtn=card.querySelector('.vb'),fbtn=card.querySelector('.fb');
+  if(ok){(chosen?vbtn:fbtn).classList.add('correct');}else{(chosen?vbtn:fbtn).classList.add('wrong');(q.c?vbtn:fbtn).classList.add('correct');}
+  if(ok)score++;answered++;else answered++;
+  showResult(qi,ok);
+}
+
+function showResult(qi,ok){
+  updateScore();
+  const r=document.getElementById('qr'+qi);
+  r.className='qres show '+(ok?'ok':'err');
+  r.textContent=ok?'✅ Correto!':'❌ Incorreto';
+  document.getElementById('qe'+qi).classList.add('show');
+}
+
+function updateScore(){
+  const pct=answered?Math.round(score/answered*100):0;
+  document.getElementById('score-display').textContent=score;
+  document.getElementById('score-fill').style.width=`${(score/qData.length)*100}%`;
+  document.getElementById('pct-display').textContent=`${pct}%`;
+}
+
+function resetQuiz(){if(!confirm('Reiniciar o quiz?'))return;renderQuiz();}
+renderQuiz();
+</script>
+
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
+</body>
+</html>
