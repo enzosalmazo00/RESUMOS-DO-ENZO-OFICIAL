@@ -8,7 +8,13 @@
 <script>document.documentElement.style.visibility = "hidden";</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="auth-guard.js"></script>
-<script>document.addEventListener("authReady",function(){document.documentElement.style.visibility="visible";});</script>
+<script>
+  document.addEventListener("authReady", function(){
+    document.documentElement.style.visibility = "visible";
+  });
+  // Fallback: garante visibilidade mesmo se auth-guard não disparar (preview local)
+  setTimeout(function(){ document.documentElement.style.visibility = "visible"; }, 1500);
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 :root{
@@ -172,8 +178,7 @@ nav.tabs button.active{background:var(--accent4);color:var(--bg);border-color:va
 <header>
   <div class="badge">🛡️ Imunologia · Exame Final · 2026</div>
   <h1>Resumo Final — Imunologia</h1>
-  <p class="sub">Imunidade Inata & Adaptativa · Anticorpos · Hipersensibilidades · Transplantes · Privilégio Imunitário · Imunologia Tumoral · Microbiologia Clínica</p>
-  <p class="verse">📖 "O Senhor é o meu pastor, nada me faltará." — Salmos 23:1</p>
+  <p class="sub">Imunidade Inata & Adaptativa · Anticorpos · Hipersensibilidades · Transplantes · Privilégio Imunitário · Imunologia Tumoral</p>
 </header>
 
 <nav class="tabs">
@@ -185,7 +190,6 @@ nav.tabs button.active{background:var(--accent4);color:var(--bg);border-color:va
   <button onclick="showSection('transplante',this)">🫀 Transplante</button>
   <button onclick="showSection('privilegio',this)">🔒 Privilégio</button>
   <button onclick="showSection('tumores',this)">🔬 Tumores</button>
-  <button onclick="showSection('micro',this)">🦠 Micro Clínica</button>
   <button onclick="showSection('flashcards',this)">🃏 Flashcards</button>
   <button onclick="showSection('quiz',this)">📝 Quiz (70Q)</button>
   <button onclick="showSection('provas',this)">📋 Provas</button>
@@ -197,8 +201,8 @@ nav.tabs button.active{background:var(--accent4);color:var(--bg);border-color:va
 <div class="chapter-title"><span class="chap-icon">📖</span> Introdução — Exame Final</div>
 <div class="info-block purple">
   <div class="label">Visão Geral</div>
-  <h4>Conteúdo: P1 + P2 + Microbiologia Clínica (Provas)</h4>
-  <p>Este resumo cobre <strong>toda a matéria de Imunologia</strong> para o exame final — inclui imunidade inata e adaptativa (P1), linfócitos T/B, anticorpos, hipersensibilidades, transplantes, privilégio imunitário e imunologia tumoral (P2), mais o conteúdo de microbiologia clínica das provas fotografadas (Streptococcus, Clostridium, Bacillus). Inclui <strong>30+ flashcards 3D, 70 questões</strong> e as questões reais das provas antigas com gabarito.</p>
+  <h4>Conteúdo: P1 + P2</h4>
+  <p>Este resumo cobre <strong>toda a matéria de Imunologia</strong> para o exame final — inclui imunidade inata e adaptativa (P1), linfócitos T/B, anticorpos, hipersensibilidades, transplantes, privilégio imunitário e imunologia tumoral (P2). Inclui <strong>flashcards 3D, questões de quiz</strong> e as questões reais das provas antigas com gabarito.</p>
 </div>
 <div class="info-block success">
   <div class="label">Roteiro de Estudo</div>
@@ -206,9 +210,8 @@ nav.tabs button.active{background:var(--accent4);color:var(--bg);border-color:va
   <ol>
     <li>Leia Inato → Adaptativo → Anticorpos (P1 consolidado)</li>
     <li>Hipersensibilidades → Transplante → Privilégio → Tumores (P2)</li>
-    <li>Micro Clínica (Streptococcus, Clostridium, Bacillus)</li>
     <li>Flashcards para fixar os conceitos-chave</li>
-    <li>70 questões de quiz + Provas Antigas com gabarito</li>
+    <li>Quiz + Provas Antigas com gabarito</li>
   </ol>
 </div>
 <div class="sec-divider"><h3>Temário Completo</h3></div>
@@ -221,7 +224,6 @@ nav.tabs button.active{background:var(--accent4);color:var(--bg);border-color:va
 <tr><td>🫀 Transplante</td><td>Tipos, rejeição (hiperaguda/aguda/crônica), ABO, GVHD, imunossupressão</td><td>P2</td></tr>
 <tr><td>🔒 Privilégio Imunitário</td><td>BHO (olho), BHE (cérebro), BHT (testículo), BHP (placenta), PD-L1, TGF-β</td><td>P2</td></tr>
 <tr><td>🔬 Imunologia Tumoral</td><td>TSA/TAA, vigilância imunológica, evasão tumoral, imunoterapia, CAR-T</td><td>P2</td></tr>
-<tr><td>🦠 Micro Clínica</td><td>Streptococcus, Clostridium, Bacillus anthracis, C. diphtheriae, M. tuberculosis</td><td>P2 provas</td></tr>
 </table>
 </div></div>
 
@@ -584,74 +586,6 @@ nav.tabs button.active{background:var(--accent4);color:var(--bg);border-color:va
 </div>
 </div></div>
 
-<!-- ============== MICRO CLÍNICA ============== -->
-<div id="micro" class="section">
-<div class="container">
-<div class="chapter-title"><span class="chap-icon">🦠</span> Microbiologia Clínica — Provas</div>
-
-<div class="sec-divider"><h3>Streptococcus</h3></div>
-<table class="compare-table">
-<tr><th>Espécie</th><th>Hemólise</th><th>Diferenciação</th><th>Doença Principal</th></tr>
-<tr><td><em>S. pyogenes</em></td><td><strong>Beta (β)</strong></td><td>Grupo A; proteína M; optoquina-resistente</td><td>Faringite, febre reumática, escarlatina</td></tr>
-<tr><td><em>S. pneumoniae</em></td><td><strong>Alfa (α)</strong></td><td>Diplococo lanceolado capsulado; optoquina-<strong>sensível</strong></td><td>Pneumonia, otite média, meningite</td></tr>
-<tr><td>Grupo <em>viridans</em></td><td><strong>Alfa (α)</strong></td><td>Microbiota oral; NÃO sensível à optoquina</td><td>Endocardite pós-dental</td></tr>
-<tr><td><em>S. agalactiae</em></td><td><strong>Beta (β)</strong></td><td>Grupo B; coloniza mucosa oral adultos</td><td>Infecção neonatal</td></tr>
-</table>
-<div class="info-block danger">
-  <div class="label">⭐ PROVA Q18</div>
-  <p><em>S. pneumoniae</em> produz hemólise <strong>ALFA</strong>, não beta. "Beta-hemólise em S. pneumoniae" = FALSO. Diferencia-se dos viridans pela sensibilidade à <strong>optoquina</strong>.</p>
-</div>
-<div class="info-block warn">
-  <div class="label">Febre Reumática (Q07 e Q17)</div>
-  <p>Anticorpos anti-proteína M de <strong>S. pyogenes</strong> (NÃO S. aureus!) reagem cruzadamente com antígenos cardíacos → cardite. Mecanismo = <strong>reação cruzada/mimetismo molecular</strong>. GNPE = depósito de imunocomplexos (diferente da febre reumática!).</p>
-</div>
-<div class="info-block">
-  <div class="label">Caso Clínico — Otite Média (Q04)</div>
-  <p>Criança 2 anos, febre, otalgia, cultivo timpânico: diplococos Gram+, alfa-hemolíticos, lanceolados → <strong>S. pneumoniae</strong>. Coloniza nasofaringe → via tuba de Eustáquio (obstruída por infecção viral) → ouvido médio.</p>
-</div>
-<div class="info-block">
-  <div class="label">Endocardite pós-dental (Q12)</div>
-  <p>Grupo <strong>viridans</strong> (S. sanguis, S. mitis) = principal agente. Microbiota oral → bacteriemia transitória no procedimento → válvulas cardíacas danificadas. Profilaxia: amoxicilina antes do procedimento.</p>
-</div>
-
-<div class="sec-divider"><h3>Clostridium</h3></div>
-<table class="compare-table">
-<tr><th>Espécie</th><th>Toxina</th><th>Mecanismo</th><th>Doença</th></tr>
-<tr><td><em>C. botulinum</em></td><td>Toxina botulínica</td><td>Cliva proteínas SNARE → bloqueia <strong>ACh</strong> → paralisia <strong>FLÁCIDA</strong> descendente</td><td>Botulismo</td></tr>
-<tr><td><em>C. tetani</em></td><td>Tetanospasmina</td><td>Bloqueia <strong>GABA e glicina</strong> (neurônios inibitórios) → paralisia <strong>ESPÁSTICA</strong></td><td>Tétano</td></tr>
-<tr><td><em>C. perfringens</em></td><td>Toxina Alfa (lecitinase/fosfolipase C)</td><td>Destrói membranas → <strong>hemólise e necrose tecidual</strong></td><td>Gangrena gasosa, intoxicação alimentar</td></tr>
-<tr><td><em>C. difficile</em></td><td>Toxina A (enterotoxina) + Toxina B (citotoxina)</td><td>A → inflamação e diarreia; B → destrói actina</td><td>Colite pseudomembranosa</td></tr>
-</table>
-<div class="info-block danger">
-  <div class="label">⭐ PROVA Q13 — Armadilha</div>
-  <p>Toxina alfa de C. perfringens = lecitinase → <strong>destrói membranas (hemólise)</strong>, NÃO inibe síntese proteica ribosomal. Síntese proteica é inibida pela <strong>toxina diftérica</strong>.</p>
-</div>
-<div class="info-block danger">
-  <div class="label">⭐ PROVA Q14 — Armadilha</div>
-  <p>Conserva de ejotes → C. botulinum → bloqueia <strong>ACh</strong> → paralisia <strong>FLÁCIDA</strong> descendente. SEM febre (não há invasão bacteriana, só toxina pré-formada). O mecanismo de GABA/glicina = tétano → paralisia ESPÁSTICA.</p>
-</div>
-<div class="info-block success">
-  <div class="label">Caso Clínico Botulismo (Q19)</div>
-  <p><strong>A) Microrganismo:</strong> Clostridium botulinum — bacilo Gram+, anaeróbio estrito, formador de esporos. <strong>B) Mecanismo:</strong> toxina cliva proteínas SNARE → impede fusão de vesículas sinápticas → sem liberação de ACh → paralisia flácida descendente.</p>
-</div>
-
-<div class="sec-divider"><h3>Outros Importantes</h3></div>
-<table class="compare-table">
-<tr><th>Microrganismo</th><th>Ponto-Chave de Prova</th></tr>
-<tr><td><em>Bacillus anthracis</em></td><td>Ântrax cutâneo: lesão necrótica com escara negra (pústula maligna). Carbunco ≠ ântrax: carbunco = S. aureus em múltiplos folículos.</td></tr>
-<tr><td><em>Corynebacterium diphtheriae</em></td><td>Toxigênico por <strong>transdução via bacteriófago lisogênico</strong> (fago β). NÃO por mutação espontânea, conjugação ou transformação.</td></tr>
-<tr><td><em>Mycobacterium tuberculosis</em></td><td><strong>Aeróbio estrito</strong>. Preferencialmente ápices pulmonares (mais O₂).</td></tr>
-<tr><td>Cápsula bacteriana</td><td>Função principal: <strong>proteger contra a fagocitose</strong>.</td></tr>
-</table>
-<table class="compare-table">
-<tr><th>Metabolismo</th><th>Exemplos</th></tr>
-<tr><td>Aeróbio estrito</td><td>M. tuberculosis, Pseudomonas aeruginosa</td></tr>
-<tr><td>Anaeróbio estrito</td><td>C. botulinum, C. tetani</td></tr>
-<tr><td>Anaeróbio facultativo</td><td>C. perfringens, E. coli, S. aureus</td></tr>
-<tr><td>Microaerófilo</td><td>Helicobacter pylori, Campylobacter</td></tr>
-</table>
-</div></div>
-
 <!-- ============== FLASHCARDS ============== -->
 <div id="flashcards" class="section">
 <div class="container">
@@ -723,35 +657,6 @@ nav.tabs button.active{background:var(--accent4);color:var(--bg);border-color:va
 
 <div class="prova-block">
   <div class="prova-hdr" onclick="toggleProva(this)">
-    <h3>Prova P2 — Streptococcus, Clostridium, Bacillus</h3>
-    <span class="meta">Múltipla Escolha + V/F + Caso Clínico · 19Q</span>
-    <span class="chev">▼</span>
-  </div>
-  <div class="prova-body">
-    <div class="prova-q"><div class="prova-q-text"><strong>01.</strong> Diferença principal entre furunculose e carbunco?</div><div class="prova-ans"><strong>B — Carbunco = infecção extensa de múltiplos folículos pilosos em uma região; furunculose = infecção localizada de um único folículo.</strong></div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>02.</strong> Função principal da cápsula bacteriana?</div><div class="prova-ans"><strong>B — Proteger contra a fagocitose.</strong></div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>03.</strong> Exemplo de bactéria aeróbia estrita?</div><div class="prova-ans"><strong>C — Mycobacterium tuberculosis.</strong> E. coli = facultativo; C. botulinum = anaeróbio estrito; H. pylori = microaerófilo.</div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>04.</strong> Criança 2 anos, otalgia, cultivo: diplococos Gram+, alfa-hemolíticos, lanceolados. Agente mais provável?</div><div class="prova-ans"><strong>B — S. pneumoniae.</strong> Coloniza nasofaringe → tuba de Eustáquio → ouvido médio. Diplococo lanceolado, alfa-hemolítico, sensível à optoquina.</div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>05.</strong> Como se adquire botulismo em adultos?</div><div class="prova-ans"><strong>A — Consumo de alimentos enlatados em casa sem esterilização adequada.</strong> Toxina pré-formada é ingerida e absorvida pelo trato GI.</div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>06.</strong> Manifestação clínica característica do ântrax cutâneo?</div><div class="prova-ans"><strong>A — Lesão necrótica com escara negra (pústula maligna).</strong> Pápula → vesícula → úlcera com crosta negra indolor.</div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>07.</strong> Criança 10 anos, febre, artrite migratória, cardite, eritema marginado 3 semanas após faringite por S. pyogenes. Mecanismo imunológico?</div><div class="prova-ans"><strong>B — Reação cruzada de anticorpos contra proteína M de S. pyogenes com antígenos do tecido cardíaco.</strong></div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>08.</strong> Efeito da alfa-toxina de Clostridium perfringens?</div><div class="prova-ans"><strong>A — Provoca hemólise e destruição tecidual.</strong> É uma lecitinase (fosfolipase C) que degrada fosfolipídios das membranas celulares.</div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>09.</strong> Tipo de metabolismo de C. perfringens?</div><div class="prova-ans"><strong>D — Anaeróbio facultativo.</strong></div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>10.</strong> Função da Toxina A de C. difficile?</div><div class="prova-ans"><strong>A — Enterotoxina que provoca inflamação e diarreia.</strong> Toxina B = citotoxina que destrói actina.</div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>11.</strong> Como C. diphtheriae adquire capacidade de produzir toxina?</div><div class="prova-ans"><strong>B — Por transducção via bacteriófago lisogênico.</strong> O fago β carrega o gene tox e o insere no DNA bacteriano.</div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>12.</strong> Grupo de Streptococcus mais frequente na endocardite pós-procedimento dental?</div><div class="prova-ans"><strong>B — Streptococcus do grupo viridans (S. sanguis, S. mitis).</strong> Microbiota oral → bacteriemia transitória → válvulas cardíacas danificadas.</div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>13.</strong> [V/F] Toxina alfa de C. perfringens (lecitinase) inibe a síntese proteica ribosomal.</div><div class="prova-ans"><strong>FALSO.</strong> Lecitinase destrói MEMBRANAS CELULARES → hemólise e gangrena. Síntese proteica ribosomal é inibida pela toxina DIFTÉRICA.</div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>14.</strong> [V/F] Conserva de ejotes → paralisia descendente → mecanismo = bloquear GABA/glicina → paralisia espástica.</div><div class="prova-ans"><strong>FALSO.</strong> C. botulinum → bloqueia ACh → paralisia FLÁCIDA. GABA/glicina = tétano → paralisia ESPÁSTICA.</div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>15.</strong> [V/F] GNPE se desenvolve por reação cruzada imunológica com antígenos renais.</div><div class="prova-ans"><strong>FALSO.</strong> GNPE = DEPÓSITO DE IMUNOCOMPLEXOS (Ag-Ac) nos glomérulos. Reação cruzada com tecido cardíaco = febre reumática.</div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>16.</strong> [V/F] S. pneumoniae coloniza nasofaringe e pode diseminar ao ouvido médio via tuba de Eustáquio.</div><div class="prova-ans"><strong>VERDADEIRO.</strong> Especialmente após infecções virais que obstruem a drenagem normal.</div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>17.</strong> [V/F] Febre reumática: anticorpos contra proteína M de S. AUREUS reagem cruzadamente com antígenos cardíacos.</div><div class="prova-ans"><strong>FALSO.</strong> É S. PYOGENES, não S. aureus.</div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>18.</strong> [V/F] S. pneumoniae produz beta-hemólise e se diferencia dos viridans por sensibilidade à optoquina.</div><div class="prova-ans"><strong>FALSO.</strong> S. pneumoniae produz hemólise ALFA (não beta). Correto: sensível à optoquina.</div></div>
-    <div class="prova-q"><div class="prova-q-text"><strong>19. Caso Clínico:</strong> Mulher 35 anos, visão borrada, dificuldade para falar/deglutir, fraqueza progressiva, após conserva caseira. A) Microrganismo? B) Mecanismo da toxina?</div><div class="prova-ans"><strong>A) Clostridium botulinum:</strong> bacilo Gram+, anaeróbio estrito, formador de esporos. <strong>B) Mecanismo:</strong> toxina cliva proteínas SNARE → impede fusão de vesículas sinápticas → sem liberação de ACh → paralisia flácida descendente. Sem febre (sem invasão bacteriana — só toxina pré-formada).</div></div>
-  </div>
-</div>
-
-<div class="prova-block">
-  <div class="prova-hdr" onclick="toggleProva(this)">
     <h3>Completar Enunciados — Seção IV</h3>
     <span class="meta">Completar palavras · 5Q</span>
     <span class="chev">▼</span>
@@ -769,6 +674,51 @@ nav.tabs button.active{background:var(--accent4);color:var(--bg);border-color:va
 
 <!-- ============== SCRIPTS ============== -->
 <script>
+// Expõe funções usadas em onclick= inline ao escopo global ANTES do DOMContentLoaded
+window.showSection = function(id, btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+window.toggleProva = function(hdr){
+  hdr.classList.toggle('open');
+  hdr.nextElementSibling.classList.toggle('open');
+};
+window.shuffleFC = function(){
+  const a=[...fcData];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  renderFC(a);
+};
+window.resetFC = function(){ renderFC(fcData); };
+window.resetQuiz = function(){ if(!confirm('Reiniciar o quiz?'))return; renderQuiz(); };
+window.pickMC = function(qi,oi){
+  const card=document.getElementById('qc'+qi);
+  if(card.dataset.done)return;
+  card.dataset.done='1';
+  const q=qData[qi];
+  card.querySelectorAll('.mc-opt').forEach((b,j)=>{b.classList.add('done');if(j===q.c)b.classList.add('correct');if(j===oi&&oi!==q.c)b.classList.add('wrong');});
+  const ok=oi===q.c;
+  if(ok)score++;answered++;else answered++;
+  showResult(qi,ok);
+};
+window.pickVOF = function(qi,chosen){
+  const card=document.getElementById('qc'+qi);
+  if(card.dataset.done)return;
+  card.dataset.done='1';
+  const q=qData[qi];
+  card.querySelectorAll('.vof-btn').forEach(b=>b.classList.add('done'));
+  const ok=chosen===q.c;
+  const vbtn=card.querySelector('.vb'),fbtn=card.querySelector('.fb');
+  if(ok){(chosen?vbtn:fbtn).classList.add('correct');}
+  else{(chosen?vbtn:fbtn).classList.add('wrong');(q.c?vbtn:fbtn).classList.add('correct');}
+  if(ok)score++;answered++;else answered++;
+  showResult(qi,ok);
+};
+
+document.addEventListener('DOMContentLoaded', function(){
+
 // PARTICLES
 const canvas=document.getElementById('particles');
 const ctx=canvas.getContext('2d');
@@ -786,21 +736,6 @@ drawPts();
 
 // SCROLL TOP
 window.addEventListener('scroll',()=>{document.getElementById('scrolltop').style.display=window.scrollY>400?'block':'none';});
-
-// TABS
-function showSection(id,btn){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-// PROVAS
-function toggleProva(hdr){
-  hdr.classList.toggle('open');
-  hdr.nextElementSibling.classList.toggle('open');
-}
 
 // FLASHCARDS DATA
 const fcData=[
@@ -830,10 +765,6 @@ const fcData=[
   {cat:'Privilégio',q:'O cérebro tem privilégio imunitário ESTRITO?',a:'NÃO! O cérebro ABRE MÃO do seu privilégio quando necessário para se defender. Essa abertura gera inflamação e dano. A microglía é responsável pela defesa local.'},
   {cat:'Tumores',q:'TSA vs TAA — diferença',a:'TSA (tumor-specific antigen) = só em células tumorais, não em células sãs. TAA (tumor-associated antigen) = presente também em células normais, mas SUPEREXPRESSO no tumor. Ex: HER2 (câncer de mama).'},
   {cat:'Tumores',q:'Como o tumor evade o sistema imune?',a:'↓ MHC I → TCD8+ não reconhece. Expressa PD-L1 → blinda contra linfócitos T. Recruta T Reguladores → suprime sistema imune. Libera IL-10 → evita defesa. Angiogênese via macrófago alternativo.'},
-  {cat:'Micro',q:'S. pneumoniae — hemólise e diferenciação dos viridans',a:'Alfa-hemólise (NÃO beta!). Diplococo lanceolado, Gram+, capsulado. Diferencia-se dos viridans pela sensibilidade à OPTOQUINA.'},
-  {cat:'Micro',q:'Botulismo vs Tétano — mecanismo e tipo de paralisia',a:'Botulismo (C. botulinum): bloqueia ACh → paralisia FLÁCIDA descendente. Tétano (C. tetani): bloqueia GABA/glicina (inibitórios) → paralisia ESPÁSTICA (trismo, opistótono).'},
-  {cat:'Micro',q:'Toxina alfa de C. perfringens — o que faz?',a:'É uma LECITINASE (fosfolipase C) → destrói membranas celulares → hemólise e necrose tecidual → gangrena gasosa. NÃO inibe síntese proteica (essa é a toxina diftérica).'},
-  {cat:'Micro',q:'Como C. diphtheriae adquire capacidade toxigênica?',a:'Por TRANSDUÇÃO via bacteriófago lisogênico (fago β). O gene tox é carregado pelo fago e inserido no DNA bacteriano. Cepas sem o fago são atóxicas.'},
 ];
 
 let fcShown=0;
@@ -850,8 +781,6 @@ function renderFC(data){
   });
   document.getElementById('fc-counter').textContent=`0 / ${data.length} revelados`;
 }
-function shuffleFC(){const a=[...fcData];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}renderFC(a);}
-function resetFC(){renderFC(fcData);}
 renderFC(fcData);
 
 // QUIZ DATA
@@ -878,16 +807,7 @@ const qData=[
   {t:'mc',q:'Qual molécula está presente em olhos, testículos e placenta para bloquear linfócitos T?',o:['TGF-β','Testosterona','PD-L1','Indolamina'],c:2,e:'PD-L1 é a molécula bloqueadora de linfócitos T presente nas principais barreiras de privilégio imunitário (BHO, BHT, BHP).'},
   {t:'mc',q:'TSA vs TAA — qual é exclusivo de células tumorais?',o:['TAA','TSA (neo-antígeno)','Ambos são exclusivos','Nenhum é exclusivo'],c:1,e:'TSA (Tumor-Specific Antigen) = só em células tumorais, NÃO em células sãs. TAA = presente em células normais mas SUPEREXPRESSO no tumor.'},
   {t:'mc',q:'Como o tumor evade o TCD8+?',o:['Produzindo mais IgE','Diminuindo a expressão de MHC I','Ativando NK','Liberando IL-12'],c:1,e:'Tumor ↓ MHC I → TCD8+ não reconhece a célula. A NK então entra em ação reconhecendo a AUSÊNCIA de MHC I → elimina a célula.'},
-  {t:'mc',q:'S. pneumoniae produz qual tipo de hemólise?',o:['Beta-hemólise','Alfa-hemólise','Gama-hemólise (nenhuma)','Delta-hemólise'],c:1,e:'S. pneumoniae = alfa-hemolítico (parcial, esverdeada). NÃO beta. Diferencia-se dos viridans pela sensibilidade à optoquina.'},
-  {t:'mc',q:'Agente mais provável: criança 2 anos, otalgia, diplococos Gram+, alfa-hemolíticos, lanceolados no cultivo timpânico:',o:['S. agalactiae','S. pneumoniae','S. pyogenes','S. viridans'],c:1,e:'S. pneumoniae: diplococo lanceolado, Gram+, alfa-hemolítico, sensível à optoquina. Coloniza nasofaringe → tuba de Eustáquio → ouvido médio.'},
-  {t:'mc',q:'Mecanismo da toxina botulínica:',o:['Bloqueia GABA/glicina → espasmo','Cliva proteínas SNARE → bloqueia ACh → paralisia flácida','Inibe síntese proteica ribosomal','Ativa superantígenos'],c:1,e:'C. botulinum → toxina zinc-endopeptidase → cliva proteínas SNARE → impede fusão vesicular → sem ACh → paralisia FLÁCIDA descendente.'},
-  {t:'mc',q:'Toxina alfa de C. perfringens = lecitinase. O que faz?',o:['Inibe síntese proteica ribosomal','Bloqueia ACh','Destrói membranas celulares (hemólise e necrose)','Bloqueia GABA/glicina'],c:2,e:'Lecitinase = fosfolipase C → degrada fosfolipídios das membranas → hemólise e necrose → gangrena gasosa. NÃO inibe síntese proteica.'},
-  {t:'mc',q:'Como C. diphtheriae adquire capacidade toxigênica?',o:['Mutação espontânea','Transdução por bacteriófago lisogênico','Conjugação','Transformação por plasmídio'],c:1,e:'Gene tox carregado pelo fago β (corinefago) → transdução lisogênica. Cepas sem o fago são atóxicas/não patogênicas.'},
-  {t:'mc',q:'Tipo de metabolismo de C. perfringens:',o:['Anaeróbio estrito','Aeróbio obrigado','Microaerófilo','Anaeróbio facultativo'],c:3,e:'C. perfringens = anaeróbio facultativo. C. botulinum e C. tetani são anaeróbios ESTRITOS. M. tuberculosis = aeróbio estrito.'},
-  {t:'mc',q:'Grupo Streptococcus mais frequente na endocardite pós-dental:',o:['S. pyogenes','Grupo viridans (S. sanguis, S. mitis)','S. pneumoniae','S. agalactiae'],c:1,e:'Viridans = microbiota oral → bacteriemia transitória durante procedimentos dentais → colonização de válvulas danificadas.'},
-  {t:'mc',q:'Manifestação do ântrax cutâneo:',o:['Lesão necrótica com escara negra (pústula maligna)','Dificuldade respiratória','Erupção pustulosa generalizada','Petéquias difusas'],c:0,e:'Ântrax cutâneo: pápula → vesícula → úlcera com escara necrótica negra indolor (pústula maligna). Mais comum e menos grave.'},
   {t:'mc',q:'Imunoglobulina que indica infecção AGUDA ou recente:',o:['IgG','IgA','IgM','IgE','IgD'],c:2,e:'IgM = primeiro anticorpo produzido em resposta a um novo antígeno (resposta primária). Presença de IgM → infecção AGUDA ou recente.'},
-  {t:'mc',q:'M. tuberculosis é classificado como:',o:['Anaeróbio estrito','Aeróbio estrito','Anaeróbio facultativo','Microaerófilo'],c:1,e:'M. tuberculosis = aeróbio ESTRITO → preferencialmente ápices pulmonares (maior pO₂). Contrário: C. botulinum = anaeróbio estrito.'},
   // VOF
   {t:'vof',q:'[V/F] Anticorpos atuam no meio intracelular.',c:false,e:'FALSO. Anticorpos atuam EXCLUSIVAMENTE no meio extracelular. Não penetram nas células.'},
   {t:'vof',q:'[V/F] Os mastócitos são células da imunidade inata fixas nos tecidos que liberam mediadores químicos.',c:true,e:'VERDADEIRO. Mastócitos estão nos tecidos (sob pele, mucosas) e liberam histamina, prostaglandinas, leucotrienos em resposta a estímulos.'},
@@ -897,13 +817,6 @@ const qData=[
   {t:'vof',q:'[V/F] Vacinas são um mecanismo de imunidade ativa artificial.',c:true,e:'VERDADEIRO. Vacinas induzem o próprio organismo a montar resposta imune (ativa) via estímulo artificial.'},
   {t:'vof',q:'[V/F] A piroptose ocorre em situações de estresse do neutrófilo.',c:false,e:'FALSO. Piroptose = morte inflamatória do MACRÓFAGO (não neutrófilo). Libera IL-1β e IL-18.'},
   {t:'vof',q:'[V/F] IgM é o anticorpo que se liga à membrana do mastócito.',c:false,e:'FALSO. IgE é que se liga aos receptores FcεRI dos mastócitos. IgM não tem essa função.'},
-  {t:'vof',q:'[V/F] S. pneumoniae produz beta-hemólise.',c:false,e:'FALSO. S. pneumoniae produz hemólise ALFA (parcial, esverdeada). É sensível à optoquina e se diferencia dos viridans por isso.'},
-  {t:'vof',q:'[V/F] A febre reumática tem base imunológica: anticorpos contra proteína M de S. pyogenes reagem cruzadamente com antígenos cardíacos.',c:true,e:'VERDADEIRO. Reação cruzada (mimetismo molecular): proteína M similar à miosina cardíaca → anticorpos atacam o coração.'},
-  {t:'vof',q:'[V/F] GNPE se desenvolve por reação cruzada imunológica com antígenos renais.',c:false,e:'FALSO. GNPE = DEPÓSITO DE IMUNOCOMPLEXOS (Tipo III) nos glomérulos. Febre reumática é que tem reação cruzada (Tipo II).'},
-  {t:'vof',q:'[V/F] S. pneumoniae pode diseminar ao ouvido médio via tuba de Eustáquio.',c:true,e:'VERDADEIRO. Coloniza nasofaringe → infecção viral obstrui tuba de Eustáquio → ascende ao ouvido médio.'},
-  {t:'vof',q:'[V/F] Toxina alfa de C. perfringens (lecitinase) inibe a síntese proteica ribosomal.',c:false,e:'FALSO. Lecitinase destrói MEMBRANAS CELULARES → hemólise e necrose. Síntese proteica ribosomal é inibida pela toxina DIFTÉRICA.'},
-  {t:'vof',q:'[V/F] Conserva de ejotes → paralisia descendente = mecanismo por bloqueio de GABA/glicina.',c:false,e:'FALSO. Conserva → C. botulinum → bloqueia ACh → paralisia FLÁCIDA. GABA/glicina = tétano → paralisia ESPÁSTICA.'},
-  {t:'vof',q:'[V/F] Grupo viridans é o principal agente de endocardite pós-procedimento dental.',c:true,e:'VERDADEIRO. S. sanguis e S. mitis = microbiota oral → bacteriemia transitória → colonizam válvulas cardíacas danificadas.'},
   {t:'vof',q:'[V/F] Imunidade celular é mediada principalmente por linfócitos B.',c:false,e:'FALSO. Imunidade celular = linfócitos T (CD4+ helper e CD8+ citotóxico). Linfócitos B → imunidade HUMORAL.'},
   {t:'vof',q:'[V/F] Células dendríticas plasmocitoides têm como principal função a produção de interferon tipo I.',c:true,e:'VERDADEIRO. Cd Plasmocitoide → especializada em IFN-α e IFN-β (interferon tipo I) → principal resposta antiviral.'},
   {t:'vof',q:'[V/F] O cérebro tem privilégio imunitário estrito.',c:false,e:'FALSO. O cérebro NÃO tem privilégio estrito — abre mão do privilégio para se defender. A microglía realiza a defesa local e poda sináptica.'},
@@ -912,9 +825,6 @@ const qData=[
   {t:'vof',q:'[V/F] Hipersensibilidade Tipo IV ocorre após 48h e é mediada por linfócitos T.',c:true,e:'VERDADEIRO. Tipo IV = tardia/celular. TH1 + TH17. NÃO envolve anticorpos. >48h (tempo de ativar células T).'},
   {t:'vof',q:'[V/F] Hipersensibilidade Tipo II: antígeno é circulante e o efeito é sistêmico.',c:false,e:'FALSO. Tipo II: antígeno é FIXO na célula → efeito LOCALIZADO. Tipo III é que tem imunocomplexos CIRCULANTES → efeito sistêmico.'},
   {t:'vof',q:'[V/F] O tumor pode evadir o TCD8+ diminuindo a expressão de MHC I.',c:true,e:'VERDADEIRO. ↓ MHC I → TCD8+ não reconhece. A NK então entra reconhecendo a AUSÊNCIA de MHC I → elimina a célula.'},
-  {t:'vof',q:'[V/F] C. perfringens é anaeróbio estrito.',c:false,e:'FALSO. C. perfringens é anaeróbio FACULTATIVO. C. botulinum e C. tetani são anaeróbios estritos.'},
-  {t:'vof',q:'[V/F] Febre reumática: anticorpos contra proteína M de S. AUREUS causam reação cruzada com o coração.',c:false,e:'FALSO. É S. PYOGENES, não S. aureus. S. aureus não causa febre reumática.'},
-  {t:'vof',q:'[V/F] NK são células da imunidade inata que eliminam células tumorais por citotoxicidade.',c:true,e:'VERDADEIRO. NK = imunidade INATA. Elimina por CITOTOXICIDADE (perforina/granzimas), NÃO por fagocitose.'},
   {t:'vof',q:'[V/F] A terapia CAR-T modifica geneticamente células T do paciente para atacar células tumorais específicas.',c:true,e:'VERDADEIRO. CAR-T: extração e modificação genética de células T → reintroduzidas para atacar especificamente tumores.'},
 ];
 
@@ -934,7 +844,7 @@ function renderQuiz(){
     let opts='';
     if(q.t==='mc'){
       opts='<div class="mc-opts">';
-      q.o.forEach((o,j)=>opts+=`<button class="mc-opt" onclick="pickMC(${i},${j})" data-i="${j}"><span class="mc-letter">${LET[j]}</span><span>${o}</span></button>`);
+      q.o.forEach((o,j)=>opts+=`<button class="mc-opt" onclick="pickMC(${i},${j})"><span class="mc-letter">${LET[j]}</span><span>${o}</span></button>`);
       opts+='</div>';
     }else{
       opts=`<div class="vof-row"><button class="vof-btn vb" onclick="pickVOF(${i},true)">✓ VERDADEIRO</button><button class="vof-btn fb" onclick="pickVOF(${i},false)">✗ FALSO</button></div>`;
@@ -942,31 +852,6 @@ function renderQuiz(){
     div.innerHTML=`<div class="qcard-top"><span class="qcard-num">Q${String(i+1).padStart(2,'0')}</span>${badge}<span class="qcard-q">${q.q.replace('[V/F] ','')}</span></div>${opts}<div class="qres" id="qr${i}"></div><div class="qexpl" id="qe${i}">💡 ${q.e}</div>`;
     body.appendChild(div);
   });
-}
-
-function pickMC(qi,oi){
-  const card=document.getElementById('qc'+qi);
-  if(card.dataset.done)return;
-  card.dataset.done='1';
-  const q=qData[qi];
-  card.querySelectorAll('.mc-opt').forEach((b,j)=>{b.classList.add('done');if(j===q.c)b.classList.add('correct');if(j===oi&&oi!==q.c)b.classList.add('wrong');});
-  const ok=oi===q.c;
-  if(ok)score++;answered++;
-  else answered++;
-  showResult(qi,ok);
-}
-
-function pickVOF(qi,chosen){
-  const card=document.getElementById('qc'+qi);
-  if(card.dataset.done)return;
-  card.dataset.done='1';
-  const q=qData[qi];
-  card.querySelectorAll('.vof-btn').forEach(b=>b.classList.add('done'));
-  const ok=chosen===q.c;
-  const vbtn=card.querySelector('.vb'),fbtn=card.querySelector('.fb');
-  if(ok){(chosen?vbtn:fbtn).classList.add('correct');}else{(chosen?vbtn:fbtn).classList.add('wrong');(q.c?vbtn:fbtn).classList.add('correct');}
-  if(ok)score++;answered++;else answered++;
-  showResult(qi,ok);
 }
 
 function showResult(qi,ok){
@@ -984,8 +869,9 @@ function updateScore(){
   document.getElementById('pct-display').textContent=`${pct}%`;
 }
 
-function resetQuiz(){if(!confirm('Reiniciar o quiz?'))return;renderQuiz();}
 renderQuiz();
+
+}); // fim DOMContentLoaded
 </script>
 
 <script src="study-timer.js"></script>
