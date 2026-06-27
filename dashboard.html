@@ -989,11 +989,38 @@
         <div class="store-grid" id="store-grid-p2"></div>
       </div>
 
-      <!-- FINAIS EM BREVE -->
+      <!-- COMBO FINAL -->
+      <div class="store-section" id="store-combo-final-section" style="display:none;">
+        <div class="store-section-title" style="color:#4ade80;">🎓 Pacote Final</div>
+        <div class="combo-card" id="combo-final-card" style="border-color:rgba(74,222,128,0.25);background:linear-gradient(135deg,rgba(74,222,128,0.06) 0%,rgba(6,182,212,0.04) 100%);">
+          <div class="combo-header">
+            <div>
+              <div class="combo-title" style="color:#4ade80;">🎓 Pacote Completo Final</div>
+              <div class="combo-sub">Todos os 7 resumos finais — 3º Semestre</div>
+            </div>
+            <div class="combo-preco-box">
+              <div class="combo-preco-old" id="combo-final-old">R$ 174,93</div>
+              <div class="combo-preco-new" style="color:#4ade80;">R$ 89,90</div>
+              <div class="combo-desconto" style="background:rgba(74,222,128,0.12);color:#4ade80;border-color:rgba(74,222,128,0.3);">🏷️ 49% off</div>
+            </div>
+          </div>
+          <div class="combo-materias" id="combo-final-tags"></div>
+          <button class="combo-btn" id="combo-final-btn" onclick="addComboFinalToCart()" style="background:linear-gradient(135deg,#4ade80,#22d3ee);">
+            🛒 Adicionar pacote ao carrinho — R$ 89,90
+          </button>
+        </div>
+      </div>
+
+      <!-- FINAIS INDIVIDUAIS -->
       <div class="store-section">
-        <div class="store-section-title" style="color:rgba(251,191,36,0.45);">🎓 Final — Em breve</div>
-        <div style="padding:16px 20px;border-radius:14px;border:1px solid rgba(251,191,36,0.15);background:rgba(251,191,36,0.04);font-size:13px;color:rgba(251,191,36,0.5);text-align:center;">
-          Os resumos das provas finais serão disponibilizados em breve.
+        <div class="store-section-title" style="color:rgba(74,222,128,0.7);">🎓 Final
+          <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
+            R$ 24,99 unit
+          </span>
+        </div>
+        <div class="store-grid" id="store-grid-final"></div>
+        <div id="store-final-breve" style="padding:16px 20px;border-radius:14px;border:1px solid rgba(251,191,36,0.15);background:rgba(251,191,36,0.04);font-size:13px;color:rgba(251,191,36,0.5);text-align:center;margin-top:10px;display:none;">
+          As demais finais serão disponibilizadas em breve.
         </div>
       </div>
 
@@ -1199,19 +1226,19 @@
 
 // ── Dados das matérias ────────────────────────────────────────────────────────
 var MATERIAS = [
-  { key:"bioquimica",    label:"Bioquímica",    emoji:"📚", desc:"Bases moleculares e metabolismo.",          file_p1:"bioquimica_p1.html",    file_p2:"resumo_bioquimica_p2.html",  file_final:"bioquimica_final.html"    },
-  { key:"biofisica",     label:"Biofísica",     emoji:"⚡", desc:"Física aplicada à medicina.",               file_p1:"biofisica_p1.html",     file_p2:"biofisica.html",             file_final:"biofisica_final.html"     },
-  { key:"genetica",      label:"Genética",      emoji:"🧬", desc:"Herança e mutações genéticas.",            file_p1:"genetica_p1.html",      file_p2:"genetica_p2_enzo.html",      file_final:"genetica_final.html"      },
-  { key:"fisiologia",    label:"Fisiologia",    emoji:"❤️", desc:"Funcionamento dos sistemas humanos.",      file_p1:"fisiologia_p1.html",    file_p2:"fisiologia_p2_enzo.html",    file_final:"fisiologia_final.html"    },
-  { key:"microbiologia", label:"Microbiologia", emoji:"🦠", desc:"Microrganismos e patologias.",             file_p1:"microbiologia_p1.html", file_p2:"microbiologia_gram_negativos.html", file_final:"microbiologia_final.html" },
-  { key:"micro_pratica", label:"Micro Prática", emoji:"🧫", desc:"Identificação e técnicas laboratoriais.",  file_p1:"micro_pratica_p1.html", file_p2:"micro_pratica.html",          file_final:"micro_pratica_final.html" },
-  { key:"imunologia",    label:"Imunologia",    emoji:"🛡️", desc:"Sistema imune e respostas do organismo.", file_p1:"imunologia_p1.html",    file_p2:"resumo_imunologia_p2.html",  file_final:"imunologia_final.html"    },
+  { key:"bioquimica",    label:"Bioquímica",    emoji:"📚", desc:"Bases moleculares e metabolismo.",          file_p1:"bioquimica_p1.html",    file_p2:"resumo_bioquimica_p2.html",  file_final:"bioquimica_final.html",    finalReady:true  },
+  { key:"biofisica",     label:"Biofísica",     emoji:"⚡", desc:"Física aplicada à medicina.",               file_p1:"biofisica_p1.html",     file_p2:"biofisica.html",             file_final:"biofisica_final.html",     finalReady:false },
+  { key:"genetica",      label:"Genética",      emoji:"🧬", desc:"Herança e mutações genéticas.",            file_p1:"genetica_p1.html",      file_p2:"genetica_p2_enzo.html",      file_final:"genetica_final.html",      finalReady:true  },
+  { key:"fisiologia",    label:"Fisiologia",    emoji:"❤️", desc:"Funcionamento dos sistemas humanos.",      file_p1:"fisiologia_p1.html",    file_p2:"fisiologia_p2_enzo.html",    file_final:"fisiologia_final.html",    finalReady:true  },
+  { key:"microbiologia", label:"Microbiologia", emoji:"🦠", desc:"Microrganismos e patologias.",             file_p1:"microbiologia_p1.html", file_p2:"microbiologia_gram_negativos.html", file_final:"microbiologia_final.html", finalReady:true  },
+  { key:"micro_pratica", label:"Micro Prática", emoji:"🧫", desc:"Identificação e técnicas laboratoriais.",  file_p1:"micro_pratica_p1.html", file_p2:"micro_pratica.html",          file_final:"micro_pratica_final.html", finalReady:false },
+  { key:"imunologia",    label:"Imunologia",    emoji:"🛡️", desc:"Sistema imune e respostas do organismo.", file_p1:"imunologia_p1.html",    file_p2:"resumo_imunologia_p2.html",  file_final:"imunologia_final.html",    finalReady:true  },
 ];
 
 var PROVAS = [
   { tipo:"p1",    label:"P1",    preco_unit:15.00, preco_pack:69.90 },
   { tipo:"p2",    label:"P2",    preco_unit:15.00, preco_pack:69.90 },
-  { tipo:"final", label:"Final", preco_unit:20.00, preco_pack:89.90 },
+  { tipo:"final", label:"Final", preco_unit:24.99, preco_pack:89.90 },
 ];
 
 // ── Estado ────────────────────────────────────────────────────────────────────
@@ -1228,6 +1255,8 @@ var cart = []; // [{key, label, emoji, preco, tipo}]
 var PRECO_UNIT = 15.00;
 var PRECO_COMBO3 = 12.00; // 3+ itens = 20% off
 var PRECO_PACK = 69.90;   // 7 itens = 33% off
+var PRECO_FINAL = 24.99;  // Finais: R$ 24,99 unitário
+var PRECO_PACK_FINAL = 89.90; // Pacote 7 finais
 
 // ── Navegação estilo Google Drive ─────────────────────────────────────────────
 var currentMateria = null; // null = vista pastas | "bioquimica" = vista interna
@@ -2345,6 +2374,15 @@ function renderPastas() {
     var diasP2  = daysLeftForResumo(m, "p2");
     var diasStr = diasP2 !== null ? diasP2 + " dias restantes" : "Acesso permanente";
 
+    var acFinal    = m.finalReady ? hasAccess(m, "final") : false;
+    var diasFinal  = m.finalReady ? daysLeftForResumo(m, "final") : null;
+    var diasFStr   = diasFinal !== null ? diasFinal + " dias restantes" : "Acesso permanente";
+    var finalStatusHtml = !m.finalReady
+      ? '<div class="folder-status-item" style="color:rgba(251,191,36,0.5);">🔜 Final em breve</div>'
+      : (acFinal
+          ? '<div class="folder-status-item" style="color:#4ade80;">✓ Final · ' + diasFStr + '</div>'
+          : '<div class="folder-status-item" style="color:rgba(251,191,36,0.5);">🔒 Final disponível</div>');
+
     materiasHtml +=
       '<div class="folder-card" onclick="openMateria(\'' + m.key + '\')">' +
         '<span class="folder-emoji">' + m.emoji + '</span>' +
@@ -2354,16 +2392,7 @@ function renderPastas() {
           (acP2
             ? '<div class="folder-status-item" style="color:#22d3ee;">✓ P2 · ' + diasStr + '</div>'
             : '<div class="folder-status-item" style="color:rgba(125,211,232,0.35);">🔒 P2 bloqueado</div>') +
-          (function() {
-            var acF = hasAccess(m, "final");
-            var diasF = daysLeftForResumo(m, "final");
-            if (!m.file_final) return '<div class="folder-status-item" style="color:rgba(251,191,36,0.5);">🔜 Final em breve</div>';
-            if (acF) {
-              var info = diasF !== null ? diasF + ' dias restantes' : 'Acesso permanente';
-              return '<div class="folder-status-item" style="color:#4ade80;">✓ Final · ' + info + '</div>';
-            }
-            return '<div class="folder-status-item" style="color:rgba(125,211,232,0.35);">🔒 Final bloqueado</div>';
-          })() +
+          finalStatusHtml +
         '</div>' +
       '</div>';
   });
@@ -2485,11 +2514,43 @@ function renderMateriaInterna(key) {
     grid.appendChild(p2locked);
   }
 
-  // Card Final — Liberado, Bloqueado ou Em breve
-  var acFinal = hasAccess(m, "final");
-  var diasFinal = daysLeftForResumo(m, "final");
+  // Card Final — Dinâmico (como P2 se pronto, senão Em breve)
+  if (m.finalReady) {
+    var acFinal = hasAccess(m, "final");
+    var diasFinal = daysLeftForResumo(m, "final");
 
-  if (!m.file_final) {
+    if (acFinal) {
+      var expiryFinalHtml = diasFinal !== null
+        ? '<div style="font-size:10px;color:' + (diasFinal <= 7 ? '#fbbf24' : 'rgba(74,222,128,0.6)') + ';margin-top:6px;">' +
+            (diasFinal <= 7 ? '⚠️ Expira em ' : '⏱️ ') + diasFinal + ' dia' + (diasFinal===1?'':'s') + (diasFinal > 7 ? ' restantes' : '') +
+          '</div>'
+        : '';
+
+      var presentes = profile.resumos_presente || [];
+      var ehPresenteF = presentes.includes(m.key + "_final");
+
+      var finalCard = document.createElement("a");
+      finalCard.className = "resumo-card unlocked";
+      finalCard.href = m.file_final;
+      finalCard.style.position = "relative";
+      finalCard.style.borderColor = "rgba(74,222,128,0.25)";
+      finalCard.innerHTML =
+        (ehPresenteF ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>' : '') +
+        '<span class="card-emoji">' + m.emoji + '</span>' +
+        '<div class="card-title" style="color:#4ade80;">' + m.label + ' — Final</div>' +
+        '<div class="card-desc">' + m.desc + '</div>' + expiryFinalHtml;
+      grid.appendChild(finalCard);
+    } else {
+      var finalLocked = document.createElement("div");
+      finalLocked.className = "resumo-card locked";
+      finalLocked.innerHTML =
+        '<span class="card-emoji">' + m.emoji + '</span>' +
+        '<div class="card-title" style="color:rgba(74,222,128,0.6);">' + m.label + ' — Final</div>' +
+        '<div class="card-desc">' + m.desc + '</div>' +
+        '<div class="lock-badge" onclick="goToStore()" style="background:rgba(74,222,128,0.08);border-color:rgba(74,222,128,0.3);color:#4ade80;">🔒 Comprar acesso</div>';
+      grid.appendChild(finalLocked);
+    }
+  } else {
     var finalSoon = document.createElement("div");
     finalSoon.className = "resumo-card soon";
     finalSoon.innerHTML =
@@ -2498,30 +2559,8 @@ function renderMateriaInterna(key) {
       '<div class="card-desc">' + m.desc + '</div>' +
       '<div class="soon-badge"><span class="soon-dot"></span> Em breve</div>';
     grid.appendChild(finalSoon);
-  } else if (acFinal) {
-    var expiryHtmlF = diasFinal !== null
-      ? '<div style="font-size:10px;color:' + (diasFinal <= 7 ? '#fbbf24' : 'rgba(125,211,232,0.4)') + ';margin-top:6px;">' +
-          (diasFinal <= 7 ? '⚠️ Expira em ' : '⏱️ ') + diasFinal + ' dia' + (diasFinal===1?'':'s') + (diasFinal > 7 ? ' restantes' : '') +
-        '</div>'
-      : '';
-    var finalUnlocked = document.createElement("a");
-    finalUnlocked.className = "resumo-card unlocked";
-    finalUnlocked.href = m.file_final;
-    finalUnlocked.innerHTML =
-      '<span class="card-emoji">' + m.emoji + '</span>' +
-      '<div class="card-title">' + m.label + ' — Final</div>' +
-      '<div class="card-desc">' + m.desc + '</div>' + expiryHtmlF;
-    grid.appendChild(finalUnlocked);
-  } else {
-    var finalLocked = document.createElement("div");
-    finalLocked.className = "resumo-card locked";
-    finalLocked.innerHTML =
-      '<span class="card-emoji">' + m.emoji + '</span>' +
-      '<div class="card-title">' + m.label + ' — Final</div>' +
-      '<div class="card-desc">' + m.desc + '</div>' +
-      '<div class="lock-badge" onclick="goToStore()">🔒 Comprar acesso</div>';
-    grid.appendChild(finalLocked);
   }
+  grid.appendChild(final);
 }
 
 window.toggleSemestre = function(header) {
@@ -2551,12 +2590,21 @@ window.goToStore = function() { switchTab("loja"); };
 function cartKey(m) { return m.key + "_p2"; }
 
 window.addToCart = function(key) {
-  var m = MATERIAS.find(function(x){ return x.key+"_p2" === key; });
+  // Detectar se é P2 ou Final
+  var isFinal = key.indexOf("_final") !== -1;
+  var m;
+  if (isFinal) {
+    m = MATERIAS.find(function(x){ return x.key+"_final" === key; });
+  } else {
+    m = MATERIAS.find(function(x){ return x.key+"_p2" === key; });
+  }
   if (!m) return;
   if (cart.find(function(c){ return c.key === key; })) {
     removeFromCart(key); return;
   }
-  cart.push({ key: key, label: m.label + " — P2", emoji: m.emoji, preco: PRECO_UNIT });
+  var preco = isFinal ? PRECO_FINAL : PRECO_UNIT;
+  var tipoLabel = isFinal ? "Final" : "P2";
+  cart.push({ key: key, label: m.label + " — " + tipoLabel, emoji: m.emoji, preco: preco, tipo: isFinal ? "final" : "p2" });
   updateCartUI();
   renderStoreGrid();
 };
@@ -2566,9 +2614,10 @@ window.addComboToCart = function() {
   var naoAdquiridos = MATERIAS.filter(function(m){ return !hasAccess(m,"p2"); });
   if (naoAdquiridos.length === 0) { alert("Você já possui todos os resumos de P2!"); return; }
 
-  cart = [];
+  // Remove itens P2 do carrinho (mantém finais se houver)
+  cart = cart.filter(function(c){ return c.tipo === "final"; });
   naoAdquiridos.forEach(function(m) {
-    cart.push({ key: m.key+"_p2", label: m.label+" — P2", emoji: m.emoji, preco: PRECO_UNIT, isCombo: true });
+    cart.push({ key: m.key+"_p2", label: m.label+" — P2", emoji: m.emoji, preco: PRECO_UNIT, tipo: "p2", isCombo: true });
   });
   updateCartUI();
   renderStoreGrid();
@@ -2593,32 +2642,47 @@ window.closeCart = function() {
 
 function calcCartTotal() {
   var n = cart.length;
-  var subtotal = n * PRECO_UNIT;
-  var total, desconto, descLabel;
+  if (n === 0) return { subtotal: 0, desconto: 0, total: 0, descLabel: "" };
 
-  // Opção C: 1-2 = R$15, 3-6 = R$12 (20% off), 7 = R$69,90 (33% off)
+  // Separar itens P2 e Final
+  var p2Items = cart.filter(function(c){ return c.tipo !== "final"; });
+  var finalItems = cart.filter(function(c){ return c.tipo === "final"; });
+
+  var subtotalP2 = p2Items.length * PRECO_UNIT;
+  var subtotalFinal = finalItems.length * PRECO_FINAL;
+  var subtotal = subtotalP2 + subtotalFinal;
+
+  var totalP2 = subtotalP2;
+  var totalFinal = subtotalFinal;
+  var descLabel = "";
+
+  // Desconto P2: pacote completo ou 3+
   var p2NaoAdquiridos = MATERIAS.filter(function(m){ return !hasAccess(m,"p2"); });
-  var todasNoCarrinho = p2NaoAdquiridos.length === MATERIAS.length &&
+  var todasP2NoCarrinho = p2NaoAdquiridos.length === MATERIAS.length &&
     MATERIAS.every(function(m){ return cart.find(function(c){ return c.key === m.key+"_p2"; }); });
 
-  if (todasNoCarrinho) {
-    // Pacote completo (7 itens)
-    total = PRECO_PACK;
-    desconto = subtotal - total;
-    descLabel = "🏷️ Pacote completo (33% off)";
-  } else if (n >= 3) {
-    // 3+ itens: 20% de desconto
-    total = n * PRECO_COMBO3;
-    desconto = subtotal - total;
-    descLabel = "🏷️ Desconto 3+ itens (20% off)";
-  } else {
-    // 1-2 itens: sem desconto
-    total = subtotal;
-    desconto = 0;
-    descLabel = "";
+  if (todasP2NoCarrinho) {
+    totalP2 = PRECO_PACK;
+    descLabel = "🏷️ Pacote P2 completo (33% off)";
+  } else if (p2Items.length >= 3) {
+    totalP2 = p2Items.length * PRECO_COMBO3;
+    descLabel = "🏷️ Desconto P2 3+ itens (20% off)";
   }
 
-  return { subtotal, desconto, total, descLabel };
+  // Desconto Final: pacote completo
+  var finalReady = MATERIAS.filter(function(m){ return m.finalReady; });
+  var todasFinalNoCarrinho = finalReady.length === MATERIAS.length &&
+    MATERIAS.every(function(m){ return cart.find(function(c){ return c.key === m.key+"_final"; }); });
+
+  if (todasFinalNoCarrinho) {
+    totalFinal = PRECO_PACK_FINAL;
+    descLabel += (descLabel ? " + " : "") + "🏷️ Pacote Final completo";
+  }
+
+  var total = totalP2 + totalFinal;
+  var desconto = subtotal - total;
+
+  return { subtotal: subtotal, desconto: desconto, total: total, descLabel: descLabel };
 }
 
 function formatPrice(v) {
@@ -2722,16 +2786,17 @@ function updateCartUI() {
   var calc = calcCartTotal();
   footer.style.display = "block";
 
-  // Dica inteligente baseada na Opção C
+  // Dica inteligente
+  var p2InCart = cart.filter(function(c){ return c.tipo !== "final"; });
   var p2NaoAdquiridos = MATERIAS.filter(function(m){ return !hasAccess(m,"p2"); });
   var faltamParaPacote = p2NaoAdquiridos.filter(function(m){ return !cart.find(function(c){ return c.key === m.key+"_p2"; }); }).length;
-  var faltamPara3 = Math.max(0, 3 - n);
+  var faltamPara3 = Math.max(0, 3 - p2InCart.length);
 
-  if (faltamPara3 > 0) {
-    comboHint.textContent = "💡 Adicione mais " + faltamPara3 + " item" + (faltamPara3>1?"s":"") + " para ganhar 20% de desconto!";
+  if (p2InCart.length > 0 && faltamPara3 > 0) {
+    comboHint.textContent = "💡 Adicione mais " + faltamPara3 + " P2 para ganhar 20% de desconto!";
     comboHint.classList.add("visible");
-  } else if (n >= 3 && faltamParaPacote > 0 && p2NaoAdquiridos.length === MATERIAS.length) {
-    comboHint.textContent = "🔥 Faltam " + faltamParaPacote + " matéria" + (faltamParaPacote>1?"s":"") + " para o pacote completo com 33% off!";
+  } else if (p2InCart.length >= 3 && faltamParaPacote > 0 && p2NaoAdquiridos.length === MATERIAS.length) {
+    comboHint.textContent = "🔥 Faltam " + faltamParaPacote + " P2 para o pacote completo com 33% off!";
     comboHint.classList.add("visible");
   } else {
     comboHint.classList.remove("visible");
@@ -2910,6 +2975,94 @@ function renderStoreGrid() {
       comboBtn.textContent = "🛒 Adicionar pacote ao carrinho — R$ 69,90";
       comboBtn.disabled = false;
     }
+  }
+
+  // ── Final store grid ──
+  renderStoreGridFinal();
+}
+
+window.addComboFinalToCart = function() {
+  var readyMaterias = MATERIAS.filter(function(m){ return m.finalReady && !hasAccess(m,"final"); });
+  if (readyMaterias.length === 0) { alert("Você já possui todos os resumos finais disponíveis!"); return; }
+
+  // Remove itens Final do carrinho (mantém P2)
+  cart = cart.filter(function(c){ return c.tipo !== "final"; });
+  readyMaterias.forEach(function(m) {
+    cart.push({ key: m.key+"_final", label: m.label+" — Final", emoji: m.emoji, preco: PRECO_FINAL, tipo: "final", isCombo: true });
+  });
+  updateCartUI();
+  renderStoreGrid();
+  openCart();
+};
+
+function renderStoreGridFinal() {
+  var grid = document.getElementById("store-grid-final");
+  var breveMsg = document.getElementById("store-final-breve");
+  if (!grid) return;
+  grid.innerHTML = "";
+
+  var readyMaterias = MATERIAS.filter(function(m){ return m.finalReady; });
+  var pendingCount = MATERIAS.length - readyMaterias.length;
+
+  readyMaterias.forEach(function(m) {
+    var key = m.key + "_final";
+    var owned = hasAccess(m, "final");
+    var inCart = !!cart.find(function(c){ return c.key === key; });
+
+    var card = document.createElement("div");
+    card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
+
+    var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "+ Adicionar");
+    var btnClass = "add-btn" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
+
+    card.innerHTML =
+      '<span class="tag-popular" style="background:rgba(74,222,128,0.12);color:#4ade80;border-color:rgba(74,222,128,0.3);">Novo</span>' +
+      '<span class="produto-emoji">' + m.emoji + '</span>' +
+      '<div class="produto-nome">' + m.label + '</div>' +
+      '<div class="produto-sub" style="color:rgba(74,222,128,0.5);">Final · 3º Semestre · 50 dias</div>' +
+      '<div class="produto-preco">R$ 24,99<span>/resumo</span></div>' +
+      '<button class="' + btnClass + '"' + (owned ? ' disabled' : ' onclick="addToCart(\'' + key + '\')"') + '>' + btnLabel + '</button>';
+
+    grid.appendChild(card);
+  });
+
+  if (breveMsg) {
+    breveMsg.style.display = pendingCount > 0 ? "block" : "none";
+  }
+
+  // Combo Final card
+  var comboSection = document.getElementById("store-combo-final-section");
+  var comboBtn = document.getElementById("combo-final-btn");
+  var comboTags = document.getElementById("combo-final-tags");
+  var comboOld = document.getElementById("combo-final-old");
+
+  if (comboSection && readyMaterias.length > 0) {
+    comboSection.style.display = "block";
+    // Tags
+    if (comboTags) {
+      comboTags.innerHTML = MATERIAS.map(function(m) {
+        var ready = m.finalReady;
+        var style = ready ? "" : "opacity:0.3;";
+        return '<span class="combo-tag" style="' + style + '">' + m.emoji + ' ' + m.label + (ready ? '' : ' 🔜') + '</span>';
+      }).join("");
+    }
+    // Old price
+    if (comboOld) {
+      comboOld.textContent = "R$ " + (MATERIAS.length * PRECO_FINAL).toFixed(2).replace(".",",");
+    }
+    // Button state
+    if (comboBtn) {
+      var finaisNaoAdquiridas = readyMaterias.filter(function(m){ return !hasAccess(m,"final"); });
+      if (finaisNaoAdquiridas.length === 0) {
+        comboBtn.textContent = "✅ Você já possui todos os resumos finais disponíveis";
+        comboBtn.disabled = true;
+      } else {
+        comboBtn.textContent = "🛒 Adicionar pacote ao carrinho — R$ 89,90";
+        comboBtn.disabled = false;
+      }
+    }
+  } else if (comboSection) {
+    comboSection.style.display = "none";
   }
 }
 
