@@ -1033,7 +1033,7 @@
             <div style="font-size:10px;color:rgba(125,211,232,0.4);margin-top:3px;">cada · mais econômico</div>
           </div>
         </div>
-        <div style="font-size:11px;color:rgba(125,211,232,0.4);margin-bottom:14px;text-align:center;">💡 Desconto aplicado automaticamente no carrinho conforme a quantidade</div>
+        <div style="font-size:11px;color:rgba(125,211,232,0.4);margin-bottom:14px;text-align:center;">💡 Desconto aplicado automaticamente no carrinho · Pacote completo: R$ 89,90 (49% off) · Cupom não acumulável com Pacote Completo</div>
         <div class="store-grid" id="store-grid-final"></div>
         <div id="store-final-breve" style="padding:16px 20px;border-radius:14px;border:1px solid rgba(251,191,36,0.15);background:rgba(251,191,36,0.04);font-size:13px;color:rgba(251,191,36,0.5);text-align:center;margin-top:10px;display:none;">
           As demais finais serão disponibilizadas em breve.
@@ -1273,8 +1273,8 @@ var PRECO_COMBO3 = 12.00; // 3+ itens = 20% off
 var PRECO_PACK = 69.90;   // 7 itens = 33% off
 var PRECO_FINAL = 24.99;        // Finais: 1 resumo = R$ 24,99
 var PRECO_FINAL_COMBO2 = 22.90; // Finais: 2 resumos = R$ 22,90 cada (8% off)
-var PRECO_FINAL_COMBO3 = 21.50; // Finais: 3+ resumos = R$ 21,50 cada (14% off)
-var PRECO_PACK_FINAL = 89.90;   // Pacote completo 7 finais (49% off)
+var PRECO_FINAL_COMBO3 = 21.50; // Finais: 3-6 resumos = R$ 21,50 cada (14% off)
+var PRECO_PACK_FINAL = 89.90;   // Pacote completo TODOS os finais (49% off) — SEM cupom
 
 // ── Navegação estilo Google Drive ─────────────────────────────────────────────
 var currentMateria = null; // null = vista pastas | "bioquimica" = vista interna
@@ -2620,6 +2620,11 @@ window.addToCart = function(key) {
   if (cart.find(function(c){ return c.key === key; })) {
     removeFromCart(key); return;
   }
+  // Se já tem pacote completo final no carrinho, não permite adicionar individual
+  if (isFinal && cart.find(function(c){ return c.isPacoteCompleto; })) {
+    alert("Você já adicionou o Pacote Completo Final. Remova-o primeiro para comprar individualmente.");
+    return;
+  }
   var preco = isFinal ? PRECO_FINAL : PRECO_UNIT;
   var tipoLabel = isFinal ? "Final" : "P2";
   cart.push({ key: key, label: m.label + " — " + tipoLabel, emoji: m.emoji, preco: preco, tipo: isFinal ? "final" : "p2" });
@@ -2687,14 +2692,14 @@ function calcCartTotal() {
     descLabel = "🏷️ Desconto P2 3+ itens (20% off)";
   }
 
-  // Desconto Final: pacote completo, combo 3+ ou combo 2
+  // Desconto Final: pacote completo (fixo 89,90), combo 3+ ou combo 2
+  var temPacoteCompleto = finalItems.some(function(c){ return c.isPacoteCompleto; });
   var finalReady = MATERIAS.filter(function(m){ return m.finalReady; });
-  var todasFinalNoCarrinho = finalReady.length > 0 &&
-    finalReady.every(function(m){ return cart.find(function(c){ return c.key === m.key+"_final"; }); });
 
-  if (todasFinalNoCarrinho && finalReady.length === MATERIAS.length) {
+  if (temPacoteCompleto) {
+    // Pacote completo: preço fixo 89,90 independente da quantidade
     totalFinal = PRECO_PACK_FINAL;
-    var pctPack = Math.round((1 - PRECO_PACK_FINAL / (MATERIAS.length * PRECO_FINAL)) * 100);
+    var pctPack = Math.round((1 - PRECO_PACK_FINAL / (finalReady.length * PRECO_FINAL)) * 100);
     descLabel += (descLabel ? " + " : "") + "🏷️ Pacote Final completo (" + pctPack + "% off)";
   } else if (finalItems.length >= 3) {
     totalFinal = finalItems.length * PRECO_FINAL_COMBO3;
@@ -2705,6 +2710,9 @@ function calcCartTotal() {
     var pct2 = Math.round((1 - PRECO_FINAL_COMBO2 / PRECO_FINAL) * 100);
     descLabel += (descLabel ? " + " : "") + "🏷️ Combo Final 2 resumos (" + pct2 + "% off)";
   }
+
+  // Expor flag para o cupom saber se tem pacote completo
+  calcCartTotal._temPacoteCompleto = temPacoteCompleto;
 
   var total = totalP2 + totalFinal;
   var desconto = subtotal - total;
@@ -2797,18 +2805,26 @@ function updateCartUI() {
     return;
   }
 
-  var finalCountCart = cart.filter(function(c){ return c.tipo === "final"; }).length;
-  var precoFinalEfetivo = finalCountCart >= 3 ? PRECO_FINAL_COMBO3 : (finalCountCart === 2 ? PRECO_FINAL_COMBO2 : PRECO_FINAL);
+  var finalIndividuaisCount = cart.filter(function(c){ return c.tipo === "final" && !c.isPacoteCompleto; }).length;
+  var precoFinalEfetivo = finalIndividuaisCount >= 3 ? PRECO_FINAL_COMBO3 : (finalIndividuaisCount === 2 ? PRECO_FINAL_COMBO2 : PRECO_FINAL);
   lista.innerHTML = cart.map(function(c) {
-    var precoItem = c.tipo === "final" ? precoFinalEfetivo : c.preco;
-    var precoOriginal = (c.tipo === "final" && precoFinalEfetivo < PRECO_FINAL)
+    var precoItem;
+    if (c.isPacoteCompleto) {
+      precoItem = c.preco; // preço já dividido pelo pacote
+    } else if (c.tipo === "final") {
+      precoItem = precoFinalEfetivo;
+    } else {
+      precoItem = c.preco;
+    }
+    var precoOriginal = (c.tipo === "final" && !c.isPacoteCompleto && precoFinalEfetivo < PRECO_FINAL)
       ? '<span style="text-decoration:line-through;color:rgba(125,211,232,0.3);font-size:11px;margin-right:4px;">R$ 24,99</span>'
       : '';
+    var subLabel = c.isPacoteCompleto ? "Pacote Completo · 50 dias" : "3º Semestre · 50 dias de acesso";
     return '<div class="cart-item">' +
       '<span class="cart-item-emoji">' + c.emoji + '</span>' +
       '<div class="cart-item-info">' +
         '<div class="cart-item-name">' + c.label + '</div>' +
-        '<div class="cart-item-sub">3º Semestre · 50 dias de acesso</div>' +
+        '<div class="cart-item-sub">' + subLabel + '</div>' +
       '</div>' +
       '<span class="cart-item-price">' + precoOriginal + formatPrice(precoItem) + '</span>' +
       '<button class="cart-item-remove" onclick="removeFromCart(\'' + c.key + '\')">✕</button>' +
@@ -2825,26 +2841,23 @@ function updateCartUI() {
   var faltamParaPacote = p2NaoAdquiridos.filter(function(m){ return !cart.find(function(c){ return c.key === m.key+"_p2"; }); }).length;
   var faltamPara3 = Math.max(0, 3 - p2InCart.length);
 
-  var finalInCart = cart.filter(function(c){ return c.tipo === "final"; });
+  var finalIndividuais = cart.filter(function(c){ return c.tipo === "final" && !c.isPacoteCompleto; });
+  var temPacoteFinal = cart.some(function(c){ return c.isPacoteCompleto; });
   var hints = [];
   if (p2InCart.length > 0 && faltamPara3 > 0) {
     hints.push("💡 Adicione mais " + faltamPara3 + " P2 para ganhar 20% de desconto!");
   } else if (p2InCart.length >= 3 && faltamParaPacote > 0 && p2NaoAdquiridos.length === MATERIAS.length) {
     hints.push("🔥 Faltam " + faltamParaPacote + " P2 para o pacote completo com 33% off!");
   }
-  if (finalInCart.length === 1) {
-    hints.push("🎓 Adicione mais 1 final para pagar R$ 22,90 cada (8% off)!");
-  } else if (finalInCart.length === 2) {
-    hints.push("🎓 Adicione mais 1 final para pagar R$ 21,50 cada (14% off)!");
-  } else if (finalInCart.length >= 3) {
-    hints.push("✅ Combo Final ativo: R$ 21,50 por resumo (14% off)");
-  }
-  if (hints.length > 0) {
-    comboHint.innerHTML = hints.join("<br>");
-    comboHint.classList.add("visible");
+  if (!temPacoteFinal) {
+    if (finalIndividuais.length === 1) hints.push("🎓 Adicione mais 1 final para pagar R$ 22,90 cada (8% off)!");
+    else if (finalIndividuais.length === 2) hints.push("🎓 Adicione mais 1 final para pagar R$ 21,50 cada (14% off)!");
+    else if (finalIndividuais.length >= 3) hints.push("✅ Combo Final ativo: R$ 21,50 por resumo (14% off)");
   } else {
-    comboHint.classList.remove("visible");
+    hints.push("📦 Pacote Completo Final: R$ 89,90 — cupom não acumulável");
   }
+  if (hints.length > 0) { comboHint.innerHTML = hints.join("<br>"); comboHint.classList.add("visible"); }
+  else { comboHint.classList.remove("visible"); }
 
   // Resumo
   var calc = calcCartTotal();
@@ -2859,15 +2872,40 @@ function updateCartUI() {
   }
   document.getElementById("cartTotal").textContent = formatPrice(calc.total);
 
-  // Cupom aplicado
+  // Cupom aplicado — SOMENTE sobre itens individuais (não pacote completo final)
   var cupomRow = document.getElementById("cartCupomRow");
+  var temPacoteNoCarrinho = cart.some(function(c){ return c.isPacoteCompleto; });
+
   if (cupomAtivo && calc.total > 0) {
-    var cupomVal = Math.round(calc.total * cupomAtivo.desconto_pct) / 100;
-    var totalComCupom = Math.max(0, calc.total - cupomVal);
-    cupomRow.style.display = "flex";
-    document.getElementById("cartCupomLabel").textContent = "🎟️ Cupom " + cupomAtivo.codigo + " (" + cupomAtivo.desconto_pct + "%)";
-    document.getElementById("cartCupomDesconto").textContent = "- " + formatPrice(cupomVal);
-    document.getElementById("cartTotal").textContent = formatPrice(totalComCupom);
+    if (temPacoteNoCarrinho) {
+      // Cupom não se aplica ao pacote completo
+      // Calcular base somente dos itens P2 (sem os finais do pacote)
+      var p2Only = cart.filter(function(c){ return c.tipo !== "final"; });
+      if (p2Only.length > 0) {
+        // Tem P2 + pacote final: cupom só nos P2
+        var baseP2 = calc.total - PRECO_PACK_FINAL;
+        var cupomVal = Math.round(baseP2 * cupomAtivo.desconto_pct) / 100;
+        var totalComCupom = Math.max(0, calc.total - cupomVal);
+        cupomRow.style.display = "flex";
+        document.getElementById("cartCupomLabel").textContent = "🎟️ Cupom " + cupomAtivo.codigo + " (" + cupomAtivo.desconto_pct + "% · só nos P2)";
+        document.getElementById("cartCupomDesconto").textContent = "- " + formatPrice(cupomVal);
+        document.getElementById("cartTotal").textContent = formatPrice(totalComCupom);
+      } else {
+        // Só pacote completo: cupom não se aplica
+        cupomRow.style.display = "flex";
+        document.getElementById("cartCupomLabel").textContent = "🎟️ Cupom " + cupomAtivo.codigo + " — não aplicável ao Pacote Completo";
+        document.getElementById("cartCupomDesconto").textContent = "R$ 0,00";
+        document.getElementById("cartTotal").textContent = formatPrice(calc.total);
+      }
+    } else {
+      // Sem pacote completo: cupom normal sobre tudo
+      var cupomVal = Math.round(calc.total * cupomAtivo.desconto_pct) / 100;
+      var totalComCupom = Math.max(0, calc.total - cupomVal);
+      cupomRow.style.display = "flex";
+      document.getElementById("cartCupomLabel").textContent = "🎟️ Cupom " + cupomAtivo.codigo + " (" + cupomAtivo.desconto_pct + "%)";
+      document.getElementById("cartCupomDesconto").textContent = "- " + formatPrice(cupomVal);
+      document.getElementById("cartTotal").textContent = formatPrice(totalComCupom);
+    }
   } else {
     cupomRow.style.display = "none";
   }
@@ -2879,11 +2917,23 @@ window.checkoutCart = function() {
   var nomes = cart.map(function(c){ return c.label; }).join(", ");
   var keys = cart.map(function(c){ return c.key; });
 
-  // Aplica cupom ao total
+  // Aplica cupom ao total — somente sobre itens individuais (não pacote completo)
   var finalTotal = calc.total;
+  var temPacoteCheckout = cart.some(function(c){ return c.isPacoteCompleto; });
   if (cupomAtivo && finalTotal > 0) {
-    var cupomVal = Math.round(finalTotal * cupomAtivo.desconto_pct) / 100;
-    finalTotal = Math.max(0, finalTotal - cupomVal);
+    if (temPacoteCheckout) {
+      // Cupom só nos itens P2 se houver
+      var p2Only = cart.filter(function(c){ return c.tipo !== "final"; });
+      if (p2Only.length > 0) {
+        var baseP2 = finalTotal - PRECO_PACK_FINAL;
+        var cupomVal = Math.round(baseP2 * cupomAtivo.desconto_pct) / 100;
+        finalTotal = Math.max(0, finalTotal - cupomVal);
+      }
+      // Se só pacote: sem desconto de cupom
+    } else {
+      var cupomVal = Math.round(finalTotal * cupomAtivo.desconto_pct) / 100;
+      finalTotal = Math.max(0, finalTotal - cupomVal);
+    }
   }
 
   // Se for 1 item só, usa fluxo normal
@@ -3029,10 +3079,14 @@ window.addComboFinalToCart = function() {
   var readyMaterias = MATERIAS.filter(function(m){ return m.finalReady && !hasAccess(m,"final"); });
   if (readyMaterias.length === 0) { alert("Você já possui todos os resumos finais disponíveis!"); return; }
 
-  // Remove itens Final do carrinho (mantém P2)
+  // Remove TODOS os itens Final do carrinho (evita duplicação)
   cart = cart.filter(function(c){ return c.tipo !== "final"; });
+
+  // Adiciona todos como pacote completo — preço fixo 89,90 dividido
+  // isPacoteCompleto = true → bloqueia cupom e combo individual
+  var precoPorItem = PRECO_PACK_FINAL / readyMaterias.length;
   readyMaterias.forEach(function(m) {
-    cart.push({ key: m.key+"_final", label: m.label+" — Final", emoji: m.emoji, preco: PRECO_FINAL, tipo: "final", isCombo: true });
+    cart.push({ key: m.key+"_final", label: m.label+" — Final", emoji: m.emoji, preco: precoPorItem, tipo: "final", isPacoteCompleto: true });
   });
   updateCartUI();
   renderStoreGrid();
@@ -3059,10 +3113,14 @@ function renderStoreGridFinal() {
     var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "+ Adicionar");
     var btnClass = "add-btn" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
-    var finalNoCarrinho = cart.filter(function(c){ return c.tipo === "final"; }).length;
-    var qtdComEste = owned ? finalNoCarrinho : (cart.find(function(c){ return c.key === key; }) ? finalNoCarrinho : finalNoCarrinho + 1);
+    // Preço dinâmico: conta só individuais (não pacote completo)
+    var individuaisNoCart = cart.filter(function(c){ return c.tipo === "final" && !c.isPacoteCompleto; }).length;
+    var qtdComEste = owned ? individuaisNoCart : (cart.find(function(c){ return c.key === key; }) ? individuaisNoCart : individuaisNoCart + 1);
+    var temPacote = cart.some(function(c){ return c.isPacoteCompleto; });
     var precoExibido, descTag;
-    if (qtdComEste >= 3) {
+    if (temPacote) {
+      precoExibido = "R$ 24,99"; descTag = ""; // pacote já cobre tudo
+    } else if (qtdComEste >= 3) {
       precoExibido = "R$ 21,50"; descTag = "<span style='font-size:9px;background:rgba(34,211,238,0.15);color:#22d3ee;border:1px solid rgba(34,211,238,0.3);padding:1px 6px;border-radius:10px;margin-left:5px;'>14% off</span>";
     } else if (qtdComEste === 2) {
       precoExibido = "R$ 22,90"; descTag = "<span style='font-size:9px;background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);padding:1px 6px;border-radius:10px;margin-left:5px;'>8% off</span>";
