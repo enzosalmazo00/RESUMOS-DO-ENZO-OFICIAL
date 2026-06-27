@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Biofísica Final — Resumos do Enzo</title>
+<script>window.PAGE_KEY = "biofisica_final";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>
+  document.addEventListener("authReady",function(){document.documentElement.style.visibility="visible";});
+  setTimeout(function(){document.documentElement.style.visibility="visible";},1500);
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{
+  --bg:#0a0d14;--bg2:#111520;--bg3:#161c2e;
+  --card:#1a2138;--card2:#1f2845;
+  --accent:#4f9cf9;--accent2:#38e8c0;--accent3:#f9784f;--accent4:#e74c3c;
+  --gold:#f9c94f;--red:#f95f5f;--green:#4ff984;
+  --text:#e8ecf4;--muted:#8892b0;
+  --border:rgba(79,156,249,0.15);
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.7;min-height:100vh;overflow-x:hidden}
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+header{position:relative;z-index:10;text-align:center;padding:56px 24px 36px;
+  background:linear-gradient(180deg,rgba(231,76,60,0.08) 0%,transparent 100%);
+  border-bottom:1px solid var(--border)}
+header .badge{display:inline-block;background:linear-gradient(135deg,#e74c3c,#f9c94f);
+  color:var(--bg);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;
+  letter-spacing:2px;text-transform:uppercase;padding:4px 16px;border-radius:20px;margin-bottom:16px}
+header h1{font-family:'Syne',sans-serif;font-size:clamp(22px,4vw,42px);font-weight:800;
+  background:linear-gradient(135deg,#fff 0%,#e74c3c 50%,#f9c94f 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}
+header .sub{color:var(--muted);font-size:13px;max-width:600px;margin:0 auto}
+
+nav.tabs{position:sticky;top:0;z-index:100;display:flex;gap:4px;flex-wrap:wrap;
+  background:rgba(10,13,20,.97);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);padding:10px 16px;justify-content:center}
+nav.tabs button{background:var(--card);border:1px solid var(--border);color:var(--muted);
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;
+  padding:6px 13px;border-radius:8px;cursor:pointer;transition:all .2s;white-space:nowrap}
+nav.tabs button:hover{color:var(--accent3);border-color:var(--accent3)}
+nav.tabs button.active{background:var(--accent4);color:#fff;border-color:var(--accent4);
+  box-shadow:0 0 18px rgba(231,76,60,.4)}
+
+.section{display:none;animation:fadeIn .4s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.container{max-width:1080px;margin:0 auto;padding:32px 20px;position:relative;z-index:1}
+
+.chapter-title{font-family:'Syne',sans-serif;font-size:21px;font-weight:700;color:var(--accent4);
+  margin-bottom:24px;display:flex;align-items:center;gap:12px}
+.chapter-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+.chap-icon{font-size:22px}
+
+.sec-divider{display:flex;align-items:center;gap:12px;margin:28px 0 16px}
+.sec-divider h3{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--accent2);white-space:nowrap}
+.sec-divider::before,.sec-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+
+.info-block{background:var(--card2);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:14px 18px;margin-bottom:16px}
+.info-block.warn{border-color:var(--gold)}
+.info-block.danger{border-color:var(--red)}
+.info-block.success{border-color:var(--green)}
+.info-block.red{border-color:var(--accent4)}
+.info-block .label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.info-block h4{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:#fff;margin-bottom:6px}
+.info-block p,.info-block li{color:var(--text);font-size:13px}
+.info-block ul,.info-block ol{padding-left:18px;margin-top:6px}
+.info-block li{margin:3px 0}
+
+.compare-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+.compare-table th{background:var(--card2);color:var(--accent);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;padding:10px 13px;text-align:left;border-bottom:1px solid var(--border)}
+.compare-table td{background:var(--card);padding:9px 13px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text);vertical-align:top}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table tr:hover td{background:var(--card2)}
+
+.formula-block{background:rgba(56,232,192,.06);border:1px solid rgba(56,232,192,.25);border-left:3px solid var(--accent2);border-radius:0 10px 10px 0;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent2);margin:14px 0;line-height:1.8}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px}
+@media(max-width:640px){.grid2,.grid3{grid-template-columns:1fr}}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+.card h4{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:8px;color:#fff}
+.card p,.card li{font-size:13px;color:var(--muted)}
+.card ul{padding-left:16px;margin-top:6px}
+.card li{margin:3px 0}
+.card.blue{border-color:rgba(79,156,249,.3)}
+.card.teal{border-color:rgba(56,232,192,.3)}
+.card.red{border-color:rgba(231,76,60,.3)}
+.card.gold{border-color:rgba(249,201,79,.3)}
+.card.green{border-color:rgba(79,249,132,.3)}
+
+/* ECG wave cards */
+.wcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;display:flex;align-items:flex-start;gap:16px}
+.wlabel{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--accent4);min-width:60px;line-height:1}
+.winfo p{font-size:13px;color:var(--muted);margin-bottom:4px}
+.winfo strong{color:var(--text)}
+
+/* Properties boxes */
+.prop-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 16px;text-align:center}
+.prop-val{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;color:var(--accent4)}
+.prop-label{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* FLASHCARDS */
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;margin-top:8px}
+.fc-card{height:200px;perspective:900px;cursor:pointer}
+.fc-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-front,.fc-back{position:absolute;inset:0;border-radius:var(--radius);backface-visibility:hidden;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:18px;border:1px solid var(--border)}
+.fc-front{background:var(--card)}
+.fc-back{background:linear-gradient(135deg,var(--card2),var(--bg3));border-color:var(--accent4);transform:rotateY(180deg)}
+.fc-cat{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--accent4);text-transform:uppercase;margin-bottom:8px;background:rgba(231,76,60,.1);padding:2px 8px;border-radius:50px;border:1px solid rgba(231,76,60,.2)}
+.fc-q{font-size:13px;font-weight:600;color:#fff;line-height:1.5}
+.fc-hint{font-size:10px;color:var(--muted);margin-top:10px}
+.fc-alabel{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.fc-a{font-size:12px;color:var(--accent2);line-height:1.5}
+
+/* QUIZ */
+.quiz-score-bar{position:sticky;top:58px;z-index:50;background:rgba(17,21,32,.97);border:1px solid var(--border);border-radius:10px;padding:11px 17px;margin-bottom:18px;display:flex;align-items:center;gap:12px;backdrop-filter:blur(16px);flex-wrap:wrap}
+.score-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted)}
+.score-num strong{color:var(--accent2);font-size:15px}
+.score-bar-wrap{flex:1;min-width:80px;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.score-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent4),var(--gold));border-radius:3px;transition:width .4s}
+.quiz-reset-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:5px 13px;border-radius:50px;cursor:pointer;font-size:12px;font-family:'JetBrains Mono',monospace;transition:all .2s;margin-left:auto}
+.quiz-reset-btn:hover{background:var(--red);color:#fff;border-color:var(--red)}
+
+.qcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+.qcard-top{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}
+.qcard-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:2px 8px;flex-shrink:0;margin-top:2px}
+.qcard-badge{font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 9px;border-radius:50px;flex-shrink:0;margin-top:3px}
+.qcard-badge.mc{background:rgba(79,156,249,.15);color:var(--accent);border:1px solid rgba(79,156,249,.25)}
+.qcard-badge.vof{background:rgba(56,232,192,.15);color:var(--accent2);border:1px solid rgba(56,232,192,.25)}
+.qcard-q{font-size:14px;line-height:1.6;flex:1}
+.mc-opts{display:flex;flex-direction:column;gap:8px}
+.mc-opt{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:13px;color:var(--muted);transition:all .2s;display:flex;align-items:flex-start;gap:10px}
+.mc-opt:hover:not(.done){background:var(--card2);border-color:var(--accent4);color:var(--text)}
+.mc-opt.correct{background:rgba(79,249,132,.08);border-color:var(--green);color:var(--green)}
+.mc-opt.wrong{background:rgba(249,95,95,.08);border-color:var(--red);color:var(--red)}
+.mc-opt.done{cursor:default}
+.mc-letter{font-family:'JetBrains Mono',monospace;font-size:12px;width:22px;height:22px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mc-opt.correct .mc-letter{background:var(--green);color:var(--bg);border-color:var(--green)}
+.mc-opt.wrong .mc-letter{background:var(--red);color:#fff;border-color:var(--red)}
+.vof-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vof-btn{padding:11px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);cursor:pointer;font-size:13px;font-family:'Syne',sans-serif;font-weight:700;transition:all .2s;text-align:center}
+.vof-btn.vb:hover:not(.done){background:rgba(56,232,192,.1);border-color:var(--accent2);color:var(--accent2)}
+.vof-btn.fb:hover:not(.done){background:rgba(249,95,95,.1);border-color:var(--red);color:var(--red)}
+.vof-btn.correct{background:rgba(56,232,192,.15);border-color:var(--accent2);color:var(--accent2)}
+.vof-btn.wrong{background:rgba(249,95,95,.15);border-color:var(--red);color:var(--red)}
+.vof-btn.done{cursor:default}
+.qexpl{display:none;margin-top:12px;padding:12px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--muted);line-height:1.6}
+.qexpl.show{display:block}
+.qres{display:none;margin-top:8px;font-size:13px;font-weight:600}
+.qres.show{display:flex;align-items:center;gap:6px}
+.qres.ok{color:var(--green)}
+.qres.err{color:var(--red)}
+
+/* PROVAS */
+.prova-block{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px}
+.prova-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 17px;cursor:pointer;transition:background .2s}
+.prova-hdr:hover{background:var(--card2)}
+.prova-hdr h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;flex:1}
+.prova-hdr .meta{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-right:10px}
+.prova-hdr .chev{color:var(--muted);transition:transform .2s}
+.prova-hdr.open .chev{transform:rotate(180deg)}
+.prova-body{display:none;border-top:1px solid var(--border);padding:18px}
+.prova-body.open{display:block}
+.prova-q{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.04)}
+.prova-q:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.prova-q-text{font-size:13.5px;margin-bottom:8px;line-height:1.6;color:var(--text)}
+.prova-ans{background:rgba(56,232,192,.06);border:1px solid rgba(56,232,192,.2);border-radius:8px;padding:9px 13px;font-size:13px;color:var(--accent2)}
+.prova-ans strong{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);display:block;margin-bottom:3px}
+
+#scrolltop{position:fixed;bottom:80px;right:20px;z-index:999;width:42px;height:42px;border-radius:50%;background:var(--accent4);color:#fff;border:none;font-size:18px;cursor:pointer;display:none;box-shadow:0 4px 18px rgba(231,76,60,.4)}
+#back-btn{position:fixed;bottom:24px;left:24px;z-index:9999;background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.3);color:var(--accent4);padding:10px 20px;border-radius:30px;text-decoration:none;font-weight:600;font-size:.85rem;backdrop-filter:blur(10px);transition:all .3s ease;display:flex;align-items:center;gap:8px}
+#back-btn:hover{background:rgba(231,76,60,.25)}
+/* PEGADINHAS */
+.peg-card{background:var(--card);border:1px solid rgba(231,76,60,.3);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .2s}
+.peg-card:hover{border-color:var(--accent4);transform:translateY(-1px)}
+.peg-top{display:flex;align-items:flex-start;gap:14px;padding:16px 18px}
+.peg-icon{font-size:1.5rem;flex-shrink:0;margin-top:2px}
+.peg-content{flex:1}
+.peg-cat{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--accent4);text-transform:uppercase;margin-bottom:5px}
+.peg-stmt{font-size:14px;font-weight:600;color:#fff;line-height:1.5}
+.peg-hint{font-size:11px;color:var(--muted);margin-top:8px}
+.peg-reveal{display:none;border-top:1px solid rgba(231,76,60,.2);padding:14px 18px;background:rgba(10,13,20,.5)}
+.peg-reveal.show{display:block}
+.peg-verdict{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-weight:700;font-size:14px}
+.peg-verdict.falso{color:var(--red)}
+.peg-verdict.verdadeiro{color:var(--green)}
+.peg-exp{font-size:13px;color:var(--muted);line-height:1.6}
+.peg-exp strong{color:var(--text)}
+.peg-progress{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:10px 14px;background:var(--card);border-radius:10px;border:1px solid var(--border)}
+
+@media(max-width:600px){nav.tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start}}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<a href="dashboard.html" id="back-btn">← Volver</a>
+<button id="scrolltop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<header>
+  <div class="badge">❤️ Biofísica · Exame Final · 2026</div>
+  <h1>Resumo Final — Biofísica</h1>
+  <p class="sub">P1: Água · Sistemas Dispersos · pH · Viscosidade · Fluxo · Tensão Superficial · Buffer · Potencial de Ação<br>P2: Coração · ECG · Frank-Starling · Bainbridge · Hemodinâmica · Derivações</p>
+  <p style="margin-top:14px;color:var(--gold);font-size:12px;font-family:'JetBrains Mono',monospace;opacity:.9">⚡ Baseado nos vídeos do Aulão de Final — Dr. Saldivar</p>
+</header>
+
+<nav class="tabs">
+  <button class="active" onclick="showSection('intro',this)">📖 Intro</button>
+  <button onclick="showSection('agua',this)">💧 Água & Dispersos</button>
+  <button onclick="showSection('ph',this)">⚗️ pH & Buffer</button>
+  <button onclick="showSection('viscosidade',this)">🩸 Viscosidade & Fluxo</button>
+  <button onclick="showSection('potencial',this)">⚡ Potencial de Ação</button>
+  <button onclick="showSection('coracao',this)">❤️ Coração</button>
+  <button onclick="showSection('hemodinamica',this)">💉 Hemodinâmica</button>
+  <button onclick="showSection('frankstarling',this)">📏 Frank-Starling</button>
+  <button onclick="showSection('forcas',this)">💪 Forças F-S</button>
+  <button onclick="showSection('bainbridge',this)">🔄 Bainbridge</button>
+  <button onclick="showSection('ecg',this)">📈 ECG</button>
+  <button onclick="showSection('pegadinhas',this)">🎯 Pegadinhas</button>
+  <button onclick="showSection('flashcards',this)">🃏 Flashcards</button>
+  <button onclick="showSection('quiz',this)">📝 Quiz</button>
+  <button onclick="showSection('provas',this)">📋 Provas</button>
+</nav>
+
+<!-- ===== INTRO ===== -->
+<div id="intro" class="section active">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">📖</span> Introdução — Exame Final</div>
+<div class="info-block red">
+  <div class="label">Conteúdo</div>
+  <h4>P1 + P2 completos — todos os temas cobrados nas provas</h4>
+  <p>Este resumo cobre toda a matéria de Biofísica para o exame final, integrando os conteúdos da P1 (Água, Sistemas Dispersos, pH, Viscosidade, Fluxo, Tensão Superficial, Sistemas Buffer e Potencial de Ação) e P2 (Biofísica Cardíaca, ECG, Hemodinâmica, Frank-Starling, Bainbridge). Inclui flashcards, quiz e provas antigas com gabarito.</p>
+</div>
+<div class="sec-divider"><h3>Temário Completo</h3></div>
+<table class="compare-table">
+<tr><th>Bloco</th><th>Temas</th><th>Prova</th></tr>
+<tr><td>💧 Água & Dispersos</td><td>Propriedades da água, polaridade, estados, sistemas dispersos (solução/coloide/suspensão), efeito Tyndall</td><td>P1</td></tr>
+<tr><td>🧪 Soluções</td><td>Solubilidade, tipos de solução, propriedades coligativas, osmose</td><td>P1</td></tr>
+<tr><td>⚗️ pH & Buffer</td><td>pH do sangue (7,35–7,45), acidose/alcalose, 3 sistemas reguladores (buffer→respiratório→renal)</td><td>P1</td></tr>
+<tr><td>🩸 Viscosidade & Fluxo</td><td>Viscosidade do sangue (3,5×água), hematócrito, Fahraeus-Lindqvist, fluxo laminar vs turbulento</td><td>P1</td></tr>
+<tr><td>🫧 Tensão Superficial</td><td>Surfactante (pneumócito tipo 2), colapso alveolar, capilaridade</td><td>P1</td></tr>
+<tr><td>⚡ Potencial de Ação</td><td>Membrana (−70mV), espiga vs meseta, fases, canais Na⁺/Ca²⁺/K⁺, período refratário</td><td>P1+P2</td></tr>
+<tr><td>❤️ Coração</td><td>Sincício, 5 propriedades, sistema de condução, automatismo, discos intercalares</td><td>P2</td></tr>
+<tr><td>💉 Hemodinâmica</td><td>Volumes (VTD/VS/VTS), débito cardíaco, pré/pós-carga, Frank-Starling, Bainbridge</td><td>P2</td></tr>
+<tr><td>📈 ECG</td><td>Ondas P/QRS/T, derivações bipolares (D1/D2/D3), unipolares ampliadas (aVR/aVL/aVF), precordiais (V1-V6), eixo, cálculo de FC</td><td>P2</td></tr>
+</table>
+</div></div>
+
+<!-- ===== ÁGUA & DISPERSOS ===== -->
+<div id="agua" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">💧</span> Água, Sistemas Dispersos & Soluções</div>
+
+<div class="sec-divider"><h3>Propriedades da Água</h3></div>
+<div class="grid2">
+<div class="card blue">
+  <h4>Características Fundamentais</h4>
+  <ul>
+    <li><strong>Polar:</strong> O tem carga δ⁻, H têm δ⁺ → dissolve substâncias iônicas</li>
+    <li><strong>Solvente universal</strong> — dissolve substâncias com carga</li>
+    <li><strong>~60% do peso corporal</strong> (LIC = 2/3; LEC = 1/3)</li>
+    <li><strong>Incompressível</strong> — não comprime</li>
+    <li><strong>Adesão + Coesão</strong> → tensão superficial + capilaridade</li>
+    <li><strong>Incolor, inodoro, insípido</strong> em forma pura</li>
+  </ul>
+</div>
+<div class="card teal">
+  <h4>Dilatação Anômala — Comportamento Único</h4>
+  <p>Ao contrário de quase toda matéria, <strong>abaixo de 4°C a água se dilata</strong>:</p>
+  <div class="formula-block" style="margin-top:10px;font-size:12px">4°C → volume mínimo, densidade máxima<br>0°C → congela, volume ↑ até 25%<br>D = m/V · D₄°C = 1 g/mL</div>
+  <p style="font-size:12px;color:var(--muted);margin-top:8px">Água do corpo NÃO congela a 0°C — solutos abaixam o ponto de congelamento (propriedade coligativa).</p>
+</div>
+</div>
+
+<div class="sec-divider"><h3>Sistemas Dispersos</h3></div>
+<div class="grid3">
+<div class="card blue">
+  <h4>Solução Verdadeira</h4>
+  <p style="color:var(--accent);font-weight:700;font-size:12px">0,1 – 1 nm</p>
+  <p><strong>Homogênea.</strong> Soluto do tamanho de átomos. NÃO dispersa luz. Ex: água + NaCl.</p>
+</div>
+<div class="card gold">
+  <h4>Coloide / Coloidal</h4>
+  <p style="color:var(--gold);font-weight:700;font-size:12px">1 – 100 nm</p>
+  <p><strong>Dispersa luz — Efeito Tyndall.</strong> Movimento Browniano. Ex: plasma sanguíneo, gelatina.</p>
+</div>
+<div class="card red">
+  <h4>Suspensão</h4>
+  <p style="color:var(--accent4);font-weight:700;font-size:12px">&gt; 100 nm</p>
+  <p><strong>Heterogênea.</strong> Soluto sedimenta. Precisa agitar. Ex: penicilina, azitromicina.</p>
+</div>
+</div>
+<div class="info-block">
+  <div class="label">Sangue = Sistema Coloidal</div>
+  <p>O plasma contém albumina (proteína de 1–100nm) → dispersa luz (amarelado) → Efeito Tyndall. O sangue é um coloide porque os componentes ficam em suspensão sem sedimentar espontaneamente.</p>
+</div>
+
+<div class="sec-divider"><h3>Soluções & Solubilidade</h3></div>
+<table class="compare-table">
+<tr><th>Tipo</th><th>Característica</th><th>Exemplo Clínico</th></tr>
+<tr><td><strong>Insaturada</strong></td><td>Soluto &lt; capacidade máxima. Pode dissolver mais.</td><td>Sangue (insaturado para comportar aumento de células)</td></tr>
+<tr><td><strong>Saturada</strong></td><td>Capacidade máxima atingida. Precipita se adicionar mais.</td><td>Urina saturada de oxalato → cálculo renal</td></tr>
+<tr><td><strong>Sobressaturada</strong></td><td>Instável. Ocorre só com temperatura/pressão/agitação.</td><td>Fenômeno raro em condições controladas</td></tr>
+</table>
+<div class="info-block warn">
+  <div class="label">Propriedades Coligativas — Prova!</div>
+  <p>Ao adicionar soluto à água: ↓ pressão de vapor, ↓ ponto de congelamento, ↑ ponto de ebulição, ↑ pressão osmótica. A água do corpo NÃO congela a 0°C por causa dos solutos.</p>
+</div>
+
+<div class="sec-divider"><h3>Tensão Superficial & Surfactante</h3></div>
+<div class="grid2">
+<div class="card red">
+  <h4>O Problema — Colapso Alveolar</h4>
+  <p>Quando ar entra no alvéolo, gotículas de H₂O grudam nas paredes → tensão superficial alta → força as paredes para dentro → <strong>colapso alveolar</strong>.</p>
+</div>
+<div class="card green">
+  <h4>A Solução — Surfactante Pulmonar</h4>
+  <p>Produzido pelos <strong>pneumócitos tipo 2</strong>. Substância lipoproteica anfipática:</p>
+  <ul>
+    <li>Parte <strong>hidrofóbica</strong> repele água</li>
+    <li>Parte <strong>hidrofílica</strong> se atrai pelas outras</li>
+    <li>↓ tensão superficial → alvéolo permanece aberto</li>
+  </ul>
+  <p style="margin-top:8px;font-size:12px;color:var(--muted)">Prematuros sem surfactante → Síndrome do Desconforto Respiratório (SDR).</p>
+</div>
+</div>
+</div></div>
+
+<!-- ===== pH & BUFFER ===== -->
+<div id="ph" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">⚗️</span> pH, Equilíbrio Ácido-Base & Sistemas Buffer</div>
+
+<div class="sec-divider"><h3>pH do Sangue</h3></div>
+<div class="grid3">
+  <div class="prop-box"><div class="prop-val" style="color:var(--green)">7,35–7,45</div><div class="prop-label">pH normal (levemente alcalino)</div></div>
+  <div class="prop-box"><div class="prop-val" style="color:var(--red)">6,0</div><div class="prop-label">Limite inferior — acidose letal</div></div>
+  <div class="prop-box"><div class="prop-val" style="color:var(--accent)">8,0</div><div class="prop-label">Limite superior — alcalose letal</div></div>
+</div>
+<div class="info-block danger">
+  <div class="label">Macete Fundamental</div>
+  <p><strong>Ácido</strong> = doador de H⁺ → [H⁺] ↑ → pH ↓ → acidose. <strong>Base</strong> = receptor de H⁺ → [H⁺] ↓ → pH ↑ → alcalose. O corpo tende naturalmente à acidose (metabolismo produz H⁺ e CO₂ constantemente). Acidose &lt; 7,35 · Alcalose &gt; 7,45. Ácido é mais perigoso (destrói proteínas/enzimas mais rapidamente).</p>
+</div>
+
+<div class="sec-divider"><h3>Os 3 Sistemas Reguladores — Hierarquia</h3></div>
+<div class="grid3">
+<div class="card blue">
+  <h4>① Buffer (Tampão)</h4>
+  <p><strong>Ação imediata</strong> — segundos a minutos</p>
+  <p>Principal componente: <strong>Bicarbonato HCO₃⁻</strong> (extracelular). Outros: fosfato, proteínas (hemoglobina — intracelular).</p>
+  <div class="formula-block" style="margin-top:10px;font-size:12px">H⁺ + HCO₃⁻ → H₂CO₃ → H₂O + CO₂</div>
+  <p style="font-size:12px;color:var(--muted)">Amortiza mas não resolve — esgota em minutos.</p>
+</div>
+<div class="card teal">
+  <h4>② Respiratório</h4>
+  <p><strong>2–3 minutos</strong> — dura até 24h</p>
+  <p>Elimina o CO₂ gerado pelo buffer. ↑ CO₂ → hiperventilar → elimina CO₂ → pH sobe.</p>
+  <p style="font-size:12px;color:var(--muted);margin-top:8px">Amortiza mas não corrige a causa raiz.</p>
+</div>
+<div class="card gold">
+  <h4>③ Renal</h4>
+  <p><strong>24–30 horas</strong> — dura até resolver</p>
+  <p>O rim é o ÚNICO que CORRIGE definitivamente. Excreta H⁺ em excesso e reabsorve HCO₃⁻.</p>
+  <p style="font-size:12px;color:var(--muted);margin-top:8px">Matematicamente: Filtração - Absorção + Secreção.</p>
+</div>
+</div>
+<div class="info-block success">
+  <div class="label">Regra de Ouro</div>
+  <p>Buffer + Respiratório = <strong>amortizam</strong> (temporários). Renal = <strong>corrige</strong> (definitivo). Gasometria = exame que mede pH, O₂, CO₂ e eletrólitos do sangue.</p>
+</div>
+</div></div>
+
+<!-- ===== VISCOSIDADE & FLUXO ===== -->
+<div id="viscosidade" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🩸</span> Viscosidade, Fluxo & Hemodinâmica Vascular</div>
+
+<div class="sec-divider"><h3>Viscosidade do Sangue</h3></div>
+<div class="grid3">
+  <div class="prop-box"><div class="prop-val" style="color:var(--accent4)">3,5×</div><div class="prop-label">Sangue vs. água pura</div></div>
+  <div class="prop-box"><div class="prop-val" style="color:var(--accent)">2,2×</div><div class="prop-label">Plasma vs. água</div></div>
+  <div class="prop-box"><div class="prop-val" style="color:var(--gold)">↑ Temp</div><div class="prop-label">↓ viscosidade</div></div>
+</div>
+<div class="info-block">
+  <div class="label">Fatores que Alteram a Viscosidade</div>
+  <ul>
+    <li><strong>Hematócrito</strong> (principal): % de eritrócitos → mais eritrócitos = mais viscoso</li>
+    <li><strong>Temperatura</strong>: ↑ calor → ↓ viscosidade (fluido fica mais "fluido")</li>
+    <li><strong>Proteínas plasmáticas</strong>: albumina e fibrinogênio ↑ viscosidade</li>
+    <li><strong>Calibre do vaso</strong>: Fenômeno de Fahraeus-Lindqvist</li>
+  </ul>
+</div>
+
+<div class="sec-divider"><h3>Fenômeno de Fahraeus-Lindqvist</h3></div>
+<div class="info-block warn">
+  <div class="label">⭐ Prova!</div>
+  <h4>Em vasos de menor calibre, a viscosidade do sangue DIMINUI</h4>
+  <p>Os eritrócitos se deslocam para o centro do vaso, deixando uma camada periférica de plasma (menos viscosa) perto da parede. Ocorre em TODOS os pontos de ramificação. Sem esse fenômeno, a resistência nos capilares seria enorme.</p>
+</div>
+
+<div class="sec-divider"><h3>Fluxo Laminar vs Turbulento</h3></div>
+<div class="grid2">
+<div class="card green">
+  <h4>Fluxo Laminar — O Normal ✅</h4>
+  <ul>
+    <li>Camadas paralelas que se movem suavemente</li>
+    <li><strong>Parede do vaso</strong> → velocidade MÍNIMA (atrito)</li>
+    <li><strong>Centro do vaso</strong> → velocidade MÁXIMA</li>
+    <li>Silencioso — não gera sopros cardíacos</li>
+    <li>Menor resistência, menor gasto energético</li>
+  </ul>
+</div>
+<div class="card red">
+  <h4>Fluxo Turbulento — Patológico ⚠️</h4>
+  <ul>
+    <li>Camadas se misturam de forma caótica</li>
+    <li>Ocorre em: ramificações 90°, estenoses, aterosclerose</li>
+    <li>Causa choque entre plaquetas → agregação → trombos</li>
+    <li>Gera sons → <strong>sopros cardíacos</strong></li>
+    <li>↑ viscosidade e pressão local</li>
+  </ul>
+</div>
+</div>
+<div class="info-block">
+  <div class="label">Lei de Poiseuille</div>
+  <p>O fluxo em tubos é inversamente proporcional ao comprimento e à viscosidade, e diretamente proporcional à diferença de pressão e ao raio⁴. Dobrar o raio → 16× mais fluxo.</p>
+</div>
+</div></div>
+
+<!-- ===== POTENCIAL DE AÇÃO ===== -->
+<div id="potencial" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">⚡</span> Potencial de Ação — Espiga, Meseta & Células Auto-Excitáveis</div>
+
+<div class="sec-divider"><h3>Potencial de Membrana em Repouso</h3></div>
+<div class="info-block red">
+  <div class="label">Valor em repouso</div>
+  <h4>−70 mV — carga negativa dentro da célula</h4>
+  <p><strong>Por quê?</strong> Dentro: ~10 mEq Na⁺ + macromoléculas negativas (proteínas, fosfatos — não saem por canais). Fora: ~140–142 mEq Na⁺ (gradiente enorme). K⁺ predomina dentro, tende a sair. Proteínas negativas ficam presas dentro → célula eletronegativa. A eletronegatividade interna é produzida por difusão de K⁺ + presença de ânions não difusíveis + bomba Na-K.</p>
+</div>
+
+<div class="sec-divider"><h3>Fases do Potencial de Ação</h3></div>
+<table class="compare-table">
+<tr><th>Fase</th><th>Evento</th><th>Canal</th><th>Resultado</th></tr>
+<tr><td><strong>Repouso</strong></td><td>Célula polarizada</td><td>Fechados</td><td>−70 mV (neurônio) / −90 mV (coração)</td></tr>
+<tr><td><strong>Despolarização</strong></td><td>Canais Na⁺ RÁPIDOS abrem</td><td>Na⁺ → entra</td><td>Voltagem sobe rapidamente até +30 mV</td></tr>
+<tr><td><strong>Repol. Inicial</strong></td><td>K⁺ começa a sair</td><td>K⁺ → sai</td><td>Voltagem cai levemente</td></tr>
+<tr><td><strong>Platô / Meseta ❤️</strong></td><td>Canais Ca²⁺ lentos (tipo L) abrem</td><td>Ca²⁺ → entra lentamente</td><td>Mantém voltagem + por 200–300ms</td></tr>
+<tr><td><strong>Repolarização</strong></td><td>K⁺ sai em massa</td><td>K⁺ → sai</td><td>Retorno a −70/−90 mV</td></tr>
+<tr><td><strong>Hiperpol.</strong></td><td>K⁺ ainda sai (inércia)</td><td>K⁺</td><td>Fica mais negativo que o repouso</td></tr>
+</table>
+
+<div class="sec-divider"><h3>Espiga vs Meseta — Diferença Crítica</h3></div>
+<div class="grid2">
+<div class="card blue">
+  <h4>Potencial Tipo Espiga ⚡</h4>
+  <ul>
+    <li>Neurônio, músculo esquelético</li>
+    <li>Duração: ~1–2 ms</li>
+    <li>Íons: Na⁺ (entrada) → K⁺ (saída)</li>
+    <li>Período refratário curto</li>
+    <li>Sem platô — vai e volta rapidamente</li>
+  </ul>
+</div>
+<div class="card red">
+  <h4>Potencial Tipo Meseta ❤️</h4>
+  <ul>
+    <li>Cardiomiócito ventricular</li>
+    <li>Duração: 200–300 ms</li>
+    <li>Íons: Na⁺ → Ca²⁺ (entra lento) → K⁺</li>
+    <li>Período refratário LONGO (= duração da contração)</li>
+    <li>Platô por Ca²⁺ = essencial para contração cardíaca</li>
+  </ul>
+</div>
+</div>
+
+<div class="sec-divider"><h3>Canais Lentos de Ca²⁺ — Armadilha de Prova!</h3></div>
+<div class="info-block danger">
+  <div class="label">❗ Prova P2 Q15 — FALSO!</div>
+  <h4>"Os canais de Ca²⁺ tipo L se abrem RAPIDAMENTE e têm curto tempo aberto" → FALSO</h4>
+  <p>Os canais de Ca²⁺ lentos (tipo L) se <strong>abrem LENTAMENTE</strong> e ficam abertos por um <strong>tempo PROLONGADO</strong> (200–300ms = o platô inteiro). São mais LENTOS que os canais de Na⁺. Quem abre rápido são os canais de Na⁺ (responsáveis pela despolarização rápida).</p>
+</div>
+
+<div class="sec-divider"><h3>Período Refratário</h3></div>
+<div class="grid2">
+<div class="card red">
+  <h4>Período Refratário Absoluto</h4>
+  <p>Durante a despolarização + platô. <strong>IMPOSSÍVEL</strong> gerar novo PA mesmo com estímulo máximo. Os canais Na⁺ estão inativados.</p>
+</div>
+<div class="card gold">
+  <h4>Período Refratário Relativo</h4>
+  <p>Durante a repolarização final. É <strong>possível</strong> gerar novo PA, mas só com estímulo <strong>supralimiar</strong> (acima do umbral normal).</p>
+</div>
+</div>
+
+<div class="sec-divider"><h3>Células Excitáveis vs Auto-Excitáveis</h3></div>
+<div class="grid2">
+<div class="card blue">
+  <h4>Células Excitáveis</h4>
+  <p>Precisam de estímulo externo. Ficam em repouso em −70 mV. Ex: neurônio, músculo esquelético, músculo liso.</p>
+</div>
+<div class="card gold">
+  <h4>Células Auto-Excitáveis</h4>
+  <p>Geram próprio estímulo. NUNCA ficam em repouso. Possuem <strong>rampa ascendente lenta (pré-potencial)</strong>. Mecanismo: canais Na⁺ engraçados ("funny") → Ca²⁺ tipo T → umbral → disparo. Ex: Nó SA, Nó AV, Fibras de Purkinje.</p>
+</div>
+</div>
+</div></div>
+
+<!-- ===== CORAÇÃO ===== -->
+<div id="coracao" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">❤️</span> Biofísica Cardíaca — Estrutura, Propriedades & Automatismo</div>
+
+<div class="sec-divider"><h3>Sincício Cardíaco & Discos Intercalares</h3></div>
+<div class="info-block red">
+  <div class="label">⭐ Prova — Pergunta 1 recorrente</div>
+  <h4>Discos Intercalares = estrutura de união entre cardiomiócitos</h4>
+  <p>São junções especializadas que conectam as células do miocárdio. Contêm <strong>gap junctions</strong> (junções comunicantes) que permitem a passagem direta do potencial de ação de uma célula para a outra de forma sequencial — responsáveis pelo comportamento <strong>sincicial</strong> do coração (contrai como uma unidade). O impulso passa do sincício auricular ao ventricular pelas <strong>fibras de condução (Feixe de His)</strong>, NÃO pelo tecido fibroso (que isola os sincícios).</p>
+</div>
+
+<div class="sec-divider"><h3>5 Propriedades do Coração</h3></div>
+<div class="grid3">
+<div class="card blue">
+  <h4>Batmotropismo</h4>
+  <p><strong>Excitabilidade</strong> — capacidade de gerar potencial de ação em resposta a estímulos.</p>
+</div>
+<div class="card teal">
+  <h4>Cronotropismo</h4>
+  <p><strong>Automatismo</strong> — frequência de geração de PA por minuto (FC).</p>
+</div>
+<div class="card green">
+  <h4>Dromotropismo</h4>
+  <p><strong>Condutividade</strong> — velocidade de condução e distribuição do PA.</p>
+</div>
+<div class="card gold">
+  <h4>Inotropismo</h4>
+  <p><strong>Contratilidade</strong> — força de contração durante a sístole.</p>
+</div>
+<div class="card red">
+  <h4>Lusotropismo</h4>
+  <p><strong>Relaxamento</strong> — capacidade de relaxar durante a diástole.</p>
+</div>
+</div>
+<div class="info-block warn">
+  <div class="label">Prova — Lusotropismo é a propriedade relacionada a RELAXAR as células cardiomiocíticas</div>
+  <p>Pergunta frequente: "Qual propriedade cardíaca é relacionada com a capacidade do coração de <strong>relaxar</strong> as células cardiomiocíticas?" → <strong>Lusotropismo</strong>.</p>
+</div>
+
+<div class="sec-divider"><h3>Sistema de Condução & Automatismo</h3></div>
+<table class="compare-table">
+<tr><th>Estrutura</th><th>Frequência</th><th>Velocidade</th><th>Tipo de PA</th><th>Propriedade</th></tr>
+<tr><td><strong>Nó SA</strong> (Sinoatrial)</td><td>60–100 PA/min</td><td>1 m/s</td><td>Espiga + rampa</td><td>Cronotropismo (marca-passo)</td></tr>
+<tr><td><strong>Nó AV</strong></td><td>40–60 PA/min</td><td><strong>0,03–0,05 m/s</strong> (lento!)</td><td>Espiga + rampa</td><td>Dromotropismo (filtro)</td></tr>
+<tr><td><strong>Feixe de His</strong></td><td>—</td><td>1–2 m/s</td><td>Meseta</td><td>Condução rápida</td></tr>
+<tr><td><strong>Fibras de Purkinje</strong></td><td>15–40 PA/min</td><td><strong>1,5–4 m/s</strong> (mais rápido!)</td><td>Meseta + rampa</td><td>Inotropismo</td></tr>
+<tr><td><strong>Fibras auriculares/ventriculares</strong></td><td>—</td><td>0,3–0,5 m/s</td><td>Meseta</td><td>Condução</td></tr>
+</table>
+<div class="info-block">
+  <div class="label">Prova P2 — Velocidade de Condução</div>
+  <p>Velocidade nas fibras auriculares e ventriculares: <strong>0,3 a 0,5 m/s</strong>. Nó AV = mais lento (0,03 m/s — retardo fisiológico de 0,1s). Purkinje = mais rápido (até 4 m/s).</p>
+</div>
+<div class="info-block warn">
+  <div class="label">Reflexo Vagal → FC = 0</div>
+  <p>Estimulação intensa do nervo <strong>vago</strong> → ↓↓ cronotropismo → pode reduzir FC a zero ou quase zero (parada sinusal transitória). VERDADEIRO.</p>
+</div>
+
+<div class="sec-divider"><h3>Ruídos Cardíacos</h3></div>
+<table class="compare-table">
+<tr><th>Ruído</th><th>Som</th><th>Causa</th><th>Marca</th></tr>
+<tr><td><strong>B1</strong></td><td>"TUM" (grave, longo)</td><td>Fechamento de mitral + tricúspide</td><td>Início da sístole (= QRS)</td></tr>
+<tr><td><strong>B2</strong></td><td>"TÁ" (agudo, curto)</td><td>Fechamento de aórtica + pulmonar</td><td>Início da diástole (= fim da onda T)</td></tr>
+<tr><td><strong>B3</strong></td><td>Galope protodiastólico</td><td>Enchimento ventricular rápido</td><td>Normal em jovens; IC em adultos</td></tr>
+<tr><td><strong>B4</strong></td><td>Galope presistólico</td><td>Contração atrial forçada</td><td>SEMPRE patológico</td></tr>
+</table>
+</div></div>
+
+<!-- ===== HEMODINÂMICA ===== -->
+<div id="hemodinamica" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">💉</span> Hemodinâmica — Volumes, Débito, Frank-Starling & Bainbridge</div>
+
+<div class="sec-divider"><h3>Volumes Cardíacos</h3></div>
+<table class="compare-table">
+<tr><th>Volume</th><th>Valor Normal</th><th>Definição</th></tr>
+<tr><td><strong>VTD</strong> (Telediastólico)</td><td>120 mL</td><td>Máximo — ao final da diástole (enchimento completo)</td></tr>
+<tr><td><strong>VS</strong> (Sistólico / Volume de Ejeção)</td><td>70 mL</td><td>Ejetado por batimento (= VTD − VTS)</td></tr>
+<tr><td><strong>VTS</strong> (Telesistólico)</td><td>50 mL</td><td>Residual — permanece após a ejeção</td></tr>
+</table>
+<div class="formula-block">VS = VTD − VTS = 120 − 50 = <strong>70 mL</strong><br>
+Débito Cardíaco (DC) = VS × FC = 70 × 80 = <strong>~5.600 mL/min = 5,6 L/min</strong><br>
+Fração de Ejeção (FE) = VS / VTD = 70/120 = <strong>58,3% ≈ 60%</strong></div>
+<div class="info-block">
+  <div class="label">Prova — Nomenclatura Certa!</div>
+  <p><strong>Volume Sistólico (VS)</strong> = 70 mL ejetados por batimento. <strong>Gasto Cardíaco / Débito Cardíaco</strong> = VS × FC = volume por MINUTO (~5,6 L/min). <strong>Retorno Venoso</strong> = quantidade de sangue que retorna à aurícula direita pelas veias.</p>
+</div>
+
+<div class="sec-divider"><h3>Pré-carga vs Pós-carga</h3></div>
+<div class="grid2">
+<div class="card blue">
+  <h4>Pré-carga — Sobrecarga de Volume</h4>
+  <p>Volume no ventrículo ao final da <strong>DIÁSTOLE</strong> (VTD ≈ 120 mL).</p>
+  <p><strong>Depende de:</strong> Retorno venoso. ↑ RV = ↑ pré-carga.</p>
+  <p><strong>Também chamada:</strong> "Sobrecarga de volume"</p>
+  <p style="color:var(--gold);font-weight:700;margin-top:8px;">Define-se durante a DIÁSTOLE</p>
+</div>
+<div class="card red">
+  <h4>Pós-carga — Resistência à Ejeção</h4>
+  <p>Resistência que o ventrículo vence para ejetar (durante a <strong>SÍSTOLE</strong>).</p>
+  <p><strong>Depende de:</strong> Pressão da Aorta + RVP (Resistência Vascular Periférica).</p>
+  <p style="color:var(--red);font-weight:700;margin-top:8px;">Varia durante a SÍSTOLE VENTRICULAR</p>
+</div>
+</div>
+<div class="info-block danger">
+  <div class="label">❗ Prova — Não confunda!</div>
+  <p>Pré-carga = diástole (enchimento). Pós-carga = sístole (ejeção). Sobrecarga de volume = pré-carga. Resistência vascular periférica = componente da pós-carga.</p>
+</div>
+
+<div class="sec-divider"><h3>Lei de Frank-Starling</h3></div>
+<div class="info-block red">
+  <div class="label">Conceito Central</div>
+  <h4>Todo o sangue que entra deve sair (dentro dos limites fisiológicos)</h4>
+  <p>↑ Retorno venoso → ↑ VTD → ↑ Estiramento das fibras miocárdicas → ↑ Força de contração (↑ inotropismo) → ↑ VS ejetado. O coração adapta automaticamente a força ao volume recebido.</p>
+</div>
+<div class="info-block warn">
+  <div class="label">⚠️ Condição Obrigatória</div>
+  <p>A lei funciona <strong>SOMENTE dentro dos limites fisiológicos</strong>. Em IC descompensada, o estiramento excessivo REDUZ a eficiência (curva descendente). Não se aplica em miocardiopatias graves.</p>
+</div>
+
+<div class="sec-divider"><h3>Reflexo de Bainbridge</h3></div>
+<div class="info-block">
+  <div class="label">Reflexo Aurículo-Cardíaco</div>
+  <h4>Estiramento da aurícula DIREITA → ↑ FC (Cronotropismo)</h4>
+  <p>Maior quantidade de sangue chega à aurícula direita → distensão → <strong>mecanorreceptores de estiramento auriculares</strong> detectam → enviam sinal ao centro cardiovascular → ↑ FC. É o complemento de Frank-Starling: F-S ajusta a força; Bainbridge ajusta a frequência.</p>
+</div>
+<table class="compare-table">
+<tr><th>Aspecto</th><th>Frank-Starling</th><th>Bainbridge</th></tr>
+<tr><td>Estrutura</td><td>Ventrículos</td><td>Aurícula DIREITA</td></tr>
+<tr><td>Ajusta</td><td>Força de contração</td><td>Frequência cardíaca (FC)</td></tr>
+<tr><td>Propriedade</td><td>Inotropismo</td><td>Cronotropismo</td></tr>
+<tr><td>Mecanismo</td><td>Estiramento das fibras ventriculares</td><td>Mecanorreceptores auriculares direitos</td></tr>
+<tr><td>Juntos</td><td colspan="2" style="text-align:center;color:var(--gold);font-weight:700">↑ Força + ↑ FC = ↑↑↑ Débito Cardíaco (exercício)</td></tr>
+</table>
+
+<div class="sec-divider"><h3>Ciclo Cardíaco</h3></div>
+<table class="compare-table">
+<tr><th>Fase</th><th>Evento</th><th>Válvulas</th></tr>
+<tr><td><strong>Diástole</strong></td><td>Relaxamento + enchimento passivo (80% do VTD)</td><td>Mitral/Tricúspide abertas; Aórtica/Pulmonar fechadas</td></tr>
+<tr><td><strong>Sístole Atrial</strong></td><td>Contração auricular — enchimento ativo (~20%)</td><td>Mitral/Tricúspide abertas</td></tr>
+<tr><td><strong>Sístole Ventricular</strong></td><td>Contração + ejeção (70 mL)</td><td>Aórtica/Pulmonar abertas; AV fechadas</td></tr>
+</table>
+<div class="info-block warn">
+  <div class="label">Prova — Bomba Cebadora (Auricular)</div>
+  <p>A aurícula contribui com <strong>20%</strong> do volume ventricular (NÃO 80%). A diástole passiva preenche 80%. Perder 20% do NSA → débito cai ~50%!</p>
+</div>
+</div></div>
+
+<!-- ===== FRANK-STARLING ===== -->
+<div id="frankstarling" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">📏</span> Lei de Frank-Starling</div>
+
+<div class="info-block red">
+  <div class="label">Conceito Central</div>
+  <h4>Dentro dos limites fisiológicos, todo o sangue que entra deve sair</h4>
+  <p>O coração adapta automaticamente a <strong>força de contração</strong> ao volume que recebe na diástole. Quanto mais sangue chega → mais as fibras se estiram → maior a força de contração → maior o volume ejetado. É o mecanismo <strong>intrínseco</strong> de auto-regulação cardíaca.</p>
+</div>
+
+<div class="formula-block">↑ Retorno venoso → ↑ VTD → ↑ Estiramento das fibras miocárdicas<br>
+→ ↑ Sobreposição actina-miosina → ↑ Força (Inotropismo ↑) → ↑ Volume Sistólico ejetado<br><br>
+<strong>Propriedade ajustada: INOTROPISMO (força de contração)</strong></div>
+
+<div class="sec-divider"><h3>Pré-carga — O Gatilho da Lei</h3></div>
+<div class="grid2">
+<div class="card blue">
+  <h4>📏 Pré-carga — Sobrecarga de Volume</h4>
+  <p><strong>O que é:</strong> Volume no ventrículo ao final da <strong>DIÁSTOLE</strong> (VTD ≈ 120 mL).</p>
+  <p><strong>Depende de:</strong> Retorno venoso. ↑ RV = ↑ pré-carga = ↑ estiramento das fibras.</p>
+  <p><strong>Também chamada:</strong> "Sobrecarga de volume"</p>
+  <p style="color:var(--gold);font-weight:700;margin-top:8px">Define-se durante a DIÁSTOLE</p>
+</div>
+<div class="card red">
+  <h4>🚧 Pós-carga — Resistência à Ejeção</h4>
+  <p><strong>O que é:</strong> Resistência que o ventrículo vence para ejetar (durante a <strong>SÍSTOLE</strong>).</p>
+  <p><strong>Depende de:</strong> Pressão da Aorta + Resistência Vascular Periférica (RVP).</p>
+  <p><strong>Também chamada:</strong> "Sobrecarga de pressão"</p>
+  <p style="color:var(--red);font-weight:700;margin-top:8px">Varia durante a SÍSTOLE VENTRICULAR</p>
+</div>
+</div>
+<div class="info-block danger">
+  <div class="label">❗ Nunca Confunda!</div>
+  <p>Pré-carga = diástole = sobrecarga de VOLUME (retorno venoso). Pós-carga = sístole = sobrecarga de PRESSÃO (resistência vascular periférica + pressão da aorta).</p>
+</div>
+
+<div class="sec-divider"><h3>Mecanismo Molecular — Por que o estiramento aumenta a força?</h3></div>
+<div class="info-block">
+  <div class="label">Base Molecular</div>
+  <h4>Mais estiramento → mais pontes cruzadas actina-miosina</h4>
+  <p>As fibras miocárdicas em repouso não estão na sobreposição ideal entre actina e miosina. Quando são estiradas pelo volume que chega (VTD ↑), a sobreposição entre os filamentos aumenta → mais pontes cruzadas são formadas → maior força gerada na sístole. É um mecanismo puramente <strong>mecânico e intrínseco</strong> — não depende de hormônios nem do sistema nervoso.</p>
+</div>
+
+<div class="sec-divider"><h3>Situações Fisiológicas da Lei</h3></div>
+<table class="compare-table">
+<tr><th>Situação</th><th>Retorno Venoso</th><th>Pré-carga (VTD)</th><th>Estiramento</th><th>Força / VS</th><th>DC</th></tr>
+<tr><td><strong>Repouso normal</strong></td><td>Normal</td><td>120 mL</td><td>Normal</td><td>Normal (70 mL)</td><td>~5,6 L/min</td></tr>
+<tr><td><strong>Exercício físico</strong></td><td>↑↑ (músculos bombeiam)</td><td>↑↑</td><td>↑↑</td><td>↑↑</td><td>↑↑ (até 5×)</td></tr>
+<tr><td><strong>Decúbito dorsal</strong></td><td>↑ (gravitação)</td><td>↑ levemente</td><td>↑ leve</td><td>↑ leve</td><td>↑ leve</td></tr>
+<tr><td><strong>Hipovolemia</strong></td><td>↓↓</td><td>↓↓</td><td>↓↓</td><td>↓↓</td><td>↓↓</td></tr>
+</table>
+
+<div class="sec-divider"><h3>Limite Fisiológico — Condição Obrigatória</h3></div>
+<div class="info-block warn">
+  <div class="label">⚠️ A lei tem um limite!</div>
+  <h4>Funciona SOMENTE dentro dos limites fisiológicos</h4>
+  <p>A relação estiramento-força tem um ponto ótimo. Além desse ponto (estiramento excessivo), os filamentos de actina e miosina se afastam demais e perdem a sobreposição → a força <strong>cai</strong>. Porém, em condições fisiológicas normais esse limite nunca é atingido. A lei falha apenas em situações extremas que estão fora da fisiologia normal.</p>
+</div>
+
+<div class="sec-divider"><h3>Frank-Starling vs Bainbridge — Comparação Rápida</h3></div>
+<table class="compare-table">
+<tr><th>Aspecto</th><th>Frank-Starling</th><th>Bainbridge</th></tr>
+<tr><td>Estrutura envolvida</td><td>Ventrículos (fibras contráteis)</td><td>Aurícula DIREITA</td></tr>
+<tr><td>Parâmetro ajustado</td><td>Força de contração</td><td>Frequência cardíaca (FC)</td></tr>
+<tr><td>Propriedade cardíaca</td><td>Inotropismo</td><td>Cronotropismo</td></tr>
+<tr><td>Mecanismo</td><td>Estiramento das fibras ventriculares</td><td>Mecanorreceptores auriculares direitos</td></tr>
+<tr><td>Resultado</td><td>↑ Volume Sistólico</td><td>↑ FC</td></tr>
+<tr><td>Juntos no exercício</td><td colspan="2" style="text-align:center;color:var(--gold);font-weight:700">↑ Força + ↑ FC = ↑↑↑ Débito Cardíaco</td></tr>
+</table>
+
+</div></div>
+
+<!-- ===== FORÇAS DE FRANK-STARLING ===== -->
+<div id="forcas" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">💪</span> Forças de Frank-Starling — Critérios que Regulam a Contração</div>
+
+<div class="info-block warn">
+  <div class="label">⚠️ Atenção — São conceitos DIFERENTES!</div>
+  <h4>Lei de Frank-Starling ≠ Forças (Critérios) de Frank-Starling</h4>
+  <p>A <strong>Lei de Frank-Starling</strong> descreve a relação estiramento-força: mais volume → mais força (mecanismo intrínseco). Já as <strong>Forças (Critérios) de Frank-Starling</strong> são os <strong>4 fatores determinantes</strong> que controlam o débito cardíaco — cada um age de forma independente e todos influenciam a performance do coração.</p>
+</div>
+
+<div class="sec-divider"><h3>Os 4 Critérios / Forças de Frank-Starling</h3></div>
+
+<div class="grid2">
+<div class="card blue">
+  <h4>① Pré-carga (Sobrecarga de Volume)</h4>
+  <p><strong>O que é:</strong> Volume de sangue que chega ao ventrículo na diástole (VTD). É determinada pelo <strong>retorno venoso</strong>.</p>
+  <p><strong>Como afeta:</strong> ↑ VTD → ↑ estiramento → ↑ força (Lei de F-S em ação). Quanto mais sangue chega, mais o ventrículo se contrai com força.</p>
+  <p><strong>Fase:</strong> DIÁSTOLE</p>
+  <div class="formula-block" style="margin-top:10px;font-size:12px">↑ Retorno venoso → ↑ Pré-carga → ↑ Força → ↑ VS</div>
+</div>
+<div class="card red">
+  <h4>② Pós-carga (Sobrecarga de Pressão)</h4>
+  <p><strong>O que é:</strong> Resistência que o ventrículo precisa superar para ejetar o sangue. Determinada pela <strong>pressão da aorta + RVP</strong>.</p>
+  <p><strong>Como afeta:</strong> ↑ Pós-carga → o ventrículo precisa gerar mais pressão para abrir as válvulas semilunares → se não conseguir, o VS cai.</p>
+  <p><strong>Fase:</strong> SÍSTOLE</p>
+  <div class="formula-block" style="margin-top:10px;font-size:12px">↑ Resistência Vascular → ↑ Pós-carga → ↓ VS (se não compensado)</div>
+</div>
+<div class="card teal">
+  <h4>③ Contratilidade (Inotropismo)</h4>
+  <p><strong>O que é:</strong> Capacidade intrínseca do miocárdio de se contrair, <strong>independente da pré-carga e pós-carga</strong>. É a "qualidade" da contração.</p>
+  <p><strong>Como afeta:</strong> ↑ Contratilidade (ex: adrenalina, Ca²⁺) → o coração esvazia mais → maior VS com mesmo VTD.</p>
+  <p><strong>Independente de:</strong> Volume que chegou. É uma propriedade do próprio músculo.</p>
+  <div class="formula-block" style="margin-top:10px;font-size:12px">↑ Ca²⁺ intracelular → ↑ pontes cruzadas → ↑ Força sem mudar VTD</div>
+</div>
+<div class="card gold">
+  <h4>④ Frequência Cardíaca (Cronotropismo)</h4>
+  <p><strong>O que é:</strong> Número de contrações por minuto (FC). Determinada pelo automatismo do Nó SA + Reflexo de Bainbridge + sistema nervoso autônomo.</p>
+  <p><strong>Como afeta:</strong> FC faz parte da fórmula do DC diretamente. ↑ FC = ↑ DC (até certo ponto — FC muito alta reduz enchimento diastólico).</p>
+  <div class="formula-block" style="margin-top:10px;font-size:12px">DC = VS × FC<br>↑ FC → ↑ DC (se VS mantido)</div>
+</div>
+</div>
+
+<div class="sec-divider"><h3>Fórmula Unificada — Como as 4 Forças Interagem</h3></div>
+<div class="formula-block">DC = VS × FC<br><br>
+VS é determinado por: Pré-carga (↑ VTD) + Contratilidade − Pós-carga (resistência)<br>
+FC é determinada por: Automatismo (NSA) + Bainbridge + SNA<br><br>
+<strong>DC ideal = todas as 4 forças em equilíbrio fisiológico</strong></div>
+
+<div class="sec-divider"><h3>Comparação das 4 Forças</h3></div>
+<table class="compare-table">
+<tr><th>Força / Critério</th><th>Também Chamada</th><th>Fase Cardíaca</th><th>Determinante Principal</th><th>Propriedade</th></tr>
+<tr><td><strong>① Pré-carga</strong></td><td>Sobrecarga de Volume</td><td>Diástole</td><td>Retorno Venoso</td><td>Inotropismo (via F-S)</td></tr>
+<tr><td><strong>② Pós-carga</strong></td><td>Sobrecarga de Pressão</td><td>Sístole</td><td>RVP + Pressão Aorta</td><td>Inotropismo (oposto)</td></tr>
+<tr><td><strong>③ Contratilidade</strong></td><td>Inotropismo intrínseco</td><td>Sístole</td><td>Ca²⁺ intracelular</td><td>Inotropismo</td></tr>
+<tr><td><strong>④ FC</strong></td><td>Cronotropismo</td><td>Ambas</td><td>NSA + Bainbridge + SNA</td><td>Cronotropismo</td></tr>
+</table>
+
+<div class="sec-divider"><h3>Como o Ca²⁺ Determina a Contratilidade</h3></div>
+<div class="info-block">
+  <div class="label">Mecanismo Molecular da Contratilidade</div>
+  <h4>Ca²⁺ = chave da contração cardíaca (dupla função: elétrica E mecânica)</h4>
+  <p>Durante a meseta (Fase 2), o Ca²⁺ entra pelo canal tipo L e aciona a liberação de mais Ca²⁺ do retículo sarcoplasmático (fenômeno CICR — Calcium-Induced Calcium Release). Esse Ca²⁺ intracelular se liga à <strong>troponina C</strong> → libera os sítios de ligação da actina → as pontes cruzadas com a miosina se formam → contração. Maior [Ca²⁺] intracelular = maior contratilidade.</p>
+</div>
+<div class="grid2">
+<div class="card blue">
+  <h4>↑ Contratilidade (↑ Ca²⁺)</h4>
+  <ul>
+    <li>Adrenalina/noradrenalina (estresse, exercício)</li>
+    <li>↑ FC (mais Ca²⁺ acumula no interior)</li>
+    <li>Glicosídeos cardíacos (inibem Na-K-ATPase → acumulam Na⁺ → ↑ Ca²⁺ intracelular)</li>
+  </ul>
+</div>
+<div class="card teal">
+  <h4>↓ Contratilidade (↓ Ca²⁺)</h4>
+  <ul>
+    <li>Bloqueadores dos canais de Ca²⁺ (verapamil, diltiazem)</li>
+    <li>Hipocalcemia</li>
+    <li>Acidose (H⁺ compete com Ca²⁺ pela troponina)</li>
+  </ul>
+</div>
+</div>
+
+<div class="sec-divider"><h3>Exercício — Todas as 4 Forças em Ação</h3></div>
+<div class="info-block success">
+  <div class="label">Exemplo Integrador — Exercício Físico Intenso</div>
+  <ul>
+    <li><strong>① Pré-carga ↑:</strong> músculos esqueléticos bombeiam mais sangue para as veias → ↑ retorno venoso → ↑ VTD → F-S em ação</li>
+    <li><strong>② Pós-carga ↓ periférica:</strong> vasodilatação muscular → ↓ RVP (facilita ejeção)</li>
+    <li><strong>③ Contratilidade ↑:</strong> adrenalina → ↑ Ca²⁺ → ↑ força intrínseca</li>
+    <li><strong>④ FC ↑:</strong> Bainbridge (↑ RV → ↑ FC) + simpático → taquicardia fisiológica</li>
+    <li><strong>Resultado:</strong> DC pode aumentar de 5,6 L/min até 20–25 L/min em atletas!</li>
+  </ul>
+</div>
+
+</div></div>
+
+<!-- ===== BAINBRIDGE ===== -->
+<div id="bainbridge" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🔄</span> Reflexo de Bainbridge</div>
+
+<div class="info-block">
+  <div class="label">Conceito Central</div>
+  <h4>Reflexo aurículo-cardíaco que ajusta a FC ao retorno venoso</h4>
+  <p>O Reflexo de Bainbridge é um <strong>reflexo nervoso intrínseco</strong> que aumenta ou diminui a frequência cardíaca (FC) de acordo com a quantidade/força com que o sangue chega à <strong>aurícula DIREITA</strong>. Complementa perfeitamente Frank-Starling: F-S ajusta a <em>força</em>, Bainbridge ajusta a <em>frequência</em>.</p>
+</div>
+
+<div class="sec-divider"><h3>Mecanismo Passo a Passo</h3></div>
+<div class="grid3">
+<div class="card blue">
+  <h4>1️⃣ Estímulo</h4>
+  <p>Maior quantidade de sangue chega à <strong>aurícula DIREITA</strong> pelo retorno venoso (veias cavas superior e inferior) → distensão/estiramento da parede auricular direita.</p>
+</div>
+<div class="card teal">
+  <h4>2️⃣ Receptor</h4>
+  <p><strong>Mecanorreceptores de estiramento</strong> localizados na parede da aurícula direita detectam a distensão → enviam sinal via nervo vago ao <strong>centro cardiovascular bulbar</strong> (bulbo).</p>
+</div>
+<div class="card gold">
+  <h4>3️⃣ Resposta</h4>
+  <p>Centro cardiovascular processa o sinal → ↑ atividade simpática ao Nó SA → <strong>↑ FC (cronotropismo ↑)</strong>. Mais sangue chegando = heart beats faster to handle it.</p>
+</div>
+</div>
+
+<div class="formula-block">↑ Retorno venoso → ↑ Sangue na aurícula DIREITA → ↑ Distensão auricular<br>
+→ Mecanorreceptores ativados → Centro cardiovascular (bulbo) → ↑ atividade simpática ao NSA<br>
+→ ↑ FC (Cronotropismo ↑) → ↑ Débito Cardíaco<br><br>
+↓ Retorno venoso → ↓ Distensão → Mecanorreceptores menos ativos → ↓ FC</div>
+
+<div class="sec-divider"><h3>Por que a Aurícula DIREITA e não a Esquerda?</h3></div>
+<div class="info-block danger">
+  <div class="label">❗ Pergunta frequente de prova!</div>
+  <h4>Aurícula DIREITA = receptor do retorno venoso SISTÊMICO</h4>
+  <p>A aurícula <strong>direita</strong> recebe o retorno venoso sistêmico pelas <strong>veias cavas superior e inferior</strong>. Por isso é ela que "sente" primeiro quando o volume circulante aumenta. A aurícula esquerda recebe o retorno <strong>pulmonar</strong> (veias pulmonares) — tem outros reflexos, não o de Bainbridge.</p>
+</div>
+
+<div class="sec-divider"><h3>Bainbridge na Prática — Situações Fisiológicas</h3></div>
+<table class="compare-table">
+<tr><th>Situação</th><th>Retorno Venoso</th><th>Distensão AD</th><th>Resposta Bainbridge</th><th>FC resultante</th></tr>
+<tr><td><strong>Exercício físico</strong></td><td>↑↑</td><td>↑↑</td><td>Ativa fortemente</td><td>↑↑ (taquicardia fisiológica)</td></tr>
+<tr><td><strong>Repouso</strong></td><td>Normal</td><td>Normal</td><td>Atividade basal</td><td>60–100 bpm</td></tr>
+<tr><td><strong>Decúbito dorsal</strong></td><td>↑ (gravitação)</td><td>↑ leve</td><td>Leve ativação</td><td>↑ leve</td></tr>
+<tr><td><strong>Inspiração profunda</strong></td><td>↑ (pressão negativa)</td><td>↑</td><td>Ativação moderada</td><td>↑ inspiração (arritmia sinusal normal)</td></tr>
+</table>
+
+<div class="sec-divider"><h3>Bainbridge vs Frank-Starling — Diferença Essencial</h3></div>
+<table class="compare-table">
+<tr><th>Critério</th><th>Frank-Starling</th><th>Bainbridge</th></tr>
+<tr><td><strong>Estrutura sensora</strong></td><td>Fibras ventriculares (mecanismo intrínseco)</td><td>Mecanorreceptores na aurícula DIREITA</td></tr>
+<tr><td><strong>O que ajusta</strong></td><td>Força de contração (VS)</td><td>Frequência cardíaca (FC)</td></tr>
+<tr><td><strong>Propriedade cardíaca</strong></td><td>Inotropismo</td><td>Cronotropismo</td></tr>
+<tr><td><strong>Tipo de mecanismo</strong></td><td>Intrínseco (mecânico)</td><td>Reflexo nervoso (extrínseco)</td></tr>
+<tr><td><strong>Via</strong></td><td>Actina-miosina (direto)</td><td>Mecanorreceptor → bulbo → NSA</td></tr>
+<tr><td><strong>Resultado no DC</strong></td><td>↑ VS → ↑ DC</td><td>↑ FC → ↑ DC</td></tr>
+<tr><td><strong>Juntos no exercício</strong></td><td colspan="2" style="text-align:center;color:var(--gold);font-weight:700">↑ VS + ↑ FC = ↑↑↑ DC (de 5,6 até 20–25 L/min!)</td></tr>
+</table>
+
+<div class="sec-divider"><h3>Relação com o Reflexo Vagal</h3></div>
+<div class="info-block warn">
+  <div class="label">Comparação — Vagal vs Bainbridge</div>
+  <p><strong>Reflexo de Bainbridge:</strong> ↑ distensão aurícula direita → ↑ FC (via simpático). Aumenta o débito para dar conta do volume aumentado.<br><br>
+  <strong>Reflexo Vagal (vago):</strong> Estimulação intensa do nervo vago → ↓↓ FC (pode chegar a zero). Mecanismo oposto — parassimpático. Bainbridge é via simpática; Vagal é via parassimpática.</p>
+</div>
+
+</div></div>
+
+<!-- ===== ECG ===== -->
+<div id="ecg" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">📈</span> ECG — Ondas, Derivações, Eixo & Cálculo de FC</div>
+
+<div class="sec-divider"><h3>Ondas do ECG</h3></div>
+<div class="wcard"><div class="wlabel">P</div><div class="winfo">
+  <p><strong>Despolarização atrial</strong> — ativa as duas aurículas. Inicial = Aurícula Direita; Final = Aurícula Esquerda. Condução interatrial via Fascículo de Bachmann.</p>
+  <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">Duração &lt;120ms | Amplitude &lt;2,5mm</p>
+</div></div>
+<div class="wcard"><div class="wlabel" style="font-size:1.6rem">PR</div><div class="winfo">
+  <p><strong>Segmento PR</strong> — retraso fisiológico no NAV. O NAV segura o impulso 0,1s para as aurículas terminarem antes dos ventrículos ativarem.</p>
+  <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">Normal: 120–200ms | &gt;200ms = Bloqueio AV 1° grau</p>
+</div></div>
+<div class="wcard"><div class="wlabel">QRS</div><div class="winfo">
+  <p><strong>Despolarização ventricular</strong>: <strong>Q</strong> = septo/VD (negativa); <strong>R</strong> = Ventrículo Esquerdo (positiva, maior massa); <strong>S</strong> = base/VD (negativa após R).</p>
+  <p><strong>Em aVR: TODAS as ondas do QRS são invertidas (negativas)</strong> — normal. Repolarização auricular existe mas é encoberta pelo QRS.</p>
+  <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">Normal: &lt;120ms | &gt;120ms = Bloqueio de ramo</p>
+</div></div>
+<div class="wcard"><div class="wlabel">ST</div><div class="winfo">
+  <p><strong>Segmento ST = Platô da sístole ventricular (Meseta — Fase 2)!</strong> Linha isoelétrica normal. Supra-ST = IAM. Infra-ST = isquemia.</p>
+</div></div>
+<div class="wcard"><div class="wlabel">T</div><div class="winfo">
+  <p><strong>Repolarização ventricular</strong> — ÚNICA onda de repolarização visível no ECG. Onda T = relaxamento ventricular. Em aVR: sempre negativa (normal). Em V1: pode ser negativa (normal).</p>
+  <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">T invertida em V4-V6/DII → investigar isquemia</p>
+</div></div>
+
+<div class="sec-divider"><h3>Papel do ECG</h3></div>
+<table class="compare-table">
+<tr><th>Quadrado</th><th>Dimensão</th><th>Tempo (horizontal)</th><th>Amplitude (vertical)</th></tr>
+<tr><td><strong>Pequeno</strong></td><td>1 mm × 1 mm</td><td>0,04 segundos</td><td>0,1 mV</td></tr>
+<tr><td><strong>Grande</strong></td><td>5 mm × 5 mm</td><td>0,20 segundos</td><td>0,5 mV</td></tr>
+</table>
+<div class="info-block">
+  <div class="label">Velocidade padrão</div>
+  <p>Velocidade do papel: <strong>25 mm/s</strong>. Calibração padrão: 10 mm = 1 mV.</p>
+</div>
+
+<div class="sec-divider"><h3>⏱️ Como Calcular a FC no ECG</h3></div>
+<div class="grid2">
+<div class="card blue">
+  <h4>Método Rápido — Linhas Escuras (Quadrados Grandes)</h4>
+  <p>Conte os <strong>quadrados grandes</strong> entre dois picos R consecutivos (intervalo R-R):</p>
+  <div class="formula-block" style="margin-top:10px;font-size:12px">FC = 300 ÷ nº de quadrados grandes<br><br>1 quadrado = 300 bpm<br>2 quadrados = 150 bpm<br>3 quadrados = 100 bpm<br>4 quadrados = 75 bpm<br>5 quadrados = 60 bpm<br>6 quadrados = 50 bpm</div>
+  <p style="font-size:12px;color:var(--accent2);margin-top:8px">Macete: "300-150-100-75-60-50"</p>
+</div>
+<div class="card teal">
+  <h4>Método Preciso — Quadradinhos (Linhas Finas)</h4>
+  <div class="formula-block" style="margin-top:8px;font-size:12px">FC = 1500 ÷ nº de quadradinhos no R-R</div>
+  <p style="margin-top:8px">Ou: marque 6 segundos de traçado (30 quadrados grandes) → conte quantos QRS aparecem → multiplique por 10.</p>
+  <p style="font-size:12px;color:var(--accent2);margin-top:8px">Usado para ritmo irregular (ex: Fibrilação Atrial)</p>
+</div>
+</div>
+
+<div class="sec-divider"><h3>📐 Derivações — Explicação Completa</h3></div>
+
+<div class="info-block red">
+  <div class="label">Conceito Base</div>
+  <h4>Derivação = perspectiva/ângulo de observação da atividade elétrica do coração</h4>
+  <p>Cada derivação "enxerga" o coração de um ângulo diferente. A atividade elétrica que se aproxima do eletrodo positivo gera deflexão positiva (↑); a que se afasta gera deflexão negativa (↓).</p>
+</div>
+
+<div class="sec-divider"><h3>Grupo 1 — Derivações BIPOLARES dos Membros (DI, DII, DIII)</h3></div>
+<div class="info-block">
+  <div class="label">Como funcionam</div>
+  <h4>Registram a DIFERENÇA de potencial entre dois eletrodos dos membros</h4>
+  <p>Formam o <strong>Triângulo de Einthoven</strong>. Cada derivação tem um eletrodo negativo (−) e um positivo (+). A diferença entre os dois gera o traçado.</p>
+</div>
+<table class="compare-table">
+<tr><th>Derivação</th><th>Eletrodo (−)</th><th>Eletrodo (+)</th><th>Ângulo</th><th>O que representa</th></tr>
+<tr><td><strong>DI</strong></td><td>Braço Direito</td><td>Braço Esquerdo</td><td>0°</td><td>Eixo horizontal — lateral esquerda</td></tr>
+<tr><td><strong>DII</strong></td><td>Braço Direito</td><td>Perna Esquerda</td><td>+60°</td><td>Melhor derivação para ritmo (alinhada ao eixo normal)</td></tr>
+<tr><td><strong>DIII</strong></td><td>Braço Esquerdo</td><td>Perna Esquerda</td><td>+120°</td><td>Parede inferior — eletrodo (−) braço esq. + (+) perna esq.</td></tr>
+</table>
+<div class="info-block warn">
+  <div class="label">⭐ Prova — DIII</div>
+  <p>Eletrodo negativo no braço esquerdo + eletrodo positivo na perna esquerda → <strong>DIII (D3)</strong>. É uma das questões mais frequentes nas provas!</p>
+</div>
+
+<div class="sec-divider"><h3>Grupo 2 — Derivações UNIPOLARES AMPLIADAS dos Membros (aVR, aVL, aVF)</h3></div>
+<div class="info-block">
+  <div class="label">Como funcionam</div>
+  <h4>Um único eletrodo explorador (+) com referência central — amplificadas 1,5×</h4>
+  <p>São unipolares porque têm apenas UM eletrodo explorador positivo. O prefixo "a" = augmented (ampliada). A referência é um ponto central calculado (Wilson central terminal modificado). O "V" = voltage (voltagem) e a letra indica o membro.</p>
+</div>
+<table class="compare-table">
+<tr><th>Derivação</th><th>Eletrodo (+)</th><th>Ângulo</th><th>Característica</th></tr>
+<tr><td><strong>aVR</strong></td><td>Braço Direito</td><td>−150°</td><td><strong>SEMPRE todas as ondas NEGATIVAS</strong> (P, QRS, T) — normal. "Avesso do coração".</td></tr>
+<tr><td><strong>aVL</strong></td><td>Braço Esquerdo</td><td>−30°</td><td>Pode ser positivo, negativo ou isodifásico — depende do eixo. Parede lateral alta.</td></tr>
+<tr><td><strong>aVF</strong></td><td>Perna Esquerda (Foot)</td><td>+90°</td><td>Positivo em eixo normal. Representa parede inferior.</td></tr>
+</table>
+<div class="info-block danger">
+  <div class="label">❗ Por que aVR tem tudo invertido?</div>
+  <p>aVR aponta em direção oposta ao vetor elétrico principal do coração (que vai da base para o ápice, em direção ao VE). Como o vetor "foge" do eletrodo de aVR → todas as deflexões são negativas. Se aVR tiver QRS positivo → eletrodos trocados ou dextrocardia!</p>
+</div>
+
+<div class="sec-divider"><h3>Grupo 3 — Derivações UNIPOLARES PRECORDIAIS (V1–V6)</h3></div>
+<div class="info-block">
+  <div class="label">Como funcionam</div>
+  <h4>Eletrodos colocados no tórax — "veem" o coração de perto, horizontalmente</h4>
+  <p>São UNIPOLARES (não bipolares!). Cada Vn tem apenas um eletrodo explorador positivo colocado sobre o tórax. Registram a atividade elétrica no plano horizontal (transversal).</p>
+</div>
+<table class="compare-table">
+<tr><th>Derivação</th><th>Posição do Eletrodo</th><th>QRS</th><th>Representa</th></tr>
+<tr><td><strong>V1</strong></td><td>4° EIC direito, borda paraesternal</td><td style="color:var(--red)">Negativo (rS)</td><td>Septo / VD — mais à direita</td></tr>
+<tr><td><strong>V2</strong></td><td>4° EIC esquerdo, borda paraesternal</td><td style="color:var(--red)">Negativo ou bifásico</td><td>Septo interventricular</td></tr>
+<tr><td><strong>V3</strong></td><td>Entre V2 e V4</td><td>Transição (R ≈ S)</td><td>Parede anterior do VE</td></tr>
+<tr><td><strong>V4</strong></td><td>5° EIC, linha hemiclavicular esq.</td><td style="color:var(--green)">Positivo (R&gt;S)</td><td>Ápice do VE</td></tr>
+<tr><td><strong>V5</strong></td><td>5° EIC, linha axilar anterior esq.</td><td style="color:var(--green)">Positivo (R alto)</td><td>Parede lateral do VE</td></tr>
+<tr><td><strong>V6</strong></td><td>5° EIC, linha axilar média esq.</td><td style="color:var(--green)">Positivo</td><td>Parede lateral do VE</td></tr>
+</table>
+<div class="info-block success">
+  <div class="label">Macete — Progressão R de V1 a V6</div>
+  <p><strong>"V1 negativo → V6 positivo — como um amanhecer"</strong>. A onda R vai crescendo progressivamente de V1 até V5-V6. Ausência de progressão R (R não cresce) → pode indicar infarto anterior. Zona de transição (R=S) normalmente em V3–V4.</p>
+</div>
+
+<div class="sec-divider"><h3>Resumo Visual — Os 3 Grupos</h3></div>
+<table class="compare-table">
+<tr><th>Grupo</th><th>Derivações</th><th>Tipo</th><th>Eletrodos Usados</th><th>Plano</th></tr>
+<tr><td><strong>Bipolares</strong></td><td>DI, DII, DIII</td><td>2 eletrodos (+ e −)</td><td>Braços + Perna esq.</td><td>Frontal</td></tr>
+<tr><td><strong>Unipolares ampliadas</strong></td><td>aVR, aVL, aVF</td><td>1 eletrodo (+) ampliado</td><td>Braços + Perna esq.</td><td>Frontal</td></tr>
+<tr><td><strong>Unipolares precordiais</strong></td><td>V1, V2, V3, V4, V5, V6</td><td>1 eletrodo (+) no tórax</td><td>Tórax (6 posições)</td><td>Horizontal</td></tr>
+</table>
+<div class="info-block danger">
+  <div class="label">❗ Armadilhas mais cobradas sobre derivações</div>
+  <ul>
+    <li>"V1, V2, V3 são bipolares" → <strong>FALSO</strong> — são UNIPOLARES PRECORDIAIS</li>
+    <li>"aVR, aVL, aVF são bipolares" → <strong>FALSO</strong> — são UNIPOLARES AMPLIADAS</li>
+    <li>"aVR tem QRS positivo" → <strong>FALSO</strong> (normal) — se positivo: eletrodos trocados</li>
+    <li>Eletrodo (−) braço esq. + (+) perna esq. → <strong>DIII</strong> (bipolar)</li>
+    <li>Eletrodo no braço direito (unipolar) → <strong>aVR</strong></li>
+    <li>Eletrodo no 4° EIC direito paraesternal → <strong>V1</strong></li>
+  </ul>
+</div>
+<table class="compare-table">
+<tr><th>Grupo</th><th>Derivações</th><th>Tipo</th><th>Como se obtém</th></tr>
+<tr><td><strong>Bipolares dos membros</strong></td><td>DI, DII, DIII</td><td>Bipolar</td><td>Diferença entre 2 eletrodos. Triângulo de Einthoven.</td></tr>
+<tr><td><strong>Unipolares ampliadas</strong></td><td>aVR, aVL, aVF</td><td>Unipolar ampliada</td><td>Eletrodo explorador positivo + ponto central. Amplificadas 1,5×.</td></tr>
+<tr><td><strong>Precordiais</strong></td><td>V1, V2, V3, V4, V5, V6</td><td>Unipolar precordial</td><td>Eletrodo no tórax. V1 = 4º EIC direito; V4 = 5º EIC linha hemiclavicular.</td></tr>
+</table>
+<div class="info-block danger">
+  <div class="label">❗ Armadilha de Prova!</div>
+  <p>"V1, V2, V3 são bipolares" → <strong>FALSO</strong>. São <strong>UNIPOLARES PRECORDIAIS</strong>. Bipolares = DI, DII, DIII. Unipolares ampliadas = aVR, aVL, aVF.</p>
+</div>
+
+<div class="sec-divider"><h3>Derivações Importantes — O Que Cai na Prova</h3></div>
+<table class="compare-table">
+<tr><th>Derivação</th><th>Características</th><th>Macete de Prova</th></tr>
+<tr><td><strong>DI</strong></td><td>Braço direito (−) → Braço esquerdo (+)</td><td>Representa eixo horizontal</td></tr>
+<tr><td><strong>DII</strong></td><td>Braço direito (−) → Perna esquerda (+)</td><td>Melhor derivação para ritmo; P, QRS e T positivos</td></tr>
+<tr><td><strong>DIII</strong></td><td>Braço esquerdo (−) → Perna esquerda (+)</td><td>Parede inferior</td></tr>
+<tr><td><strong>aVR</strong></td><td>Braço direito — derivação unipolar</td><td><strong>TODAS as ondas invertidas (negativas)</strong> — normal! "Avesso do coração"</td></tr>
+<tr><td><strong>aVL</strong></td><td>Braço esquerdo — derivação unipolar</td><td>Pode ser positivo, negativo ou isodifásico (depende do eixo)</td></tr>
+<tr><td><strong>aVF</strong></td><td>Perna esquerda — derivação unipolar</td><td>Representa parede inferior; positivo em eixo normal</td></tr>
+<tr><td><strong>V1</strong></td><td>4º EIC direito paraesternal</td><td>QRS predominantemente NEGATIVO (rS). Onda T pode ser negativa — normal.</td></tr>
+<tr><td><strong>V4</strong></td><td>5º EIC linha hemiclavicular esq.</td><td>Ápice do VE — QRS positivo (R&gt;S)</td></tr>
+</table>
+
+<div class="sec-divider"><h3>Eixo Elétrico — DI e aVF</h3></div>
+<table class="compare-table">
+<tr><th>Eixo</th><th>Faixa</th><th>DI</th><th>aVF</th></tr>
+<tr><td><strong style="color:var(--green)">Normal</strong></td><td>0° a +90°</td><td style="color:var(--green)">✓ Positivo</td><td style="color:var(--green)">✓ Positivo</td></tr>
+<tr><td><strong style="color:var(--gold)">Desvio Esquerdo</strong></td><td>0° a −90°</td><td style="color:var(--green)">✓ Positivo</td><td style="color:var(--red)">✗ Negativo</td></tr>
+<tr><td><strong style="color:var(--red)">Desvio Direito</strong></td><td>+90° a +180°</td><td style="color:var(--red)">✗ Negativo</td><td style="color:var(--green)">✓ Positivo</td></tr>
+<tr><td><strong style="color:var(--muted)">Extremo</strong></td><td>−90° a ±180°</td><td style="color:var(--red)">✗ Negativo</td><td style="color:var(--red)">✗ Negativo</td></tr>
+</table>
+<div class="formula-block">Eixo médio normal citado na prova: <strong>+60°</strong><br>
+DI ✓ + aVF ✓ = NORMAL · DI ✓ + aVF ✗ = DESVIO ESQUERDO<br>
+DI ✗ + aVF ✓ = DESVIO DIREITO · DI ✗ + aVF ✗ = EIXO EXTREMO</div>
+
+<div class="sec-divider"><h3>Gabarito Prova P2 — Respostas Corretas</h3></div>
+<div class="info-block success">
+  <div class="label">Respostas consolidadas das provas P2</div>
+  <ul>
+    <li>1. Característica sincitial do coração → <strong>Discos Intercalares</strong></li>
+    <li>2. Unipolar ampliada com QRS invertido → <strong>aVR</strong></li>
+    <li>3. Sangue ejetado por minuto → <strong>Débito Cardíaco (Gasto Cardíaco)</strong></li>
+    <li>4. Velocidade de condução das fibras auriculares/ventriculares → <strong>0,3 a 0,5 m/s</strong></li>
+    <li>5. Estiramento aurícula direita → reflexo que aumenta FC → <strong>Reflexo de Bainbridge</strong></li>
+    <li>6. Quantidade de sangue que retorna à veia → <strong>Retorno Venoso</strong></li>
+    <li>7. Repolarização no ECG → <strong>Onda T</strong></li>
+    <li>8. De latido a latido → <strong>Ciclo Cardíaco</strong></li>
+    <li>9. Canal rápido (Na⁺) + canal lento (Ca²⁺) → <strong>Potencial de Ação (meseta)</strong></li>
+    <li>10. Eletrodo (−) braço esq. + (+) perna esq. → <strong>D3 (DIII)</strong></li>
+    <li>17. Velocidade do ECG → <strong>25 mm/s</strong></li>
+    <li>18. Derivação precordial com QRS invertido → <strong>V1</strong></li>
+    <li>19. Valor do eixo médio normal → <strong>60°</strong></li>
+    <li>20. Grau de tensão ventricular depende do retorno venoso → <strong>Pré-carga</strong></li>
+  </ul>
+</div>
+</div></div>
+
+<!-- ===== PEGADINHAS ===== -->
+<div id="pegadinhas" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🎯</span> Pegadinhas do Dr. Saldivar</div>
+
+<div class="info-block red" style="background:rgba(231,76,60,0.12);border-left:4px solid var(--accent4)">
+  <div class="label">⚠️ Atenção</div>
+  <h4>O rei das pegadinhas — leia cada afirmação com calma!</h4>
+  <p>Cada card abaixo contém uma afirmação que parece correta mas é FALSA (ou vice-versa). Clique para revelar a resposta e a explicação. Estas são as armadilhas mais cobradas nas provas.</p>
+</div>
+
+<div id="peg-grid" style="display:flex;flex-direction:column;gap:14px;margin-top:20px"></div>
+
+</div></div>
+
+<!-- ===== FLASHCARDS ===== -->
+<div id="flashcards" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🃏</span> Flashcards — Clique para revelar</div>
+<div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+  <button onclick="shuffleFC()" style="background:var(--card);border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:50px;cursor:pointer;font-size:13px">🔀 Embaralhar</button>
+  <button onclick="resetFC()" style="background:var(--card);border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:50px;cursor:pointer;font-size:13px">↺ Resetar</button>
+  <span id="fc-counter" style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px;margin-left:auto;align-self:center">0 / 0 revelados</span>
+</div>
+<div class="fc-grid" id="fc-grid"></div>
+</div></div>
+
+<!-- ===== QUIZ ===== -->
+<div id="quiz" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">📝</span> Quiz — Questões de Prova</div>
+<div class="quiz-score-bar">
+  <div class="score-num">Acertos: <strong id="score-display">0</strong></div>
+  <div class="score-bar-wrap"><div class="score-bar-fill" id="score-fill" style="width:0%"></div></div>
+  <div class="score-num" id="pct-display">0%</div>
+  <button class="quiz-reset-btn" onclick="resetQuiz()">↺ Reiniciar</button>
+</div>
+<div id="quiz-body"></div>
+</div></div>
+
+<!-- ===== PROVAS ANTIGAS ===== -->
+<div id="provas" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">📋</span> Provas Antigas com Gabarito</div>
+
+<div class="prova-block">
+  <div class="prova-hdr" onclick="toggleProva(this)">
+    <h3>Prova P1 — Viscosidade, Fluxo, Água, Soluções, Tensão Superficial</h3>
+    <span class="meta">Múltipla Escolha + V/F · 18Q</span>
+    <span class="chev">▼</span>
+  </div>
+  <div class="prova-body">
+    <div class="prova-q"><div class="prova-q-text"><strong>1.</strong> A viscosidade é uma propriedade dos líquidos definida como: a) Quantidade de massa/volume b) Propriedade de opor-se ao deslocamento tangencial de camadas líquidas (resistência ao fluxo) c) Força de atração na superfície d) Capacidade de dissolver substâncias polares</div><div class="prova-ans"><strong>GABARITO: B</strong> Viscosidade = resistência interna ao fluxo por atrito entre camadas. Do sangue: ~3,5× a da água.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>2.</strong> Fatores que afetam a viscosidade do sangue: a) Proporção de água/eritrócitos b) Fluxo laminar ou turbulento c) Calibre dos vasos d) Todas as anteriores</div><div class="prova-ans"><strong>GABARITO: D — Todas as anteriores.</strong> Hematócrito (principal), temperatura, proteínas plasmáticas e calibre do vaso (Fahraeus-Lindqvist).</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>3.</strong> Sobre a circulação sanguínea nos vasos, é CORRETO afirmar: a) A camada próxima à parede move-se com velocidade mínima b) Move-se com mesma velocidade no centro e na periferia c) O movimento normal é turbulento d) Nenhuma é correta</div><div class="prova-ans"><strong>GABARITO: A</strong> No fluxo LAMINAR (normal): parede = velocidade mínima (atrito); centro = velocidade máxima. O turbulento é patológico.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>4.</strong> Capacidade de um fluido de opor-se ao movimento: a) Densidade b) Solubilidade c) Tensão Superficial d) Nenhuma das anteriores (= Viscosidade)</div><div class="prova-ans"><strong>GABARITO: D</strong> Nenhuma das alternativas A, B, C descreve viscosidade. A resposta correta é D (o conceito é Viscosidade).</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>5.</strong> Fenômeno de Fahraeus-Lindqvist: a) Quantidade de matéria/volume b) Força de atração na superfície c) Movimento de líquido por membrana d) Nenhuma — é a diminuição da viscosidade ao diminuir o calibre do vaso</div><div class="prova-ans"><strong>GABARITO: D</strong> Fahraeus-Lindqvist: em vasos menores, eritrócitos vão ao centro → periferia fica com plasma → ↓ viscosidade.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>6.</strong> Viscosidade relativa do sangue completo (hematócrito normal): a) 1,5× b) 2,0× c) 3,5× d) 5,0×</div><div class="prova-ans"><strong>GABARITO: C — 3,5×</strong> Viscosidade do sangue = ~3,5× a da água pura. Plasma = ~2–2,2×.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>14.</strong> Fórmula da densidade: a) D = m/V b) D = V/m c) D = m × V d) D = m + V</div><div class="prova-ans"><strong>GABARITO: A — D = m/V</strong> Densidade = massa/volume. D máxima da água a 4°C = 1 g/mL.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>15.</strong> [V/F] O surfactante pulmonar é produzido pelos pneumócitos tipo 2 e reduz a tensão superficial nos alvéolos, prevenindo seu colapso.</div><div class="prova-ans"><strong>VERDADEIRO.</strong> Pneumócitos tipo 2 produzem surfactante lipoproteico anfipático. Sem ele: SDR (Síndrome do Desconforto Respiratório) em prematuros.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>16.</strong> Pressão arterial sistólica normal: a) 80 mmHg b) 60 mmHg c) 120 mmHg d) 140 mmHg</div><div class="prova-ans"><strong>GABARITO: C — 120 mmHg</strong> Sistólica = 120 mmHg (contração). Diastólica = 80 mmHg (relaxamento). Pressão normal = 120/80 mmHg.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>17.</strong> [V/F] Os fluidos circulam de áreas de menor pressão para áreas de maior pressão.</div><div class="prova-ans"><strong>FALSO.</strong> Fluidos circulam de MAIOR para MENOR pressão. O gradiente de pressão gera o fluxo sanguíneo.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>18.</strong> [V/F] O sangue é um fluido vermelho opaco, constituído por elementos celulares e plasma, e é um exemplo de sistema coloidal.</div><div class="prova-ans"><strong>VERDADEIRO.</strong> O plasma contém albumina (1–100nm) → dispersa luz (efeito Tyndall). O sangue é um coloide.</div></div>
+  </div>
+</div>
+
+<div class="prova-block">
+  <div class="prova-hdr" onclick="toggleProva(this)">
+    <h3>Prova P2 — Biofísica Cardíaca & ECG (Múltipla Escolha)</h3>
+    <span class="meta">Múltipla Escolha · 10Q</span>
+    <span class="chev">▼</span>
+  </div>
+  <div class="prova-body">
+    <div class="prova-q"><div class="prova-q-text"><strong>1.</strong> Qual propriedade cardíaca está relacionada com a capacidade do coração de RELAXAR as células cardiomiocíticas? a) Inotropismo b) Dromotropismo c) Cronotropismo d) Lusotropismo</div><div class="prova-ans"><strong>GABARITO: D — Lusotropismo</strong> = capacidade de relaxamento (diástole). Cronotropismo = FC. Inotropismo = força. Dromotropismo = condutividade.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>2.</strong> "Pressão que sofrem as paredes dos ventrículos por efeito do sangue que chega, definida pelo volume sanguíneo que chega por meio do retorno venoso": a) Gasto cardíaco b) Pré-carga c) Trabalho cardíaco d) Lei de Frank-Starling</div><div class="prova-ans"><strong>GABARITO: B — Pré-carga</strong> = volume no ventrículo ao final da diástole, dependente do retorno venoso. Também chamada "sobrecarga de volume".</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>3.</strong> O Nó AV pode gerar aproximadamente quantos PA por minuto? a) 150–100 b) 100–60 c) 60–40 d) 40–20</div><div class="prova-ans"><strong>GABARITO: C — 60–40 bpm</strong> (mais especificamente 40–60/min). Nó SA = 60–100. Purkinje = 15–40.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>4.</strong> Qual é a velocidade de condução no interior do Nó AV? a) 0,3 m/s b) 1–2 m/s c) 0,03 m/s d) 1,5–4 m/s</div><div class="prova-ans"><strong>GABARITO: C — 0,03 m/s</strong> O NAV tem a condução mais LENTA do sistema — gera o retardo de 0,1s (Segmento PR no ECG). Purkinje = 1,5–4 m/s (mais rápido).</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>5.</strong> Para abertura das válvulas AV, o que NÃO é necessário: a) Diminuição da pressão intraauricular b) Relaxamento dos músculos pilares c) Contração das paredes ventriculares d) Todas são corretas</div><div class="prova-ans"><strong>GABARITO: B — Relaxamento dos músculos pilares NÃO é necessário.</strong> Os músculos pilares se CONTRAEM durante a sístole para manter os folhetos das válvulas AV no lugar.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>6.</strong> Sobrecarga de Volume durante o trabalho cardíaco é representada por: a) Pressão da Aorta b) Retorno Venoso c) Resistência Vascular Periférica d) A e C são corretas</div><div class="prova-ans"><strong>GABARITO: B — Retorno Venoso</strong> = Pré-carga = Sobrecarga de Volume. Pressão da Aorta + RVP = Pós-carga (sobrecarga de pressão).</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>7.</strong> Derivação precordial que registra atividade elétrica invertida: a) V1 b) DI c) aVR d) aVF</div><div class="prova-ans"><strong>GABARITO: A — V1</strong> registra QRS predominantemente negativo (rS) normalmente. aVR (unipolar ampliada, não precordial) também tem todas ondas invertidas.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>8.</strong> Período de tempo que dura o potencial de ação dos ventrículos: a) Sístole Elétrica b) Sístole Mecânica c) Sístole Hemodinâmica d) Asistolia</div><div class="prova-ans"><strong>GABARITO: A — Sístole Elétrica</strong> = período de tempo do PA ventricular (= QRS + Segmento ST + Onda T). Corresponde à atividade elétrica que gera a contração mecânica.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>9.</strong> Volume de sangue ejetado pelo coração aos grandes vasos durante 1 sístole: a) Volume Sistólico b) Ciclo Cardíaco c) Gasto Cardíaco d) Retorno Venoso</div><div class="prova-ans"><strong>GABARITO: A — Volume Sistólico (VS)</strong> = 70 mL ejetados por batimento. Gasto Cardíaco = VS × FC = por MINUTO.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>10.</strong> Os eletrodos de braço direita, braço esquerda e perna são utilizados para obter quais derivações unipolares? a) DI, DII, DIII b) V1, V2, V3, V4, V5, V6 c) aVR, aVL, aVF d) A e B</div><div class="prova-ans"><strong>GABARITO: C — aVR, aVL, aVF</strong> São as unipolares ampliadas dos membros. DI, DII, DIII são BIPOLARES. V1-V6 são unipolares precordiais (tórax).</div></div>
+  </div>
+</div>
+
+<div class="prova-block">
+  <div class="prova-hdr" onclick="toggleProva(this)">
+    <h3>Prova P2 — V/F & Completar Enunciados</h3>
+    <span class="meta">V/F + Completar · 15Q</span>
+    <span class="chev">▼</span>
+  </div>
+  <div class="prova-body">
+    <div class="prova-q"><div class="prova-q-text"><strong>11. [V/F]</strong> Normalmente os PA no coração se propagam no Sistema de Condução de forma unidirecional.</div><div class="prova-ans"><strong>VERDADEIRO.</strong> O impulso segue uma via única: Nó SA → Nó AV → Feixe de His → Ramos → Purkinje. A propagação unidirecional evita arritmias de reentrada.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>12. [V/F]</strong> A onda T representa a atividade de repolarização ventricular e pode estar invertida em algumas derivações.</div><div class="prova-ans"><strong>VERDADEIRO.</strong> Onda T = repolarização ventricular. Pode ser negativa/invertida em aVR e V1 de forma normal. Em outras derivações, inversão é sinal de isquemia.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>13. [V/F]</strong> Durante a diástole, o Retorno Venoso é o principal fator que define a Pós-carga.</div><div class="prova-ans"><strong>FALSO.</strong> O retorno venoso define a <strong>PRÉ-carga</strong> (sobrecarga de volume). A pós-carga é definida pela resistência vascular periférica e pressão da aorta (resistência à ejeção na sístole).</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>14. [V/F]</strong> O Reflexo de Bainbridge está relacionado com o controle da regulação da adaptação da força de contração ventricular.</div><div class="prova-ans"><strong>FALSO.</strong> Bainbridge regula a <strong>FREQUÊNCIA CARDÍACA</strong> (cronotropismo), não a força de contração. A força é regulada pela Lei de Frank-Starling (inotropismo).</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>15. [V/F]</strong> Em caso de não produção de contração dos músculos auriculares (pectíneos), a função cardíaca seguirá de forma normal sem alterar a função do coração.</div><div class="prova-ans"><strong>FALSO.</strong> A contração auricular contribui com ~20% do VTD. Sem ela, o débito cardíaco cai significativamente (~50% em situações de alta demanda).</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>16. Completar:</strong> A eletronegatidade interna da célula é produzida graças a: a) Difusão de K⁺ do interior ao meio extracelular b) Presença de Ânions não difusíveis c) Ativação da Bomba Na-K d) Todas são corretas</div><div class="prova-ans"><strong>GABARITO: D — Todas as anteriores.</strong> Os 3 mecanismos juntos geram o potencial de repouso de −70 mV.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>17. Completar:</strong> A membrana se faz muito permeável aos íons Na⁺ permitindo difusão rápida de íons positivos ao interior = a) Fase de Repouso b) Fase de Despolarização c) Fase de Repolarização d) Hiperpolarização</div><div class="prova-ans"><strong>GABARITO: B — Fase de Despolarização</strong> Canais rápidos de Na⁺ abrem → Na⁺ entra → voltagem sobe rapidamente de −70 mV para +30 mV.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>18. Completar:</strong> Estrutura do Sistema de Condução autoexcitável que gera a MENOR quantidade de PA por minuto: a) Nó SA b) Nó AV c) Fibras de Purkinje d) Todas têm a mesma frequência</div><div class="prova-ans"><strong>GABARITO: C — Fibras de Purkinje</strong> geram 15–40 PA/min (menor). Nó SA = 60–100 (maior). Nó AV = 40–60.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>19. Completar:</strong> São derivações do ECG obtidas pela utilização unipolar dos eletrodos de extremidades: a) DI, DII, DIII b) aVR, aVL, aVF c) V1–V6 d) Todas as anteriores</div><div class="prova-ans"><strong>GABARITO: B — aVR, aVL, aVF</strong> São as unipolares ampliadas dos membros (extremidades). DI/DII/DIII = bipolares. V1-V6 = unipolares precordiais.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>20. Completar:</strong> O estiramento da parede ventricular prévia à sístole, parâmetro fisiológico para adequar a força muscular cardíaca, relaciona-se com: a) Lei de Poiseuille b) Reflexo Vasovagal c) Reflexo de Bainbridge d) Lei de Frank-Starling</div><div class="prova-ans"><strong>GABARITO: D — Lei de Frank-Starling</strong> = maior estiramento das fibras na diástole → maior força de contração na sístole. É o mecanismo intrínseco de adaptação do débito cardíaco.</div></div>
+    <div class="prova-q"><div class="prova-q-text"><strong>21. Completar (Seção C):</strong> 16. Período do potencial de membrana onde não se pode produzir um novo PA enquanto a membrana está despolarizada = ___. 17. Terminal de motoneurona + grupo de fibras musculares que inerva = ___. 18. Derivação que deve ter todas as ondas invertidas sendo derivação unipolar = ___. 19. Tensão que se apresenta durante a sístole nas paredes ventriculares = ___. 20. Derivação que se obtém com eletrodo no 4° EIC direito, linha paraesternal = ___.</div><div class="prova-ans"><strong>16. Período Refratário (Absoluto)</strong> | <strong>17. Unidade Motora</strong> | <strong>18. AVR</strong> | <strong>19. Pós-carga</strong> | <strong>20. V1</strong></div></div>
+  </div>
+</div>
+
+</div></div>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+// PEGADINHAS ENGINE
+var pegData=[
+  // ===== P1 — ÁGUA & SISTEMAS DISPERSOS =====
+  {cat:'Água',icon:'💧',stmt:'"A água atinge sua densidade máxima a 0°C, quando congela."',verdict:false,exp:'<strong>FALSO.</strong> A água atinge a densidade máxima a <strong>4°C</strong>, não a 0°C. A 0°C ela congela e o volume AUMENTA ~25% — por isso o gelo flutua na água. Essa dilatação anômala abaixo de 4°C é uma propriedade única da água.'},
+  {cat:'Água',icon:'💧',stmt:'"A água é um solvente universal e dissolve tanto substâncias polares quanto apolares (lipídeos)."',verdict:false,exp:'<strong>FALSO.</strong> A água dissolve apenas substâncias <strong>POLARES e iônicas</strong>. Não dissolve lipídeos (apolares). "Like dissolves like" — semelhante dissolve semelhante.'},
+  {cat:'Água',icon:'💧',stmt:'"A água do corpo humano congela a 0°C, igual à água pura."',verdict:false,exp:'<strong>FALSO.</strong> A água do corpo NÃO congela a 0°C. A presença de solutos dissolvidos (propriedade coligativa) <strong>diminui o ponto de congelamento</strong> abaixo de 0°C.'},
+  {cat:'Dispersos',icon:'🔬',stmt:'"O sangue é uma suspensão, pois possui partículas visíveis em suspensão."',verdict:false,exp:'<strong>FALSO.</strong> O sangue é um <strong>COLOIDE</strong>. O plasma contém albumina e outras proteínas com partículas de 1–100nm que apresentam Efeito Tyndall. Suspensões têm partículas >1000nm que sedimentam.'},
+  {cat:'Dispersos',icon:'🔬',stmt:'"O Efeito Tyndall ocorre em soluções verdadeiras porque as partículas são muito pequenas."',verdict:false,exp:'<strong>FALSO.</strong> O Efeito Tyndall ocorre em <strong>COLOIDES</strong>, não em soluções verdadeiras. Em soluções verdadeiras as partículas (<1nm) são pequenas demais para deflectir a luz. O efeito é a dispersão da luz visível pelas partículas coloidais.'},
+  {cat:'Dispersos',icon:'🔬',stmt:'"Penicilina e azitromicina são exemplos de soluções verdadeiras."',verdict:false,exp:'<strong>FALSO.</strong> São exemplos de <strong>SUSPENSÕES</strong> — partículas maiores que 1000nm, heterogêneas, que sedimentam e precisam de agitação. Por isso o rótulo diz "agite antes de usar".'},
+  // ===== P1 — pH & BUFFER =====
+  {cat:'pH & Buffer',icon:'⚗️',stmt:'"O corpo humano tende naturalmente à alcalose porque produz muito bicarbonato."',verdict:false,exp:'<strong>FALSO.</strong> O corpo tende naturalmente à <strong>ACIDOSE</strong>. O metabolismo celular produz H⁺ e CO₂ constantemente (respiração celular, ácido lático, ácido úrico). Os sistemas reguladores trabalham continuamente para neutralizar essa acidez.'},
+  {cat:'pH & Buffer',icon:'⚗️',stmt:'"O sistema buffer é o que realmente resolve e corrige definitivamente o desequilíbrio do pH."',verdict:false,exp:'<strong>FALSO.</strong> O buffer apenas <strong>AMORTIZA</strong> — age em segundos mas se esgota rapidamente. Quem CORRIGE definitivamente é o <strong>sistema RENAL</strong> (24–30h). Buffer + Respiratório = amortizam. Renal = corrige.'},
+  {cat:'pH & Buffer',icon:'⚗️',stmt:'"O bicarbonato é o principal componente do sistema buffer intracelular."',verdict:false,exp:'<strong>FALSO.</strong> O bicarbonato (HCO₃⁻) é o principal componente do sistema buffer <strong>EXTRAcelular</strong>. Intracelularmente, os principais buffers são as proteínas (hemoglobina) e o fosfato.'},
+  {cat:'pH & Buffer',icon:'⚗️',stmt:'"O ácido é menos perigoso que a base porque o organismo tolera melhor valores baixos de pH."',verdict:false,exp:'<strong>FALSO.</strong> O ácido é <strong>MAIS perigoso</strong> — destrói proteínas e enzimas mais rapidamente que a base. A acidose é a causa mais comum e mais grave de desequilíbrio. A base age mais lentamente, modificando ligações.'},
+  {cat:'pH & Buffer',icon:'⚗️',stmt:'"pH 7,0 é considerado normal para o sangue."',verdict:false,exp:'<strong>FALSO.</strong> pH 7,0 é <strong>NEUTRO</strong>, mas é acidose grave para o sangue. O pH normal do sangue é <strong>7,35–7,45</strong> (levemente alcalino). pH 7,0 no sangue é próximo do limite letal inferior (6,0).'},
+  // ===== P1 — VISCOSIDADE & FLUXO =====
+  {cat:'Viscosidade',icon:'🩸',stmt:'"No fenômeno de Fahraeus-Lindqvist, a viscosidade AUMENTA em vasos de menor calibre."',verdict:false,exp:'<strong>FALSO.</strong> É exatamente o oposto! Fahraeus-Lindqvist: em vasos de <strong>menor</strong> calibre, a viscosidade <strong>DIMINUI</strong>. Os eritrócitos migram para o centro, deixando uma camada periférica de plasma menos viscoso.'},
+  {cat:'Viscosidade',icon:'🩸',stmt:'"O fluxo normal do sangue nos vasos é turbulento."',verdict:false,exp:'<strong>FALSO.</strong> O fluxo normal é <strong>LAMINAR</strong> — camadas paralelas, silencioso, eficiente. O fluxo turbulento é PATOLÓGICO, causa sopros cardíacos, promove agregação plaquetária e trombose.'},
+  {cat:'Viscosidade',icon:'🩸',stmt:'"No fluxo laminar, a velocidade do sangue é maior nas paredes do vaso."',verdict:false,exp:'<strong>FALSO.</strong> No fluxo laminar, a velocidade é <strong>MÍNIMA nas paredes</strong> (atrito com a parede) e <strong>MÁXIMA no centro</strong>. É justamente essa diferença de velocidade que define o fluxo laminar (em camadas).'},
+  {cat:'Viscosidade',icon:'🩸',stmt:'"A viscosidade do sangue é 1,5× maior que a da água."',verdict:false,exp:'<strong>FALSO.</strong> A viscosidade do sangue é <strong>3,5×</strong> maior que a da água pura. A do plasma é ~2–2,2×. O valor 1,5× não existe para o sangue — cuidado com essa troca de valores!'},
+  {cat:'Viscosidade',icon:'🩸',stmt:'"Aumentar a temperatura do sangue aumenta sua viscosidade."',verdict:false,exp:'<strong>FALSO.</strong> ↑ Temperatura → <strong>↓ viscosidade</strong> (o fluido fica mais "fluido"). O calor aumenta o movimento molecular, reduzindo o atrito entre as camadas. Sangue em febre alta fica menos viscoso.'},
+  // ===== P1 — TENSÃO SUPERFICIAL =====
+  {cat:'Tensão Superficial',icon:'🫧',stmt:'"O surfactante pulmonar é produzido pelos pneumócitos tipo 1."',verdict:false,exp:'<strong>FALSO.</strong> O surfactante é produzido pelos <strong>pneumócitos tipo 2</strong>. Os tipo 1 são células achatadas que fazem a troca gasosa (hematose). Tipo 2 = secretores, cúbicos, produzem surfactante.'},
+  {cat:'Tensão Superficial',icon:'🫧',stmt:'"A tensão superficial existe em qualquer estado da matéria."',verdict:false,exp:'<strong>FALSO.</strong> A tensão superficial existe <strong>APENAS no estado líquido</strong>. É a força de coesão entre moléculas de líquido na superfície. Em sólidos há coesão cristalina; em gases não há coesão suficiente.'},
+  {cat:'Tensão Superficial',icon:'🫧',stmt:'"O surfactante AUMENTA a tensão superficial para manter os alvéolos inflados."',verdict:false,exp:'<strong>FALSO.</strong> O surfactante <strong>REDUZ/DIMINUI</strong> a tensão superficial. É justamente diminuindo a tensão superficial que ele impede o colapso alveolar. Se aumentasse, pioraria o colapso.'},
+  // ===== P1 — POTENCIAL DE AÇÃO =====
+  {cat:'Potencial de Ação',icon:'⚡',stmt:'"Os canais lentos de Ca²⁺ (tipo L) abrem rapidamente e têm curto tempo aberto, sendo mais rápidos que os canais de Na⁺."',verdict:false,exp:'<strong>FALSO — Pegadinha clássica do Dr. Saldivar!</strong> Os canais de Ca²⁺ tipo L são chamados "lentos" exatamente porque abrem <strong>LENTAMENTE</strong> e ficam abertos por <strong>LONGO tempo</strong> (200–300ms = todo o platô). São mais LENTOS que os de Na⁺.'},
+  {cat:'Potencial de Ação',icon:'⚡',stmt:'"O potencial de ação tipo Meseta dura apenas 1–2 milissegundos, igual à Espiga."',verdict:false,exp:'<strong>FALSO.</strong> A Meseta dura <strong>200–300 milissegundos</strong> (0,2–0,3 segundos) — o platô por entrada de Ca²⁺. A Espiga é que dura 1–2ms (neurônio/músculo esquelético). A Meseta é ~150–300× mais longa que a Espiga.'},
+  {cat:'Potencial de Ação',icon:'⚡',stmt:'"Durante o período refratário absoluto, é possível gerar um novo PA com estímulo muito forte."',verdict:false,exp:'<strong>FALSO.</strong> Durante o período refratário <strong>ABSOLUTO</strong> é IMPOSSÍVEL gerar novo PA com QUALQUER estímulo. Os canais de Na⁺ estão inativados. Só no refratário RELATIVO é possível com estímulo supralimiar.'},
+  {cat:'Potencial de Ação',icon:'⚡',stmt:'"As células auto-excitáveis do coração têm potencial de repouso fixo em −70 mV."',verdict:false,exp:'<strong>FALSO.</strong> As células auto-excitáveis <strong>NUNCA</strong> têm potencial de repouso verdadeiro. Elas têm uma <strong>rampa ascendente lenta</strong> (pré-potencial) que as leva automaticamente ao umbral — jamais estabilizam em −70 mV.'},
+  {cat:'Potencial de Ação',icon:'⚡',stmt:'"O Ca²⁺ não tem nenhuma função durante o potencial de ação cardíaco."',verdict:false,exp:'<strong>FALSO.</strong> O Ca²⁺ é <strong>ESSENCIAL</strong> no PA cardíaco — é o íon responsável pelo PLATÔ (Fase 2/Meseta), mantendo o potencial positivo por 200–300ms. Além disso, o Ca²⁺ que entra aciona a liberação de mais Ca²⁺ do retículo sarcoplasmático para a contração.'},
+  // ===== P2 — CORAÇÃO =====
+  {cat:'Coração',icon:'❤️',stmt:'"O impulso cardíaco passa do sincício auricular ao ventricular através do tecido fibroso."',verdict:false,exp:'<strong>FALSO — Questão 11 da prova!</strong> O tecido fibroso <strong>ISOLA</strong> os dois sincícios, impedindo a passagem direta do impulso. O impulso passa pelas <strong>fibras de condução</strong> (Nó AV → Feixe de His → Ramos → Purkinje).'},
+  {cat:'Coração',icon:'❤️',stmt:'"A bomba cebadora (aurícula) contribui com 80% do volume ventricular."',verdict:false,exp:'<strong>FALSO — Questão 13 da prova!</strong> A aurícula contribui com apenas <strong>20%</strong> do VTD. Os outros <strong>80%</strong> entram passivamente durante a diástole. Contração auricular = 20%. Enchimento passivo = 80%.'},
+  {cat:'Coração',icon:'❤️',stmt:'"O Nó AV tem a condução mais RÁPIDA do sistema de condução cardíaco."',verdict:false,exp:'<strong>FALSO.</strong> O Nó AV tem a condução mais <strong>LENTA</strong> — apenas 0,03 m/s. É o "filtro" do coração. A condução mais rápida é das <strong>Fibras de Purkinje</strong> (1,5–4 m/s). NAV lento = retardo fisiológico (segmento PR).'},
+  {cat:'Coração',icon:'❤️',stmt:'"Lusotropismo é a propriedade cardíaca relacionada à força de contração."',verdict:false,exp:'<strong>FALSO.</strong> Lusotropismo = <strong>RELAXAMENTO</strong> (diástole). Força de contração = <strong>Inotropismo</strong>. Cronotropismo = FC. Dromotropismo = condutividade. Batmotropismo = excitabilidade. Pegadinha: "luso" soa parecido com algo vigoroso, mas é relaxamento!'},
+  {cat:'Coração',icon:'❤️',stmt:'"O Nó SA dispara 40–60 PA/min, sendo o marca-passo natural do coração."',verdict:false,exp:'<strong>FALSO.</strong> O Nó SA dispara <strong>60–100</strong> PA/min. 40–60/min é a frequência do <strong>Nó AV</strong>. O SA é sim o marca-passo natural, mas porque tem a MAIOR frequência intrínseca — não a menor.'},
+  {cat:'Coração',icon:'❤️',stmt:'"As Fibras de Purkinje têm a menor frequência de disparos do sistema de condução."',verdict:true,exp:'<strong>VERDADEIRO.</strong> As Fibras de Purkinje disparam 15–40 PA/min — a menor frequência. Nó SA = 60–100 (maior). Nó AV = 40–60. Purkinje = 15–40 (menor). O SA domina porque tem frequência maior e "sobrepõe" os demais.'},
+  {cat:'Coração',icon:'❤️',stmt:'"O B4 (quarto ruído cardíaco) pode ser normal em adultos saudáveis."',verdict:false,exp:'<strong>FALSO.</strong> O B4 é <strong>SEMPRE patológico</strong> em adultos. Representa contração atrial forçada contra ventrículo rígido (hipertrofia ou disfunção diastólica). B3 pode ser normal em crianças e jovens; B4 nunca é normal em adultos.'},
+  // ===== P2 — HEMODINÂMICA =====
+  {cat:'Hemodinâmica',icon:'💉',stmt:'"A Pré-carga é determinada durante a SÍSTOLE ventricular."',verdict:false,exp:'<strong>FALSO.</strong> A pré-carga é determinada durante a <strong>DIÁSTOLE</strong> (enchimento ventricular — VTD ≈ 120 mL). A pós-carga é que varia durante a <strong>sístole</strong> (resistência à ejeção). Pré = antes da contração = diástole.'},
+  {cat:'Hemodinâmica',icon:'💉',stmt:'"A Pós-carga é a sobrecarga de VOLUME que chega ao ventrículo pelo retorno venoso."',verdict:false,exp:'<strong>FALSO.</strong> Sobrecarga de volume = <strong>Pré-carga</strong>. A <strong>pós-carga</strong> é a resistência que o ventrículo vence para EJETAR o sangue (pressão da aorta + resistência vascular periférica). Pós = pressão de ejeção na sístole.'},
+  {cat:'Hemodinâmica',icon:'💉',stmt:'"O Reflexo de Bainbridge regula a FORÇA de contração ventricular."',verdict:false,exp:'<strong>FALSO — Questão 14 da prova!</strong> Bainbridge regula a <strong>FREQUÊNCIA CARDÍACA</strong> (cronotropismo). A força é regulada por <strong>Frank-Starling</strong> (inotropismo). Bainbridge = aurícula direita → FC. Frank-Starling = ventrículos → força.'},
+  {cat:'Hemodinâmica',icon:'💉',stmt:'"O Gasto Cardíaco é o volume ejetado por BATIMENTO (70 mL)."',verdict:false,exp:'<strong>FALSO.</strong> 70 mL por batimento = <strong>Volume Sistólico (VS)</strong>. O <strong>Gasto/Débito Cardíaco</strong> = VS × FC = volume por <strong>MINUTO</strong> (~5,6 L/min). Pegadinha clássica de confundir VS com DC.'},
+  {cat:'Hemodinâmica',icon:'💉',stmt:'"A Lei de Frank-Starling funciona em qualquer condição, inclusive na insuficiência cardíaca grave."',verdict:false,exp:'<strong>FALSO.</strong> Frank-Starling funciona <strong>SOMENTE dentro dos limites fisiológicos</strong>. Em IC descompensada, o estiramento excessivo <strong>REDUZ</strong> a eficiência (curva descendente da lei). Na IC grave, a lei falha.'},
+  {cat:'Hemodinâmica',icon:'💉',stmt:'"O Retorno Venoso é o principal fator que define a Pós-carga."',verdict:false,exp:'<strong>FALSO — Questão 13 da prova!</strong> Retorno venoso define a <strong>PRÉ-carga</strong>. A <strong>pós-carga</strong> é definida pela resistência vascular periférica + pressão da aorta. Retorno venoso → aurícula direita → pré-carga → Frank-Starling.'},
+  {cat:'Hemodinâmica',icon:'💉',stmt:'"Durante a diástole, as válvulas aórtica e pulmonar estão abertas."',verdict:false,exp:'<strong>FALSO.</strong> Durante a diástole, as válvulas <strong>mitral e tricúspide</strong> estão abertas (enchimento ventricular). As <strong>aórtica e pulmonar</strong> estão <strong>fechadas</strong> — elas só abrem durante a sístole ventricular (ejeção).'},
+  // ===== ECG =====
+  {cat:'ECG',icon:'📈',stmt:'"V1, V2 e V3 são derivações bipolares do tórax."',verdict:false,exp:'<strong>FALSO — Armadilha mais cobrada do ECG!</strong> V1–V6 são <strong>UNIPOLARES PRECORDIAIS</strong>. Bipolares são apenas DI, DII, DIII. As precordiais têm apenas 1 eletrodo explorador (+) no tórax — sem eletrodo negativo equivalente.'},
+  {cat:'ECG',icon:'📈',stmt:'"aVR, aVL e aVF são derivações bipolares dos membros."',verdict:false,exp:'<strong>FALSO.</strong> aVR, aVL, aVF são <strong>UNIPOLARES AMPLIADAS</strong> dos membros. Bipolares = DI, DII, DIII. O "a" significa augmented (ampliada) — são unipolares amplificadas 1,5× pelo algoritmo de Goldberger.'},
+  {cat:'ECG',icon:'📈',stmt:'"A onda T representa a repolarização ATRIAL no ECG."',verdict:false,exp:'<strong>FALSO.</strong> A onda T representa a repolarização <strong>VENTRICULAR</strong>. A repolarização <strong>atrial</strong> existe mas é <strong>encoberta pelo QRS</strong> (muito mais intenso) e nunca aparece no ECG de rotina.'},
+  {cat:'ECG',icon:'📈',stmt:'"O segmento ST elevado (Supra-ST) é sempre normal no ECG."',verdict:false,exp:'<strong>FALSO.</strong> Supra-ST = <strong>Infarto Agudo do Miocárdio (IAM)</strong> até prova em contrário. O segmento ST deve ser <strong>isoelétrico</strong> (na linha de base). Supra-ST = lesão/IAM. Infra-ST = isquemia.'},
+  {cat:'ECG',icon:'📈',stmt:'"aVR normalmente tem QRS positivo — se for negativo indica doença."',verdict:false,exp:'<strong>FALSO — Invertido!</strong> aVR normalmente tem <strong>TODAS as ondas NEGATIVAS</strong> — isso é o <strong>NORMAL</strong>. Se aVR tiver QRS positivo → suspeitar de eletrodos trocados ou dextrocardia (coração no lado direito).'},
+  {cat:'ECG',icon:'📈',stmt:'"A velocidade padrão do ECG é 50 mm/s."',verdict:false,exp:'<strong>FALSO.</strong> A velocidade padrão é <strong>25 mm/s</strong>. A 25mm/s, cada quadradinho (1mm) = 0,04s e cada quadrado grande (5mm) = 0,20s. 50mm/s pode ser usada em situações especiais (análise de arritmias), mas NÃO é o padrão.'},
+  {cat:'ECG',icon:'📈',stmt:'"No ECG padrão, o quadrado GRANDE representa 0,04 segundos."',verdict:false,exp:'<strong>FALSO.</strong> O quadrado <strong>PEQUENO</strong> (1mm) = 0,04 segundos. O quadrado <strong>GRANDE</strong> (5mm) = <strong>0,20 segundos</strong>. Macete: pequeno = 40ms, grande = 200ms.'},
+  {cat:'ECG',icon:'📈',stmt:'"O complexo QRS representa a despolarização ATRIAL no ECG."',verdict:false,exp:'<strong>FALSO.</strong> QRS = despolarização <strong>VENTRICULAR</strong>. A despolarização atrial = <strong>onda P</strong>. Q = septo/VD, R = VE (parede livre), S = base/VD. Pegadinha: confundir P com QRS ou atrial com ventricular.'},
+  {cat:'ECG',icon:'📈',stmt:'"Para calcular a FC pelo método rápido, divide-se 1500 pelo número de quadrados GRANDES."',verdict:false,exp:'<strong>FALSO.</strong> 1500 ÷ <strong>quadradinhos</strong> (pequenos). Ou <strong>300 ÷ quadrados grandes</strong>. Os dois métodos existem mas com divisores diferentes. Trocar quadrado grande (÷300) com quadradinho (÷1500) dá resultado errado.'},
+  {cat:'ECG',icon:'📈',stmt:'"V1 apresenta QRS predominantemente POSITIVO (onda R alta) no ECG normal."',verdict:false,exp:'<strong>FALSO.</strong> V1 apresenta QRS predominantemente <strong>NEGATIVO</strong> (padrão rS — r pequeno, S profundo). R cresce progressivamente de V1→V6. V1 negativo → V6 positivo = "como um amanhecer". V1 com R alta pode indicar HVD ou infarto posterior.'},
+  {cat:'ECG',icon:'📈',stmt:'"O intervalo PR normal pode ser de até 300ms sem significado patológico."',verdict:false,exp:'<strong>FALSO.</strong> PR normal = <strong>120–200ms</strong> (3–5 quadradinhos). PR >200ms = <strong>Bloqueio AV 1° grau</strong>. PR >300ms seria Bloqueio AV avançado. O retardo é fisiológico no NAV; acima de 200ms indica doença do sistema de condução.'},
+  {cat:'ECG',icon:'📈',stmt:'"O eletrodo negativo no braço direito e positivo na perna esquerda forma a derivação DI."',verdict:false,exp:'<strong>FALSO.</strong> Braço direito (−) + perna esquerda (+) = <strong>DII</strong>. DI = braço direito (−) + <strong>braço esquerdo</strong> (+). DIII = braço esquerdo (−) + perna esquerda (+). Pegadinha clássica de trocar DI por DII.'},
+  {cat:'ECG',icon:'📈',stmt:'"A derivação aVL é obtida pelo eletrodo na perna esquerda (foot)."',verdict:false,exp:'<strong>FALSO.</strong> Perna esquerda (foot) = <strong>aVF</strong>. aVL = braço <strong>esquerdo</strong> (Left). aVR = braço <strong>direito</strong> (Right). Macete: R=Right (direito), L=Left (esquerdo), F=Foot (pé/perna).'},
+  {cat:'ECG',icon:'📈',stmt:'"DII é a melhor derivação para analisar o eixo elétrico do coração."',verdict:false,exp:'<strong>FALSO.</strong> DII é a melhor para <strong>análise do RITMO</strong>. Para o <strong>eixo elétrico</strong>, analisam-se <strong>DI e aVF</strong> juntos. DI+/aVF+ = eixo normal. O eixo requer duas derivações perpendiculares entre si.'},
+  // ===== INTEGRADAS =====
+  {cat:'Integrada',icon:'🔗',stmt:'"A onda T corresponde ao platô (Fase 2) do potencial de ação cardíaco."',verdict:false,exp:'<strong>FALSO.</strong> O platô (Fase 2) corresponde ao <strong>segmento ST</strong>. A <strong>onda T</strong> corresponde à <strong>Fase 3</strong> (repolarização ventricular). Segmento ST = meseta. Onda T = fim da repolarização = relaxamento ventricular.'},
+  {cat:'Integrada',icon:'🔗',stmt:'"O Nó AV é o principal marca-passo do coração porque tem a condução mais lenta."',verdict:false,exp:'<strong>FALSO — dupla pegadinha!</strong> O principal marca-passo é o <strong>Nó SA</strong>, não o AV. E o NAV é o marca-passo de <strong>segurança/escape</strong> (40–60/min), não o principal. O SA domina por ter a MAIOR frequência intrínseca (60–100/min), não pela velocidade de condução.'},
+  {cat:'Integrada',icon:'🔗',stmt:'"Um pH de 7,30 no sangue é considerado normal."',verdict:false,exp:'<strong>FALSO.</strong> pH 7,30 é <strong>ACIDOSE</strong> (abaixo de 7,35). Normal = 7,35–7,45. 7,30 já indica desequilíbrio ácido-base clinicamente significativo que requer investigação e tratamento.'},
+  {cat:'Integrada',icon:'🔗',stmt:'"A repolarização auricular aparece como uma onda clara entre a onda P e o QRS no ECG."',verdict:false,exp:'<strong>FALSO.</strong> A repolarização auricular <strong>NÃO aparece</strong> no ECG — é <strong>encoberta pelo QRS</strong>, que é muito mais intenso. Por isso, a única onda de repolarização visível no ECG é a onda T (ventricular).'},
+  {cat:'Integrada',icon:'🔗',stmt:'"Fluxo turbulento nos vasos é silencioso e não causa problemas clínicos."',verdict:false,exp:'<strong>FALSO.</strong> Fluxo turbulento: (1) gera <strong>sons → sopros cardíacos</strong>, (2) causa choque entre plaquetas → agregação → <strong>trombose</strong>, (3) aumenta viscosidade e pressão local. É sempre patológico ou sinal de doença.'},
+];
+
+var pegRevealed=0;
+function renderPegadinhas(){
+  var grid=document.getElementById('peg-grid');
+  if(!grid) return;
+  grid.innerHTML='';
+  // Add progress bar
+  var prog=document.createElement('div');
+  prog.className='peg-progress';
+  prog.innerHTML='<span style="font-family:\'JetBrains Mono\',monospace;font-size:12px;color:var(--muted)">Reveladas:</span><strong id="peg-count" style="color:var(--accent2);font-family:\'JetBrains Mono\',monospace">0</strong><span style="font-size:12px;color:var(--muted)">/ '+pegData.length+'</span><div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-left:8px"><div id="peg-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent4),var(--gold));border-radius:2px;transition:width .4s"></div></div><button onclick="resetPegadinhas()" style="background:var(--card);border:1px solid var(--border);color:var(--muted);padding:5px 12px;border-radius:50px;cursor:pointer;font-size:11px;font-family:\'JetBrains Mono\',monospace;margin-left:auto">↺ Resetar</button>';
+  grid.appendChild(prog);
+
+  pegRevealed=0;
+  pegData.forEach(function(peg,i){
+    var card=document.createElement('div');
+    card.className='peg-card';
+    var verdictLabel=peg.verdict?'✅ VERDADEIRO':'❌ FALSO';
+    var verdictClass=peg.verdict?'verdadeiro':'falso';
+    card.innerHTML='<div class="peg-top" onclick="revealPeg('+i+',this)">'
+      +'<div class="peg-icon">'+peg.icon+'</div>'
+      +'<div class="peg-content">'
+      +'<div class="peg-cat">'+peg.cat+'</div>'
+      +'<div class="peg-stmt">'+peg.stmt+'</div>'
+      +'<div class="peg-hint">Clique para revelar → V ou F?</div>'
+      +'</div>'
+      +'<div style="font-size:1.2rem;color:var(--muted);align-self:center">?</div>'
+      +'</div>'
+      +'<div class="peg-reveal" id="peg-rev-'+i+'">'
+      +'<div class="peg-verdict '+verdictClass+'">'+verdictLabel+'</div>'
+      +'<div class="peg-exp">'+peg.exp+'</div>'
+      +'</div>';
+    grid.appendChild(card);
+  });
+}
+
+function revealPeg(i, topEl){
+  var rev=document.getElementById('peg-rev-'+i);
+  if(rev.classList.contains('show')) return;
+  rev.classList.add('show');
+  topEl.querySelector('.peg-hint').textContent='Revelado!';
+  topEl.querySelector('div:last-child').textContent=pegData[i].verdict?'✅':'❌';
+  pegRevealed++;
+  document.getElementById('peg-count').textContent=pegRevealed;
+  document.getElementById('peg-bar').style.width=(pegRevealed/pegData.length*100)+'%';
+}
+
+function resetPegadinhas(){
+  renderPegadinhas();
+}
+
+// PARTICLES - isolado com try/catch para não bloquear outras funções
+try {
+(function(){
+  var c=document.getElementById('particles');
+  if(!c) return;
+  var x=c.getContext('2d');
+  var p=[];
+  function rs(){c.width=innerWidth;c.height=innerHeight;}
+  rs();window.addEventListener('resize',rs);
+  for(var i=0;i<55;i++) p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5});
+  (function draw(){
+    x.clearRect(0,0,c.width,c.height);
+    p.forEach(function(pt){pt.x=(pt.x+pt.vx+c.width)%c.width;pt.y=(pt.y+pt.vy+c.height)%c.height;x.beginPath();x.arc(pt.x,pt.y,pt.r,0,Math.PI*2);x.fillStyle='rgba(231,76,60,0.1)';x.fill();});
+    for(var i=0;i<p.length;i++)for(var j=i+1;j<p.length;j++){var dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<110){x.beginPath();x.moveTo(p[i].x,p[i].y);x.lineTo(p[j].x,p[j].y);x.strokeStyle='rgba(249,201,79,'+(.05*(1-d/110))+')';x.lineWidth=.5;x.stroke();}}
+    requestAnimationFrame(draw);
+  })();
+})();
+} catch(e) { console.warn('particles error:', e); }
+
+window.addEventListener('scroll',function(){document.getElementById('scrolltop').style.display=window.scrollY>400?'block':'none';});
+
+function showSection(id,btn){
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('nav.tabs button').forEach(function(b){b.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleProva(hdr){
+  hdr.classList.toggle('open');
+  hdr.nextElementSibling.classList.toggle('open');
+}
+
+// FLASHCARDS DATA
+var fcData=[
+  {cat:'P1',q:'Qual é a viscosidade do sangue em relação à água?',a:'3,5× mais viscoso que a água pura. O plasma é 2–2,2×. O principal fator é o hematócrito (% de eritrócitos).'},
+  {cat:'P1',q:'Fenômeno de Fahraeus-Lindqvist — o que é?',a:'Em vasos de MENOR calibre, a viscosidade DIMINUI. Eritrócitos vão ao centro, plasma periférico → ↓ viscosidade. Ocorre em todos os pontos de ramificação.'},
+  {cat:'P1',q:'Fluxo laminar vs turbulento — diferença fundamental',a:'Laminar: camadas paralelas, centro mais rápido, parede mais lento — NORMAL e silencioso. Turbulento: caótico, gera sopros, promove trombose — PATOLÓGICO.'},
+  {cat:'P1',q:'pH normal do sangue. Limites letais.',a:'pH 7,35–7,45 (levemente alcalino). Limites letais: 6,0 (acidose) e 8,0 (alcalose). O corpo tende à acidose naturalmente.'},
+  {cat:'P1',q:'3 sistemas reguladores de pH — ordem e tempo',a:'① Buffer (segundos — amortiza, HCO₃⁻) → ② Respiratório (2–3 min — elimina CO₂) → ③ Renal (24–30h — corrige definitivamente).'},
+  {cat:'P1',q:'Surfactante pulmonar — quem produz e função',a:'Produzido pelos pneumócitos tipo 2. Reduz a tensão superficial nos alvéolos, prevenindo colapso alveolar. Ausência → SDR em prematuros.'},
+  {cat:'P1',q:'Sistemas dispersos — 3 tipos e tamanhos',a:'Solução verdadeira (0,1–1nm, homogênea). Coloide (1–100nm, efeito Tyndall, Browniano — ex: plasma). Suspensão (>100nm, heterogênea, sedimenta — ex: penicilina).'},
+  {cat:'P1',q:'Potencial de repouso — valor e por quê',a:'−70mV. Porque: proteínas anions ficam presas dentro + K⁺ sai por difusão + Na⁺ concentrado fora + Bomba Na-K. Resultado: interior eletonegativo.'},
+  {cat:'P1',q:'Espiga vs Meseta — célula, duração, íons',a:'Espiga: neurônio/músculo esq., 1–2ms, Na⁺→K⁺. Meseta: cardiomiócito, 200–300ms, Na⁺→Ca²⁺(lento)→K⁺. Ca²⁺ essencial para contração cardíaca.'},
+  {cat:'P1',q:'Canais de Ca²⁺ lentos (tipo L) — verdade ou mentira?',a:'São LENTOS (NÃO rápidos). Abrem lentamente e ficam abertos por MUITO tempo (200–300ms = o platô inteiro). São mais lentos que os canais de Na⁺.'},
+  {cat:'P2',q:'Discos Intercalares — o que são e função',a:'Junções especializadas entre cardiomiócitos com gap junctions. Permitem PA passar de célula a célula → comportamento sincicial. O impulso aurícula→ventrículo passa pelas FIBRAS DE CONDUÇÃO, NÃO pelo tecido fibroso.'},
+  {cat:'P2',q:'5 Propriedades do coração — macete',a:'Batmotropismo (excitabilidade), Cronotropismo (automatismo/FC), Dromotropismo (condutividade), Inotropismo (contratilidade/força), Lusotropismo (relaxamento/diástole).'},
+  {cat:'P2',q:'Reflexo de Bainbridge — mecanismo completo',a:'↑ sangue na aurícula DIREITA → distensão → mecanorreceptores → ↑ FC (cronotropismo). É o complemento de Frank-Starling: F-S ajusta força; Bainbridge ajusta frequência.'},
+  {cat:'P2',q:'Frank-Starling — lei fundamental',a:'↑ Retorno venoso → ↑ VTD → ↑ estiramento das fibras → ↑ força (inotropismo) → ↑ VS. Todo o sangue que entra deve sair (dentro dos limites fisiológicos).'},
+  {cat:'P2',q:'Pré-carga vs Pós-carga',a:'Pré-carga = VTD na DIÁSTOLE (depende do retorno venoso). Pós-carga = resistência à ejeção na SÍSTOLE (aorta + RVP). Pré-carga = sobrecarga de volume; pós-carga = sobrecarga de pressão.'},
+  {cat:'P2',q:'Volumes cardíacos — VTD, VS, VTS, DC',a:'VTD = 120mL (máximo, fim da diástole). VS = 70mL (ejetado por batimento). VTS = 50mL (residual). DC = 70×80 = 5.600 mL/min = 5,6 L/min. FE = 70/120 ≈ 60%.'},
+  {cat:'ECG',q:'Onda T — o que representa?',a:'Repolarização VENTRICULAR (ÚNICA onda de repolarização visível). Corresponde ao relaxamento ventricular. Em aVR e V1: pode ser negativa de forma normal.'},
+  {cat:'ECG',q:'aVR — por que tem todas as ondas invertidas?',a:'aVR aponta para a cavidade direita do coração — é o "avesso". Todas as ondas (P, QRS, T) são negativas em aVR como norma. SEMPRE negativo = derivação normal.'},
+  {cat:'ECG',q:'Como calcular FC pelo ECG (método rápido)',a:'FC = 300 ÷ nº de quadrados grandes entre dois picos R-R. Macete: 1q=300, 2q=150, 3q=100, 4q=75, 5q=60, 6q=50. Velocidade padrão = 25mm/s.'},
+  {cat:'ECG',q:'Derivações Bipolares vs Unipolares ampliadas vs Precordiais',a:'Bipolares: DI, DII, DIII (triângulo de Einthoven). Unipolares ampliadas: aVR, aVL, aVF (membros). Precordiais: V1–V6 (tórax, UNIPOLARES). V1–V6 NÃO são bipolares!'},
+  {cat:'ECG',q:'Eixo elétrico médio normal — valor e como verificar',a:'Eixo médio normal = +60°. Verificação: DI positivo + aVF positivo = NORMAL. DI+/aVF− = desvio esquerdo. DI−/aVF+ = desvio direito.'},
+  {cat:'ECG',q:'Velocidade de condução pelo sistema cardíaco',a:'Nó SA: 1 m/s. Nó AV: 0,03 m/s (mais lento — retardo de 0,1s). Fibras auriculares/ventriculares: 0,3–0,5 m/s. Purkinje: 1,5–4 m/s (mais rápido).'},
+  {cat:'ECG',q:'Segmento PR — o que representa?',a:'Retardo fisiológico no Nó AV. O impulso fica "preso" no NAV por ~0,1s para as aurículas terminarem de contrair antes dos ventrículos. Maior que 200ms = Bloqueio AV 1° grau.'},
+  {cat:'ECG',q:'QRS — o que é cada letra?',a:'Q = deflexão negativa antes do R (septo, base do coração). R = deflexão positiva principal (Ventrículo Esquerdo). S = deflexão negativa após R (VD, região basal). QRS largo (>120ms) = bloqueio de ramo.'},
+  {cat:'ECG',q:'V1 — posição e característica do QRS',a:'V1 = 4° espaço intercostal direito, borda esternal. QRS predominantemente NEGATIVO (rS). Zona de transição entre V1 negativo e V6 positivo ocorre em V3-V4.'},
+  {cat:'P2',q:'Bomba cebadora (auricular) — contribuição real',a:'A aurícula contribui com ~20% do VTD (NÃO 80%). A diástole passiva preenche 80%. Perda de contração auricular → ↓ ~50% do débito em situações de alta demanda.'},
+  {cat:'ECG',q:'DI, DII, DIII — tipo e como se obtém',a:'BIPOLARES dos membros. Registram diferença de potencial entre 2 eletrodos. DI: braço dir(−) → braço esq(+). DII: braço dir(−) → perna esq(+). DIII: braço esq(−) → perna esq(+). Formam o Triângulo de Einthoven.'},
+  {cat:'ECG',q:'aVR, aVL, aVF — tipo e características',a:'UNIPOLARES AMPLIADAS dos membros. Um eletrodo explorador (+) por membro, amplificadas 1,5×. aVR=braço dir(SEMPRE negativo). aVL=braço esq(variável). aVF=perna esq(positivo em eixo normal). NÃO são bipolares!'},
+  {cat:'ECG',q:'V1–V6 — tipo e progressão R',a:'UNIPOLARES PRECORDIAIS — NÃO bipolares! V1: negativo (rS, mais à direita). V2-V3: transição. V4-V6: positivos (VE). Progressão R: cresce de V1→V6 "como um amanhecer".'},
+  {cat:'ECG',q:'Por que aVR tem TODAS as ondas invertidas?',a:'aVR aponta para direção OPOSTA ao vetor elétrico do coração (que vai ao VE). O vetor "foge" do eletrodo → todas deflexões negativas. Se aVR tiver QRS positivo → eletrodos trocados ou dextrocardia!'},
+  {cat:'ECG',q:'Eletrodo (−) braço esq. + (+) perna esq. = qual derivação?',a:'DIII (D3) — derivação bipolar. DI: BD(−)→BE(+). DII: BD(−)→PE(+). DIII: BE(−)→PE(+). É a bipolar que usa braço esq. como negativo.'},
+  {cat:'P1',q:'3 estados da água e temperatura de transição',a:'Sólido (gelo): abaixo de 0°C. Líquido: 0–100°C. Gasoso (vapor): acima de 100°C (ou evaporação antes). Densidade máxima a 4°C. Água pura congela a 0°C — mas soluções (sangue) congela a temperatura menor.'},
+  {cat:'P1',q:'Diferença entre Ácido e Base',a:'Ácido = DOADOR de H⁺. [H⁺]↑ → pH↓ → acidose. Mais perigoso — destrói proteínas rapidamente. Base = RECEPTOR de H⁺. [H⁺]↓ → pH↑ → alcalose. HCO₃⁻ = principal base do corpo.'},
+  {cat:'P2',q:'Nó SA — frequência e tipo de PA',a:'Marca-passo natural. Dispara 60–100 PA/min (ritmo sinusal normal). Tipo espiga + rampa ascendente (pré-potencial). Auto-excitável — NUNCA entra em repouso verdadeiro.'},
+  {cat:'P2',q:'Nó AV — frequência, velocidade e função',a:'Dispara 40–60 PA/min. Condução MAIS LENTA: 0,03 m/s. Retarda o impulso 0,1s (= segmento PR no ECG). Função: garantir que aurículas terminem de contrair ANTES dos ventrículos. "Filtro e retardo".'},
+  {cat:'P2',q:'Fibras de Purkinje — frequência e velocidade',a:'Disparam 15–40 PA/min (menor frequência). Condução MAIS RÁPIDA: 1,5–4 m/s. Tipo Meseta + rampa. Distribuem o PA pelos ventrículos rapidamente. Inotropismo.'},
+  {cat:'ECG',q:'Segmento ST — o que é e alterações',a:'Corresponde à MESETA (fase 2) do PA cardíaco = sístole elétrica ventricular. Normal = isoelétrico. SUPRA-ST (+) = IAM (infarto agudo). INFRA-ST (−) = isquemia miocárdica. Sempre isoelétrico no coração saudável.'},
+  {cat:'ECG',q:'Intervalo PR — normal e alteração',a:'Tempo do início da onda P ao início do QRS (= retraso no NAV). Normal: 120–200ms (3–5 quadradinhos). >200ms = Bloqueio AV 1° grau. Representa o retardo fisiológico que protege os ventrículos.'},
+  {cat:'P2',q:'Sístole Elétrica vs Mecânica vs Hemodinâmica',a:'Sístole Elétrica = duração do PA ventricular (QRS+ST+T). Sístole Mecânica = contração muscular que se segue. Sístole Hemodinâmica = ejeção de sangue para a aorta. Ocorrem nessa sequência com pequeno atraso.'},
+  {cat:'P2',q:'B1 e B2 — ruídos cardíacos',a:'B1 "TUM" (grave, longo) = fechamento de mitral+tricúspide = início da sístole = coincide com QRS. B2 "TÁ" (agudo, curto) = fechamento de aórtica+pulmonar = início da diástole = coincide com fim da onda T.'},
+  {cat:'ECG',q:'Qual derivação é melhor para analisar o ritmo cardíaco?',a:'DII — porque: onda P bem visível e positiva, QRS positivo e nítido, alinhada ao eixo médio normal (+60°). É a derivação padrão para análise do ritmo sinusal. Usar DII para calcular FC pelo R-R.'},
+  // FRANK-STARLING
+  {cat:'Frank-Starling',q:'Lei de Frank-Starling — enunciado completo',a:'Dentro dos limites fisiológicos, todo o sangue que entra no coração na diástole será bombeado para fora. ↑ VTD → ↑ Estiramento das fibras → ↑ Sobreposição actina-miosina → ↑ Força (inotropismo) → ↑ VS. Propriedade ajustada: INOTROPISMO.'},
+  {cat:'Frank-Starling',q:'Por que o estiramento das fibras aumenta a força de contração?',a:'Mais estiramento → melhor sobreposição entre filamentos de actina e miosina → mais pontes cruzadas formadas → maior força gerada. É um mecanismo mecânico e intrínseco — não depende de hormônios nem do sistema nervoso.'},
+  {cat:'Frank-Starling',q:'Pré-carga — definição, sinônimo e fase cardíaca',a:'Pré-carga = volume no ventrículo ao final da DIÁSTOLE (VTD ≈ 120mL). Sinônimo: "sobrecarga de volume". Determinada pelo retorno venoso. ↑ RV → ↑ pré-carga → ↑ estiramento → F-S em ação. Fase: DIÁSTOLE.'},
+  {cat:'Frank-Starling',q:'Pós-carga — definição, sinônimo e fase cardíaca',a:'Pós-carga = resistência que o ventrículo vence para EJETAR o sangue. Sinônimo: "sobrecarga de pressão". Determinada pela pressão da aorta + RVP (resistência vascular periférica). Fase: SÍSTOLE VENTRICULAR.'},
+  {cat:'Frank-Starling',q:'F-S no exercício físico — o que acontece com cada variável?',a:'↑ Retorno venoso (músculos bombeiam) → ↑ VTD → ↑ Estiramento → ↑ Força → ↑ VS. DC pode aumentar de 5,6 L/min até 20–25 L/min em atletas. Frank-Starling + Bainbridge juntos = taquicardia + força = ↑↑ DC.'},
+  // FORÇAS DE FRANK-STARLING
+  {cat:'Forças F-S',q:'Quais são os 4 critérios/forças de Frank-Starling?',a:'① Pré-carga (retorno venoso, diástole). ② Pós-carga (RVP + pressão aorta, sístole). ③ Contratilidade/Inotropismo intrínseco (Ca²⁺ intracelular). ④ Frequência Cardíaca / Cronotropismo (NSA + Bainbridge + SNA). Todos determinam o Débito Cardíaco.'},
+  {cat:'Forças F-S',q:'Qual é a diferença entre a LEI e as FORÇAS de Frank-Starling?',a:'Lei F-S: relação estiramento-força (mais volume → mais força) — mecanismo INTRÍNSECO mecânico. Forças F-S: os 4 critérios determinantes do débito cardíaco (pré-carga, pós-carga, contratilidade, FC) — são os FATORES que regulam a performance cardíaca, cada um independente.'},
+  {cat:'Forças F-S',q:'Contratilidade (③ Força F-S) — o que é e do que depende?',a:'Contratilidade = capacidade INTRÍNSECA do miocárdio de contrair, INDEPENDENTE da pré-carga e pós-carga. Depende do Ca²⁺ intracelular: ↑ Ca²⁺ → liga à troponina C → libera sítios actina → pontes cruzadas → ↑ força sem mudar o VTD.'},
+  {cat:'Forças F-S',q:'Como a FC é a 4ª Força de Frank-Starling?',a:'DC = VS × FC. A FC é determinada pelo Nó SA (automatismo) + Reflexo de Bainbridge (↑ RV → ↑ FC) + SNA (simpático/parassimpático). ↑ FC → ↑ DC (até certo ponto — FC muito alta reduz tempo de enchimento diastólico).'},
+  {cat:'Forças F-S',q:'No exercício, como as 4 Forças atuam juntas?',a:'① Pré-carga ↑ (↑ RV muscular). ② Pós-carga ↓ (vasodilatação muscular ↓ RVP). ③ Contratilidade ↑ (adrenalina → ↑ Ca²⁺). ④ FC ↑ (Bainbridge + simpático). Resultado: DC de 5,6 → 20–25 L/min!'},
+  // BAINBRIDGE
+  {cat:'Bainbridge',q:'Reflexo de Bainbridge — mecanismo completo em sequência',a:'↑ Sangue → Aurícula DIREITA → ↑ distensão → Mecanorreceptores de estiramento ativados → sinal ao centro cardiovascular (bulbo) → ↑ atividade simpática ao Nó SA → ↑ FC (cronotropismo ↑) → ↑ DC.'},
+  {cat:'Bainbridge',q:'Por que Bainbridge ocorre na aurícula DIREITA e não na esquerda?',a:'A aurícula DIREITA recebe o retorno venoso SISTÊMICO (veias cavas superior e inferior) → "sente" primeiro o aumento de volume circulante. A aurícula esquerda recebe retorno PULMONAR (veias pulmonares) — tem outros reflexos, não Bainbridge.'},
+  {cat:'Bainbridge',q:'Bainbridge ajusta qual propriedade cardíaca?',a:'CRONOTROPISMO — frequência cardíaca (FC). Frank-Starling ajusta o INOTROPISMO (força). Bainbridge ajusta a FREQUÊNCIA. Juntos: ↑ força (F-S) + ↑ FC (Bainbridge) = ↑↑ DC durante o exercício.'},
+  {cat:'Bainbridge',q:'Bainbridge vs Vagal — qual a diferença?',a:'Bainbridge: ↑ distensão AD → ↑ FC (via SIMPÁTICO). Vagal: estimulação do nervo vago → ↓ FC (via PARASSIMPÁTICO — pode chegar a zero). São reflexos OPOSTOS: Bainbridge acelera, vagal freia o coração.'},
+  {cat:'Bainbridge',q:'Bainbridge vs Frank-Starling — tabela mental',a:'F-S: ventrículos, mecanismo intrínseco mecânico, ajusta força (VS), inotropismo. Bainbridge: aurícula DIREITA, reflexo nervoso extrínseco, ajusta frequência (FC), cronotropismo. Juntos: ↑ VS + ↑ FC = ↑ DC.'},
+];
+
+var fcShown=0;
+function renderFC(data){
+  var g=document.getElementById('fc-grid');
+  g.innerHTML='';fcShown=0;
+  data.forEach(function(fc){
+    var d=document.createElement('div');
+    d.className='fc-card';
+    d.innerHTML='<div class="fc-inner"><div class="fc-front"><div class="fc-cat">'+fc.cat+'</div><div class="fc-q">'+fc.q+'</div><div class="fc-hint">Clique para revelar</div></div><div class="fc-back"><div class="fc-alabel">Resposta</div><div class="fc-a">'+fc.a+'</div></div></div>';
+    d.addEventListener('click',function(){
+      var was=d.classList.contains('flipped');
+      d.classList.toggle('flipped');
+      fcShown+=was?-1:1;
+      if(fcShown<0)fcShown=0;
+      document.getElementById('fc-counter').textContent=fcShown+' / '+data.length+' revelados';
+    });
+    g.appendChild(d);
+  });
+  document.getElementById('fc-counter').textContent='0 / '+data.length+' revelados';
+}
+function shuffleFC(){
+  var a=fcData.slice();
+  for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+  renderFC(a);
+}
+function resetFC(){renderFC(fcData);}
+renderFC(fcData);
+
+// QUIZ DATA
+var qData=[
+  {t:'mc',q:'Qual é a viscosidade relativa do sangue completo em relação à água?',o:['1,5×','2,0×','3,5×','5,0×'],c:2,e:'Sangue completo = 3,5× mais viscoso que a água pura. Plasma = 2–2,2×. O hematócrito é o principal determinante.'},
+  {t:'mc',q:'O Fenômeno de Fahraeus-Lindqvist é:',o:['Aumento da viscosidade em vasos menores','Diminuição da viscosidade em vasos de menor calibre','Fluxo turbulento em capilares','Coagulação em vasos finos'],c:1,e:'Em vasos menores, eritrócitos vão ao centro → plasma periférico → ↓ viscosidade. Ocorre em todos os pontos de ramificação.'},
+  {t:'mc',q:'No fluxo laminar, a velocidade do sangue é:',o:['Uniforme em todo o vaso','Maior nas paredes e menor no centro','Menor nas paredes e maior no centro','Igual em todas as camadas'],c:2,e:'Fluxo laminar: MENOR velocidade nas paredes (atrito) e MAIOR no centro. É o fluxo normal — silencioso e eficiente.'},
+  {t:'mc',q:'pH normal do sangue arterial:',o:['7,0–7,2','7,2–7,3','7,35–7,45','7,5–7,6'],c:2,e:'pH normal = 7,35–7,45 (levemente alcalino). Limite inferior (acidose letal) = 6,0. Limite superior (alcalose letal) = 8,0.'},
+  {t:'mc',q:'Qual sistema regulador do pH age PRIMEIRO?',o:['Sistema Renal','Sistema Respiratório','Sistema Buffer (Bicarbonato)','Sistema Nervoso'],c:2,e:'Buffer age em segundos (imediato). Respiratório age em 2–3 minutos. Renal age em 24–30 horas. Buffer é o mais rápido mas só amortiza.'},
+  {t:'mc',q:'O surfactante pulmonar é produzido por:',o:['Pneumócitos tipo 1','Pneumócitos tipo 2','Macrófagos alveolares','Células de Clara'],c:1,e:'Pneumócitos tipo 2 produzem surfactante lipoproteico anfipático. Tipo 1 = troca gasosa. Ausência de surfactante → SDR em prematuros.'},
+  {t:'mc',q:'Qual sistema disperso apresenta Efeito Tyndall?',o:['Solução verdadeira','Coloide','Suspensão','Todos apresentam'],c:1,e:'Coloide (1–100nm) dispersa a luz → Efeito Tyndall. Solução verdadeira = partículas muito pequenas → não dispersa luz.'},
+  {t:'mc',q:'O potencial de membrana em repouso de um neurônio é:',o:['+70 mV','−70 mV','0 mV','−90 mV'],c:1,e:'Neurônio: −70 mV em repouso. Cardiomiócito: −90 mV. Carga negativa interna por proteínas aniônicas, saída de K⁺ e bomba Na-K.'},
+  {t:'mc',q:'A principal diferença entre o potencial tipo ESPIGA e tipo MESETA é:',o:['Espiga é mais longa e tem Ca²⁺','Meseta tem platô por entrada de Ca²⁺ lento (200–300ms)','Espiga ocorre no coração','Não há diferença entre eles'],c:1,e:'Meseta (coração): platô de 200–300ms por entrada de Ca²⁺ lento (tipo L). Espiga (neurônio): 1–2ms, só Na⁺ e K⁺. O platô é ESSENCIAL para a contração cardíaca.'},
+  {t:'mc',q:'Os canais de Ca²⁺ tipo L (lentos) no coração:',o:['Abrem rapidamente e fecham rápido','Abrem lentamente e ficam abertos por tempo prolongado','São mais rápidos que os canais de Na⁺','São canais de K⁺ renomeados'],c:1,e:'Canais de Ca²⁺ tipo L: LENTOS — abrem lentamente e ficam abertos por 200–300ms (todo o platô). Mais LENTOS que os canais de Na⁺. Armadilha de prova!'},
+  {t:'mc',q:'A estrutura de união entre os cardiomiócitos que permite o comportamento sincicial é:',o:['Linha Z','Banda I','Discos Intercalares','Túbulos T'],c:2,e:'Discos Intercalares contêm gap junctions que permitem PA passar de uma célula à outra sequencialmente → comportamento sincicial. O impulso aurícula→ventrículo passa pelas fibras de condução.'},
+  {t:'mc',q:'A propriedade cardíaca de RELAXAMENTO durante a diástole é:',o:['Batmotropismo','Cronotropismo','Inotropismo','Lusotropismo'],c:3,e:'Lusotropismo = capacidade de relaxamento (diástole). Batmotropismo = excitabilidade. Cronotropismo = FC. Inotropismo = força de contração.'},
+  {t:'mc',q:'O Reflexo de Bainbridge regula:',o:['Força de contração ventricular','Frequência cardíaca (FC)','Resistência vascular periférica','Débito cardíaco diretamente'],c:1,e:'Bainbridge: estiramento da aurícula DIREITA → mecanorreceptores → ↑ FC (cronotropismo). Frank-Starling ajusta a força; Bainbridge ajusta a frequência.'},
+  {t:'mc',q:'Segundo a Lei de Frank-Starling:',o:['A força de contração independe do volume diastólico','↑ retorno venoso → ↑ estiramento → ↑ força de contração (dentro dos limites fisiológicos)','O coração sempre esvazia completamente','A pré-carga depende da resistência vascular'],c:1,e:'Frank-Starling: ↑ RV → ↑ VTD → ↑ estiramento fibras → ↑ força (inotropismo) → ↑ VS. Funciona SOMENTE dentro dos limites fisiológicos.'},
+  {t:'mc',q:'O Débito Cardíaco (DC) é calculado como:',o:['VTD × FC','Volume Sistólico × FC','VTS × FC','Pressão arterial / Resistência'],c:1,e:'DC = VS × FC = 70 mL × 80 bpm = 5.600 mL/min ≈ 5,6 L/min. DC = volume de sangue bombeado POR MINUTO.'},
+  {t:'mc',q:'A Pré-carga é:',o:['Resistência da aorta à ejeção','Volume no ventrículo ao final da DIÁSTOLE (VTD)','Pressão sistólica ventricular','Força de contração máxima'],c:1,e:'Pré-carga = VTD ≈ 120 mL. É determinada na DIÁSTOLE pelo retorno venoso. Também chamada "sobrecarga de volume".'},
+  {t:'mc',q:'A Onda T no ECG representa:',o:['Despolarização atrial','Despolarização ventricular','Repolarização ventricular','Repolarização atrial'],c:2,e:'Onda T = repolarização VENTRICULAR. É a ÚNICA onda de repolarização visível (a auricular é encoberta pelo QRS). T = relaxamento ventricular.'},
+  {t:'mc',q:'A derivação aVR tem:',o:['Todas as ondas positivas','Onda P negativa e QRS positivo','Todas as ondas INVERTIDAS (negativas) — normal','QRS largo e T bifásica'],c:2,e:'aVR é o "avesso do coração" — aponta para a cavidade direita. Todas as ondas P, QRS e T são NEGATIVAS em aVR de forma normal.'},
+  {t:'mc',q:'Como calcular a FC no ECG pelo método rápido (linhas escuras)?',o:['FC = 1500 ÷ quadradinhos','FC = 300 ÷ quadrados grandes entre dois R-R','FC = quadrados grandes × 60','FC = amplitude da onda R × 100'],c:1,e:'FC = 300 ÷ nº de quadrados grandes (linhas escuras) entre dois picos R consecutivos. Macete: 1=300, 2=150, 3=100, 4=75, 5=60, 6=50.'},
+  {t:'mc',q:'As derivações DI, DII, DIII são classificadas como:',o:['Unipolares precordiais','Unipolares ampliadas','Bipolares dos membros','Derivações do tórax'],c:2,e:'DI, DII, DIII = bipolares dos membros (Triângulo de Einthoven). aVR, aVL, aVF = unipolares ampliadas. V1–V6 = unipolares precordiais.'},
+  {t:'mc',q:'A velocidade do papel padrão no ECG é:',o:['10 mm/s','12,5 mm/s','25 mm/s','50 mm/s'],c:2,e:'Velocidade padrão = 25 mm/s. Cada quadradinho (1mm) = 0,04s. Cada quadrado grande (5mm) = 0,20s. Calibração padrão: 10mm = 1mV.'},
+  {t:'mc',q:'No sistema de condução cardíaco, qual estrutura tem a condução mais LENTA?',o:['Nó SA','Nó AV','Feixe de His','Fibras de Purkinje'],c:1,e:'Nó AV = 0,03 m/s (mais lento). Esse retardo é FISIOLÓGICO — garante que as aurículas terminem antes dos ventrículos. Purkinje = 1,5–4 m/s (mais rápido).'},
+  {t:'vof',q:'[V/F] O impulso cardíaco passa do sincício auricular ao ventricular pelo tecido fibroso.',c:false,e:'FALSO. O tecido fibroso ISOLA os dois sincícios. O impulso passa pelas FIBRAS DE CONDUÇÃO (Nó AV → Feixe de His → Ramos → Purkinje).'},
+  {t:'vof',q:'[V/F] A estimulação intensa do nervo vago pode diminuir a FC a zero ou quase zero.',c:true,e:'VERDADEIRO. Estimulação vagal intensa → ↓↓ cronotropismo → pode causar parada sinusal transitória (FC próxima de zero).'},
+  {t:'vof',q:'[V/F] A bomba cebadora (aurícula) contribui com 80% do volume ventricular.',c:false,e:'FALSO. A aurícula contribui com apenas 20% do VTD. Os outros 80% entram passivamente durante a diástole. Macete: "aurícula = 20%".'},
+  {t:'vof',q:'[V/F] Os canais lentos de Ca²⁺ abrem rapidamente e têm curto tempo aberto.',c:false,e:'FALSO. Canais lentos de Ca²⁺ (tipo L) se abrem LENTAMENTE e ficam abertos por LONGO tempo (200–300ms = todo o platô). São mais LENTOS que os de Na⁺.'},
+  {t:'vof',q:'[V/F] A onda T representa a repolarização ventricular e o relaxamento dos ventrículos.',c:true,e:'VERDADEIRO. Onda T = repolarização ventricular (fase 3 do PA cardíaco) = relaxamento dos ventrículos = início da diástole elétrica.'},
+  {t:'vof',q:'[V/F] O Volume Sistólico normal é de 70 mL por batimento.',c:true,e:'VERDADEIRO. VS = 70 mL por batimento (= VTD 120mL − VTS 50mL). Débito Cardíaco = 70 × 80 = 5.600 mL/min.'},
+  {t:'vof',q:'[V/F] A velocidade padrão do ECG é 25 mm/s.',c:true,e:'VERDADEIRO. Velocidade padrão = 25 mm/s. Cada quadradinho = 0,04s. Cada quadrado grande = 0,20s.'},
+  {t:'vof',q:'[V/F] O Reflexo de Bainbridge regula a força de contração ventricular.',c:false,e:'FALSO. Bainbridge regula a FREQUÊNCIA CARDÍACA (cronotropismo). A força de contração é regulada pela Lei de Frank-Starling (inotropismo).'},
+  {t:'vof',q:'[V/F] A lei de Frank-Starling funciona independentemente do estado do miocárdio.',c:false,e:'FALSO. A lei funciona SOMENTE dentro dos limites fisiológicos. Em IC descompensada, o estiramento excessivo REDUZ a eficiência (curva descendente falha).'},
+  {t:'vof',q:'[V/F] O segmento PR representa o retraso fisiológico no Nó AV.',c:true,e:'VERDADEIRO. O Nó AV retarda o impulso ~0,1s (0,03 m/s = condução mais lenta). Isso garante que as aurículas terminem de contrair antes dos ventrículos ativarem.'},
+  {t:'mc',q:'Qual derivação usa o eletrodo NEGATIVO no braço esquerdo e POSITIVO na perna esquerda?',o:['DI','DII','DIII','aVL'],c:2,e:'DIII (D3): braço esquerdo (−) + perna esquerda (+). DI: braço dir(−)→braço esq(+). DII: braço dir(−)→perna esq(+).'},
+  {t:'mc',q:'As derivações aVR, aVL, aVF são classificadas como:',o:['Bipolares dos membros','Unipolares precordiais','Unipolares ampliadas dos membros','Derivações do tórax'],c:2,e:'aVR, aVL, aVF = UNIPOLARES AMPLIADAS dos membros. Um eletrodo explorador (+) por membro, amplificadas 1,5×. "a" = augmented (ampliada).'},
+  {t:'mc',q:'Por que aVR tem todas as ondas do ECG negativas/invertidas?',o:['Porque é uma derivação patológica','Porque aponta na direção oposta ao vetor elétrico principal do coração','Porque os eletrodos estão trocados','Porque registra apenas o VD'],c:1,e:'aVR aponta para o ângulo −150°, oposto ao vetor cardíaco que vai em direção ao VE (+60°). O vetor "foge" do eletrodo → todas deflexões negativas. É NORMAL.'},
+  {t:'mc',q:'V1, V2, V3 são derivações:',o:['Bipolares dos membros','Bipolares do tórax','Unipolares ampliadas','Unipolares precordiais'],c:3,e:'V1–V6 são UNIPOLARES PRECORDIAIS. Têm apenas 1 eletrodo explorador (+) posicionado no tórax. NÃO são bipolares — a armadilha mais cobrada nas provas!'},
+  {t:'mc',q:'Qual derivação precordial se posiciona no 4° EIC direito, borda paraesternal?',o:['V2','V3','V1','V4'],c:2,e:'V1 = 4° EIC direito, borda paraesternal direita. V2 = 4° EIC esquerdo, borda paraesternal esquerda. V4 = 5° EIC, linha hemiclavicular esquerda.'},
+  {t:'mc',q:'A progressão da onda R nas derivações precordiais (V1→V6) é:',o:['R diminui progressivamente de V1 a V6','R permanece igual em todas','R cresce progressivamente de V1 a V6','R está ausente nas precordiais'],c:2,e:'Progressão R normal: V1 (negativo, rS) → V2-V3 (transição) → V4-V6 (positivos, R crescendo). Macete: "V1 negativo → V6 positivo, como um amanhecer". Ausência de progressão → infarto anterior.'},
+  {t:'mc',q:'Qual derivação usa eletrodo explorador (+) no braço DIREITO?',o:['DI','DII','aVR','aVL'],c:2,e:'aVR = eletrodo explorador (+) no braço direito. aVL = braço esquerdo. aVF = perna esquerda (foot). São as 3 unipolares ampliadas.'},
+  {t:'mc',q:'O segmento ST isoelétrico no ECG corresponde a qual fase do PA cardíaco?',o:['Fase 0 — despolarização rápida','Fase 1 — repolarização inicial','Fase 2 — Platô (Meseta)','Fase 3 — repolarização tardia'],c:2,e:'Segmento ST = MESETA (Fase 2) do PA cardíaco = sístole elétrica ventricular. Supra-ST = IAM (lesão). Infra-ST = isquemia. Sempre isoelétrico no coração saudável.'},
+  {t:'mc',q:'Qual parede do coração é representada pelas derivações DII, DIII e aVF?',o:['Parede anterior','Parede lateral','Parede inferior','Parede septal'],c:2,e:'DII + DIII + aVF = parede INFERIOR do coração (coronária direita). V1–V4 = anterior/septal (DA). DI + aVL = lateral alta (Cx). V5–V6 = lateral baixa.'},
+  {t:'vof',q:'[V/F] DI é uma derivação bipolar onde o eletrodo negativo está no braço direito e o positivo no braço esquerdo.',c:true,e:'VERDADEIRO. DI: braço direito (−) → braço esquerdo (+). Registra o eixo horizontal (0°). Representa a atividade elétrica na direção lateral esquerda.'},
+  {t:'vof',q:'[V/F] aVF é obtida com o eletrodo explorador positivo na perna esquerda e representa a parede inferior do coração.',c:true,e:'VERDADEIRO. aVF (augmented Voltage Foot) = eletrodo (+) na perna esquerda = ângulo +90° = parede inferior. Positivo em eixo elétrico normal.'},
+  {t:'mc',q:'Qual é a frequência de geração de PA por minuto do Nó SA?',o:['15–40/min','40–60/min','60–100/min','100–150/min'],c:2,e:'Nó SA = 60–100 PA/min (ritmo sinusal normal). Nó AV = 40–60/min. Purkinje = 15–40/min (menor). O SA domina pois tem a maior frequência intrínseca.'},
+  {t:'mc',q:'Qual estrutura do sistema de condução tem a condução mais LENTA?',o:['Nó SA','Nó AV','Feixe de His','Fibras de Purkinje'],c:1,e:'Nó AV = 0,03 m/s (mais lento). Esse retardo fisiológico gera o segmento PR no ECG e garante que as aurículas terminem antes dos ventrículos.'},
+  {t:'mc',q:'Qual estrutura do sistema de condução tem a condução mais RÁPIDA?',o:['Nó SA','Nó AV','Músculo atrial','Fibras de Purkinje'],c:3,e:'Fibras de Purkinje = 1,5–4 m/s (mais rápidas). Isso permite ativação rápida e simultânea de toda a massa ventricular, garantindo contração eficiente.'},
+  {t:'mc',q:'O período de tempo que dura o PA dos ventrículos se chama:',o:['Sístole Mecânica','Sístole Elétrica','Sístole Hemodinâmica','Diástole Elétrica'],c:1,e:'Sístole Elétrica = duração do PA ventricular (QRS + ST + T). Precede e gera a Sístole Mecânica (contração muscular) e depois a Hemodinâmica (ejeção de sangue).'},
+  {t:'vof',q:'[V/F] O complexo QRS tem duração normal menor que 120ms; se maior, indica bloqueio de ramo.',c:true,e:'VERDADEIRO. QRS normal <120ms (3 quadradinhos). >120ms = bloqueio de ramo (BRDE ou BRFE) — a condução pelos ventrículos está retardada por um dos ramos do Feixe de His.'},
+  {t:'vof',q:'[V/F] A repolarização auricular aparece claramente no ECG como uma onda distinta após a onda P.',c:false,e:'FALSO. A repolarização auricular EXISTE mas é encoberta pelo complexo QRS (muito mais intenso). Por isso ela nunca é visível no ECG de rotina.'},
+  {t:'mc',q:'Qual derivação é a MELHOR para análise do ritmo cardíaco e por quê?',o:['V1 — por estar próxima ao nó SA','aVR — por ter ondas amplas','DII — onda P positiva, QRS nítido, alinhada ao eixo médio','aVF — por representar a parede inferior'],c:2,e:'DII é a derivação padrão para ritmo porque: onda P positiva e bem visível, QRS positivo e nítido, alinhada ao eixo médio normal (+60°). Usar DII para medir R-R e calcular FC.'},
+  {t:'mc',q:'O eixo elétrico médio NORMAL do coração é:',o:['0°','−30°','+60°','+120°'],c:2,e:'Eixo médio normal = +60° (dentro da faixa 0° a +90°). A isodifásica em aVL (−30°) indica eixo perpendicular = +60°. Teste rápido: DI positivo + aVF positivo = NORMAL.'},
+  // MAIS QUESTÕES — completando 70
+  {t:'mc',q:'A densidade máxima da água ocorre a:',o:['0°C','4°C','100°C','37°C'],c:1,e:'Densidade máxima da água = 4°C (= 1 g/mL). Abaixo de 4°C, a água se dilata (anomalia). A 0°C congela e o volume aumenta ~25%. Por isso o gelo flutua.'},
+  {t:'mc',q:'Qual sistema disperso apresenta Movimento Browniano e Efeito Tyndall?',o:['Solução verdadeira','Coloide','Suspensão','Todos os sistemas'],c:1,e:'Coloide (1–100nm): partículas grandes o suficiente para dispersar a luz (Tyndall) e em movimento aleatório constante (Browniano). Ex: plasma sanguíneo, gelatina.'},
+  {t:'mc',q:'A propriedade coligativa que é clinicamente mais importante no sangue é:',o:['Elevação do ponto de ebulição','Abaixamento crioscópico (ponto de congelamento)','Pressão osmótica','Abaixamento da pressão de vapor'],c:2,e:'A pressão osmótica é a propriedade coligativa mais clinicamente relevante — regula o movimento de água entre compartimentos (células, plasma, interstício). Base das soluções isotônicas, hipo e hipertônicas.'},
+  {t:'mc',q:'O sistema RENAL de regulação do pH age em quanto tempo?',o:['Segundos','2–3 minutos','24–30 horas','1 semana'],c:2,e:'Renal: 24–30 horas. É o mais lento mas o único que CORRIGE definitivamente o desequilíbrio. Buffer = segundos. Respiratório = 2–3 minutos. Renal = 24–30h.'},
+  {t:'mc',q:'A viscosidade do PLASMA em relação à água é de aproximadamente:',o:['1,0× (igual)','2–2,2×','3,5×','5×'],c:1,e:'Plasma = 2–2,2× mais viscoso que a água. Sangue completo = 3,5×. A diferença entre plasma e sangue completo se deve principalmente aos eritrócitos (hematócrito).'},
+  {t:'vof',q:'[V/F] O surfactante pulmonar é uma substância hidrofílica que atrai a água para os alvéolos.',c:false,e:'FALSO. O surfactante é ANFIPÁTICO — tem parte hidrofóbica (repele água) e parte hidrofílica. É justamente a parte hidrofóbica que se interpõe entre as moléculas de água na superfície alveolar, reduzindo a tensão superficial.'},
+  {t:'mc',q:'Qual íon é o principal responsável pelo PLATÔ (Fase 2) do potencial de ação cardíaco?',o:['Na⁺','K⁺','Ca²⁺','Cl⁻'],c:2,e:'Ca²⁺ entra pelos canais lentos tipo L durante 200–300ms → mantém o potencial positivo em platô. É essencial para a contração cardíaca. O platô impede tetania cardíaca (período refratário longo).'},
+  {t:'mc',q:'Qual das opções representa corretamente a sequência de condução cardíaca?',o:['Purkinje → Nó AV → Nó SA → His','Nó SA → Nó AV → His → Purkinje','Nó AV → Nó SA → Purkinje → His','His → Nó SA → Nó AV → Purkinje'],c:1,e:'Sequência correta: Nó SA → Nó AV (retardo 0,1s) → Feixe de His → Ramos direito e esquerdo → Fibras de Purkinje → miocárdio ventricular.'},
+  {t:'vof',q:'[V/F] O volume telediastólico (VTD) normal é de 50 mL.',c:false,e:'FALSO. VTD normal = 120 mL (volume máximo, ao final da diástole). 50 mL = volume telesistólico (VTS = residual após ejeção). Volume sistólico = VTD − VTS = 120 − 50 = 70 mL.'},
+  {t:'mc',q:'A Fração de Ejeção (FE) normal do ventrículo esquerdo é aproximadamente:',o:['30–40%','40–50%','58–60%','70–80%'],c:2,e:'FE normal ≈ 58–60% (VS/VTD = 70/120). FE <40% = disfunção sistólica grave (IC com FE reduzida). FE ≥50% com sintomas = IC com FE preservada (disfunção diastólica).'},
+  {t:'mc',q:'Qual é o principal componente do sistema buffer extracelular?',o:['Hemoglobina','Fosfato','Bicarbonato (HCO₃⁻)','Proteínas plasmáticas'],c:2,e:'HCO₃⁻ (bicarbonato) = principal buffer extracelular. Intracelularmente, o principal buffer é a hemoglobina (proteína). O bicarbonato forma o sistema tampão mais importante do plasma.'},
+  {t:'vof',q:'[V/F] O fluxo sanguíneo nos grandes vasos é normalmente turbulento.',c:false,e:'FALSO. O fluxo normal é LAMINAR em todos os vasos. O turbulento ocorre patologicamente em estenoses, ramificações em ângulo 90°, aterosclerose. Em condições normais, mesmo a aorta tem fluxo predominantemente laminar.'},
+  {t:'mc',q:'Qual é a causa do sopro cardíaco?',o:['Contração muscular vigorosa do coração','Fluxo turbulento do sangue','Fechamento das válvulas cardíacas','Abertura das válvulas cardíacas'],c:1,e:'Sopros = fluxo TURBULENTO. O fechamento das válvulas gera os ruídos normais (B1, B2). A contração muscular per se não gera som audível. Sopros indicam turbulência por valvopatia, estenose ou shunt.'},
+  {t:'mc',q:'O B1 (primeiro ruído cardíaco) corresponde a:',o:['Fechamento das válvulas aórtica e pulmonar','Abertura das válvulas mitral e tricúspide','Fechamento das válvulas mitral e tricúspide','Contração do miocárdio ventricular'],c:2,e:'B1 "TUM" = fechamento de mitral + tricúspide (válvulas AV) = início da sístole ventricular. Coincide com o complexo QRS no ECG. B2 "TÁ" = fechamento de aórtica + pulmonar = início da diástole.'},
+  {t:'vof',q:'[V/F] A Lei de Frank-Starling afirma que quanto maior o estiramento das fibras ventriculares na diástole, maior a força de contração na sístole.',c:true,e:'VERDADEIRO. Frank-Starling: ↑ estiramento (↑ VTD) → ↑ sobreposição actina-miosina → ↑ força (inotropismo) → ↑ VS. Funciona dentro dos limites fisiológicos. Base do mecanismo intrínseco de adaptação cardíaca.'},
+  {t:'mc',q:'Durante a sístole ventricular, quais válvulas estão ABERTAS?',o:['Mitral e tricúspide','Aórtica e pulmonar (semilunares)','Todas as válvulas abertas','Todas as válvulas fechadas'],c:1,e:'Sístole ventricular: válvulas semilunares (aórtica + pulmonar) ABERTAS → ejeção de sangue. Válvulas AV (mitral + tricúspide) FECHADAS → evitam refluxo para as aurículas.'},
+  {t:'mc',q:'Qual das seguintes afirmações sobre o Nó AV é CORRETA?',o:['Tem a maior frequência de disparo','Tem a condução mais rápida do coração','Retarda o impulso ~0,1s para aurículas terminarem antes dos ventrículos','Gera 60–100 PA/min como o Nó SA'],c:2,e:'Nó AV: retarda o impulso ~0,1s (0,03 m/s = mais lento). Isso garante que as aurículas terminem de contrair antes dos ventrículos ativarem. Frequência = 40–60/min (não 60–100).'},
+  {t:'vof',q:'[V/F] A onda P do ECG representa a despolarização de ambas as aurículas.',c:true,e:'VERDADEIRO. A onda P tem dois componentes: componente inicial = despolarização da aurícula DIREITA; componente final = despolarização da aurícula ESQUERDA. Condução interatrial pelo Fascículo de Bachmann.'},
+  {t:'mc',q:'Um paciente com DI positivo e aVF negativo apresenta:',o:['Eixo elétrico normal','Desvio do eixo para a esquerda','Desvio do eixo para a direita','Eixo extremo'],c:1,e:'DI(+) + aVF(−) = DESVIO ESQUERDO (0° a −90°). Normal = DI(+) aVF(+). Desvio direito = DI(−) aVF(+). Eixo extremo = DI(−) aVF(−). Causas de desvio esq: HVE, BRFE, IAM inferior.'},
+  {t:'vof',q:'[V/F] O QRS largo (>120ms) no ECG indica bloqueio de ramo ou condução ventricular aberrante.',c:true,e:'VERDADEIRO. QRS normal <120ms. QRS >120ms = condução ventricular lenta = bloqueio de ramo. O ventrículo é despolarizado de forma anômala.'},
+  // FRANK-STARLING
+  {t:'mc',q:'A Lei de Frank-Starling descreve que:',o:['↑ FC → ↑ força de contração','↑ estiramento das fibras na diástole → ↑ força de contração na sístole','↑ resistência vascular → ↑ débito cardíaco','↑ pós-carga → ↑ volume sistólico'],c:1,e:'Frank-Starling: ↑ VTD → ↑ estiramento → ↑ sobreposição actina-miosina → ↑ força (inotropismo) → ↑ VS. Mecanismo intrínseco que adapta a força ao volume recebido.'},
+  {t:'mc',q:'A pré-carga é determinada durante qual fase do ciclo cardíaco?',o:['Sístole ventricular','Sístole atrial','Diástole','Período refratário'],c:2,e:'Pré-carga = VTD = volume ao final da DIÁSTOLE. Enchimento passivo (80%) + contração auricular (20%). A pós-carga é que varia durante a sístole.'},
+  {t:'mc',q:'A pós-carga depende principalmente de:',o:['Volume de retorno venoso','Pressão da aorta + resistência vascular periférica','Frequência cardíaca','Contratilidade do miocárdio'],c:1,e:'Pós-carga = resistência à ejeção = pressão da aorta + RVP. É a resistência que o ventrículo precisa superar para abrir as válvulas semilunares e ejetar o sangue durante a sístole.'},
+  {t:'vof',q:'[V/F] A pré-carga é também chamada de sobrecarga de pressão.',c:false,e:'FALSO. Pré-carga = sobrecarga de VOLUME (retorno venoso). Pós-carga = sobrecarga de PRESSÃO (resistência vascular). Pegadinha clássica — não trocar os sinônimos!'},
+  {t:'mc',q:'Qual propriedade cardíaca é ajustada pela Lei de Frank-Starling?',o:['Cronotropismo','Dromotropismo','Inotropismo','Batmotropismo'],c:2,e:'Frank-Starling ajusta o INOTROPISMO — a força de contração. ↑ estiramento → ↑ sobreposição actina-miosina → ↑ força. Bainbridge é que ajusta o cronotropismo (FC).'},
+  {t:'vof',q:'[V/F] A Lei de Frank-Starling afirma que o estiramento das fibras ventriculares na diástole determina a força de contração na sístole.',c:true,e:'VERDADEIRO. Frank-Starling: ↑ VTD (diástole) → ↑ estiramento → ↑ força (sístole) → ↑ VS. Mecanismo intrínseco de auto-regulação cardíaca.'},
+  // FORCAS DE FRANK-STARLING
+  {t:'mc',q:'Quantos critérios/forças de Frank-Starling determinam o débito cardíaco?',o:['2','3','4','5'],c:2,e:'São 4: ① Pré-carga (retorno venoso), ② Pós-carga (RVP + pressão aorta), ③ Contratilidade (Ca²⁺ intracelular), ④ Frequência Cardíaca (NSA + Bainbridge + SNA). Todos determinam o DC.'},
+  {t:'mc',q:'A Contratilidade (3ª Força de Frank-Starling) depende principalmente de:',o:['Volume de retorno venoso','Resistência vascular periférica','Concentração de Ca²⁺ intracelular','Frequência cardíaca'],c:2,e:'Contratilidade = capacidade intrínseca de contração INDEPENDENTE da pré e pós-carga. Depende do Ca²⁺ intracelular: ↑ Ca²⁺ → liga à troponina C → libera sítios actina → ↑ força sem mudar VTD.'},
+  {t:'vof',q:'[V/F] A contratilidade é determinada pelo volume de sangue que chega ao ventrículo.',c:false,e:'FALSO. A contratilidade é INDEPENDENTE do volume (VTD). É determinada pelo Ca²⁺ intracelular — propriedade intrínseca do músculo. O que depende do VTD é a pré-carga (1ª Força F-S).'},
+  {t:'mc',q:'Qual é a diferença entre a LEI e as FORÇAS de Frank-Starling?',o:['São a mesma coisa','Lei = relação estiramento-força intrínseca; Forças = 4 critérios determinantes do DC','Lei é para exercício; Forças são para repouso','Não existe diferença clinicamente'],c:1,e:'Lei F-S: relação estiramento-força (mecanismo intrínseco mecânico). Forças F-S: os 4 critérios que determinam o DC (pré-carga, pós-carga, contratilidade, FC) — cada um independente.'},
+  // BAINBRIDGE
+  {t:'mc',q:'O Reflexo de Bainbridge regula qual propriedade cardíaca?',o:['Inotropismo','Dromotropismo','Cronotropismo','Batmotropismo'],c:2,e:'Bainbridge regula o CRONOTROPISMO — a frequência cardíaca. Frank-Starling regula o inotropismo (força). Bainbridge = aurícula direita → FC.'},
+  {t:'mc',q:'O mecanismo do Reflexo de Bainbridge é:',o:['↑ pressão ventricular → ↑ FC','↑ distensão da aurícula DIREITA → mecanorreceptores → ↑ FC','↑ distensão da aurícula ESQUERDA → ↑ força ventricular','↓ retorno venoso → ↑ FC'],c:1,e:'↑ sangue na aurícula DIREITA → ↑ distensão → mecanorreceptores → sinal ao bulbo → ↑ simpático ao NSA → ↑ FC.'},
+  {t:'mc',q:'Por que Bainbridge ocorre na aurícula DIREITA?',o:['É maior que a esquerda','Tem mais discos intercalares','Recebe o retorno venoso sistêmico pelas veias cavas','Tem conexão direta com o Nó SA'],c:2,e:'Aurícula DIREITA recebe o retorno venoso SISTÊMICO (veias cavas superior e inferior) — "sente" primeiro o aumento de volume. A esquerda recebe retorno pulmonar.'},
+  {t:'vof',q:'[V/F] O Reflexo de Bainbridge atua via sistema nervoso parassimpático para aumentar a FC.',c:false,e:'FALSO. Bainbridge atua via SIMPÁTICO para aumentar FC. O parassimpático (vagal) DIMINUI a FC. Bainbridge: mecanorreceptores AD → bulbo → ↑ simpático ao NSA → ↑ FC.'},
+  {t:'vof',q:'[V/F] Frank-Starling e Bainbridge são complementares — F-S ajusta a força e Bainbridge ajusta a frequência.',c:true,e:'VERDADEIRO. F-S (ventrículos) ajusta INOTROPISMO (força/VS). Bainbridge (aurícula direita) ajusta CRONOTROPISMO (FC). Juntos: DC pode ↑ de 5,6 → 20-25 L/min no exercício.'},
+  {t:'mc',q:'Qual a diferença fundamental entre Frank-Starling e Bainbridge?',o:['F-S ajusta FC; Bainbridge ajusta força','F-S ajusta força (inotropismo); Bainbridge ajusta FC (cronotropismo)','Ambos ajustam a mesma coisa','F-S é reflexo nervoso; Bainbridge é intrínseco'],c:1,e:'F-S: força (inotropismo), mecanismo intrínseco, ventrículos. Bainbridge: FC (cronotropismo), reflexo nervoso extrínseco, aurícula direita. Complementares — juntos aumentam o DC no exercício.'},
+];
+
+var score=0,answered=0;
+var LET=['A','B','C','D','E'];
+
+function renderQuiz(){
+  score=0;answered=0;
+  updateScore();
+  var body=document.getElementById('quiz-body');
+  body.innerHTML='';
+  qData.forEach(function(q,i){
+    var div=document.createElement('div');
+    div.className='qcard';
+    div.id='qc'+i;
+    var badge=q.t==='mc'?'<span class="qcard-badge mc">MÚLTIPLA ESCOLHA</span>':'<span class="qcard-badge vof">V O F</span>';
+    var opts='';
+    if(q.t==='mc'){
+      opts='<div class="mc-opts">';
+      q.o.forEach(function(o,j){opts+='<button class="mc-opt" onclick="pickMC('+i+','+j+')"><span class="mc-letter">'+LET[j]+'</span><span>'+o+'</span></button>';});
+      opts+='</div>';
+    } else {
+      opts='<div class="vof-row"><button class="vof-btn vb" onclick="pickVOF('+i+',true)">✓ VERDADEIRO</button><button class="vof-btn fb" onclick="pickVOF('+i+',false)">✗ FALSO</button></div>';
+    }
+    div.innerHTML='<div class="qcard-top"><span class="qcard-num">Q'+String(i+1).padStart(2,'0')+'</span>'+badge+'<span class="qcard-q">'+q.q.replace('[V/F] ','')+'</span></div>'+opts+'<div class="qres" id="qr'+i+'"></div><div class="qexpl" id="qe'+i+'">💡 '+q.e+'</div>';
+    body.appendChild(div);
+  });
+}
+
+function pickMC(qi,oi){
+  var card=document.getElementById('qc'+qi);
+  if(card.dataset.done) return;
+  card.dataset.done='1';
+  var q=qData[qi];
+  var btns=card.querySelectorAll('.mc-opt');
+  btns.forEach(function(b,j){
+    b.classList.add('done');
+    if(j===q.c) b.classList.add('correct');
+    if(j===oi&&oi!==q.c) b.classList.add('wrong');
+  });
+  var ok=oi===q.c;
+  if(ok) score++;
+  answered++;
+  showResult(qi,ok);
+}
+
+function pickVOF(qi,chosen){
+  var card=document.getElementById('qc'+qi);
+  if(card.dataset.done) return;
+  card.dataset.done='1';
+  var q=qData[qi];
+  card.querySelectorAll('.vof-btn').forEach(function(b){b.classList.add('done');});
+  var ok=chosen===q.c;
+  var vbtn=card.querySelector('.vb'),fbtn=card.querySelector('.fb');
+  if(ok){(chosen?vbtn:fbtn).classList.add('correct');}
+  else{(chosen?vbtn:fbtn).classList.add('wrong');(q.c?vbtn:fbtn).classList.add('correct');}
+  if(ok) score++;
+  answered++;
+  showResult(qi,ok);
+}
+
+function showResult(qi,ok){
+  updateScore();
+  var r=document.getElementById('qr'+qi);
+  r.className='qres show '+(ok?'ok':'err');
+  r.textContent=ok?'✅ Correto!':'❌ Incorreto';
+  document.getElementById('qe'+qi).classList.add('show');
+}
+
+function updateScore(){
+  var pct=answered?Math.round(score/answered*100):0;
+  document.getElementById('score-display').textContent=score;
+  document.getElementById('score-fill').style.width=(score/qData.length*100)+'%';
+  document.getElementById('pct-display').textContent=pct+'%';
+}
+
+function resetQuiz(){if(!confirm('Reiniciar o quiz?')) return;renderQuiz();}
+
+renderQuiz();
+renderPegadinhas();
+</script>
+
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
+</body>
+</html>
