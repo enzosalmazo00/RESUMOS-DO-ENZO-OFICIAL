@@ -11,13 +11,15 @@ var PY_IMG="data:image/webp;base64,UklGRrZMAABXRUJQVlA4IKpMAABwVAGdASpSAaQBPmEsk
 
 var JOGOS_BR=[
   {date:"13/06 (Sáb)",time:"18:00",t1:"Brasil",t2:"Marrocos",f1:"\ud83c\udde7\ud83c\uddf7",f2:"\ud83c\uddf2\ud83c\udde6",stad:"MetLife Stadium, Nova Jersey",score:"1 x 1",done:true},
-  {date:"19/06 (Sex)",time:"20:30",t1:"Brasil",t2:"Haiti",f1:"\ud83c\udde7\ud83c\uddf7",f2:"\ud83c\udded\ud83c\uddf9",stad:"Lincoln Financial Field, Filadélfia",score:null,done:false,next:true},
-  {date:"24/06 (Qua)",time:"18:00",t1:"Escócia",t2:"Brasil",f1:"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc73\udb40\udc63\udb40\udc74\udb40\udc7f",f2:"\ud83c\udde7\ud83c\uddf7",stad:"Hard Rock Stadium, Miami",score:null,done:false}
+  {date:"19/06 (Sex)",time:"20:30",t1:"Brasil",t2:"Haiti",f1:"\ud83c\udde7\ud83c\uddf7",f2:"\ud83c\udded\ud83c\uddf9",stad:"Lincoln Financial Field, Filadélfia",score:"3 x 0",done:true},
+  {date:"24/06 (Qua)",time:"19:00",t1:"Escócia",t2:"Brasil",f1:"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc73\udb40\udc63\udb40\udc74\udb40\udc7f",f2:"\ud83c\udde7\ud83c\uddf7",stad:"Hard Rock Stadium, Miami",score:"0 x 3",done:true},
+  {date:"29/06 (Seg)",time:"14:00",t1:"Brasil",t2:"Japão",f1:"\ud83c\udde7\ud83c\uddf7",f2:"\ud83c\uddef\ud83c\uddf5",stad:"NRG Stadium, Houston",score:null,done:false,next:true,fase:"16 avos"}
 ];
 var JOGOS_PY=[
   {date:"12/06 (Sex)",time:"21:00",t1:"EUA",t2:"Paraguai",f1:"\ud83c\uddfa\ud83c\uddf8",f2:"\ud83c\uddf5\ud83c\uddfe",stad:"SoFi Stadium, Los Angeles",score:"4 x 1",done:true},
-  {date:"20/06 (Sáb)",time:"00:00",t1:"Turquia",t2:"Paraguai",f1:"\ud83c\uddf9\ud83c\uddf7",f2:"\ud83c\uddf5\ud83c\uddfe",stad:"Levi's Stadium, San Francisco",score:null,done:false,next:true},
-  {date:"25/06 (Qui)",time:"22:00",t1:"Paraguai",t2:"Austrália",f1:"\ud83c\uddf5\ud83c\uddfe",f2:"\ud83c\udde6\ud83c\uddfa",stad:"Levi's Stadium, San Francisco",score:null,done:false}
+  {date:"20/06 (Sáb)",time:"00:00",t1:"Turquia",t2:"Paraguai",f1:"\ud83c\uddf9\ud83c\uddf7",f2:"\ud83c\uddf5\ud83c\uddfe",stad:"Levi's Stadium, San Francisco",score:"0 x 1",done:true},
+  {date:"25/06 (Qui)",time:"22:00",t1:"Paraguai",t2:"Austrália",f1:"\ud83c\uddf5\ud83c\uddfe",f2:"\ud83c\udde6\ud83c\uddfa",stad:"Levi's Stadium, San Francisco",score:"0 x 0",done:true},
+  {date:"29/06 (Seg)",time:"17:30",t1:"Alemanha",t2:"Paraguai",f1:"\ud83c\udde9\ud83c\uddea",f2:"\ud83c\uddf5\ud83c\uddfe",stad:"Gillette Stadium, Boston",score:null,done:false,next:true,fase:"16 avos"}
 ];
 var FRASES_BR=["Bora estudar! \ud83d\udcda","Você é craque! \u26bd","Tá voando! \ud83d\ude80","Não para não! \ud83d\udcaa","Gol de placa! \ud83e\udd45","Manda ver! \ud83d\udd25","Rumo à aprovação! \ud83c\udfc6","Confia no processo! \u2728","Golaço! \u26bd","Tá ON! \ud83d\udfe2"];
 var FRASES_PY=["¡Vamos a estudiar! \ud83d\udcda","¡Sos un crack! \u26bd","¡Dale con todo! \ud83d\ude80","¡No pares! \ud83d\udcaa","¡Golazo! \ud83e\udd45","¡Metele nomás! \ud83d\udd25","¡Rumbo al éxito! \ud83c\udfc6","¡Confiá en vos! \u2728","¡Hoy se gana! \u26bd","¡Estás ON! \ud83d\udfe2"];
@@ -120,8 +122,8 @@ function renderSelect(){
 <h2>Selecione sua Seleção!</h2>\
 <p>Aqui você torce e estuda ao mesmo tempo! \ud83c\udfc6\ud83d\udcda</p>\
 <div class="mc-opts">\
-<div class="mc-opt" data-c="br"><img src="'+BR_IMG+'"><div class="mc-opt-label">\ud83c\udde7\ud83c\uddf7 BRASIL</div><div class="mc-opt-grupo">Grupo C</div></div>\
-<div class="mc-opt" data-c="py"><img src="'+PY_IMG+'"><div class="mc-opt-label">\ud83c\uddf5\ud83c\uddfe PARAGUAY</div><div class="mc-opt-grupo">Grupo D</div></div>\
+<div class="mc-opt" data-c="br"><img src="'+BR_IMG+'"><div class="mc-opt-label">\ud83c\udde7\ud83c\uddf7 BRASIL</div><div class="mc-opt-grupo">1\u00ba Grupo C \u2713</div></div>\
+<div class="mc-opt" data-c="py"><img src="'+PY_IMG+'"><div class="mc-opt-label">\ud83c\uddf5\ud83c\uddfe PARAGUAY</div><div class="mc-opt-grupo">3\u00ba Grupo D \u2713</div></div>\
 </div></div></div>';
   panel.querySelectorAll(".mc-opt").forEach(function(el){
     el.addEventListener("click",function(){country=el.getAttribute("data-c");kicks=0;tab="game";render();});
@@ -132,7 +134,7 @@ function renderMain(){
   var img=country==="br"?BR_IMG:PY_IMG;
   var flag=country==="br"?"\ud83c\udde7\ud83c\uddf7":"\ud83c\uddf5\ud83c\uddfe";
   var name=country==="br"?"BRASIL":"PARAGUAY";
-  var grupo=country==="br"?"Grupo C":"Grupo D";
+  var grupo=country==="br"?"Grupo C \u2022 1\u00ba \u2713":"Grupo D \u2022 3\u00ba \u2713";
   
   panel.innerHTML='\
 <div class="mc-head">\
@@ -166,8 +168,8 @@ function renderCalendar(el){
     html+='<div class="mc-match-teams">'+j.f1+' '+j.t1+' '+(j.score?'<span class="mc-score">'+j.score+'</span>':'<span class="mc-vs">vs</span>')+' '+j.t2+' '+j.f2+'</div>';
     html+='<div class="mc-match-stad">'+j.stad+'</div></div>';
   });
-  if(country==="br") html+='<div class="mc-mata"><b>\ud83c\udfc6 Se classificar:</b><br>1\u00ba \u2192 29/06 14h vs 2\u00ba Grupo F (Houston)<br>2\u00ba \u2192 29/06 22h vs 1\u00ba Grupo F (Monterrey)</div>';
-  else html+='<div class="mc-mata"><b>\ud83c\udfc6 Se classificar:</b><br>1\u00ba \u2192 28/06 vs 2\u00ba Grupo C<br>2\u00ba \u2192 29/06 vs 1\u00ba Grupo C</div>';
+  if(country==="br") html+='<div class="mc-mata"><b>\ud83c\udfc6 CLASSIFICADO! 1\u00ba do Grupo C</b><br>\u26bd 16 avos: 29/06 14h vs Jap\u00e3o (Houston)</div>';
+  else html+='<div class="mc-mata"><b>\ud83c\udfc6 CLASSIFICADO! 3\u00ba do Grupo D</b><br>\u26bd 16 avos: 29/06 17h30 vs Alemanha (Boston)</div>';
   el.innerHTML=html;
 }
 
