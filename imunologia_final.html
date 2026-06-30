@@ -259,17 +259,69 @@ nav.tabs button.active{background:var(--accent4);color:var(--bg);border-color:va
 <div class="sec-divider"><h3>Células da Imunidade Inata</h3></div>
 <table class="compare-table">
 <tr><th>Célula</th><th>Função Principal</th><th>Detalhes Importantes</th></tr>
-<tr><td><strong>Neutrófilo (PMN)</strong></td><td>Fagocitose — 1ª célula a chegar</td><td>40–60% dos leucócitos. Pus = neutrófilos mortos. Faz NET (armadilha extracelular de DNA). Vida ~48h.</td></tr>
-<tr><td><strong>Macrófago</strong></td><td>Fagocitose + APC + piroptose</td><td>Deriva do monócito. Piroptose = morte inflamatória do MACRÓFAGO (não neutrófilo). Sistema mononuclear.</td></tr>
-<tr><td><strong>Mastócito</strong></td><td>Libera mediadores químicos (histamina)</td><td>Fixos nos tecidos. Liga IgE na membrana → desgranulação.</td></tr>
-<tr><td><strong>Célula NK</strong></td><td>Elimina células tumorais/infectadas</td><td>NÃO precisa de MHC. Elimina por citotoxicidade (perforina/granzimas), NÃO por fagocitose.</td></tr>
-<tr><td><strong>Dendrítica clássica</strong></td><td>APC profissional — ativa Lt virgens</td><td>Captura Ag nos tecidos → migra ao linfonodo → ativa CD4+ e CD8+.</td></tr>
+<tr><td><strong>Neutrófilo (PMN)</strong></td><td>Fagocitose — 1ª célula a chegar</td><td>40–60% dos leucócitos. Pus = neutrófilos mortos. Faz NET (armadilha extracelular de DNA). Vida ~48h. Sistema POLIMORFONUCLEAR.</td></tr>
+<tr><td><strong>Macrófago</strong></td><td>Fagocitose + APC + piroptose</td><td>Deriva do monócito. Piroptose = morte inflamatória do MACRÓFAGO (não neutrófilo). Sistema MONONUCLEAR. M1 (clássica, destrói) vs M2 (alternativa, repara tecido).</td></tr>
+<tr><td><strong>Mastócito</strong></td><td>Libera mediadores químicos (histamina)</td><td>FIXO nos tecidos (basófilo é o circulante — não confundir). Liga IgE na membrana → desgranulação.</td></tr>
+<tr><td><strong>Basófilo</strong></td><td>Circulante, similar ao mastócito</td><td>&lt;1% dos leucócitos — o menos produzido de todos. Possui receptor para IgE.</td></tr>
+<tr><td><strong>Eosinófilo</strong></td><td>Combate parasitas e alergias</td><td>1–4% dos leucócitos. SEM capacidade fagocítica clássica. Degranula contra helmintos.</td></tr>
+<tr><td><strong>Célula NK</strong></td><td>Elimina células tumorais/infectadas</td><td>NÃO precisa de MHC. Elimina por citotoxicidade (perforina/granzimas), NÃO por fagocitose. Estimula a fagocitose de outras células.</td></tr>
+<tr><td><strong>Dendrítica clássica</strong></td><td>APC profissional — ativa Lt virgens</td><td>Captura Ag nos tecidos → migra ao linfonodo → ativa CD4+ e CD8+. Une o inato com o adaptativo.</td></tr>
 <tr><td><strong>Dendrítica plasmocitoide</strong></td><td>Produção de interferon tipo I</td><td>Especializada em IFN-α e IFN-β → resposta antiviral.</td></tr>
-<tr><td><strong>Eosinófilo</strong></td><td>Combate parasitas e alergias</td><td>SEM capacidade fagocítica clássica. Degranula contra helmintos.</td></tr>
+<tr><td><strong>Célula de Langerhans</strong></td><td>APC específica da pele</td><td>Célula dendrítica residente da epiderme.</td></tr>
 </table>
 <div class="info-block danger">
   <div class="label">⚠️ ARMADILHA DE PROVA</div>
-  <p><strong>"NK elimina por fagocitose"</strong> → FALSO. NK usa citotoxicidade (perforina/granzimas). <strong>"Piroptose ocorre no neutrófilo"</strong> → FALSO. Piroptose = macrófago. <strong>"PAMPs são reconhecidos pela imunidade adaptativa"</strong> → FALSO. PAMPs → imunidade INATA (TLRs).</p>
+  <p><strong>"NK elimina por fagocitose"</strong> → FALSO. NK usa citotoxicidade (perforina/granzimas). <strong>"Piroptose ocorre no neutrófilo"</strong> → FALSO. Piroptose = macrófago. <strong>"PAMPs são reconhecidos pela imunidade adaptativa"</strong> → FALSO. PAMPs → imunidade INATA (TLRs). <strong>"Mastócito é circulante"</strong> → FALSO. Mastócito = FIXO; quem circula é o basófilo.</p>
+</div>
+
+<div class="sec-divider"><h3>ILC — Células Linfocíticas Inatas (espelhos do TH)</h3></div>
+<div class="info-block purple">
+  <p>Linfócitos do sistema INATO, sem receptor diverso de antígeno — "espelham" os subtipos TH do adaptativo: <strong>ILC-1 ↔ Th1</strong> (bactérias/vírus, IFN-γ) · <strong>ILC-2 ↔ Th2</strong> (alergias/helmintos) · <strong>ILC-3 ↔ Th17</strong> (fungos).</p>
+</div>
+
+<div class="sec-divider"><h3>Órgãos do Sistema Imune</h3></div>
+<table class="compare-table">
+<tr><th>Tipo</th><th>Órgão</th><th>Função</th></tr>
+<tr><td rowspan="2"><strong>Primários</strong> (geradores)</td><td>Medula óssea</td><td>Produz TODAS as células sanguíneas. Linfócito B é produzido E maturado aqui.</td></tr>
+<tr><td>Timo</td><td>Maturação do linfócito T (T = Timo). Involui após a puberdade.</td></tr>
+<tr><td rowspan="3"><strong>Secundários</strong> (periféricos)</td><td>Linfonodos</td><td>Filtram a linfa — onde linfócitos encontram antígenos e são ativados.</td></tr>
+<tr><td>Baço</td><td>Filtra o sangue de microrganismos.</td></tr>
+<tr><td>MALT</td><td>Tecido linfático associado a mucosas (intestino, respiratório).</td></tr>
+</table>
+<div class="info-block success">
+  <div class="label">Regra</div>
+  <p>Linfócito <strong>B</strong> → produzido E maturado na <strong>medula óssea</strong>. Linfócito <strong>T</strong> → produzido na medula, mas <strong>MATURA NO TIMO</strong>.</p>
+</div>
+
+<div class="sec-divider"><h3>Valores Normais de Leucócitos no Sangue</h3></div>
+<table class="compare-table">
+<tr><th>Célula</th><th>%</th><th>Se alterado</th></tr>
+<tr><td>Neutrófilos</td><td>40–60%</td><td>↑ = infecção bacteriana</td></tr>
+<tr><td>Linfócitos</td><td>20–40%</td><td>↑ = infecção viral · &lt;12% = possível HIV (CD4 &lt;400/mm³)</td></tr>
+<tr><td>Monócitos</td><td>2–8%</td><td>↑ = inflamação crônica</td></tr>
+<tr><td>Eosinófilos</td><td>1–4%</td><td>↑ = parasitas/vermes ou alergia</td></tr>
+<tr><td>Basófilos</td><td>&lt;1%</td><td>O menos produzido de todos</td></tr>
+</table>
+
+<div class="sec-divider"><h3>Comparativo: Neutrófilo vs Macrófago vs Linfócito</h3></div>
+<table class="compare-table">
+<tr><th>Característica</th><th>Neutrófilo</th><th>Macrófago</th><th>Linfócito</th></tr>
+<tr><td>Sistema</td><td>Inato</td><td>Inato</td><td>Adaptativo</td></tr>
+<tr><td>Nome alternativo</td><td>PMN</td><td>Mononuclear</td><td>T ou B</td></tr>
+<tr><td>Vida</td><td>~48h</td><td>Semanas/anos</td><td>Meses/anos</td></tr>
+<tr><td>Chegada</td><td>1º a chegar</td><td>2º (mais lento)</td><td>Último (dias)</td></tr>
+<tr><td>NET</td><td>Sim</td><td>Não</td><td>Não</td></tr>
+<tr><td>Piroptose</td><td>Não</td><td>Sim</td><td>Não</td></tr>
+<tr><td>APC</td><td>Não</td><td>Sim</td><td>LB sim</td></tr>
+</table>
+
+<div class="sec-divider"><h3>Inflamação — Sequência da Resposta a uma Doença</h3></div>
+<div class="info-block warn">
+  <p><strong>1.</strong> Barreiras físicas tentam bloquear → <strong>2.</strong> Células sentinelas (macrófago, mastócito, dendrítica) detectam via TLR/PAMP/DAMP → <strong>3.</strong> Citocinas (TNF, IL-1, IL-6) liberadas → vasodilatação → <strong>4.</strong> Neutrófilos chegam primeiro (diapedese) → <strong>5.</strong> Macrófagos fagocitam e viram APC → <strong>6.</strong> Dendríticas migram ao linfonodo e ativam LT → <strong>7.</strong> Expansão clonal → <strong>8.</strong> Resposta adaptativa elimina o patógeno → <strong>9.</strong> Memória.</p>
+</div>
+<div class="info-block">
+  <div class="label">Citocinas-chave</div>
+  <p><strong>TNF e IL-1</strong> ativam o endotélio. <strong>IL-6</strong> causa febre e proteínas de fase aguda no fígado. <strong>IL-12</strong> estimula NK e diferenciação de linfócitos T.</p>
 </div>
 
 <div class="sec-divider"><h3>Diapedese — Como o leucócito sai do vaso</h3></div>
@@ -713,6 +765,8 @@ function toggleProva(hdr){
 // ── FLASHCARDS ──
 var fcData=[
   {cat:'Inato',q:'Quais células da imunidade inata estão SEMPRE ativas?',a:'Neutrófilos, macrófagos, NK, mastócitos e células dendríticas. Respondem imediatamente sem necessidade de ativação prévia.'},
+  {cat:'Inato',q:'Onde o linfócito B e o linfócito T maturam?',a:'Linfócito B → produzido E maturado na MEDULA ÓSSEA. Linfócito T → produzido na medula, mas MATURA NO TIMO.'},
+  {cat:'Inato',q:'Quais são os valores normais de neutrófilos e linfócitos no sangue?',a:'Neutrófilos: 40–60% (↑ = bacteriana). Linfócitos: 20–40% (↑ = viral; <12% pode indicar HIV).'},
   {cat:'Inato',q:'O que são PAMPs e onde são reconhecidos?',a:'Padrões Moleculares Associados a Patógenos. Reconhecidos pelos receptores Toll-like (TLRs) da imunidade INATA.'},
   {cat:'Inato',q:'TLR 4 reconhece o quê? E o TLR 5?',a:'TLR 4 → LPS de bactérias Gram–. TLR 5 → flagelina. Macete: TLR 4=Gram-4, TLR 5=Fla5elina.'},
   {cat:'Inato',q:'NK mata células tumorais como? Por fagocitose?',a:'NÃO! NK usa CITOTOXICIDADE (perforina e granzimas). Não faz fagocitose. Reconhece células que perderam MHC I.'},
@@ -807,6 +861,38 @@ var qData=[
   {t:'vof',q:'[V/F] Hipersensibilidade Tipo II: antígeno é circulante e efeito é sistêmico.',c:false,e:'FALSO. Tipo II: antígeno FIXO na célula → efeito LOCALIZADO. Tipo III: imunocomplexos CIRCULANTES → sistêmico.'},
   {t:'vof',q:'[V/F] O tumor pode evadir o TCD8+ diminuindo a expressão de MHC I.',c:true,e:'VERDADEIRO. ↓ MHC I → TCD8+ não reconhece. NK reconhece AUSÊNCIA de MHC I e elimina.'},
   {t:'vof',q:'[V/F] A terapia CAR-T modifica geneticamente células T do paciente para atacar células tumorais.',c:true,e:'VERDADEIRO. CAR-T: extração e modificação genética de células T → reintroduzidas para atacar tumores especificamente.'},
+  {t:'vof',q:'[V/F] A imunidade passiva gera memória imunológica duradoura.',c:false,e:'FALSO. A imunidade passiva é TEMPORÁRIA e não gera memória, pois o organismo recebe anticorpos prontos sem produzi-los.'},
+  {t:'vof',q:'[V/F] A imunidade humoral é mediada por linfócitos T e atua contra patógenos intracelulares.',c:false,e:'FALSO. Humoral = linfócito B = anticorpos = extracelular. Celular = linfócito T = intracelular. Clássica pegadinha de prova!'},
+  {t:'vof',q:'[V/F] O mastócito é uma célula circulante no sangue.',c:false,e:'FALSO. O mastócito é FIXO nos tecidos. O BASÓFILO é que circula no sangue — diferença que cai na prova!'},
+  {t:'vof',q:'[V/F] O neutrófilo se renova a cada 48 horas e o pus é formado por neutrófilos mortos.',c:true,e:'VERDADEIRO. O neutrófilo é o mais produzido e o que mais morre, renovando-se a cada 48h. Pus = neutrófilos mortos.'},
+  {t:'vof',q:'[V/F] Os basófilos constituem menos de 1% dos leucócitos.',c:true,e:'VERDADEIRO. Basófilos = menos de 1% dos leucócitos — a célula de defesa menos produzida de todas.'},
+  {t:'vof',q:'[V/F] As células de Langerhans são células dendríticas especializadas na defesa da pele.',c:true,e:'VERDADEIRO. Células de Langerhans = células dendríticas residentes da epiderme (pele). Cai na prova!'},
+  {t:'vof',q:'[V/F] As selectinas formam uma ligação forte que inicia a transmigração do leucócito.',c:false,e:'FALSO. Selectinas = ligação FRACA (rolamento). São as INTEGRINAS que formam a ligação FORTE necessária para a transmigração.'},
+  {t:'vof',q:'[V/F] A via das lectinas do complemento necessita de manose, exclusiva de fungos e bactérias.',c:true,e:'VERDADEIRO. A MBL (lectina ligadora de manose) reconhece manose terminal, exclusiva de fungos e bactérias — humanos não a possuem.'},
+  {t:'vof',q:'[V/F] A proteína C3b do complemento causa inflamação, enquanto C3a faz opsonização.',c:false,e:'FALSO. É ao contrário: C3a causa inflamação e C3b faz opsonização (marca a bactéria com "pregos" para o macrófago). Pegadinha clássica!'},
+  {t:'vof',q:'[V/F] O choque anafilático e o choque anafilactoide são clinicamente idênticos e o tratamento é o mesmo.',c:true,e:'VERDADEIRO. Anafilático (IgE/histamina) e anafilactoide (celular, sem IgE) são clinicamente idênticos. Tratamento para ambos: adrenalina + anti-histamínico + corticoide.'},
+  {t:'mc',q:'Qual célula une o sistema inato com o sistema adaptativo?',o:['Neutrófilo','Mastócito','Célula dendrítica','Eosinófilo'],c:2,e:'Células DENDRÍTICAS unem inato com adaptativo — capturam antígenos, migram ao linfonodo e ativam linfócitos T virgens.'},
+  {t:'mc',q:'Nome do processo em que o leucócito atravessa a parede do vaso para entrar no tecido infectado:',o:['Fagocitose','Quimiotaxia','Diapedese / Transmigração','Opsonização'],c:2,e:'DIAPEDESE (transmigração) = processo em que o leucócito atravessa o endotélio vascular e entra no tecido. Requer selectinas, integrinas e quimiocinas.'},
+  {t:'mc',q:'O sistema fagocítico MONONUCLEAR é composto por quais células?',o:['Neutrófilos','Macrófagos e monócitos','Eosinófilos e basófilos','Linfócitos T e B'],c:1,e:'Sistema mononuclear = macrófagos e monócitos. Neutrófilos = sistema POLIMORFONUCLEAR (PMN). Distinção que cai na prova!'},
+  {t:'mc',q:'O que é opsonização?',o:['Morte celular explosiva do macrófago','Formação de redes de DNA pelo neutrófilo','Marcação de patógenos com moléculas para facilitar a fagocitose','Ativação dos linfócitos T pelos APCs'],c:2,e:'Opsonização = "marcar" patógenos com moléculas (opsoninas como C3b, IgG) para que os fagócitos os reconheçam e fagocitem com mais eficiência.'},
+  {t:'mc',q:'Qual célula é responsável pela defesa imunológica da pele?',o:['Mastócito','Basófilo','Célula de Langerhans','Neutrófilo'],c:2,e:'A CÉLULA DE LANGERHANS é a APC específica da pele (epiderme). Captura antígenos e os apresenta a linfócitos T.'},
+  {t:'mc',q:'A proteína C5b do sistema complemento é responsável por:',o:['Causar inflamação','Opsonização da bactéria','Formar o Complexo de Ataque à Membrana (CAM) — lise','Ativar linfócitos B'],c:2,e:'C5b inicia a formação do COMPLEXO DE ATAQUE À MEMBRANA (CAM) com C6-C9, formando um poro que causa a lise da bactéria.'},
+  {t:'mc',q:'Qual subtipo de linfócito T helper (CD4+) age principalmente contra fungos?',o:['Th1','Th2','Th17','T Regulador'],c:2,e:'Th17 age contra fungos e bactérias extracelulares (via IL-17/IL-22). Th1 = bactérias/vírus intracelulares. Th2 = parasitas/alergias.'},
+  {t:'mc',q:'Qual é o papel das células ILC-2 no sistema inato?',o:['Defesa contra bactérias e vírus','Defesa contra alergias e helmintos','Defesa contra fungos','Produção de anticorpos'],c:1,e:'ILC-2 são o análogo inato dos linfócitos Th2 — agem contra alergias e helmintos. ILC-1 ↔ Th1. ILC-3 ↔ Th17.'},
+  {t:'mc',q:'Qual é a função principal do linfócito T CD4+ Helper?',o:['Matar diretamente células infectadas','Produzir anticorpos','Guiar/coordenar a resposta imune, ativar macrófagos e ajudar o LB','Fagocitar microrganismos'],c:2,e:'O LT CD4+ (Helper) GUIA a resposta imune: ativa macrófagos, ajuda o LB a produzir anticorpos de alta qualidade e coordena a resposta adaptativa.'},
+  {t:'mc',q:'Em qual via de ativação do complemento é necessário o reconhecimento de manose na superfície do patógeno?',o:['Via Clássica','Via Alternativa','Via das Lectinas','Todas as vias'],c:2,e:'A VIA DAS LECTINAS usa a MBL (lectina ligadora de manose) para reconhecer manose terminal em fungos e bactérias — exclusiva desses microrganismos.'},
+  {t:'mc',q:'Qual é a porcentagem normal de linfócitos no sangue e o que significa um valor acima desse limite?',o:['10–20%; indica infecção bacteriana','20–40%; acima indica possível infecção viral','40–60%; acima indica inflamação crônica','5–10%; acima indica alergia'],c:1,e:'Linfócitos = 20–40% dos leucócitos. Valores >40% sugerem infecção VIRAL. Se <12%, pode indicar HIV (CD4 <400/mm³).'},
+  {t:'mc',q:'Qual é a função do linfócito T Regulador?',o:['Produzir anticorpos','Matar células infectadas','Frear/suprimir a resposta imune para evitar excessos e autoimunidade','Ativar macrófagos contra bactérias'],c:2,e:'O LT Regulador SUPRIME a resposta imune para evitar excessos que poderiam lesar tecidos próprios — essencial para prevenir autoimunidade.'},
+  {t:'mc',q:'O que acontece quando o sistema adaptativo é ativado pelo mesmo antígeno pela SEGUNDA vez?',o:['A resposta é mais lenta, pois o sistema precisa recomeçar','A resposta é mais rápida e forte por causa da memória imunológica','Não há diferença entre a 1ª e a 2ª resposta','O sistema inato assume completamente'],c:1,e:'Na 2ª exposição, a MEMÓRIA IMUNOLÓGICA (linfócitos de memória) gera resposta mais rápida, forte e duradoura — princípio das vacinas.'},
+  {t:'mc',q:'Qual é a função principal do linfócito TH1?',o:['Produzir IgE contra helmintos','Ativar mastócitos nas mucosas','Combater microrganismos intracelulares liberando IFN-γ','Estimular o peristaltismo intestinal'],c:2,e:'TH1 combate microrganismos intracelulares mediante IFN-γ, que ativa macrófagos pela via clássica (M1).'},
+  {t:'mc',q:'Qual é o tratamento de urgência correto para o choque anafilático E o choque anafilactoide?',o:['Somente anti-histamínico, pois ambos são histamínicos','Somente corticoide sistêmico','Adrenalina (epinefrina) + anti-histamínico + corticoide','Adrenalina só no anafilático; corticoide só no anafilactoide'],c:2,e:'Ambos se tratam igual: adrenalina + anti-histamínico + corticoide, pois clinicamente são idênticos mesmo com mecanismos diferentes.'},
+  {t:'mc',q:'Qual dos seguintes transplantes NÃO apresenta rejeição sob nenhuma circunstância?',o:['Transplante xenogênico (porco→humano)','Transplante alogênico com compatibilidade de 70%','Transplante singênico entre gêmeos idênticos','Transplante alogênico de medula óssea'],c:2,e:'O transplante SINGÊNICO (entre gêmeos idênticos) não apresenta rejeição, pois o MHC é idêntico.'},
+  {t:'mc',q:'A proteína FoxP3 é marcadora da diferenciação de qual linfócito?',o:['Linfócito TH17, que produz IL-17','Linfócito TH1, que libera IFN-γ','Linfócito TCD8+, que se torna citotóxico','Linfócito T Regulador, que controla a resposta imune'],c:3,e:'A proteína FoxP3 determina a diferenciação do linfócito T Regulador, cuja função é evitar exageros do sistema imune.'},
+  {t:'mc',q:'Qual é a interleucina liberada pelo TH17 que recruta neutrófilos?',o:['IL-4','IL-5','IFN-γ','IL-22'],c:3,e:'IL-22 (TH17) recruta neutrófilos. IL-17 (também TH17) recruta monócitos. IL-4/IL-5 são do TH2; IFN-γ é do TH1.'},
+  {t:'mc',q:'A eritroblastose fetal é um exemplo de hipersensibilidade tipo:',o:['Tipo I, por IgE e mastócitos','Tipo III, por complexos imunológicos','Tipo II, por IgG materna que ataca hemácias do feto Rh+','Tipo IV, tardia mediada por TH1'],c:2,e:'A eritroblastose fetal é tipo II: mãe Rh– sensibilizada produz IgG anti-Rh que cruza a placenta e ataca os eritrócitos do feto Rh+.'},
+  {t:'mc',q:'O ADCC (Citotoxicidade Dependente de Anticorpos) atua principalmente ativando:',o:['A célula NK, que elimina células marcadas por anticorpos','Macrófagos exclusivamente pela via alternativa','Linfócitos TH2 para produzir mais IgE','Neutrófilos no tecido inflamado'],c:0,e:'O ADCC ativa a célula NK: os anticorpos marcam células alteradas/infectadas e a NK as elimina.'},
+  {t:'mc',q:'Qual linfócito determina o isotipo do anticorpo produzido, sendo que ativado por TH2 leva à produção de IgE?',o:['Linfócito T Regulador','Linfócito TCD8+ citotóxico','Linfócito TH17','Linfócito T Folicular (Tfh)'],c:3,e:'O linfócito T Folicular (Tfh) determina o isotipo do anticorpo: ativado por TH1 → IgG; ativado por TH2 → IgE.'},
+  {t:'mc',q:'Na miastenia gravis (hipersensibilidade tipo II), o anticorpo atua:',o:['Estimulando receptores de TSH na tireoide','Atacando hemácias do feto em gestações Rh incompatíveis','Ativando mastócitos via IgE','Bloqueando receptores de acetilcolina na placa motora, causando paralisia flácida'],c:3,e:'Na miastenia gravis, anticorpos bloqueiam receptores de acetilcolina → a placa motora não se contrai → paralisia flácida.'},
 ];
 
 var score=0, answered=0;
