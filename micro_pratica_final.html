@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Microbiología Práctica — Examen Final | Resumos do Enzo</title>
+<script>window.PAGE_KEY = "micro_pratica_final";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>
+  document.addEventListener("authReady", function () {
+    document.documentElement.style.visibility = "visible";
+  });
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a0d14;--surface:#111827;--surface2:#1a2236;--surface3:#232d42;--border:#2a3550;--text:#e2e8f0;--text2:#94a3b8;--accent:#e74c3c;--accent2:#f9c94f;--green:#22c55e;--cyan:#06b6d4;--purple:#a855f7;--orange:#f97316;--pink:#ec4899;--correct:#22c55e;--wrong:#ef4444;--radius:12px;--font-display:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'JetBrains Mono',monospace}
@@ -134,12 +143,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="hero">
 <h1>🔬 Microbiología Práctica</h1>
 <p class="sub">Examen Final — Casos Clínicos Interactivos</p>
-<span class="badge">26 microorganismos · 52 casos clínicos</span>
+<span class="badge">26 microorganismos · 75 casos clínicos</span>
 </div>
 
 <div class="stats-bar">
 <div class="stat-item"><div class="num" id="totalOrgs">26</div><div class="lbl">Microorganismos</div></div>
-<div class="stat-item"><div class="num" id="totalCases">52</div><div class="lbl">Casos Clínicos</div></div>
+<div class="stat-item"><div class="num" id="totalCases">75</div><div class="lbl">Casos Clínicos</div></div>
 <div class="stat-item"><div class="num" id="scoreDisplay">0/0</div><div class="lbl">Aciertos</div></div>
 </div>
 
@@ -182,14 +191,17 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Cocos G+ en racimos (estafilococos)</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Cocos G+ en racimos (como uvas), inmóviles, no esporulados</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram positivo: pared gruesa de peptidoglicana retiene el cristal violeta → se tiñe de azul/violeta</div></div>
 <div class="ficha-item"><div class="fi-label">Coagulasa</div><div class="fi-value">Positiva (diferencia de otros Staphylo)</div></div>
-<div class="ficha-item"><div class="fi-label">Catalasa</div><div class="fi-value">Positiva</div></div>
-<div class="ficha-item"><div class="fi-label">Medio selectivo</div><div class="fi-value">Agar Manitol Salado (fermentador)</div></div>
-<div class="ficha-item"><div class="fi-label">Factores de virulencia</div><div class="fi-value">Proteína A, toxinas (TSST-1, enterotoxinas, PVL, exfoliatina), coagulasa, hemolisinas</div></div>
-<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Abscesos, celulitis, endocarditis, osteomielitis, neumonía, SST, impétigo, intoxicación alimentaria, SSSS</div></div>
-<div class="ficha-item"><div class="fi-label">Resistencia</div><div class="fi-value">MRSA (resistente a meticilina/oxacilina) → Vancomicina</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Oxacilina (sensible) / Vancomicina (MRSA)</div></div>
+<div class="ficha-item"><div class="fi-label">Catalasa</div><div class="fi-value">Positiva (diferencia de Streptococcus, que es negativo)</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Agar Manitol Salado (fermentador, colonias amarillas) + coagulasa + DNAsa positiva</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Proteína A (se une al Fc de IgG, bloquea opsonización), coagulasa (forma coágulo de fibrina protector), toxinas (TSST-1 superantígeno, enterotoxinas, PVL — necrosis leucocitaria, exfoliatina), hemolisinas, biofilm</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Hemocultivo, pus/exudado de absceso, aspirado articular, esputo (según foco)</div></div>
+<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Abscesos, celulitis, endocarditis, osteomielitis, neumonía, síndrome de shock tóxico, impétigo, intoxicación alimentaria, SSSS</div></div>
+<div class="ficha-item"><div class="fi-label">Resistencia</div><div class="fi-value">MRSA (resistente a meticilina/oxacilina por gen mecA) → tratar con Vancomicina</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Oxacilina/Cefazolina si es sensible (MSSA); Vancomicina, Linezolid o Daptomicina si es MRSA — siempre confirmar con antibiograma/sensibilidad antes de elegir</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Higiene de manos, descolonización nasal con mupirocina en portadores, técnica aséptica en heridas/catéteres, aislamiento de contacto en MRSA</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
@@ -200,6 +212,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="diff-dx teoria-content">
 <h4>⚖️ Diagnóstico Diferencial</h4>
 <p><strong>vs S. epidermidis:</strong> epidermidis es coagulasa negativo, asociado a prótesis/catéteres. <strong>vs S. pyogenes:</strong> pyogenes es estreptococo (cadenas), catalasa negativo.</p>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (4)</h4>
+<p><strong>1) Endocarditis aguda</strong> (válvulas nativas, especialmente en usuarios de drogas IV). <strong>2) Embolias sépticas</strong> a pulmón/cerebro/bazo desde focos endovasculares. <strong>3) Osteomielitis/artritis séptica</strong> por diseminación hematógena. <strong>4) Síndrome de shock tóxico</strong> (TSST-1, fiebre + hipotensión + rash + falla multiorgánica).</p>
 </div>
 
 <div class="case-card" data-case="aureus1">
@@ -227,6 +243,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: b) Exfoliatina.</strong> Síndrome de Piel Escaldada Estafilocócica (SSSS) — ampollas flácidas, Nikolsky +, SIN afectación mucosa (diferencia de NET/Stevens-Johnson). La toxina exfoliativa cliva desmogleína 1 en el estrato granuloso. TSST-1 causa Síndrome de Shock Tóxico.</div>
 </div>
+
+<div class="case-card" data-case="aureus3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Mujer de 27 años, usuaria de tampones, acude a urgencias con fiebre de 39.8°C de inicio súbito, hipotensión (PA 80/50 mmHg), vómitos, diarrea acuosa y un exantema eritematoso difuso tipo "quemadura solar" en tronco y extremidades. Al examen: mucosas hiperémicas, confusión leve. Laboratorio: plaquetas 90.000, creatinina elevada, transaminasas elevadas. Se retira un tampón olvidado en la vagina. Cultivo vaginal: cocos Gram positivos en racimos, catalasa y coagulasa positivos.</div>
+<div class="case-q">¿Cuál es el diagnóstico, el mecanismo fisiopatológico y la conducta terapéutica inicial?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="aureus3q1">a) Síndrome de shock tóxico estafilocócico por TSST-1 (superantígeno) — retirar el foco, reanimación con líquidos IV, clindamicina (inhibe la síntesis de toxina) + oxacilina/vancomicina según sensibilidad</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="aureus3q1">b) Shock séptico por E. coli — solo ceftriaxona</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="aureus3q1">c) Reacción alérgica a tampón — antihistamínicos</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="aureus3q1">d) Fiebre reumática — penicilina benzatínica</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> Cuadro clásico de <strong>síndrome de shock tóxico estafilocócico</strong> asociado a tampón: fiebre alta, hipotensión, rash difuso (con posterior descamación palmoplantar), afectación multiorgánica (≥3 sistemas: renal, hepático, hematológico, SNC). La <strong>TSST-1</strong> actúa como superantígeno, activando masivamente linfocitos T sin necesidad de procesamiento antigénico clásico → tormenta de citocinas. Conducta: <strong>retirar el foco</strong> (tampón), reanimación agresiva con líquidos, y antibioticoterapia combinando un agente <strong>antiestafilocócico</strong> (oxacilina o vancomicina según sensibilidad/MRSA) con <strong>clindamicina</strong>, que no mata más rápido pero <strong>suprime la síntesis de la toxina</strong> (efecto antitoxina) por inhibición de la síntesis proteica ribosomal.</div>
+</div>
 </div>
 </div>
 
@@ -241,12 +270,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Cocos G+ en racimos</div></div>
-<div class="ficha-item"><div class="fi-label">Coagulasa</div><div class="fi-value">Negativa</div></div>
-<div class="ficha-item"><div class="fi-label">Novobiocina</div><div class="fi-value">Resistente (diferencia de S. epidermidis)</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Cocos G+ en racimos (como uvas)</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram positivo: pared gruesa de peptidoglicana retiene el cristal violeta → se tiñe de azul/violeta</div></div>
+<div class="ficha-item"><div class="fi-label">Coagulasa</div><div class="fi-value">Negativa (≠ S. aureus)</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Novobiocina RESISTENTE (diferencia de S. epidermidis, que es sensible)</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Adhesinas de superficie (hemaglutinina que se une al urotelio), ureasa (menor que Proteus, contribuye a la irritación urinaria), resistencia a novobiocina (marcador diagnóstico)</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Urocultivo de chorro medio</div></div>
 <div class="ficha-item"><div class="fi-label">Enfermedad principal</div><div class="fi-value">ITU en mujeres jóvenes sexualmente activas (2ª causa después de E. coli)</div></div>
-<div class="ficha-item"><div class="fi-label">Diagnóstico</div><div class="fi-value">Urocultivo + resistencia a novobiocina</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">TMP-SMX, Nitrofurantoína, Fluoroquinolonas</div></div>
+<div class="ficha-item"><div class="fi-label">Diagnóstico</div><div class="fi-value">Urocultivo + catalasa positiva + coagulasa negativa + resistencia a novobiocina (nitritos suelen ser negativos, no tiene nitrato reductasa)</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">TMP-SMX, Nitrofurantoína, Fluoroquinolonas — confirmar sensibilidad con antibiograma, puede haber resistencia a algunos betalactámicos</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Hidratación adecuada, buena higiene íntima, orinar después de la relación sexual</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
@@ -256,6 +289,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="diff-dx teoria-content">
 <h4>⚖️ Diagnóstico Diferencial</h4>
 <p><strong>vs E. coli:</strong> E. coli es bacilo G−, 1ª causa de ITU. <strong>vs S. epidermidis:</strong> epidermidis es sensible a novobiocina y causa infecciones de prótesis/catéteres.</p>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (3)</h4>
+<p><strong>1) Pielonefritis</strong> (si la ITU baja no se trata a tiempo). <strong>2) ITU recurrente</strong> (frecuente en mujeres jóvenes sexualmente activas). <strong>3) Bacteriemia</strong> (rara, más en pacientes con factores de riesgo).</p>
 </div>
 
 <div class="case-card" data-case="sapro1">
@@ -297,17 +334,24 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Cocos G+ en racimos</div></div>
-<div class="ficha-item"><div class="fi-label">Coagulasa</div><div class="fi-value">Negativa</div></div>
-<div class="ficha-item"><div class="fi-label">Novobiocina</div><div class="fi-value">Sensible (≠ S. saprophyticus)</div></div>
-<div class="ficha-item"><div class="fi-label">Factor clave</div><div class="fi-value">Formación de BIOFILM en dispositivos</div></div>
-<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Endocarditis de válvula protésica, infección de catéter, infección de prótesis articular</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Vancomicina + Rifampicina ± retiro del dispositivo</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Cocos G+ en racimos (como uvas)</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram positivo: pared gruesa de peptidoglicana retiene el cristal violeta → se tiñe de azul/violeta</div></div>
+<div class="ficha-item"><div class="fi-label">Coagulasa</div><div class="fi-value">Negativa (≠ S. aureus)</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Novobiocina SENSIBLE (≠ S. saprophyticus, que es resistente)</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">BIOFILM (slime polisacárido extracelular que se adhiere a superficies plásticas/protésicas y protege de antibióticos y del sistema inmune)</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">2 hemocultivos de sitios separados (para diferenciar infección real de contaminación de piel), cultivo de punta de catéter</div></div>
+<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Endocarditis de válvula protésica, infección de catéter, infección de prótesis articular, mediastinitis post-esternotomía</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Vancomicina + Rifampicina ± retiro del dispositivo — con frecuencia meticilino-resistente (SCoN-R), siempre confirmar sensibilidad con antibiograma</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Técnica aséptica en la inserción de catéteres/prótesis, antibiótico profiláctico perioperatorio, cuidado y recambio oportuno de catéteres</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
 <span class="kw">Coagulasa −</span><span class="kw gold">Novobiocina SENSIBLE</span>
 <span class="kw">BIOFILM</span><span class="kw gold">Prótesis / Catéter</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (4)</h4>
+<p><strong>1) Endocarditis de válvula protésica</strong> (principal causa en <1 año post-cirugía). <strong>2) Bacteriemia/sepsis asociada a catéter.</strong> <strong>3) Infección de prótesis articular.</strong> <strong>4) Mediastinitis</strong> post-esternotomía.</p>
 </div>
 
 <div class="case-card" data-case="epid1">
@@ -350,13 +394,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
 <div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Cocos G+ en cadenas</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram positivo: pared gruesa de peptidoglicana retiene el cristal violeta → se tiñe de azul/violeta</div></div>
 <div class="ficha-item"><div class="fi-label">Lancefield</div><div class="fi-value">Grupo A</div></div>
-<div class="ficha-item"><div class="fi-label">Hemólisis</div><div class="fi-value">β-hemolítico</div></div>
-<div class="ficha-item"><div class="fi-label">Catalasa</div><div class="fi-value">Negativa</div></div>
-<div class="ficha-item"><div class="fi-label">Sensibilidad</div><div class="fi-value">Bacitracina SENSIBLE / PYR +</div></div>
-<div class="ficha-item"><div class="fi-label">Toxinas</div><div class="fi-value">Estreptolisina O/S, exotoxina pirogénica (SpeA), hialuronidasa, estreptocinasa</div></div>
-<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Faringitis, escarlatina, impétigo, erisipela, celulitis, fascitis necrotizante, SST estreptocócico</div></div>
-<div class="ficha-item"><div class="fi-label">Complicaciones no supurativas</div><div class="fi-value">Fiebre Reumática (post-faríngea) y GNPE (post-faríngea/cutánea)</div></div>
+<div class="ficha-item"><div class="fi-label">Hemólisis</div><div class="fi-value">β-hemolítico (halo claro completo)</div></div>
+<div class="ficha-item"><div class="fi-label">Catalasa</div><div class="fi-value">Negativa (diferencia de Staphylococcus)</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Bacitracina SENSIBLE / PYR + (diferencia de S. agalactiae, que es resistente a bacitracina y PYR−)</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Proteína M (antifagocítica, base del tipado), cápsula de ácido hialurónico (mimetismo, no inmunogénica), estreptolisina O/S, exotoxina pirogénica SpeA (superantígeno), hialuronidasa, estreptocinasa</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Exudado faríngeo, hemocultivo, aspirado de tejido (fascitis), ASLO/anti-DNasa B en suero (retrospectivo)</div></div>
+<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Faringitis, escarlatina, impétigo, erisipela, celulitis, fascitis necrotizante, síndrome de shock tóxico estreptocócico</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Penicilina (aún universalmente sensible, no se ha descrito resistencia) + Clindamicina en infecciones graves/toxina-mediadas (inhibe síntesis de toxina); confirmar alergia antes de elegir</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Tratamiento completo de faringitis para evitar Fiebre Reumática, no exprimir/manipular lesiones cutáneas, aislamiento de contacto en fascitis necrotizante</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
@@ -368,6 +415,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="diff-dx teoria-content">
 <h4>⚖️ Diagnóstico Diferencial</h4>
 <p><strong>vs S. agalactiae (B):</strong> agalactiae es resistente a bacitracina, PYR−, CAMP+, causa infección neonatal. <strong>vs S. aureus:</strong> aureus es catalasa+, cocos en racimos.</p>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (4)</h4>
+<p><strong>1) Fiebre reumática</strong> (post-faríngea, mimetismo molecular con miocardio/válvulas — Criterios de Jones). <strong>2) Glomerulonefritis post-estreptocócica</strong> (post-faríngea o post-cutánea, por depósito de inmunocomplejos). <strong>3) Fascitis necrotizante</strong> (emergencia quirúrgica). <strong>4) Síndrome de shock tóxico estreptocócico</strong> (SpeA superantígeno).</p>
 </div>
 
 <div class="case-card" data-case="pyog1">
@@ -395,6 +446,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: c) Fascitis necrotizante.</strong> Dolor desproporcionado + progresión rápida + crepitación + necrosis + shock = fascitis necrotizante. Es una <strong>emergencia quirúrgica</strong>. El desbridamiento quirúrgico es la prioridad. ATB: Penicilina + Clindamicina (inhibe producción de toxinas). S. pyogenes (Grupo A) es la causa principal.</div>
 </div>
+
+<div class="case-card" data-case="pyog3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Niña de 8 años tuvo faringoamigdalitis hace 3 semanas, tratada de forma incompleta (abandonó el antibiótico a los 3 días por mejoría). Ahora presenta poliartritis migratoria (rodillas, tobillos), fiebre de 38.5°C, un soplo sistólico nuevo en foco mitral y nódulos subcutáneos indoloros en codos. Laboratorio: ASLO muy elevado, PCR y VSG elevadas. ECG: intervalo PR prolongado.</div>
+<div class="case-q">¿Cuál es el diagnóstico, los criterios que lo sustentan y la conducta terapéutica/preventiva?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="pyog3q1">a) Fiebre reumática aguda (Criterios de Jones: poliartritis migratoria + carditis + nódulos subcutáneos, mayores; PR prolongado, menor) — tratar con penicilina y luego profilaxis secundaria con penicilina benzatínica mensual</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="pyog3q1">b) Artritis séptica — drenaje articular únicamente</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="pyog3q1">c) Lupus eritematoso sistémico — corticoides</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="pyog3q1">d) Endocarditis infecciosa aguda — vancomicina empírica</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> Cuadro clásico de <strong>fiebre reumática aguda</strong>, complicación no supurativa post-faríngea por <strong>mimetismo molecular</strong>: anticuerpos contra la proteína M de S. pyogenes reaccionan de forma cruzada con antígenos del miocardio, válvulas, articulaciones y núcleos caudado/subtalámico. Cumple <strong>Criterios de Jones</strong> (2 mayores: poliartritis migratoria + carditis, más nódulos subcutáneos; 1 menor: PR prolongado), con evidencia de infección previa (ASLO elevado). El tratamiento antibiótico erradica el foco residual, pero la clave a largo plazo es la <strong>profilaxis secundaria con penicilina benzatínica</strong> (cada 3-4 semanas, por años, para prevenir recurrencias que dañan aún más las válvulas). Este caso también ilustra por qué <strong>nunca se debe abandonar el tratamiento antibiótico</strong> de una faringitis estreptocócica antes de completarlo.</div>
+</div>
 </div>
 </div>
 
@@ -410,19 +474,26 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
 <div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Cocos G+ en cadenas</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram positivo: pared gruesa de peptidoglicana retiene el cristal violeta → se tiñe de azul/violeta</div></div>
 <div class="ficha-item"><div class="fi-label">Lancefield</div><div class="fi-value">Grupo B</div></div>
 <div class="ficha-item"><div class="fi-label">Hemólisis</div><div class="fi-value">β-hemolítico</div></div>
-<div class="ficha-item"><div class="fi-label">Pruebas</div><div class="fi-value">CAMP +, Hipurato +, Bacitracina RESISTENTE, PYR −</div></div>
-<div class="ficha-item"><div class="fi-label">Colonización</div><div class="fi-value">Tracto vaginal y rectal (20-30% mujeres)</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">CAMP +, Hipurato +, Bacitracina RESISTENTE, PYR − (diferencia de S. pyogenes)</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Cápsula polisacárida (antifagocítica, base de los serotipos — el III es el más asociado a meningitis neonatal), hemolisina/citolisina β, proteína de superficie Rib</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Hisopado vaginal/rectal (screening sem 35-37), hemocultivo y LCR del neonato, urocultivo</div></div>
+<div class="ficha-item"><div class="fi-label">Colonización</div><div class="fi-value">Tracto vaginal y rectal (20-30% de mujeres)</div></div>
 <div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Sepsis neonatal precoz/tardía, meningitis neonatal, neumonía neonatal, endometritis puerperal, ITU en embarazadas</div></div>
-<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Screening vaginal/rectal sem 35-37 → profilaxis intraparto con Penicilina IV</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Penicilina G / Ampicilina</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Screening vaginal/rectal semana 35-37 → profilaxis intraparto con Penicilina IV (o Ampicilina)</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Penicilina G / Ampicilina (sigue siendo universalmente sensible); confirmar alergia a betalactámicos antes de elegir alternativa</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
 <span class="kw">Grupo B Lancefield</span><span class="kw gold">CAMP +</span>
 <span class="kw">Hipurato +</span><span class="kw gold">Neonato</span>
 <span class="kw">Bacitracina RESISTENTE</span><span class="kw">Screening sem 35-37</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (4)</h4>
+<p><strong>1) Sepsis neonatal precoz</strong> (<7 días, adquirida por vía ascendente/parto). <strong>2) Sepsis neonatal tardía</strong> (7 días-3 meses, incluye meningitis). <strong>3) Meningitis neonatal</strong> (secuelas neurológicas). <strong>4) Endometritis puerperal/corioamnionitis</strong> en la madre.</p>
 </div>
 
 <div class="case-card" data-case="agal1">
@@ -450,6 +521,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: b)</strong> Bacteriuria por GBS en embarazada = <strong>colonización significativa</strong>. Requiere tratamiento de la bacteriuria Y profilaxis intraparto obligatoria (no necesita screening adicional). CAMP+ y bacitracina resistente confirman Grupo B.</div>
 </div>
+
+<div class="case-card" data-case="agal3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Recién nacido a término, previamente sano tras un alta hospitalaria sin incidencias, es traído a los 15 días de vida por rechazo del alimento, irritabilidad, fontanela abombada y un episodio de convulsión tónico-clónica. La madre relata que el screening vaginal/rectal a las 36 semanas fue negativo. Punción lumbar: LCR turbio, pleocitosis con predominio de PMN, glucosa baja, proteínas elevadas. Gram del LCR: cocos Gram positivos en cadenas.</div>
+<div class="case-q">¿Cómo se clasifica este cuadro, por qué ocurrió pese al screening negativo y cuál es el tratamiento?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="agal3q1">a) Sepsis/meningitis neonatal tardía por S. agalactiae — el screening negativo no descarta adquisición posterior (colonización intermitente o transmisión horizontal); tratar con Ampicilina + Gentamicina (o Penicilina + aminoglucósido) por vía IV según protocolo de meningitis neonatal</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="agal3q1">b) Meningitis viral — solo manejo de soporte</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="agal3q1">c) Sepsis precoz por E. coli — cefotaxima sola</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="agal3q1">d) Encefalopatía hipóxico-isquémica — no requiere antibiótico</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> A diferencia de la <strong>sepsis precoz</strong> (<7 días, transmisión vertical intraparto, prevenible con profilaxis intraparto), la <strong>sepsis/meningitis tardía</strong> (7 días a 3 meses) por GBS <strong>no se previene con el screening ni la profilaxis intraparto</strong>, ya que puede originarse de transmisión horizontal (contacto con la madre u otros cuidadores) después del nacimiento — por eso el screening negativo prenatal no descarta el diagnóstico. Clínicamente se manifiesta más como <strong>meningitis</strong> que la forma precoz (que predomina como sepsis/neumonía). El tratamiento empírico combina un betalactámico con un aminoglucósido hasta confirmar sensibilidad, y luego se puede desescalar a Penicilina/Ampicilina si el germen es sensible, como suele ocurrir con GBS.</div>
+</div>
 </div>
 </div>
 
@@ -464,18 +548,25 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Diplococos G+ lanceolados (forma de llama)</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Diplococos G+ lanceolados, extremos puntiagudos "en llama de vela"</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram positivo: pared gruesa de peptidoglicana retiene el cristal violeta → se tiñe de azul/violeta</div></div>
 <div class="ficha-item"><div class="fi-label">Hemólisis</div><div class="fi-value">α-hemolítico (halo verdoso)</div></div>
-<div class="ficha-item"><div class="fi-label">Pruebas</div><div class="fi-value">Optoquina SENSIBLE, Bilis SOLUBLE, Quellung +</div></div>
-<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Cápsula polisacárida (principal), neumolisina, IgA proteasa</div></div>
+<div class="ficha-item"><div class="fi-label">Pruebas de diferenciación</div><div class="fi-value">Optoquina SENSIBLE (≠ otros α-hemolíticos como S. viridans, resistente), Bilis SOLUBLE (lisis por autolisina activada por bilis), Quellung + (hinchazón capsular con antisuero)</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Cápsula polisacárida (principal — antifagocítica), neumolisina (citotóxica, forma poros), IgA proteasa (evade IgA secretora de mucosas), adhesinas (colonización nasofaríngea)</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Esputo, hemocultivo, LCR (meningitis), líquido pleural, antígeno urinario</div></div>
 <div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Neumonía (1ª causa NAC), meningitis (adultos), otitis media, sinusitis</div></div>
-<div class="ficha-item"><div class="fi-label">Vacunas</div><div class="fi-value">PCV13 (conjugada), PPSV23 (polisacárida)</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Penicilina G si es SENSIBLE; si hay resistencia (alteración de PBP) usar ceftriaxona/cefotaxima, o vancomicina + cefalosporina en meningitis — siempre pedir antibiograma</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Vacunas PCV13/PCV15/PCV20 (conjugada) y PPSV23 (polisacárida) — niños <2 años, adultos >65 años, esplenectomizados e inmunocomprometidos</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
 <span class="kw gold">Diplococos lanceolados</span><span class="kw">α-hemolítico</span>
 <span class="kw gold">Optoquina SENSIBLE</span><span class="kw">Bilis SOLUBLE</span>
 <span class="kw">Cápsula</span><span class="kw gold">1ª causa NAC</span><span class="kw">Quellung</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (4)</h4>
+<p><strong>1) Meningitis</strong> (1ª causa en adultos, alto riesgo en esplenectomizados por falta de opsonización capsular). <strong>2) Otitis media aguda</strong> (principal causa en niños). <strong>3) Sinusitis.</strong> <strong>4) Bacteriemia/sepsis con CID</strong> en pacientes de alto riesgo (asplenia, VIH).</p>
 </div>
 
 <div class="case-card" data-case="pneumo1">
@@ -503,6 +594,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: c)</strong> El bazo es esencial para la fagocitosis de bacterias encapsuladas (neumococo, H. influenzae, meningococo). Pacientes asplénicos tienen riesgo de <strong>sepsis fulminante</strong> (OPSI). Deben recibir vacunas contra encapsulados y pueden necesitar profilaxis con penicilina.</div>
 </div>
+
+<div class="case-card" data-case="pneumo3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Niña de 3 años, sin vacunación completa, presenta otalgia derecha, fiebre de 39°C e irritabilidad de 2 días. Al otoscopio: membrana timpánica abombada y eritematosa. Se maneja con amoxicilina, pero 5 días después la fiebre persiste, aparece cefalea intensa, vómitos y letargia. Punción lumbar: LCR turbio, PMN elevados, glucosa baja. Cultivo de LCR: diplococos Gram positivos lanceolados, optoquina sensibles, resistentes a la penicilina por antibiograma (CIM elevada).</div>
+<div class="case-q">¿Cuál es la complicación, por qué falló el tratamiento inicial y cuál es la conducta correcta?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="pneumo3q1">a) Meningitis por S. pneumoniae resistente a penicilina (alteración de las PBP) — cambiar a Vancomicina + Ceftriaxona (± corticoide) y ajustar según antibiograma</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="pneumo3q1">b) Meningitis viral — continuar solo con amoxicilina</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="pneumo3q1">c) Otitis persistente sin complicación — aumentar la dosis de amoxicilina oral</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="pneumo3q1">d) Absceso cerebral — solo drenaje quirúrgico, sin antibiótico</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> La otitis media aguda no tratada/mal controlada por S. pneumoniae puede progredir a <strong>meningitis</strong> por contigüidad. Este caso muestra un neumococo con <strong>resistencia a la penicilina</strong> (por alteración de las proteínas fijadoras de penicilina — PBP —, no por betalactamasa), que explica la falla del tratamiento oral inicial. En meningitis con sospecha o confirmación de resistencia, el esquema empírico/dirigido debe combinar <strong>Vancomicina + una cefalosporina de 3ª generación (Ceftriaxona/Cefotaxima)</strong>, ajustando según el antibiograma. Se recomienda además corticoide (dexametasona) antes o junto con la primera dosis de antibiótico para reducir secuelas neurológicas. Este caso refuerza la importancia de <strong>siempre verificar la sensibilidad</strong> antes de asumir que la penicilina será eficaz.</div>
+</div>
 </div>
 </div>
 
@@ -521,14 +625,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Diplococos G− en forma de riñón/grano de café (intracelulares)</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Diplococos G− en forma de riñón/grano de café (intracelulares en PMN)</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram negativo: pared fina con poca peptidoglicana → no retiene el cristal violeta al decolorar, se tiñe de rosa/rojo con safranina</div></div>
 <div class="ficha-item"><div class="fi-label">Oxidasa</div><div class="fi-value">Positiva</div></div>
-<div class="ficha-item"><div class="fi-label">Medio</div><div class="fi-value">Thayer-Martin (agar chocolate + antibióticos selectivos)</div></div>
-<div class="ficha-item"><div class="fi-label">Fermentación</div><div class="fi-value">Solo glucosa (NO maltosa)</div></div>
-<div class="ficha-item"><div class="fi-label">Factores virulencia</div><div class="fi-value">Pili (variación antigénica), proteína Opa, IgA proteasa, LOS, β-lactamasa</div></div>
-<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Uretritis, cervicitis, EPI, artritis séptica (adulto joven), oftalmia neonatorum, faringitis</div></div>
-<div class="ficha-item"><div class="fi-label">Diagnóstico</div><div class="fi-value">Gram (diplococos intracelulares), NAAT, cultivo Thayer-Martin</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Ceftriaxona IM + Azitromicina (siempre tratar Chlamydia concomitante)</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Medio Thayer-Martin (agar chocolate + antibióticos selectivos); fermenta SOLO glucosa (NO maltosa) — diferencia de N. meningitidis</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Pili tipo IV (adhesión y variación antigénica constante, evita inmunidad), proteína Opa (adhesión íntima), LOS (lipooligosacárido, endotoxina), IgA proteasa, β-lactamasa (resistencia a penicilina)</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Secreción uretral/cervical/rectal/faríngea, líquido articular (en DGI), NAAT de orina</div></div>
+<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Uretritis, cervicitis, enfermedad pélvica inflamatoria, artritis séptica (adulto joven), oftalmia neonatorum, faringitis, infección gonocócica diseminada</div></div>
+<div class="ficha-item"><div class="fi-label">Diagnóstico</div><div class="fi-value">Gram (diplococos intracelulares), NAAT (prueba de elección), cultivo en Thayer-Martin</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Ceftriaxona IM (dosis única) + Azitromicina VO (cubre coinfección por Chlamydia). Penicilina NO se usa: alta tasa de resistencia por β-lactamasa — siempre pensar en sensibilidad/resistencia local</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Preservativo, tamizaje en personas sexualmente activas de riesgo, tratamiento de parejas sexuales, profilaxis ocular con eritromicina en recién nacidos</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
@@ -539,6 +645,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="diff-dx teoria-content">
 <h4>⚖️ Diagnóstico Diferencial</h4>
 <p><strong>vs N. meningitidis:</strong> meningitidis fermenta glucosa Y maltosa, causa meningitis, NO ETS. <strong>vs Chlamydia:</strong> Chlamydia causa uretritis NO purulenta (secreción mucosa/acuosa).</p>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (4)</h4>
+<p><strong>1) Enfermedad pélvica inflamatoria</strong> (riesgo de infertilidad y embarazo ectópico). <strong>2) Infección gonocócica diseminada</strong> (artritis + tenosinovitis + dermatitis). <strong>3) Oftalmia neonatorum</strong> (ceguera si no se trata, transmisión en el canal de parto). <strong>4) Epididimitis</strong> en el hombre.</p>
 </div>
 
 <div class="case-card" data-case="gono1">
@@ -566,6 +676,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: a)</strong> EPI + artritis = infección gonocócica diseminada (DGI). N. gonorrhoeae es la <strong>causa más frecuente de artritis séptica en adultos jóvenes sexualmente activos</strong>. Puede presentar la tríada: tenosinovitis + dermatitis (pápulas/pústulas) + artritis migratoria.</div>
 </div>
+
+<div class="case-card" data-case="gono3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Recién nacido de 3 días de vida, parto vaginal domiciliario sin controles prenatales, presenta secreción ocular purulenta bilateral abundante con edema palpebral marcado. La madre refiere flujo vaginal los últimos meses del embarazo que no fue evaluado. Gram de la secreción ocular: diplococos Gram negativos intracelulares.</div>
+<div class="case-q">¿Cuál es el diagnóstico, la gravedad de no tratarlo y qué falló en la prevención?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="gono3q1">a) Oftalmia neonatorum por N. gonorrhoeae — riesgo de perforación corneal y ceguera; faltó control prenatal con tamizaje/tratamiento materno y profilaxis ocular neonatal con eritromicina</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="gono3q1">b) Conjuntivitis alérgica — antihistamínico tópico</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="gono3q1">c) Conjuntivitis viral por herpes — aciclovir tópico</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="gono3q1">d) Dacriocistitis congénita — masaje del conducto lagrimal</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> La <strong>oftalmia neonatorum gonocócica</strong> se adquiere por paso a través del canal de parto de una madre infectada no tratada, y se presenta típicamente en los primeros 2-5 días de vida con secreción purulenta abundante y edema palpebral — es una <strong>emergencia oftalmológica</strong>, ya que sin tratamiento puede progresar a úlcera corneal, perforación y ceguera. El tratamiento es <strong>Ceftriaxona sistémica</strong> (no solo tópico) más lavados oculares con solución salina. La prevención tiene dos pilares que fallaron en este caso: <strong>1)</strong> el tamizaje y tratamiento de ETS durante el control prenatal, y <strong>2)</strong> la <strong>profilaxis ocular universal</strong> con pomada de eritromicina al nacer, independientemente del riesgo materno.</div>
+</div>
 </div>
 </div>
 
@@ -580,20 +703,26 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Diplococos G− en grano de café</div></div>
-<div class="ficha-item"><div class="fi-label">Fermentación</div><div class="fi-value">Glucosa Y Maltosa (≠ gonococo)</div></div>
-<div class="ficha-item"><div class="fi-label">Cápsula</div><div class="fi-value">Polisacárida (serogrupos A, B, C, Y, W-135)</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Diplococos G− en grano de café/riñón, intracelulares</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram negativo: pared fina con poca peptidoglicana → no retiene el cristal violeta, se tiñe de rosa/rojo con safranina</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Fermenta Glucosa Y Maltosa (≠ gonococo, que solo fermenta glucosa); oxidasa positiva</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Cápsula polisacárida (antifagocítica, base de los serogrupos A, B, C, Y, W-135), LOS/endotoxina (responsable del shock y CID), pili e IgA proteasa</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">LCR, hemocultivo, raspado de lesiones petequiales</div></div>
 <div class="ficha-item"><div class="fi-label">Transmisión</div><div class="fi-value">Gotitas respiratorias, portadores nasofaríngeos</div></div>
-<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Meningitis, meningococcemia, Waterhouse-Friderichsen (hemorragia adrenal)</div></div>
-<div class="ficha-item"><div class="fi-label">Factores riesgo</div><div class="fi-value">Deficiencia de complemento (C5-C9, MAC), asplenia, hacinamiento</div></div>
-<div class="ficha-item"><div class="fi-label">Profilaxis contactos</div><div class="fi-value">Rifampicina, Ciprofloxacina o Ceftriaxona</div></div>
-<div class="ficha-item"><div class="fi-label">Vacunas</div><div class="fi-value">Conjugada ACWY, recombinante serogrupo B</div></div>
+<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Meningitis, meningococcemia, síndrome de Waterhouse-Friderichsen (hemorragia adrenal)</div></div>
+<div class="ficha-item"><div class="fi-label">Factores de riesgo</div><div class="fi-value">Deficiencia de complemento (C5-C9, MAC), asplenia, hacinamiento (dormitorios, cuarteles)</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Penicilina G o Ceftriaxona (empírico hasta confirmar sensibilidad; en zonas con resistencia a penicilina usar cefalosporina de 3ª)</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Vacunas conjugada ACWY y recombinante serogrupo B; profilaxis de contactos cercanos con Rifampicina, Ciprofloxacina o Ceftriaxona</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
 <span class="kw gold">Glucosa + Maltosa</span><span class="kw">Petequias/Púrpura</span>
 <span class="kw gold">Waterhouse-Friderichsen</span><span class="kw">Deficiencia C5-C9</span>
 <span class="kw">Profilaxis Rifampicina</span><span class="kw gold">Cápsula</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (4)</h4>
+<p><strong>1) Meningococcemia fulminante</strong> con CID. <strong>2) Síndrome de Waterhouse-Friderichsen</strong> (hemorragia adrenal bilateral → insuficiencia suprarrenal aguda). <strong>3) Shock séptico</strong> por endotoxina (LOS). <strong>4) Secuelas neurológicas</strong> (sordera, déficit cognitivo) en sobrevivientes de meningitis.</p>
 </div>
 
 <div class="case-card" data-case="mening1">
@@ -621,6 +750,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: b)</strong> La deficiencia de componentes terminales del complemento (C5-C9) impide la formación del <strong>MAC (Complejo de Ataque a Membrana)</strong>, esencial para lisar Neisseria. Estos pacientes tienen infecciones meningocócicas recurrentes. ¡Meningitis recurrente = investigar complemento!</div>
 </div>
+
+<div class="case-card" data-case="mening3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Estudiante de 19 años que vive en residencia universitaria es traído a urgencias por fiebre de 12 horas de evolución, cefalea intensa y un rash purpúrico que se extendió rápidamente en las últimas 2 horas. Al examen: hipotensión (PA 70/40), extremidades frías, tiempo de llenado capilar >4 segundos. Se toma hemocultivo y se inicia Ceftriaxona empírica de inmediato, sin esperar la punción lumbar (contraindicada por inestabilidad hemodinámica). El compañero de cuarto está asintomático.</div>
+<div class="case-q">¿Cuál es la conducta correcta respecto al tratamiento y a la protección de los contactos cercanos?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="mening3q1">a) El inicio inmediato de antibiótico empírico fue correcto (no se debe retrasar por estudios); el compañero de cuarto (contacto cercano) debe recibir quimioprofilaxis con Rifampicina, Ciprofloxacina o Ceftriaxona, independientemente de estar asintomático</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="mening3q1">b) Se debió esperar la punción lumbar antes de dar antibiótico</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="mening3q1">c) El compañero de cuarto no necesita ninguna medida al estar asintomático</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="mening3q1">d) Solo se debe notificar a las autoridades sanitarias sin dar profilaxis a nadie</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> Este caso ilustra una <strong>meningococcemia fulminante con shock séptico</strong>: la clínica (fiebre + púrpura + hipotensión de rápida progresión) es una emergencia donde el <strong>antibiótico nunca debe retrasarse</strong> por estudios diagnósticos, y la punción lumbar está contraindicada en pacientes hemodinámicamente inestables (riesgo de herniación) — se toma hemocultivo y se inicia tratamiento empírico de inmediato. Es fundamental recordar que <strong>N. meningitidis es de notificación obligatoria</strong> y que todo <strong>contacto cercano</strong> (convivientes, compañeros de cuarto, personal de salud expuesto a secreciones respiratorias sin protección) debe recibir <strong>quimioprofilaxis</strong> lo antes posible, incluso estando asintomático, porque puede ser portador nasofaríngeo y transmitir la bacteria o desarrollar la enfermedad.</div>
+</div>
 </div>
 </div>
 
@@ -639,11 +781,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G− intracelular (cuerpos de Donovan)</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G− intracelular, pleomórfico, encapsulado</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram negativo (se ve mejor con Giemsa o Wright en la biopsia, resaltando los cuerpos de Donovan dentro de macrófagos)</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Cápsula (resiste la fagocitosis, permite sobrevivir dentro de macrófagos), invade y se replica intracelularmente formando los cuerpos de Donovan</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Biopsia/raspado de la lesión con tinción de Giemsa o Wright (aplastamiento tisular — "tissue crush prep")</div></div>
 <div class="ficha-item"><div class="fi-label">Enfermedad</div><div class="fi-value">Donovanosis (Granuloma Inguinal)</div></div>
-<div class="ficha-item"><div class="fi-label">Lesión</div><div class="fi-value">Úlcera genital INDOLORA, granulomatosa, sangra al contacto, sin adenopatía</div></div>
-<div class="ficha-item"><div class="fi-label">Diagnóstico</div><div class="fi-value">Biopsia: cuerpos de Donovan (dentro de macrófagos), NO se cultiva</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Azitromicina (mínimo 3 semanas)</div></div>
+<div class="ficha-item"><div class="fi-label">Lesión</div><div class="fi-value">Úlcera genital INDOLORA, granulomatosa (beefy-red), sangra al contacto, sin adenopatía</div></div>
+<div class="ficha-item"><div class="fi-label">Diagnóstico</div><div class="fi-value">Biopsia con cuerpos de Donovan (dentro de macrófagos, aspecto "alfiler de seguridad"); NO se cultiva de rutina</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Azitromicina (mínimo 3 semanas o hasta cicatrización completa) — confirmar mejoría clínica, no solo por tiempo fijo</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Preservativo, tratamiento de parejas sexuales, diagnóstico y tratamiento precoz (evita destrucción tisular progresiva)</div></div>
 <div class="ficha-item"><div class="fi-label">Clave</div><div class="fi-value">NO confundir con H. ducreyi (cancroide = úlcera DOLOROSA)</div></div>
 </div>
 </div>
@@ -655,6 +801,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="diff-dx teoria-content">
 <h4>⚖️ Diagnóstico Diferencial — Úlceras genitales</h4>
 <p><strong>Donovanosis (K. granulomatis):</strong> indolora, sin adenopatía, cuerpos Donovan. <strong>Cancroide (H. ducreyi):</strong> DOLOROSA, adenopatía supurativa. <strong>Sífilis (T. pallidum):</strong> indolora, bordes indurados, adenopatía bilateral. <strong>Herpes:</strong> vesículas DOLOROSAS en racimo.</p>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (3)</h4>
+<p><strong>1) Destrucción tisular progresiva</strong> y desfigurante de genitales si no se trata. <strong>2) Sobreinfección bacteriana</strong> de la úlcera. <strong>3) Diseminación a hueso/hígado</strong> (rara, en casos avanzados no tratados).</p>
 </div>
 
 <div class="case-card" data-case="kgran1">
@@ -682,6 +832,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: c)</strong> Ambas son indoloras pero: <strong>Sífilis</strong> = chancro duro, base limpia, bordes indurados, CON adenopatía bilateral indolora. <strong>Donovanosis</strong> = granulomatosa beefy-red, borde enrollado, SIN adenopatía. VDRL negativo descarta sífilis.</div>
 </div>
+
+<div class="case-card" data-case="kgran3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Hombre de 35 años, residente de zona endémica, presenta lesión genital ulcerada de 6 meses de evolución que ha ido creciendo lentamente, sin dolor, con tejido de granulación exuberante que sangra con facilidad y sin adenopatía inguinal palpable. Refiere haber recibido tratamiento previo con penicilina benzatínica por "sospecha de sífilis" sin mejoría. VDRL no reactivo. Biopsia con tinción de Giemsa muestra macrófagos con inclusiones intracitoplasmáticas en forma de alfiler de seguridad.</div>
+<div class="case-q">¿Por qué falló el tratamiento previo y cuál es la conducta correcta?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="kgran3q1">a) El tratamiento previo fue para sífilis, pero el diagnóstico correcto es Donovanosis (K. granulomatis) — la penicilina no cubre este germen; tratar con Azitromicina prolongada hasta cicatrización completa</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="kgran3q1">b) El paciente no cumplió el tratamiento de penicilina, se debe repetir el mismo esquema</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="kgran3q1">c) Es una cepa de T. pallidum resistente a penicilina</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="kgran3q1">d) Se debe iniciar aciclovir para herpes genital</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> Este caso ilustra un error diagnóstico común: tratar empíricamente una úlcera genital indolora como sífilis sin confirmación (VDRL) ni considerar otras causas. La <strong>Donovanosis</strong> es indistinguible clínicamente de la sífilis a primera vista (ambas indoloras), pero la <strong>ausencia de adenopatía</strong>, el crecimiento lento y progresivo, y sobre todo la biopsia con <strong>cuerpos de Donovan</strong> confirman K. granulomatis. Como no se cultiva de forma rutinaria, el diagnóstico depende de la sospecha clínica y la biopsia. La penicilina no tiene actividad contra este organismo, por eso el tratamiento previo falló — el esquema correcto es <strong>Azitromicina</strong> mantenida hasta la resolución completa de la lesión (no un número fijo de días), dado el riesgo de destrucción tisular progresiva si se abandona precozmente.</div>
+</div>
 </div>
 </div>
 
@@ -697,17 +860,25 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
 <div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G− grueso, encapsulado, inmóvil</div></div>
-<div class="ficha-item"><div class="fi-label">Características</div><div class="fi-value">Colonias mucosas (cápsula prominente), lactosa +, hilo mucoso +</div></div>
-<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Neumonía necrotizante (alcohólicos), ITU nosocomial, absceso hepático (K1), sepsis</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram negativo: pared fina con poca peptidoglicana → no retiene el cristal violeta, se tiñe de rosa/rojo con safranina</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Colonias mucosas (cápsula prominente), lactosa +, prueba del hilo mucoso positiva (string test)</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Cápsula polisacárida voluminosa (antifagocítica — serotipos hipervirulentos K1/K2), fimbrias (adhesión), sideróforos (captación de hierro)</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Esputo, hemocultivo, urocultivo, aspirado de absceso hepático</div></div>
+<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Neumonía necrotizante (alcohólicos), ITU nosocomial, absceso hepático invasivo (K1), sepsis</div></div>
 <div class="ficha-item"><div class="fi-label">Imagen típica</div><div class="fi-value">Esputo en "jalea de grosella", signo de la cisura abombada en Rx</div></div>
-<div class="ficha-item"><div class="fi-label">Resistencia</div><div class="fi-value">BLEE (betalactamasa espectro extendido), KPC (carbapenemasa)</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Carbapenemes (sensible), Ceftazidima-avibactam (KPC)</div></div>
+<div class="ficha-item"><div class="fi-label">Resistencia</div><div class="fi-value">BLEE (betalactamasa espectro extendido), KPC (carbapenemasa) — cada vez más frecuente en nosocomial</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Carbapenémicos si es sensible; Ceftazidima-avibactam u otros nuevos si hay KPC — siempre pedir antibiograma por el alto riesgo de multirresistencia</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Higiene de manos, control de infecciones nosocomiales, uso racional de antibióticos (evitar seleccionar cepas BLEE/KPC), manejo del alcoholismo (factor de riesgo aspirativo)</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
 <span class="kw gold">Alcohólico + neumonía</span><span class="kw">Jalea de grosella</span>
 <span class="kw gold">Cisura abombada</span><span class="kw">Cápsula mucosa</span>
 <span class="kw">BLEE / KPC</span><span class="kw gold">Lactosa +</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (4)</h4>
+<p><strong>1) Neumonía necrotizante</strong> con destrucción cavitaria. <strong>2) Absceso hepático invasivo</strong> (K1/K2, diabéticos). <strong>3) Endoftalmitis metastásica</strong> (diseminación hematógena desde el absceso hepático). <strong>4) Sepsis por cepas multirresistentes</strong> (BLEE/KPC), con opciones terapéuticas limitadas.</p>
 </div>
 
 <div class="case-card" data-case="kpneum1">
@@ -735,6 +906,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: c)</strong> Síndrome de absceso hepático invasivo por <strong>K. pneumoniae hipervirulenta (K1/K2)</strong>, frecuente en diabéticos asiáticos. La complicación temida es <strong>endoftalmitis metastásica</strong> (diseminación hematógena al ojo). Siempre hacer examen oftalmológico.</div>
 </div>
+
+<div class="case-card" data-case="kpneum3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Paciente de 68 años, internado hace 3 semanas en UCI por otra causa, con sonda vesical permanente, desarrolla fiebre, hipotensión e ITU asociada a catéter. Urocultivo: bacilo Gram negativo, lactosa positivo, mucoso. El antibiograma muestra resistencia a todas las cefalosporinas de 3ª/4ª generación y a los carbapenémicos, con sensibilidad conservada solo a Colistina.</div>
+<div class="case-q">¿Qué mecanismo de resistencia explica este perfil y cuál es la conducta terapéutica?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="kpneum3q1">a) K. pneumoniae productora de carbapenemasa (KPC) — usar Colistina (o combinaciones nuevas como Ceftazidima-avibactam si disponible), retirar/cambiar el catéter urinario y reforzar medidas de control de infecciones</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="kpneum3q1">b) Es una cepa normal, aumentar la dosis de ceftriaxona</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="kpneum3q1">c) Se trata de contaminación de la muestra, repetir urocultivo sin cambiar nada</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="kpneum3q1">d) Es resistencia por producción de betalactamasa de espectro extendido (BLEE) solamente, tratar con piperacilina-tazobactam</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> La resistencia a carbapenémicos en K. pneumoniae generalmente se debe a la producción de <strong>carbapenemasas (KPC)</strong>, enzimas que hidrolizan incluso los antibióticos de último recurso entre los betalactámicos. Este tipo de cepas son un problema grave de salud pública nosocomial, transmitidas por catéteres, manos del personal y superficies. El tratamiento se reduce a opciones limitadas como <strong>Colistina</strong>, Tigeciclina, o combinaciones nuevas (Ceftazidima-avibactam, Meropenem-vaborbactam) según disponibilidad y sensibilidad confirmada — <strong>nunca se debe asumir sensibilidad</strong> sin antibiograma. Además del tratamiento, es esencial <strong>retirar/recambiar el foco</strong> (catéter urinario) y aplicar medidas estrictas de control de infecciones para evitar la diseminación de la cepa multirresistente en la unidad.</div>
+</div>
 </div>
 </div>
 
@@ -750,11 +934,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
 <div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G−, no fermentador, móvil (flagelo polar), aerobio estricto</div></div>
-<div class="ficha-item"><div class="fi-label">Oxidasa</div><div class="fi-value">Positiva</div></div>
-<div class="ficha-item"><div class="fi-label">Pigmentos</div><div class="fi-value">Piocianina (azul-verde), pioverdina (amarillo-verde), olor a frutas/uvas</div></div>
-<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Infección de quemados, neumonía nosocomial (ventilador), otitis externa maligna (diabéticos), ecthyma gangrenoso, ITU por catéter, fibrosis quística</div></div>
-<div class="ficha-item"><div class="fi-label">Factores virulencia</div><div class="fi-value">Exotoxina A (inhibe EF-2), elastasa, biofilm, alginato (FQ)</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Piperacilina-Tazobactam, Cefepime, Meropenem, Ciprofloxacina (anti-pseudomonal)</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram negativo: pared fina con poca peptidoglicana → no retiene el cristal violeta, se tiñe de rosa/rojo con safranina</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Oxidasa positiva, no fermentador de lactosa, pigmentos característicos (piocianina azul-verde, pioverdina amarillo-verde fluorescente), crece a 42°C, olor a uvas/frutas</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Exotoxina A (inhibe el factor de elongación EF-2, igual mecanismo que la toxina diftérica), elastasa y proteasas (destrucción tisular), biofilm y alginato (protección, clave en fibrosis quística), pili y flagelo (adhesión/motilidad), LPS</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Exudado de herida/quemadura, esputo (en FQ o ventilados), secreción ótica, hemocultivo, urocultivo</div></div>
+<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Infección de quemados, neumonía nosocomial (asociada a ventilador), otitis externa maligna (diabéticos), ecthyma gangrenoso, ITU por catéter, fibrosis quística</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Piperacilina-Tazobactam, Cefepime, Meropenem o Ciprofloxacina (cobertura anti-pseudomonal) — germen con alta capacidad de generar resistencia, siempre confirmar sensibilidad</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Higiene de manos, manejo estéril de quemaduras y heridas, cuidado de catéteres/ventiladores, evitar exposición de oídos a agua contaminada, control de infecciones nosocomiales</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
@@ -762,6 +948,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <span class="kw gold">Olor a frutas/uvas</span><span class="kw">No fermentador</span>
 <span class="kw">Quemados</span><span class="kw gold">Otitis maligna diabético</span>
 <span class="kw">Ecthyma gangrenoso</span><span class="kw gold">Fibrosis quística</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (4)</h4>
+<p><strong>1) Sepsis en grandes quemados</strong> (principal causa de mortalidad infecciosa). <strong>2) Otitis externa maligna</strong> con osteomielitis de la base del cráneo y parálisis de nervios craneales. <strong>3) Ecthyma gangrenoso</strong> (lesión necrótica cutánea en pacientes neutropénicos/bacteriémicos). <strong>4) Deterioro pulmonar crónico</strong> en fibrosis quística por colonización persistente con biofilm.</p>
 </div>
 
 <div class="case-card" data-case="pseudo1">
@@ -789,6 +979,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: b)</strong> <strong>Diabético + otalgia severa + erosión ósea + parálisis facial = Otitis externa maligna por P. aeruginosa.</strong> Invade hueso temporal (osteomielitis). Es una emergencia. No confundir con otitis externa simple del "oído del nadador" (también Pseudomonas pero benigna).</div>
 </div>
+
+<div class="case-card" data-case="pseudo3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Paciente de 19 años con fibrosis quística conocida, en seguimiento regular, presenta empeoramiento progresivo de la función pulmonar en los últimos 6 meses, con esputo purulento crónico y cultivos de esputo repetidamente positivos para bacilos Gram negativos no fermentadores, oxidasa positivos, con colonias mucoides. El equipo de neumología decide iniciar terapia inhalada además del tratamiento IV en las exacerbaciones.</div>
+<div class="case-q">¿Qué característica del germen explica la cronicidad de la infección y cuál es el fundamento de la terapia inhalada?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="pseudo3q1">a) P. aeruginosa forma biofilm/alginato (fenotipo mucoide) que la protege de antibióticos y del sistema inmune, favoreciendo colonización crónica; los antibióticos inhalados (ej. tobramicina) logran concentraciones locales altas directamente en la vía aérea, mejorando la penetración pese al biofilm</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="pseudo3q1">b) El germen es intrínsecamente resistente a todos los antibióticos disponibles y no hay nada que hacer</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="pseudo3q1">c) Se trata de una infección viral sobreagregada, no bacteriana</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="pseudo3q1">d) La terapia inhalada se usa solo por comodidad, sin ventaja farmacológica</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> En pacientes con fibrosis quística, la colonización crónica por P. aeruginosa es la regla, no la excepción, y se asocia a <strong>deterioro progresivo de la función pulmonar</strong>. El fenotipo <strong>mucoide</strong> (producción exuberante de alginato) forma un <strong>biofilm</strong> que dificulta la penetración de antibióticos y anticuerpos, y protege a la bacteria de la fagocitosis — por eso rara vez se logra erradicación completa una vez establecida la colonización crónica. La <strong>terapia antibiótica inhalada</strong> (tobramicina, colistina) busca sortear parcialmente esta barrera, entregando altas concentraciones directamente en la vía aérea, reduciendo la carga bacteriana y las exacerbaciones, aunque el manejo integral también incluye antibióticos sistémicos en las agudizaciones (siempre según antibiograma, dado el alto potencial de multirresistencia de este germen).</div>
+</div>
 </div>
 </div>
 
@@ -803,12 +1006,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G−, anaerobio facultativo, lactosa +</div></div>
-<div class="ficha-item"><div class="fi-label">Medio</div><div class="fi-value">MacConkey (lactosa +, colonias rosas), EMB (brillo metálico verde)</div></div>
-<div class="ficha-item"><div class="fi-label">Patotipos diarreicos</div><div class="fi-value">ECET (diarrea viajero, toxina termolábil/termoestable), ECEH O157:H7 (SHU, toxina Shiga), ECEP (niños, adherencia), ECEI (invasiva, disentería)</div></div>
-<div class="ficha-item"><div class="fi-label">Otras infecciones</div><div class="fi-value">1ª causa ITU, meningitis neonatal (K1), sepsis urinaria</div></div>
-<div class="ficha-item"><div class="fi-label">ECEH O157:H7</div><div class="fi-value">Hamburguesa mal cocida, NO dar ATB (libera más toxina Shiga → SHU)</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento ITU</div><div class="fi-value">TMP-SMX, Nitrofurantoína, Fluoroquinolonas</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G−, anaerobio facultativo, móvil (flagelos perítricos)</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram negativo: pared fina con poca peptidoglicana → no retiene el cristal violeta, se tiñe de rosa/rojo con safranina</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">MacConkey (lactosa +, colonias rosas), EMB (brillo metálico verde), nitritos + (nitrato reductasa)</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Fimbrias P (adhesión al urotelio en ITU), cápsula K1 (mimetiza el ácido siálico humano, evade el sistema inmune → meningitis neonatal), toxina Shiga (ECEH), toxinas termolábil/termoestable (ECET), LPS</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Urocultivo, hemocultivo, coprocultivo, LCR (meningitis neonatal)</div></div>
+<div class="ficha-item"><div class="fi-label">Patotipos diarreicos</div><div class="fi-value">ECET (diarrea del viajero, toxina termolábil/termoestable), ECEH O157:H7 (SHU, toxina Shiga), ECEP (niños, adherencia), ECEI (invasiva, disentería)</div></div>
+<div class="ficha-item"><div class="fi-label">Otras infecciones</div><div class="fi-value">1ª causa de ITU, meningitis neonatal (K1), sepsis urinaria</div></div>
+<div class="ficha-item"><div class="fi-label">ECEH O157:H7</div><div class="fi-value">Hamburguesa mal cocida; NO dar ATB (libera más toxina Shiga → SHU)</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento ITU</div><div class="fi-value">TMP-SMX, Nitrofurantoína, Fluoroquinolonas — confirmar sensibilidad por resistencia creciente (BLEE)</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Cocción adecuada de carnes (ECEH), agua/alimentos seguros en viajes (ECET), higiene de manos, hidratación y micción postcoital para ITU recurrente</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
@@ -816,6 +1023,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <span class="kw gold">EMB brillo metálico</span><span class="kw">ECEH O157:H7 → SHU</span>
 <span class="kw gold">Hamburguesa + diarrea sanguinolenta</span><span class="kw">Meningitis neonatal K1</span>
 <span class="kw">NO ATB en ECEH</span><span class="kw gold">ECET = viajero</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (4)</h4>
+<p><strong>1) Síndrome hemolítico urémico</strong> (ECEH O157:H7 — anemia hemolítica microangiopática + trombocitopenia + IRA). <strong>2) Pielonefritis/urosepsis</strong> desde ITU no tratada. <strong>3) Meningitis neonatal</strong> (cepas K1, alta mortalidad/secuelas). <strong>4) Peritonitis</strong> por translocación en perforación intestinal.</p>
 </div>
 
 <div class="case-card" data-case="ecoli1">
@@ -843,6 +1054,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: a)</strong> 1ª causa de ITU + lactosa + + brillo metálico EMB + nitritos + = <strong>E. coli</strong>. Las enterobacterias tienen <strong>nitrato reductasa</strong> que convierte nitratos en nitritos (prueba positiva en orina). S. saprophyticus no tiene esta enzima → nitritos negativos.</div>
 </div>
+
+<div class="case-card" data-case="ecoli3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Recién nacido de 5 días, nacido por parto vaginal prolongado, desarrolla fiebre, letargia, rechazo alimentario y una convulsión. Punción lumbar: LCR turbio, PMN elevados, glucosa baja. Gram del LCR: bacilos Gram negativos. El cultivo confirma E. coli con antígeno capsular K1 positivo. La madre había tenido un cultivo rectal/vaginal negativo para S. agalactiae en el control prenatal.</div>
+<div class="case-q">¿Por qué esta E. coli es capaz de causar meningitis neonatal y en qué se diferencia del enfoque preventivo del GBS?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="ecoli3q1">a) La cápsula K1 mimetiza el ácido siálico humano, evadiendo el reconocimiento inmune y el complemento — a diferencia de GBS, no existe un screening prenatal específico ni profilaxis intraparto dirigida contra E. coli K1, por lo que el tratamiento es empírico con Ampicilina + Cefotaxima/Aminoglucósido ante sospecha clínica</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="ecoli3q1">b) E. coli no causa meningitis neonatal, debe ser un error de laboratorio</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="ecoli3q1">c) Se previene igual que GBS, con penicilina intraparto</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="ecoli3q1">d) Solo se debe tratar con Vancomicina oral</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> Junto con S. agalactiae, <strong>E. coli K1</strong> es una de las causas principales de sepsis y meningitis neonatal. La <strong>cápsula K1</strong> contiene ácido siálico polimerizado idéntico al del tejido neural humano, lo que la hace <strong>poco inmunogénica</strong> y le permite evadir la fagocitosis y la activación del complemento — mecanismo distinto al de GBS (cuya cápsula sí genera buena respuesta de anticuerpos maternos protectores). Como no existe un screening ni profilaxis específica para E. coli K1 (a diferencia del protocolo establecido para GBS), la sospecha se basa en la clínica, y el tratamiento empírico de la sepsis/meningitis neonatal combina <strong>Ampicilina</strong> (cubre Listeria y enterococo) con una <strong>cefalosporina de 3ª generación o aminoglucósido</strong> (cubre bacilos Gram negativos), ajustando después según el cultivo y antibiograma.</div>
+</div>
 </div>
 </div>
 
@@ -857,11 +1081,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G−, móvil (flagelos peritricos), lactosa −, H₂S +</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G−, móvil (flagelos perítricos)</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram negativo: pared fina con poca peptidoglicana → no retiene el cristal violeta, se tiñe de rosa/rojo con safranina</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Lactosa negativa, H₂S positivo (colonias con centro negro en agar SS/XLD)</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Sistema de secreción tipo III (invade el epitelio intestinal), cápsula Vi (S. Typhi, antifagocítica), sobrevive dentro de macrófagos (diseminación sistémica en fiebre tifoidea), LPS</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Hemocultivo (1ª semana de fiebre tifoidea), coprocultivo (2ª-3ª semana o gastroenteritis), mielocultivo (más sensible en fiebre tifoidea)</div></div>
 <div class="ficha-item"><div class="fi-label">S. Typhi</div><div class="fi-value">Fiebre tifoidea: fiebre escalonada, roséolas, bradicardia relativa, hepatoesplenomegalia</div></div>
 <div class="ficha-item"><div class="fi-label">Salmonella no-Typhi</div><div class="fi-value">Gastroenteritis autolimitada (huevos, pollo), diarrea inflamatoria</div></div>
 <div class="ficha-item"><div class="fi-label">Portador crónico</div><div class="fi-value">Vesícula biliar (colecistectomía en portadores de S. Typhi)</div></div>
-<div class="ficha-item"><div class="fi-label">Diagnóstico</div><div class="fi-value">Hemocultivo (1ª sem), coprocultivo (2ª-3ª sem), Widal (no muy específico)</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Ciprofloxacina o Ceftriaxona en fiebre tifoidea (confirmar sensibilidad, hay resistencia creciente a fluoroquinolonas); gastroenteritis no-Typhi generalmente NO requiere ATB (autolimitada), salvo en inmunocomprometidos o bacteriemia</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Agua potable, cocción adecuada de huevos/aves, vacuna contra fiebre tifoidea en viajeros a zonas endémicas, higiene de manos</div></div>
 <div class="ficha-item"><div class="fi-label">Asociación</div><div class="fi-value">Anemia falciforme → osteomielitis por Salmonella</div></div>
 </div>
 </div>
@@ -870,6 +1099,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <span class="kw gold">Bradicardia relativa</span><span class="kw">Lactosa −</span>
 <span class="kw">H₂S +</span><span class="kw gold">Portador → vesícula biliar</span>
 <span class="kw">Falciforme → osteomielitis</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (4)</h4>
+<p><strong>1) Perforación intestinal</strong> (placas de Peyer, 3ª-4ª semana de fiebre tifoidea no tratada). <strong>2) Osteomielitis</strong> (especialmente en anemia falciforme). <strong>3) Bacteriemia/sepsis</strong> en inmunocomprometidos con gastroenteritis no-Typhi. <strong>4) Estado de portador crónico</strong> (vesícula biliar, fuente de transmisión continua).</p>
 </div>
 
 <div class="case-card" data-case="salm1">
@@ -897,6 +1130,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: a)</strong> En anemia falciforme, los <strong>microinfartos óseos</strong> (por oclusión vascular) crean tejido necrótico que sirve como nicho para Salmonella. Además, hay disfunción esplénica funcional. Regla: osteomielitis en falciforme = Salmonella (en población general = S. aureus).</div>
 </div>
+
+<div class="case-card" data-case="salm3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Mujer de 45 años, cocinera de un comedor escolar, ha tenido diarrea intermitente durante los últimos 2 años, generalmente asintomática entre episodios. Una investigación epidemiológica tras un brote de gastroenteritis en la escuela (12 niños afectados con fiebre y diarrea no sanguinolenta autolimitada tras consumir ensalada con huevo) rastrea el origen hasta ella. Coprocultivo de la cocinera: positivo para Salmonella Typhi, sin síntomas actuales. Ecografía abdominal: colelitiasis.</div>
+<div class="case-q">¿Qué situación explica este caso y cuál es la conducta de salud pública/clínica?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="salm3q1">a) Portadora crónica de S. Typhi (reservorio en la vesícula biliar, favorecido por la colelitiasis) — retirarla del manejo de alimentos, tratar con antibiótico prolongado y considerar colecistectomía si persiste la eliminación fecal</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="salm3q1">b) Coincidencia, no hay relación entre la cocinera y el brote</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="salm3q1">c) La cocinera necesita tratamiento solo si tiene síntomas</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="salm3q1">d) El brote fue viral, no bacteriano</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> Este caso ilustra el clásico escenario del <strong>portador crónico de S. Typhi</strong>: tras la infección aguda (a veces incluso subclínica), la bacteria puede persistir indefinidamente en la <strong>vesícula biliar</strong> (favorecido por la presencia de cálculos biliares, que sirven de nido para la bacteria), eliminándose de forma intermitente en las heces sin que la persona tenga síntomas activos. Estos portadores son una <strong>fuente de transmisión</strong> importante, especialmente si manipulan alimentos (el ejemplo histórico es "Mary la Tifoidea"). La conducta de salud pública es <strong>retirar a la persona del manejo de alimentos</strong> mientras se confirma y trata la portación, con antibioticoterapia prolongada (ej. fluoroquinolona varias semanas) y, si el estado de portador persiste (sobre todo con colelitiasis asociada), considerar la <strong>colecistectomía</strong> como medida definitiva.</div>
+</div>
 </div>
 </div>
 
@@ -911,12 +1157,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G−, INMÓVIL (≠ Salmonella), lactosa −, H₂S − (≠ Salmonella)</div></div>
-<div class="ficha-item"><div class="fi-label">Toxina</div><div class="fi-value">Toxina Shiga (S. dysenteriae) — inhibe 60S → daño endotelial</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G−, INMÓVIL (≠ Salmonella)</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram negativo: pared fina con poca peptidoglicana → no retiene el cristal violeta, se tiñe de rosa/rojo con safranina</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Lactosa negativa, H₂S NEGATIVO (≠ Salmonella, que es H₂S+), inmóvil (≠ Salmonella, que es móvil)</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Toxina Shiga (S. dysenteriae — inhibe la subunidad ribosomal 60S, deteniendo la síntesis proteica → daño endotelial), sistema de secreción tipo III (invasión de colonocitos), diseminación célula a célula (evita anticuerpos extracelulares)</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Coprocultivo (heces con moco/sangre)</div></div>
 <div class="ficha-item"><div class="fi-label">Mecanismo</div><div class="fi-value">Invasión de colonocitos, diseminación célula a célula</div></div>
 <div class="ficha-item"><div class="fi-label">Enfermedad</div><div class="fi-value">Disentería bacilar: diarrea sanguinolenta con moco, tenesmo, fiebre, cólicos</div></div>
 <div class="ficha-item"><div class="fi-label">Dosis infectante</div><div class="fi-value">Muy baja (10-100 bacterias) — transmisión persona-persona</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Ciprofloxacina, Azitromicina (SÍ se trata, ≠ ECEH)</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Ciprofloxacina o Azitromicina (SÍ se trata, ≠ ECEH) — confirmar sensibilidad, hay resistencia creciente a fluoroquinolonas</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Higiene de manos rigurosa, agua potable, aislamiento de contacto en brotes (guarderías/instituciones), dada la dosis infectante extremadamente baja</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
@@ -927,6 +1177,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="diff-dx teoria-content">
 <h4>⚖️ Shigella vs Salmonella</h4>
 <p><strong>Shigella:</strong> inmóvil, H₂S−, dosis baja, disentería, NO bacteriemia. <strong>Salmonella:</strong> móvil, H₂S+, fiebre tifoidea, SÍ bacteriemia, portador vesícula biliar.</p>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (3)</h4>
+<p><strong>1) Síndrome hemolítico urémico</strong> (S. dysenteriae tipo 1, por toxina Shiga). <strong>2) Megacolon tóxico</strong> (raro, en casos graves). <strong>3) Artritis reactiva</strong> (síndrome de Reiter, más frecuente en portadores HLA-B27).</p>
 </div>
 
 <div class="case-card" data-case="shig1">
@@ -954,6 +1208,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: c)</strong> S. dysenteriae tipo 1 produce <strong>Toxina Shiga original</strong> (la misma familia que ECEH). Causa SHU por daño endotelial glomerular. Tríada SHU: anemia hemolítica microangiopática + trombocitopenia + IRA. Shigella y ECEH comparten esta complicación.</div>
 </div>
+
+<div class="case-card" data-case="shig3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Hombre de 26 años, HLA-B27 positivo (conocido), presenta un episodio de diarrea sanguinolenta con tenesmo hace 3 semanas, tratado con azitromicina y resuelto. Ahora consulta por dolor y tumefacción en rodilla derecha y talón izquierdo, junto con enrojecimiento ocular y ardor al orinar sin secreción purulenta. Al examen: conjuntivitis bilateral, artritis de rodilla, entesitis del tendón de Aquiles. Cultivo articular: estéril.</div>
+<div class="case-q">¿Cuál es el diagnóstico, su relación con la infección previa y el enfoque terapéutico?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="shig3q1">a) Artritis reactiva (síndrome de Reiter: artritis + conjuntivitis + uretritis) post-disentería por Shigella, favorecida por HLA-B27 — el cultivo articular es estéril porque es un fenómeno inmunomediado, no infeccioso; se trata con AINEs, no con más antibióticos</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="shig3q1">b) Artritis séptica activa por Shigella — requiere antibiótico IV prolongado y drenaje articular</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="shig3q1">c) Gonorrea diseminada — tratar con ceftriaxona</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="shig3q1">d) Fiebre reumática — penicilina benzatínica</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> Este es el cuadro clásico de <strong>artritis reactiva</strong> (antes llamada síndrome de Reiter), una complicación <strong>post-infecciosa inmunomediada</strong> que ocurre semanas después de una disentería por Shigella (también descrita con Salmonella, Yersinia, Campylobacter), particularmente en personas con el alelo <strong>HLA-B27</strong>. La tríada clásica es <strong>artritis + conjuntivitis + uretritis</strong> ("no puede ver, no puede orinar, no puede subir a un árbol"). A diferencia de una artritis séptica verdadera, el <strong>cultivo articular es estéril</strong> porque no hay bacteria viable en la articulación — es una reacción cruzada del sistema inmune. El manejo es con <strong>AINEs</strong> (y en casos persistentes, DMARDs), y NO se debe dar más antibiótico, ya que la infección original generalmente ya fue tratada y resuelta.</div>
+</div>
 </div>
 </div>
 
@@ -968,18 +1235,25 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Cocobacilo G− pleomórfico, pequeño</div></div>
-<div class="ficha-item"><div class="fi-label">Requerimientos</div><div class="fi-value">Factor X (hemina) + Factor V (NAD) → agar chocolate (NO crece en agar sangre solo)</div></div>
-<div class="ficha-item"><div class="fi-label">Satelitismo</div><div class="fi-value">Crece alrededor de S. aureus (provee factor V)</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Cocobacilo G− pleomórfico, pequeño, inmóvil</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram negativo: pared fina con poca peptidoglicana → no retiene el cristal violeta, se tiñe de rosa/rojo con safranina</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Requiere Factor X (hemina) + Factor V (NAD) → agar chocolate (NO crece en agar sangre solo); fenómeno de satelitismo alrededor de S. aureus</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Cápsula polisacárida tipo b (antifagocítica, principal factor en cepas invasivas), pili (adherencia), IgA proteasa, LOS</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">LCR, hemocultivo, aspirado de oído medio/senos, esputo (según foco), cultivo en agar chocolate</div></div>
 <div class="ficha-item"><div class="fi-label">Tipo b (Hib)</div><div class="fi-value">Encapsulado → epiglotitis, meningitis, neumonía, artritis séptica en niños no vacunados</div></div>
 <div class="ficha-item"><div class="fi-label">No tipable</div><div class="fi-value">Sin cápsula → otitis media, sinusitis, bronquitis (en adultos con EPOC)</div></div>
-<div class="ficha-item"><div class="fi-label">Vacuna</div><div class="fi-value">Hib conjugada (PRP-T) — redujo invasiva >99%</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Ceftriaxona/Cefotaxima en infección invasiva; Amoxicilina-Clavulánico en otitis/sinusitis — hasta 30-40% de cepas producen β-lactamasa, siempre valorar sensibilidad</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Vacuna Hib conjugada (PRP-T) en el esquema infantil — redujo la enfermedad invasiva >99%; profilaxis con rifampicina a contactos cercanos no vacunados en casos de enfermedad invasiva</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
 <span class="kw gold">Factor X + Factor V</span><span class="kw">Agar chocolate</span>
 <span class="kw gold">Satelitismo con S. aureus</span><span class="kw">Epiglotitis</span>
 <span class="kw">Cápsula tipo b</span><span class="kw gold">Niño NO vacunado</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (4)</h4>
+<p><strong>1) Epiglotitis</strong> (emergencia de vía aérea, riesgo de obstrucción súbita). <strong>2) Meningitis</strong> (secuelas neurológicas/auditivas en sobrevivientes). <strong>3) Artritis séptica</strong> en niños pequeños. <strong>4) Celulitis periorbitaria/facial</strong> en lactantes no vacunados.</p>
 </div>
 
 <div class="case-card" data-case="hinfl1">
@@ -1007,6 +1281,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: c)</strong> El <strong>fenómeno de satelitismo</strong> ocurre porque H. influenzae necesita Factor V (NAD), que es liberado por S. aureus (β-hemolisina lisa eritrocitos y libera NAD). Por eso crece como "satélite" alrededor de las colonias de S. aureus en agar sangre.</div>
 </div>
+
+<div class="case-card" data-case="hinfl3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Lactante de 14 meses, sin ninguna dosis de vacuna (padres objetores), presenta fiebre de 39.5°C de 2 días, irritabilidad marcada, rechazo alimentario y una convulsión febril. Al examen: fontanela abombada, rigidez de nuca. Punción lumbar: LCR turbio, PMN elevados, glucosa muy baja, proteínas elevadas. Gram del LCR: cocobacilos Gram negativos pleomórficos. Cultivo en agar chocolate confirma H. influenzae tipo b.</div>
+<div class="case-q">¿Cuál es la conducta terapéutica, la medida a tomar con los contactos del hogar y qué hubiera prevenido este cuadro?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="hinfl3q1">a) Ceftriaxona IV empírica (cubre posible β-lactamasa) + dexametasona; profilaxis con Rifampicina a todos los convivientes del hogar (incluidos adultos) por riesgo de transmisión secundaria; la vacuna Hib conjugada habría prevenido este cuadro con altísima eficacia</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="hinfl3q1">b) Amoxicilina oral ambulatoria, sin necesidad de profilaxis a la familia</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="hinfl3q1">c) Solo manejo sintomático, ya que es autolimitada</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="hinfl3q1">d) Aciclovir IV, sospechando encefalitis herpética</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> Este caso representa exactamente el escenario que la <strong>vacuna Hib conjugada</strong> fue diseñada para prevenir: meningitis invasiva por H. influenzae tipo b en un lactante no vacunado, antes una de las principales causas de meningitis bacteriana infantil y ahora rara en poblaciones vacunadas. El tratamiento de la meningitis se inicia empíricamente con una <strong>cefalosporina de 3ª generación</strong> (cubriendo la posibilidad de cepas productoras de β-lactamasa) junto con <strong>corticoide</strong> para reducir secuelas neurológicas/auditivas. Un punto clave de salud pública: los <strong>contactos cercanos del hogar</strong> (no solo el paciente) deben recibir <strong>quimioprofilaxis con Rifampicina</strong>, ya que el riesgo de enfermedad invasiva secundaria en convivientes no vacunados —especialmente niños pequeños— está aumentado tras un caso índice.</div>
+</div>
 </div>
 </div>
 
@@ -1021,18 +1308,26 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Cocobacilo G− (cadenas/"banco de peces")</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Cocobacilo G−, dispuesto en cadenas paralelas ("banco de peces")</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram negativo: pared fina con poca peptidoglicana → no retiene el cristal violeta, se tiñe de rosa/rojo con safranina</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Diagnóstico frecuentemente de exclusión (VDRL−, HSV−); cultivo difícil, requiere medios enriquecidos especiales</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Citotoxina distensora citoletal (CDT — daño al ADN celular), pili y adhesinas, resistencia a la fagocitosis por PMN</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Exudado/raspado de la base de la úlcera, aspirado del bubón inguinal</div></div>
 <div class="ficha-item"><div class="fi-label">Enfermedad</div><div class="fi-value">Cancroide (Chancro Blando)</div></div>
 <div class="ficha-item"><div class="fi-label">Lesión</div><div class="fi-value">Úlcera genital DOLOROSA, bordes irregulares, base sucia, purulenta</div></div>
 <div class="ficha-item"><div class="fi-label">Adenopatía</div><div class="fi-value">Unilateral, dolorosa, SUPURATIVA (bubón)</div></div>
-<div class="ficha-item"><div class="fi-label">Diagnóstico</div><div class="fi-value">Clínico + exclusión de sífilis y herpes; cultivo difícil</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Azitromicina 1g VO dosis única o Ceftriaxona 250mg IM</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Azitromicina 1g VO dosis única o Ceftriaxona 250mg IM — confirmar respuesta clínica, el bubón puede requerir drenaje</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Preservativo, tratamiento de parejas sexuales, diagnóstico y tratamiento precoz</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
 <span class="kw gold">Úlcera DOLOROSA</span><span class="kw">Cancroide</span>
 <span class="kw gold">Adenopatía SUPURATIVA</span><span class="kw">Bubón</span>
 <span class="kw">Base sucia</span><span class="kw gold">Chancro BLANDO</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (3)</h4>
+<p><strong>1) Bubón inguinal supurativo</strong> (puede fistulizar espontáneamente). <strong>2) Sobreinfección bacteriana</strong> de la úlcera. <strong>3) Mayor riesgo de transmisión de VIH</strong> (la úlcera facilita la entrada del virus).</p>
 </div>
 
 <div class="case-card" data-case="ducr1">
@@ -1060,6 +1355,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: b)</strong> Cocobacilos G− en "banco de peces" (school of fish) es patrón microscópico clásico de <strong>H. ducreyi</strong>. Diagnóstico de cancroide es frecuentemente de exclusión (VDRL−, HSV−). K. granulomatis no se cultiva y muestra cuerpos de Donovan en biopsia.</div>
 </div>
+
+<div class="case-card" data-case="ducr3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Hombre de 32 años, trabajador sexual, presenta úlcera genital dolorosa de 1 semana, con una adenopatía inguinal derecha que ha crecido rápidamente, fluctuante, con la piel suprayacente eritematosa y a tensión, a punto de fistulizar. Refiere no usar preservativo. Se solicita también serología para VIH.</div>
+<div class="case-q">¿Cuál es la conducta integral ante este bubón y por qué se solicita la serología de VIH?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="ducr3q1">a) Tratar con Azitromicina o Ceftriaxona, drenar el bubón fluctuante mediante aspiración con aguja (evitar incisión amplia) para prevenir fistulización espontánea; se solicita VIH porque las úlceras genitales (incluido el cancroide) aumentan significativamente el riesgo de transmisión/adquisición del virus</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="ducr3q1">b) Solo observación, el bubón se resuelve espontáneamente sin conducta adicional</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="ducr3q1">c) Incisión amplia y drenaje abierto sin antibiótico</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="ducr3q1">d) La serología de VIH no tiene relación con este cuadro</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> El <strong>bubón inguinal supurativo</strong> del cancroide, cuando está fluctuante y a punto de fistulizar, se maneja preferentemente con <strong>aspiración con aguja</strong> (no incisión amplia, que retrasa la cicatrización y deja cicatrices mayores), además del tratamiento antibiótico sistémico. Un punto clínico importante que suele caer en examen: las <strong>úlceras genitales</strong> (cancroide, herpes, sífilis) rompen la barrera mucocutánea y generan un estado inflamatorio local con reclutamiento de células CD4, lo que <strong>facilita significativamente la transmisión y adquisición del VIH</strong> — por eso ante cualquier ETS ulcerativa se debe ofrecer siempre serología de VIH (y de otras ETS) como parte del abordaje integral.</div>
+</div>
 </div>
 </div>
 
@@ -1074,18 +1382,26 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G− curvo/espiral, flagelos, microaerófilo</div></div>
-<div class="ficha-item"><div class="fi-label">Ureasa</div><div class="fi-value">Fuertemente positiva (neutraliza ácido gástrico)</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G− curvo/espiral en "ala de gaviota", 4-6 flagelos polares, microaerófilo</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram negativo: pared fina con poca peptidoglicana → no retiene cristal violeta al decolorar, se tiñe de rosa/rojo con safranina</div></div>
+<div class="ficha-item"><div class="fi-label">Ureasa</div><div class="fi-value">Fuertemente positiva (neutraliza ácido gástrico → amonio + CO₂)</div></div>
 <div class="ficha-item"><div class="fi-label">Oxidasa/Catalasa</div><div class="fi-value">Ambas positivas</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Ureasa (neutraliza ácido y libera amonio tóxico), flagelos (motilidad, atraviesa el moco), adhesina BabA (se une al Ag Lewis b), citotoxina VacA (vacuolización/apoptosis), CagA (inyectada por sistema de secreción tipo IV, altera señalización celular y es oncogénica)</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Biopsia gástrica (antro/cuerpo) para ureasa rápida, histología y cultivo; aire espirado (test de aliento); heces (antígeno)</div></div>
 <div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Gastritis crónica, úlcera péptica/duodenal, adenocarcinoma gástrico, linfoma MALT</div></div>
-<div class="ficha-item"><div class="fi-label">Diagnóstico</div><div class="fi-value">Test de ureasa rápida (CLOtest), test de aliento C13/C14, antígeno fecal, biopsia</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Triple: IBP + Claritromicina + Amoxicilina (14 días)</div></div>
+<div class="ficha-item"><div class="fi-label">Diagnóstico</div><div class="fi-value">Test de ureasa rápida (CLOtest), test de aliento C13/C14, antígeno fecal, histología (Giemsa/Warthin-Starry), serología IgG (no distingue infección activa)</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Triple: IBP + Claritromicina + Amoxicilina (14 días). Ojo: resistencia creciente a claritromicina — si hay resistencia local/falla previa, usar terapia cuádruple con bismuto</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Agua potable, buena higiene de manos y alimentos (transmisión fecal-oral/oral-oral); no existe vacuna disponible</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
 <span class="kw gold">UREASA +++</span><span class="kw">Curvo/espiral</span>
 <span class="kw gold">Úlcera péptica</span><span class="kw">MALT</span>
 <span class="kw">Cáncer gástrico</span><span class="kw gold">Test aliento C13</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (4)</h4>
+<p><strong>1) Úlcera péptica/duodenal</strong> (empeora con ayuno, mejora con alimentos). <strong>2) Gastritis crónica atrófica.</strong> <strong>3) Adenocarcinoma gástrico</strong> (carcinógeno grupo 1 de la OMS). <strong>4) Linfoma MALT</strong> (regresa con solo erradicar H. pylori en estadios tempranos).</p>
 </div>
 
 <div class="case-card" data-case="hpyl1">
@@ -1127,12 +1443,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G− curvo en "S" o "alas de gaviota", microaerófilo</div></div>
-<div class="ficha-item"><div class="fi-label">Temperatura</div><div class="fi-value">Crece a 42°C (termofílico)</div></div>
-<div class="ficha-item"><div class="fi-label">Oxidasa</div><div class="fi-value">Positiva</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G− curvo en "S" o "alas de gaviota", microaerófilo, móvil (flagelo polar)</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram negativo: pared fina con poca peptidoglicana → no retiene el cristal violeta, se tiñe de rosa/rojo con safranina</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Crece a 42°C (termofílico), oxidasa positiva, requiere atmósfera microaerófila</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Flagelo (motilidad, penetra el moco intestinal), citotoxina distensora citoletal (CDT), invasión de la mucosa (enteritis inflamatoria), LOS con mimetismo de gangliósidos (base del Guillain-Barré)</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Coprocultivo en medio selectivo, incubado a 42°C en atmósfera microaerófila</div></div>
 <div class="ficha-item"><div class="fi-label">Fuente</div><div class="fi-value">Pollo mal cocido, leche no pasteurizada</div></div>
-<div class="ficha-item"><div class="fi-label">Enfermedad</div><div class="fi-value">Enteritis inflamatoria (diarrea sanguinolenta), dolor abdominal</div></div>
-<div class="ficha-item"><div class="fi-label">Complicación</div><div class="fi-value">Síndrome de Guillain-Barré (mimetismo molecular gangliósidos)</div></div>
+<div class="ficha-item"><div class="fi-label">Enfermedad</div><div class="fi-value">Enteritis inflamatoria (diarrea sanguinolenta), dolor abdominal, fiebre</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Generalmente autolimitada (soporte/hidratación); Azitromicina en casos graves/prolongados — confirmar sensibilidad, hay resistencia creciente a fluoroquinolonas</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Cocción adecuada del pollo, pasteurización de la leche, higiene de manos al manipular aves crudas</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
@@ -1143,6 +1462,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="diff-dx teoria-content">
 <h4>⚖️ Campylobacter vs Vibrio cholerae</h4>
 <p><strong>C. jejuni:</strong> diarrea sanguinolenta/inflamatoria, fiebre, pollo, 42°C. <strong>V. cholerae:</strong> diarrea acuosa "agua de arroz", SIN sangre, SIN fiebre, agua contaminada.</p>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (3)</h4>
+<p><strong>1) Síndrome de Guillain-Barré</strong> (mimetismo molecular con gangliósidos, parálisis flácida ascendente 2-4 semanas después). <strong>2) Artritis reactiva</strong> (relacionada a HLA-B27). <strong>3) Bacteriemia</strong> (rara, más en inmunocomprometidos).</p>
 </div>
 
 <div class="case-card" data-case="camp1">
@@ -1170,6 +1493,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: c)</strong> Diarrea acuosa "agua de arroz" + SIN sangre + SIN fiebre + deshidratación severa + agua contaminada = <strong>V. cholerae</strong>. Campylobacter causa diarrea SANGUINOLENTA con FIEBRE. Ambos son bacilos G− curvos, pero el cuadro clínico es diferente.</div>
 </div>
+
+<div class="case-card" data-case="camp3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Hombre de 24 años tuvo un episodio de diarrea sanguinolenta con fiebre hace 3 semanas tras comer pollo a la parrilla en una fiesta, que se resolvió espontáneamente en pocos días sin tratamiento. Ahora presenta debilidad progresiva y simétrica que comenzó en los pies y ha ascendido hasta los muslos en 48 horas, con arreflexia en miembros inferiores y parestesias leves, sin alteración del estado de conciencia. Niega fiebre actual.</div>
+<div class="case-q">¿Cuál es el diagnóstico más probable, el mecanismo fisiopatológico y la urgencia del manejo?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="camp3q1">a) Síndrome de Guillain-Barré post-infeccioso por C. jejuni — mimetismo molecular entre el LOS bacteriano y gangliósidos de los nervios periféricos (ataque autoinmune a la mielina/axón); es una emergencia por riesgo de compromiso de músculos respiratorios, requiere monitoreo de la capacidad vital y considerar inmunoglobulina IV o plasmaféresis</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="camp3q1">b) Recaída de la infección intestinal — dar Azitromicina nuevamente</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="camp3q1">c) Deficiencia de vitamina B12 — suplementación oral</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="camp3q1">d) Ansiedad somatizada — manejo psicológico</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> Este es el cuadro clásico de <strong>Síndrome de Guillain-Barré</strong> desencadenado por C. jejuni, la causa infecciosa precedente más frecuentemente identificada. El mecanismo es <strong>mimetismo molecular</strong>: los anticuerpos generados contra el lipooligosacárido (LOS) de la bacteria reaccionan de forma cruzada con <strong>gangliósidos</strong> (como GM1) presentes en los nervios periféricos, causando una <strong>polirradiculoneuropatía desmielinizante/axonal aguda</strong> con debilidad ascendente simétrica y arreflexia. Es una <strong>emergencia médica</strong> por el riesgo de progresión a <strong>parálisis de los músculos respiratorios</strong> e inestabilidad autonómica — requiere monitoreo estrecho de la función respiratoria (capacidad vital forzada) y tratamiento con <strong>inmunoglobulina IV o plasmaféresis</strong>, NO antibióticos (la infección original ya se resolvió, el daño actual es autoinmune).</div>
+</div>
 </div>
 </div>
 
@@ -1189,13 +1525,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
 <div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo ácido-alcohol resistente (BAAR), NO se tiñe con Gram</div></div>
-<div class="ficha-item"><div class="fi-label">Tinción</div><div class="fi-value">Ziehl-Neelsen (rojo sobre fondo azul), Auramina-Rodamina (fluorescencia)</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción</div><div class="fi-value">Ziehl-Neelsen (rojo sobre fondo azul; el ácido-alcohol no decolora la pared rica en lípidos) — Auramina-Rodamina (fluorescencia)</div></div>
 <div class="ficha-item"><div class="fi-label">Medio cultivo</div><div class="fi-value">Löwenstein-Jensen (4-8 semanas), BACTEC (más rápido)</div></div>
 <div class="ficha-item"><div class="fi-label">Pared celular</div><div class="fi-value">Ácidos micólicos (resistencia a ácido, álcalis, desecación)</div></div>
-<div class="ficha-item"><div class="fi-label">Patología</div><div class="fi-value">Granuloma CASEOSO (central con necrosis caseosa), células de Langhans</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Ácidos micólicos y factor de cordón (inhiben la fusión fagolisosomal, permiten sobrevivir dentro del macrófago), sulfátidos (bloquean la fagocitosis), inducción de granuloma caseoso (contención pero también daño tisular)</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Esputo (3 muestras seriadas), lavado broncoalveolar, biopsia tisular en TB extrapulmonar, orina/LCR según foco</div></div>
+<div class="ficha-item"><div class="fi-label">Patología</div><div class="fi-value">Granuloma CASEOSO (centro con necrosis caseosa), células de Langhans</div></div>
 <div class="ficha-item"><div class="fi-label">Clínica</div><div class="fi-value">TB pulmonar: tos >2 sem, hemoptisis, sudoración nocturna, pérdida de peso, fiebre vespertina</div></div>
 <div class="ficha-item"><div class="fi-label">Diagnóstico</div><div class="fi-value">Baciloscopia (BAAR), cultivo Löwenstein-Jensen, PCR (GeneXpert), PPD/IGRA</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">RIPE: Rifampicina + Isoniazida + Pirazinamida + Etambutol (2 meses) → RI (4 meses)</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">RIPE: Rifampicina + Isoniazida + Pirazinamida + Etambutol (2 meses) → RI (4 meses) — confirmar sensibilidad (descartar TB multirresistente/MDR) antes de asumir el esquema estándar</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Vacuna BCG (protege sobre todo formas graves infantiles), tratamiento de TB latente en contactos/inmunocomprometidos, aislamiento respiratorio del caso bacilífero, ventilación adecuada</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
@@ -1203,6 +1542,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <span class="kw gold">Granuloma caseoso</span><span class="kw">Löwenstein-Jensen</span>
 <span class="kw">Tos >2 semanas</span><span class="kw gold">Cavernas</span>
 <span class="kw">Ácidos micólicos</span><span class="kw gold">RIPE</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (4)</h4>
+<p><strong>1) TB miliar</strong> (diseminación hematógena, micronódulos difusos, más en inmunocomprometidos). <strong>2) Hemoptisis</strong> (erosión de vasos en cavernas). <strong>3) TB extrapulmonar</strong> (meníngea, ósea/Pott, renal, ganglionar). <strong>4) TB multirresistente (MDR/XDR)</strong> por tratamiento incompleto o irregular.</p>
 </div>
 
 <div class="case-card" data-case="tb1">
@@ -1230,6 +1573,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: b)</strong> La PPD requiere respuesta inmune celular (hipersensibilidad tipo IV, mediada por linfocitos T CD4+). Con <strong>CD4 <200 → anergia</strong> → PPD falsamente negativa. TB miliar = diseminación hematógena (micronódulos difusos). En VIH, usar IGRA o diagnosticar por clínica + cultivo + PCR.</div>
 </div>
+
+<div class="case-card" data-case="tb3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Paciente de 40 años, diagnosticado de TB pulmonar hace 8 meses, completó supuestamente el esquema RIPE, pero abandonó el tratamiento en varias ocasiones por efectos adversos y reinició por cuenta propia. Reingresa con tos persistente, hemoptisis y baciloscopia BAAR positiva nuevamente. Se solicita prueba de sensibilidad a fármacos (cultivo con antibiograma para TB), que muestra resistencia a Rifampicina e Isoniazida.</div>
+<div class="case-q">¿Qué tipo de TB desarrolló este paciente, por qué ocurrió y cuál es el manejo?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="tb3q1">a) TB multirresistente (MDR-TB, resistente a Rifampicina e Isoniazida) — causada por el tratamiento incompleto/irregular que seleccionó cepas resistentes; requiere esquema de segunda línea con fármacos específicos (ej. bedaquilina, linezolid, fluoroquinolonas) bajo supervisión estricta y prolongada</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="tb3q1">b) TB latente reactivada — repetir el mismo esquema RIPE</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="tb3q1">c) Reinfección viral, no bacteriana</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="tb3q1">d) Es un fenómeno normal, no requiere cambio de tratamiento</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> Este caso ilustra cómo la <strong>adherencia irregular al tratamiento</strong> (abandonos y reinicios) es el principal factor de riesgo para desarrollar <strong>TB multirresistente (MDR-TB)</strong>: cada interrupción permite que sobrevivan las subpoblaciones bacilares menos sensibles, seleccionando progresivamente cepas resistentes a Rifampicina e Isoniazida (los dos pilares del esquema estándar). Por eso es fundamental el <strong>tratamiento directamente observado (DOT)</strong> para TB. Ante MDR-TB confirmada por antibiograma, el esquema RIPE estándar ya no sirve — se requiere un <strong>régimen de segunda línea</strong>, más prolongado, con más efectos adversos y bajo supervisión estricta en centros especializados. Este caso refuerza que en TB, igual que en cualquier infección, <strong>siempre hay que verificar la sensibilidad</strong> antes de asumir que el esquema habitual funcionará.</div>
+</div>
 </div>
 </div>
 
@@ -1249,19 +1605,25 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
 <div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G+ pequeño, intracelular facultativo</div></div>
-<div class="ficha-item"><div class="fi-label">Motilidad</div><div class="fi-value">"Tumbling motility" a 25°C (actin rockets intracelular)</div></div>
-<div class="ficha-item"><div class="fi-label">Crecimiento</div><div class="fi-value">Crece a 4°C (refrigerador) — cold enrichment</div></div>
-<div class="ficha-item"><div class="fi-label">β-hemolítica</div><div class="fi-value">Sí (listeriolisina O — forma poros)</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram positivo: pared gruesa de peptidoglicana retiene el cristal violeta → se tiñe de azul/violeta</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">"Tumbling motility" a 25°C (móvil a temperatura ambiente, inmóvil a 37°C), crece a 4°C (cold enrichment), β-hemolítica</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Listeriolisina O (forma poros, escapa del fagosoma), ActA (polimeriza actina — "actin rockets" — permite moverse célula a célula sin salir al espacio extracelular, evadiendo anticuerpos), internalinas (invasión de células epiteliales/placenta)</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Hemocultivo, LCR, cultivo de placenta/líquido amniótico en aborto séptico</div></div>
 <div class="ficha-item"><div class="fi-label">Fuente</div><div class="fi-value">Quesos blandos, leche no pasteurizada, embutidos, hot dogs</div></div>
-<div class="ficha-item"><div class="fi-label">Grupos riesgo</div><div class="fi-value">Embarazadas, neonatos, ancianos, inmunosuprimidos</div></div>
-<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Meningitis (neonatos, >50 años, inmunosuprimidos), granulomatosis infantiséptica, aborto</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Ampicilina (NO cefalosporinas — resistente natural)</div></div>
+<div class="ficha-item"><div class="fi-label">Grupos de riesgo</div><div class="fi-value">Embarazadas, neonatos, ancianos, inmunosuprimidos</div></div>
+<div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Meningitis (neonatos, >50 años, inmunosuprimidos), granulomatosis infantiséptica, aborto/sepsis materna</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Ampicilina ± Gentamicina (NO cefalosporinas — resistencia natural, por eso siempre agregar ampicilina al esquema empírico de meningitis en >50 años/embarazadas)</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Evitar quesos blandos no pasteurizados, embutidos fríos sin recalentar y leche cruda, especialmente en embarazadas e inmunosuprimidos</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
 <span class="kw gold">Crece a 4°C</span><span class="kw">Tumbling motility</span>
 <span class="kw gold">Queso blando / no pasteurizado</span><span class="kw">Embarazada</span>
 <span class="kw">Inmunosuprimido</span><span class="kw gold">Ampicilina (NO cefalosporinas)</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (3)</h4>
+<p><strong>1) Aborto/parto prematuro/muerte fetal</strong> (infección transplacentaria). <strong>2) Granulomatosis infantiséptica</strong> (sepsis neonatal con microabscesos diseminados). <strong>3) Meningoencefalitis/rombencefalitis</strong> en ancianos e inmunosuprimidos.</p>
 </div>
 
 <div class="case-card" data-case="list1">
@@ -1289,6 +1651,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: b)</strong> Listeria es un patógeno <strong>intracelular</strong>, lo que genera una respuesta mediada por linfocitos T (no neutrófilos). Por eso el LCR puede mostrar predominio linfocitario con glucosa baja — imitando meningitis viral o TB. Clave: anciano/inmunosuprimido + LCR "atípico" + bacilo G+ = pensar Listeria.</div>
 </div>
+
+<div class="case-card" data-case="list3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Mujer de 29 años, 26 semanas de embarazo, presenta fiebre de 38.5°C, mialgias y cefalea leve durante 3 días, cuadro que ella atribuyó a un "resfriado". Consultó tardíamente al notar disminución de los movimientos fetales. Ecografía: sufrimiento fetal agudo. Se realiza cesárea de urgencia; el líquido amniótico es turbio y maloliente. Hemocultivos maternos y cultivo de placenta: bacilos Gram positivos pequeños, β-hemolíticos, con motilidad "tumbling" a 25°C.</div>
+<div class="case-q">¿Cuál es el diagnóstico, por qué el cuadro materno fue tan inespecífico y cuál es el tratamiento correcto?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="list3q1">a) Listeriosis materno-fetal — la bacteriemia materna suele ser leve/inespecífica (símil gripal), pero atraviesa la placenta e infecta al feto, causando corioamnionitis y sufrimiento fetal; tratar con Ampicilina (± Gentamicina), NUNCA cefalosporinas por resistencia intrínseca</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="list3q1">b) Corioamnionitis por E. coli — tratar con Ceftriaxona sola</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="list3q1">c) Influenza materna — solo tratamiento sintomático</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="list3q1">d) Corioamnionitis por S. agalactiae — Penicilina sola es suficiente</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> Este caso resalta un punto crítico de la <strong>listeriosis en el embarazo</strong>: la infección materna suele presentarse como un cuadro <strong>febril leve e inespecífico</strong> (fiebre, mialgias, similar a un cuadro gripal), fácilmente subestimado, mientras que el organismo <strong>atraviesa la placenta</strong> gracias a sus internalinas y puede causar corioamnionitis, sufrimiento fetal, parto prematuro o muerte fetal. Por eso toda embarazada con fiebre inexplicada, sobre todo con antecedente alimentario de riesgo (quesos blandos, embutidos), debe considerarse para descartar listeriosis. El tratamiento de elección es <strong>Ampicilina</strong> (con Gentamicina para sinergismo en casos graves) — es fundamental recordar que la <strong>resistencia intrínseca a cefalosporinas</strong> hace que estos antibióticos (frecuentemente usados de forma empírica en corioamnionitis) sean ineficaces contra Listeria.</div>
+</div>
 </div>
 </div>
 
@@ -1304,17 +1679,25 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
 <div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G+ con espora terminal ("palillo de tambor"), anaerobio estricto</div></div>
-<div class="ficha-item"><div class="fi-label">Toxina</div><div class="fi-value">Tetanospasmina — bloquea liberación de GABA y glicina (inhibitorios)</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram positivo: pared gruesa de peptidoglicana retiene el cristal violeta → se tiñe de azul/violeta</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Diagnóstico es CLÍNICO (el cultivo no es útil de rutina); la espora terminal redondeada da el aspecto característico en "palillo de tambor"</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Tetanospasmina (neurotoxina AB, bloquea la liberación de GABA y glicina de interneuronas inhibitorias vía clivaje de sinaptobrevina), esporas muy resistentes en el ambiente</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Diagnóstico clínico; no suele requerir cultivo de la herida (baja sensibilidad, la toxina actúa a distancia)</div></div>
 <div class="ficha-item"><div class="fi-label">Mecanismo</div><div class="fi-value">Transporte retrógrado por axones → médula espinal → bloquea interneuronas inhibitorias → espasmo</div></div>
-<div class="ficha-item"><div class="fi-label">Clínica</div><div class="fi-value">Trismus (mandíbula trabada), risa sardónica, opistótonos, espasmos generalizados</div></div>
+<div class="ficha-item"><div class="fi-label">Clínica</div><div class="fi-value">Trismus (mandíbula trabada), risa sardónica, opistótonos, espasmos generalizados (parálisis ESPÁSTICA)</div></div>
 <div class="ficha-item"><div class="fi-label">Fuente</div><div class="fi-value">Heridas contaminadas con tierra/óxido, tétanos neonatal (cordón umbilical)</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Inmunoglobulina antitetánica (TIG), Metronidazol, desbridamiento, soporte</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Inmunoglobulina antitetánica (TIG) para neutralizar toxina libre, Metronidazol (elimina la bacteria), desbridamiento de la herida, soporte (a veces sedación/ventilación)</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Esquema de vacunación completo (DPT/Td/Tdap) con refuerzos cada 10 años; vacunación materna en el embarazo para prevenir tétanos neonatal; profilaxis antitetánica según estado vacunal ante heridas de riesgo</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
 <span class="kw gold">Palillo de tambor</span><span class="kw">Tetanospasmina</span>
 <span class="kw gold">Bloquea GABA/Glicina</span><span class="kw">Trismus</span>
 <span class="kw">Opistótonos</span><span class="kw gold">Risa sardónica</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (3)</h4>
+<p><strong>1) Espasmo laríngeo/respiratorio</strong> (riesgo de asfixia). <strong>2) Fracturas vertebrales/musculares</strong> por espasmos violentos. <strong>3) Disautonomía</strong> (inestabilidad de PA y FC en casos graves).</p>
 </div>
 
 <div class="case-card" data-case="tet1">
@@ -1342,6 +1725,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: c)</strong> Tétanos neonatal = infección del muñón umbilical con C. tetani. Se previene con <strong>vacunación materna (Td o Tdap)</strong> durante el embarazo, que transfiere anticuerpos antitoxina al feto por vía transplacentaria. La clave: parto no asistido + instrumento no estéril.</div>
 </div>
+
+<div class="case-card" data-case="tet3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Hombre de 45 años sufre una herida punzante profunda y sucia con tierra en el antebrazo mientras jardineaba. No recuerda con certeza su estado de vacunación, pero cree haber recibido vacunas "hace muchos años, quizás en la infancia". Acude a urgencias 2 horas después de la herida, sin síntomas neurológicos aún.</div>
+<div class="case-q">¿Cuál es la conducta profiláctica correcta ante esta herida de alto riesgo con estado vacunal incierto?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="tet3q1">a) Limpieza y desbridamiento de la herida + aplicar tanto vacuna Td/Tdap como Inmunoglobulina antitetánica (TIG), ya que es una herida tetanígena (sucia, profunda, con tierra) y el estado vacunal es incierto/probablemente incompleto</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="tet3q1">b) Solo limpieza de la herida, no requiere ninguna profilaxis</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="tet3q1">c) Solo dar antibiótico oral, sin vacuna ni inmunoglobulina</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="tet3q1">d) Esperar a que aparezcan síntomas antes de actuar</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> Este caso ilustra la <strong>profilaxis antitetánica post-exposición</strong>, un tema clásico de examen: ante una <strong>herida tetanígena</strong> (sucia, profunda, contaminada con tierra, con tejido desvitalizado) y un <strong>estado vacunal incierto o incompleto</strong> (menos de 3 dosis o desconocido), se debe administrar <strong>tanto la vacuna (Td/Tdap)</strong> — para estimular memoria inmunológica y proteger a futuro — <strong>como la inmunoglobulina antitetánica (TIG)</strong> — para neutralizar de inmediato cualquier toxina que ya se esté produciendo, ya que la respuesta inmune activa tarda días-semanas en desarrollarse y el tétanos puede tener un período de incubación corto. Además, el manejo local (limpieza, desbridamiento del tejido desvitalizado) reduce el ambiente anaerobio que la bacteria necesita para esporular y multiplicarse.</div>
+</div>
 </div>
 </div>
 
@@ -1357,17 +1753,29 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
 <div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G+, anaerobio estricto, esporulado</div></div>
-<div class="ficha-item"><div class="fi-label">Toxina</div><div class="fi-value">Toxina botulínica — bloquea liberación de ACETILCOLINA en placa neuromuscular</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram positivo: pared gruesa de peptidoglicana retiene el cristal violeta → se tiñe de azul/violeta</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Diagnóstico clínico + detección de toxina en suero/heces/alimento (bioensayo en ratón o ELISA)</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Toxina botulínica (neurotoxina AB, la más potente conocida) — cliva proteínas SNARE, bloqueando la liberación de ACETILCOLINA en la placa neuromuscular</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Suero, heces, contenido gástrico o el alimento sospechoso, para detección de toxina</div></div>
 <div class="ficha-item"><div class="fi-label">Mecanismo</div><div class="fi-value">Cliva proteínas SNARE → no se libera ACh → parálisis FLÁCIDA</div></div>
-<div class="ficha-item"><div class="fi-label">Formas clínicas</div><div class="fi-value">Alimentario (conservas), infantil (miel), de herida</div></div>
+<div class="ficha-item"><div class="fi-label">Formas clínicas</div><div class="fi-value">Alimentario (conservas caseras mal esterilizadas), infantil (miel), de herida (uso de drogas IV)</div></div>
 <div class="ficha-item"><div class="fi-label">Clínica</div><div class="fi-value">Parálisis flácida DESCENDENTE: empieza con nervios craneales (diplopía, disfagia, disartria) → desciende</div></div>
-<div class="ficha-item"><div class="fi-label">Diferencial</div><div class="fi-value">≠ Tétanos (espástica) ≠ Guillain-Barré (ascendente)</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Antitoxina botulínica equina (neutraliza toxina circulante no unida), soporte respiratorio (riesgo de falla ventilatoria) — NO antibióticos en la forma infantil (pueden aumentar liberación de toxina por lisis bacteriana)</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Esterilización adecuada de conservas caseras, NO dar miel a menores de 1 año, cuidado con heridas en usuarios de drogas IV</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
 <span class="kw gold">Parálisis flácida DESCENDENTE</span><span class="kw">Bloquea ACh</span>
 <span class="kw gold">Conservas caseras</span><span class="kw">Miel → lactante</span>
 <span class="kw">SNARE</span><span class="kw gold">Nervios craneales primero</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚖️ Diagnóstico Diferencial</h4>
+<p><strong>≠ Tétanos:</strong> parálisis espástica (bloquea neurotransmisores inhibitorios). <strong>≠ Guillain-Barré:</strong> parálisis ascendente (pies hacia arriba), reflejos abolidos.</p>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (3)</h4>
+<p><strong>1) Insuficiencia respiratoria</strong> (parálisis de músculos respiratorios, causa principal de muerte). <strong>2) Disautonomía</strong> (íleo, retención urinaria, sequedad de mucosas). <strong>3) Parálisis prolongada</strong> (recuperación lenta, semanas a meses, por regeneración de nuevas terminales nerviosas).</p>
 </div>
 
 <div class="case-card" data-case="bot1">
@@ -1395,6 +1803,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: a)</strong> <strong>Botulismo infantil:</strong> la miel contiene ESPORAS (no toxina preformada). En el intestino inmaduro del lactante (<1 año), las esporas germinan y producen toxina IN VIVO. En adultos, la flora normal impide la germinación. Por eso: <strong>NO dar miel a menores de 1 año</strong>.</div>
 </div>
+
+<div class="case-card" data-case="bot3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Hombre de 34 años, usuario de drogas inyectables (heroína "black tar" subcutánea), presenta una herida en el antebrazo con celulitis local, sin fiebre alta ni signos claros de infección sistémica. Dos días después desarrolla visión borrosa, ptosis bilateral, dificultad para hablar y tragar, y debilidad progresiva descendente de las extremidades, con pupilas midriáticas poco reactivas. Está consciente y orientado, sin alteración sensitiva.</div>
+<div class="case-q">¿Cuál es el diagnóstico, por qué la vía de entrada es distinta a las formas clásicas y cuál es el manejo?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="bot3q1">a) Botulismo de herida — la toxina se produce localmente en la herida contaminada con esporas (típico en usuarios de drogas inyectables) y se absorbe sistémicamente; a diferencia del alimentario, aquí SÍ está indicado el desbridamiento de la herida y antibiótico (penicilina/metronidazol) además de la antitoxina y soporte respiratorio</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="bot3q1">b) Síndrome de Guillain-Barré — inmunoglobulina IV</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="bot3q1">c) Sobredosis de opioides — naloxona</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="bot3q1">d) Tétanos — inmunoglobulina antitetánica</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> El <strong>botulismo de herida</strong> es una forma menos común pero cada vez más reconocida, típicamente asociada a <strong>usuarios de drogas inyectables</strong> (especialmente heroína contaminada con esporas, inyectada por vía subcutánea/intramuscular — "skin popping"). A diferencia del botulismo alimentario (toxina preformada, ingerida) o infantil (esporas germinan en el intestino), aquí las esporas germinan <strong>en la herida</strong> y producen toxina localmente, que luego se disemina sistémicamente causando la misma parálisis flácida descendente característica. La distinción clínica clave con Guillain-Barré es el patrón <strong>descendente</strong> (craneal → periférico) con <strong>pupilas afectadas</strong> (por bloqueo colinérgico parasimpático), mientras GB es ascendente. El manejo combina <strong>antitoxina</strong>, soporte (vigilar función respiratoria), y a diferencia de las otras formas, aquí SÍ se recomienda <strong>desbridamiento de la herida y antibióticos</strong> (penicilina o metronidazol) para eliminar el foco productor de toxina.</div>
+</div>
 </div>
 </div>
 
@@ -1410,17 +1831,24 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
 <div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G+, anaerobio, esporulado</div></div>
-<div class="ficha-item"><div class="fi-label">Toxinas</div><div class="fi-value">Toxina A (enterotoxina) + Toxina B (citotoxina, más virulenta)</div></div>
-<div class="ficha-item"><div class="fi-label">Factor desencadenante</div><div class="fi-value">Uso previo de ANTIBIÓTICOS (clindamicina, fluoroquinolonas, cefalosporinas, ampicilina)</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram positivo: pared gruesa de peptidoglicana retiene el cristal violeta → se tiñe de azul/violeta</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Detección de antígeno GDH (tamizaje) + toxinas A/B en heces (EIA/PCR) — el cultivo solo no distingue cepas toxigénicas de no toxigénicas</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Toxina A (enterotoxina, daña la mucosa) + Toxina B (citotoxina, más potente, despolimeriza actina), esporas resistentes a alcohol y muchos desinfectantes</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Heces (solo si diarrea activa, no se testea en pacientes asintomáticos ni para "curación")</div></div>
+<div class="ficha-item"><div class="fi-label">Factor desencadenante</div><div class="fi-value">Uso previo de ANTIBIÓTICOS (clindamicina, fluoroquinolonas, cefalosporinas, ampicilina) que alteran la flora colónica normal</div></div>
 <div class="ficha-item"><div class="fi-label">Enfermedad</div><div class="fi-value">Colitis pseudomembranosa (pseudomembranas amarillentas en colonoscopía)</div></div>
-<div class="ficha-item"><div class="fi-label">Diagnóstico</div><div class="fi-value">Detección de toxinas A/B en heces (ELISA, PCR GDH+toxina)</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Vancomicina ORAL (1ª línea) o Fidaxomicina. Suspender ATB causante. Metronidazol IV si íleo</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Vancomicina ORAL (1ª línea) o Fidaxomicina; suspender el ATB causante; Metronidazol IV como adyuvante si hay íleo/megacolon — nunca vancomicina IV (no alcanza el colon)</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Uso racional de antibióticos (evitar los de alto riesgo cuando sea posible), higiene de manos con AGUA Y JABÓN (el alcohol-gel NO elimina esporas), aislamiento de contacto, limpieza ambiental con hipoclorito</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
 <span class="kw gold">Post-ANTIBIÓTICO</span><span class="kw">Pseudomembranas</span>
 <span class="kw gold">Toxina A + B</span><span class="kw">Clindamicina</span>
 <span class="kw">Vancomicina ORAL</span><span class="kw gold">Nosocomial</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (3)</h4>
+<p><strong>1) Megacolon tóxico</strong> (emergencia quirúrgica). <strong>2) Perforación colónica.</strong> <strong>3) Recurrencia</strong> (hasta 20-25% tras el primer episodio, mayor tras cada recaída).</p>
 </div>
 
 <div class="case-card" data-case="cdiff1">
@@ -1448,6 +1876,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: c)</strong> El <strong>transplante de microbiota fecal (TMF)</strong> restaura la flora colónica normal, que compite con C. difficile. Tiene eficacia >85% en recurrencias múltiples. La idea: C. difficile prolifera porque los antibióticos eliminaron la flora competidora.</div>
 </div>
+
+<div class="case-card" data-case="cdiff3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Mujer de 82 años, residente de un asilo, es tratada con ciprofloxacina por una ITU no complicada. A los 6 días desarrolla diarrea acuosa profusa (12 episodios/día), dolor abdominal difuso, fiebre 39°C y distensión abdominal progresiva. Laboratorio: leucocitosis de 35.000, creatinina elevada, albúmina baja. Rx abdomen: dilatación colónica >6cm sin signos de perforación. La enfermera del asilo comenta que varios residentes tuvieron diarrea similar en las últimas semanas.</div>
+<div class="case-q">¿Qué gravedad tiene este cuadro, cuál es la conducta terapéutica y qué medida de control de brote se necesita en el asilo?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="cdiff3q1">a) Infección por C. difficile fulminante con megacolon tóxico (leucocitosis >15.000, distensión colónica >6cm) — requiere Vancomicina oral en altas dosis + Metronidazol IV, evaluación quirúrgica urgente, y en el asilo: aislamiento de contacto, higiene de manos con AGUA Y JABÓN (no alcohol-gel) y limpieza con hipoclorito para las esporas</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="cdiff3q1">b) Gastroenteritis viral leve — solo hidratación oral</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="cdiff3q1">c) Diarrea del viajero — azitromicina</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="cdiff3q1">d) Constipación con diarrea por rebosamiento — laxantes</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> Este caso presenta criterios de <strong>infección grave/fulminante por C. difficile con megacolon tóxico</strong> (leucocitosis marcada, distensión colónica significativa, deterioro renal e hipoalbuminemia), lo que exige tratamiento intensivo con <strong>Vancomicina oral en dosis altas combinada con Metronidazol IV</strong>, además de evaluación quirúrgica ante el riesgo de perforación. El contexto (asilo, uso reciente de fluoroquinolona, brote entre residentes) es característico de <strong>transmisión nosocomial/institucional</strong>: las <strong>esporas</strong> de C. difficile son muy resistentes y sobreviven en superficies y manos durante mucho tiempo, y <strong>no se eliminan con gel de alcohol</strong> — por eso el control del brote requiere <strong>lavado de manos con agua y jabón</strong> (arrastre mecánico de esporas), aislamiento de contacto de los casos, y limpieza ambiental con productos esporicidas como el hipoclorito.</div>
+</div>
 </div>
 </div>
 
@@ -1462,18 +1903,26 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G+ grande, anaerobio, esporulado, doble zona de hemólisis</div></div>
-<div class="ficha-item"><div class="fi-label">Toxina principal</div><div class="fi-value">Toxina alfa (α) — lecitinasa/fosfolipasa C → destruye membranas celulares</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G+ grande, anaerobio, esporulado, inmóvil</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram positivo: pared gruesa de peptidoglicana retiene el cristal violeta → se tiñe de azul/violeta</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Doble zona de hemólisis en agar sangre (halo interno completo por toxina θ + halo externo parcial por toxina α)</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Toxina alfa (α) — lecitinasa/fosfolipasa C, destruye membranas celulares y causa hemólisis masiva; enterotoxina (liberada durante la esporulación intestinal, causa la intoxicación alimentaria)</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Exudado/tejido de la herida (gangrena gaseosa), coprocultivo/alimento sospechoso (intoxicación alimentaria)</div></div>
 <div class="ficha-item"><div class="fi-label">Enfermedades</div><div class="fi-value">Gangrena gaseosa (mionecrosis), intoxicación alimentaria (enterotoxina), celulitis</div></div>
 <div class="ficha-item"><div class="fi-label">Gangrena gaseosa</div><div class="fi-value">Crepitación, gas en tejidos, necrosis rápida, dolor intenso, olor fétido</div></div>
 <div class="ficha-item"><div class="fi-label">Intox. alimentaria</div><div class="fi-value">Carnes recalentadas, diarrea acuosa + cólicos 6-24h, autolimitada</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Desbridamiento quirúrgico URGENTE + Penicilina + Clindamicina</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Desbridamiento quirúrgico URGENTE (amputación si es necesario) + Penicilina + Clindamicina (esta última inhibe la síntesis de toxina); intoxicación alimentaria solo requiere soporte</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Manejo quirúrgico precoz de heridas traumáticas/contaminadas, refrigeración adecuada de alimentos cocidos (no dejar a temperatura ambiente), recalentar a temperatura suficiente antes de consumir</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
 <span class="kw gold">Gangrena gaseosa</span><span class="kw">Toxina alfa (lecitinasa)</span>
 <span class="kw gold">Crepitación</span><span class="kw">Gas en tejidos</span>
 <span class="kw">Doble hemólisis</span><span class="kw gold">Carnes recalentadas</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (3)</h4>
+<p><strong>1) Shock séptico/mionecrosis fulminante</strong> (alta mortalidad sin cirugía urgente). <strong>2) Amputación</strong> (a veces necesaria para control del foco). <strong>3) Hemólisis intravascular masiva</strong> (por toxina alfa, en bacteriemia).</p>
 </div>
 
 <div class="case-card" data-case="perf1">
@@ -1501,6 +1950,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: b)</strong> Carne recalentada + diarrea acuosa 8-12h + sin vómitos + autolimitada = <strong>C. perfringens tipo A</strong>. Las esporas sobreviven al recalentamiento, germinan en el intestino y liberan <strong>enterotoxina durante la esporulación</strong>. Diferencia de S. aureus: estafilococo tiene vómitos prominentes y inicio más rápido (1-6h).</div>
 </div>
+
+<div class="case-card" data-case="perf3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Mujer de 58 años, sometida a una cirugía abdominal complicada con contaminación fecal del campo quirúrgico. A las 24 horas presenta dolor abdominal intenso desproporcionado al examen, taquicardia, hipotensión y confusión. Al retirar el apósito, la piel periincisional está bronceada con ampollas, hay crepitación a la palpación y sale líquido serosanguinolento con olor fétido ("dulzón"). Laboratorio: hemólisis marcada (bilirrubina elevada, haptoglobina indetectable), acidosis metabólica. Rx: gas disecando los planos musculares.</div>
+<div class="case-q">¿Cuál es el diagnóstico, el mecanismo de la hemólisis y la conducta inmediata?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="perf3q1">a) Mionecrosis por Clostridium perfringens (gangrena gaseosa) — la toxina alfa (fosfolipasa C) degrada la lecitina de las membranas celulares, incluidas las de los eritrocitos, causando hemólisis intravascular masiva; requiere desbridamiento quirúrgico URGENTE (posible amputación) + Penicilina + Clindamicina, sin retrasar por estudios</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="perf3q1">b) Infección superficial de la herida — antibiótico oral ambulatorio</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="perf3q1">c) Reacción alérgica al material de sutura — antihistamínicos</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="perf3q1">d) Hematoma postquirúrgico simple — observación</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> Este caso reúne los signos clásicos de <strong>mionecrosis clostridial (gangrena gaseosa)</strong>: dolor desproporcionado de inicio súbito, crepitación, gas en los tejidos por radiografía, piel bronceada con ampollas, y un dato distintivo importante — la <strong>hemólisis intravascular masiva</strong>, causada porque la <strong>toxina alfa</strong> no solo destruye el tejido muscular sino que también <strong>lisa la membrana de los eritrocitos</strong> (por su actividad fosfolipasa C/lecitinasa), explicando la anemia hemolítica aguda con bilirrubina elevada y haptoglobina indetectable. Es una <strong>emergencia quirúrgica absoluta</strong>: el desbridamiento radical del tejido necrótico (a veces amputación) no debe retrasarse por estudios de imagen o laboratorio, y se combina con antibioticoterapia de alta dosis (Penicilina + Clindamicina, esta última para suprimir la producción de toxina).</div>
+</div>
 </div>
 </div>
 
@@ -1515,11 +1977,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G+ grande, aerobio, esporulado</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G+ grande, aerobio/anaerobio facultativo, esporulado, móvil</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram positivo: pared gruesa de peptidoglicana retiene el cristal violeta → se tiñe de azul/violeta</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Diagnóstico clínico-epidemiológico (alimento sospechoso + tiempo de incubación); cultivo del alimento puede confirmar recuento bacteriano alto</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Cereulida (toxina emética, preformada, termoestable — resiste el recalentamiento), enterotoxina termolábil (forma diarreica, producida in vivo en el intestino)</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Alimento sospechoso (arroz/carnes), coprocultivo en la forma diarreica</div></div>
 <div class="ficha-item"><div class="fi-label">Forma emética</div><div class="fi-value">Toxina cereulida (preformada, termoestable): VÓMITOS 1-6h, arroz frito recalentado</div></div>
 <div class="ficha-item"><div class="fi-label">Forma diarreica</div><div class="fi-value">Enterotoxina (termolábil, in vivo): DIARREA acuosa 8-16h, carnes/vegetales</div></div>
-<div class="ficha-item"><div class="fi-label">Clave</div><div class="fi-value">Arroz frito recalentado = B. cereus (emético)</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Autolimitado, soporte con hidratación</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Autolimitado, soporte con hidratación (no requiere antibiótico en la intoxicación alimentaria)</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">No dejar arroz/alimentos cocidos a temperatura ambiente por horas, refrigeración rápida tras la cocción, recalentar a temperatura suficiente</div></div>
 <div class="ficha-item"><div class="fi-label">Otro</div><div class="fi-value">También causa queratitis traumática (lentes de contacto, tierra en ojo)</div></div>
 </div>
 </div>
@@ -1527,6 +1993,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <span class="kw gold">Arroz frito recalentado</span><span class="kw">Vómitos 1-6h</span>
 <span class="kw gold">Cereulida (preformada)</span><span class="kw">Diarrea 8-16h</span>
 <span class="kw">2 síndromes</span><span class="kw gold">Autolimitado</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (2)</h4>
+<p><strong>1) Deshidratación</strong> (en casos con diarrea/vómitos profusos, generalmente leve/autolimitada). <strong>2) Queratitis grave</strong> (forma traumática ocular, puede llevar a pérdida visual si no se trata).</p>
 </div>
 
 <div class="case-card" data-case="bcer1">
@@ -1554,6 +2024,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: b)</strong> La <strong>forma diarreica</strong> de B. cereus (enterotoxina termolábil, 8-16h, carnes) es prácticamente indistinguible clínicamente de C. perfringens. En la práctica, si el alimento es carne recalentada, puede ser cualquiera. La diferencia clásica: <strong>si es ARROZ → B. cereus emético</strong>. Si es CARNE → puede ser ambos.</div>
 </div>
+
+<div class="case-card" data-case="bcer3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Agricultor de 45 años sufre una lesión corneal con una rama de árbol mientras trabajaba en el campo. No consulta de inmediato. A las 24 horas presenta dolor ocular intenso, fotofobia, enrojecimiento marcado y disminución rápida de la visión. Al examen con lámpara de hendidura: infiltrado corneal en forma de anillo, progresión muy rápida (en horas) hacia necrosis corneal, a pesar de gotas antibióticas de amplio espectro iniciadas de inmediato. Cultivo corneal: bacilo Gram positivo grande, esporulado, aerobio, móvil.</div>
+<div class="case-q">¿Cuál es el diagnóstico, por qué progresa tan rápido y cuál es el manejo correcto?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="bcer3q1">a) Queratitis por Bacillus cereus (traumática, típica tras lesión con material vegetal/tierra) — produce toxinas necrotizantes (fosfolipasas, hemolisinas) que causan destrucción corneal fulminante en horas; requiere tratamiento tópico intensivo con vancomicina/aminoglucósido según sensibilidad y evaluación oftalmológica urgente, ya que puede llevar a pérdida ocular</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="bcer3q1">b) Conjuntivitis bacteriana simple — continuar el mismo colirio</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="bcer3q1">c) Queratitis herpética — aciclovir tópico</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="bcer3q1">d) Queratitis alérgica — corticoide tópico solo</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> Más allá de las intoxicaciones alimentarias, B. cereus es una causa reconocida de <strong>queratitis traumática grave</strong>, típicamente tras lesiones corneales con <strong>material vegetal o contaminado con tierra</strong> (donde las esporas son ubicuas) o en usuarios de lentes de contacto. Es temida porque produce toxinas (fosfolipasas, hemolisinas, proteasas) que causan una <strong>destrucción corneal extremadamente rápida</strong> (horas), a menudo <strong>resistente a los antibióticos tópicos habituales</strong> de primera línea. Por eso, ante sospecha o confirmación, se requiere tratamiento tópico intensivo dirigido (vancomicina, aminoglucósidos) según cultivo y sensibilidad, y <strong>evaluación oftalmológica urgente</strong>, dado el riesgo real de perforación corneal y pérdida de la visión si el tratamiento no es rápido y agresivo.</div>
+</div>
 </div>
 </div>
 
@@ -1568,14 +2051,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <div class="ficha teoria-content">
 <h4>📋 Ficha Técnica</h4>
 <div class="ficha-grid">
-<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G+ grande, en cadenas ("caña de bambú"), esporulado, inmóvil, NO hemolítico</div></div>
-<div class="ficha-item"><div class="fi-label">Cápsula</div><div class="fi-value">Poli-D-ácido glutámico (proteica, NO polisacárida — única)</div></div>
-<div class="ficha-item"><div class="fi-label">Toxinas</div><div class="fi-value">Factor edema (EF) + Factor letal (LF) + Antígeno protector (PA)</div></div>
+<div class="ficha-item"><div class="fi-label">Morfología</div><div class="fi-value">Bacilo G+ grande, en cadenas ("caña de bambú"), esporulado, inmóvil</div></div>
+<div class="ficha-item"><div class="fi-label">Tinción de Gram</div><div class="fi-value">Gram positivo: pared gruesa de peptidoglicana retiene el cristal violeta → se tiñe de azul/violeta, dispuesto en largas cadenas</div></div>
+<div class="ficha-item"><div class="fi-label">Prueba de diferenciación</div><div class="fi-value">Colonias "cabeza de medusa" en agar sangre, NO hemolíticas (≠ otros Bacillus); cápsula visible con tinción especial (azul de metileno policromo)</div></div>
+<div class="ficha-item"><div class="fi-label">Cápsula</div><div class="fi-value">Poli-D-ácido glutámico (proteica, NO polisacárida — única entre las bacterias patógenas)</div></div>
+<div class="ficha-item"><div class="fi-label">Factor de virulencia</div><div class="fi-value">Toxina tripartita: Antígeno protector (PA, se une al receptor celular y forma el poro), Factor edema (EF, adenilato ciclasa → edema), Factor letal (LF, proteasa → apoptosis y shock); cápsula antifagocítica</div></div>
+<div class="ficha-item"><div class="fi-label">Muestra microbiológica</div><div class="fi-value">Exudado de la lesión cutánea, hemocultivo, esputo/lavado broncoalveolar (forma pulmonar), LCR (meníngea)</div></div>
 <div class="ficha-item"><div class="fi-label">Forma cutánea</div><div class="fi-value">Pápula → vesícula → ESCARA NEGRA indolora ("carbunco")</div></div>
 <div class="ficha-item"><div class="fi-label">Forma pulmonar</div><div class="fi-value">Inhalación de esporas → mediastinitis hemorrágica → shock, mortalidad ~90%</div></div>
-<div class="ficha-item"><div class="fi-label">Colonias</div><div class="fi-value">"Cabeza de medusa" en agar sangre, NO hemolíticas</div></div>
-<div class="ficha-item"><div class="fi-label">Diagnóstico</div><div class="fi-value">Cultivo, tinción (cadenas de bambú), PCR</div></div>
-<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Ciprofloxacina o Doxiciclina (profilaxis y cutáneo). Pulmonar: combinación múltiple</div></div>
+<div class="ficha-item"><div class="fi-label">Tratamiento</div><div class="fi-value">Ciprofloxacina o Doxiciclina (profilaxis y forma cutánea); forma pulmonar/sistémica requiere combinación de múltiples antibióticos + antitoxina</div></div>
+<div class="ficha-item"><div class="fi-label">Prevención</div><div class="fi-value">Vacunación de riesgo ocupacional/militar, evitar contacto con ganado/pieles enfermos, profilaxis post-exposición con antibiótico en sospecha de bioterrorismo</div></div>
 </div>
 </div>
 <div class="keywords teoria-content">
@@ -1583,6 +2068,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 <span class="kw gold">Cabeza de medusa</span><span class="kw">Cápsula poli-D-glutámico</span>
 <span class="kw">No hemolítico</span><span class="kw gold">Mediastinitis hemorrágica</span>
 <span class="kw">Bioterrorismo</span><span class="kw gold">Lana / ganado</span>
+</div>
+<div class="diff-dx teoria-content">
+<h4>⚠️ Complicaciones (3)</h4>
+<p><strong>1) Mediastinitis hemorrágica</strong> (forma pulmonar, mortalidad ~90% sin tratamiento precoz). <strong>2) Meningitis hemorrágica</strong> (diseminación sistémica). <strong>3) Shock séptico</strong> por el factor letal (LF).</p>
 </div>
 
 <div class="case-card" data-case="anth1">
@@ -1610,6 +2099,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 </div>
 <div class="case-explanation"><strong>Respuesta: b)</strong> <strong>Ántrax inhalatorio:</strong> esporas llegan a alvéolos → macrófagos las transportan a ganglios mediastínicos → germinan → producen toxinas → <strong>mediastinitis hemorrágica</strong> → ensanchamiento mediastínico en Rx. El patrón bifásico (mejora y luego colapso) es clásico. Mortalidad ~90%.</div>
 </div>
+
+<div class="case-card" data-case="anth3">
+<div class="case-label">Caso Clínico 3 (Integrador)</div>
+<div class="case-text">Trabajadora de una curtiembre artesanal de 38 años presenta una lesión indolora en el dorso de la mano de 4 días de evolución: comenzó como una pápula pruriginosa, evolucionó a vesícula y ahora es una úlcera con escara negra central rodeada de edema no doloroso importante y varias vesículas satélite. Está afebril y sin compromiso sistémico. Tinción del exudado: bacilos Gram positivos grandes en cadenas.</div>
+<div class="case-q">¿Cuál es la conducta terapéutica, el pronóstico de esta forma y qué NO se debe hacer con la lesión?</div>
+<div class="case-opts" data-correct="0">
+<label onclick="checkAnswer(this)"><input type="radio" name="anth3q1">a) Carbunco cutáneo — tratar con Ciprofloxacina o Doxiciclina oral; el pronóstico es excelente con tratamiento (mortalidad <1%) porque la toxina permanece localizada; NO se debe desbridar ni manipular quirúrgicamente la escara, ya que esto puede favorecer la diseminación bacteriana</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="anth3q1">b) Es ántrax pulmonar temprano — hospitalizar para tratamiento combinado IV inmediato</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="anth3q1">c) Se debe desbridar quirúrgicamente la escara de inmediato</label>
+<label onclick="checkAnswer(this)"><input type="radio" name="anth3q1">d) No requiere ningún tratamiento, se resuelve espontáneamente sin riesgo</label>
+</div>
+<div class="case-explanation"><strong>Respuesta: a).</strong> El <strong>carbunco cutáneo</strong> es la forma más frecuente (>95% de los casos) y la de mejor pronóstico de la enfermedad, típica en personas con exposición ocupacional a animales o productos animales (pieles, lana, cuero). Aunque la lesión es dramática, la infección tiende a permanecer <strong>localizada</strong> gracias a la respuesta inmune local, y con tratamiento antibiótico oportuno (Ciprofloxacina o Doxiciclina) el pronóstico es excelente. Un punto de manejo importante que suele evaluarse: a diferencia de otras lesiones necróticas cutáneas, la escara del carbunco <strong>NO se debe desbridar quirúrgicamente</strong>, ya que la manipulación puede romper la contención local y favorecer la <strong>diseminación bacteriana/toxémica</strong> — el manejo es médico, dejando que la escara se resuelva por sí sola con el tratamiento antibiótico sistémico.</div>
+</div>
 </div>
 </div>
 
@@ -1625,11 +2127,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-he
 
 </div><!-- end main-content -->
 
-<script src="https://chqhdmjqnjjdatowfyif.supabase.co/storage/v1/object/public/js/auth-guard.js"></script>
-<script src="https://chqhdmjqnjjdatowfyif.supabase.co/storage/v1/object/public/js/study-timer.js"></script>
-<script src="https://chqhdmjqnjjdatowfyif.supabase.co/storage/v1/object/public/js/enzo-ia.js"></script>
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
 <script>
-var PAGE_KEY = 'micro_pratica_final';
 var correctTotal = 0;
 var wrongTotal = 0;
 var answeredSet = {};
