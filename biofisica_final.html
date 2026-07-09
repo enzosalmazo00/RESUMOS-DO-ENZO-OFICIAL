@@ -210,7 +210,7 @@ nav.tabs button.active{background:var(--accent4);color:#fff;border-color:var(--a
   <div class="badge">❤️ Biofísica · Exame Final · 2026</div>
   <h1>Resumo Final — Biofísica</h1>
   <p class="sub">P1: Água · Sistemas Dispersos · pH · Viscosidade · Fluxo · Tensão Superficial · Buffer · Potencial de Ação<br>P2: Coração · ECG · Frank-Starling · Bainbridge · Hemodinâmica · Derivações</p>
-  <p style="margin-top:14px;color:var(--gold);font-size:12px;font-family:'JetBrains Mono',monospace;opacity:.9">⚡ Baseado nos vídeos do Aulão de Final — Dr. Saldivar</p>
+  <p style="margin-top:14px;color:var(--gold);font-size:12px;font-family:'JetBrains Mono',monospace;opacity:.9">⚡ Baseado no Aulão de Revisão para o Exame Final</p>
 </header>
 
 <nav class="tabs">
@@ -225,6 +225,7 @@ nav.tabs button.active{background:var(--accent4);color:#fff;border-color:var(--a
   <button onclick="showSection('forcas',this)">💪 Forças F-S</button>
   <button onclick="showSection('bainbridge',this)">🔄 Bainbridge</button>
   <button onclick="showSection('ecg',this)">📈 ECG</button>
+  <button onclick="showSection('ecgsim',this)">🖥️ Simulador de ECG</button>
   <button onclick="showSection('contracao',this)">💪 Contração Muscular</button>
   <button onclick="showSection('pegadinhas',this)">🎯 Pegadinhas</button>
   <button onclick="showSection('flashcards',this)">🃏 Flashcards</button>
@@ -1157,6 +1158,83 @@ DI ✗ + aVF ✓ = DESVIO DIREITO · DI ✗ + aVF ✗ = EIXO EXTREMO</div>
     <li>20. Grau de tensão ventricular depende do retorno venoso → <strong>Pré-carga</strong></li>
   </ul>
 </div>
+
+<div class="sec-divider"><h3>📋 Protocolo de Leitura do ECG — Os 4 Pilares</h3></div>
+<div class="info-block red">
+  <div class="label">Sequência que cai na prova aberta</div>
+  <h4>Toda leitura de ECG segue sempre a mesma ordem</h4>
+  <ol>
+    <li><strong>Ritmo</strong> — o intervalo R-R é constante (rítmico) ou varia (arrítmico)?</li>
+    <li><strong>Origem</strong> — existe onda P antes de cada QRS, positiva em DII? Se sim, o ritmo é sinusal.</li>
+    <li><strong>Frequência Cardíaca</strong> — pelo método 300 (quadrados grandes) ou 1500 (quadradinhos) no intervalo R-R.</li>
+    <li><strong>Eixo Elétrico</strong> — polaridade de DI e aVF (normal / desvio esquerdo / desvio direito / extremo).</li>
+  </ol>
+  <p style="margin-top:8px">Use a aba <strong>🖥️ Simulador de ECG</strong> para treinar os 4 passos com traçados gerados na hora.</p>
+</div>
+</div></div>
+
+<!-- ===== SIMULADOR DE ECG ===== -->
+<div id="ecgsim" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🖥️</span> Simulador de ECG — Treino de Ritmo, FC e Eixo</div>
+<div class="info-block">
+  <div class="label">Como usar</div>
+  <p>Cada traçado é gerado aleatoriamente. Conte os quadradinhos entre dois picos R, calcule a FC pelo método que preferir, decida se o ritmo é rítmico ou arrítmico — depois clique em "Mostrar resposta" para conferir o cálculo completo, igual à questão aberta da prova.</p>
+</div>
+
+<div class="sec-divider"><h3>Traçado — Ritmo &amp; Frequência</h3></div>
+<div style="background:#050810;border:1px solid var(--border);border-radius:var(--radius);padding:10px;margin-bottom:16px;overflow-x:auto">
+  <canvas id="ecgsim-canvas" width="860" height="200" style="display:block"></canvas>
+</div>
+<div class="grid2">
+<div class="card blue">
+  <button class="quiz-reset-btn" style="margin:0 0 12px" onclick="ecgsimNewCase()">↺ Gerar novo traçado</button>
+  <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:6px">Seu cálculo (mostre a fórmula)</label>
+  <textarea id="ecgsim-calc" placeholder="Ex.: 1500 / nº quadradinhos R-R = FC..." style="width:100%;min-height:70px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:13px"></textarea>
+</div>
+<div class="card teal">
+  <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:6px">Sua FC estimada (bpm)</label>
+  <input type="number" id="ecgsim-hr" placeholder="Ex.: 88" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 10px;font-family:'JetBrains Mono',monospace;font-size:14px;margin-bottom:10px">
+  <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:6px">Ritmo</label>
+  <div class="vof-row">
+    <button class="vof-btn vb" id="ecgsim-rit-r" onclick="ecgsimChooseRhythm(true)">Rítmico</button>
+    <button class="vof-btn fb" id="ecgsim-rit-i" onclick="ecgsimChooseRhythm(false)">Arrítmico</button>
+  </div>
+</div>
+</div>
+<div class="ecg-controls" style="margin-bottom:14px">
+  <button class="quiz-reset-btn" onclick="ecgsimToggleReveal()">Mostrar resposta</button>
+</div>
+<div class="qexpl" id="ecgsim-reveal" style="margin-bottom:24px"></div>
+
+<div class="sec-divider"><h3>Eixo Elétrico — DI &amp; aVF</h3></div>
+<div class="grid2">
+<div class="card">
+  <h4 style="text-align:center;margin-bottom:8px">DI</h4>
+  <canvas id="ecgsim-axis-di" width="260" height="90" style="display:block;margin:0 auto;background:#050810;border-radius:8px"></canvas>
+</div>
+<div class="card">
+  <h4 style="text-align:center;margin-bottom:8px">aVF</h4>
+  <canvas id="ecgsim-axis-avf" width="260" height="90" style="display:block;margin:0 auto;background:#050810;border-radius:8px"></canvas>
+</div>
+</div>
+<div class="ecg-controls" style="margin:14px 0">
+  <button class="quiz-reset-btn" onclick="ecgsimNewAxis()">↺ Gerar novo caso</button>
+</div>
+<textarea id="ecgsim-axis-calc" placeholder="Seu raciocínio: DI positivo + aVF... → eixo..." style="width:100%;min-height:60px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:13px;margin-bottom:12px"></textarea>
+<div class="vof-row" style="grid-template-columns:1fr 1fr;margin-bottom:8px">
+  <button class="vof-btn vb" onclick="ecgsimChooseAxis('normal')">Normal</button>
+  <button class="vof-btn fb" onclick="ecgsimChooseAxis('esquerda')">Desvio Esquerdo</button>
+</div>
+<div class="vof-row" style="margin-bottom:14px">
+  <button class="vof-btn fb" onclick="ecgsimChooseAxis('direita')">Desvio Direito</button>
+  <button class="vof-btn fb" onclick="ecgsimChooseAxis('extremo')">Extremo/Indeterminado</button>
+</div>
+<div class="ecg-controls" style="margin-bottom:14px">
+  <button class="quiz-reset-btn" onclick="ecgsimToggleAxisReveal()">Mostrar resposta</button>
+</div>
+<div class="qexpl" id="ecgsim-axis-reveal"></div>
+
 </div></div>
 
 <!-- ===== CONTRAÇÃO MUSCULAR ===== -->
@@ -1323,12 +1401,52 @@ DI ✗ + aVF ✓ = DESVIO DIREITO · DI ✗ + aVF ✗ = EIXO EXTREMO</div>
 <tr><td>Junções entre células</td><td>Ausentes (fibras isoladas)</td><td>Discos intercalares (gap junctions)</td><td>Junções comunicantes (em algumas)</td></tr>
 </table>
 
+<div class="sec-divider"><h3>Período Latente da Contração</h3></div>
+<div class="info-block">
+  <div class="label">Definição</div>
+  <h4>Intervalo entre o início do estímulo nervoso e o início da resposta mecânica</h4>
+  <p>Entre o disparo do potencial de ação na placa motora e o começo efetivo do encurtamento do sarcômero existe um pequeno atraso — o tempo gasto pelo acoplamento excitação-contração (condução pelos túbulos T, liberação de Ca²⁺ pelo retículo sarcoplasmático e formação das primeiras pontes cruzadas). Esse atraso não é igual para todas as fibras.</p>
+</div>
+<table class="compare-table">
+<tr><th>Tipo de fibra</th><th>Período latente aproximado</th><th>Onde predomina</th></tr>
+<tr><td><strong>Fibras rápidas (Tipo II)</strong></td><td>Mais curto (poucos milissegundos)</td><td>Musculatura fina de membros superiores — resposta ágil para movimentos de precisão</td></tr>
+<tr><td><strong>Fibras lentas (Tipo I)</strong></td><td>Mais longo (pode chegar a dezenas de milissegundos)</td><td>Musculatura de sustentação dos membros inferiores — resposta mais lenta, porém mais resistente à fadiga</td></tr>
+</table>
+<div class="info-block warn">
+  <div class="label">💡 Ideia-chave</div>
+  <p>Quanto mais rápida a fibra (mais glicolítica, menos mitocôndrias), menor o período latente. É o mesmo raciocínio de "fibra rápida = fadiga rápida, mas resposta ágil" já visto na tabela Tipo I vs Tipo II.</p>
+</div>
+
+<div class="sec-divider"><h3>Especialização da Inervação — Membros Superiores vs Inferiores</h3></div>
+<div class="grid2">
+<div class="card blue">
+  <h4>Membros Superiores — Precisão</h4>
+  <ul>
+    <li>Ramificação nervosa terminal mais extensa (unidades motoras pequenas)</li>
+    <li>Permite recrutar poucas fibras para tarefas delicadas ou mais fibras para tarefas pesadas — dosagem fina de força</li>
+    <li>Predomínio relativo de fibras rápidas → resposta ágil e precisa</li>
+  </ul>
+</div>
+<div class="card red">
+  <h4>Membros Inferiores — Potência</h4>
+  <ul>
+    <li>Menos ramificações nervosas (unidades motoras grandes)</li>
+    <li>Um único estímulo já ativa grande parte do músculo — ativação "em bloco"</li>
+    <li>Predomínio relativo de fibras lentas → sustentam a bipedestação por longos períodos sem fadigar</li>
+  </ul>
+</div>
+</div>
+<div class="info-block success">
+  <div class="label">Por que isso importa clinicamente</div>
+  <p>É a mesma lógica de "unidade motora pequena = controle fino" já vista na Junção Neuromuscular: quanto menor o número de fibras por unidade motora, maior a precisão do movimento — por isso os músculos da mão têm muito mais unidades motoras que o quadríceps.</p>
+</div>
+
 </div></div>
 
 <!-- ===== PEGADINHAS ===== -->
 <div id="pegadinhas" class="section">
 <div class="container">
-<div class="chapter-title"><span class="chap-icon">🎯</span> Pegadinhas do Dr. Saldivar</div>
+<div class="chapter-title"><span class="chap-icon">🎯</span> Pegadinhas Clássicas de Prova</div>
 
 <div class="info-block red" style="background:rgba(231,76,60,0.12);border-left:4px solid var(--accent4)">
   <div class="label">⚠️ Atenção</div>
@@ -1462,7 +1580,7 @@ var pegData=[
   {cat:'Tensão Superficial',icon:'🫧',stmt:'"A tensão superficial existe em qualquer estado da matéria."',verdict:false,exp:'<strong>FALSO.</strong> A tensão superficial existe <strong>APENAS no estado líquido</strong>. É a força de coesão entre moléculas de líquido na superfície. Em sólidos há coesão cristalina; em gases não há coesão suficiente.'},
   {cat:'Tensão Superficial',icon:'🫧',stmt:'"O surfactante AUMENTA a tensão superficial para manter os alvéolos inflados."',verdict:false,exp:'<strong>FALSO.</strong> O surfactante <strong>REDUZ/DIMINUI</strong> a tensão superficial. É justamente diminuindo a tensão superficial que ele impede o colapso alveolar. Se aumentasse, pioraria o colapso.'},
   // ===== P1 — POTENCIAL DE AÇÃO =====
-  {cat:'Potencial de Ação',icon:'⚡',stmt:'"Os canais lentos de Ca²⁺ (tipo L) abrem rapidamente e têm curto tempo aberto, sendo mais rápidos que os canais de Na⁺."',verdict:false,exp:'<strong>FALSO — Pegadinha clássica do Dr. Saldivar!</strong> Os canais de Ca²⁺ tipo L são chamados "lentos" exatamente porque abrem <strong>LENTAMENTE</strong> e ficam abertos por <strong>LONGO tempo</strong> (200–300ms = todo o platô). São mais LENTOS que os de Na⁺.'},
+  {cat:'Potencial de Ação',icon:'⚡',stmt:'"Os canais lentos de Ca²⁺ (tipo L) abrem rapidamente e têm curto tempo aberto, sendo mais rápidos que os canais de Na⁺."',verdict:false,exp:'<strong>FALSO — Pegadinha clássica de prova!</strong> Os canais de Ca²⁺ tipo L são chamados "lentos" exatamente porque abrem <strong>LENTAMENTE</strong> e ficam abertos por <strong>LONGO tempo</strong> (200–300ms = todo o platô). São mais LENTOS que os de Na⁺.'},
   {cat:'Potencial de Ação',icon:'⚡',stmt:'"O potencial de ação tipo Meseta dura apenas 1–2 milissegundos, igual à Espiga."',verdict:false,exp:'<strong>FALSO.</strong> A Meseta dura <strong>200–300 milissegundos</strong> (0,2–0,3 segundos) — o platô por entrada de Ca²⁺. A Espiga é que dura 1–2ms (neurônio/músculo esquelético). A Meseta é ~150–300× mais longa que a Espiga.'},
   {cat:'Potencial de Ação',icon:'⚡',stmt:'"Durante o período refratário absoluto, é possível gerar um novo PA com estímulo muito forte."',verdict:false,exp:'<strong>FALSO.</strong> Durante o período refratário <strong>ABSOLUTO</strong> é IMPOSSÍVEL gerar novo PA com QUALQUER estímulo. Os canais de Na⁺ estão inativados. Só no refratário RELATIVO é possível com estímulo supralimiar.'},
   {cat:'Potencial de Ação',icon:'⚡',stmt:'"As células auto-excitáveis do coração têm potencial de repouso fixo em −70 mV."',verdict:false,exp:'<strong>FALSO.</strong> As células auto-excitáveis <strong>NUNCA</strong> têm potencial de repouso verdadeiro. Elas têm uma <strong>rampa ascendente lenta</strong> (pré-potencial) que as leva automaticamente ao umbral — jamais estabilizam em −70 mV.'},
@@ -1669,6 +1787,9 @@ var fcData=[
   {cat:'Contração Muscular',q:'Fontes de energia da contração — ordem de uso',a:'① ATP estocado (2–3s) → ② Fosfocreatina (8–10s, via creatina-quinase) → ③ Glicólise anaeróbica (1–2min, produz lactato) → ④ Fosforilação oxidativa (prolongada, requer O₂).'},
   {cat:'Contração Muscular',q:'Relação comprimento-tensão — o que diz?',a:'Existe um comprimento ótimo do sarcômero (~2,0–2,2 μm) com sobreposição ideal actina-miosina = força máxima. Muito estirado ou muito encurtado = menos força. É o princípio mecânico por trás da Lei de Frank-Starling cardíaca.'},
   {cat:'Contração Muscular',q:'Diferença entre Tétano Incompleto e Completo',a:'Tétano incompleto: estímulos frequentes mas com pequena oscilação de relaxamento entre eles. Tétano completo: estímulos tão frequentes que a contração é sustentada, lisa, sem oscilações visíveis.'},
+  {cat:'Contração Muscular',q:'O que é o Período Latente da contração?',a:'Intervalo entre o início do estímulo nervoso e o início da resposta mecânica. Fibras rápidas (membros superiores) têm período latente mais curto; fibras lentas (membros inferiores) têm período mais longo.'},
+  {cat:'Contração Muscular',q:'Por que membros superiores têm mais precisão motora que os inferiores?',a:'Têm ramificação nervosa terminal mais extensa (unidades motoras pequenas) → dosagem fina do número de fibras recrutadas. Membros inferiores têm unidades motoras grandes → ativação em bloco, priorizando potência e sustentação.'},
+  {cat:'ECG',q:'Quais são os 4 pilares da leitura sistemática do ECG?',a:'① Ritmo (regular ou irregular) → ② Origem (é sinusal? onda P antes de cada QRS) → ③ Frequência Cardíaca (método 300 ou 1500) → ④ Eixo Elétrico (DI + aVF).'},
 ];
 
 var fcShown=0;
@@ -1810,6 +1931,15 @@ var qData=[
   {t:'mc',q:'Qual fonte de energia muscular é utilizada PRIMEIRO, nos primeiros segundos de esforço?',o:['Fosforilação oxidativa','Glicólise anaeróbica','ATP estocado','Fosfocreatina'],c:2,e:'O ATP já estocado na fibra é usado imediatamente (2–3s). Em seguida entra a fosfocreatina (8–10s), depois a glicólise anaeróbica (1–2min) e por fim a fosforilação oxidativa (prolongada).'},
   {t:'vof',q:'[V/F] A relação comprimento-tensão do músculo esquelético é o mesmo princípio mecânico por trás da Lei de Frank-Starling no coração.',c:true,e:'VERDADEIRO. Ambos dependem do grau de sobreposição entre actina e miosina: existe um comprimento ótimo do sarcômero para força máxima — no coração isso é descrito como Frank-Starling.'},
   {t:'mc',q:'Tétano completo é definido como:',o:['Resposta a um único estímulo isolado','Contração sustentada e lisa por estímulos muito frequentes, sem oscilações','Relaxamento total entre estímulos','Ausência de resposta muscular'],c:1,e:'Tétano completo ocorre quando os estímulos são tão frequentes que não há tempo para relaxamento entre eles — a contração fica sustentada e lisa, sem oscilações (diferente do tétano incompleto).'},
+  // PERÍODO LATENTE E ESPECIALIZAÇÃO MOTORA
+  {t:'mc',q:'O Período Latente da contração muscular corresponde ao intervalo entre:',o:['A contração e o relaxamento','A entrada e a saída de ATP','O início do estímulo nervoso e o início da contração mecânica','A liberação e a reciclagem do Ca²⁺'],c:2,e:'Período latente = tempo entre o disparo do potencial de ação na placa motora e o início efetivo do encurtamento — o tempo gasto no acoplamento excitação-contração.'},
+  {t:'mc',q:'Em relação ao período latente, é correto afirmar que:',o:['É igual em todas as fibras musculares','Fibras rápidas têm período latente mais curto que fibras lentas','Fibras lentas respondem mais rápido que fibras rápidas','Não depende do tipo de fibra'],c:1,e:'Fibras rápidas (Tipo II, predominantes em membros superiores) têm período latente mais curto — resposta mais ágil. Fibras lentas (Tipo I, predominantes em membros inferiores) têm período latente mais longo.'},
+  {t:'mc',q:'A maior ramificação nervosa terminal nos músculos dos membros superiores permite:',o:['Contração mais lenta e imprecisa','Dosagem fina do número de fibras recrutadas para movimentos delicados','Ativação obrigatória de todas as fibras a cada estímulo','Predomínio exclusivo de fibras lentas'],c:1,e:'Unidades motoras pequenas nos membros superiores permitem recrutar poucas fibras (tarefas delicadas) ou mais fibras (tarefas pesadas) — dosagem fina de força, base da precisão motora da mão.'},
+  {t:'vof',q:'[V/F] Nos membros inferiores, a menor quantidade de ramificações nervosas resulta em ativação simultânea de um grande número de fibras por estímulo.',c:true,e:'VERDADEIRO. Unidades motoras grandes nos membros inferiores ativam muitas fibras de uma vez — prioriza potência e sustentação da postura, em vez de precisão.'},
+  // PROTOCOLO DE LEITURA DO ECG
+  {t:'mc',q:'Na leitura sistemática de um ECG, a sequência correta dos 4 passos é:',o:['Eixo → FC → Ritmo → Origem','Ritmo → Origem (sinusal?) → Frequência Cardíaca → Eixo Elétrico','Origem → Eixo → Ritmo → FC','FC → Eixo → Origem → Ritmo'],c:1,e:'Protocolo padrão: ① Ritmo (regular/irregular) → ② Origem (é sinusal — onda P antes de cada QRS?) → ③ Frequência Cardíaca (R-R) → ④ Eixo Elétrico (DI + aVF).'},
+  {t:'mc',q:'Para afirmar que um ritmo é SINUSAL, é necessário observar:',o:['QRS estreito em todas as derivações','Onda T sempre positiva','Onda P positiva em DII, presente antes de cada complexo QRS','Intervalo PR maior que 200ms'],c:2,e:'Ritmo sinusal = origem no Nó SA = onda P positiva em DII, precedendo cada QRS, com intervalo PR constante. Sem esse padrão, o ritmo pode ter origem ectópica.'},
+  {t:'vof',q:'[V/F] Um ritmo é considerado arrítmico quando o intervalo R-R varia de batimento para batimento.',c:true,e:'VERDADEIRO. Ritmo rítmico (regular) = intervalos R-R constantes. Arrítmico (irregular) = intervalos R-R variáveis, como na Fibrilação Atrial.'},
 ];
 
 var score=0,answered=0;
@@ -1887,8 +2017,166 @@ function updateScore(){
 
 function resetQuiz(){if(!confirm('Reiniciar o quiz?')) return;renderQuiz();}
 
+// ===== SIMULADOR DE ECG =====
+var ecgsimCase=null, ecgsimAxisCase=null;
+var ecgsimPxPerSmallSquare=8;
+
+function ecgsimDrawGrid(ctx,w,h){
+  ctx.fillStyle='#050810';
+  ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle='rgba(231,76,60,0.10)';
+  ctx.lineWidth=1;
+  for(var x=0;x<w;x+=ecgsimPxPerSmallSquare){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+  for(var y=0;y<h;y+=ecgsimPxPerSmallSquare){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+  ctx.strokeStyle='rgba(231,76,60,0.26)';
+  ctx.lineWidth=1.2;
+  for(var x2=0;x2<w;x2+=ecgsimPxPerSmallSquare*5){ctx.beginPath();ctx.moveTo(x2,0);ctx.lineTo(x2,h);ctx.stroke();}
+  for(var y2=0;y2<h;y2+=ecgsimPxPerSmallSquare*5){ctx.beginPath();ctx.moveTo(0,y2);ctx.lineTo(w,y2);ctx.stroke();}
+}
+
+function ecgsimDrawBeat(ctx,x0,baseline,amp){
+  ctx.lineTo(x0+8,baseline);
+  ctx.quadraticCurveTo(x0+14,baseline-amp*0.18,x0+20,baseline);
+  ctx.lineTo(x0+28,baseline);
+  ctx.lineTo(x0+32,baseline+amp*0.12);
+  ctx.lineTo(x0+36,baseline-amp*0.9);
+  ctx.lineTo(x0+40,baseline+amp*0.45);
+  ctx.lineTo(x0+44,baseline);
+  ctx.lineTo(x0+56,baseline);
+  ctx.quadraticCurveTo(x0+68,baseline-amp*0.28,x0+80,baseline);
+}
+
+function ecgsimGenerateCase(regular){
+  var canvas=document.getElementById('ecgsim-canvas');
+  var w=canvas.width;
+  var baseSquares=15+Math.floor(Math.random()*21);
+  var beats=[],cursor=40;
+  var interval=baseSquares*ecgsimPxPerSmallSquare;
+  while(cursor<w-90){
+    beats.push(cursor);
+    var thisInterval=interval;
+    if(!regular){thisInterval=interval*(0.7+Math.random()*0.6);}
+    cursor+=thisInterval;
+  }
+  return {beats:beats,smallSquares:baseSquares,regular:regular};
+}
+
+function ecgsimRenderCase(c){
+  var canvas=document.getElementById('ecgsim-canvas');
+  var ctx=canvas.getContext('2d');
+  ecgsimDrawGrid(ctx,canvas.width,canvas.height);
+  var baseline=canvas.height*0.55;
+  ctx.strokeStyle='#e74c3c';
+  ctx.lineWidth=2.2;
+  ctx.beginPath();
+  ctx.moveTo(0,baseline);
+  c.beats.forEach(function(bx){ecgsimDrawBeat(ctx,bx,baseline,68);});
+  ctx.lineTo(canvas.width,baseline);
+  ctx.stroke();
+}
+
+function ecgsimNewCase(){
+  var regular=Math.random()>0.4;
+  ecgsimCase=ecgsimGenerateCase(regular);
+  ecgsimRenderCase(ecgsimCase);
+  document.getElementById('ecgsim-reveal').classList.remove('show');
+  document.getElementById('ecgsim-calc').value='';
+  document.getElementById('ecgsim-hr').value='';
+  document.getElementById('ecgsim-rit-r').classList.remove('correct','wrong','done');
+  document.getElementById('ecgsim-rit-i').classList.remove('correct','wrong','done');
+}
+
+function ecgsimChooseRhythm(choseRegular){
+  if(!ecgsimCase) return;
+  var rBtn=document.getElementById('ecgsim-rit-r'), iBtn=document.getElementById('ecgsim-rit-i');
+  rBtn.classList.remove('correct','wrong');
+  iBtn.classList.remove('correct','wrong');
+  rBtn.classList.add('done');iBtn.classList.add('done');
+  var ok=(choseRegular===ecgsimCase.regular);
+  var chosenBtn=choseRegular?rBtn:iBtn;
+  chosenBtn.classList.add(ok?'correct':'wrong');
+  if(!ok){(ecgsimCase.regular?rBtn:iBtn).classList.add('correct');}
+}
+
+function ecgsimToggleReveal(){
+  if(!ecgsimCase) return;
+  var box=document.getElementById('ecgsim-reveal');
+  var hr1500=Math.round(1500/ecgsimCase.smallSquares);
+  var bigSq=(ecgsimCase.smallSquares/5).toFixed(1);
+  var hr300=Math.round(300/(ecgsimCase.smallSquares/5));
+  box.innerHTML='💡 <strong>Quadradinhos entre R-R:</strong> '+ecgsimCase.smallSquares+' (≈ '+bigSq+' quadrados grandes)<br>'+
+    '<strong>Método 1500:</strong> 1500 ÷ '+ecgsimCase.smallSquares+' = <strong>'+hr1500+' bpm</strong><br>'+
+    '<strong>Método 300:</strong> 300 ÷ '+bigSq+' ≈ <strong>'+hr300+' bpm</strong><br>'+
+    '<strong>Ritmo:</strong> '+(ecgsimCase.regular?'Rítmico (R-R constante)':'Arrítmico (R-R variável)');
+  box.classList.add('show');
+}
+
+var ecgsimAxisOptions=[
+  {di:1,avf:1,label:'normal',exp:'DI positivo e aVF positivo → eixo dentro da faixa normal (0° a +90°).'},
+  {di:1,avf:-1,label:'esquerda',exp:'DI positivo e aVF negativo → desvio à esquerda (0° a −90°).'},
+  {di:-1,avf:1,label:'direita',exp:'DI negativo e aVF positivo → desvio à direita (+90° a +180°).'},
+  {di:-1,avf:-1,label:'extremo',exp:'DI negativo e aVF negativo → eixo extremo/indeterminado.'}
+];
+
+function ecgsimDrawAxisLead(canvasId,positive){
+  var c=document.getElementById(canvasId);
+  var ctx=c.getContext('2d');
+  ctx.fillStyle='#050810';
+  ctx.fillRect(0,0,c.width,c.height);
+  ctx.strokeStyle='rgba(231,76,60,0.14)';
+  for(var x=0;x<c.width;x+=8){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,c.height);ctx.stroke();}
+  for(var y=0;y<c.height;y+=8){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(c.width,y);ctx.stroke();}
+  var baseline=c.height/2;
+  ctx.strokeStyle='#38e8c0';
+  ctx.lineWidth=2.4;
+  ctx.beginPath();
+  ctx.moveTo(10,baseline);
+  ctx.lineTo(90,baseline);
+  if(positive>0){
+    ctx.lineTo(100,baseline+8);
+    ctx.lineTo(115,baseline-c.height*0.36);
+    ctx.lineTo(130,baseline+10);
+  } else {
+    ctx.lineTo(100,baseline-8);
+    ctx.lineTo(115,baseline+c.height*0.36);
+    ctx.lineTo(130,baseline-10);
+  }
+  ctx.lineTo(140,baseline);
+  ctx.lineTo(c.width-10,baseline);
+  ctx.stroke();
+}
+
+function ecgsimNewAxis(){
+  ecgsimAxisCase=ecgsimAxisOptions[Math.floor(Math.random()*ecgsimAxisOptions.length)];
+  ecgsimDrawAxisLead('ecgsim-axis-di',ecgsimAxisCase.di);
+  ecgsimDrawAxisLead('ecgsim-axis-avf',ecgsimAxisCase.avf);
+  document.getElementById('ecgsim-axis-reveal').classList.remove('show');
+  document.getElementById('ecgsim-axis-calc').value='';
+  document.querySelectorAll('#ecgsim .vof-btn').forEach(function(b){b.classList.remove('correct','wrong','done');});
+}
+
+function ecgsimChooseAxis(choice){
+  if(!ecgsimAxisCase) return;
+  var buttons=document.querySelectorAll('#ecgsim .vof-row .vof-btn');
+  var labels=['normal','esquerda','direita','extremo'];
+  buttons.forEach(function(b){b.classList.add('done');b.classList.remove('correct','wrong');});
+  var idx=labels.indexOf(choice);
+  var ok=(choice===ecgsimAxisCase.label);
+  buttons[idx].classList.add(ok?'correct':'wrong');
+  if(!ok){buttons[labels.indexOf(ecgsimAxisCase.label)].classList.add('correct');}
+}
+
+function ecgsimToggleAxisReveal(){
+  if(!ecgsimAxisCase) return;
+  var box=document.getElementById('ecgsim-axis-reveal');
+  box.innerHTML='💡 <strong>DI:</strong> '+(ecgsimAxisCase.di>0?'positivo':'negativo')+' &nbsp; <strong>aVF:</strong> '+(ecgsimAxisCase.avf>0?'positivo':'negativo')+'<br>'+ecgsimAxisCase.exp;
+  box.classList.add('show');
+}
+
 renderQuiz();
 renderPegadinhas();
+ecgsimNewCase();
+ecgsimNewAxis();
 </script>
 
 <script src="study-timer.js"></script>
