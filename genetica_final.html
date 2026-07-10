@@ -266,21 +266,23 @@ nav.tabs button.active {
 <header>
   <div class="badge">🧬 Genética Médica · Examen Final · 2026</div>
   <h1>Resumen Final — Genética Médica</h1>
-  <p class="sub">Bases · Herencia · EIM · Hemoglobinopatías · Cromosomatopatías · Defeitos Congênitos · Multifactorial</p>
+  <p class="sub">História · Bases · Herencia · EIM · Hemoglobinopatías · Cromosomatopatías · Defeitos Congênitos · Teratógenos · Pré-natal · Multifactorial · Palavras-Chave</p>
   <p class="by">⚡ Elaborado por Enzo Salmazo · Emery / Thompson · Dr. Roberto Ottoni · UCP 3° Semestre</p>
   <p class="verse">📖 "Mil caerán a tu lado y diez mil a tu diestra, pero a ti no te llegará" — Salmos 91:7</p>
 </header>
 
 <nav class="tabs">
   <button class="active" onclick="showSection('intro', this)">📖 Intro</button>
+  <button onclick="showSection('historia', this)">📅 História</button>
   <button onclick="showSection('bases', this)">🧬 Bases</button>
   <button onclick="showSection('herencia', this)">🔗 Herencia</button>
   <button onclick="showSection('eim', this)">🧪 EIM</button>
   <button onclick="showSection('sangre', this)">🩸 Sangre</button>
   <button onclick="showSection('cromo', this)">📊 Cromosom.</button>
   <button onclick="showSection('defeitos', this)">🧬 Defeitos</button>
+  <button onclick="showSection('chaves', this)">🔑 Palavras-Chave</button>
   <button onclick="showSection('flashcards', this)">🃏 Flashcards</button>
-  <button onclick="showSection('quiz', this)">📝 Quiz (70Q)</button>
+  <button onclick="showSection('quiz', this)">📝 Quiz (95Q)</button>
   <button onclick="showSection('provas', this)">📋 Provas</button>
 </nav>
 
@@ -291,29 +293,86 @@ nav.tabs button.active {
 <div class="info-block">
   <div class="label">Visión General</div>
   <h4>Contenido del Examen Final de Genética Médica</h4>
-  <p>Este resumen cubre <strong>toda la materia</strong> de Genética Médica del 3° semestre (P1 + P2 + Clase 14 — Herencia Multifactorial) para el examen final con el Dr. Roberto Ottoni. Incluye <strong>20+ flashcards interactivos</strong> y <strong>70 questões de quiz</strong> con gabarito comentado, además de las 20 preguntas de la prova antiga con gabarito oficial.</p>
+  <p>Este resumen cubre <strong>toda la materia</strong> de Genética Médica del 3° semestre (P1 + P2 + Clase 14 — Herencia Multifactorial), organizada según los <strong>12 temas oficiais</strong> anunciados por el Dr. Roberto Ottoni para el Examen Final. Incluye <strong>32 flashcards interactivos</strong>, <strong>95 questões de quiz</strong> com gabarito comentado, una sección dedicada de <strong>Palavras-Chave</strong> para reconocimiento instantáneo de enfermedades, además de las 20 preguntas de la prova antiga con gabarito oficial.</p>
 </div>
 <div class="info-block success">
   <div class="label">Cómo estudiar</div>
   <h4>Roteiro sugerido</h4>
   <ol>
-    <li>Lea cada sección en orden (Bases → Herencia → EIM → Sangre → Cromosomatopatías → Defeitos/Teratógenos).</li>
+    <li>Lea cada sección en orden (História → Bases → Herencia → EIM → Sangre → Cromosomatopatías → Defeitos/Teratógenos).</li>
+    <li>Estude a seção <strong>🔑 Palavras-Chave</strong> — é o atalho mais rápido para acertar questões de reconhecimento clínico.</li>
     <li>Use los <strong>flashcards</strong> para fijar los conceptos clave.</li>
-    <li>Haga las <strong>70 questões</strong> del quiz — cubren todas las secciones.</li>
+    <li>Haga las <strong>95 questões</strong> del quiz — cubren todas las secciones.</li>
     <li>Repase las <strong>Provas Antigas</strong> para practicar con formato de examen real.</li>
   </ol>
 </div>
-<div class="sec-divider"><h3>Temario del Examen Final</h3></div>
+<div class="sec-divider"><h3>Temario Oficial do Examen Final (12 Temas)</h3></div>
 <table class="compare-table">
-<tr><th>Bloque</th><th>Temas</th><th>Fuente</th></tr>
-<tr><td>🧬 Bases Genéticas</td><td>DNA, RNA, replicación, codones, cromosomas, cariótipo, Leyes de Mendel</td><td>P1</td></tr>
-<tr><td>🔗 Herencia</td><td>AD, AR, Ligada al X (XD, XR), Y-ligada, Multifactorial, Poligénica</td><td>P2 + Clase 14</td></tr>
-<tr><td>🧪 EIM</td><td>PKU, Homocistinuria, Galactosemia, Hipercolesterolemia Familiar, Gota, Porfirias</td><td>P1</td></tr>
-<tr><td>🩸 Sangre</td><td>ABO/Rh, Anemia Falciforme, Talasemias, Coombs</td><td>P1 + P2</td></tr>
-<tr><td>📊 Cromosomatopatías</td><td>Down (T21), Edwards (T18), Patau (T13), Turner (45,X), Klinefelter (47,XXY), Jacobs (47,XYY)</td><td>P1 + P2</td></tr>
-<tr><td>🧬 Defeitos Congênitos</td><td>Malformação, Deformidade, Disrupção, Teratógenos, Diagnóstico Pré-natal</td><td>P2</td></tr>
-<tr><td>🧠 Inteligência</td><td>MEF2C, Herdabilidade, Poligênica</td><td>P2</td></tr>
+<tr><th>#</th><th>Tema</th><th>Aba correspondente</th></tr>
+<tr><td>1</td><td>História da Genética</td><td>📅 História</td></tr>
+<tr><td>2</td><td>Conceitos Básicos</td><td>📅 História</td></tr>
+<tr><td>3</td><td>Material Genético</td><td>🧬 Bases</td></tr>
+<tr><td>4</td><td>Cruzamentos (Leis de Mendel)</td><td>🧬 Bases</td></tr>
+<tr><td>5</td><td>Erros do Metabolismo</td><td>🧪 EIM</td></tr>
+<tr><td>6</td><td>Hemoglobinopatias</td><td>🩸 Sangre</td></tr>
+<tr><td>7</td><td>Aberrações Cromossômicas</td><td>📊 Cromosom.</td></tr>
+<tr><td>8</td><td>Defeitos Congênitos</td><td>🧬 Defeitos</td></tr>
+<tr><td>9</td><td>Teratógenos</td><td>🧬 Defeitos</td></tr>
+<tr><td>10</td><td>Padrões de Herança</td><td>🔗 Herencia</td></tr>
+<tr><td>11</td><td>Diagnóstico Pré-natal</td><td>🧬 Defeitos</td></tr>
+<tr><td>12</td><td>Herança Multifatorial</td><td>🔗 Herencia</td></tr>
 </table>
+</div></div>
+
+<!-- ═══════════ HISTÓRIA & CONCEITOS ═══════════ -->
+<div id="historia" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">📅</span> 1. História da Genética & 2. Conceitos Básicos</div>
+
+<div class="info-block">
+  <div class="label">Definição</div>
+  <h4>Genética = estudo da transferência de informações hereditárias entre gerações</h4>
+  <p>Ramo da biologia que estuda como características físicas, fisiológicas e metabólicas passam dos pais para os filhos. O <strong>material genético</strong> fica armazenado no núcleo das células.</p>
+</div>
+
+<div class="sec-divider"><h3>⏱️ Linha do Tempo — Marcos Históricos</h3></div>
+<table class="compare-table">
+<tr><th>Marco</th><th>Contribuição-chave (palavra-chave)</th></tr>
+<tr><td><strong>Gregor Mendel</strong> (séc. XIX)</td><td>Leis da hereditariedade com ervilhas — <strong>"teoria da herança particular"</strong> (venceu a antiga "teoria da mistura")</td></tr>
+<tr><td><strong>Friedrich Miescher</strong></td><td>Descobriu o <strong>ácido nucleico</strong> no núcleo celular — primeira observação do material genético</td></tr>
+<tr><td><strong>Wilhelm Johannsen</strong></td><td>Criou os termos <strong>gene, genótipo e fenótipo</strong></td></tr>
+<tr><td><strong>Thomas Morgan</strong></td><td><strong>Teoria cromossômica da hereditariedade</strong> — provou que os genes ficam nos cromossomos</td></tr>
+<tr><td><strong>Watson & Crick — 1953</strong></td><td><strong>Dupla hélice do DNA</strong></td></tr>
+<tr><td><strong>1982</strong></td><td>Primeiro <strong>animal transgênico</strong> (gene do GH introduzido)</td></tr>
+<tr><td><strong>1996 — Dolly</strong></td><td>Primeira <strong>ovelha clonada</strong> — clonagem de mamíferos</td></tr>
+<tr><td><strong>2001</strong></td><td>Rascunho do <strong>Genoma Humano</strong> publicado — era pós-genoma</td></tr>
+<tr><td><strong>2007 — Thomson & Yamanaka</strong></td><td><strong>iPSC</strong> — células-tronco pluripotentes induzidas</td></tr>
+<tr><td><strong>2010 — Craig Venter</strong></td><td>Primeira <strong>"célula sintética"</strong> com genoma artificial</td></tr>
+</table>
+
+<div class="sec-divider"><h3>🔤 Terminologia Essencial (Conceitos Básicos)</h3></div>
+<div class="info-block">
+  <div class="label">Definições clave</div>
+  <h4>Vocabulário fundamental da Genética</h4>
+  <p><strong>Genótipo:</strong> conjunto completo de genes de um indivíduo — o "código interno". <strong>Fenótipo:</strong> expressão visível/mensurável do genótipo, pode sofrer influência do ambiente. <strong>Gene:</strong> segmento de DNA responsável por expressar uma característica. <strong>Alelo:</strong> forma alternativa de um gene no mesmo locus (A, a). <strong>Locus:</strong> posição/"endereço" do gene no cromossomo. <strong>Caráter:</strong> fenótipo transmitido/herdado.</p>
+</div>
+<table class="compare-table">
+<tr><th>Termo</th><th>Definição</th><th>Notação</th></tr>
+<tr><td><strong>Homozigoto Dominante</strong></td><td>2 alelos dominantes iguais</td><td>AA</td></tr>
+<tr><td><strong>Homozigoto Recessivo</strong></td><td>2 alelos recessivos iguais</td><td>aa</td></tr>
+<tr><td><strong>Heterozigoto</strong></td><td>Alelos diferentes — expressa o dominante; pode ser portador do recessivo</td><td>Aa</td></tr>
+<tr><td><strong>Alelo Dominante</strong></td><td>Se expressa mesmo com 1 cópia (letra MAIÚSCULA)</td><td>A</td></tr>
+<tr><td><strong>Alelo Recessivo</strong></td><td>Só se expressa com 2 cópias — "mascarado" em Aa (letra minúscula)</td><td>a</td></tr>
+<tr><td><strong>Codominância</strong></td><td>Ambos os alelos se expressam simultaneamente, nenhum mascara o outro</td><td>Ex: tipo AB (IA + IB)</td></tr>
+</table>
+
+<div class="sec-divider"><h3>🎯 Variabilidade Genética</h3></div>
+<div class="info-block purple">
+  <div class="label">Conceito</div>
+  <h4>Variações no material genético que promovem sobrevivência e adaptação</h4>
+  <p>Quanto maior a variabilidade, maior a capacidade evolutiva/adaptativa. <strong>2 fontes de variação:</strong> <strong>1. Mutações</strong> (erros de replicação, radiação, químicos). <strong>2. Recombinação gênica</strong> (na reprodução sexual — 23 pares geram ~8,4 milhões de combinações possíveis). <strong>Reservatório gênico</strong> restrito (endogamia) → menor variabilidade → menor adaptabilidade e fertilidade.</p>
+</div>
+
 </div></div>
 
 <!-- ═══════════ BASES GENÉTICAS ═══════════ -->
@@ -376,6 +435,22 @@ nav.tabs button.active {
   <div class="label">2ª Ley — Distribución Independiente</div>
   <h4>Genes en cromosomas diferentes se segregan independientemente</h4>
   <p>Cruce <strong>AaBb × AaBb</strong>: proporción fenotípica <strong>9:3:3:1</strong>. Condición: los genes deben estar en cromosomas DIFERENTES (no ligados).</p>
+</div>
+<div class="info-block success">
+  <div class="label">Cruzamento-Teste (Testcross / Retrocruzamento)</div>
+  <h4>Como descobrir se un individuo dominante es AA o Aa?</h4>
+  <p>Se cruza el individuo de fenotipo dominante (genótipo desconocido) con un homozigoto recesivo (<strong>aa</strong>). <strong>Si AA × aa</strong> → 100% descendencia Aa (fenotipo dominante). <strong>Si Aa × aa</strong> → 50% Aa : 50% aa (fenotipo dominante y recesivo en 1:1). Es la forma clásica de "desenmascarar" el genótipo de un individuo dominante.</p>
+</div>
+
+<div class="sec-divider"><h3>🧵 Cromatina — Eucromatina & Heterocromatina</h3></div>
+<table class="compare-table">
+<tr><th>Tipo</th><th>Condensación</th><th>Actividad transcripcional</th><th>Ejemplo</th></tr>
+<tr><td><strong>Eucromatina</strong></td><td>Poco condensada (laxa)</td><td>ACTIVA — genes se transcriben</td><td>Mayor parte del genoma en interfase</td></tr>
+<tr><td><strong>Heterocromatina</strong></td><td>Muy condensada (compacta)</td><td>INACTIVA — genes silenciados</td><td>Corpúsculo de Barr (X inactivo en mujeres)</td></tr>
+</table>
+<div class="info-block warn">
+  <div class="label">Corpúsculo de Barr — Palavra-chave</div>
+  <p>Cromosoma X inactivado (Lyonização) visto como massa de heterocromatina no núcleo. Número de corpúsculos de Barr = número de X − 1. Mulher normal (XX): 1 corpúsculo. Turner (X0): 0 corpúsculos. Klinefelter (XXY): 1 corpúsculo.</p>
 </div>
 
 </div></div>
@@ -694,6 +769,80 @@ nav.tabs button.active {
 
 </div></div>
 
+<!-- ═══════════ PALAVRAS-CHAVE ═══════════ -->
+<div id="chaves" class="section">
+<div class="container">
+<div class="chapter-title"><span class="chap-icon">🔑</span> Palavras-Chave — Reconhecimento Rápido de Doenças</div>
+<div class="info-block purple">
+  <div class="label">Como usar esta tabela</div>
+  <h4>Associação instantânea: achado clínico → diagnóstico</h4>
+  <p>Na prova, muitas questões dão apenas UM achado patognomônico ou uma palavra-chave para você identificar a doença rapidamente. Estude esta tabela até conseguir dizer o diagnóstico em &lt;3 segundos ao ler a palavra-chave.</p>
+</div>
+
+<div class="sec-divider"><h3>🧪 Erros Inatos do Metabolismo</h3></div>
+<table class="compare-table">
+<tr><th>Palavra-chave / Achado</th><th>Diagnóstico</th></tr>
+<tr><td><strong>Odor/cheiro de rato ou mofo</strong> na urina + hipopigmentação</td><td>Fenilcetonúria (PKU)</td></tr>
+<tr><td><strong>Luxação do cristalino para BAIXO</strong> + hábito marfanoide + tromboembolismo</td><td>Homocistinúria</td></tr>
+<tr><td><strong>Catarata neonatal precoce</strong> + vômitos/diarreia após leite + sepse por E. coli</td><td>Galactosemia</td></tr>
+<tr><td><strong>Xantomas tendinosos</strong> + arco corneal precoce + LDL muito alto</td><td>Hipercolesterolemia Familiar</td></tr>
+<tr><td><strong>Automutilação</strong> (autolesão compulsiva) em criança</td><td>Síndrome de Lesch-Nyhan (défice HGPRT)</td></tr>
+<tr><td><strong>Tofos</strong> + artrite + nefrolitíase por uratos</td><td>Gota idiopática</td></tr>
+<tr><td><strong>Ambiguidade genital</strong> em RN feminina + perda de sal/crise adrenal</td><td>Hiperplasia Suprarrenal Congênita (déficit 21-hidroxilase)</td></tr>
+<tr><td><strong>Urina que escurece</strong> + dor abdominal + crise neurológica</td><td>Porfiria Aguda Intermitente</td></tr>
+<tr><td><strong>Fotossensibilidade</strong> cutânea</td><td>Porfiria Cutânea Tarda</td></tr>
+</table>
+
+<div class="sec-divider"><h3>🩸 Hemoglobinopatias & Sangue</h3></div>
+<table class="compare-table">
+<tr><th>Palavra-chave / Achado</th><th>Diagnóstico</th></tr>
+<tr><td><strong>Autoesplenectomia funcional</strong> + crises dolorosas + AVC em criança</td><td>Anemia Falciforme (HbS, Glu→Val)</td></tr>
+<tr><td><strong>Fácies em esquilo/chipmunk</strong> (eritropoiese extramedular) + dependente de transfusão</td><td>β-Talassemia Major (Cooley)</td></tr>
+<tr><td><strong>Hidropisia fetal</strong> por deleção dos 4 genes alfa</td><td>α-Talassemia Major</td></tr>
+<tr><td><strong>Genótipo "ii"</strong> — sem antígenos</td><td>Tipo sanguíneo O (doador universal)</td></tr>
+<tr><td><strong>2ª gestação</strong> + mãe Rh– sensibilizada</td><td>Doença Hemolítica do RN (Eritroblastose fetal)</td></tr>
+</table>
+
+<div class="sec-divider"><h3>📊 Cromossomopatias</h3></div>
+<table class="compare-table">
+<tr><th>Palavra-chave / Achado</th><th>Diagnóstico</th></tr>
+<tr><td><strong>Prega palmar única (linha simiesca)</strong> + prega epicântica + cardiopatia AV</td><td>Síndrome de Down (T21)</td></tr>
+<tr><td><strong>Mãos em punho cerrado com dedos sobrepostos</strong> + pé em "mata-borrão"</td><td>Síndrome de Edwards (T18)</td></tr>
+<tr><td><strong>Lábio leporino + polidactilia + holoprosencefalia</strong></td><td>Síndrome de Patau (T13)</td></tr>
+<tr><td><strong>Pescoço alado</strong> + baixa estatura + amenorreia primária</td><td>Síndrome de Turner (45,X)</td></tr>
+<tr><td><strong>Ginecomastia</strong> + testículos pequenos + azoospermia</td><td>Síndrome de Klinefelter (47,XXY)</td></tr>
+<tr><td><strong>Estatura muito elevada</strong> + acne severa + TDAH ("cromossomo do crime" = MITO)</td><td>Síndrome de Jacobs (47,XYY)</td></tr>
+<tr><td><strong>Choro semelhante ao de um gato</strong> + microcefalia + DI</td><td>Síndrome de Cri-du-chat (deleção 5p)</td></tr>
+</table>
+
+<div class="sec-divider"><h3>🔗 Padrões de Herança — Doenças-âncora</h3></div>
+<table class="compare-table">
+<tr><th>Palavra-chave / Achado</th><th>Diagnóstico</th></tr>
+<tr><td><strong>Subluxação do cristalino para CIMA</strong> + aracnodactilia + dilatação aórtica</td><td>Síndrome de Marfan (AD — comparar com Homocistinúria, que luxa para BAIXO)</td></tr>
+<tr><td><strong>Nanismo rizomélico</strong> (membros curtos, tronco normal)</td><td>Acondroplasia (AD, FGFR3)</td></tr>
+<tr><td><strong>Pseudohipertrofia de panturrilha</strong> + sinal de Gowers (criança "escala" o próprio corpo para levantar)</td><td>Distrofia Muscular de Duchenne (XR)</td></tr>
+<tr><td><strong>Orelhas grandes + face alongada + macroorquidismo</strong> + DI</td><td>Síndrome do X Frágil (XR, expansão CGG no FMR1)</td></tr>
+<tr><td><strong>Regressão do desenvolvimento</strong> em menina + movimentos estereotipados das mãos</td><td>Síndrome de Rett (XD, MECP2)</td></tr>
+<tr><td><strong>Sangramento articular</strong> (hemartrose) espontâneo</td><td>Hemofilia A/B (XR)</td></tr>
+</table>
+
+<div class="sec-divider"><h3>☣️ Teratógenos — Agente → Achado</h3></div>
+<table class="compare-table">
+<tr><th>Agente / Palavra-chave</th><th>Achado clássico</th></tr>
+<tr><td><strong>Rubéola congênita</strong></td><td>Tríade de Gregg: catarata + surdez + cardiopatia congênita</td></tr>
+<tr><td><strong>Citomegalovírus (CMV) congênito</strong></td><td>Calcificações PERIVENTRICULARES + microcefalia</td></tr>
+<tr><td><strong>Toxoplasmose congênita</strong></td><td>Calcificações DIFUSAS + coriorretinite + hidrocefalia</td></tr>
+<tr><td><strong>Sífilis congênita</strong></td><td>Nariz em sela + dentes de Hutchinson</td></tr>
+<tr><td><strong>Zika congênito</strong></td><td>Microcefalia grave</td></tr>
+<tr><td><strong>Talidomida</strong></td><td>Focomelia (membros muito reduzidos)</td></tr>
+<tr><td><strong>Álcool (Síndrome Alcoólica Fetal)</strong></td><td>Fácies característica + microcefalia + DI</td></tr>
+<tr><td><strong>Ácido retinóico / Isotretinoína</strong></td><td>Malformações craniofaciais</td></tr>
+<tr><td><strong>Ácido valproico</strong></td><td>Defeitos do tubo neural</td></tr>
+<tr><td><strong>Hipertermia materna</strong></td><td>Defeitos do tubo neural (principal risco do calor)</td></tr>
+</table>
+
+</div></div>
+
 <!-- ═══════════ FLASHCARDS ═══════════ -->
 <div id="flashcards" class="section">
 <div class="container">
@@ -705,9 +854,9 @@ nav.tabs button.active {
 <!-- ═══════════ QUIZ 70Q ═══════════ -->
 <div id="quiz" class="section">
 <div class="container">
-<div class="chapter-title"><span class="chap-icon">📝</span> Quiz Final — 70 Questões</div>
+<div class="chapter-title"><span class="chap-icon">📝</span> Quiz Final — 95 Questões</div>
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-  <p style="color:var(--muted);font-size:13px;">70 questões cobrindo todos os temas da matéria. Gabarito comentado.</p>
+  <p style="color:var(--muted);font-size:13px;">95 questões cobrindo todos os 12 temas oficiais da matéria, incluindo reconhecimento por palavras-chave. Gabarito comentado.</p>
   <button class="btn" onclick="restartQuiz()">🔄 Reiniciar Quiz</button>
 </div>
 <div class="quiz-score-bar" id="quiz-scorebar">Aciertos: <strong>0</strong> / 0</div>
@@ -783,6 +932,18 @@ const flashcardData = [
 {name:"Coombs Indireto vs Direto",cat:"Sangre",front:"Em quem é feito cada um?",back:"INDIRETO = MÃE (soro materno, anticorpos livres). DIRETO = BEBÊ/CORDÃO (anticorpos já grudados nos eritrócitos). Macete: Indireto=Investiga mãe, Direto=Detecta no filho."},
 {name:"Malformação × Deformidade × Disrupção",cat:"Defeitos",front:"Diferença fundamental?",back:"Malformação: tecido NUNCA se formou corretamente (erro genético). Deformidade: tecido normal distorcido por forças mecânicas. Disrupção: tecido normal DESTRUÍDO após se formar (bridas, isquemia)."},
 {name:"Diagnóstico Pré-natal",cat:"Defeitos",front:"Método NÃO invasivo mais sensível para trissomias?",back:"DNA fetal livre (cfDNA / NIPT) — sensibilidade >99% para T21. A partir de 10 semanas. NÃO é diagnóstico definitivo (é triagem). Amniocentese/BVC são confirmatórios."},
+{name:"Watson & Crick",cat:"História",front:"O que descreveram em 1953?",back:"A estrutura de DUPLA HÉLICE do DNA. Antes: Miescher descobriu o ácido nucleico; Johannsen criou os termos gene/genótipo/fenótipo; Morgan provou a teoria cromossômica."},
+{name:"Testcross (Retrocruzamento)",cat:"Mendel",front:"Como descubro se um dominante é AA ou Aa?",back:"Cruzo com um homozigoto recessivo (aa). Se TODA a prole for dominante → era AA. Se sair 1:1 (dominante:recessivo) → era Aa."},
+{name:"Corpúsculo de Barr",cat:"Material Genético",front:"O que é e quantos tem cada síndrome?",back:"Cromosomo X inativado (heterocromatina). Nº de corpúsculos = nº de X − 1. Mulher normal: 1. Turner (X0): 0. Klinefelter (XXY): 1."},
+{name:"Cri-du-chat",cat:"Cromosomatopatía — Palavra-chave",front:"Palavra-chave clínica?",back:"Choro semelhante ao miado/choro de gato + microcefalia + DI. Deleção do braço curto do cromosomo 5 (5p-)."},
+{name:"Lesch-Nyhan",cat:"EIM — Palavra-chave",front:"Palavra-chave clínica?",back:"AUTOMUTILAÇÃO compulsiva (morder lábios/dedos). Déficit de HGPRT → ↑ ácido úrico. Herança recessiva ligada ao X."},
+{name:"Hiperplasia Suprarrenal Congênita",cat:"EIM",front:"Palavra-chave clínica?",back:"Ambiguidade genital em RN feminina + perda de sal/crise adrenal neonatal. Déficit de 21-hidroxilase (90% dos casos). Herança AR."},
+{name:"Tríade de Gregg (Rubéola congênita)",cat:"Teratógenos",front:"Quais os 3 achados clássicos?",back:"CATARATA + SURDEZ + CARDIOPATIA congênita. Teratógeno biológico — infecção materna no 1º trimestre é a mais grave."},
+{name:"CMV vs Toxoplasmose congênita",cat:"Teratógenos — Palavra-chave",front:"Como diferenciar as calcificações?",back:"CMV: calcificações PERIVENTRICULARES + microcefalia. Toxoplasmose: calcificações DIFUSAS + coriorretinite + hidrocefalia."},
+{name:"Talidomida",cat:"Teratógenos — Palavra-chave",front:"Palavra-chave clínica?",back:"FOCOMELIA — membros muito reduzidos/ausentes ('membros de foca'). Teratógeno químico clássico, uso como antiemético na gravidez."},
+{name:"Marfan vs Homocistinúria",cat:"Comparação — Palavra-chave",front:"Como diferenciar a luxação do cristalino?",back:"Marfan: subluxação para CIMA (AD, gene FBN1). Homocistinúria: luxação para BAIXO (AR, cistationina β-sintetase, + tromboembolismo)."},
+{name:"Duchenne — Palavra-chave",cat:"Herencia",front:"Achado clínico patognomônico?",back:"Pseudohipertrofia de panturrilha (infiltração gordurosa/fibrose) + Sinal de Gowers (criança 'escala' o próprio corpo para ficar de pé). XR, gene da distrofina."},
+{name:"Amniocentese × BVC × Cordocentese",cat:"Pré-natal",front:"Semana e risco de cada método invasivo?",back:"BVC: 10-13 sem, risco ~1% (mais precoce). Amniocentese: 15-20 sem, risco ~0,2% (padrão-ouro). Cordocentese: >18 sem, risco ~1-2% (maior risco)."},
 ];
 
 function renderFlashcards() {
@@ -896,6 +1057,34 @@ const quizData = [
 {q:"68. El 'Polygenic Risk Score' (PRS) sirve para:",opts:["Diagnosticar EIM","Medir la probabilidad de desarrollo de una enfermedad multifactorial","Detectar aneuploidías","Identificar portadores de hemofilia"],correct:1,explain:"PRS (Polygenic Risk Score): herramienta genómica que calcula la probabilidad de desarrollar una enfermedad multifactorial basándose en la suma de variantes genéticas de riesgo."},
 {q:"69. La herencia del color de ojos es un ejemplo de herencia:",opts:["Autosómica dominante simple","Autosómica recesiva","Poligénica (sin componente ambiental)","Multifactorial"],correct:2,explain:"Color de ojos = herencia POLIGÉNICA (múltiples genes con efecto aditivo, SIN componente ambiental). Diferente de multifactorial que incluye genes + ambiente."},
 {q:"70. El diagnóstico y evaluación de una enfermedad multifactorial incluye:",opts:["Solo cariotipo","Solo electroforesis de hemoglobina","Historia familiar detallada (genograma 3 generaciones) + evaluación ambiental + pruebas genéticas si indicado","Solo teste de Guthrie"],correct:2,explain:"Evaluación multifactorial: genograma de 3 generaciones + evaluación de factores ambientales (tóxicos, estilo de vida, medicaciones) + pruebas genéticas cuando indicado (PRS, secuenciación). Enfoque integrado gen-ambiente."},
+// ── HISTÓRIA DA GENÉTICA (71-75) ──
+{q:"71. ¿Quién describió por primera vez la estructura de doble hélice del DNA?",opts:["Gregor Mendel","Friedrich Miescher","Watson & Crick","Thomas Morgan"],correct:2,explain:"Watson & Crick (1953) describieron la estructura de doble hélice del DNA. Miescher había descubierto el ácido nucleico antes, pero no su estructura."},
+{q:"72. ¿Quién introdujo los términos 'gene', 'genótipo' y 'fenótipo'?",opts:["Gregor Mendel","Wilhelm Johannsen","Thomas Morgan","Craig Venter"],correct:1,explain:"Wilhelm Johannsen introdujo los términos gene, genótipo y fenótipo — vocabulario fundamental usado hasta hoy."},
+{q:"73. La 'teoría cromosómica de la herencia' — que demuestra que los genes están en los cromosomas — fue obra de:",opts:["Thomas Morgan","Craig Venter","Yamanaka","Miescher"],correct:0,explain:"Thomas Morgan visualizó los cromosomas y demostró que los genes están en ellos — teoría cromosómica de la herencia."},
+{q:"74. Dolly, la primera oveja clonada, marcó un hito en 1996 relacionado a:",opts:["Genoma Humano","Clonación de mamíferos","Terapia génica","CRISPR"],correct:1,explain:"Dolly (1996) = primer mamífero clonado con éxito a partir de una célula somática adulta — marco de la clonación de mamíferos."},
+{q:"75. Las iPSC (células madre pluripotentes inducidas) fueron desarrolladas por:",opts:["Watson & Crick","Thomson & Yamanaka","Mendel & Morgan","Venter & Miescher"],correct:1,explain:"James Thomson y Shinya Yamanaka (2007) revirtieron células somáticas a células madre pluripotentes inducidas (iPSC), capaces de diferenciarse en cualquier tipo celular."},
+// ── CONCEITOS BÁSICOS & MENDEL (76-82) ──
+{q:"76. Un individuo con genótipo 'Aa' se clasifica como:",opts:["Homozigoto dominante","Homozigoto recessivo","Heterozigoto","Hemizigoto"],correct:2,explain:"Aa = alelos diferentes = HETEROZIGOTO. Expressa o fenótipo dominante, mas pode ser portador do alelo recessivo."},
+{q:"77. Na codominância, o que acontece com os dois alelos?",opts:["Um mascara completamente o outro","Ambos se expressam simultaneamente, sem mascaramento","Nenhum se expressa","Formam um fenótipo intermediário (mistura)"],correct:1,explain:"Codominância: AMBOS os alelos se expressam plenamente e simultaneamente — nenhum mascara o outro. Exemplo clássico: tipo sanguíneo AB (IA + IB, ambos antígenos presentes)."},
+{q:"78. Para descobrir se um indivíduo de fenótipo dominante é AA ou Aa, qual técnica se utiliza?",opts:["Cariótipo","Cruzamento-teste (testcross) com homozigoto recessivo","Eletroforese","Amniocentese"],correct:1,explain:"Cruzamento-teste (retrocruzamento): cruza-se o indivíduo com homozigoto recessivo (aa). Se toda a prole for dominante, o indivíduo era AA; se sair 1:1, era Aa."},
+{q:"79. Quantas variedades de ervilhas Mendel estudou em seus experimentos clássicos?",opts:["7","34","46","100"],correct:1,explain:"Mendel estudou 34 variedades de ervilhas por 8 anos, identificando 7 pares de características com linhagens puras (homozigotas)."},
+{q:"80. O que caracteriza uma 'linha pura' nos experimentos de Mendel?",opts:["Um híbrido F1","Homozigoto que sempre gera descendentes idênticos","Heterozigoto estável","Um indivíduo estéril"],correct:1,explain:"Linha pura = homozigoto (AA ou aa) que, ao se autopolinizar, sempre gera descendentes idênticos a si mesmo."},
+{q:"81. O corpúsculo de Barr representa:",opts:["Um cromossomo Y extra","Heterocromatina — o cromossomo X inativado","Eucromatina ativa","Uma translocação robertsoniana"],correct:1,explain:"Corpúsculo de Barr = massa de heterocromatina correspondente ao cromossomo X inativado (Lyonização). Número de corpúsculos = número de X menos 1."},
+{q:"82. Quantos corpúsculos de Barr espera-se encontrar em uma paciente com Síndrome de Turner (45,X)?",opts:["0","1","2","3"],correct:0,explain:"Turner (45,X) tem apenas 1 cromossomo X → nº de corpúsculos de Barr = 1−1 = 0. Mulher normal (XX) tem 1; Klinefelter (XXY) também tem 1."},
+// ── PALAVRAS-CHAVE — RECONHECIMENTO RÁPIDO (83-95) ──
+{q:"83. Recém-nascido com automutilação compulsiva (morde os próprios lábios e dedos) e ácido úrico elevado. Diagnóstico?",opts:["Fenilcetonúria","Síndrome de Lesch-Nyhan","Galactosemia","Homocistinúria"],correct:1,explain:"AUTOMUTILAÇÃO + hiperuricemia = palavra-chave clássica de Síndrome de Lesch-Nyhan (déficit de HGPRT), herança recessiva ligada ao X."},
+{q:"84. RN feminina com genitália ambígua e crise de perda de sal na primeira semana de vida. Diagnóstico?",opts:["Síndrome de Turner","Hiperplasia Suprarrenal Congênita (déficit de 21-hidroxilase)","Síndrome de Klinefelter","Galactosemia"],correct:1,explain:"Ambiguidade genital em RN feminina + perda de sal = palavra-chave de Hiperplasia Suprarrenal Congênita por déficit de 21-hidroxilase (AR)."},
+{q:"85. Criança com pseudohipertrofia de panturrilhas e Sinal de Gowers positivo. Diagnóstico?",opts:["Síndrome de Rett","Distrofia Muscular de Duchenne","Síndrome do X Frágil","Hemofilia A"],correct:1,explain:"Pseudohipertrofia de panturrilha + Sinal de Gowers (criança 'escala' o próprio corpo para ficar em pé) = palavras-chave clássicas de Duchenne (XR, déficit de distrofina)."},
+{q:"86. Menina com regressão do desenvolvimento neuropsicomotor e movimentos estereotipados das mãos. Diagnóstico?",opts:["Síndrome de Rett","Síndrome de Down","X Frágil","Síndrome de Turner"],correct:0,explain:"Regressão do desenvolvimento em menina + estereotipias das mãos = palavras-chave de Síndrome de Rett (gene MECP2, herança dominante ligada ao X)."},
+{q:"87. Recém-nascido com calcificações cerebrais PERIVENTRICULARES e microcefalia. Infecção congênita mais provável?",opts:["Toxoplasmose","Citomegalovírus (CMV)","Rubéola","Sífilis"],correct:1,explain:"Calcificações PERIVENTRICULARES + microcefalia = palavra-chave de CMV congênito. Diferencie de Toxoplasmose, cujas calcificações são DIFUSAS."},
+{q:"88. Recém-nascido com calcificações cerebrais DIFUSAS, coriorretinite e hidrocefalia. Diagnóstico?",opts:["CMV congênito","Toxoplasmose congênita","Zika congênito","Rubéola congênita"],correct:1,explain:"Calcificações DIFUSAS + coriorretinite + hidrocefalia = tríade clássica de Toxoplasmose congênita."},
+{q:"89. Recém-nascido com nariz em sela e dentes de Hutchinson. Diagnóstico?",opts:["Sífilis congênita","Rubéola congênita","CMV congênito","Síndrome Alcoólica Fetal"],correct:0,explain:"Nariz em sela + dentes de Hutchinson = palavras-chave patognomônicas de Sífilis congênita."},
+{q:"90. Gestante fez uso de talidomida no primeiro trimestre. Qual malformação é esperada no feto?",opts:["Microcefalia","Focomelia","Defeito do tubo neural","Catarata"],correct:1,explain:"Talidomida = teratógeno químico clássico → FOCOMELIA (redução/ausência dos membros, 'membros de foca')."},
+{q:"91. Adolescente alto (>1,82m), com aracnodactilia, subluxação do cristalino para CIMA e dilatação da aorta. Diagnóstico?",opts:["Homocistinúria","Síndrome de Marfan","Síndrome de Klinefelter","Síndrome de Jacobs"],correct:1,explain:"Subluxação do cristalino para CIMA + aracnodactilia + dilatação aórtica = Síndrome de Marfan (AD, gene FBN1). Compare com Homocistinúria, cuja luxação é para BAIXO."},
+{q:"92. Paciente com hábito marfanoide, luxação do cristalino para BAIXO e eventos tromboembólicos. Diagnóstico?",opts:["Síndrome de Marfan","Homocistinúria","Hipercolesterolemia Familiar","Galactosemia"],correct:1,explain:"Luxação do cristalino para BAIXO + tromboembolismo = palavra-chave de Homocistinúria (déficit de cistationina β-sintetase), que se diferencia do Marfan pela direção da luxação e pelo risco trombótico."},
+{q:"93. Criança com choro semelhante ao miado de um gato, microcefalia e discapacidade intelectual. Diagnóstico?",opts:["Síndrome de Down","Síndrome de Cri-du-chat","Síndrome de Patau","Síndrome de Edwards"],correct:1,explain:"Choro semelhante ao de um gato ('cri-du-chat') + microcefalia + DI = Síndrome de Cri-du-chat, causada por deleção do braço curto do cromossomo 5 (5p-)."},
+{q:"94. Recém-nascido com fácies característica (fenda palpebral curta, filtro nasolabial liso), microcefalia e discapacidade intelectual, filho de mãe etilista. Diagnóstico?",opts:["Síndrome Alcoólica Fetal","Síndrome de Down","Rubéola congênita","Hiperplasia Suprarrenal Congênita"],correct:0,explain:"Fácies característica + microcefalia + DI em filho de mãe etilista = Síndrome Alcoólica Fetal (SAF), teratógeno químico não prescrito."},
+{q:"95. Gestante em uso crônico de ácido valproico. Qual defeito congênito tem maior risco?",opts:["Focomelia","Defeito do tubo neural","Catarata congênita","Ginecomastia"],correct:1,explain:"Ácido valproico (anticonvulsivante) = teratógeno com risco aumentado de defeitos do tubo neural (espinha bífida)."},
 ];
 
 // ════════════════════════════════════════
