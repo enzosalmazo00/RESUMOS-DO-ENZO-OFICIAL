@@ -991,49 +991,45 @@
 
       <!-- COMBO FINAL -->
       <div class="store-section" id="store-combo-final-section" style="display:none;">
-        <div class="store-section-title" style="color:#4ade80;">🎓 Pacote Final</div>
-        <div class="combo-card" id="combo-final-card" style="border-color:rgba(74,222,128,0.25);background:linear-gradient(135deg,rgba(74,222,128,0.06) 0%,rgba(6,182,212,0.04) 100%);">
+        <div class="store-section-title" style="color:#fb7185;">🔥 Promo Recuperatória</div>
+        <div class="combo-card" id="combo-final-card" style="border-color:rgba(244,63,94,0.3);background:linear-gradient(135deg,rgba(244,63,94,0.07) 0%,rgba(6,182,212,0.04) 100%);">
           <div class="combo-header">
             <div>
-              <div class="combo-title" style="color:#4ade80;">🎓 Pacote Completo Final</div>
-              <div class="combo-sub">Todos os 7 resumos finais — 3º Semestre</div>
+              <div class="combo-title" style="color:#fb7185;">🎓 Pacote Completo Final — Recuperatória</div>
+              <div class="combo-sub">Todas as 7 matérias · todos os resumos finais — 3º Semestre</div>
             </div>
             <div class="combo-preco-box">
               <div class="combo-preco-old" id="combo-final-old" style="font-size:22px;color:rgba(248,113,113,0.55);">R$ 174,93</div>
-              <div class="combo-preco-new" style="color:#4ade80;">R$ 89,90</div>
-              <div class="combo-desconto" style="background:rgba(74,222,128,0.12);color:#4ade80;border-color:rgba(74,222,128,0.3);">🏷️ 49% off</div>
+              <div class="combo-preco-new" id="combo-final-new" style="color:#fb7185;">R$ 39,99</div>
+              <div class="combo-desconto" id="combo-final-pct" style="background:rgba(244,63,94,0.12);color:#fb7185;border-color:rgba(244,63,94,0.3);">🏷️ 77% off</div>
             </div>
           </div>
           <div class="combo-materias" id="combo-final-tags"></div>
-          <button class="combo-btn" id="combo-final-btn" onclick="addComboFinalToCart()" style="background:linear-gradient(135deg,#4ade80,#22d3ee);">
-            🛒 Adicionar pacote ao carrinho — R$ 89,90
+          <button class="combo-btn" id="combo-final-btn" onclick="addComboFinalToCart()" style="background:linear-gradient(135deg,#f43f5e,#e11d48);box-shadow:0 4px 20px rgba(244,63,94,0.3);">
+            🛒 Adicionar pacote ao carrinho — R$ 39,99
           </button>
         </div>
       </div>
 
       <!-- FINAIS INDIVIDUAIS -->
       <div class="store-section">
-        <div class="store-section-title" style="color:rgba(74,222,128,0.7);">🎓 Resumos Finais</div>
+        <div class="store-section-title" style="color:#fb7185;">🎓 Resumos Finais — Promo Recuperatória</div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
-          <div style="flex:1;min-width:130px;border-radius:12px;padding:12px 14px;background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.2);text-align:center;">
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(74,222,128,0.5);margin-bottom:6px;">1 Resumo</div>
-            <div style="font-size:20px;font-weight:800;color:#4ade80;">R$ 24,99</div>
-            <div style="font-size:10px;color:rgba(125,211,232,0.4);margin-top:3px;">preço unitário</div>
+          <div style="flex:1;min-width:150px;border-radius:12px;padding:14px;background:rgba(244,63,94,0.07);border:1px solid rgba(244,63,94,0.25);text-align:center;position:relative;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(251,113,133,0.6);margin-bottom:6px;">Resumo individual</div>
+            <div style="font-size:12px;color:rgba(125,211,232,0.35);text-decoration:line-through;">R$ 24,99</div>
+            <div style="font-size:24px;font-weight:800;color:#fb7185;">R$ 10,00</div>
+            <div style="font-size:10px;color:rgba(125,211,232,0.4);margin-top:3px;">por resumo · qualquer quantidade</div>
           </div>
-          <div style="flex:1;min-width:130px;border-radius:12px;padding:12px 14px;background:rgba(74,222,128,0.09);border:1px solid rgba(74,222,128,0.3);text-align:center;position:relative;">
-            <div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;">8% OFF</div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(74,222,128,0.5);margin-bottom:6px;">2 Resumos</div>
-            <div style="font-size:20px;font-weight:800;color:#4ade80;">R$ 22,90</div>
-            <div style="font-size:10px;color:rgba(125,211,232,0.4);margin-top:3px;">cada · R$ 45,80 total</div>
-          </div>
-          <div style="flex:1;min-width:130px;border-radius:12px;padding:12px 14px;background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.4);text-align:center;position:relative;">
-            <div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#22d3ee,#0891b2);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;">14% OFF ⭐</div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(74,222,128,0.5);margin-bottom:6px;">3+ Resumos</div>
-            <div style="font-size:20px;font-weight:800;color:#4ade80;">R$ 21,50</div>
-            <div style="font-size:10px;color:rgba(125,211,232,0.4);margin-top:3px;">cada · mais econômico</div>
+          <div style="flex:1;min-width:150px;border-radius:12px;padding:14px;background:rgba(244,63,94,0.13);border:1px solid rgba(244,63,94,0.45);text-align:center;position:relative;">
+            <div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f43f5e,#e11d48);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;">MELHOR NEGÓCIO ⭐</div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(251,113,133,0.6);margin-bottom:6px;">Todas as matérias</div>
+            <div style="font-size:12px;color:rgba(125,211,232,0.35);text-decoration:line-through;">R$ 174,93</div>
+            <div style="font-size:24px;font-weight:800;color:#fb7185;">R$ 39,99</div>
+            <div style="font-size:10px;color:rgba(125,211,232,0.4);margin-top:3px;">7 resumos finais · ~R$ 5,71 cada</div>
           </div>
         </div>
-        <div style="font-size:11px;color:rgba(125,211,232,0.4);margin-bottom:14px;text-align:center;">💡 Desconto aplicado automaticamente no carrinho · Pacote completo: R$ 89,90 (49% off) · Cupom não acumulável com Pacote Completo</div>
+        <div style="font-size:11px;color:rgba(125,211,232,0.4);margin-bottom:14px;text-align:center;">🔥 Promo válida para a recuperatória · Desconto aplicado automaticamente no carrinho · Cupom não acumulável com o Pacote Completo</div>
         <div class="store-grid" id="store-grid-final"></div>
         <div id="store-final-breve" style="padding:16px 20px;border-radius:14px;border:1px solid rgba(251,191,36,0.15);background:rgba(251,191,36,0.04);font-size:13px;color:rgba(251,191,36,0.5);text-align:center;margin-top:10px;display:none;">
           As demais finais serão disponibilizadas em breve.
@@ -1254,7 +1250,7 @@ var MATERIAS = [
 var PROVAS = [
   { tipo:"p1",    label:"P1",    preco_unit:15.00, preco_pack:69.90 },
   { tipo:"p2",    label:"P2",    preco_unit:15.00, preco_pack:69.90 },
-  { tipo:"final", label:"Final", preco_unit:24.99, preco_pack:89.90 },
+  { tipo:"final", label:"Final", preco_unit:10.00, preco_pack:39.99 },
 ];
 
 // ── Estado ────────────────────────────────────────────────────────────────────
@@ -1271,10 +1267,16 @@ var cart = []; // [{key, label, emoji, preco, tipo}]
 var PRECO_UNIT = 15.00;
 var PRECO_COMBO3 = 12.00; // 3+ itens = 20% off
 var PRECO_PACK = 69.90;   // 7 itens = 33% off
-var PRECO_FINAL = 24.99;        // Finais: 1 resumo = R$ 24,99
-var PRECO_FINAL_COMBO2 = 22.90; // Finais: 2 resumos = R$ 22,90 cada (8% off)
-var PRECO_FINAL_COMBO3 = 21.50; // Finais: 3-6 resumos = R$ 21,50 cada (14% off)
-var PRECO_PACK_FINAL = 89.90;   // Pacote completo TODOS os finais (49% off) — SEM cupom
+/* ── PROMO RECUPERATÓRIA ──────────────────────────────────────────────────────
+   Finais: preço único de R$ 10,00 por resumo · Pacote completo R$ 39,99
+   Para encerrar a promo: volte PRECO_FINAL=24.99 e PRECO_PACK_FINAL=89.90
+   e reative PROMO_FINAL_ATIVA=false.                                          */
+var PROMO_FINAL_ATIVA = true;
+var PRECO_FINAL_DE = 24.99;     // preço "de" (riscado) — só exibição
+var PRECO_FINAL = 10.00;        // Finais: preço único promocional por resumo
+var PRECO_FINAL_COMBO2 = 10.00; // sem escada de desconto na promo
+var PRECO_FINAL_COMBO3 = 10.00; // sem escada de desconto na promo
+var PRECO_PACK_FINAL = 39.99;   // Pacote completo TODOS os finais — SEM cupom
 
 // ── Navegação estilo Google Drive ─────────────────────────────────────────────
 var currentMateria = null; // null = vista pastas | "bioquimica" = vista interna
@@ -2672,7 +2674,7 @@ function calcCartTotal() {
   var finalItems = cart.filter(function(c){ return c.tipo === "final"; });
 
   var subtotalP2 = p2Items.length * PRECO_UNIT;
-  var subtotalFinal = finalItems.length * PRECO_FINAL;
+  var subtotalFinal = finalItems.length * (PROMO_FINAL_ATIVA ? PRECO_FINAL_DE : PRECO_FINAL);
   var subtotal = subtotalP2 + subtotalFinal;
 
   var totalP2 = subtotalP2;
@@ -2692,23 +2694,20 @@ function calcCartTotal() {
     descLabel = "🏷️ Desconto P2 3+ itens (20% off)";
   }
 
-  // Desconto Final: pacote completo (fixo 89,90), combo 3+ ou combo 2
+  // Desconto Final: pacote completo (preço fixo) ou preço único promocional
   var temPacoteCompleto = finalItems.some(function(c){ return c.isPacoteCompleto; });
   var finalReady = MATERIAS.filter(function(m){ return m.finalReady; });
 
   if (temPacoteCompleto) {
-    // Pacote completo: preço fixo 89,90 independente da quantidade
+    // Pacote completo: preço fixo promocional independente da quantidade
     totalFinal = PRECO_PACK_FINAL;
-    var pctPack = Math.round((1 - PRECO_PACK_FINAL / (finalReady.length * PRECO_FINAL)) * 100);
-    descLabel += (descLabel ? " + " : "") + "🏷️ Pacote Final completo (" + pctPack + "% off)";
-  } else if (finalItems.length >= 3) {
-    totalFinal = finalItems.length * PRECO_FINAL_COMBO3;
-    var pct3 = Math.round((1 - PRECO_FINAL_COMBO3 / PRECO_FINAL) * 100);
-    descLabel += (descLabel ? " + " : "") + "🏷️ Combo Final 3+ (" + pct3 + "% off)";
-  } else if (finalItems.length === 2) {
-    totalFinal = finalItems.length * PRECO_FINAL_COMBO2;
-    var pct2 = Math.round((1 - PRECO_FINAL_COMBO2 / PRECO_FINAL) * 100);
-    descLabel += (descLabel ? " + " : "") + "🏷️ Combo Final 2 resumos (" + pct2 + "% off)";
+    var pctPack = Math.round((1 - PRECO_PACK_FINAL / (finalReady.length * PRECO_FINAL_DE)) * 100);
+    descLabel += (descLabel ? " + " : "") + "🏷️ Pacote Final Recuperatória (" + pctPack + "% off)";
+  } else if (finalItems.length > 0) {
+    // Promo: preço único por resumo, sem escada de desconto
+    totalFinal = finalItems.length * PRECO_FINAL;
+    var pctUnit = Math.round((1 - PRECO_FINAL / PRECO_FINAL_DE) * 100);
+    descLabel += (descLabel ? " + " : "") + "🏷️ Promo Recuperatória (" + pctUnit + "% off)";
   }
 
   // Expor flag para o cupom saber se tem pacote completo
@@ -2805,8 +2804,7 @@ function updateCartUI() {
     return;
   }
 
-  var finalIndividuaisCount = cart.filter(function(c){ return c.tipo === "final" && !c.isPacoteCompleto; }).length;
-  var precoFinalEfetivo = finalIndividuaisCount >= 3 ? PRECO_FINAL_COMBO3 : (finalIndividuaisCount === 2 ? PRECO_FINAL_COMBO2 : PRECO_FINAL);
+  var precoFinalEfetivo = PRECO_FINAL;
   lista.innerHTML = cart.map(function(c) {
     var precoItem;
     if (c.isPacoteCompleto) {
@@ -2816,8 +2814,8 @@ function updateCartUI() {
     } else {
       precoItem = c.preco;
     }
-    var precoOriginal = (c.tipo === "final" && !c.isPacoteCompleto && precoFinalEfetivo < PRECO_FINAL)
-      ? '<span style="text-decoration:line-through;color:rgba(125,211,232,0.3);font-size:11px;margin-right:4px;">R$ 24,99</span>'
+    var precoOriginal = (c.tipo === "final" && !c.isPacoteCompleto && PROMO_FINAL_ATIVA && precoFinalEfetivo < PRECO_FINAL_DE)
+      ? '<span style="text-decoration:line-through;color:rgba(125,211,232,0.3);font-size:11px;margin-right:4px;">' + formatPrice(PRECO_FINAL_DE) + '</span>'
       : '';
     var subLabel = c.isPacoteCompleto ? "Pacote Completo · 50 dias" : "3º Semestre · 50 dias de acesso";
     return '<div class="cart-item">' +
@@ -2849,12 +2847,18 @@ function updateCartUI() {
   } else if (p2InCart.length >= 3 && faltamParaPacote > 0 && p2NaoAdquiridos.length === MATERIAS.length) {
     hints.push("🔥 Faltam " + faltamParaPacote + " P2 para o pacote completo com 33% off!");
   }
+  var finaisDisponiveis = MATERIAS.filter(function(m){ return m.finalReady && !hasAccess(m,"final"); });
   if (!temPacoteFinal) {
-    if (finalIndividuais.length === 1) hints.push("🎓 Adicione mais 1 final para pagar R$ 22,90 cada (8% off)!");
-    else if (finalIndividuais.length === 2) hints.push("🎓 Adicione mais 1 final para pagar R$ 21,50 cada (14% off)!");
-    else if (finalIndividuais.length >= 3) hints.push("✅ Combo Final ativo: R$ 21,50 por resumo (14% off)");
+    if (finalIndividuais.length > 0) {
+      var custoIndiv = finalIndividuais.length * PRECO_FINAL;
+      if (finalIndividuais.length >= finaisDisponiveis.length && custoIndiv > PRECO_PACK_FINAL) {
+        hints.push("🔥 Leve o Pacote Completo Final por " + formatPrice(PRECO_PACK_FINAL) + " e economize " + formatPrice(custoIndiv - PRECO_PACK_FINAL) + "!");
+      } else {
+        hints.push("🎓 Promo Recuperatória: " + formatPrice(PRECO_FINAL) + " por resumo · pacote completo por " + formatPrice(PRECO_PACK_FINAL));
+      }
+    }
   } else {
-    hints.push("📦 Pacote Completo Final: R$ 89,90 — cupom não acumulável");
+    hints.push("📦 Pacote Completo Final: " + formatPrice(PRECO_PACK_FINAL) + " — cupom não acumulável");
   }
   if (hints.length > 0) { comboHint.innerHTML = hints.join("<br>"); comboHint.classList.add("visible"); }
   else { comboHint.classList.remove("visible"); }
@@ -3082,7 +3086,7 @@ window.addComboFinalToCart = function() {
   // Remove TODOS os itens Final do carrinho (evita duplicação)
   cart = cart.filter(function(c){ return c.tipo !== "final"; });
 
-  // Adiciona todos como pacote completo — preço fixo 89,90 dividido
+  // Adiciona todos como pacote completo — PRECO_PACK_FINAL dividido entre os itens
   // isPacoteCompleto = true → bloqueia cupom e combo individual
   var precoPorItem = PRECO_PACK_FINAL / readyMaterias.length;
   readyMaterias.forEach(function(m) {
@@ -3113,22 +3117,16 @@ function renderStoreGridFinal() {
     var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "+ Adicionar");
     var btnClass = "add-btn" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
-    // Preço dinâmico: conta só individuais (não pacote completo)
-    var individuaisNoCart = cart.filter(function(c){ return c.tipo === "final" && !c.isPacoteCompleto; }).length;
-    var qtdComEste = owned ? individuaisNoCart : (cart.find(function(c){ return c.key === key; }) ? individuaisNoCart : individuaisNoCart + 1);
-    var temPacote = cart.some(function(c){ return c.isPacoteCompleto; });
-    var precoExibido, descTag;
-    if (temPacote) {
-      precoExibido = "R$ 24,99"; descTag = ""; // pacote já cobre tudo
-    } else if (qtdComEste >= 3) {
-      precoExibido = "R$ 21,50"; descTag = "<span style='font-size:9px;background:rgba(34,211,238,0.15);color:#22d3ee;border:1px solid rgba(34,211,238,0.3);padding:1px 6px;border-radius:10px;margin-left:5px;'>14% off</span>";
-    } else if (qtdComEste === 2) {
-      precoExibido = "R$ 22,90"; descTag = "<span style='font-size:9px;background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);padding:1px 6px;border-radius:10px;margin-left:5px;'>8% off</span>";
-    } else {
-      precoExibido = "R$ 24,99"; descTag = "";
+    // Promo Recuperatória: preço único por resumo
+    var precoExibido = formatPrice(PRECO_FINAL);
+    var descTag = "";
+    if (PROMO_FINAL_ATIVA && PRECO_FINAL < PRECO_FINAL_DE) {
+      var pctOff = Math.round((1 - PRECO_FINAL / PRECO_FINAL_DE) * 100);
+      precoExibido = "<span style='text-decoration:line-through;color:rgba(125,211,232,0.3);font-size:11px;font-weight:400;margin-right:5px;'>" + formatPrice(PRECO_FINAL_DE) + "</span>" + formatPrice(PRECO_FINAL);
+      descTag = "<span style='font-size:9px;background:rgba(244,63,94,0.15);color:#fb7185;border:1px solid rgba(244,63,94,0.35);padding:1px 6px;border-radius:10px;margin-left:5px;'>" + pctOff + "% off</span>";
     }
     card.innerHTML =
-      '<span class="tag-popular" style="background:rgba(74,222,128,0.12);color:#4ade80;border-color:rgba(74,222,128,0.3);">Novo</span>' +
+      '<span class="tag-popular" style="background:rgba(244,63,94,0.12);color:#fb7185;border-color:rgba(244,63,94,0.3);">Promo</span>' +
       '<span class="produto-emoji">' + m.emoji + '</span>' +
       '<div class="produto-nome">' + m.label + '</div>' +
       '<div class="produto-sub" style="color:rgba(74,222,128,0.5);">Final · 3º Semestre · 50 dias</div>' +
@@ -3159,8 +3157,15 @@ function renderStoreGridFinal() {
       }).join("");
     }
     // Old price
+    var refUnit = PROMO_FINAL_ATIVA ? PRECO_FINAL_DE : PRECO_FINAL;
     if (comboOld) {
-      comboOld.textContent = "R$ " + (MATERIAS.length * PRECO_FINAL).toFixed(2).replace(".",",");
+      comboOld.textContent = formatPrice(MATERIAS.length * refUnit);
+    }
+    var comboNew = document.getElementById("combo-final-new");
+    if (comboNew) comboNew.textContent = formatPrice(PRECO_PACK_FINAL);
+    var comboPct = document.getElementById("combo-final-pct");
+    if (comboPct) {
+      comboPct.textContent = "🏷️ " + Math.round((1 - PRECO_PACK_FINAL / (MATERIAS.length * refUnit)) * 100) + "% off";
     }
     // Button state
     if (comboBtn) {
@@ -3169,7 +3174,7 @@ function renderStoreGridFinal() {
         comboBtn.textContent = "✅ Você já possui todos os resumos finais disponíveis";
         comboBtn.disabled = true;
       } else {
-        comboBtn.textContent = "🛒 Adicionar pacote ao carrinho — R$ 89,90";
+        comboBtn.textContent = "🛒 Adicionar pacote ao carrinho — " + formatPrice(PRECO_PACK_FINAL);
         comboBtn.disabled = false;
       }
     }
