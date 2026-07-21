@@ -245,7 +245,7 @@ function showSection(id,btn){document.querySelectorAll('.section').forEach(funct
 var IMAGENS=[
   {file:"img/m2-cascavel-01.jpg",titulo:"Crotalus durissus (corpo inteiro com guizo)",credito:"Renato Augusto Martins / Wikimedia Commons — CC BY-SA 4.0"},
   {file:"img/m2-cascavel-02.jpg",titulo:"Cabeça da cascavel (detalhe)",credito:"H. Krisp / Wikimedia Commons — CC BY 3.0"},
-  {file:"img/m2-cascavel-03.jpg",titulo:"Guizo/chocalho da cascavel",credito:"Wikimedia Commons — CC BY-SA 4.0"}
+  {file:"img/m2-cascavel-03.jpg",titulo:"Guizo/chocalho da cascavel",credito:"Renato Augusto Martins / Wikimedia Commons — CC BY-SA 4.0"}
 ];
 function renderGallery(){var w=document.getElementById('galleryWrap');w.innerHTML='';IMAGENS.forEach(function(im){var c=document.createElement('div');c.className='img-card';c.innerHTML='<div class="img-frame"><img src="'+im.file+'" alt="'+im.titulo+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><div class="placeholder" style="display:none"><span class="ph-emoji">🐍</span><span>'+im.titulo+'</span></div></div><div class="cap"><div class="cap-title">'+im.titulo+'</div><div class="cap-credit">'+im.credito+'</div></div>';w.appendChild(c);});}
 
