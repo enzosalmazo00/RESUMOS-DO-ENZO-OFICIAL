@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prova · Módulo 1 — Fundamentos e Identificação</title>
+<script>window.PAGE_KEY = "curso-peconhentos";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>document.addEventListener("authReady", function(){ document.documentElement.style.visibility = "visible"; });</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0d14;--bg2:#111520;--bg3:#161c2e;--card:#1a2138;--card2:#1f2845;--accent:#4f9cf9;--accent2:#38e8c0;--accent3:#f9784f;--accent4:#b84ff9;--gold:#f9c94f;--red:#f95f5f;--green:#4ff984;--text:#e8eaf6;--muted:#8892b0;--border:rgba(79,156,249,0.15);--shadow:0 8px 40px rgba(0,0,0,0.5);--radius:16px;--font-body:'DM Sans',sans-serif;--font-display:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;padding-bottom:90px}
+header{position:relative;z-index:10;text-align:center;padding:40px 24px 24px;background:linear-gradient(180deg,rgba(184,79,249,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border)}
+header .badge{display:inline-block;background:linear-gradient(135deg,var(--accent4),var(--accent3));color:#fff;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px}
+header h1{font-family:var(--font-display);font-size:clamp(22px,3.5vw,34px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--accent4) 60%,var(--accent3) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+header .sub{color:var(--muted);font-size:13px}
+.container{max-width:900px;margin:0 auto;padding:28px 20px}
+.exam-info{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:24px;display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+.exam-info .ei-icon{font-size:36px}
+.exam-info .ei-text{flex:1;min-width:200px}
+.exam-info .ei-text h3{font-family:var(--font-display);font-size:16px;font-weight:700;margin-bottom:4px}
+.exam-info .ei-text p{color:var(--muted);font-size:12px;line-height:1.5}
+.exam-info .ei-best{text-align:center;min-width:100px}
+.exam-info .ei-best .eb-label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.exam-info .ei-best .eb-val{font-family:var(--font-display);font-size:28px;font-weight:800}
+.progress-bar{width:100%;height:8px;background:var(--bg3);border-radius:10px;overflow:hidden;margin-bottom:24px}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--accent4),var(--accent3));border-radius:10px;transition:width .4s}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.q-card.answered{opacity:.85}
+.q-card.cq{border-color:var(--green)}.q-card.wq{border-color:var(--red)}
+.q-num{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-bottom:10px}
+.q-text{font-size:14px;font-weight:600;color:#fff;margin-bottom:16px;line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:11px 16px;border-radius:10px;cursor:pointer;font-size:13px;text-align:left;transition:all .2s;display:flex;gap:10px;font-family:var(--font-body)}
+.opt-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(79,156,249,.08)}
+.opt-btn .ol{font-family:var(--font-mono);font-weight:700;color:var(--accent4);min-width:20px}
+.opt-btn.ca{background:rgba(79,249,132,.1);border-color:var(--green);color:var(--green)}
+.opt-btn.wa{background:rgba(249,95,95,.1);border-color:var(--red);color:var(--red)}
+.exp-box{display:none;margin-top:14px;padding:14px 18px;background:rgba(184,79,249,.06);border-left:3px solid var(--accent4);border-radius:0 10px 10px 0;font-size:13px;color:var(--text);line-height:1.7}
+.exp-box.vis{display:block}
+.et{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent4);margin-bottom:8px}
+/* RESULTADO FINAL */
+.result-panel{display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-top:24px;text-align:center;box-shadow:var(--shadow)}
+.result-panel.vis{display:block}
+.result-panel .rp-icon{font-size:48px;margin-bottom:12px}
+.result-panel .rp-title{font-family:var(--font-display);font-size:22px;font-weight:800;margin-bottom:6px}
+.result-panel .rp-score{font-family:var(--font-mono);font-size:36px;font-weight:800;margin-bottom:8px}
+.result-panel .rp-detail{color:var(--muted);font-size:13px;margin-bottom:18px}
+.result-panel.pass{border-color:var(--green)}.result-panel.pass .rp-score{color:var(--green)}
+.result-panel.fail{border-color:var(--red)}.result-panel.fail .rp-score{color:var(--red)}
+.rp-btn{padding:12px 24px;border:none;border-radius:12px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;margin:6px;transition:all .2s}
+.rp-btn.primary{background:linear-gradient(135deg,var(--accent4),var(--accent3));color:#fff}
+.rp-btn.primary:hover{box-shadow:0 0 24px rgba(184,79,249,.4)}
+.rp-btn.secondary{background:var(--card2);color:var(--accent);border:1px solid var(--border)}
+.source-note{margin-top:22px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent4);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}.source-note b{color:var(--accent4)}
+#backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow)}
+#backBtn:hover{border-color:var(--accent);background:var(--card2)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">Prova de Proficiência</div>
+  <h1>Módulo 1 — Fundamentos e Identificação</h1>
+  <div class="sub">10 questões · mínimo 61% para aprovação · refazível</div>
+</header>
+
+<div class="container">
+  <div class="exam-info">
+    <div class="ei-icon">📝</div>
+    <div class="ei-text">
+      <h3>Prova do Módulo 1</h3>
+      <p>Cobre os temas: identificação de serpentes peçonhentas, conduta inicial hospitalar e profilaxia antitetânica. Responda todas as questões — ao final, seu resultado é salvo automaticamente. Você pode refazer quantas vezes quiser; vale a melhor nota.</p>
+    </div>
+    <div class="ei-best">
+      <div class="eb-label">Melhor nota</div>
+      <div class="eb-val" id="bestScore">—</div>
+    </div>
+  </div>
+
+  <div class="progress-bar"><div class="fill" id="progFill" style="width:0%"></div></div>
+
+  <div id="examContainer"></div>
+
+  <div class="result-panel" id="resultPanel">
+    <div class="rp-icon" id="rpIcon"></div>
+    <div class="rp-title" id="rpTitle"></div>
+    <div class="rp-score" id="rpScore"></div>
+    <div class="rp-detail" id="rpDetail"></div>
+    <button class="rp-btn primary" onclick="refazerProva()">🔄 Refazer prova</button>
+    <button class="rp-btn secondary" onclick="window.location.href='curso-peconhentos.html'">← Voltar ao curso</button>
+  </div>
+
+  <div class="source-note">
+    <b>Nota:</b> esta prova avalia os conteúdos do Módulo 1. A aprovação (≥ 61%) é um dos requisitos para a emissão do certificado de conclusão do curso.
+  </div>
+</div>
+
+<a href="curso-peconhentos.html" id="backBtn">← Voltar ao curso</a>
+
+<script>
+var CURSO = "peconhentos";
+var MODULO = 1;
+var AULA_ID = "m1-prova";
+var MIN_PCT = 61;
+
+var QD = [
+  {n:1, q:"A fosseta loreal é um órgão termorreceptor localizado:", o:[{l:"A",v:"Entre o olho e a orelha"},{l:"B",v:"Entre o olho e a narina"},{l:"C",v:"Na ponta da cauda"},{l:"D",v:"Na região ventral"}], cr:"B", ex:"A fosseta loreal fica entre o olho e a narina — por isso o nome popular 'cobra de 4 ventas' (2 narinas + 2 fossetas). Presente em Bothrops, Crotalus e Lachesis."},
+  {n:2, q:"Qual gênero de serpente peçonhenta NÃO possui fosseta loreal?", o:[{l:"A",v:"Bothrops"},{l:"B",v:"Crotalus"},{l:"C",v:"Lachesis"},{l:"D",v:"Micrurus"}], cr:"D", ex:"A Micrurus (coral verdadeira) é a exceção: é peçonhenta mas não tem fosseta loreal e tem presas fixas pequenas (proteróglifa). Nunca descartar envenenamento por ausência de fosseta."},
+  {n:3, q:"A cascavel (Crotalus) pode ser identificada pelo tipo de cauda, que apresenta:", o:[{l:"A",v:"Escamas eriçadas"},{l:"B",v:"Cauda lisa"},{l:"C",v:"Guizo ou chocalho"},{l:"D",v:"Anéis coloridos"}], cr:"C", ex:"Crotalus = guizo/chocalho. Bothrops = cauda lisa. Lachesis = escamas eriçadas. Micrurus = sem fosseta, anéis coloridos."},
+  {n:4, q:"No acidente ofídico, qual analgésico é CONTRAINDICADO?", o:[{l:"A",v:"Dipirona"},{l:"B",v:"Tramadol"},{l:"C",v:"Ácido acetilsalicílico (AAS)"},{l:"D",v:"Paracetamol"}], cr:"C", ex:"O AAS é antiagregante plaquetário — em paciente com possível distúrbio de coagulação, ele agrava o risco hemorrágico."},
+  {n:5, q:"A hidratação venosa no acidente ofídico visa manter a diurese do adulto em:", o:[{l:"A",v:"5–10 mL/h"},{l:"B",v:"30–40 mL/h"},{l:"C",v:"100–150 mL/h"},{l:"D",v:"Não há meta de diurese"}], cr:"B", ex:"Meta: 30–40 mL/h no adulto (1–2 mL/kg/h na criança). A proteção renal é fundamental — a IRA é a complicação sistêmica que mais mata no botrópico."},
+  {n:6, q:"Os exames de controle (HMG, coagulograma, CPK, etc.) devem ser coletados:", o:[{l:"A",v:"Apenas na admissão"},{l:"B",v:"Na admissão, 12h e 24h após o soro"},{l:"C",v:"A cada hora nas primeiras 6h"},{l:"D",v:"Somente na alta"}], cr:"B", ex:"Três tempos: admissão, 12h e 24h. O TC (tempo de coagulação) é o marcador prático de eficácia da soroterapia."},
+  {n:7, q:"No ferimento de alto risco (acidente ofídico), paciente com esquema vacinal completo e última dose há 3 anos. Conduta antitetânica:", o:[{l:"A",v:"Vacina + SAT/IGHAT"},{l:"B",v:"Apenas reforço"},{l:"C",v:"Nenhuma medida"},{l:"D",v:"Apenas SAT"}], cr:"C", ex:"Esquema completo com última dose há menos de 5 anos: nenhuma medida é necessária, mesmo em ferimento de alto risco."},
+  {n:8, q:"Por que a profilaxia antitetânica IM deve ser adiada no acidente botrópico até a correção do coagulograma?", o:[{l:"A",v:"O soro antiofídico anula a vacina"},{l:"B",v:"Risco de hematoma na injeção IM em paciente incoagulável"},{l:"C",v:"A vacina não funciona com veneno no corpo"},{l:"D",v:"O tétano não ocorre em picada de cobra"}], cr:"B", ex:"Aplicar IM em paciente com coagulopatia pode causar hematoma grave. Primeiro corrige a coagulação, depois vacina."},
+  {n:9, q:"Diante de infecção polimicrobiana no local da mordedura de serpente, a cobertura antimicrobiana indicada cobre:", o:[{l:"A",v:"Apenas Gram-negativos"},{l:"B",v:"Apenas fungos"},{l:"C",v:"Gram-positivos, Gram-negativos e anaeróbios"},{l:"D",v:"Apenas vírus"}], cr:"C", ex:"A infecção por mordedura de serpente é tipicamente polimicrobiana (Gram+, Gram– e anaeróbios). Cobertura possível: ceftriaxona + clindamicina. O antibiótico é terapêutico, não profilático."},
+  {n:10, q:"O diagnóstico do acidente ofídico é fundamentalmente:", o:[{l:"A",v:"Laboratorial, por dosagem do veneno"},{l:"B",v:"Radiológico"},{l:"C",v:"Clínico-epidemiológico, mesmo sem identificar o animal"},{l:"D",v:"Dependente obrigatoriamente da captura da serpente"}], cr:"C", ex:"O diagnóstico é clínico-epidemiológico: baseia-se nas manifestações do paciente e no contexto do acidente, mesmo que a serpente não tenha sido capturada ou identificada."}
+];
+
+var answers = [];
+var answered = 0;
+var correct = 0;
+
+function renderExam(){
+  var ct = document.getElementById('examContainer');
+  ct.innerHTML = '';
+  answers = [];
+  answered = 0;
+  correct = 0;
+  document.getElementById('resultPanel').className = 'result-panel';
+  document.getElementById('progFill').style.width = '0%';
+
+  QD.forEach(function(q, i){
+    answers.push(null);
+    var d = document.createElement('div');
+    d.className = 'q-card';
+    d.id = 'q' + i;
+    var body = '<div class="opts">' + q.o.map(function(o){
+      return '<button class="opt-btn" data-q="'+i+'" data-l="'+o.l+'" onclick="answerQ('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+o.v+'</span></button>';
+    }).join('') + '</div>';
+    d.innerHTML = '<div class="q-num">Questão ' + q.n + ' de ' + QD.length + '</div><p class="q-text">' + q.q + '</p>' + body + '<div class="exp-box" id="ex' + i + '"><div class="et">📖 Explicação</div><p>' + q.ex + '</p></div>';
+    ct.appendChild(d);
+  });
+}
+
+function answerQ(i, ch){
+  var q = QD[i];
+  var card = document.getElementById('q' + i);
+  if(card.classList.contains('answered')) return;
+
+  card.querySelectorAll('.opt-btn').forEach(function(b){
+    b.disabled = true;
+    if(b.dataset.l === q.cr) b.classList.add('ca');
+    if(b.dataset.l === ch && ch !== q.cr) b.classList.add('wa');
+  });
+
+  var ok = ch === q.cr;
+  card.classList.add('answered', ok ? 'cq' : 'wq');
+  document.getElementById('ex' + i).classList.add('vis');
+  answers[i] = ch;
+  answered++;
+  if(ok) correct++;
+
+  document.getElementById('progFill').style.width = Math.round(answered / QD.length * 100) + '%';
+
+  if(answered === QD.length){
+    setTimeout(function(){ finalizarProva(); }, 600);
+  }
+}
+
+async function finalizarProva(){
+  var pct = Math.round(correct / QD.length * 100);
+  var aprovado = pct >= MIN_PCT;
+
+  var panel = document.getElementById('resultPanel');
+  panel.className = 'result-panel vis ' + (aprovado ? 'pass' : 'fail');
+  document.getElementById('rpIcon').textContent = aprovado ? '🎉' : '😔';
+  document.getElementById('rpTitle').textContent = aprovado ? 'Aprovado!' : 'Não atingiu a nota mínima';
+  document.getElementById('rpScore').textContent = pct + '%';
+  document.getElementById('rpDetail').textContent = correct + ' de ' + QD.length + ' corretas · Mínimo: ' + MIN_PCT + '% · ' + (aprovado ? 'Módulo 1 concluído!' : 'Você pode refazer quantas vezes quiser.');
+
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  /* Salvar no Supabase */
+  var sb = getClient();
+  if(sb){
+    try {
+      var u = await sb.auth.getUser();
+      var user = u && u.data ? u.data.user : null;
+      if(user){
+        /* Salvar tentativa na tabela curso_provas */
+        await sb.from('curso_provas').insert({
+          user_id: user.id,
+          curso: CURSO,
+          modulo: MODULO,
+          acertos: correct,
+          total: QD.length,
+          percentual: pct,
+          aprovado: aprovado
+        });
+
+        /* Marcar aula como concluída no progresso */
+        await sb.from('curso_progresso').upsert({
+          user_id: user.id,
+          curso: CURSO,
+          aula_id: AULA_ID,
+          concluida: true,
+          quiz_score: correct,
+          quiz_total: QD.length,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'user_id,curso,aula_id' });
+
+        /* Atualizar melhor nota exibida */
+        loadBestScore(sb, user.id);
+      }
+    } catch(e){ console.warn('Erro ao salvar prova:', e); }
+  }
+}
+
+function refazerProva(){
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(function(){ renderExam(); }, 300);
+}
+
+function getClient(){
+  if(window.authClient) return window.authClient;
+  return null;
+}
+
+async function loadBestScore(sb, userId){
+  try {
+    var res = await sb.from('curso_melhor_prova')
+      .select('melhor_percentual, ja_aprovado, tentativas')
+      .eq('user_id', userId)
+      .eq('curso', CURSO)
+      .eq('modulo', MODULO)
+      .single();
+    if(res.data){
+      var el = document.getElementById('bestScore');
+      el.textContent = Math.round(res.data.melhor_percentual) + '%';
+      el.style.color = res.data.ja_aprovado ? 'var(--green)' : 'var(--red)';
+    }
+  } catch(e){}
+}
+
+/* Init */
+document.addEventListener("authReady", function(){
+  renderExam();
+  var sb = getClient();
+  if(sb){
+    sb.auth.getUser().then(function(u){
+      var user = u && u.data ? u.data.user : null;
+      if(user) loadBestScore(sb, user.id);
+    });
+  }
+});
+setTimeout(function(){
+  if(!document.getElementById('examContainer').children.length) renderExam();
+}, 1200);
+</script>
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
+</body>
+</html>
