@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 1 · Profilaxia Antitetânica – Enzo Salmazo | 2026</title>
+<script>window.PAGE_KEY = "curso-peconhentos";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>document.addEventListener("authReady", function(){ document.documentElement.style.visibility = "visible"; });</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0d14;--bg2:#111520;--bg3:#161c2e;--card:#1a2138;--card2:#1f2845;--accent:#4f9cf9;--accent2:#38e8c0;--accent3:#f9784f;--accent4:#b84ff9;--gold:#f9c94f;--red:#f95f5f;--green:#4ff984;--text:#e8eaf6;--muted:#8892b0;--border:rgba(79,156,249,0.15);--shadow:0 8px 40px rgba(0,0,0,0.5);--radius:16px;--font-body:'DM Sans',sans-serif;--font-display:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;padding-bottom:90px}
+header{position:relative;z-index:10;text-align:center;padding:40px 24px 24px;background:linear-gradient(180deg,rgba(79,156,249,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border)}
+header .badge{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--bg);font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px}
+header h1{font-family:var(--font-display);font-size:clamp(22px,3.5vw,34px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--accent) 60%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+header .sub{color:var(--muted);font-size:13px}
+nav.tabs{position:sticky;top:0;z-index:100;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;background:rgba(10,13,20,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:10px 16px}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:var(--font-body);font-size:12px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
+nav.tabs button:hover{color:var(--accent);border-color:var(--accent)}
+nav.tabs button.active{background:var(--accent);color:var(--bg);border-color:var(--accent);box-shadow:0 0 20px rgba(79,156,249,0.4)}
+nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:var(--accent4)}
+.section{display:none;animation:fadeIn .4s ease}.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.container{max-width:900px;margin:0 auto;padding:28px 20px}
+.chapter-title{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.chapter-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+.info-block{background:var(--card2);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:18px}
+.info-block.warn{border-color:var(--gold)}.info-block.danger{border-color:var(--red)}.info-block.success{border-color:var(--green)}.info-block.orange{border-color:var(--accent3)}
+.info-block .label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.info-block h4{font-family:var(--font-display);font-weight:700;margin-bottom:8px;font-size:15px;color:#fff}
+.info-block p{color:var(--text);margin-bottom:6px}.info-block ul{padding-left:20px;margin-top:8px;color:var(--text)}.info-block li{margin:5px 0}
+.compare-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--radius);overflow:hidden;margin-bottom:20px;font-size:12.5px}
+.compare-table th{background:var(--card2);color:var(--accent);font-family:var(--font-display);font-size:12.5px;font-weight:700;padding:11px 12px;text-align:left;border-bottom:1px solid var(--border)}
+.compare-table td{background:var(--card);padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text)}
+.compare-table tr:last-child td{border-bottom:none}
+.yes{color:var(--green);font-weight:700}.no{color:var(--muted)}
+.sec-divider{display:flex;align-items:center;gap:12px;margin:28px 0 18px}
+.sec-divider h3{font-family:var(--font-display);font-weight:700;font-size:16px;color:var(--accent2);white-space:nowrap}
+.sec-divider::before,.sec-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+.quiz-header{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px;justify-content:center}
+.score-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 20px;text-align:center;min-width:90px}
+.score-box .sn{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.score-box .sv{font-family:var(--font-display);font-size:26px;font-weight:800}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.q-card.cq{border-color:var(--green)}.q-card.wq{border-color:var(--red)}
+.q-num{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-bottom:10px}
+.q-text{font-size:14px;font-weight:600;color:#fff;margin-bottom:16px;line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:11px 16px;border-radius:10px;cursor:pointer;font-size:13px;text-align:left;transition:all .2s;display:flex;gap:10px;font-family:var(--font-body)}
+.opt-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(79,156,249,.08)}
+.opt-btn .ol{font-family:var(--font-mono);font-weight:700;color:var(--accent);min-width:20px}
+.opt-btn.ca{background:rgba(79,249,132,.1);border-color:var(--green);color:var(--green)}
+.opt-btn.wa{background:rgba(249,95,95,.1);border-color:var(--red);color:var(--red)}
+.res-ind{display:none;padding:8px 14px;border-radius:8px;margin-bottom:10px;font-size:13px;font-weight:700}
+.res-ind.vis{display:block}.res-ind.c{background:rgba(79,249,132,.1);color:var(--green)}.res-ind.w{background:rgba(249,95,95,.1);color:var(--red)}
+.exp-box{display:none;margin-top:14px;padding:14px 18px;background:rgba(79,156,249,.06);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;font-size:13px;color:var(--text);line-height:1.7}
+.exp-box.vis{display:block}.et{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.reset-btn{display:inline-block;margin-top:16px;padding:10px 24px;background:var(--accent4);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:var(--font-body);font-size:13px;font-weight:700}
+.complete-panel{background:linear-gradient(135deg,rgba(79,249,132,0.06),rgba(56,232,192,0.06));border:1px solid rgba(79,249,132,0.25);border-radius:var(--radius);padding:24px;margin-top:28px;text-align:center}
+.complete-panel h3{font-family:var(--font-display);font-size:18px;color:var(--green);margin-bottom:8px}
+.complete-panel p{color:var(--muted);font-size:13px;margin-bottom:16px}
+.complete-btn{padding:13px 28px;border:none;border-radius:12px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--green),var(--accent2));color:var(--bg);transition:all .2s}
+.complete-btn:hover{box-shadow:0 0 24px rgba(79,249,132,0.4);transform:translateY(-1px)}
+.complete-btn.done{background:var(--card2);color:var(--green);cursor:default;border:1px solid var(--green)}
+.source-note{margin-top:22px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}.source-note b{color:var(--accent2)}
+#backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow)}
+#backBtn:hover{border-color:var(--accent);background:var(--card2)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">Módulo 1 · Aula 3</div>
+  <h1>Profilaxia Antitetânica e Infecção Local</h1>
+  <div class="sub">Quando vacinar, quando dar SAT/IGHAT e como cobrir infecção</div>
+</header>
+
+<nav class="tabs">
+  <button class="active" onclick="showSection('teoria',this)">📖 Teoria</button>
+  <button class="qz-tab" onclick="showSection('quiz',this)">🧠 Quiz</button>
+</nav>
+
+<div class="section active" id="teoria">
+<div class="container">
+
+  <div class="info-block orange">
+    <div class="label">Contexto</div>
+    <h4>A picada é um ferimento — e pode dar tétano</h4>
+    <p>A decisão de profilaxia antitetânica depende de dois fatores: o <b>risco do ferimento</b> (mínimo vs. alto risco) e o <b>histórico vacinal</b> do paciente. No acidente ofídico, a picada costuma ser ferimento de <b>alto risco</b> (puntiforme, contaminado, com possível tecido desvitalizado).</p>
+  </div>
+
+  <div class="info-block warn">
+    <div class="label">Ordem importa</div>
+    <h4>⚠️ Corrigir a coagulação primeiro</h4>
+    <p>Em acidentes com distúrbio de coagulação (botrópico/crotálico/laquético), a vacina intramuscular deve ser feita <b>após correção do coagulograma</b> — aplicar IM em paciente incoagulável pode causar hematoma. Por isso, no fluxo, a profilaxia entra depois de estabilizar a coagulação.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Ferimento de ALTO risco (caso do acidente ofídico)</h3></div>
+  <table class="compare-table">
+    <thead><tr><th>Histórico vacinal</th><th>Vacina</th><th>SAT / IGHAT</th></tr></thead>
+    <tbody>
+      <tr><td>Incerto ou &lt; 3 doses</td><td class="yes">Sim</td><td class="yes">Sim</td></tr>
+      <tr><td>≥ 3 doses, última &lt; 5 anos</td><td class="no">Não</td><td class="no">Não</td></tr>
+      <tr><td>≥ 3 doses, última entre 5 e 10 anos</td><td class="yes">Sim (1 reforço)</td><td class="no">Não*</td></tr>
+      <tr><td>≥ 3 doses, última ≥ 10 anos</td><td class="yes">Sim (1 reforço)</td><td class="no">Não*</td></tr>
+    </tbody>
+  </table>
+  <div class="info-block">
+    <div class="label">Notas da tabela</div>
+    <ul>
+      <li><b>*</b> Para <b>imunodeprimido, desnutrido grave ou idoso</b>, além do reforço, também se indica IGHAT ou SAT.</li>
+      <li>Se o profissional julgar que os cuidados posteriores com o ferimento <b>não serão adequados</b>, considerar imunização passiva (SAT/IGHAT).</li>
+      <li>Quando vacina e SAT/IGHAT são usados juntos, aplicar em <b>locais diferentes</b>.</li>
+      <li><b>IGHAT</b> é preferível ao SAT (origem humana → menos risco de reação alérgica).</li>
+    </ul>
+  </div>
+
+  <div class="info-block success">
+    <div class="label">Regra rápida</div>
+    <p>No ferimento de alto risco: <b>quem tem esquema completo e recente (&lt;5 anos) não faz nada</b>; entre 5–10 anos faz <b>reforço</b>; incerto/&lt;3 doses faz <b>vacina + soro/IGHAT</b>.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Infecção no local da picada</h3></div>
+  <div class="info-block">
+    <div class="label">Ofídico</div>
+    <p>Mordeduras por serpentes tendem a causar <b>infecção polimicrobiana</b> (Gram-positivos, Gram-negativos e anaeróbios). Quando há sinais de infecção, uma cobertura possível é <b>ceftriaxona</b> (Gram-negativos) + <b>clindamicina</b> (Gram-positivos e anaeróbios). O antibiótico é <b>terapêutico</b> (quando há infecção), <b>não profilático</b> de rotina.</p>
+  </div>
+  <div class="info-block warn">
+    <div class="label">Detalhe de conduta</div>
+    <p>Se houver <b>bacteremia</b>, coletar hemocultura. No local, geralmente é celulite, sem material para cultura. Sempre confirmar o esquema antimicrobiano com o protocolo do serviço.</p>
+  </div>
+
+  <div class="source-note">
+    <b>Fontes:</b> TelessaúdeRS-UFRGS, adaptado do Ministério da Saúde (2022/2024); Guia de Vigilância em Saúde / MS; FioCruz — Manual de Diagnóstico e Tratamento de Acidentes por Animais Peçonhentos; Nota Técnica MS nº 64/2021. Conteúdo educativo — não substitui protocolo institucional vigente.
+  </div>
+</div>
+</div>
+
+<div class="section" id="quiz">
+<div class="container">
+  <div class="chapter-title"><span>🧠</span> Quiz — fixação</div>
+  <div class="quiz-header">
+    <div class="score-box"><div class="sn">Certas</div><div class="sv" id="sC" style="color:var(--green)">0</div></div>
+    <div class="score-box"><div class="sn">Erradas</div><div class="sv" id="sW" style="color:var(--red)">0</div></div>
+    <div class="score-box"><div class="sn">Restantes</div><div class="sv" id="sP" style="color:var(--accent)">0</div></div>
+  </div>
+  <div id="quizContainer"></div>
+  <div style="text-align:center"><button class="reset-btn" onclick="resetQuiz()">🔄 Refazer quiz</button></div>
+  <div class="complete-panel">
+    <h3>✔️ Concluir esta aula</h3>
+    <p>Ao concluir, sua barra de progresso no curso é atualizada. Você terá completado o Módulo 1!</p>
+    <button class="complete-btn" id="completeBtn" onclick="concluirAula()">Marcar aula como concluída</button>
+  </div>
+</div>
+</div>
+
+<a href="curso-peconhentos.html" id="backBtn">← Voltar ao curso</a>
+
+<script>
+var CURSO="peconhentos", AULA_ID="m1-profilaxia";
+function showSection(id,btn){document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');document.querySelectorAll('nav.tabs button').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+var QD=[
+  {n:1,q:"No ferimento de alto risco, paciente com esquema completo e última dose há 3 anos. Conduta?",o:[{l:"A",v:"Vacina + IGHAT"},{l:"B",v:"Apenas reforço da vacina"},{l:"C",v:"Não fazer nada"},{l:"D",v:"Apenas SAT"}],cr:"C",ex:"Esquema completo com última dose há menos de 5 anos, mesmo em ferimento de alto risco: não é necessária nova vacina nem soro."},
+  {n:2,q:"Paciente com histórico vacinal incerto sofre acidente botrópico (ferimento de alto risco). Conduta antitetânica?",o:[{l:"A",v:"Nada"},{l:"B",v:"Apenas vacina"},{l:"C",v:"Vacina + SAT ou IGHAT"},{l:"D",v:"Apenas IGHAT"}],cr:"C",ex:"Histórico incerto ou menos de 3 doses, em ferimento de alto risco: indica-se vacina E imunização passiva (SAT ou IGHAT), aplicadas em locais diferentes."},
+  {n:3,q:"Por que a vacina antitetânica IM deve ser adiada até a correção do coagulograma no acidente botrópico?",o:[{l:"A",v:"A vacina não funciona com veneno no corpo"},{l:"B",v:"Risco de hematoma na injeção IM em paciente incoagulável"},{l:"C",v:"O soro antiofídico anula a vacina"},{l:"D",v:"É contraindicada em qualquer sangramento"}],cr:"B",ex:"Aplicar injeção intramuscular em paciente com incoagulabilidade pode causar hematoma. Por isso a profilaxia entra após a correção do coagulograma."},
+  {n:4,q:"Diante de infecção no local da picada por serpente, um esquema de cobertura razoável seria:",o:[{l:"A",v:"Ceftriaxona + clindamicina"},{l:"B",v:"Apenas AAS"},{l:"C",v:"Nenhum antibiótico é necessário"},{l:"D",v:"Antifúngico oral"}],cr:"A",ex:"A infecção costuma ser polimicrobiana; ceftriaxona cobre Gram-negativos e clindamicina cobre Gram-positivos e anaeróbios. O antibiótico é terapêutico (quando há infecção), não profilático de rotina."}
+];
+var QS={c:0,w:0,a:0};
+function renderQuiz(){var ct=document.getElementById('quizContainer');ct.innerHTML='';QD.forEach(function(q,i){var d=document.createElement('div');d.className='q-card';d.id='q'+i;var body='<div class="opts">'+q.o.map(function(o){return '<button class="opt-btn" data-q="'+i+'" data-l="'+o.l+'" onclick="answerMC('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+o.v+'</span></button>';}).join('')+'</div>';d.innerHTML='<div class="q-num">Questão '+q.n+'</div><div class="res-ind" id="ri'+i+'"></div><p class="q-text">'+q.q+'</p>'+body+'<div class="exp-box" id="ex'+i+'"><div class="et">📖 Explicação</div><p>'+q.ex+'</p></div>';ct.appendChild(d);});updateScores();}
+function answerMC(i,ch){var q=QD[i];var card=document.getElementById('q'+i);if(card.classList.contains('ans'))return;card.querySelectorAll('.opt-btn').forEach(function(b){b.disabled=true;if(b.dataset.l===q.cr)b.classList.add('ca');if(b.dataset.l===ch&&ch!==q.cr)b.classList.add('wa');});var ok=ch===q.cr;card.classList.add('ans',ok?'cq':'wq');var ri=document.getElementById('ri'+i);ri.className='res-ind vis '+(ok?'c':'w');ri.innerHTML=ok?'✅ Correto!':'❌ Incorreto. Resposta: '+q.cr;document.getElementById('ex'+i).classList.add('vis');ok?QS.c++:QS.w++;QS.a++;updateScores();}
+function updateScores(){document.getElementById('sC').textContent=QS.c;document.getElementById('sW').textContent=QS.w;document.getElementById('sP').textContent=QD.length-QS.a;}
+function resetQuiz(){QS={c:0,w:0,a:0};renderQuiz();}
+function getClient(){if(window.authClient)return window.authClient;if(window.supabaseClient)return window.supabaseClient;return null;}
+async function concluirAula(){var btn=document.getElementById('completeBtn');var sb=getClient();if(!sb){marcarConcluidaUI(btn);return;}try{var u=await sb.auth.getUser();var user=u&&u.data?u.data.user:null;if(user){await sb.from('curso_progresso').upsert({user_id:user.id,curso:CURSO,aula_id:AULA_ID,concluida:true,quiz_score:QS.c,quiz_total:QD.length,updated_at:new Date().toISOString()},{onConflict:'user_id,curso,aula_id'});}}catch(e){console.warn('Falha ao salvar progresso:',e);}marcarConcluidaUI(btn);}
+function marcarConcluidaUI(btn){btn.classList.add('done');btn.textContent='✓ Aula concluída';btn.onclick=function(){window.location.href='curso-peconhentos.html';};setTimeout(function(){window.location.href='curso-peconhentos.html';},900);}
+document.addEventListener("authReady",function(){renderQuiz();});
+setTimeout(function(){if(!document.getElementById('quizContainer').children.length){renderQuiz();}},1200);
+</script>
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
+</body>
+</html>
