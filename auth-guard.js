@@ -135,18 +135,23 @@
     // ── Buscar perfil ─────────────────────────────────────────────────────
     var pageKey = window.PAGE_KEY || null;
 
+    // [CURSOS] Chaves de curso (ex.: "curso-peconhentos") vivem SÓ na tabela
+    // `acessos`, não têm coluna em `profiles`. Marcamos para não injetar o nome
+    // como coluna no select de profiles (evita erro 400) e validar via acessos.
+    var isCurso = !!(pageKey && pageKey.indexOf("curso-") === 0);
+
     var pacoteKey = null;
-    if (pageKey) {
+    if (pageKey && !isCurso) {
       if (pageKey.endsWith("_p1"))    pacoteKey = "pacote_p1";
       if (pageKey.endsWith("_p2"))    pacoteKey = "pacote_p2";
       if (pageKey.endsWith("_final")) pacoteKey = "pacote_final";
     }
 
     var extraFields = "";
-    if (pageKey)    extraFields += ", " + pageKey;
-    if (pacoteKey)  extraFields += ", " + pacoteKey;
-    if (pageKey)    extraFields += ", " + pageKey + "_expira";
-    if (pacoteKey)  extraFields += ", " + pacoteKey + "_expira";
+    if (pageKey && !isCurso)  extraFields += ", " + pageKey;
+    if (pacoteKey)            extraFields += ", " + pacoteKey;
+    if (pageKey && !isCurso)  extraFields += ", " + pageKey + "_expira";
+    if (pacoteKey)            extraFields += ", " + pacoteKey + "_expira";
 
     var fields = "is_approved, active_session, device_id" + extraFields;
 
