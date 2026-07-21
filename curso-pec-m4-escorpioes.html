@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 4 · Escorpionismo (SAEsc) – Enzo Salmazo | 2026</title>
+<script>window.PAGE_KEY = "curso-peconhentos";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>document.addEventListener("authReady", function(){ document.documentElement.style.visibility = "visible"; });</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0d14;--bg2:#111520;--bg3:#161c2e;--card:#1a2138;--card2:#1f2845;--accent:#4f9cf9;--accent2:#38e8c0;--accent3:#f9784f;--accent4:#b84ff9;--gold:#f9c94f;--red:#f95f5f;--green:#4ff984;--text:#e8eaf6;--muted:#8892b0;--border:rgba(79,156,249,0.15);--shadow:0 8px 40px rgba(0,0,0,0.5);--radius:16px;--font-body:'DM Sans',sans-serif;--font-display:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace}*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;padding-bottom:90px}header{position:relative;z-index:10;text-align:center;padding:40px 24px 24px;background:linear-gradient(180deg,rgba(249,201,79,0.1) 0%,transparent 100%);border-bottom:1px solid var(--border)}header .badge{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--accent3));color:var(--bg);font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px}header h1{font-family:var(--font-display);font-size:clamp(22px,3.5vw,34px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--gold) 60%,var(--accent3) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}header .sub{color:var(--muted);font-size:13px}nav.tabs{position:sticky;top:0;z-index:100;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;background:rgba(10,13,20,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:10px 16px}nav.tabs::-webkit-scrollbar{display:none}nav.tabs button{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:var(--font-body);font-size:12px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}nav.tabs button:hover{color:var(--accent);border-color:var(--accent)}nav.tabs button.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:var(--accent4)}nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-color:var(--gold)}.section{display:none;animation:fadeIn .4s ease}.section.active{display:block}@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}.container{max-width:900px;margin:0 auto;padding:28px 20px}.info-block{background:var(--card2);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:18px}.info-block.warn{border-color:var(--gold)}.info-block.danger{border-color:var(--red)}.info-block.success{border-color:var(--green)}.info-block.orange{border-color:var(--accent3)}.info-block .label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}.info-block h4{font-family:var(--font-display);font-weight:700;margin-bottom:8px;font-size:15px;color:#fff}.info-block p{color:var(--text);margin-bottom:6px}.info-block ul{padding-left:20px;margin-top:8px;color:var(--text)}.info-block li{margin:5px 0}.compare-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--radius);overflow:hidden;margin-bottom:24px;font-size:13px}.compare-table th{background:var(--card2);color:var(--gold);font-family:var(--font-display);font-size:13px;font-weight:700;padding:12px 14px;text-align:left;border-bottom:1px solid var(--border)}.compare-table td{background:var(--card);padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text)}.compare-table tr:last-child td{border-bottom:none}.sev-leve{color:var(--green);font-weight:700}.sev-mod{color:var(--gold);font-weight:700}.sev-grave{color:var(--red);font-weight:700}.sec-divider{display:flex;align-items:center;gap:12px;margin:28px 0 18px}.sec-divider h3{font-family:var(--font-display);font-weight:700;font-size:16px;color:var(--accent2);white-space:nowrap}.sec-divider::before,.sec-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}.pill-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.pill{background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--text)}.pill.danger{border-color:rgba(249,95,95,.4);color:var(--red)}.pill.warn{border-color:rgba(249,201,79,.4);color:var(--gold)}.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:24px}.img-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .25s}.img-card:hover{border-color:var(--gold);transform:translateY(-2px)}.img-frame{width:100%;aspect-ratio:4/3;background:var(--bg3);display:flex;align-items:center;justify-content:center;overflow:hidden}.img-frame img{width:100%;height:100%;object-fit:cover;display:block}.img-frame .placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:12px;text-align:center;padding:16px}.img-frame .placeholder .ph-emoji{font-size:34px;opacity:.5}.img-card .cap{padding:12px 14px}.img-card .cap .cap-title{font-size:13px;font-weight:700;margin-bottom:4px}.img-card .cap .cap-credit{font-size:10px;color:var(--muted);font-family:var(--font-mono);line-height:1.4}
+.child-alert{background:linear-gradient(135deg,rgba(249,95,95,0.12),rgba(249,120,79,0.08));border:2px solid var(--red);border-radius:var(--radius);padding:20px 24px;margin-bottom:22px;position:relative;overflow:hidden}
+.child-alert::before{content:'👶';position:absolute;right:16px;top:12px;font-size:40px;opacity:.2}
+.child-alert .ca-badge{display:inline-block;background:var(--red);color:#fff;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:6px;margin-bottom:10px}
+.child-alert h4{font-family:var(--font-display);font-size:16px;font-weight:800;color:var(--red);margin-bottom:8px}
+.child-alert p{color:var(--text);font-size:13.5px;line-height:1.7;margin-bottom:6px}
+.child-alert b{color:#fff}
+.ck-group{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;overflow:hidden}.ck-group h4{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--gold);padding:14px 18px;background:var(--card2);border-bottom:1px solid var(--border)}.ck-items{padding:10px 18px}.ck-item{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;user-select:none}.ck-item:last-child{border-bottom:none}.ck-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;transition:all .2s;margin-top:1px}.ck-item.checked .ck-box{background:var(--green);border-color:var(--green);color:var(--bg)}.ck-item .ck-text{font-size:13px;color:var(--text)}.ck-item.checked .ck-text{color:var(--muted);text-decoration:line-through}.ck-result{position:sticky;bottom:76px;background:var(--card2);border:1px solid var(--accent);border-radius:14px;padding:14px 18px;margin-top:16px;text-align:center;font-size:14px;font-weight:700;color:var(--accent2);box-shadow:var(--shadow)}.checklist-intro{background:rgba(249,201,79,0.06);border:1px solid rgba(249,201,79,0.25);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px}
+.quiz-header{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px;justify-content:center}.score-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 20px;text-align:center;min-width:90px}.score-box .sn{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.score-box .sv{font-family:var(--font-display);font-size:26px;font-weight:800}.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}.q-card.cq{border-color:var(--green)}.q-card.wq{border-color:var(--red)}.q-num{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-bottom:10px}.q-text{font-size:14px;font-weight:600;color:#fff;margin-bottom:16px;line-height:1.5}.opts{display:flex;flex-direction:column;gap:8px}.opt-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:11px 16px;border-radius:10px;cursor:pointer;font-size:13px;text-align:left;transition:all .2s;display:flex;gap:10px;font-family:var(--font-body)}.opt-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(79,156,249,.08)}.opt-btn .ol{font-family:var(--font-mono);font-weight:700;color:var(--accent);min-width:20px}.opt-btn.ca{background:rgba(79,249,132,.1);border-color:var(--green);color:var(--green)}.opt-btn.wa{background:rgba(249,95,95,.1);border-color:var(--red);color:var(--red)}.res-ind{display:none;padding:8px 14px;border-radius:8px;margin-bottom:10px;font-size:13px;font-weight:700}.res-ind.vis{display:block}.res-ind.c{background:rgba(79,249,132,.1);color:var(--green)}.res-ind.w{background:rgba(249,95,95,.1);color:var(--red)}.exp-box{display:none;margin-top:14px;padding:14px 18px;background:rgba(79,156,249,.06);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;font-size:13px;color:var(--text);line-height:1.7}.exp-box.vis{display:block}.et{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}.reset-btn{display:inline-block;margin-top:16px;padding:10px 24px;background:var(--accent4);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:var(--font-body);font-size:13px;font-weight:700}.complete-panel{background:linear-gradient(135deg,rgba(79,249,132,0.06),rgba(56,232,192,0.06));border:1px solid rgba(79,249,132,0.25);border-radius:var(--radius);padding:24px;margin-top:28px;text-align:center}.complete-panel h3{font-family:var(--font-display);font-size:18px;color:var(--green);margin-bottom:8px}.complete-panel p{color:var(--muted);font-size:13px;margin-bottom:16px}.complete-btn{padding:13px 28px;border:none;border-radius:12px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--green),var(--accent2));color:var(--bg);transition:all .2s}.complete-btn:hover{box-shadow:0 0 24px rgba(79,249,132,0.4)}.complete-btn.done{background:var(--card2);color:var(--green);cursor:default;border:1px solid var(--green)}.source-note{margin-top:22px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}.source-note b{color:var(--accent2)}#backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow)}#backBtn:hover{border-color:var(--accent);background:var(--card2)}
+</style>
+</head>
+<body>
+<header>
+  <div class="badge">Módulo 4 · Aula 1</div>
+  <h1>Escorpionismo — Soro Antiescorpiônico (SAEsc)</h1>
+  <div class="sub">Gênero <i>Tityus</i> · escorpião amarelo — atenção redobrada em crianças</div>
+</header>
+<nav class="tabs">
+  <button class="active" onclick="showSection('teoria',this)">📖 Teoria</button>
+  <button onclick="showSection('imagens',this)">🖼️ Imagens</button>
+  <button class="ck-tab" onclick="showSection('checklist',this)">✅ Checklist CVE</button>
+  <button class="qz-tab" onclick="showSection('quiz',this)">🧠 Quiz</button>
+</nav>
+
+<div class="section active" id="teoria">
+<div class="container">
+
+  <!-- ========== ALERTA CRIANÇAS — PRIMEIRO E IMPOSSÍVEL DE IGNORAR ========== -->
+  <div class="child-alert">
+    <div class="ca-badge">🚨 Alerta pediátrico</div>
+    <h4>CRIANÇAS ATÉ 10 ANOS: RISCO DE ÓBITO MUITO MAIOR</h4>
+    <p>Crianças, especialmente <b>menores de 7 anos</b>, são o grupo com <b>maior mortalidade</b> no escorpionismo. O veneno de <i>Tityus serrulatus</i> (escorpião amarelo) pode causar <b>edema pulmonar agudo, choque cardiogênico e óbito</b> em poucas horas numa criança.</p>
+    <p><b>Conduta imediata:</b> em CRIANÇAS até 10 anos picadas por escorpião, <b>administrar SAEsc IMEDIATAMENTE</b> — independente de sintomas ou classificação. Não esperar evolução clínica. A gravidade pode se instalar em minutos.</p>
+    <p>Internação com <b>monitorização contínua</b> dos sinais vitais é obrigatória. Transferência para CTI se houver qualquer manifestação sistêmica.</p>
+  </div>
+
+  <div class="info-block orange">
+    <div class="label">Visão geral</div>
+    <h4>O acidente mais notificado no Brasil</h4>
+    <p>O escorpionismo é, junto com o ofidismo, um dos acidentes por peçonhentos mais frequentes no país. O gênero <b>Tityus</b> é o de importância médica: <i>T. serrulatus</i> (escorpião amarelo, o mais perigoso), <i>T. bahiensis</i> (marrom) e <i>T. stigmurus</i> (amarelo do Nordeste). O <b>escorpião amarelo</b> causa os acidentes mais graves — e é o que mais se reproduz em ambiente urbano (partenogênese).</p>
+  </div>
+
+  <div class="sec-divider"><h3>Ação do veneno</h3></div>
+  <div class="info-block">
+    <div class="label">Fisiopatologia</div>
+    <p>O veneno escorpiônico age sobre <b>canais de sódio voltagem-dependentes</b>, causando:</p>
+    <ul>
+      <li><b>Ação local:</b> dor intensa no local da picada (principal queixa), parestesia, eritema, sudorese local.</li>
+      <li><b>Indução de despolarização:</b> estimulação maciça de terminações nervosas autonômicas → liberação de <b>catecolaminas</b> (adrenérgica) e <b>acetilcolina</b> (colinérgica) → é essa "tempestade autonômica" que causa os efeitos sistêmicos.</li>
+    </ul>
+  </div>
+
+  <div class="sec-divider"><h3>Manifestações clínicas</h3></div>
+
+  <div class="info-block">
+    <div class="label">Quadro leve (mais comum em adultos)</div>
+    <p>Dor local intensa (pode ser excruciante), parestesia e eritema no local. <b>Sem manifestações sistêmicas.</b> Observação mínima de 4–6 horas.</p>
+  </div>
+
+  <div class="info-block warn">
+    <div class="label">Quadro moderado</div>
+    <p>Manifestações sistêmicas <b>isoladas e brandas</b>: sudorese, náuseas, vômitos ocasionais, taquicardia ou bradicardia, hipertensão arterial leve, agitação. Quadro mais frequente em crianças que começam a evoluir.</p>
+  </div>
+
+  <div class="info-block danger">
+    <div class="label">Quadro grave — emergência</div>
+    <h4>⚠️ Vômitos profusos e frequentes = sinal premonitório de gravidade</h4>
+    <p>Manifestações sistêmicas <b>evidentes e intensas</b>:</p>
+    <ul>
+      <li><b>Vômitos profusos e frequentes</b> — é o principal sinal premonitório ("sentinel vomiting"). Quando uma criança começa a vomitar repetidamente após picada de escorpião, assumir GRAVIDADE.</li>
+      <li>Sudorese generalizada e abundante, sensação de frio, pele arrepiada, palidez</li>
+      <li><b>Agitação psicomotora</b> acentuada (pode alternar com sonolência)</li>
+      <li>Hipotermia ou hipertermia</li>
+      <li>Taquicardia ou bradicardia intensa, <b>hipo ou hipertensão arterial</b></li>
+      <li>Taquidispneia, tremores, espasmos musculares</li>
+      <li><b>Convulsões</b></li>
+      <li><b>Insuficiência cardíaca, edema agudo de pulmão</b></li>
+      <li>Extra-sístoles, arritmias</li>
+      <li><b>Priapismo</b></li>
+      <li><b>Choque</b> — causa de óbito</li>
+    </ul>
+  </div>
+
+  <!-- ========== SEGUNDO ALERTA CRIANÇAS — REFORÇO ========== -->
+  <div class="child-alert">
+    <div class="ca-badge">👶 Conduta em crianças — reforço</div>
+    <h4>POR QUE A CRIANÇA EVOLUI MAIS RÁPIDO PARA GRAVIDADE?</h4>
+    <p>Numa criança, a <b>relação dose de veneno / massa corporal</b> é muito maior que no adulto — a mesma quantidade de veneno produz efeitos proporcionalmente mais intensos. Além disso, o sistema cardiovascular infantil é mais vulnerável à "tempestade autonômica" do veneno.</p>
+    <p><b>Na prática clínica:</b></p>
+    <ul style="padding-left:20px;margin-top:8px">
+      <li>Criança que "só vomitou" → <b>não é caso leve</b>. Vômito em criança após escorpião = considerar evolução para grave.</li>
+      <li>Criança até 10 anos + picada de escorpião amarelo = <b>administrar SAEsc imediatamente + internar com monitorização</b>.</li>
+      <li>Se evolução rápida com dispneia, sudorese profusa ou instabilidade hemodinâmica → <b>CTI imediatamente</b>.</li>
+      <li>Manter <b>adrenalina e material de intubação</b> à disposição.</li>
+    </ul>
+  </div>
+
+  <div class="sec-divider"><h3>Classificação e soroterapia (SAEsc)</h3></div>
+  <table class="compare-table">
+    <thead><tr><th>Gravidade</th><th>Quadro clínico</th><th>Conduta</th></tr></thead>
+    <tbody>
+      <tr><td class="sev-leve">Leve</td><td>Dor, eritema e parestesia local apenas</td><td>Analgesia + bloqueio anestésico + observação 4–6h. <b>Sem soro.</b></td></tr>
+      <tr><td class="sev-mod">Moderado</td><td>Sintomas sistêmicos isolados e brandos (sudorese, náuseas, vômitos ocasionais, taquicardia, agitação)</td><td><b>2–3 ampolas SAEsc</b> + analgesia + internação e monitorização 24h</td></tr>
+      <tr><td class="sev-grave">Grave</td><td>Vômitos profusos, sudorese profusa, bradicardia, edema pulmonar, choque, convulsão</td><td><b>4–6 ampolas SAEsc</b> + internação em CTI + suporte hemodinâmico/ventilatório</td></tr>
+    </tbody>
+  </table>
+
+  <div class="info-block danger">
+    <div class="label">Regra especial — crianças até 10 anos</div>
+    <h4>🚨 Em crianças: administrar SAEsc IMEDIATAMENTE, independente da classificação</h4>
+    <p>O checklist do CVE-SP e o Guia do MS são explícitos: <b>criança até 10 anos</b> picada por escorpião → administrar <b>3 ampolas de SAEsc</b> e internar com monitorização mínima de 24h <b>mesmo que o quadro pareça leve</b>. Se evoluir para sintomas graves → complementar para <b>6 ampolas</b> (total) + CTI.</p>
+  </div>
+
+  <div class="info-block success">
+    <div class="label">Sobre o soro (Butantan, 2024)</div>
+    <ul>
+      <li>Cada ampola de SAEsc tem <b>5 mL</b> (atenção: diferente dos soros ofídicos, que têm 10 mL).</li>
+      <li>Cada mL neutraliza <b>≥ 1 mg</b> de veneno-referência de <i>T. serrulatus</i> → <b>≥ 5 mg por ampola</b>.</li>
+      <li>Via <b>intravenosa</b>. Na impossibilidade de acesso venoso: <b>via intraóssea</b> (PCDT MS 2026).</li>
+      <li>Dose máxima: <b>6 ampolas</b> (PCDT MS 2026).</li>
+      <li>Não há contraindicação por faixa etária — mesma dose para adultos e crianças.</li>
+      <li>Na falta de SAEsc: o <b>SAA (soro antiaracnídico)</b> cobre escorpiões do gênero Tityus, com mesma eficácia.</li>
+    </ul>
+  </div>
+
+  <div class="info-block">
+    <div class="label">Tratamento da dor</div>
+    <ul>
+      <li>Compressa morna no local</li>
+      <li>Analgésico via oral e/ou parenteral (dipirona 10 mg/kg)</li>
+      <li>Bloqueio anestésico com <b>lidocaína 2% sem vasoconstritor</b> — infiltração local</li>
+    </ul>
+  </div>
+
+  <div class="source-note">
+    <b>Fontes:</b> Instituto Butantan (bula do soro antiescorpiônico, 02/2024); PCDT Escorpionismo — Ministério da Saúde (2026); Guia de Vigilância em Saúde / MS (6ª ed.); CVE-SP — Checklist Acidente Escorpiônico; Ofício Circular nº 04/2014 CGDT/DEVIT/SVS/MS. Conteúdo educativo — não substitui protocolo institucional vigente.
+  </div>
+</div>
+</div>
+
+<div class="section" id="imagens">
+<div class="container">
+  <div style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--gold);margin-bottom:20px">🖼️ Imagens — Escorpiões do gênero <i>Tityus</i></div>
+  <div class="gallery" id="galleryWrap"></div>
+</div>
+</div>
+
+<div class="section" id="checklist">
+<div class="container">
+  <div style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--gold);margin-bottom:20px">✅ Checklist — Acidente Escorpiônico (CVE-SP)</div>
+  <div class="checklist-intro"><p>Marque os achados do paciente para estimar a gravidade. <b>Atenção: se o paciente é criança ≤ 10 anos, administrar SAEsc imediatamente.</b></p></div>
+  <div class="ck-group"><h4>Dados do paciente</h4><div class="ck-items" id="ckPac"></div></div>
+  <div class="ck-group"><h4>Manifestações locais e sistêmicas</h4><div class="ck-items" id="ckSint"></div></div>
+  <div class="ck-result" id="ckResult">Marque os sinais para estimar a gravidade.</div>
+</div>
+</div>
+
+<div class="section" id="quiz">
+<div class="container">
+  <div style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--accent);margin-bottom:20px">🧠 Quiz — fixação</div>
+  <div class="quiz-header"><div class="score-box"><div class="sn">Certas</div><div class="sv" id="sC" style="color:var(--green)">0</div></div><div class="score-box"><div class="sn">Erradas</div><div class="sv" id="sW" style="color:var(--red)">0</div></div><div class="score-box"><div class="sn">Restantes</div><div class="sv" id="sP" style="color:var(--accent)">0</div></div></div>
+  <div id="quizContainer"></div>
+  <div style="text-align:center"><button class="reset-btn" onclick="resetQuiz()">🔄 Refazer quiz</button></div>
+  <div class="complete-panel"><h3>✔️ Concluir esta aula</h3><p>Ao concluir, sua barra de progresso no curso é atualizada.</p><button class="complete-btn" id="completeBtn" onclick="concluirAula()">Marcar aula como concluída</button></div>
+</div>
+</div>
+
+<a href="curso-peconhentos.html" id="backBtn">← Voltar ao curso</a>
+
+<script>
+var CURSO="peconhentos",AULA_ID="m4-escorpioes";
+function showSection(id,btn){document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');document.querySelectorAll('nav.tabs button').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+
+var IMAGENS=[
+  {file:"img/m4-escorpiao-amarelo-01.jpg",titulo:"Tityus serrulatus (escorpião amarelo — o mais perigoso)",credito:"Wikimedia Commons — CC BY-SA 4.0"},
+  {file:"img/m4-escorpiao-marrom-01.jpg",titulo:"Tityus bahiensis (escorpião marrom)",credito:"Wikimedia Commons — CC BY-SA 4.0"}
+];
+function renderGallery(){var w=document.getElementById('galleryWrap');w.innerHTML='';IMAGENS.forEach(function(im){var c=document.createElement('div');c.className='img-card';c.innerHTML='<div class="img-frame"><img src="'+im.file+'" alt="'+im.titulo+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><div class="placeholder" style="display:none"><span class="ph-emoji">🦂</span><span>'+im.titulo+'</span></div></div><div class="cap"><div class="cap-title">'+im.titulo+'</div><div class="cap-credit">'+im.credito+'</div></div>';w.appendChild(c);});}
+
+/* CHECKLIST */
+var CK_PAC=[{t:"Criança ≤ 10 anos (ATENÇÃO: risco de escorpionismo grave!)",peso:"crianca"},{t:"Escorpião identificado como AMARELO (T. serrulatus)",peso:"alerta"}];
+var CK_SINT=[
+  {t:"Dor local intensa",peso:"leve"},{t:"Parestesia e eritema local",peso:"leve"},
+  {t:"Sudorese localizada",peso:"leve"},{t:"Náuseas / vômitos ocasionais",peso:"moderado"},
+  {t:"Sudorese generalizada",peso:"moderado"},{t:"Taquicardia ou bradicardia",peso:"moderado"},
+  {t:"Agitação / hipertensão leve",peso:"moderado"},
+  {t:"VÔMITOS PROFUSOS E FREQUENTES (sinal premonitório!)",peso:"grave"},
+  {t:"Sudorese profusa + palidez + pele arrepiada",peso:"grave"},
+  {t:"Bradicardia severa / hipotensão",peso:"grave"},
+  {t:"Taquidispneia / edema pulmonar agudo",peso:"grave"},
+  {t:"Convulsão",peso:"grave"},{t:"Insuficiência cardíaca / choque",peso:"grave"},
+  {t:"Priapismo",peso:"grave"}
+];
+var ckState={};
+function renderChecklist(){
+  renderCkGroup('ckPac',CK_PAC,'p');
+  renderCkGroup('ckSint',CK_SINT,'s');
+}
+function renderCkGroup(elId,arr,prefix){var el=document.getElementById(elId);el.innerHTML='';arr.forEach(function(o,i){var id=prefix+i;ckState[id]=false;var d=document.createElement('div');d.className='ck-item';d.setAttribute('data-id',id);d.setAttribute('data-peso',o.peso);d.onclick=function(){toggleCk(id);};d.innerHTML='<div class="ck-box">✓</div><div class="ck-text">'+o.t+'</div>';el.appendChild(d);});}
+function toggleCk(id){ckState[id]=!ckState[id];var el=document.querySelector('.ck-item[data-id="'+id+'"]');if(el)el.classList.toggle('checked',ckState[id]);updateCkResult();}
+function updateCkResult(){
+  var box=document.getElementById('ckResult');
+  var crianca=ckState['p0'];
+  var grave=false,moderado=false,leve=false;
+  CK_SINT.forEach(function(o,i){if(ckState['s'+i]){if(o.peso==='grave')grave=true;else if(o.peso==='moderado')moderado=true;else leve=true;}});
+  if(crianca&&(grave||moderado)){
+    box.style.color='var(--red)';box.innerHTML='🔴 CRIANÇA com sintomas sistêmicos → GRAVE → SAEsc 4–6 ampolas + CTI IMEDIATO';
+  } else if(crianca){
+    box.style.color='var(--red)';box.innerHTML='🔴 CRIANÇA ≤ 10 anos → Administrar SAEsc 3 ampolas IMEDIATAMENTE + internação + monitorização. Não esperar evolução!';
+  } else if(grave){
+    box.style.color='var(--red)';box.innerHTML='🔴 Sugere acidente GRAVE → SAEsc 4–6 ampolas + CTI (seguir protocolo vigente)';
+  } else if(moderado){
+    box.style.color='var(--gold)';box.innerHTML='🟡 Sugere acidente MODERADO → SAEsc 2–3 ampolas + internação e monitorização 24h';
+  } else if(leve){
+    box.style.color='var(--green)';box.innerHTML='🟢 Sugere quadro LEVE → Analgesia + bloqueio anestésico + observação 4–6h. Sem soro (adulto).';
+  } else {
+    box.style.color='var(--accent2)';box.innerHTML='Marque os sinais para estimar a gravidade.';
+  }
+}
+
+/* QUIZ */
+var QD=[
+  {n:1,q:"Qual é o principal sinal premonitório de gravidade no escorpionismo, especialmente em crianças?",o:[{l:"A",v:"Dor local intensa"},{l:"B",v:"Vômitos profusos e frequentes"},{l:"C",v:"Eritema no local"},{l:"D",v:"Parestesia"}],cr:"B",ex:"Os vômitos profusos e frequentes ('sentinel vomiting') são o sinal premonitório mais importante de gravidade no escorpionismo. Em crianças, vômito após picada de escorpião = assumir evolução para caso grave."},
+  {n:2,q:"Uma criança de 5 anos é picada por escorpião amarelo e apresenta apenas dor local intensa. A conduta é:",o:[{l:"A",v:"Apenas analgesia e observação, como no adulto"},{l:"B",v:"Administrar SAEsc imediatamente + internação com monitorização, mesmo sem sintomas sistêmicos"},{l:"C",v:"Alta com orientações"},{l:"D",v:"Soro antibotrópico"}],cr:"B",ex:"Criança ≤ 10 anos picada por escorpião: administrar SAEsc IMEDIATAMENTE, independente da classificação. Não esperar evolução clínica — a gravidade pode se instalar em minutos."},
+  {n:3,q:"Por que crianças são mais vulneráveis ao escorpionismo grave?",o:[{l:"A",v:"Porque o veneno é diferente em crianças"},{l:"B",v:"Porque a relação dose de veneno / massa corporal é muito maior e o sistema cardiovascular é mais vulnerável"},{l:"C",v:"Porque crianças não sentem dor"},{l:"D",v:"Porque o SAEsc não funciona em crianças"}],cr:"B",ex:"A mesma quantidade de veneno afeta proporcionalmente muito mais uma criança que um adulto (relação dose/peso). Além disso, o sistema cardiovascular infantil é mais suscetível à tempestade autonômica do veneno."},
+  {n:4,q:"O SAEsc é apresentado em ampolas de:",o:[{l:"A",v:"10 mL (como os soros ofídicos)"},{l:"B",v:"5 mL"},{l:"C",v:"20 mL"},{l:"D",v:"1 mL"}],cr:"B",ex:"Cuidado: a ampola de SAEsc tem 5 mL (não 10 mL como os soros ofídicos). Cada mL neutraliza ≥1 mg de veneno de T. serrulatus → ≥5 mg por ampola."},
+  {n:5,q:"Na falta de SAEsc, qual soro pode ser utilizado com a mesma eficácia para escorpionismo?",o:[{l:"A",v:"SAB (antibotrópico)"},{l:"B",v:"SAC (anticrotálico)"},{l:"C",v:"SAA (soro antiaracnídico — cobre Tityus)"},{l:"D",v:"SAEL (antielapídico)"}],cr:"C",ex:"O SAA (soro antiaracnídico) cobre venenos de Loxosceles, Phoneutria e Tityus. Pode substituir o SAEsc com mesma eficácia. Nenhum soro ofídico (SAB, SAC, SAEL) serve para escorpionismo."},
+  {n:6,q:"O acidente escorpiônico classificado como LEVE (adulto) é tratado com:",o:[{l:"A",v:"2–3 ampolas de SAEsc"},{l:"B",v:"4–6 ampolas de SAEsc"},{l:"C",v:"Analgesia, bloqueio anestésico e observação 4–6h — sem soro"},{l:"D",v:"Nenhum tratamento"}],cr:"C",ex:"No adulto com quadro leve (apenas dor e parestesia local), o tratamento é sintomático: analgesia, bloqueio com lidocaína e observação. Soro só é indicado em moderado (2–3 amp.) e grave (4–6 amp.)."}
+];
+var QS={c:0,w:0,a:0};
+function renderQuiz(){var ct=document.getElementById('quizContainer');ct.innerHTML='';QD.forEach(function(q,i){var d=document.createElement('div');d.className='q-card';d.id='q'+i;var body='<div class="opts">'+q.o.map(function(o){return '<button class="opt-btn" data-q="'+i+'" data-l="'+o.l+'" onclick="answerMC('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+o.v+'</span></button>';}).join('')+'</div>';d.innerHTML='<div class="q-num">Questão '+q.n+'</div><div class="res-ind" id="ri'+i+'"></div><p class="q-text">'+q.q+'</p>'+body+'<div class="exp-box" id="ex'+i+'"><div class="et">📖 Explicação</div><p>'+q.ex+'</p></div>';ct.appendChild(d);});updateScores();}
+function answerMC(i,ch){var q=QD[i];var card=document.getElementById('q'+i);if(card.classList.contains('ans'))return;card.querySelectorAll('.opt-btn').forEach(function(b){b.disabled=true;if(b.dataset.l===q.cr)b.classList.add('ca');if(b.dataset.l===ch&&ch!==q.cr)b.classList.add('wa');});var ok=ch===q.cr;card.classList.add('ans',ok?'cq':'wq');var ri=document.getElementById('ri'+i);ri.className='res-ind vis '+(ok?'c':'w');ri.innerHTML=ok?'✅ Correto!':'❌ Incorreto. Resposta: '+q.cr;document.getElementById('ex'+i).classList.add('vis');ok?QS.c++:QS.w++;QS.a++;updateScores();}
+function updateScores(){document.getElementById('sC').textContent=QS.c;document.getElementById('sW').textContent=QS.w;document.getElementById('sP').textContent=QD.length-QS.a;}
+function resetQuiz(){QS={c:0,w:0,a:0};renderQuiz();}
+function getClient(){if(window.authClient)return window.authClient;return null;}
+async function concluirAula(){var btn=document.getElementById('completeBtn');var sb=getClient();if(!sb){marcarConcluidaUI(btn);return;}try{var u=await sb.auth.getUser();var user=u&&u.data?u.data.user:null;if(user){await sb.from('curso_progresso').upsert({user_id:user.id,curso:CURSO,aula_id:AULA_ID,concluida:true,quiz_score:QS.c,quiz_total:QD.length,updated_at:new Date().toISOString()},{onConflict:'user_id,curso,aula_id'});}}catch(e){console.warn('Falha ao salvar progresso:',e);}marcarConcluidaUI(btn);}
+function marcarConcluidaUI(btn){btn.classList.add('done');btn.textContent='✓ Aula concluída';btn.onclick=function(){window.location.href='curso-peconhentos.html';};setTimeout(function(){window.location.href='curso-peconhentos.html';},900);}
+document.addEventListener("authReady",function(){renderGallery();renderChecklist();renderQuiz();});
+setTimeout(function(){if(!document.getElementById('quizContainer').children.length){renderGallery();renderChecklist();renderQuiz();}},1200);
+</script>
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
+</body>
+</html>
