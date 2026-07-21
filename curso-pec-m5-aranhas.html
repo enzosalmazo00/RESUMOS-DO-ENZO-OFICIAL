@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 5 · Acidentes Araneídicos (SAA) – Enzo Salmazo | 2026</title>
+<script>window.PAGE_KEY = "curso-peconhentos";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>document.addEventListener("authReady", function(){ document.documentElement.style.visibility = "visible"; });</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0d14;--bg2:#111520;--bg3:#161c2e;--card:#1a2138;--card2:#1f2845;--accent:#4f9cf9;--accent2:#38e8c0;--accent3:#f9784f;--accent4:#b84ff9;--gold:#f9c94f;--red:#f95f5f;--green:#4ff984;--text:#e8eaf6;--muted:#8892b0;--border:rgba(79,156,249,0.15);--shadow:0 8px 40px rgba(0,0,0,0.5);--radius:16px;--font-body:'DM Sans',sans-serif;--font-display:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace}*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;padding-bottom:90px}header{position:relative;z-index:10;text-align:center;padding:40px 24px 24px;background:linear-gradient(180deg,rgba(184,79,249,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border)}header .badge{display:inline-block;background:linear-gradient(135deg,var(--accent4),var(--accent3));color:#fff;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px}header h1{font-family:var(--font-display);font-size:clamp(22px,3.5vw,34px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--accent4) 60%,var(--accent3) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}header .sub{color:var(--muted);font-size:13px}nav.tabs{position:sticky;top:0;z-index:100;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;background:rgba(10,13,20,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:10px 16px}nav.tabs::-webkit-scrollbar{display:none}nav.tabs button{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:var(--font-body);font-size:12px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}nav.tabs button:hover{color:var(--accent);border-color:var(--accent)}nav.tabs button.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:var(--accent4)}.section{display:none;animation:fadeIn .4s ease}.section.active{display:block}@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}.container{max-width:900px;margin:0 auto;padding:28px 20px}.info-block{background:var(--card2);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:18px}.info-block.warn{border-color:var(--gold)}.info-block.danger{border-color:var(--red)}.info-block.success{border-color:var(--green)}.info-block.orange{border-color:var(--accent3)}.info-block.purple{border-color:var(--accent4)}.info-block .label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}.info-block h4{font-family:var(--font-display);font-weight:700;margin-bottom:8px;font-size:15px;color:#fff}.info-block p{color:var(--text);margin-bottom:6px}.info-block ul{padding-left:20px;margin-top:8px;color:var(--text)}.info-block li{margin:5px 0}.compare-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--radius);overflow:hidden;margin-bottom:24px;font-size:12.5px}.compare-table th{background:var(--card2);color:var(--accent4);font-family:var(--font-display);font-size:12.5px;font-weight:700;padding:11px 12px;text-align:left;border-bottom:1px solid var(--border)}.compare-table td{background:var(--card);padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text)}.compare-table tr:last-child td{border-bottom:none}.sev-leve{color:var(--green);font-weight:700}.sev-mod{color:var(--gold);font-weight:700}.sev-grave{color:var(--red);font-weight:700}.sec-divider{display:flex;align-items:center;gap:12px;margin:28px 0 18px}.sec-divider h3{font-family:var(--font-display);font-weight:700;font-size:16px;color:var(--accent2);white-space:nowrap}.sec-divider::before,.sec-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}.pill-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.pill{background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--text)}.pill.danger{border-color:rgba(249,95,95,.4);color:var(--red)}.pill.warn{border-color:rgba(249,201,79,.4);color:var(--gold)}.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:24px}.img-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .25s}.img-card:hover{border-color:var(--accent4);transform:translateY(-2px)}.img-frame{width:100%;aspect-ratio:4/3;background:var(--bg3);display:flex;align-items:center;justify-content:center;overflow:hidden}.img-frame img{width:100%;height:100%;object-fit:cover;display:block}.img-frame .placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:12px;text-align:center;padding:16px}.img-frame .placeholder .ph-emoji{font-size:34px;opacity:.5}.img-card .cap{padding:12px 14px}.img-card .cap .cap-title{font-size:13px;font-weight:700;margin-bottom:4px}.img-card .cap .cap-credit{font-size:10px;color:var(--muted);font-family:var(--font-mono);line-height:1.4}
+.child-alert{background:linear-gradient(135deg,rgba(249,95,95,0.12),rgba(249,120,79,0.08));border:2px solid var(--red);border-radius:var(--radius);padding:20px 24px;margin-bottom:22px;position:relative;overflow:hidden}.child-alert::before{content:'👶';position:absolute;right:16px;top:12px;font-size:40px;opacity:.2}.child-alert .ca-badge{display:inline-block;background:var(--red);color:#fff;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:6px;margin-bottom:10px}.child-alert h4{font-family:var(--font-display);font-size:16px;font-weight:800;color:var(--red);margin-bottom:8px}.child-alert p{color:var(--text);font-size:13.5px;line-height:1.7;margin-bottom:6px}.child-alert b{color:#fff}
+.quiz-header{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px;justify-content:center}.score-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 20px;text-align:center;min-width:90px}.score-box .sn{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.score-box .sv{font-family:var(--font-display);font-size:26px;font-weight:800}.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}.q-card.cq{border-color:var(--green)}.q-card.wq{border-color:var(--red)}.q-num{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-bottom:10px}.q-text{font-size:14px;font-weight:600;color:#fff;margin-bottom:16px;line-height:1.5}.opts{display:flex;flex-direction:column;gap:8px}.opt-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:11px 16px;border-radius:10px;cursor:pointer;font-size:13px;text-align:left;transition:all .2s;display:flex;gap:10px;font-family:var(--font-body)}.opt-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(79,156,249,.08)}.opt-btn .ol{font-family:var(--font-mono);font-weight:700;color:var(--accent);min-width:20px}.opt-btn.ca{background:rgba(79,249,132,.1);border-color:var(--green);color:var(--green)}.opt-btn.wa{background:rgba(249,95,95,.1);border-color:var(--red);color:var(--red)}.res-ind{display:none;padding:8px 14px;border-radius:8px;margin-bottom:10px;font-size:13px;font-weight:700}.res-ind.vis{display:block}.res-ind.c{background:rgba(79,249,132,.1);color:var(--green)}.res-ind.w{background:rgba(249,95,95,.1);color:var(--red)}.exp-box{display:none;margin-top:14px;padding:14px 18px;background:rgba(79,156,249,.06);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;font-size:13px;color:var(--text);line-height:1.7}.exp-box.vis{display:block}.et{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}.reset-btn{display:inline-block;margin-top:16px;padding:10px 24px;background:var(--accent4);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:var(--font-body);font-size:13px;font-weight:700}.complete-panel{background:linear-gradient(135deg,rgba(79,249,132,0.06),rgba(56,232,192,0.06));border:1px solid rgba(79,249,132,0.25);border-radius:var(--radius);padding:24px;margin-top:28px;text-align:center}.complete-panel h3{font-family:var(--font-display);font-size:18px;color:var(--green);margin-bottom:8px}.complete-panel p{color:var(--muted);font-size:13px;margin-bottom:16px}.complete-btn{padding:13px 28px;border:none;border-radius:12px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--green),var(--accent2));color:var(--bg);transition:all .2s}.complete-btn:hover{box-shadow:0 0 24px rgba(79,249,132,0.4)}.complete-btn.done{background:var(--card2);color:var(--green);cursor:default;border:1px solid var(--green)}.source-note{margin-top:22px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}.source-note b{color:var(--accent2)}#backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow)}#backBtn:hover{border-color:var(--accent);background:var(--card2)}
+</style>
+</head>
+<body>
+<header>
+  <div class="badge">Módulo 5 · Aula 1</div>
+  <h1>Acidentes Araneídicos — Phoneutria, Loxosceles e Latrodectus</h1>
+  <div class="sub">Armadeira, aranha-marrom e viúva-negra — diagnóstico diferencial e soroterapia</div>
+</header>
+<nav class="tabs">
+  <button class="active" onclick="showSection('teoria',this)">📖 Teoria</button>
+  <button onclick="showSection('imagens',this)">🖼️ Imagens</button>
+  <button class="qz-tab" onclick="showSection('quiz',this)">🧠 Quiz</button>
+</nav>
+
+<div class="section active" id="teoria">
+<div class="container">
+
+  <div class="sec-divider"><h3>🕷️ Phoneutria (armadeira / aranha da banana)</h3></div>
+  <div class="info-block purple">
+    <div class="label">Fisiopatologia</div>
+    <h4>Phoneutriatoxina 2 (PhTx2) — canais de sódio</h4>
+    <p>A toxina principal (<b>PhTx2</b>) age nos <b>canais de sódio voltagem-dependentes</b> → despolarização de fibras musculares e terminações nervosas sensitivas, motoras e autonômicas → liberação de <b>catecolaminas e acetilcolina</b>. Mecanismo semelhante ao escorpionismo (por isso o SAA cobre ambos).</p>
+  </div>
+  <div class="info-block"><div class="label">Manifestações</div><ul><li><b>Dor intensa irradiada</b> para a raiz do membro — a queixa mais marcante</li><li>Eritema e edema local</li><li>Parestesia</li><li><b>Priapismo</b> (sinal clássico de foneutrismo em homens)</li><li>Sudorese, taquicardia, hipertensão</li><li>Nos graves: edema agudo de pulmão, choque</li></ul></div>
+
+  <div class="child-alert">
+    <div class="ca-badge">👶 Crianças</div>
+    <h4>Foneutrismo em crianças: mesma lógica do escorpionismo</h4>
+    <p>Em crianças <b>até 7 anos</b>, o acidente fonêutrico com sintomas sistêmicos → administrar <b>SAA imediatamente</b> + internação. Na dúvida entre acidente fonêutrico ou escorpiônico (sintomas parecidos), optar pelo <b>SAA</b>, que cobre ambos.</p>
+  </div>
+
+  <table class="compare-table">
+    <thead><tr><th>Gravidade</th><th>Quadro</th><th>Conduta</th></tr></thead>
+    <tbody>
+      <tr><td class="sev-leve">Leve</td><td>Dor local apenas</td><td>Bloqueio anestésico + analgesia + compressa fria + observação 72h. <b>Sem soro.</b></td></tr>
+      <tr><td class="sev-mod">Moderado</td><td>Sudorese ocasional, vômitos, agitação, hipotensão leve</td><td><b>2–4 ampolas SAA</b></td></tr>
+      <tr><td class="sev-grave">Grave</td><td>Sudorese profusa, vômitos frequentes, priapismo, edema pulmonar, choque</td><td><b>5–10 ampolas SAA</b></td></tr>
+    </tbody>
+  </table>
+
+  <div class="sec-divider"><h3>🕷️ Loxosceles (aranha-marrom)</h3></div>
+  <div class="info-block purple">
+    <div class="label">Fisiopatologia — o veneno que come a pele</div>
+    <h4>Esfingomielinase-D: necrose cutânea + hemólise</h4>
+    <p>O veneno de Loxosceles ativa o sistema complemento, plaquetas e células endoteliais → <b>obstrução de vasos + infiltração de polimorfonucleares</b> → <b>lesão cutâneo-necrótica</b> (placa marmórea, bolhas, necrose). Além disso, enzimas ativam metaloproteinases que tornam hemácias suscetíveis à lise → <b>hemólise intravascular</b> → <b>IRA</b>. A proteína responsável (32–35 kDa) tem atividade <b>esfingomielinase-D</b>.</p>
+  </div>
+  <div class="info-block"><div class="label">Manifestações</div><ul><li>Dor (pode ser tipo queimação), eritema, edema</li><li><b>Placa marmórea</b> (isquêmica, com áreas pálidas e violáceas)</li><li>Bolhas hemorrágicas → necrose</li><li>Hemólise intravascular → icterícia, urina escura, IRA</li></ul></div>
+
+  <table class="compare-table">
+    <thead><tr><th>Gravidade</th><th>Quadro</th><th>Conduta</th></tr></thead>
+    <tbody>
+      <tr><td class="sev-leve">Leve</td><td>Lesão incaracterística sem aranha identificada, sem hemólise</td><td>Bloqueio anestésico + analgesia + corticóide (prednisona 40mg/dia adulto, 0,5–1mg/kg criança) + compressa fria + retorno 3 dias. <b>Sem soro.</b></td></tr>
+      <tr><td class="sev-mod">Moderado</td><td>Lesão característica com placa marmórea, sem hemólise</td><td><b>5 ampolas SAA</b> + prednisona 7 dias</td></tr>
+      <tr><td class="sev-grave">Grave (cutâneo-hemolítico)</td><td>Lesão + hemólise intravascular (icterícia, hemoglobinúria, IRA)</td><td><b>10 ampolas SAA</b> + prednisona 7 dias + hidratação adequada</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sec-divider"><h3>🕷️ Latrodectus (viúva-negra)</h3></div>
+  <div class="info-block purple">
+    <div class="label">Fisiopatologia</div>
+    <h4>Alfa-latrotoxina: tempestade de neurotransmissores</h4>
+    <p>A <b>alfa-latrotoxina</b> é uma neurotoxina pré-sináptica que aumenta Ca²⁺ intracelular → liberação maciça de <b>neurotransmissores adrenérgicos, colinérgicos e GABA</b> → dor, contraturas, sudorese generalizada, sintomas autonômicos difusos.</p>
+  </div>
+  <div class="info-block"><div class="label">Manifestações</div><ul><li>Dor local, edema discreto, sudorese local</li><li>Dor nos membros inferiores, parestesia, tremores e <b>contraturas musculares</b></li><li>Dor abdominal ("abdome em tábua" — pode simular abdome agudo)</li><li><b>Fácies latrodectísmica</b> (contraturas faciais)</li><li>Taquicardia/bradicardia, hipertensão, taquidispneia</li><li>Priapismo, retenção urinária</li></ul></div>
+
+  <div class="info-block danger">
+    <div class="label">Soro antilatrodéctico</div>
+    <h4>⚠️ NÃO disponível no Brasil atualmente</h4>
+    <p>O soro antilatrodéctico <b>não está disponível</b> no Brasil. O tratamento é <b>sintomático</b>: analgésicos, benzodiazepínicos (diazepam) e gluconato de cálcio. O soro é de aplicação <b>intramuscular</b> (diferente de todos os outros, que são IV).</p>
+    <ul>
+      <li><b>Diazepam:</b> adulto 5–10 mg; criança 1–2 doses, IV, de 4/4h se necessário</li>
+      <li><b>Gluconato de cálcio 10%:</b> adulto 10–20 mL IM; criança 1 mg/kg IV, de 4/4h</li>
+      <li><b>Clorpromazina:</b> adulto 25–50 mg IM; criança 0,55 mg/kg/dose IM de 8/8h</li>
+    </ul>
+  </div>
+
+  <div class="info-block success">
+    <div class="label">SAA — Soro Antiaracnídico</div>
+    <h4>Um soro, três venenos</h4>
+    <p>O SAA cobre <b>Loxosceles, Phoneutria e Tityus</b> (mas <b>NÃO</b> cobre Latrodectus). Ampola de <b>5 mL</b>, via intravenosa. Não é indicado para acidentes ofídicos. Na dúvida entre fonêutrico e escorpiônico → usar SAA (cobre ambos). Contato CEATOX: <b>0800 148 110</b>.</p>
+  </div>
+
+  <div class="source-note">
+    <b>Fontes:</b> Instituto Butantan (bula SAA, 02/2024); Guia de Vigilância em Saúde / MS; FioCruz; CVE-SP — Checklist Acidente Araneídeo; Nota Técnica MS nº 64/2021. Conteúdo educativo — não substitui protocolo institucional vigente.
+  </div>
+</div>
+</div>
+
+<div class="section" id="imagens">
+<div class="container">
+  <div style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--accent4);margin-bottom:20px">🖼️ Aranhas de importância médica</div>
+  <div class="gallery" id="galleryWrap"></div>
+</div>
+</div>
+
+<div class="section" id="quiz">
+<div class="container">
+  <div style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--accent);margin-bottom:20px">🧠 Quiz — fixação</div>
+  <div class="quiz-header"><div class="score-box"><div class="sn">Certas</div><div class="sv" id="sC" style="color:var(--green)">0</div></div><div class="score-box"><div class="sn">Erradas</div><div class="sv" id="sW" style="color:var(--red)">0</div></div><div class="score-box"><div class="sn">Restantes</div><div class="sv" id="sP" style="color:var(--accent)">0</div></div></div>
+  <div id="quizContainer"></div>
+  <div style="text-align:center"><button class="reset-btn" onclick="resetQuiz()">🔄 Refazer quiz</button></div>
+  <div class="complete-panel"><h3>✔️ Concluir esta aula</h3><p>Ao concluir, sua barra de progresso no curso é atualizada.</p><button class="complete-btn" id="completeBtn" onclick="concluirAula()">Marcar aula como concluída</button></div>
+</div>
+</div>
+
+<a href="curso-peconhentos.html" id="backBtn">← Voltar ao curso</a>
+
+<script>
+var CURSO="peconhentos",AULA_ID="m5-aranhas";
+function showSection(id,btn){document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');document.querySelectorAll('nav.tabs button').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+var IMAGENS=[
+  {file:"img/m5-armadeira-01.jpg",titulo:"Phoneutria nigriventer (armadeira)",credito:"Wikimedia Commons — CC BY-SA 4.0"},
+  {file:"img/m5-marrom-01.jpg",titulo:"Loxosceles sp. (aranha-marrom)",credito:"Wikimedia Commons — CC BY-SA 4.0"},
+  {file:"img/m5-viuva-negra-01.jpg",titulo:"Latrodectus sp. (viúva-negra)",credito:"Wikimedia Commons — CC BY-SA 4.0"}
+];
+function renderGallery(){var w=document.getElementById('galleryWrap');w.innerHTML='';IMAGENS.forEach(function(im){var c=document.createElement('div');c.className='img-card';c.innerHTML='<div class="img-frame"><img src="'+im.file+'" alt="'+im.titulo+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><div class="placeholder" style="display:none"><span class="ph-emoji">🕷️</span><span>'+im.titulo+'</span></div></div><div class="cap"><div class="cap-title">'+im.titulo+'</div><div class="cap-credit">'+im.credito+'</div></div>';w.appendChild(c);});}
+var QD=[
+  {n:1,q:"A dor intensa irradiada para a raiz do membro + priapismo são manifestações clássicas de acidente por:",o:[{l:"A",v:"Loxosceles (aranha-marrom)"},{l:"B",v:"Phoneutria (armadeira)"},{l:"C",v:"Latrodectus (viúva-negra)"},{l:"D",v:"Tityus (escorpião)"}],cr:"B",ex:"Dor intensa irradiada e priapismo são marcas do acidente fonêutrico (Phoneutria). A aranha-marrom causa mais lesão necrótica local, e a viúva-negra causa contraturas e dor abdominal."},
+  {n:2,q:"A 'placa marmórea' (áreas pálidas e violáceas com necrose) é achado típico de:",o:[{l:"A",v:"Phoneutria"},{l:"B",v:"Latrodectus"},{l:"C",v:"Loxosceles"},{l:"D",v:"Tityus"}],cr:"C",ex:"A placa marmórea é o achado dermatológico clássico do loxoscelismo. A esfingomielinase-D do veneno causa isquemia e necrose cutânea progressiva."},
+  {n:3,q:"O soro antilatrodéctico (viúva-negra) atualmente no Brasil:",o:[{l:"A",v:"Está disponível em todo ponto estratégico"},{l:"B",v:"Não está disponível — o tratamento é sintomático"},{l:"C",v:"É o mesmo SAA"},{l:"D",v:"É administrado via oral"}],cr:"B",ex:"O soro antilatrodéctico NÃO está disponível no Brasil. O tratamento é sintomático: diazepam (espasmos), gluconato de cálcio e clorpromazina. O SAA NÃO cobre Latrodectus."},
+  {n:4,q:"O SAA (soro antiaracnídico) cobre os venenos de:",o:[{l:"A",v:"Apenas Loxosceles"},{l:"B",v:"Loxosceles, Phoneutria e Tityus"},{l:"C",v:"Todos os aracnídeos incluindo Latrodectus"},{l:"D",v:"Apenas Phoneutria e Tityus"}],cr:"B",ex:"O SAA é trivalente: neutraliza venenos de Loxosceles (aranha-marrom), Phoneutria (armadeira) e Tityus (escorpiões). NÃO cobre Latrodectus (viúva-negra)."},
+  {n:5,q:"No loxoscelismo grave (cutâneo-hemolítico), a complicação mais temida é:",o:[{l:"A",v:"Priapismo"},{l:"B",v:"Paralisia respiratória"},{l:"C",v:"Insuficiência renal aguda por hemólise intravascular"},{l:"D",v:"Bloqueio AV total"}],cr:"C",ex:"No loxoscelismo grave, a hemólise intravascular deposita hemoglobina nos túbulos renais → necrose tubular → IRA. Hidratação adequada é fundamental para prevenir."},
+  {n:6,q:"Na dúvida entre acidente fonêutrico ou escorpiônico, a conduta com o soro é:",o:[{l:"A",v:"Não administrar soro"},{l:"B",v:"Usar SAB (antibotrópico)"},{l:"C",v:"Usar SAA (antiaracnídico), que cobre ambos"},{l:"D",v:"Esperar identificação do animal"}],cr:"C",ex:"O SAA cobre Phoneutria e Tityus. Como os quadros clínicos podem ser semelhantes, na dúvida: SAA resolve ambos. O checklist CVE-SP orienta optar pelo SAA nessa situação."}
+];
+var QS={c:0,w:0,a:0};
+function renderQuiz(){var ct=document.getElementById('quizContainer');ct.innerHTML='';QD.forEach(function(q,i){var d=document.createElement('div');d.className='q-card';d.id='q'+i;var body='<div class="opts">'+q.o.map(function(o){return '<button class="opt-btn" data-q="'+i+'" data-l="'+o.l+'" onclick="answerMC('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+o.v+'</span></button>';}).join('')+'</div>';d.innerHTML='<div class="q-num">Questão '+q.n+'</div><div class="res-ind" id="ri'+i+'"></div><p class="q-text">'+q.q+'</p>'+body+'<div class="exp-box" id="ex'+i+'"><div class="et">📖 Explicação</div><p>'+q.ex+'</p></div>';ct.appendChild(d);});updateScores();}
+function answerMC(i,ch){var q=QD[i];var card=document.getElementById('q'+i);if(card.classList.contains('ans'))return;card.querySelectorAll('.opt-btn').forEach(function(b){b.disabled=true;if(b.dataset.l===q.cr)b.classList.add('ca');if(b.dataset.l===ch&&ch!==q.cr)b.classList.add('wa');});var ok=ch===q.cr;card.classList.add('ans',ok?'cq':'wq');var ri=document.getElementById('ri'+i);ri.className='res-ind vis '+(ok?'c':'w');ri.innerHTML=ok?'✅ Correto!':'❌ Incorreto. Resposta: '+q.cr;document.getElementById('ex'+i).classList.add('vis');ok?QS.c++:QS.w++;QS.a++;updateScores();}
+function updateScores(){document.getElementById('sC').textContent=QS.c;document.getElementById('sW').textContent=QS.w;document.getElementById('sP').textContent=QD.length-QS.a;}
+function resetQuiz(){QS={c:0,w:0,a:0};renderQuiz();}
+function getClient(){if(window.authClient)return window.authClient;return null;}
+async function concluirAula(){var btn=document.getElementById('completeBtn');var sb=getClient();if(!sb){marcarConcluidaUI(btn);return;}try{var u=await sb.auth.getUser();var user=u&&u.data?u.data.user:null;if(user){await sb.from('curso_progresso').upsert({user_id:user.id,curso:CURSO,aula_id:AULA_ID,concluida:true,quiz_score:QS.c,quiz_total:QD.length,updated_at:new Date().toISOString()},{onConflict:'user_id,curso,aula_id'});}}catch(e){console.warn('Falha ao salvar progresso:',e);}marcarConcluidaUI(btn);}
+function marcarConcluidaUI(btn){btn.classList.add('done');btn.textContent='✓ Aula concluída';btn.onclick=function(){window.location.href='curso-peconhentos.html';};setTimeout(function(){window.location.href='curso-peconhentos.html';},900);}
+document.addEventListener("authReady",function(){renderGallery();renderQuiz();});
+setTimeout(function(){if(!document.getElementById('quizContainer').children.length){renderGallery();renderQuiz();}},1200);
+</script>
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
+</body>
+</html>
