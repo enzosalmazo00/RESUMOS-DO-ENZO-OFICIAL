@@ -2,255 +2,1388 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prova · Prova Final — Acidentes por Animais Peçonhentos</title>
-<script>window.PAGE_KEY = "curso-peconhentos";</script>
-<script>document.documentElement.style.visibility = "hidden";</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Prova Final — Acidentes por Animais Peçonhentos</title>
+<script>window.PAGE_KEY="curso-peconhentos";</script>
+<script>document.documentElement.style.visibility="hidden";</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="auth-guard.js"></script>
-<script>document.addEventListener("authReady", function(){ document.documentElement.style.visibility = "visible"; });</script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0d14;--bg2:#111520;--bg3:#161c2e;--card:#1a2138;--card2:#1f2845;--accent:#4f9cf9;--accent2:#38e8c0;--accent3:#f9784f;--accent4:#b84ff9;--gold:#f9c94f;--red:#f95f5f;--green:#4ff984;--text:#e8eaf6;--muted:#8892b0;--border:rgba(79,156,249,0.15);--shadow:0 8px 40px rgba(0,0,0,0.5);--radius:16px;--font-body:'DM Sans',sans-serif;--font-display:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace}
+:root{
+  --bg:#0a0d14;--card:#111827;--card2:#1a2236;--border:#1e293b;
+  --accent:#4f9cf9;--accent2:#38e8c0;--green:#22c55e;--red:#ef4444;--yellow:#eab308;
+  --text:#e2e8f0;--text2:#94a3b8;
+  --font-head:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'JetBrains Mono',monospace;
+  --shadow:0 4px 24px rgba(0,0,0,.4);--radius:16px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;padding-bottom:90px}
-header{position:relative;z-index:10;text-align:center;padding:40px 24px 24px;background:linear-gradient(180deg,rgba(184,79,249,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border)}
-header .badge{display:inline-block;background:linear-gradient(135deg,var(--accent4),var(--accent3));color:#fff;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px}
-header h1{font-family:var(--font-display);font-size:clamp(22px,3.5vw,34px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--accent4) 60%,var(--accent3) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
-header .sub{color:var(--muted);font-size:13px}
-.container{max-width:900px;margin:0 auto;padding:28px 20px}
-.exam-info{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:24px;display:flex;gap:20px;flex-wrap:wrap;align-items:center}
-.exam-info .ei-icon{font-size:36px}
-.exam-info .ei-text{flex:1;min-width:200px}
-.exam-info .ei-text h3{font-family:var(--font-display);font-size:16px;font-weight:700;margin-bottom:4px}
-.exam-info .ei-text p{color:var(--muted);font-size:12px;line-height:1.5}
-.exam-info .ei-best{text-align:center;min-width:100px}
-.exam-info .ei-best .eb-label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-.exam-info .ei-best .eb-val{font-family:var(--font-display);font-size:28px;font-weight:800}
-.progress-bar{width:100%;height:8px;background:var(--bg3);border-radius:10px;overflow:hidden;margin-bottom:24px}
-.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--accent4),var(--accent3));border-radius:10px;transition:width .4s}
-.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
-.q-card.answered{opacity:.85}
-.q-card.cq{border-color:var(--green)}.q-card.wq{border-color:var(--red)}
-.q-num{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-bottom:10px}
-.q-text{font-size:14px;font-weight:600;color:#fff;margin-bottom:16px;line-height:1.5}
-.opts{display:flex;flex-direction:column;gap:8px}
-.opt-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:11px 16px;border-radius:10px;cursor:pointer;font-size:13px;text-align:left;transition:all .2s;display:flex;gap:10px;font-family:var(--font-body)}
-.opt-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(79,156,249,.08)}
-.opt-btn .ol{font-family:var(--font-mono);font-weight:700;color:var(--accent4);min-width:20px}
-.opt-btn.ca{background:rgba(79,249,132,.1);border-color:var(--green);color:var(--green)}
-.opt-btn.wa{background:rgba(249,95,95,.1);border-color:var(--red);color:var(--red)}
-.exp-box{display:none;margin-top:14px;padding:14px 18px;background:rgba(184,79,249,.06);border-left:3px solid var(--accent4);border-radius:0 10px 10px 0;font-size:13px;color:var(--text);line-height:1.7}
-.exp-box.vis{display:block}
-.et{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent4);margin-bottom:8px}
-/* RESULTADO FINAL */
-.result-panel{display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-top:24px;text-align:center;box-shadow:var(--shadow)}
-.result-panel.vis{display:block}
-.result-panel .rp-icon{font-size:48px;margin-bottom:12px}
-.result-panel .rp-title{font-family:var(--font-display);font-size:22px;font-weight:800;margin-bottom:6px}
-.result-panel .rp-score{font-family:var(--font-mono);font-size:36px;font-weight:800;margin-bottom:8px}
-.result-panel .rp-detail{color:var(--muted);font-size:13px;margin-bottom:18px}
-.result-panel.pass{border-color:var(--green)}.result-panel.pass .rp-score{color:var(--green)}
-.result-panel.fail{border-color:var(--red)}.result-panel.fail .rp-score{color:var(--red)}
-.rp-btn{padding:12px 24px;border:none;border-radius:12px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;margin:6px;transition:all .2s}
-.rp-btn.primary{background:linear-gradient(135deg,var(--accent4),var(--accent3));color:#fff}
-.rp-btn.primary:hover{box-shadow:0 0 24px rgba(184,79,249,.4)}
-.rp-btn.secondary{background:var(--card2);color:var(--accent);border:1px solid var(--border)}
-.source-note{margin-top:22px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent4);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}.source-note b{color:var(--accent4)}
-#backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow)}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.6;min-height:100vh}
+
+header{
+  text-align:center;padding:48px 20px 32px;
+  background:linear-gradient(135deg,rgba(79,156,249,.12),rgba(56,232,192,.08));
+  border-bottom:1px solid var(--border)
+}
+header h1{font-family:var(--font-head);font-size:clamp(1.4rem,4vw,2rem);color:var(--accent);margin-bottom:6px}
+header .sub{color:var(--text2);font-size:14px}
+header .badge{display:inline-block;background:var(--accent);color:#000;font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;margin-bottom:12px}
+
+.container{max-width:800px;margin:0 auto;padding:24px 16px 80px}
+
+/* Score bar */
+.score-bar{
+  position:sticky;top:0;z-index:200;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:14px 20px;margin-bottom:24px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+  box-shadow:var(--shadow)
+}
+.score-bar .sb-left{display:flex;gap:16px;align-items:center;font-size:14px;font-weight:600}
+.sb-correct{color:var(--green)}
+.sb-wrong{color:var(--red)}
+.sb-pending{color:var(--text2)}
+.score-bar .sb-right{display:flex;gap:10px;align-items:center}
+.sb-pct{font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--accent)}
+.sb-status{font-size:12px;padding:4px 10px;border-radius:8px;font-weight:700}
+
+/* Question cards */
+.q-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;margin-bottom:16px;transition:border-color .3s
+}
+.q-card.answered-right{border-color:var(--green)}
+.q-card.answered-wrong{border-color:var(--red)}
+.q-num{font-family:var(--font-mono);font-size:13px;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.q-badge{font-size:11px;padding:2px 8px;border-radius:6px;font-family:var(--font-body);font-weight:700}
+.q-badge.right{background:rgba(34,197,94,.15);color:var(--green)}
+.q-badge.wrong{background:rgba(239,68,68,.15);color:var(--red)}
+.q-text{font-size:15px;margin-bottom:16px;line-height:1.7}
+.q-opts{display:flex;flex-direction:column;gap:8px}
+.opt{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:12px 14px;border-radius:12px;border:1px solid var(--border);
+  cursor:pointer;transition:all .2s;font-size:14px;background:var(--card2)
+}
+.opt:hover:not(.locked){border-color:var(--accent);background:rgba(79,156,249,.06)}
+.opt.locked{cursor:default;pointer-events:none}
+.opt.selected-right{border-color:var(--green);background:rgba(34,197,94,.1)}
+.opt.selected-wrong{border-color:var(--red);background:rgba(239,68,68,.1)}
+.opt.correct-reveal{border-color:var(--green);background:rgba(34,197,94,.08)}
+.opt-letter{
+  min-width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:12px;font-weight:700;
+  background:rgba(79,156,249,.1);color:var(--accent);flex-shrink:0;margin-top:1px
+}
+.opt.selected-right .opt-letter{background:var(--green);color:#fff}
+.opt.selected-wrong .opt-letter{background:var(--red);color:#fff}
+.opt.correct-reveal .opt-letter{background:var(--green);color:#fff}
+
+.q-exp{
+  margin-top:16px;padding:16px;border-radius:12px;
+  background:rgba(79,156,249,.06);border:1px solid rgba(79,156,249,.15);
+  display:none;font-size:13.5px;line-height:1.7
+}
+.q-exp.show{display:block;animation:fadeIn .3s ease}
+.exp-title{font-weight:700;color:var(--accent);margin-bottom:6px;font-size:14px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+
+/* Result panel */
+.result-panel{
+  display:none;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:32px;text-align:center;margin-top:24px;
+  box-shadow:var(--shadow)
+}
+.result-panel.show{display:block;animation:fadeIn .4s ease}
+.result-panel h2{font-family:var(--font-head);font-size:24px;margin-bottom:8px}
+.result-panel .rp-score{font-family:var(--font-mono);font-size:48px;font-weight:800;margin:16px 0}
+.result-panel .rp-score.pass{color:var(--green)}
+.result-panel .rp-score.fail{color:var(--red)}
+.result-panel .rp-msg{font-size:15px;color:var(--text2);margin-bottom:20px}
+.rp-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.rp-btns a,.rp-btns button{
+  padding:12px 24px;border-radius:12px;font-weight:700;font-size:14px;
+  text-decoration:none;border:none;cursor:pointer;font-family:var(--font-body)
+}
+.btn-primary{background:var(--accent);color:#000}
+.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border) !important}
+
+/* Best score */
+.best-panel{
+  background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;
+  font-size:14px
+}
+.best-panel .bp-icon{font-size:24px}
+.best-panel .bp-label{color:var(--text2)}
+.best-panel .bp-score{font-family:var(--font-mono);font-weight:700;color:var(--accent);font-size:18px;margin-left:auto}
+
+#backBtn{
+  position:fixed;bottom:20px;left:20px;z-index:300;
+  background:var(--card);border:1px solid var(--border);color:var(--accent);
+  padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;
+  font-weight:700;text-decoration:none;box-shadow:var(--shadow);transition:all .2s
+}
 #backBtn:hover{border-color:var(--accent);background:var(--card2)}
+
+@media(max-width:560px){
+  .score-bar{flex-direction:column;align-items:flex-start}
+  .q-card{padding:16px}
+}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="badge">🏆 Prova Final do Curso</div>
-  <h1>Prova Final — Acidentes por Animais Peçonhentos</h1>
-  <div class="sub">15 questões · mínimo 61% · cobre todos os 5 módulos · sem limite de tentativas</div>
+  <div class="badge">PROVA FINAL</div>
+  <h1>Acidentes por Animais Peçonhentos</h1>
+  <div class="sub">35 questões · Todos os módulos · Mínimo 61% para aprovação</div>
 </header>
 
 <div class="container">
-  <div class="exam-info">
-    <div class="ei-icon">📝</div>
-    <div class="ei-text">
-      <h3>Prova Final</h3>
-      <p>Cobre TODO o conteúdo: identificação, conduta, ofídicos, escorpiônicos, aracnídeos e soroterapia. Aprovação aqui + nos 5 módulos = certificado.</p>
+
+  <div class="best-panel" id="bestPanel" style="display:none">
+    <div class="bp-icon">🏆</div>
+    <div>
+      <div class="bp-label">Sua melhor nota</div>
+      <div id="bestDate" style="font-size:12px;color:var(--text2)"></div>
     </div>
-    <div class="ei-best">
-      <div class="eb-label">Melhor nota</div>
-      <div class="eb-val" id="bestScore">—</div>
+    <div class="bp-score" id="bestScore">—</div>
+  </div>
+
+  <div class="score-bar" id="scoreBar">
+    <div class="sb-left">
+      <span class="sb-correct">✓ <span id="nRight">0</span></span>
+      <span class="sb-wrong">✗ <span id="nWrong">0</span></span>
+      <span class="sb-pending">◯ <span id="nPending">35</span></span>
+    </div>
+    <div class="sb-right">
+      <span class="sb-pct" id="pctLabel">0%</span>
+      <span class="sb-status" id="statusLabel"></span>
     </div>
   </div>
 
-  <div class="progress-bar"><div class="fill" id="progFill" style="width:0%"></div></div>
+  <div id="quizWrap">
+      <div class="q-card" data-q="0" data-ans="1">
+        <div class="q-num">Questão 1 <span class="q-badge" id="badge0"></span></div>
+        <div class="q-text">Qual estrutura anatômica permite a diferenciação imediata entre serpentes peçonhentas dos gêneros <i>Bothrops</i>, <i>Crotalus</i> e <i>Lachesis</i> das não peçonhentas?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Presença de escamas carenadas no dorso</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Fosseta loreal — órgão termorreceptor localizado entre o olho e a narina</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Padrão de coloração em anéis vermelhos, pretos e brancos</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Presença de dentes opistodontes no maxilar posterior</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Formato da pupila exclusivamente circular</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp0">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A fosseta loreal é o critério-chave de campo: trata-se de um orifício entre o olho e a narina que funciona como sensor térmico (infravermelho), presente em <i>Bothrops</i>, <i>Crotalus</i> e <i>Lachesis</i>. Quando presente, origina a aparência de '4 ventas' (2 narinas + 2 fossetas). A exceção importante é <i>Micrurus</i> (coral verdadeira), que é peçonhenta mas NÃO possui fosseta loreal.</div>
+        </div>
+      </div>
 
-  <div id="examContainer"></div>
+      <div class="q-card" data-q="1" data-ans="2">
+        <div class="q-num">Questão 2 <span class="q-badge" id="badge1"></span></div>
+        <div class="q-text">Uma serpente é trazida ao pronto-socorro por familiar do paciente. Ela apresenta cabeça triangular bem destacada do corpo, fosseta loreal visível, pupila em fenda vertical e cauda que termina de forma abrupta sem guizo ou escamas eriçadas. Qual gênero é mais provável?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span><i>Crotalus</i> — presença de guizo/chocalho</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span><i>Micrurus</i> — presença de anéis coloridos</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span><i>Bothrops</i> — cauda lisa com afinamento abrupto</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span><i>Lachesis</i> — escamas caudais eriçadas</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span><i>Philodryas</i> — serpente semi-peçonhenta</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp1">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A cauda lisa com afinamento abrupto, combinada com fosseta loreal e cabeça triangular, é característica de <i>Bothrops</i>. <i>Crotalus</i> possui guizo/chocalho terminal; <i>Lachesis</i> possui escamas eriçadas na ponta da cauda. Acidentes botrópicos representam ~75% dos envenenamentos ofídicos no Brasil.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="2" data-ans="1">
+        <div class="q-num">Questão 3 <span class="q-badge" id="badge2"></span></div>
+        <div class="q-text">Na admissão hospitalar de um paciente vítima de acidente ofídico, qual medida está CONTRAINDICADA?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Limpeza do local da picada com água e sabão</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Aplicação de torniquete ('garrote') no membro acometido</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Manutenção do membro em posição elevada</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Acesso venoso periférico em membro contralateral à picada</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Administração de analgesia, evitando AAS e anti-inflamatórios</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp2">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">O torniquete (garrote) é CONTRAINDICADO pois agrava a isquemia tecidual, concentra o veneno localmente aumentando a necrose, e pode causar síndrome compartimental. Medidas corretas: limpeza com água e sabão, elevar o membro, acesso venoso, analgesia (evitar AAS/AINEs que agravam distúrbios de coagulação) e encaminhamento rápido ao hospital de referência.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="3" data-ans="1">
+        <div class="q-num">Questão 4 <span class="q-badge" id="badge3"></span></div>
+        <div class="q-text">Sobre a profilaxia antitetânica no acidente ofídico, é CORRETO afirmar que:</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>A vacina antitetânica intramuscular deve ser aplicada imediatamente na admissão, independentemente do coagulograma</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Pacientes com esquema vacinal completo (≥ 3 doses) há menos de 5 anos não necessitam de nenhuma medida</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>A IGHAT (imunoglobulina humana antitetânica) é preferível ao SAT (soro antitetânico) apenas em gestantes</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Todos os pacientes com acidente ofídico devem receber SAT, independentemente do histórico vacinal</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>A profilaxia antitetânica é desnecessária em acidentes ofídicos pois o veneno tem ação bactericida</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp3">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">Pacientes com ≥ 3 doses e última dose há < 5 anos: nenhuma medida necessária. IMPORTANTE: no acidente ofídico, a vacina IM só deve ser aplicada APÓS correção do coagulograma (risco de hematoma IM em pacientes com coagulopatia). A IGHAT é preferível ao SAT em TODOS os casos disponíveis (menor risco de reação), não apenas em gestantes. Imunodeprimidos, idosos e desnutridos graves: associar IGHAT ou SAT independentemente do histórico vacinal.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="4" data-ans="1">
+        <div class="q-num">Questão 5 <span class="q-badge" id="badge4"></span></div>
+        <div class="q-text">Qual é a exceção mais importante à regra de identificação de serpentes peçonhentas pela presença de fosseta loreal no Brasil?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span><i>Bothrops atrox</i> — algumas populações amazônicas perderam a fosseta</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span><i>Micrurus</i> (coral verdadeira) — peçonhenta sem fosseta loreal, com presas fixas pequenas (proteróglifa)</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span><i>Philodryas olfersii</i> — colubridae com dente inoculador posterior</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span><i>Crotalus durissus</i> — filhotes nascem sem a fosseta funcional</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span><i>Lachesis muta</i> — fosseta vestigial não identificável em campo</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp4">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body"><i>Micrurus</i> (coral verdadeira) é a grande exceção: é altamente peçonhenta (veneno neurotóxico potente) porém NÃO possui fosseta loreal, tem pupilas redondas, cabeça não destacada do corpo e presas fixas pequenas (dentição proteróglifa) — características que a fariam parecer 'não peçonhenta' pela regra geral. A identificação se dá pelo padrão de anéis completos (que circundam todo o corpo) em tríades.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="5" data-ans="2">
+        <div class="q-num">Questão 6 <span class="q-badge" id="badge5"></span></div>
+        <div class="q-text">Paciente de 45 anos, picado por serpente há 2 horas, chega ao PS com edema local progressivo, equimose perilesional e sangramento nos pontos de venopunção. O tempo de coagulação (TC) está incoagulável. Qual a conduta inicial PRIORITÁRIA?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Solicitar tomografia do membro acometido para avaliar necrose</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Administrar vitamina K endovenosa e ácido tranexâmico</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Iniciar hidratação vigorosa, colher exames e preparar soroterapia antiveneno específica por via endovenosa</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Realizar fasciotomia de urgência</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Aplicar soro antitetânico antes do antiveneno</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp5">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A conduta prioritária é: acesso venoso, hidratação vigorosa (prevenção de IRA — principal causa de óbito no botrópico), coleta de exames laboratoriais (TC, hemograma, ureia, creatinina, CPK, EAS) e preparo da soroterapia antiveneno específica por via IV. A vitamina K é ineficaz pois a coagulopatia ofídica não é por depleção de fatores vitamina K-dependentes e sim por consumo/degradação direta pela ação proteolítica do veneno.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="6" data-ans="2">
+        <div class="q-num">Questão 7 <span class="q-badge" id="badge6"></span></div>
+        <div class="q-text">Sobre a antibioticoterapia no acidente ofídico com sinais de infecção local, o esquema recomendado é:</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Amoxicilina + ácido clavulânico via oral por 5 dias</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Ciprofloxacino IV em dose única</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Ceftriaxona + clindamicina (ou metronidazol), cobrindo Gram-negativos entéricos e anaeróbios da flora oral da serpente</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Oxacilina IV isolada, direcionada a <i>Staphylococcus aureus</i></span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Gentamicina + vancomicina empírica até resultado de cultura</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp6">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A flora oral de serpentes contém predominantemente Gram-negativos entéricos (ex.: <i>Morganella morganii</i>, <i>Enterobacter</i>) e anaeróbios. O esquema recomendado pelo MS é a associação de ceftriaxona (Gram-negativos) + clindamicina ou metronidazol (anaeróbios). A cobertura apenas para Gram-positivos (oxacilina, vancomicina) é insuficiente.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="7" data-ans="1">
+        <div class="q-num">Questão 8 <span class="q-badge" id="badge7"></span></div>
+        <div class="q-text">No acidente botrópico classificado como LEVE, a dose preconizada de Soro Antibotrópico (SAB) pelo Ministério da Saúde/Butantan é:</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>1 ampola IV</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>2 a 4 ampolas IV</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>4 a 8 ampolas IV</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>8 a 12 ampolas IV</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>12 ampolas IV</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp7">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">Pelo Guia de Vigilância em Saúde (MS/Butantan): LEVE = 2–4 ampolas; MODERADO = 4–8 ampolas; GRAVE = 12 ampolas. O CVE-SP adota dose fixa de 3 ampolas para leve (protocolo racionado desde 2014). Ambos os esquemas são oficiais. Cada ampola de SAB (10 mL) neutraliza ≥ 50 mg de veneno-referência de <i>B. jararaca</i>.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="8" data-ans="2">
+        <div class="q-num">Questão 9 <span class="q-badge" id="badge8"></span></div>
+        <div class="q-text">Qual é a principal complicação que mais causa óbito no acidente botrópico e qual medida é fundamental para sua prevenção?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Choque anafilático ao soro — pré-medicar com adrenalina IM</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Hemorragia cerebral — administrar plasma fresco congelado</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Insuficiência renal aguda (IRA) — hidratação endovenosa precoce e vigorosa</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Síndrome compartimental — fasciotomia profilática</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Coagulação intravascular disseminada — heparinização plena</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp8">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A IRA é a complicação mais letal do acidente botrópico, resultante de lesão renal direta pelo veneno, hipoperfusão por sangramento/hipotensão e deposição tubular de hemoglobina/mioglobina. A hidratação endovenosa precoce e vigorosa é a medida mais eficaz para sua prevenção. A fasciotomia é indicada apenas na síndrome compartimental confirmada (rara), e a heparinização é CONTRAINDICADA.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="9" data-ans="2">
+        <div class="q-num">Questão 10 <span class="q-badge" id="badge9"></span></div>
+        <div class="q-text">O controle laboratorial da eficácia da soroterapia no acidente botrópico é feito pelo:</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Hemograma completo com contagem de plaquetas a cada 6 horas</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Dosagem sérica de fibrinogênio antes e depois do soro</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Tempo de coagulação (TC) — repetir em 12 e 24 horas após o soro; se incoagulável após 24h, dose adicional de antiveneno</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>TP e TTPa seriados a cada 4 horas</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>D-dímero quantitativo e produtos de degradação da fibrina</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp9">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">O TC (Tempo de Coagulação) é o exame padrão para monitorar a resposta à soroterapia. Deve ser repetido 12h e 24h após a infusão do antiveneno. Se o TC permanecer incoagulável após 24h, indica-se dose adicional de soro. O TC é um teste simples (tubo seco, observar coagulação em até 10 min) e acessível em qualquer PS.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="10" data-ans="1">
+        <div class="q-num">Questão 11 <span class="q-badge" id="badge10"></span></div>
+        <div class="q-text">O acidente crotálico (<i>Crotalus durissus</i>) se diferencia do botrópico pela predominância de qual quadro clínico?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Edema exuberante e necrose local extensa com bolhas hemorrágicas</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Fácies miastênica (ptose palpebral bilateral, oftalmoplegia), mialgia generalizada e urina escura (mioglobinúria)</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Dor abdominal intensa simulando abdome agudo cirúrgico</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Fenômenos hemorrágicos sistêmicos com gengivorragia e hematúria franca</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Linfangite e linfadenomegalia regional progressiva</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp10">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">O veneno crotálico tem ação predominantemente neurotóxica (crotoxina → bloqueio neuromuscular pré-sináptico → fácies miastênica com ptose, oftalmoplegia, diplopia) e miotóxica (rabdomiólise sistêmica → mialgia difusa, CPK elevadíssima, urina escura/mioglobinúria). Diferentemente do botrópico, as manifestações LOCAIS são discretas ('lesão pobre'). A principal causa de óbito é IRA por nefrotoxicidade direta + deposição de mioglobina.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="11" data-ans="2">
+        <div class="q-num">Questão 12 <span class="q-badge" id="badge11"></span></div>
+        <div class="q-text">Qual soro antiveneno deve ser utilizado no acidente crotálico e qual a dose para casos GRAVES?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>SAB (Soro Antibotrópico) — 12 ampolas IV</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>SABC (Soro Antibotrópico-Crotálico) — 4 ampolas IV</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>SAC (Soro Anticrotálico) — 20 ampolas IV; na indisponibilidade, usar SABC</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>SABL (Soro Antibotrópico-Laquético) — 20 ampolas IV</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>SAVE (Soro Antielapídico) — 10 ampolas IV</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp11">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">O soro específico é o SAC (Soro Anticrotálico). Doses: LEVE = 5 ampolas; MODERADO = 10 ampolas; GRAVE = 20 ampolas. Na indisponibilidade do SAC, utiliza-se o SABC (Soro Antibotrópico-Crotálico), que neutraliza 50 mg de veneno botrópico + 15 mg de veneno crotálico por ampola. A via é SEMPRE endovenosa.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="12" data-ans="1">
+        <div class="q-num">Questão 13 <span class="q-badge" id="badge12"></span></div>
+        <div class="q-text">Homem de 32 anos, trabalhador rural, picado há 6 horas por cascavel. Apresenta ptose palpebral bilateral, diplopia, mialgia intensa e urina cor de 'coca-cola'. CPK = 15.000 U/L, creatinina = 3,2 mg/dL. Qual complicação está em curso e qual medida é PRIORITÁRIA?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Hepatite fulminante por ação hepatotóxica direta — iniciar N-acetilcisteína</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>IRA por rabdomiólise e nefrotoxicidade direta — hidratação vigorosa com alcalinização urinária e soroterapia anticrotálica urgente</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Síndrome de Guillain-Barré pós-infecciosa — iniciar imunoglobulina IV</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Coagulopatia de consumo por CIVD — transfusão maciça de crioprecipitado</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Miastenia gravis aguda — iniciar piridostigmina e plasmaférese</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp12">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">O quadro é típico de acidente crotálico GRAVE: fácies miastênica (ptose + diplopia) por ação neurotóxica, rabdomiólise (mialgia + CPK 15.000) por ação miotóxica, e IRA (Cr 3,2 + urina escura por mioglobinúria). A conduta prioritária é soroterapia (SAC 20 ampolas IV) + hidratação vigorosa com alcalinização urinária (bicarbonato de sódio para pH urinário > 6,5) visando prevenir progressão da IRA por deposição tubular de mioglobina. Manitol pode ser associado.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="13" data-ans="2">
+        <div class="q-num">Questão 14 <span class="q-badge" id="badge13"></span></div>
+        <div class="q-text">Sobre a via de administração da soroterapia antiveneno (SAB, SAC, SABC, SAVE, SABL), é CORRETO afirmar:</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>A via intramuscular é preferível para absorção lenta e sustentada</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>A via subcutânea é indicada em crianças com difícil acesso venoso</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>A via endovenosa é a ÚNICA via recomendada — diluir em SF ou SG 5% e infundir em 20–60 minutos</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>A via oral pode ser usada em acidentes classificados como leves</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>A via intradérmica em múltiplos pontos ao redor da picada (bloqueio local) é uma alternativa ao IV</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp13">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">TODOS os soros antiveneno devem ser administrados exclusivamente por via ENDOVENOSA. O soro é diluído em SF 0,9% ou SG 5% e infundido em 20–60 minutos. A via IM não é indicada por absorção errática e risco de hematoma (especialmente em pacientes com coagulopatia). A infiltração local ao redor da picada está abandonada.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="14" data-ans="1">
+        <div class="q-num">Questão 15 <span class="q-badge" id="badge14"></span></div>
+        <div class="q-text">O acidente laquético (<i>Lachesis muta</i> — surucucu) é exclusivo de qual bioma e apresenta qual manifestação clínica que o diferencia do botrópico?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Cerrado — manifestação crotálica com rabdomiólise</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Floresta Amazônica e Mata Atlântica — síndrome vagal (bradicardia, hipotensão, diarreia, vômitos), além do quadro local semelhante ao botrópico</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Caatinga — hemorragia pulmonar maciça (hemoptise)</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Pantanal — edema de glote e anafilaxia</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Campos sulinos — convulsões e rebaixamento do nível de consciência</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp14">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body"><i>Lachesis muta</i> (surucucu/pico-de-jaca) habita exclusivamente áreas de floresta (Amazônia e Mata Atlântica). Representa apenas ~1,5% dos acidentes ofídicos no Brasil. O quadro local é semelhante ao botrópico (edema, dor, equimose, necrose), porém apresenta adicionalmente uma SÍNDROME VAGAL (estimulação parassimpática): bradicardia, hipotensão arterial, diarreia, cólicas abdominais e vômitos — diferencial clínico importante.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="15" data-ans="1">
+        <div class="q-num">Questão 16 <span class="q-badge" id="badge15"></span></div>
+        <div class="q-text">Qual soro antiveneno é utilizado no acidente laquético e qual a dose preconizada?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>SAB (Soro Antibotrópico) — 4 ampolas IV, pois o veneno é semelhante ao botrópico</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>SABL (Soro Antibotrópico-Laquético) — 20 ampolas IV; na indisponibilidade, usar SAB em dose dobrada</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>SAC (Soro Anticrotálico) — 10 ampolas IV</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>SAVE (Soro Antielapídico) — 15 ampolas IV</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>SABC (Soro Antibotrópico-Crotálico) — 12 ampolas IV</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp15">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">O soro específico é o SABL (Soro Antibotrópico-Laquético), na dose de 20 ampolas IV (todos os acidentes laquéticos são considerados GRAVES). Na indisponibilidade do SABL, utiliza-se SAB em dose equivalente. A identificação correta da serpente é crucial, pois o quadro local pode ser confundido com botrópico — a presença da síndrome vagal direciona para laquético.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="16" data-ans="1">
+        <div class="q-num">Questão 17 <span class="q-badge" id="badge16"></span></div>
+        <div class="q-text">Sobre o acidente elapídico (<i>Micrurus</i> — coral verdadeira), é CORRETO afirmar:</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>O quadro clínico é predominantemente local, com dor intensa, edema exuberante e necrose</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>O veneno possui ação predominantemente neurotóxica (bloqueio neuromuscular) com manifestações locais discretas — risco de insuficiência respiratória aguda</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>O tratamento é apenas sintomático, pois não existe soro antielapídico no Brasil</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>A fácies miastênica é exclusiva do acidente crotálico e não ocorre no elapídico</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>A mordedura da coral é inofensiva em humanos pois suas presas são muito pequenas para penetrar a pele</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp16">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">O veneno elapídico é predominantemente NEUROTÓXICO (neurotoxinas pós-sinápticas, e em algumas espécies também pré-sinápticas). As manifestações locais são discretas (parestesia local), mas o quadro sistêmico é potencialmente letal: fácies miastênica (ptose, oftalmoplegia), disfagia, paralisia progressiva descendente e INSUFICIÊNCIA RESPIRATÓRIA AGUDA por paralisia da musculatura diafragmática — principal causa de óbito.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="17" data-ans="1">
+        <div class="q-num">Questão 18 <span class="q-badge" id="badge17"></span></div>
+        <div class="q-text">Qual a dose de Soro Antielapídico (SAVE) e qual medida de suporte é ESSENCIAL enquanto se aguarda a soroterapia no acidente elapídico?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>SAVE 5 ampolas IV + compressas frias no local da picada</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>SAVE 10 ampolas IV + suporte ventilatório (monitorização respiratória contínua, intubação orotraqueal se necessário)</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>SAVE 20 ampolas IV + atropina para bradicardia vagal</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>SAVE 3 ampolas IV + neostigmina como antídoto universal</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>SAVE 15 ampolas IM + diazepam para prevenção de convulsões</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp17">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">SAVE: 10 ampolas IV para TODOS os casos (todo acidente elapídico é potencialmente grave). A medida de suporte essencial é o SUPORTE VENTILATÓRIO: monitorização contínua da mecânica respiratória, oximetria, e prontidão para IOT + ventilação mecânica caso haja insuficiência respiratória. A neostigmina (anticolinesterásico) pode ser utilizada como ADJUVANTE nos casos com neurotoxinas de ação pós-sináptica, mas NÃO substitui o SAVE.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="18" data-ans="0">
+        <div class="q-num">Questão 19 <span class="q-badge" id="badge18"></span></div>
+        <div class="q-text">Como diferenciar clinicamente uma coral VERDADEIRA (<i>Micrurus</i>) de uma coral FALSA (ex.: <i>Erythrolamprus aesculapii</i>)?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>A coral verdadeira possui anéis que circundam completamente o corpo (ventre incluso), dispostos em tríades; na falsa, os anéis geralmente são incompletos no ventre</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>A coral verdadeira possui fosseta loreal e a falsa não</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>A coral verdadeira é maior (> 2 metros) e a falsa nunca ultrapassa 50 cm</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>A coral verdadeira possui chocalho na cauda e a falsa não</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>A diferenciação só é possível por análise laboratorial da peçonha</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp18">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A coral verdadeira (<i>Micrurus</i>) apresenta anéis completos que circundam TODO o corpo (incluindo o ventre), dispostos em tríades (padrão vermelho-branco-preto-branco-vermelho). As corais falsas (não peçonhentas) geralmente apresentam anéis incompletos no ventre ou padrões irregulares. IMPORTANTE: <i>Micrurus</i> NÃO possui fosseta loreal — é a grande exceção. Na dúvida, tratar sempre como coral verdadeira.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="19" data-ans="2">
+        <div class="q-num">Questão 20 <span class="q-badge" id="badge19"></span></div>
+        <div class="q-text">Paciente picado por serpente em área de Mata Atlântica apresenta edema importante no membro inferior, equimose, sangramento local, além de bradicardia (FC = 48 bpm), hipotensão (PA = 80×50 mmHg), diarreia profusa e vômitos. TC incoagulável. Qual o acidente MAIS provável?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Botrópico grave</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Crotálico moderado</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Laquético — o quadro local botrópico-símile associado à síndrome vagal (bradicardia + hipotensão + diarreia) é a chave diagnóstica</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Elapídico — por ser de Mata Atlântica</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Filodryas — serpente semi-peçonhenta da Mata Atlântica</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp19">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A combinação de: (1) quadro local semelhante ao botrópico (edema, equimose, sangramento, TC incoagulável) + (2) SÍNDROME VAGAL (bradicardia, hipotensão, diarreia, vômitos) + (3) habitat de Mata Atlântica = acidente LAQUÉTICO (<i>Lachesis muta</i>). No botrópico puro, a síndrome vagal não ocorre. Conduta: SABL 20 ampolas IV + atropina para bradicardia + suporte hemodinâmico.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="20" data-ans="2">
+        <div class="q-num">Questão 21 <span class="q-badge" id="badge20"></span></div>
+        <div class="q-text">A neostigmina é utilizada como recurso terapêutico ADJUVANTE em qual tipo de acidente ofídico e qual seu mecanismo de ação?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Botrópico — inibe a cascata de coagulação prevenindo CIVD</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Crotálico — bloqueia a absorção do veneno no local da picada</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Elapídico — anticolinesterásico que aumenta a disponibilidade de acetilcolina na junção neuromuscular, revertendo parcialmente o bloqueio pós-sináptico</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Laquético — antagoniza os efeitos vagais do veneno</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Em todos os acidentes ofídicos como pré-medicação antes do soro</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp20">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A neostigmina é um anticolinesterásico (inibidor da acetilcolinesterase) que impede a degradação da acetilcolina na fenda sináptica, aumentando sua concentração e competindo com as neurotoxinas elapídicas pelo receptor nicotínico pós-sináptico. É útil APENAS nos acidentes elapídicos com neurotoxinas de ação PÓS-sináptica. Nas espécies com ação PRÉ-sináptica (bloqueio da liberação de ACh), a neostigmina é ineficaz. NÃO substitui o SAVE.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="21" data-ans="0">
+        <div class="q-num">Questão 22 <span class="q-badge" id="badge21"></span></div>
+        <div class="q-text">Qual espécie de escorpião é responsável pela maioria dos acidentes graves e óbitos no Brasil?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span><i>Tityus serrulatus</i> (escorpião-amarelo)</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span><i>Tityus bahiensis</i> (escorpião-marrom)</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span><i>Tityus stigmurus</i> (escorpião-amarelo do Nordeste)</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span><i>Bothriurus bonariensis</i> (escorpião-da-areia)</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span><i>Tityus obscurus</i> (escorpião-preto da Amazônia)</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp21">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body"><i>Tityus serrulatus</i> (escorpião-amarelo) é o responsável pela maioria dos acidentes graves e óbitos, especialmente em crianças. Características: coloração amarelo-palha, serrilha no 3º e 4º segmentos da cauda (daí 'serrulatus'), adaptação ao ambiente urbano e reprodução por PARTENOGÊNESE (fêmeas geram filhotes sem macho), o que facilita a infestação.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="22" data-ans="2">
+        <div class="q-num">Questão 23 <span class="q-badge" id="badge22"></span></div>
+        <div class="q-text">Criança de 4 anos, picada por escorpião-amarelo há 1 hora, apresenta dor intensa no local, vômitos incoercíveis, sudorese profusa, taquicardia (FC = 180 bpm), hipertensão arterial e sialorreia. Qual a classificação de gravidade e conduta?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>LEVE — observação clínica por 6 horas + analgesia local</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>MODERADO — 2–3 ampolas de SAEsc IV + analgesia + observação por 24h</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>GRAVE — 4–6 ampolas de SAEsc IV + UTI + suporte hemodinâmico + controle das manifestações sistêmicas</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>MODERADO — dipirona VO + alta com receita de analgésico</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>GRAVE — 20 ampolas de SAEsc IV + intubação imediata</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp22">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">Criança < 7 anos + manifestações sistêmicas (vômitos, sudorese, taquicardia, hipertensão, sialorreia) = GRAVE. Conduta: SAEsc (Soro Antiescorpiônico) 4–6 ampolas IV + internação em UTI + monitorização cardíaca contínua + controle das manifestações autonômicas. A via é SEMPRE endovenosa. Crianças são o grupo de maior risco para gravidade e óbito por escorpionismo.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="23" data-ans="1">
+        <div class="q-num">Questão 24 <span class="q-badge" id="badge23"></span></div>
+        <div class="q-text">O mecanismo de ação do veneno escorpiônico que explica as manifestações sistêmicas (taquicardia, hipertensão, sudorese, sialorreia) é:</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Ação proteolítica direta sobre o miocárdio</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Liberação maciça de catecolaminas e acetilcolina por estimulação dos canais de sódio em terminações nervosas autonômicas</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Bloqueio neuromuscular semelhante ao curare</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Ativação direta da cascata de coagulação</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Hemólise intravascular maciça</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp23">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">As toxinas escorpiônicas (especialmente do gênero <i>Tityus</i>) atuam sobre os canais de sódio voltagem-dependentes, mantendo-os abertos e causando despolarização prolongada das terminações nervosas autonômicas. Isso provoca liberação maciça de CATECOLAMINAS (simpático → taquicardia, hipertensão, hiperglicemia) e ACETILCOLINA (parassimpático → bradicardia paradoxal, sialorreia, vômitos, diarreia, miose, sudorese) — a chamada 'tempestade autonômica'.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="24" data-ans="2">
+        <div class="q-num">Questão 25 <span class="q-badge" id="badge24"></span></div>
+        <div class="q-text">Qual é a principal causa de óbito no escorpionismo grave em crianças?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Hemorragia cerebral</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Insuficiência renal aguda</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Edema agudo de pulmão e/ou choque cardiogênico</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Anafilaxia ao veneno</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Insuficiência hepática aguda</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp24">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A principal causa de óbito no escorpionismo grave é cardiovascular: edema agudo de pulmão (cardiogênico) e/ou choque cardiogênico. A tempestade catecolaminérgica causa miocardite tóxica aguda com disfunção ventricular grave, que pode progredir rapidamente para choque e EAP. Por isso a internação em UTI com monitorização cardíaca contínua é mandatória nos casos graves.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="25" data-ans="1">
+        <div class="q-num">Questão 26 <span class="q-badge" id="badge25"></span></div>
+        <div class="q-text">Sobre a classificação de gravidade dos acidentes escorpiônicos, um paciente adulto com dor local intensa e irradiação para o membro, SEM manifestações sistêmicas, é classificado como:</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>LEVE — apenas dor local sem irradiação</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>MODERADO — dor local com irradiação e/ou vômitos ocasionais, sem manifestações sistêmicas graves</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>GRAVE — qualquer dor com irradiação exige internação em UTI</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>LEVE — observação domiciliar sem necessidade de atendimento</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Inclassificável — exige ecocardiograma antes da classificação</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp25">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">Classificação escorpiônica: LEVE = dor local, com ou sem parestesia, sem manifestações sistêmicas (observação por 4–6h, analgesia); MODERADO = dor com irradiação e/ou manifestações sistêmicas discretas (vômitos ocasionais, sudorese discreta, agitação) — 2–3 ampolas SAEsc IV; GRAVE = manifestações sistêmicas exuberantes (vômitos incoercíveis, sudorese profusa, prostração, taquicardia/bradicardia, hipotensão/hipertensão, EAP) — 4–6 ampolas SAEsc IV + UTI.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="26" data-ans="1">
+        <div class="q-num">Questão 27 <span class="q-badge" id="badge26"></span></div>
+        <div class="q-text">Sobre a analgesia no acidente escorpiônico, qual o manejo recomendado da dor?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>AAS (ácido acetilsalicílico) via oral em dose anti-inflamatória</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Infiltração local com lidocaína a 2% (sem vasoconstritor) no local da picada e/ou dipirona IV — evitar AAS e opioides em crianças</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Morfina IV em dose plena como primeira linha</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>AINE tópico (gel de diclofenaco) no local da picada</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Nenhuma analgesia é necessária pois a dor cessa espontaneamente em 30 minutos</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp26">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A dor escorpiônica é intensa e necessita de tratamento imediato. A analgesia local com infiltração de lidocaína a 2% (sem vasoconstritor) é muito eficaz. Analgésicos sistêmicos: dipirona IV é a primeira linha. Evitar AAS (risco hemorrágico) e usar opioides com cautela em crianças (risco de depressão respiratória, que pode ser confundida com efeito do veneno). A dor pode persistir por até 24 horas.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="27" data-ans="1">
+        <div class="q-num">Questão 28 <span class="q-badge" id="badge27"></span></div>
+        <div class="q-text"><i>Tityus serrulatus</i> se reproduz por partenogênese. Qual a implicação epidemiológica direta dessa característica?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Menor virulência do veneno por baixa diversidade genética</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Capacidade de colonização rápida de novos ambientes, pois uma única fêmea pode estabelecer uma população inteira sem necessidade de macho</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Os filhotes nascem imunes ao próprio veneno</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>A reprodução só ocorre em ambiente silvestre, limitando acidentes urbanos</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Menor taxa de reprodução comparada às espécies sexuadas</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp27">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A partenogênese (reprodução assexuada — fêmea gera filhotes geneticamente idênticos sem fecundação) permite que uma ÚNICA fêmea de <i>T. serrulatus</i> transporte dentro de entulho, materiais de construção ou cargas gere uma infestação inteira em ambiente novo. Isso explica a rápida expansão geográfica da espécie e sua predominância em ambientes URBANOS — encontrado sob entulho, telhas, blocos de construção.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="28" data-ans="2">
+        <div class="q-num">Questão 29 <span class="q-badge" id="badge28"></span></div>
+        <div class="q-text">Qual aranha de importância médica no Brasil causa o quadro de LOXOSCELISMO (lesão dermonecrótica com 'placa marmórea')?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span><i>Phoneutria nigriventer</i> (armadeira)</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span><i>Latrodectus</i> spp. (viúva-negra)</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span><i>Loxosceles</i> spp. (aranha-marrom)</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span><i>Nephila clavipes</i> (aranha-de-jardim)</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span><i>Lycosa</i> spp. (aranha-de-grama/tarântula)</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp28">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body"><i>Loxosceles</i> (aranha-marrom) é responsável pelo loxoscelismo. A picada é inicialmente pouco dolorosa ('picada seca') e evolui em 12–72h para uma lesão dermonecrótica com 'placa marmórea' (equimose + isquemia + necrose central). A forma cutâneo-visceral (hemolítica), com hemólise intravascular e IRA, é a complicação mais grave. É a aranha que mais causa acidentes graves no Brasil, especialmente na região Sul.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="29" data-ans="1">
+        <div class="q-num">Questão 30 <span class="q-badge" id="badge29"></span></div>
+        <div class="q-text">Sobre o acidente por <i>Phoneutria</i> (armadeira), assinale a alternativa CORRETA:</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>A manifestação local é discreta e o quadro predominante é dermonecrótico</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>A picada causa dor local intensa e imediata ('em ferroada'), com edema e eritema; casos graves cursam com manifestações autonômicas semelhantes ao escorpionismo</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>A armadeira não possui importância médica relevante no Brasil</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>O soro específico é o SALox (Soro Antiloxoscélico)</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>A principal complicação é a insuficiência hepática aguda</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp29">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">O acidente fonêutrico se caracteriza por dor local INTENSA e imediata, com edema e eritema. Nos casos GRAVES (especialmente em crianças), pode haver manifestações sistêmicas semelhantes ao escorpionismo: taquicardia, hipertensão, sudorese, sialorreia, priapismo, vômitos e até edema agudo de pulmão. O soro específico é o SAArac (Soro Antiaracnídico). A armadeira (<i>Phoneutria</i>) é a aranha que mais causa ACIDENTES no Brasil, mas a maioria é leve.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="30" data-ans="1">
+        <div class="q-num">Questão 31 <span class="q-badge" id="badge30"></span></div>
+        <div class="q-text">O acidente por <i>Latrodectus</i> (viúva-negra) se diferencia dos demais aracnídeos por apresentar qual quadro clínico característico?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Lesão dermonecrótica extensa com necrose seca</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Dor local progressiva, contraturas musculares generalizadas ('abdome em tábua'), sudorese, fácies latrodectísmica (trismo, riso sardônico) e hipertensão</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Edema exuberante com bolhas serosas e febre alta</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Paralisia flácida ascendente tipo Guillain-Barré</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Reação anafilática imediata com urticária e broncoespasmo</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp30">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">O latrodectismo se caracteriza por: dor local que evolui para contraturas musculares generalizadas (mialgia intensa, rigidez abdominal — 'abdome em tábua' simulando abdome agudo), sudorese regional/generalizada, fácies latrodectísmica (contratura facial com trismo), hipertensão arterial e taquicardia. O veneno atua liberando neurotransmissores (acetilcolina e noradrenalina) nas terminações nervosas. Tratamento: SALatr (Soro Antilatrodectus) + benzodiazepínicos + gluconato de cálcio para espasmos.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="31" data-ans="3">
+        <div class="q-num">Questão 32 <span class="q-badge" id="badge31"></span></div>
+        <div class="q-text">Sobre os princípios gerais da soroterapia antiveneno no Brasil, assinale a alternativa INCORRETA:</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Todos os soros antiveneno são produzidos pelo SUS (Butantan, FioCruz, FUNED) e fornecidos GRATUITAMENTE</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>A via de administração é exclusivamente endovenosa, com diluição em SF 0,9% ou SG 5%</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>A dose do soro é a MESMA para adultos e crianças — a dose neutraliza o veneno inoculado, não varia com o peso corporal</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>A pré-medicação com anti-histamínicos e corticoides antes do soro é OBRIGATÓRIA e deve ser feita em TODOS os pacientes</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>A soroterapia deve ser realizada preferencialmente nas primeiras horas após o acidente</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp31">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A pré-medicação com anti-histamínicos e corticoides NÃO é obrigatória em todos os pacientes — seu uso é controverso e varia conforme protocolo institucional. O essencial é: (1) equipe preparada para reações adversas, (2) adrenalina disponível à beira-leito, (3) iniciar infusão lenta e observar nos primeiros 10–15 minutos. A dose NÃO varia com peso: uma criança picada por Crotalus recebe a mesma dose de SAC que um adulto, pois a dose se baseia na quantidade de veneno a neutralizar.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="32" data-ans="1">
+        <div class="q-num">Questão 33 <span class="q-badge" id="badge32"></span></div>
+        <div class="q-text">Paciente apresenta lesão em membro inferior com centro necrótico escuro circundado por halo pálido isquêmico e borda eritematosa ('placa marmórea'), que apareceu 48 horas após picada indolor. Hemograma mostra anemia com haptoglobina baixa e LDH elevada. Urina escura. Qual o diagnóstico e a complicação mais temida?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Foneutrismo grave — edema agudo de pulmão</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Loxoscelismo cutâneo-visceral — hemólise intravascular com risco de IRA por hemoglobinúria</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Escorpionismo grave — choque cardiogênico</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Acidente botrópico com necrose — coagulopatia de consumo</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Latrodectismo — rabdomiólise</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp32">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A 'placa marmórea' (equimose + isquemia + necrose) 48h após picada indolor é patognomônica de LOXOSCELISMO. A evolução para a forma cutâneo-visceral é a complicação mais temida: hemólise intravascular (anemia + haptoglobina baixa + LDH elevada + bilirrubina indireta elevada) → hemoglobinúria (urina escura) → IRA por deposição tubular de hemoglobina. Tratamento: SALox ou SAArac + corticoterapia (prednisona) + hidratação vigorosa. A forma cutâneo-visceral ocorre em ~1–3% dos casos.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="33" data-ans="2">
+        <div class="q-num">Questão 34 <span class="q-badge" id="badge33"></span></div>
+        <div class="q-text">Sobre o armazenamento e conservação dos soros antiveneno, é CORRETO afirmar:</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Devem ser congelados a -20°C para preservar a atividade das imunoglobulinas</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Podem ser mantidos em temperatura ambiente por até 30 dias após abertos</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Devem ser conservados entre +2°C e +8°C (geladeira), NUNCA congelados, e usados imediatamente após abertura</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Podem ser reutilizados se sobrar soro no frasco após a infusão</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>A validade é indeterminada desde que mantidos refrigerados</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp33">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">Os soros antiveneno devem ser conservados entre +2°C e +8°C (refrigeração — porta da geladeira NÃO é adequada por variação de temperatura). NUNCA congelar, pois o congelamento desnatura as imunoglobulinas e inativa o soro. Após abrir o frasco, usar IMEDIATAMENTE — não reutilizar remanescentes. A validade está impressa no frasco e deve ser rigorosamente respeitada. O transporte deve ser em caixa térmica com gelo reciclável.</div>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="34" data-ans="2">
+        <div class="q-num">Questão 35 <span class="q-badge" id="badge34"></span></div>
+        <div class="q-text">Qual a conduta correta diante de uma reação adversa precoce (anafilactóide) durante a infusão do soro antiveneno?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0">
+            <span class="opt-letter">A</span>
+            <span>Interromper definitivamente a infusão e não readministrar em hipótese alguma</span>
+          </label>
+          <label class="opt" data-idx="1">
+            <span class="opt-letter">B</span>
+            <span>Manter a infusão na mesma velocidade e administrar anti-histamínico VO</span>
+          </label>
+          <label class="opt" data-idx="2">
+            <span class="opt-letter">C</span>
+            <span>Interromper a infusão, tratar a reação (adrenalina IM + anti-histamínico IV + corticoide IV ± broncodilatador), estabilizar o paciente e RETOMAR a infusão em velocidade mais lenta — o soro é o tratamento e deve ser completado</span>
+          </label>
+          <label class="opt" data-idx="3">
+            <span class="opt-letter">D</span>
+            <span>Substituir por outro tipo de soro antiveneno de classe diferente</span>
+          </label>
+          <label class="opt" data-idx="4">
+            <span class="opt-letter">E</span>
+            <span>Administrar o restante do soro por via intramuscular</span>
+          </label>
+        </div>
+        <div class="q-exp" id="exp34">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">Diante de reação adversa precoce: (1) INTERROMPER a infusão temporariamente; (2) tratar a reação: adrenalina IM 0,01 mg/kg (máx 0,5 mg adulto), anti-histamínico IV (prometazina ou difenidramina), corticoide IV (hidrocortisona), broncodilatador se broncoespasmo; (3) após estabilização, RETOMAR a infusão em velocidade mais lenta. O soro NÃO deve ser abandonado, pois é o ÚNICO tratamento eficaz contra o envenenamento. A reação não contraindica a continuidade da soroterapia.</div>
+        </div>
+      </div>
+  </div>
 
   <div class="result-panel" id="resultPanel">
-    <div class="rp-icon" id="rpIcon"></div>
-    <div class="rp-title" id="rpTitle"></div>
+    <h2 id="rpTitle"></h2>
     <div class="rp-score" id="rpScore"></div>
-    <div class="rp-detail" id="rpDetail"></div>
-    <button class="rp-btn primary" onclick="refazerProva()">🔄 Refazer prova</button>
-    <button class="rp-btn secondary" onclick="window.location.href='curso-peconhentos.html'">← Voltar ao curso</button>
-  </div>
-
-  <div class="source-note">
-    <b>Nota:</b> PROVA FINAL. Aprovação (≥ 61%) + aprovação nos 5 módulos = certificado de conclusão.
+    <div class="rp-msg" id="rpMsg"></div>
+    <div class="rp-btns">
+      <button class="btn-secondary" onclick="location.reload()">🔄 Refazer prova</button>
+      <a href="curso-peconhentos.html" class="btn-primary">← Voltar ao curso</a>
+    </div>
   </div>
 </div>
 
 <a href="curso-peconhentos.html" id="backBtn">← Voltar ao curso</a>
 
 <script>
-var CURSO = "peconhentos";
 var MODULO = 0;
 var AULA_ID = "prova-final";
-var MIN_PCT = 61;
+var TOTAL = 35;
+var PASSING = Math.ceil(TOTAL * 0.61);
+var answered = 0, rights = 0, wrongs = 0;
 
-var QD = [{"n": 1, "q": "Fosseta loreal AUSENTE em:", "o": [{"l": "A", "v": "Bothrops"}, {"l": "B", "v": "Crotalus"}, {"l": "C", "v": "Micrurus"}, {"l": "D", "v": "Lachesis"}], "cr": "C", "ex": "Micrurus (coral) não tem fosseta."}, {"n": 2, "q": "Analgésico CONTRAINDICADO no ofidismo:", "o": [{"l": "A", "v": "Dipirona"}, {"l": "B", "v": "AAS"}, {"l": "C", "v": "Paracetamol"}, {"l": "D", "v": "Tramadol"}], "cr": "B", "ex": "AAS antiagregante → piora sangramento."}, {"n": 3, "q": "Complicação que mais mata no botrópico:", "o": [{"l": "A", "v": "Paralisia"}, {"l": "B", "v": "IRA"}, {"l": "C", "v": "Choque"}, {"l": "D", "v": "Hemorragia cerebral"}], "cr": "B", "ex": "IRA. Hidratação precoce é a chave."}, {"n": 4, "q": "Fácies miastênica = qual acidente?", "o": [{"l": "A", "v": "Botrópico"}, {"l": "B", "v": "Crotálico"}, {"l": "C", "v": "Escorpiônico"}, {"l": "D", "v": "Laquético"}], "cr": "B", "ex": "Crotálico — bloqueio neuromuscular."}, {"n": 5, "q": "Diferencial do laquético:", "o": [{"l": "A", "v": "Neurotóxicos"}, {"l": "B", "v": "Vagais"}, {"l": "C", "v": "Miotóxicos"}, {"l": "D", "v": "Hemolíticos"}], "cr": "B", "ex": "Sinais vagais = laquético."}, {"n": 6, "q": "Todo elapídico é:", "o": [{"l": "A", "v": "Leve"}, {"l": "B", "v": "Moderado"}, {"l": "C", "v": "Grave"}, {"l": "D", "v": "Depende"}], "cr": "C", "ex": "GRAVE. 10 amp SAEL."}, {"n": 7, "q": "Criança 4a + escorpião + só dor:", "o": [{"l": "A", "v": "Observação"}, {"l": "B", "v": "SAEsc imediato + internação"}, {"l": "C", "v": "Alta"}, {"l": "D", "v": "SAB"}], "cr": "B", "ex": "Criança ≤10a: SAEsc IMEDIATO."}, {"n": 8, "q": "Sentinel vomiting indica:", "o": [{"l": "A", "v": "Intoxicação"}, {"l": "B", "v": "Gravidade iminente"}, {"l": "C", "v": "Reação ao soro"}, {"l": "D", "v": "Caso leve"}], "cr": "B", "ex": "Vômitos profusos = gravidade."}, {"n": 9, "q": "Priapismo + dor irradiada:", "o": [{"l": "A", "v": "Loxosceles"}, {"l": "B", "v": "Phoneutria"}, {"l": "C", "v": "Latrodectus"}, {"l": "D", "v": "Crotalus"}], "cr": "B", "ex": "Foneutrismo."}, {"n": 10, "q": "Placa marmórea:", "o": [{"l": "A", "v": "Phoneutria"}, {"l": "B", "v": "Loxosceles"}, {"l": "C", "v": "Latrodectus"}, {"l": "D", "v": "Bothrops"}], "cr": "B", "ex": "Loxoscelismo."}, {"n": 11, "q": "Dose de soro depende de:", "o": [{"l": "A", "v": "Peso"}, {"l": "B", "v": "Idade"}, {"l": "C", "v": "Gravidade"}, {"l": "D", "v": "Sexo"}], "cr": "C", "ex": "Gravidade. Mesma dose adulto/criança."}, {"n": 12, "q": "Anafilaxia ao soro — 1ª conduta:", "o": [{"l": "A", "v": "Mais soro"}, {"l": "B", "v": "Interromper + adrenalina IM"}, {"l": "C", "v": "Anti-histamínico"}, {"l": "D", "v": "Suspender"}], "cr": "B", "ex": "Interromper + adrenalina. Retomar depois."}, {"n": 13, "q": "SAA NÃO cobre:", "o": [{"l": "A", "v": "Loxosceles"}, {"l": "B", "v": "Phoneutria"}, {"l": "C", "v": "Tityus"}, {"l": "D", "v": "Latrodectus"}], "cr": "D", "ex": "SAA não cobre Latrodectus."}, {"n": 14, "q": "Armazenamento soros:", "o": [{"l": "A", "v": "-20°C"}, {"l": "B", "v": "+2 a +8°C"}, {"l": "C", "v": "Ambiente"}, {"l": "D", "v": "Qualquer"}], "cr": "B", "ex": "+2 a +8°C, nunca congelar."}, {"n": 15, "q": "Fornecimento soros no Brasil:", "o": [{"l": "A", "v": "Pago"}, {"l": "B", "v": "Gratuito, Estado, porta aberta"}, {"l": "C", "v": "Convênio"}, {"l": "D", "v": "Farmácia"}], "cr": "B", "ex": "Gratuito, pertencem ao Estado."}];
-
-var answers = [];
-var answered = 0;
-var correct = 0;
-
-function renderExam(){
-  var ct = document.getElementById('examContainer');
-  ct.innerHTML = '';
-  answers = [];
-  answered = 0;
-  correct = 0;
-  document.getElementById('resultPanel').className = 'result-panel';
-  document.getElementById('progFill').style.width = '0%';
-
-  QD.forEach(function(q, i){
-    answers.push(null);
-    var d = document.createElement('div');
-    d.className = 'q-card';
-    d.id = 'q' + i;
-    var body = '<div class="opts">' + q.o.map(function(o){
-      return '<button class="opt-btn" data-q="'+i+'" data-l="'+o.l+'" onclick="answerQ('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+o.v+'</span></button>';
-    }).join('') + '</div>';
-    d.innerHTML = '<div class="q-num">Questão ' + q.n + ' de ' + QD.length + '</div><p class="q-text">' + q.q + '</p>' + body + '<div class="exp-box" id="ex' + i + '"><div class="et">📖 Explicação</div><p>' + q.ex + '</p></div>';
-    ct.appendChild(d);
-  });
-}
-
-function answerQ(i, ch){
-  var q = QD[i];
-  var card = document.getElementById('q' + i);
-  if(card.classList.contains('answered')) return;
-
-  card.querySelectorAll('.opt-btn').forEach(function(b){
-    b.disabled = true;
-    if(b.dataset.l === q.cr) b.classList.add('ca');
-    if(b.dataset.l === ch && ch !== q.cr) b.classList.add('wa');
-  });
-
-  var ok = ch === q.cr;
-  card.classList.add('answered', ok ? 'cq' : 'wq');
-  document.getElementById('ex' + i).classList.add('vis');
-  answers[i] = ch;
-  answered++;
-  if(ok) correct++;
-
-  document.getElementById('progFill').style.width = Math.round(answered / QD.length * 100) + '%';
-
-  if(answered === QD.length){
-    setTimeout(function(){ finalizarProva(); }, 600);
-  }
-}
-
-async function finalizarProva(){
-  var pct = Math.round(correct / QD.length * 100);
-  var aprovado = pct >= MIN_PCT;
-
-  var panel = document.getElementById('resultPanel');
-  panel.className = 'result-panel vis ' + (aprovado ? 'pass' : 'fail');
-  document.getElementById('rpIcon').textContent = aprovado ? '🎉' : '😔';
-  document.getElementById('rpTitle').textContent = aprovado ? 'Aprovado!' : 'Não atingiu a nota mínima';
-  document.getElementById('rpScore').textContent = pct + '%';
-  document.getElementById('rpDetail').textContent = correct + ' de ' + QD.length + ' corretas · Mínimo: ' + MIN_PCT + '% · ' + (aprovado ? 'Módulo 1 concluído!' : 'Você pode refazer quantas vezes quiser.');
-
-  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-  /* Salvar no Supabase */
-  var sb = getClient();
-  if(sb){
-    try {
-      var u = await sb.auth.getUser();
-      var user = u && u.data ? u.data.user : null;
-      if(user){
-        /* Salvar tentativa na tabela curso_provas */
-        await sb.from('curso_provas').insert({
-          user_id: user.id,
-          curso: CURSO,
-          modulo: MODULO,
-          acertos: correct,
-          total: QD.length,
-          percentual: pct,
-          aprovado: aprovado
-        });
-
-        /* Marcar aula como concluída no progresso */
-        await sb.from('curso_progresso').upsert({
-          user_id: user.id,
-          curso: CURSO,
-          aula_id: AULA_ID,
-          concluida: true,
-          quiz_score: correct,
-          quiz_total: QD.length,
-          updated_at: new Date().toISOString()
-        }, { onConflict: 'user_id,curso,aula_id' });
-
-        /* Atualizar melhor nota exibida */
-        loadBestScore(sb, user.id);
-      }
-    } catch(e){ console.warn('Erro ao salvar prova:', e); }
-  }
-}
-
-function refazerProva(){
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  setTimeout(function(){ renderExam(); }, 300);
-}
-
-function getClient(){
-  if(window.authClient) return window.authClient;
-  return null;
-}
-
-async function loadBestScore(sb, userId){
-  try {
-    var res = await sb.from('curso_melhor_prova')
-      .select('melhor_percentual, ja_aprovado, tentativas')
-      .eq('user_id', userId)
-      .eq('curso', CURSO)
-      .eq('modulo', MODULO)
-      .single();
-    if(res.data){
-      var el = document.getElementById('bestScore');
-      el.textContent = Math.round(res.data.melhor_percentual) + '%';
-      el.style.color = res.data.ja_aprovado ? 'var(--green)' : 'var(--red)';
+function updateScore() {
+  document.getElementById("nRight").textContent = rights;
+  document.getElementById("nWrong").textContent = wrongs;
+  document.getElementById("nPending").textContent = TOTAL - answered;
+  var pct = TOTAL > 0 ? Math.round((rights / TOTAL) * 100) : 0;
+  document.getElementById("pctLabel").textContent = pct + "%";
+  var st = document.getElementById("statusLabel");
+  if (answered < TOTAL) {
+    st.textContent = "";
+    st.style.background = "transparent";
+  } else {
+    if (rights >= PASSING) {
+      st.textContent = "APROVADO ✓";
+      st.style.background = "rgba(34,197,94,.15)";
+      st.style.color = "var(--green)";
+    } else {
+      st.textContent = "REPROVADO ✗";
+      st.style.background = "rgba(239,68,68,.15)";
+      st.style.color = "var(--red)";
     }
-  } catch(e){}
+  }
 }
 
-/* Init */
-document.addEventListener("authReady", function(){
-  renderExam();
-  var sb = getClient();
-  if(sb){
-    sb.auth.getUser().then(function(u){
-      var user = u && u.data ? u.data.user : null;
-      if(user) loadBestScore(sb, user.id);
+function showResult() {
+  var pct = Math.round((rights / TOTAL) * 100);
+  var pass = rights >= PASSING;
+  var rp = document.getElementById("resultPanel");
+  rp.classList.add("show");
+  document.getElementById("rpTitle").textContent = pass ? "🎉 Parabéns!" : "Tente novamente";
+  var sc = document.getElementById("rpScore");
+  sc.textContent = pct + "%";
+  sc.className = "rp-score " + (pass ? "pass" : "fail");
+  document.getElementById("rpMsg").textContent = pass
+    ? "Você atingiu " + pct + "% (" + rights + "/" + TOTAL + "). Aprovado na prova final!"
+    : "Você atingiu " + pct + "% (" + rights + "/" + TOTAL + "). Mínimo: 61% (" + PASSING + " acertos). Revise o conteúdo e tente novamente.";
+  rp.scrollIntoView({ behavior: "smooth", block: "center" });
+  saveScore(pct);
+}
+
+function saveScore(pct) {
+  if (!window.authClient || !window.authSession) return;
+  var uid = window.authSession.user.id;
+  window.authClient.from("curso_provas").upsert({
+    user_id: uid,
+    curso: "curso-peconhentos",
+    modulo: MODULO,
+    nota: pct,
+    tentativa_em: new Date().toISOString()
+  }, { onConflict: "user_id,curso,modulo,tentativa_em" }).then(function(res) {
+    if (res.error) console.error("Erro ao salvar prova:", res.error);
+    else console.log("Prova salva:", pct + "%");
+  });
+}
+
+function loadBest() {
+  if (!window.authClient || !window.authSession) return;
+  var uid = window.authSession.user.id;
+  window.authClient.from("curso_melhor_prova")
+    .select("melhor_nota,ultima_tentativa")
+    .eq("user_id", uid)
+    .eq("curso", "curso-peconhentos")
+    .eq("modulo", MODULO)
+    .maybeSingle()
+    .then(function(res) {
+      if (res.data && res.data.melhor_nota !== null) {
+        var bp = document.getElementById("bestPanel");
+        bp.style.display = "flex";
+        document.getElementById("bestScore").textContent = res.data.melhor_nota + "%";
+        if (res.data.ultima_tentativa) {
+          var d = new Date(res.data.ultima_tentativa);
+          document.getElementById("bestDate").textContent = d.toLocaleDateString("pt-BR");
+        }
+      }
     });
-  }
+}
+
+/* Bind options */
+document.querySelectorAll(".q-card").forEach(function(card) {
+  card.querySelectorAll(".opt").forEach(function(opt) {
+    opt.addEventListener("click", function() {
+      if (card.classList.contains("done")) return;
+      card.classList.add("done");
+      answered++;
+      var correct = parseInt(card.getAttribute("data-ans"));
+      var chosen = parseInt(opt.getAttribute("data-idx"));
+      var allOpts = card.querySelectorAll(".opt");
+      allOpts.forEach(function(o) { o.classList.add("locked"); });
+      var qi = parseInt(card.getAttribute("data-q"));
+      if (chosen === correct) {
+        rights++;
+        opt.classList.add("selected-right");
+        card.classList.add("answered-right");
+        document.getElementById("badge" + qi).textContent = "✓ Correta";
+        document.getElementById("badge" + qi).className = "q-badge right";
+      } else {
+        wrongs++;
+        opt.classList.add("selected-wrong");
+        allOpts[correct].classList.add("correct-reveal");
+        card.classList.add("answered-wrong");
+        document.getElementById("badge" + qi).textContent = "✗ Errada";
+        document.getElementById("badge" + qi).className = "q-badge wrong";
+      }
+      document.getElementById("exp" + qi).classList.add("show");
+      updateScore();
+      if (answered === TOTAL) setTimeout(showResult, 600);
+    });
+  });
 });
-setTimeout(function(){
-  if(!document.getElementById('examContainer').children.length) renderExam();
-}, 1200);
+
+document.addEventListener("authReady", function() { loadBest(); });
+setTimeout(function() { loadBest(); }, 3000);
 </script>
+
 <script src="study-timer.js"></script>
 <script src="enzo-ia.js"></script>
 </body>
