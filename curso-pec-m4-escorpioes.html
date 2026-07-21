@@ -186,7 +186,7 @@ function showSection(id,btn){document.querySelectorAll('.section').forEach(funct
 
 var IMAGENS=[
   {file:"img/m4-escorpiao-amarelo-01.jpg",titulo:"Tityus serrulatus (escorpião amarelo — o mais perigoso)",credito:"Wikimedia Commons — CC BY-SA 4.0"},
-  {file:"img/m4-escorpiao-marrom-01.jpg",titulo:"Tityus bahiensis (escorpião marrom)",credito:"Wikimedia Commons — CC BY-SA 4.0"}
+  {file:"img/m4-escorpiao-marrom-01.jpg",titulo:"Tityus bahiensis (escorpião marrom)",credito:"Manual de Identificação de Escorpiões — Governo do Estado de São Paulo"}
 ];
 function renderGallery(){var w=document.getElementById('galleryWrap');w.innerHTML='';IMAGENS.forEach(function(im){var c=document.createElement('div');c.className='img-card';c.innerHTML='<div class="img-frame"><img src="'+im.file+'" alt="'+im.titulo+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><div class="placeholder" style="display:none"><span class="ph-emoji">🦂</span><span>'+im.titulo+'</span></div></div><div class="cap"><div class="cap-title">'+im.titulo+'</div><div class="cap-credit">'+im.credito+'</div></div>';w.appendChild(c);});}
 
