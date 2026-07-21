@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certificado — Acidentes por Animais Peçonhentos</title>
+<script>window.PAGE_KEY = "curso-peconhentos";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>document.addEventListener("authReady", function(){ document.documentElement.style.visibility = "visible"; });</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0d14;--card:#1a2138;--card2:#1f2845;--accent:#4f9cf9;--accent2:#38e8c0;--accent3:#f9784f;--gold:#f9c94f;--text:#e8eaf6;--muted:#8892b0;--border:rgba(79,156,249,0.15);--radius:16px;--font-body:'DM Sans',sans-serif;--font-display:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px}
+.status-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 40px;text-align:center;max-width:560px;width:100%}
+.status-panel h2{font-family:var(--font-display);font-size:22px;margin-bottom:12px}
+.status-panel p{color:var(--muted);font-size:13px;margin-bottom:20px;line-height:1.6}
+.status-panel .icon{font-size:48px;margin-bottom:16px}
+.gen-btn{padding:14px 32px;border:none;border-radius:12px;font-family:var(--font-body);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s}
+.gen-btn.ready{background:linear-gradient(135deg,var(--gold),var(--accent3));color:var(--bg)}
+.gen-btn.ready:hover{box-shadow:0 0 30px rgba(249,201,79,0.5);transform:translateY(-2px)}
+.gen-btn.locked{background:var(--card2);color:var(--muted);cursor:not-allowed;border:1px solid var(--border)}
+.gen-btn.generating{background:var(--card2);color:var(--accent);cursor:wait}
+.back-link{margin-top:20px;color:var(--accent);font-size:13px;text-decoration:none;font-weight:600}
+.back-link:hover{text-decoration:underline}
+.preview-note{margin-top:16px;font-size:11px;color:var(--muted);font-family:var(--font-mono)}
+
+/* ======== CERTIFICADO (renderizado off-screen, capturado pelo html2pdf) ======== */
+#certWrapper{position:absolute;left:-9999px;top:0}
+.cert-page{width:1122px;height:793px;background:#fff;position:relative;overflow:hidden;font-family:'Playfair Display','DM Sans',serif;color:#1a1a2e}
+
+/* Página 1 — Diploma */
+.p1-border{position:absolute;inset:16px;border:3px solid #b8860b;border-radius:4px}
+.p1-inner-border{position:absolute;inset:22px;border:1px solid #d4a93c}
+.p1-corner{position:absolute;width:40px;height:40px;border:2px solid #b8860b}
+.p1-corner.tl{top:28px;left:28px;border-right:none;border-bottom:none}
+.p1-corner.tr{top:28px;right:28px;border-left:none;border-bottom:none}
+.p1-corner.bl{bottom:28px;left:28px;border-right:none;border-top:none}
+.p1-corner.br{bottom:28px;right:28px;border-left:none;border-top:none}
+.p1-content{position:absolute;inset:50px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+.p1-badge{font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#b8860b;margin-bottom:8px;font-weight:600}
+.p1-title{font-size:36px;font-weight:700;color:#1a1a2e;margin-bottom:4px;letter-spacing:1px}
+.p1-subtitle{font-size:13px;color:#666;letter-spacing:2px;text-transform:uppercase;margin-bottom:28px;font-family:'DM Sans',sans-serif}
+.p1-certifica{font-size:13px;color:#888;margin-bottom:6px;font-family:'DM Sans',sans-serif}
+.p1-nome{font-size:30px;font-weight:700;color:#1a1a2e;border-bottom:2px solid #b8860b;padding-bottom:6px;margin-bottom:6px;min-width:400px;font-style:italic}
+.p1-doc{font-size:11px;color:#666;margin-bottom:16px;font-family:'DM Sans',sans-serif;letter-spacing:0.5px}
+.p1-desc{font-size:12.5px;color:#444;line-height:1.7;max-width:700px;margin-bottom:20px;font-family:'DM Sans',sans-serif}
+.p1-curso-name{font-size:16px;font-weight:700;color:#1a1a2e;margin-bottom:6px}
+.p1-ch{font-size:12px;color:#666;margin-bottom:24px;font-family:'DM Sans',sans-serif}
+.p1-footer{display:flex;justify-content:space-between;align-items:flex-end;width:100%;max-width:700px;margin-top:auto}
+.p1-sign{text-align:center}
+.p1-sign-line{width:220px;border-top:1.5px solid #333;margin-bottom:4px}
+.p1-sign-name{font-size:12px;font-weight:700;color:#1a1a2e}
+.p1-sign-title{font-size:9.5px;color:#666;font-family:'DM Sans',sans-serif;max-width:220px;line-height:1.4}
+.p1-date-block{text-align:center}
+.p1-date-block .p1-sign-line{width:160px}
+.p1-date{font-size:12px;color:#333}
+
+/* Página 2 — Conteúdo programático */
+.p2-header{background:linear-gradient(135deg,#1a1a2e 0%,#2d2d5e 100%);padding:28px 50px;color:#fff}
+.p2-header h2{font-size:20px;font-weight:700;margin-bottom:4px}
+.p2-header p{font-size:11px;color:rgba(255,255,255,0.7);font-family:'DM Sans',sans-serif}
+.p2-body{padding:24px 50px;columns:2;column-gap:40px}
+.p2-module{break-inside:avoid;margin-bottom:18px}
+.p2-mod-title{font-size:13px;font-weight:700;color:#1a1a2e;border-bottom:1.5px solid #b8860b;padding-bottom:3px;margin-bottom:6px;font-family:'DM Sans',sans-serif}
+.p2-mod-items{font-size:11px;color:#444;line-height:1.7;font-family:'DM Sans',sans-serif;padding-left:14px}
+.p2-mod-items li{margin-bottom:3px}
+.p2-footer{position:absolute;bottom:20px;left:50px;right:50px;display:flex;justify-content:space-between;font-size:9px;color:#999;font-family:'DM Sans',sans-serif;border-top:1px solid #ddd;padding-top:8px}
+</style>
+</head>
+<body>
+
+<!-- PAINEL VISÍVEL (status + botão) -->
+<div class="status-panel" id="statusPanel">
+  <div class="icon">🎓</div>
+  <h2 id="statusTitle">Verificando elegibilidade...</h2>
+  <p id="statusDesc">Aguarde enquanto verificamos se você completou todos os requisitos para o certificado.</p>
+
+  <div id="certForm" style="display:none;text-align:left;margin:20px auto;max-width:420px;">
+    <div style="margin-bottom:14px;">
+      <label style="display:block;font-size:12px;font-weight:700;color:#8892b0;margin-bottom:5px;font-family:var(--font-mono);letter-spacing:1px;text-transform:uppercase;">Nome completo (como aparecerá no certificado)</label>
+      <input type="text" id="certNomeInput" placeholder="Ex.: João da Silva Santos" style="width:100%;padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--font-body);font-size:14px;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+    </div>
+    <div style="margin-bottom:18px;">
+      <label style="display:block;font-size:12px;font-weight:700;color:#8892b0;margin-bottom:5px;font-family:var(--font-mono);letter-spacing:1px;text-transform:uppercase;">Documento de identidade (RG ou CPF)</label>
+      <input type="text" id="certDocInput" placeholder="Ex.: 12.345.678-9 ou 123.456.789-00" style="width:100%;padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--font-body);font-size:14px;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+    </div>
+    <div id="certFormError" style="display:none;color:var(--red);font-size:12px;margin-bottom:12px;font-weight:600;"></div>
+  </div>
+
+  <button class="gen-btn locked" id="genBtn" disabled>Aguarde...</button>
+  <div class="preview-note" id="previewNote"></div>
+</div>
+<a href="curso-peconhentos.html" class="back-link">← Voltar ao curso</a>
+
+<!-- CERTIFICADO (off-screen, capturado pelo html2pdf) -->
+<div id="certWrapper">
+  <!-- PÁGINA 1 — DIPLOMA -->
+  <div class="cert-page" id="certPage1">
+    <div class="p1-border"></div>
+    <div class="p1-inner-border"></div>
+    <div class="p1-corner tl"></div>
+    <div class="p1-corner tr"></div>
+    <div class="p1-corner bl"></div>
+    <div class="p1-corner br"></div>
+    <div class="p1-content">
+      <div class="p1-badge">Resumos do Enzo · Curso Livre</div>
+      <div class="p1-title">Certificado de Conclusão</div>
+      <div class="p1-subtitle">Certificate of Completion</div>
+      <div class="p1-certifica">Certificamos que</div>
+      <div class="p1-nome" id="certNome">Nome do Aluno</div>
+      <div class="p1-doc" id="certDoc">Documento</div>
+      <div class="p1-desc">
+        concluiu com aproveitamento o curso livre
+      </div>
+      <div class="p1-curso-name">Acidentes por Animais Peçonhentos e Uso de Soro Antiveneno</div>
+      <div class="p1-ch">Carga horária: 20 horas · Modalidade: EAD · Categoria: Curso livre para estudantes de Medicina</div>
+      <div class="p1-footer">
+        <div class="p1-sign">
+          <div class="p1-sign-line"></div>
+          <div class="p1-sign-name">Enzo S. Salmazo</div>
+          <div class="p1-sign-title">Farmacêutico pela Universidade Brasil · CRF-SP: 107.700<br>Especialista em Farmácia Clínica pelo Hospital Israelita Albert Einstein</div>
+        </div>
+        <div class="p1-date-block">
+          <div class="p1-sign-line"></div>
+          <div class="p1-date" id="certData">00 de mês de 0000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PÁGINA 2 — CONTEÚDO PROGRAMÁTICO -->
+  <div class="cert-page" id="certPage2">
+    <div class="p2-header">
+      <h2>Conteúdo Programático</h2>
+      <p>Acidentes por Animais Peçonhentos e Uso de Soro Antiveneno · 20 horas · Enzo S. Salmazo</p>
+    </div>
+    <div class="p2-body">
+      <div class="p2-module">
+        <div class="p2-mod-title">Módulo 1 — Fundamentos e Identificação</div>
+        <ul class="p2-mod-items">
+          <li>Identificação de serpentes peçonhentas: fosseta loreal, tipo de cauda, pupila, dentição</li>
+          <li>Diferenciação: peçonhentas × não peçonhentas (fluxograma FioCruz)</li>
+          <li>Gêneros de importância médica: Bothrops, Crotalus, Lachesis e Micrurus</li>
+          <li>Conduta inicial hospitalar: os 8 passos da admissão do acidentado</li>
+          <li>Exames laboratoriais: HMG, ureia, creatinina, CPK, urina I, fibrinogênio, coagulograma (3 tempos)</li>
+          <li>Profilaxia antitetânica: esquema vacinal por histórico e risco do ferimento</li>
+          <li>Manejo de infecção no local da picada: cobertura antimicrobiana (ofídico e aracnídeo)</li>
+        </ul>
+      </div>
+      <div class="p2-module">
+        <div class="p2-mod-title">Módulo 2 — Acidentes Ofídicos I (Botrópico e Crotálico)</div>
+        <ul class="p2-mod-items">
+          <li>Acidente botrópico (SAB): ação proteolítica, coagulante e hemorrágica do veneno</li>
+          <li>Manifestações clínicas: dor, edema, equimoses, bolhas, necrose, síndrome compartimental</li>
+          <li>Classificação de gravidade e soroterapia: leve (2–4 amp.), moderado (4–8), grave (12)</li>
+          <li>Controle de eficácia pelo tempo de coagulação (TC) e critério de dose adicional</li>
+          <li>Acidente crotálico (SAC): ação neurotóxica, miotóxica e coagulante</li>
+          <li>Fácies miastênica, ptose palpebral, colúria e insuficiência renal aguda por mioglobinúria</li>
+          <li>Classificação e soroterapia: leve (5 amp.), moderado (10), grave (20)</li>
+        </ul>
+      </div>
+      <div class="p2-module">
+        <div class="p2-mod-title">Módulo 3 — Acidentes Ofídicos II (Laquético e Elapídico)</div>
+        <ul class="p2-mod-items">
+          <li>Acidente laquético (SABL): gênero Lachesis, ação hemorrágica, bradicardia, hipotensão</li>
+          <li>Classificação e soroterapia SABL: moderado (10 amp.), grave (20)</li>
+          <li>Acidente elapídico (SAEL): gênero Micrurus, ação neurotóxica curarizante</li>
+          <li>Todo acidente elapídico é considerado grave — administrar 10 ampolas de SAEL</li>
+          <li>Diagnóstico diferencial entre os 4 acidentes ofídicos</li>
+        </ul>
+      </div>
+      <div class="p2-module">
+        <div class="p2-mod-title">Módulo 4 — Acidentes Escorpiônicos</div>
+        <ul class="p2-mod-items">
+          <li>Escorpionismo (SAEsc): gênero Tityus, ação local e despolarização de canais de sódio</li>
+          <li>Gravidade em crianças: indicação imediata de soro independente da classificação</li>
+          <li>Manifestações: dor, parestesia, sudorese, sialorréia, bradicardia, edema pulmonar, choque</li>
+          <li>Classificação e soroterapia: leve (observação), moderado (2–3 amp.), grave (4–6)</li>
+          <li>Manejo do caso grave: monitorização contínua, atropina, suporte em CTI</li>
+        </ul>
+      </div>
+      <div class="p2-module">
+        <div class="p2-mod-title">Módulo 5 — Aracnídeos e Soroterapia na Prática</div>
+        <ul class="p2-mod-items">
+          <li>Acidente fonêutrico (Phoneutria — armadeira): dor irradiada, priapismo, choque</li>
+          <li>Acidente loxoscélico (Loxosceles — aranha-marrom): lesão dermonecrótica, hemólise intravascular</li>
+          <li>Acidente latrodéctico (Latrodectus — viúva-negra): fácies latrodectísmica, contraturas</li>
+          <li>Soro antiaracnídico (SAA): indicações, classificação e doses por aranha</li>
+          <li>Preparo e infusão de soros antiveneno: diluição, via IV, tempo 20–60 min, reações anafiláticas</li>
+          <li>Remanejamento de soros entre pontos estratégicos; informações sobre fornecimento gratuito</li>
+        </ul>
+      </div>
+    </div>
+    <div class="p2-footer">
+      <span>Resumos do Enzo · enzosalmazo00.github.io</span>
+      <span>Fontes: Instituto Butantan · FioCruz · Ministério da Saúde (Nota Técnica nº 64/2021)</span>
+    </div>
+  </div>
+</div>
+
+<script>
+var CURSO = "peconhentos";
+
+function getClient(){
+  if(window.authClient) return window.authClient;
+  return null;
+}
+
+/* Meses por extenso */
+var MESES = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+function dataExtenso(d){
+  return d.getDate() + " de " + MESES[d.getMonth()] + " de " + d.getFullYear();
+}
+
+/* Verificar elegibilidade */
+async function checkEligibility(){
+  var sb = getClient();
+  var panel = document.getElementById("statusPanel");
+  var title = document.getElementById("statusTitle");
+  var desc = document.getElementById("statusDesc");
+  var btn = document.getElementById("genBtn");
+  var note = document.getElementById("previewNote");
+
+  if(!sb){
+    title.textContent = "Erro de conexão";
+    desc.textContent = "Não foi possível conectar ao servidor. Recarregue a página.";
+    return;
+  }
+
+  try {
+    var userRes = await sb.auth.getUser();
+    var user = userRes && userRes.data ? userRes.data.user : null;
+    if(!user){
+      title.textContent = "Não autenticado";
+      desc.textContent = "Faça login para verificar seu certificado.";
+      return;
+    }
+
+    /* Verificar se é elegível */
+    var eligRes = await sb.from("curso_certificado_elegivel").select("curso").eq("user_id", user.id).eq("curso", CURSO);
+    var eligible = eligRes.data && eligRes.data.length > 0;
+
+    /* Pegar nome do aluno do perfil */
+    var profileRes = await sb.from("profiles").select("nome_preferido, email").eq("id", user.id).single();
+    var nomeAluno = "Aluno";
+    if(profileRes.data){
+      nomeAluno = profileRes.data.nome_preferido || profileRes.data.email || "Aluno";
+    }
+
+    if(eligible){
+      title.textContent = "Parabéns! 🎉";
+      desc.textContent = "Você completou todos os requisitos. Preencha seus dados abaixo para emitir o certificado.";
+      document.getElementById("certForm").style.display = "block";
+      /* Pré-preencher com nome do perfil se existir */
+      var inputNome = document.getElementById("certNomeInput");
+      if(nomeAluno && nomeAluno !== "Aluno") inputNome.value = nomeAluno;
+      btn.className = "gen-btn ready";
+      btn.disabled = false;
+      btn.textContent = "🎓 Gerar meu certificado em PDF";
+      btn.onclick = function(){ validarEGerar(); };
+      note.textContent = "O PDF será gerado e baixado automaticamente.";
+    } else {
+      title.textContent = "Requisitos pendentes";
+      desc.textContent = "Você precisa ser aprovado (≥ 61%) em cada uma das 5 provas de módulo e na prova final para emitir o certificado. Volte ao curso e conclua as provas pendentes.";
+      btn.className = "gen-btn locked";
+      btn.disabled = true;
+      btn.textContent = "🔒 Certificado bloqueado";
+      note.textContent = "";
+    }
+  } catch(e){
+    console.error("Erro ao verificar elegibilidade:", e);
+    title.textContent = "Erro ao verificar";
+    desc.textContent = "Ocorreu um erro. Tente recarregar a página.";
+  }
+}
+
+/* Validar campos e gerar */
+function validarEGerar(){
+  var nome = (document.getElementById("certNomeInput").value || "").trim();
+  var doc = (document.getElementById("certDocInput").value || "").trim();
+  var errBox = document.getElementById("certFormError");
+
+  if(!nome || nome.length < 5){
+    errBox.style.display = "block";
+    errBox.textContent = "Preencha seu nome completo (mínimo 5 caracteres).";
+    return;
+  }
+  if(!doc || doc.length < 5){
+    errBox.style.display = "block";
+    errBox.textContent = "Preencha seu documento de identidade (RG ou CPF).";
+    return;
+  }
+  errBox.style.display = "none";
+  gerarCertificado(nome, doc);
+}
+
+/* Gerar o PDF */
+async function gerarCertificado(nome, documento){
+  var btn = document.getElementById("genBtn");
+  btn.className = "gen-btn generating";
+  btn.disabled = true;
+  btn.textContent = "⏳ Gerando certificado...";
+
+  /* Preencher dados dinâmicos */
+  document.getElementById("certNome").textContent = nome;
+  document.getElementById("certDoc").textContent = "Documento: " + documento;
+  document.getElementById("certData").textContent = dataExtenso(new Date());
+
+  /* Mover wrapper para visível temporariamente (html2pdf precisa) */
+  var wrapper = document.getElementById("certWrapper");
+  wrapper.style.position = "fixed";
+  wrapper.style.left = "0";
+  wrapper.style.top = "0";
+  wrapper.style.zIndex = "-1";
+  wrapper.style.opacity = "0.01";
+
+  try {
+    var page1 = document.getElementById("certPage1");
+    var page2 = document.getElementById("certPage2");
+
+    var opt = {
+      margin: 0,
+      filename: "Certificado_Peconhentos_" + nome.replace(/\s+/g,"_") + ".pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, logging: false },
+      jsPDF: { unit: "px", format: [1122, 793], orientation: "landscape" },
+      pagebreak: { mode: ["css","legacy"] }
+    };
+
+    /* Gerar página 1 */
+    var worker = html2pdf().set(opt).from(page1);
+    var pdf = await worker.toPdf().get("pdf");
+
+    /* Adicionar página 2 */
+    pdf.addPage([1122, 793], "landscape");
+    var canvas2 = await html2pdf().set(opt).from(page2).toCanvas().get("canvas");
+    var imgData = canvas2.toDataURL("image/jpeg", 0.98);
+    pdf.addImage(imgData, "JPEG", 0, 0, 1122, 793);
+
+    /* Salvar */
+    pdf.save(opt.filename);
+
+    btn.className = "gen-btn ready";
+    btn.disabled = false;
+    btn.textContent = "✅ Baixar novamente";
+    btn.onclick = function(){ gerarCertificado(nome, documento); };
+    document.getElementById("previewNote").textContent = "PDF gerado com sucesso! Verifique sua pasta de downloads.";
+
+  } catch(e){
+    console.error("Erro ao gerar PDF:", e);
+    btn.className = "gen-btn ready";
+    btn.disabled = false;
+    btn.textContent = "🔄 Tentar novamente";
+    btn.onclick = function(){ gerarCertificado(nome, documento); };
+    document.getElementById("previewNote").textContent = "Erro ao gerar. Tente novamente.";
+  }
+
+  /* Esconder wrapper de volta */
+  wrapper.style.position = "absolute";
+  wrapper.style.left = "-9999px";
+  wrapper.style.opacity = "1";
+}
+
+/* Init */
+document.addEventListener("authReady", function(){
+  checkEligibility();
+});
+setTimeout(function(){
+  if(document.getElementById("statusTitle").textContent === "Verificando elegibilidade..."){
+    checkEligibility();
+  }
+}, 2000);
+</script>
+
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
+</body>
+</html>
