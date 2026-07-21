@@ -119,7 +119,7 @@ var CURSO="peconhentos",AULA_ID="m3-laquetico";
 function showSection(id,btn){document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');document.querySelectorAll('nav.tabs button').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
 var IMAGENS=[
   {file:"img/m3-surucucu-01.jpg",titulo:"Lachesis muta (corpo — escamas eriçadas na cauda)",credito:"Christopher Murray / Wikimedia Commons — Domínio público"},
-  {file:"img/m3-surucucu-02.jpg",titulo:"Surucucu — padrão dorsal losangular",credito:"Wikimedia Commons — CC BY-SA 4.0"}
+  {file:"img/m3-surucucu-02.jpg",titulo:"Surucucu — padrão dorsal losangular",credito:"salomao_janderson (iNaturalist) / Wikimedia Commons — CC BY 4.0"}
 ];
 function renderGallery(){var w=document.getElementById('galleryWrap');w.innerHTML='';IMAGENS.forEach(function(im){var c=document.createElement('div');c.className='img-card';c.innerHTML='<div class="img-frame"><img src="'+im.file+'" alt="'+im.titulo+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><div class="placeholder" style="display:none"><span class="ph-emoji">🐍</span><span>'+im.titulo+'</span></div></div><div class="cap"><div class="cap-title">'+im.titulo+'</div><div class="cap-credit">'+im.credito+'</div></div>';w.appendChild(c);});}
 var QD=[
