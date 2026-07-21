@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curso: Acidentes por Animais Peçonhentos – Enzo Salmazo | 2026</title>
+<script>window.PAGE_KEY = "curso-peconhentos";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>document.addEventListener("authReady", function(){ document.documentElement.style.visibility = "visible"; });</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0d14; --bg2: #111520; --bg3: #161c2e;
+  --card: #1a2138; --card2: #1f2845;
+  --accent: #4f9cf9; --accent2: #38e8c0; --accent3: #f9784f; --accent4: #b84ff9;
+  --gold: #f9c94f; --red: #f95f5f; --green: #4ff984;
+  --text: #e8eaf6; --muted: #8892b0; --border: rgba(79,156,249,0.15);
+  --shadow: 0 8px 40px rgba(0,0,0,0.5); --radius: 16px;
+  --font-body: 'DM Sans', sans-serif; --font-display: 'Syne', sans-serif; --font-mono: 'JetBrains Mono', monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;padding-bottom:80px}
+header{position:relative;z-index:10;text-align:center;padding:48px 24px 32px;background:linear-gradient(180deg,rgba(79,156,249,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border)}
+header .badge{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--bg);font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:16px}
+header h1{font-family:var(--font-display);font-size:clamp(24px,4vw,40px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--accent) 50%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;max-width:820px;margin-left:auto;margin-right:auto}
+header .sub{color:var(--muted);font-size:13px;letter-spacing:1px}
+header .by{margin-top:12px;color:var(--accent2);font-family:var(--font-mono);font-size:12px}
+.container{max-width:900px;margin:0 auto;padding:32px 20px;position:relative;z-index:1}
+
+/* PROGRESSO GERAL */
+.progress-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;margin-bottom:28px;box-shadow:var(--shadow)}
+.progress-panel .pp-top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.progress-panel .pp-title{font-family:var(--font-display);font-size:16px;font-weight:700;color:#fff}
+.progress-panel .pp-pct{font-family:var(--font-mono);font-size:24px;font-weight:600;color:var(--accent2)}
+.bar-track{width:100%;height:12px;background:var(--bg3);border-radius:20px;overflow:hidden;border:1px solid var(--border)}
+.bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.pp-meta{display:flex;justify-content:space-between;margin-top:10px;font-size:12px;color:var(--muted);font-family:var(--font-mono)}
+.continue-btn{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:12px 22px;background:var(--accent);color:var(--bg);border:none;border-radius:12px;cursor:pointer;font-family:var(--font-body);font-size:14px;font-weight:700;text-decoration:none;transition:all .2s}
+.continue-btn:hover{box-shadow:0 0 24px rgba(79,156,249,0.45);transform:translateY(-1px)}
+
+/* MÓDULOS */
+.module{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden;transition:border-color .25s}
+.module:hover{border-color:var(--accent)}
+.mod-head{display:flex;align-items:center;gap:16px;padding:18px 22px;cursor:pointer;user-select:none}
+.mod-num{font-family:var(--font-display);font-size:20px;font-weight:800;color:var(--bg);background:linear-gradient(135deg,var(--accent),var(--accent2));min-width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mod-info{flex:1;min-width:0}
+.mod-title{font-family:var(--font-display);font-size:16px;font-weight:700;color:#fff;margin-bottom:3px}
+.mod-sub{font-size:12px;color:var(--muted)}
+.mod-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.mod-count{font-family:var(--font-mono);font-size:11px;color:var(--muted);white-space:nowrap}
+.mod-chevron{color:var(--accent);transition:transform .3s;font-size:14px}
+.module.open .mod-chevron{transform:rotate(90deg)}
+.mod-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.module.open .mod-body{max-height:600px}
+.mod-body-inner{padding:0 22px 16px 22px;border-top:1px solid var(--border);margin-top:0}
+
+/* AULAS */
+.lesson{display:flex;align-items:center;gap:14px;padding:12px 8px;border-bottom:1px solid rgba(255,255,255,0.04);text-decoration:none;color:var(--text);transition:all .2s;border-radius:8px}
+.lesson:last-child{border-bottom:none}
+.lesson:hover{background:var(--card2);padding-left:14px}
+.lesson-check{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);transition:all .2s}
+.lesson.done .lesson-check{background:var(--green);border-color:var(--green);color:var(--bg)}
+.lesson-name{flex:1;font-size:13px;font-weight:500}
+.lesson.done .lesson-name{color:var(--muted)}
+.lesson-type{font-family:var(--font-mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--bg3);padding:2px 8px;border-radius:6px;flex-shrink:0}
+.lesson-exam .lesson-type{color:var(--accent4);background:rgba(184,79,249,.12)}
+
+/* CERTIFICADO */
+.cert-panel{background:linear-gradient(135deg,rgba(249,201,79,0.06),rgba(184,79,249,0.06));border:1px solid rgba(249,201,79,0.25);border-radius:var(--radius);padding:24px;margin-top:28px;text-align:center}
+.cert-panel .cert-icon{font-size:40px;margin-bottom:10px}
+.cert-panel h3{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--gold);margin-bottom:8px}
+.cert-panel p{color:var(--muted);font-size:13px;max-width:520px;margin:0 auto 16px}
+.cert-btn{padding:12px 26px;border:none;border-radius:12px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.cert-btn.locked{background:var(--bg3);color:var(--muted);cursor:not-allowed;border:1px solid var(--border)}
+.cert-btn.ready{background:linear-gradient(135deg,var(--gold),var(--accent3));color:var(--bg)}
+.cert-btn.ready:hover{box-shadow:0 0 24px rgba(249,201,79,0.45);transform:translateY(-1px)}
+.cert-reqs{display:flex;flex-direction:column;gap:6px;max-width:420px;margin:0 auto 18px;text-align:left}
+.cert-req{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
+.cert-req .cr-dot{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+.cert-req.ok .cr-dot{background:var(--green);border-color:var(--green);color:var(--bg)}
+.cert-req.ok{color:var(--text)}
+
+/* SOURCE NOTE */
+.source-note{margin-top:24px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}
+.source-note b{color:var(--accent2)}
+
+/* VOLTAR */
+#backBtn{position:fixed;bottom:20px;left:20px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow);transition:all .2s}
+#backBtn:hover{border-color:var(--accent);background:var(--card2)}
+
+@media(max-width:560px){
+  .mod-sub{display:none}
+  .lesson-type{display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">Curso Livre · Estudantes de Medicina</div>
+  <h1>Acidentes por Animais Peçonhentos e Uso de Soro Antiveneno</h1>
+  <div class="sub">Ofídicos · Escorpiônicos · Aracnídeos · Soroterapia na prática</div>
+  <div class="by">Enzo Salmazo · Resumos do Enzo · 2026</div>
+</header>
+
+<div class="container">
+
+  <!-- PROGRESSO GERAL -->
+  <div class="progress-panel">
+    <div class="pp-top">
+      <div class="pp-title">Seu progresso no curso</div>
+      <div class="pp-pct" id="ppPct">0%</div>
+    </div>
+    <div class="bar-track"><div class="bar-fill" id="ppBar"></div></div>
+    <div class="pp-meta">
+      <span id="ppDone">0 de 0 aulas concluídas</span>
+      <span id="ppStatus">Comece pelo Módulo 1</span>
+    </div>
+    <a href="#" class="continue-btn" id="continueBtn">▶ Continuar de onde parei</a>
+  </div>
+
+  <!-- MÓDULOS (renderizados via JS a partir de COURSE) -->
+  <div id="modulesWrap"></div>
+
+  <!-- CERTIFICADO -->
+  <div class="cert-panel">
+    <div class="cert-icon">🎓</div>
+    <h3>Certificado de Conclusão</h3>
+    <p>Para emitir seu certificado, é preciso ser aprovado (≥ 61%) em cada uma das 5 provas de módulo e na prova final.</p>
+    <div class="cert-reqs" id="certReqs"></div>
+    <button class="cert-btn locked" id="certBtn" disabled>🔒 Complete os requisitos</button>
+  </div>
+
+  <!-- NOTA DE FONTES -->
+  <div class="source-note">
+    <b>Fontes:</b> conteúdo baseado no Instituto Butantan, FioCruz (Manual de Diagnóstico e Tratamento de Acidentes por Animais Peçonhentos) e Nota Técnica MS nº 64/2021. Os soros pertencem ao Estado; fornecimento gratuito. Este curso tem finalidade educativa e não substitui protocolo institucional vigente.
+  </div>
+
+</div>
+
+<a href="dashboard.html" id="backBtn">← Voltar</a>
+
+<script>
+/* ============================================================
+   ESTRUTURA DO CURSO — 5 módulos
+   aula.id  -> chave usada na tabela curso_progresso (aula_id)
+   aula.file-> arquivo HTML da aula (a construir nos próximos passos)
+   aula.exam=true -> é a prova de proficiência do módulo
+   ============================================================ */
+const COURSE = {
+  curso: "peconhentos",
+  modules: [
+    {
+      n: 1, title: "Fundamentos e Identificação",
+      sub: "Reconhecer a serpente peçonhenta e a conduta de base",
+      lessons: [
+        { id: "m1-identificacao",  name: "Identificação: fosseta loreal, cauda e fluxograma", file: "curso-pec-m1-identificacao.html", type: "Aula" },
+        { id: "m1-conduta-inicial", name: "Conduta inicial hospitalar e exames", file: "curso-pec-m1-conduta.html", type: "Aula" },
+        { id: "m1-profilaxia",     name: "Profilaxia antitetânica e infecção local", file: "curso-pec-m1-profilaxia.html", type: "Aula" },
+        { id: "m1-prova",          name: "Prova de proficiência — Módulo 1", file: "curso-pec-m1-prova.html", type: "Prova", exam: true }
+      ]
+    },
+    {
+      n: 2, title: "Acidentes Ofídicos I — Botrópico e Crotálico",
+      sub: "Os dois acidentes ofídicos mais frequentes no Brasil",
+      lessons: [
+        { id: "m2-botropico", name: "Acidente botrópico (SAB) + checklist CVE", file: "curso-pec-m2-botropico.html", type: "Aula" },
+        { id: "m2-crotalico", name: "Acidente crotálico (SAC) + checklist CVE", file: "curso-pec-m2-crotalico.html", type: "Aula" },
+        { id: "m2-prova",     name: "Prova de proficiência — Módulo 2", file: "curso-pec-m2-prova.html", type: "Prova", exam: true }
+      ]
+    },
+    {
+      n: 3, title: "Acidentes Ofídicos II — Laquético e Elapídico",
+      sub: "Surucucu (Lachesis) e coral verdadeira (Micrurus)",
+      lessons: [
+        { id: "m3-laquetico", name: "Acidente laquético (SABL)", file: "curso-pec-m3-laquetico.html", type: "Aula" },
+        { id: "m3-elapidico", name: "Acidente elapídico (SAEL) — todo caso é grave", file: "curso-pec-m3-elapidico.html", type: "Aula" },
+        { id: "m3-prova",     name: "Prova de proficiência — Módulo 3", file: "curso-pec-m3-prova.html", type: "Prova", exam: true }
+      ]
+    },
+    {
+      n: 4, title: "Acidentes Escorpiônicos",
+      sub: "Tityus e a gravidade em crianças",
+      lessons: [
+        { id: "m4-escorpioes", name: "Escorpionismo (SAEsc) + checklist CVE", file: "curso-pec-m4-escorpioes.html", type: "Aula" },
+        { id: "m4-manejo",     name: "Manejo do caso grave: cardio, atropina, UTI", file: "curso-pec-m4-manejo.html", type: "Aula" },
+        { id: "m4-prova",      name: "Prova de proficiência — Módulo 4", file: "curso-pec-m4-prova.html", type: "Prova", exam: true }
+      ]
+    },
+    {
+      n: 5, title: "Aracnídeos e Soroterapia na Prática",
+      sub: "Phoneutria, Loxosceles, Latrodectus e a técnica do soro",
+      lessons: [
+        { id: "m5-aranhas",     name: "Acidentes araneídicos (SAA) + checklist CVE", file: "curso-pec-m5-aranhas.html", type: "Aula" },
+        { id: "m5-soroterapia", name: "Preparo, infusão e reações anafiláticas", file: "curso-pec-m5-soroterapia.html", type: "Aula" },
+        { id: "m5-prova",       name: "Prova de proficiência — Módulo 5", file: "curso-pec-m5-prova.html", type: "Prova", exam: true }
+      ]
+    }
+  ],
+  finalExam: { id: "prova-final", name: "Prova Final do Curso", file: "curso-pec-prova-final.html" }
+};
+
+/* estado carregado do Supabase: Set de aula_id concluídas + módulos aprovados */
+let DONE = new Set();
+let MODULOS_APROVADOS = new Set(); // números de módulo (1..5) com prova >=61%
+let FINAL_APROVADA = false;
+
+/* --------- resolver o client Supabase do auth-guard v3 ---------- */
+function getClient(){
+  // auth-guard.js v3 expõe o client como window.authClient
+  if (window.authClient) return window.authClient;
+  // fallbacks defensivos
+  if (window.supabaseClient) return window.supabaseClient;
+  if (window._sb) return window._sb;
+  return null;
+}
+
+/* ----------------- render dos módulos ---------------------- */
+function totalLessons(){
+  let t = 0;
+  COURSE.modules.forEach(m => t += m.lessons.length);
+  return t;
+}
+
+function renderModules(){
+  const wrap = document.getElementById('modulesWrap');
+  wrap.innerHTML = '';
+  COURSE.modules.forEach(m => {
+    const doneCount = m.lessons.filter(l => DONE.has(l.id)).length;
+    const allDone = doneCount === m.lessons.length;
+    const mod = document.createElement('div');
+    mod.className = 'module';
+    let lessonsHtml = '';
+    m.lessons.forEach(l => {
+      const done = DONE.has(l.id);
+      lessonsHtml += `
+        <a class="lesson ${done?'done':''} ${l.exam?'lesson-exam':''}" href="${l.file}">
+          <span class="lesson-check">${done?'✓':''}</span>
+          <span class="lesson-name">${l.name}</span>
+          <span class="lesson-type">${l.type}</span>
+        </a>`;
+    });
+    mod.innerHTML = `
+      <div class="mod-head" onclick="toggleModule(this)">
+        <div class="mod-num">${m.n}</div>
+        <div class="mod-info">
+          <div class="mod-title">${m.title}</div>
+          <div class="mod-sub">${m.sub}</div>
+        </div>
+        <div class="mod-right">
+          <span class="mod-count">${doneCount}/${m.lessons.length} ${allDone?'✅':''}</span>
+          <span class="mod-chevron">▶</span>
+        </div>
+      </div>
+      <div class="mod-body"><div class="mod-body-inner">${lessonsHtml}</div></div>`;
+    wrap.appendChild(mod);
+  });
+}
+
+function toggleModule(head){
+  head.parentElement.classList.toggle('open');
+}
+
+/* ----------------- progresso geral ------------------------- */
+function updateProgress(){
+  const total = totalLessons();
+  const done = COURSE.modules.reduce((acc,m)=>acc + m.lessons.filter(l=>DONE.has(l.id)).length, 0);
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('ppPct').textContent = pct + '%';
+  document.getElementById('ppBar').style.width = pct + '%';
+  document.getElementById('ppDone').textContent = `${done} de ${total} aulas concluídas`;
+
+  // próxima aula não concluída
+  let next = null;
+  for (const m of COURSE.modules){
+    for (const l of m.lessons){
+      if (!DONE.has(l.id)){ next = l; break; }
+    }
+    if (next) break;
+  }
+  const btn = document.getElementById('continueBtn');
+  const status = document.getElementById('ppStatus');
+  if (next){
+    btn.href = next.file;
+    btn.innerHTML = `▶ Continuar: ${next.name}`;
+    status.textContent = 'Continue de onde parou';
+  } else {
+    btn.href = COURSE.finalExam.file;
+    btn.innerHTML = `🏁 Ir para a Prova Final`;
+    status.textContent = 'Todas as aulas concluídas!';
+  }
+}
+
+/* ----------------- requisitos do certificado --------------- */
+function renderCertReqs(){
+  const box = document.getElementById('certReqs');
+  box.innerHTML = '';
+  for (let i=1;i<=5;i++){
+    const ok = MODULOS_APROVADOS.has(i);
+    box.innerHTML += `
+      <div class="cert-req ${ok?'ok':''}">
+        <span class="cr-dot">${ok?'✓':''}</span>
+        <span>Prova do Módulo ${i} — mínimo 61%</span>
+      </div>`;
+  }
+  box.innerHTML += `
+    <div class="cert-req ${FINAL_APROVADA?'ok':''}">
+      <span class="cr-dot">${FINAL_APROVADA?'✓':''}</span>
+      <span>Prova Final — mínimo 61%</span>
+    </div>`;
+
+  const eligible = MODULOS_APROVADOS.size === 5 && FINAL_APROVADA;
+  const btn = document.getElementById('certBtn');
+  if (eligible){
+    btn.className = 'cert-btn ready';
+    btn.disabled = false;
+    btn.textContent = '🎓 Emitir meu certificado';
+    btn.onclick = emitirCertificado;
+  } else {
+    btn.className = 'cert-btn locked';
+    btn.disabled = true;
+    btn.textContent = '🔒 Complete os requisitos';
+  }
+}
+
+function emitirCertificado(){
+  // placeholder — a geração do certificado será implementada no passo de provas/certificado
+  window.location.href = "curso-pec-certificado.html";
+}
+
+/* ----------------- carregar dados do Supabase -------------- */
+async function loadProgress(){
+  const sb = getClient();
+  if (!sb){ // sem client: mostra estrutura zerada (falha graciosa)
+    renderModules(); updateProgress(); renderCertReqs();
+    return;
+  }
+  try {
+    const { data: { user } } = await sb.auth.getUser();
+    if (user){
+      // aulas concluídas
+      const { data: prog } = await sb
+        .from('curso_progresso')
+        .select('aula_id, concluida')
+        .eq('curso', COURSE.curso)
+        .eq('user_id', user.id);
+      if (prog){ prog.forEach(r => { if (r.concluida) DONE.add(r.aula_id); }); }
+
+      // provas aprovadas (melhor tentativa via view)
+      const { data: provas } = await sb
+        .from('curso_melhor_prova')
+        .select('modulo, ja_aprovado')
+        .eq('curso', COURSE.curso)
+        .eq('user_id', user.id);
+      if (provas){
+        provas.forEach(p => {
+          if (p.ja_aprovado){
+            if (p.modulo === 0) FINAL_APROVADA = true;
+            else MODULOS_APROVADOS.add(p.modulo);
+          }
+        });
+      }
+    }
+  } catch(e){ console.warn('Falha ao carregar progresso do curso:', e); }
+  renderModules(); updateProgress(); renderCertReqs();
+}
+
+/* abre o primeiro módulo por padrão após render */
+function openFirstModule(){
+  const first = document.querySelector('.module');
+  if (first) first.classList.add('open');
+}
+
+document.addEventListener("authReady", function(){
+  loadProgress().then(openFirstModule);
+});
+// fallback: se authReady não disparar em 1.2s, renderiza mesmo assim
+setTimeout(function(){
+  if (!document.querySelector('.module')){ renderModules(); updateProgress(); renderCertReqs(); openFirstModule(); }
+}, 1200);
+</script>
+
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
+</body>
+</html>

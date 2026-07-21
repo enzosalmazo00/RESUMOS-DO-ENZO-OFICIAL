@@ -884,6 +884,7 @@
     <!-- TABS -->
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('resumos')">📚 Meus Resumos</button>
+      <button class="tab-btn" onclick="switchTab('cursos')">🎓 Cursos</button>
       <button class="tab-btn" onclick="switchTab('loja')">🛒 Comprar Resumos</button>
       <button class="tab-btn" onclick="switchTab('streak')">🔥 Meu Streak</button>
     </div>
@@ -932,6 +933,15 @@
         <div class="resumos-grid" id="materiaCardsGrid"></div>
       </div>
 
+    </div>
+
+    <!-- TAB: CURSOS -->
+    <div class="tab-panel" id="tab-cursos">
+      <div style="margin-bottom:18px;">
+        <h2 style="font-size:19px;font-weight:600;color:var(--cyan);margin-bottom:4px;">🎓 Cursos livres</h2>
+        <p style="font-size:13px;color:#a5f3fc;">Mini-cursos com aulas, provas e certificado. Estude no seu ritmo.</p>
+      </div>
+      <div class="resumos-grid" id="cursosGrid"></div>
     </div>
 
     <!-- TAB: LOJA -->
@@ -1293,8 +1303,9 @@ window.switchTab = function(tab) {
   document.querySelectorAll(".tab-btn").forEach(function(b,i){
     b.classList.toggle("active",
       (tab==="resumos"&&i===0)||
-      (tab==="loja"&&i===1)||
-      (tab==="streak"&&i===2)
+      (tab==="cursos"&&i===1)||
+      (tab==="loja"&&i===2)||
+      (tab==="streak"&&i===3)
     );
   });
   document.querySelectorAll(".tab-panel").forEach(function(p){
@@ -2606,6 +2617,53 @@ window.closePresenteModal = function() {
 
 window.goToStore = function() { switchTab("loja"); };
 
+// ── CURSOS ──────────────────────────────────────────────────────────────────
+// Catálogo de cursos. `chave` = valor em `acessos.resumo` e PAGE_KEY do arquivo.
+var CURSOS = [
+  {
+    chave: "curso-peconhentos",
+    titulo: "Acidentes por Animais Peçonhentos",
+    emoji: "🐍",
+    desc: "Ofídicos, escorpiônicos e aracnídeos + soroterapia. 5 módulos, provas e certificado.",
+    file: "curso-peconhentos.html"
+  }
+];
+
+// Um curso está liberado se houver registro válido em acessos (via cache já carregado).
+function cursoLiberado(chave) {
+  var acesso = acessosCache[chave];
+  if (!acesso) return false;
+  if (!acesso.expira_em) return true;
+  return new Date(acesso.expira_em) > new Date();
+}
+
+function renderCursosGrid() {
+  var grid = document.getElementById("cursosGrid");
+  if (!grid) return;
+  grid.innerHTML = "";
+  CURSOS.forEach(function(c) {
+    var liberado = cursoLiberado(c.chave);
+    var card = document.createElement("div");
+    card.className = "resumo-card " + (liberado ? "unlocked" : "locked");
+    if (liberado) {
+      card.onclick = function(){ window.location.href = c.file; };
+      card.innerHTML =
+        '<span class="card-emoji">' + c.emoji + '</span>' +
+        '<div class="card-title">' + c.titulo + '</div>' +
+        '<div class="card-desc">' + c.desc + '</div>' +
+        '<div style="margin-top:10px;font-size:11px;color:#34d399;font-weight:600;">✓ Liberado — clique para abrir</div>';
+    } else {
+      card.onclick = function(){ switchTab("loja"); };
+      card.innerHTML =
+        '<span class="card-emoji">' + c.emoji + '</span>' +
+        '<div class="card-title">' + c.titulo + '</div>' +
+        '<div class="card-desc">' + c.desc + '</div>' +
+        '<div style="margin-top:10px;font-size:11px;color:#fbbf24;font-weight:600;">🔒 Adquira na loja</div>';
+    }
+    grid.appendChild(card);
+  });
+}
+
 // ── CARRINHO ──────────────────────────────────────────────────────────────────
 function cartKey(m) { return m.key + "_p2"; }
 
@@ -3362,6 +3420,7 @@ document.addEventListener("authReady", async function(e) {
   renderExpiryBadge();
   renderWelcome();
   renderResumosGrid();
+  renderCursosGrid();
   renderStore();
 });
 

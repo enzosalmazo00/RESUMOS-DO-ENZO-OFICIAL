@@ -375,6 +375,8 @@
     <div class="modal-email" id="modalEmail">&#8212;</div>
     <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(34,211,238,0.5);margin-bottom:8px;">Resumos — clique para liberar/revogar</div>
     <div class="resumos-grid-modal" id="resumosGrid"></div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(184,79,249,0.6);margin:14px 0 8px;">🎓 Cursos — grava na tabela acessos</div>
+    <div class="resumos-grid-modal" id="cursosGridModal"></div>
     <div class="expiry-row">
       <label>Acesso ate:</label>
       <input class="expiry-input" type="date" id="expiryInput">
@@ -394,6 +396,12 @@ var SUPABASE_URL="https://chqhdmjqnjjdatowfyif.supabase.co";
 var SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNocWhkbWpxbmpqZGF0b3dmeWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDc0MDAsImV4cCI6MjA5NTgyMzQwMH0.v_7y0YD9R1LvFJkz9Vr_zJX0_CE2lo8OY5xX-KtVcFk";
 var client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 var allAlunos=[],currentAluno=null,currentToggles={};
+// ── CURSOS (gravam na tabela `acessos`, não em profiles) ──
+var CURSOS_COLS=[
+  {key:"curso-peconhentos",label:"Curso Peçonhentos"}
+];
+var currentCursoToggles={};      // estado dos toggles de curso no modal
+var currentCursoOriginal={};     // estado que veio do banco (para diff no save)
 var RESUMOS_COLS=[
   {key:"bioquimica_p1",label:"Bioquimica P1"},{key:"bioquimica_p2",label:"Bioquimica P2"},{key:"bioquimica_final",label:"Bioquimica Final"},
   {key:"biofisica_p1",label:"Biofisica P1"},{key:"biofisica_p2",label:"Biofisica P2"},{key:"biofisica_final",label:"Biofisica Final"},
@@ -545,13 +553,62 @@ function renderActivity(){
 }
 
 // ── MODAL ──
-window.openModal=function(id){currentAluno=allAlunos.find(function(a){return a.id===id;});if(!currentAluno)return;document.getElementById("modalEmail").textContent=currentAluno.email||"\u2014";document.getElementById("expiryInput").value=currentAluno.acesso_expira_em?currentAluno.acesso_expira_em.substring(0,10):"";currentToggles={};RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=!!currentAluno[r.key];});renderResumosGrid();document.getElementById("modalAluno").classList.add("open");};
+window.openModal=function(id){currentAluno=allAlunos.find(function(a){return a.id===id;});if(!currentAluno)return;document.getElementById("modalEmail").textContent=currentAluno.email||"\u2014";document.getElementById("expiryInput").value=currentAluno.acesso_expira_em?currentAluno.acesso_expira_em.substring(0,10):"";currentToggles={};RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=!!currentAluno[r.key];});renderResumosGrid();loadCursosDoAluno(currentAluno.id);document.getElementById("modalAluno").classList.add("open");};
+
+// Lê da tabela acessos os cursos já liberados para este aluno
+async function loadCursosDoAluno(userId){
+  currentCursoToggles={};currentCursoOriginal={};
+  var g=document.getElementById("cursosGridModal");
+  if(g)g.innerHTML="<div style='grid-column:1/-1;font-size:11px;color:rgba(125,211,232,0.5);'>Carregando cursos...</div>";
+  try{
+    var chaves=CURSOS_COLS.map(function(c){return c.key;});
+    var res=await client.from("acessos").select("resumo,expira_em").eq("user_id",userId).in("resumo",chaves);
+    var liberados={};
+    if(res.data){res.data.forEach(function(r){
+      var valido=!r.expira_em||new Date(r.expira_em)>new Date();
+      if(valido)liberados[r.resumo]=true;
+    });}
+    CURSOS_COLS.forEach(function(c){
+      currentCursoToggles[c.key]=!!liberados[c.key];
+      currentCursoOriginal[c.key]=!!liberados[c.key];
+    });
+  }catch(err){
+    CURSOS_COLS.forEach(function(c){currentCursoToggles[c.key]=false;currentCursoOriginal[c.key]=false;});
+  }
+  renderCursosGridModal();
+}
+
+function renderCursosGridModal(){
+  var g=document.getElementById("cursosGridModal");if(!g)return;
+  g.innerHTML=CURSOS_COLS.map(function(c){
+    var on=currentCursoToggles[c.key];
+    return "<div class='resumo-toggle "+(on?"on":"")+"' data-key='"+c.key+"' data-act='togglecurso'>"+(on?"\u2705 ":"\uD83D\uDD12 ")+c.label+"</div>";
+  }).join("");
+}
+window.toggleCurso=function(k){currentCursoToggles[k]=!currentCursoToggles[k];renderCursosGridModal();};
 function renderResumosGrid(){var g=document.getElementById("resumosGrid");var pr=(currentAluno&&currentAluno.resumos_presente)||[];g.innerHTML=RESUMOS_COLS.map(function(r){var on=currentToggles[r.key],ip=pr.includes(r.key);return"<div style='display:flex;gap:4px;align-items:stretch;'><div class='resumo-toggle "+(on?"on":"")+"' style='flex:1' data-key='"+r.key+"' data-act='toggle'>"+(on?"&#9989; ":"&#128274; ")+r.label+"</div>"+(on?"<div title='Presente' style='padding:4px 8px;border-radius:10px;cursor:pointer;font-size:14px;border:1px solid rgba(251,191,36,"+(ip?"0.5":"0.15")+");background:rgba(251,191,36,"+(ip?"0.15":"0.04")+");display:flex;align-items:center;justify-content:center;' data-key='"+r.key+"' data-act='presente'>&#127873;</div>":"")+"</div>";}).join("");}
 window.toggleResumo=function(k){currentToggles[k]=!currentToggles[k];renderResumosGrid();};
 window.togglePresente=function(k){if(!currentAluno)return;var p=(currentAluno.resumos_presente||[]).slice(),i=p.indexOf(k);if(i>=0)p.splice(i,1);else p.push(k);currentAluno.resumos_presente=p;renderResumosGrid();};
 window.set50Days=function(){var d=new Date();d.setDate(d.getDate()+50);document.getElementById("expiryInput").value=d.toISOString().substring(0,10);};
 window.closeModal=function(){document.getElementById("modalAluno").classList.remove("open");currentAluno=null;};
-window.saveAluno=async function(){if(!currentAluno)return;var btn=document.getElementById("saveBtn");btn.disabled=true;btn.textContent="Salvando...";var u={};var ev=document.getElementById("expiryInput").value;var expiraIso=ev?new Date(ev).toISOString():null;u.acesso_expira_em=expiraIso;RESUMOS_COLS.forEach(function(r){var antes=!!currentAluno[r.key];var agora=!!currentToggles[r.key];u[r.key]=agora;if(agora&&!antes&&expiraIso){u[r.key+"_expira"]=expiraIso;}else if(!agora){u[r.key+"_expira"]=null;}});u.resumos_presente=currentAluno.resumos_presente||[];var res=await client.from("profiles").update(u).eq("id",currentAluno.id);if(res.error)showToast("Erro ao salvar!","error");else{showToast("&#9989; Salvo!","success");closeModal();await loadAlunos();renderActivity();}btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";};
+window.saveAluno=async function(){if(!currentAluno)return;var btn=document.getElementById("saveBtn");btn.disabled=true;btn.textContent="Salvando...";var u={};var ev=document.getElementById("expiryInput").value;var expiraIso=ev?new Date(ev).toISOString():null;u.acesso_expira_em=expiraIso;RESUMOS_COLS.forEach(function(r){var antes=!!currentAluno[r.key];var agora=!!currentToggles[r.key];u[r.key]=agora;if(agora&&!antes&&expiraIso){u[r.key+"_expira"]=expiraIso;}else if(!agora){u[r.key+"_expira"]=null;}});u.resumos_presente=currentAluno.resumos_presente||[];var res=await client.from("profiles").update(u).eq("id",currentAluno.id);if(res.error){showToast("Erro ao salvar!","error");btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";return;}
+// ── Persistir CURSOS na tabela acessos (insert/delete conforme diff) ──
+try{
+  for(var ci=0;ci<CURSOS_COLS.length;ci++){
+    var ck=CURSOS_COLS[ci].key;
+    var antesC=!!currentCursoOriginal[ck];
+    var agoraC=!!currentCursoToggles[ck];
+    if(agoraC&&!antesC){
+      await client.from("acessos").upsert({user_id:currentAluno.id,resumo:ck,expira_em:expiraIso},{onConflict:"user_id,resumo"});
+    }else if(!agoraC&&antesC){
+      await client.from("acessos").delete().match({user_id:currentAluno.id,resumo:ck});
+    }else if(agoraC&&antesC){
+      // já tinha: atualiza expiração se mudou
+      await client.from("acessos").update({expira_em:expiraIso}).match({user_id:currentAluno.id,resumo:ck});
+    }
+  }
+}catch(errC){showToast("Resumos salvos, mas erro ao salvar cursos!","error");}
+{showToast("&#9989; Salvo!","success");closeModal();await loadAlunos();renderActivity();}btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";};
 window.revokeAll=async function(){if(!currentAluno)return;if(!confirm("Revogar TODOS os acessos de "+currentAluno.email+"?"))return;RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=false;});document.getElementById("expiryInput").value="";renderResumosGrid();showToast("Clique em Salvar para confirmar","success");};
 window.quickRevoke=async function(id,emailEnc){var email=decodeURIComponent(emailEnc);if(!confirm("Revogar todos de "+email+"?"))return;var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=false;u[r.key+"_expira"]=null;});u.acesso_expira_em=null;var res=await client.from("profiles").update(u).eq("id",id);if(res.error)showToast("Erro!","error");else{showToast("&#9989; Revogado!","success");await loadAlunos();renderActivity();}};
 window.quickGrantAll=async function(id,emailEnc){var email=decodeURIComponent(emailEnc);if(!confirm("Liberar TODOS para "+email+"?"))return;var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=true;});u.acesso_expira_em=null;var res=await client.from("profiles").update(u).eq("id",id);if(res.error)showToast("Erro!","error");else{showToast("&#9989; Liberado!","success");await loadAlunos();renderActivity();}};
@@ -562,7 +619,7 @@ window.doLogout=async function(){await client.auth.signOut();window.location.rep
 
 // ── EVENT DELEGATION ──
 document.addEventListener("click",function(e){var b=e.target.closest("[data-act]");if(!b)return;var id=b.dataset.id||"",em=b.dataset.email||"",key=b.dataset.key||"",act=b.dataset.act;
-  if(act==="edit")openModal(id);else if(act==="revoke")quickRevoke(id,em);else if(act==="grant")quickGrantAll(id,em);else if(act==="toggle"&&window.toggleResumo)toggleResumo(key);else if(act==="presente"&&window.togglePresente)togglePresente(key);else if(act==="cupom-off")toggleCupom(id,false);else if(act==="cupom-on")toggleCupom(id,true);else if(act==="cupom-del")deletarCupom(id,b.dataset.code||"");
+  if(act==="edit")openModal(id);else if(act==="revoke")quickRevoke(id,em);else if(act==="grant")quickGrantAll(id,em);else if(act==="toggle"&&window.toggleResumo)toggleResumo(key);else if(act==="togglecurso"&&window.toggleCurso)toggleCurso(key);else if(act==="presente"&&window.togglePresente)togglePresente(key);else if(act==="cupom-off")toggleCupom(id,false);else if(act==="cupom-on")toggleCupom(id,true);else if(act==="cupom-del")deletarCupom(id,b.dataset.code||"");
 });
 
 // ═══ CUPONS ═══
