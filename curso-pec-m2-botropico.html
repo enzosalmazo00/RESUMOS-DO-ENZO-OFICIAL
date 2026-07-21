@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 2 · Acidente Botrópico (SAB) – Enzo Salmazo | 2026</title>
+<script>window.PAGE_KEY = "curso-peconhentos";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>document.addEventListener("authReady", function(){ document.documentElement.style.visibility = "visible"; });</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0d14; --bg2: #111520; --bg3: #161c2e;
+  --card: #1a2138; --card2: #1f2845;
+  --accent: #4f9cf9; --accent2: #38e8c0; --accent3: #f9784f; --accent4: #b84ff9;
+  --gold: #f9c94f; --red: #f95f5f; --green: #4ff984;
+  --text: #e8eaf6; --muted: #8892b0; --border: rgba(79,156,249,0.15);
+  --shadow: 0 8px 40px rgba(0,0,0,0.5); --radius: 16px;
+  --font-body: 'DM Sans', sans-serif; --font-display: 'Syne', sans-serif; --font-mono: 'JetBrains Mono', monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;padding-bottom:90px}
+header{position:relative;z-index:10;text-align:center;padding:40px 24px 24px;background:linear-gradient(180deg,rgba(249,120,79,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border)}
+header .badge{display:inline-block;background:linear-gradient(135deg,var(--accent3),var(--gold));color:var(--bg);font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px}
+header h1{font-family:var(--font-display);font-size:clamp(22px,3.5vw,34px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--accent3) 60%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+header .sub{color:var(--muted);font-size:13px;letter-spacing:.5px}
+nav.tabs{position:sticky;top:0;z-index:100;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;background:rgba(10,13,20,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:10px 16px}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:var(--font-body);font-size:12px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
+nav.tabs button:hover{color:var(--accent);border-color:var(--accent)}
+nav.tabs button.active{background:var(--accent);color:var(--bg);border-color:var(--accent);box-shadow:0 0 20px rgba(79,156,249,0.4)}
+nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:var(--accent4)}
+nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.section{display:none;animation:fadeIn .4s ease}.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.container{max-width:900px;margin:0 auto;padding:28px 20px;position:relative;z-index:1}
+.chapter-title{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--accent3);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.chapter-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+.info-block{background:var(--card2);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:18px}
+.info-block.warn{border-color:var(--gold)}.info-block.danger{border-color:var(--red)}.info-block.success{border-color:var(--green)}.info-block.orange{border-color:var(--accent3)}
+.info-block .label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.info-block h4{font-family:var(--font-display);font-weight:700;margin-bottom:8px;font-size:15px;color:#fff}
+.info-block p{color:var(--text);margin-bottom:6px}.info-block ul,.info-block ol{padding-left:20px;margin-top:8px;color:var(--text)}.info-block li{margin:5px 0}
+.compare-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--radius);overflow:hidden;margin-bottom:24px;font-size:13px}
+.compare-table th{background:var(--card2);color:var(--accent);font-family:var(--font-display);font-size:13px;font-weight:700;padding:12px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.compare-table td{background:var(--card);padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text)}
+.compare-table tr:last-child td{border-bottom:none}
+.sev-leve{color:var(--green);font-weight:700}.sev-mod{color:var(--gold);font-weight:700}.sev-grave{color:var(--red);font-weight:700}
+.sec-divider{display:flex;align-items:center;gap:12px;margin:28px 0 18px}
+.sec-divider h3{font-family:var(--font-display);font-weight:700;font-size:16px;color:var(--accent2);white-space:nowrap}
+.sec-divider::before,.sec-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+.pill-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.pill{background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--text)}
+.pill.danger{border-color:rgba(249,95,95,.4);color:var(--red)}
+/* GALERIA */
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:24px}
+.img-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .25s}
+.img-card:hover{border-color:var(--accent3);transform:translateY(-2px);box-shadow:0 8px 30px rgba(249,120,79,.15)}
+.img-frame{width:100%;aspect-ratio:4/3;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.img-frame img{width:100%;height:100%;object-fit:cover;display:block}
+.img-frame .placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:12px;text-align:center;padding:16px}
+.img-frame .placeholder .ph-emoji{font-size:34px;opacity:.5}
+.img-card .cap{padding:12px 14px}
+.img-card .cap .cap-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.img-card .cap .cap-credit{font-size:10px;color:var(--muted);font-family:var(--font-mono);line-height:1.4}
+/* CHECKLIST CVE */
+.checklist-intro{background:rgba(249,201,79,0.06);border:1px solid rgba(249,201,79,0.25);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px}
+.ck-group{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;overflow:hidden}
+.ck-group h4{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--gold);padding:14px 18px;background:var(--card2);border-bottom:1px solid var(--border)}
+.ck-items{padding:10px 18px}
+.ck-item{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;user-select:none}
+.ck-item:last-child{border-bottom:none}
+.ck-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;transition:all .2s;margin-top:1px}
+.ck-item.checked .ck-box{background:var(--green);border-color:var(--green);color:var(--bg)}
+.ck-item .ck-text{font-size:13px;color:var(--text)}
+.ck-item.checked .ck-text{color:var(--muted);text-decoration:line-through}
+.ck-result{position:sticky;bottom:76px;background:var(--card2);border:1px solid var(--accent);border-radius:14px;padding:14px 18px;margin-top:16px;text-align:center;font-size:14px;font-weight:700;color:var(--accent2);box-shadow:var(--shadow)}
+/* QUIZ */
+.quiz-header{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px;justify-content:center}
+.score-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 20px;text-align:center;min-width:90px}
+.score-box .sn{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.score-box .sv{font-family:var(--font-display);font-size:26px;font-weight:800}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.q-card.cq{border-color:var(--green)}.q-card.wq{border-color:var(--red)}
+.q-num{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-bottom:10px}
+.q-text{font-size:14px;font-weight:600;color:#fff;margin-bottom:16px;line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:11px 16px;border-radius:10px;cursor:pointer;font-size:13px;text-align:left;transition:all .2s;display:flex;gap:10px;font-family:var(--font-body)}
+.opt-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(79,156,249,.08)}
+.opt-btn .ol{font-family:var(--font-mono);font-weight:700;color:var(--accent);min-width:20px}
+.opt-btn.ca{background:rgba(79,249,132,.1);border-color:var(--green);color:var(--green)}
+.opt-btn.wa{background:rgba(249,95,95,.1);border-color:var(--red);color:var(--red)}
+.res-ind{display:none;padding:8px 14px;border-radius:8px;margin-bottom:10px;font-size:13px;font-weight:700}
+.res-ind.vis{display:block}.res-ind.c{background:rgba(79,249,132,.1);color:var(--green)}.res-ind.w{background:rgba(249,95,95,.1);color:var(--red)}
+.exp-box{display:none;margin-top:14px;padding:14px 18px;background:rgba(79,156,249,.06);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;font-size:13px;color:var(--text);line-height:1.7}
+.exp-box.vis{display:block}.et{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.reset-btn{display:inline-block;margin-top:16px;padding:10px 24px;background:var(--accent4);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:var(--font-body);font-size:13px;font-weight:700}
+/* CONCLUIR */
+.complete-panel{background:linear-gradient(135deg,rgba(79,249,132,0.06),rgba(56,232,192,0.06));border:1px solid rgba(79,249,132,0.25);border-radius:var(--radius);padding:24px;margin-top:28px;text-align:center}
+.complete-panel h3{font-family:var(--font-display);font-size:18px;color:var(--green);margin-bottom:8px}
+.complete-panel p{color:var(--muted);font-size:13px;margin-bottom:16px}
+.complete-btn{padding:13px 28px;border:none;border-radius:12px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--green),var(--accent2));color:var(--bg);transition:all .2s}
+.complete-btn:hover{box-shadow:0 0 24px rgba(79,249,132,0.4);transform:translateY(-1px)}
+.complete-btn.done{background:var(--card2);color:var(--green);cursor:default;border:1px solid var(--green)}
+.source-note{margin-top:22px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}
+.source-note b{color:var(--accent2)}
+#backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow)}
+#backBtn:hover{border-color:var(--accent);background:var(--card2)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">Módulo 2 · Aula 1</div>
+  <h1>Acidente Botrópico — Soro Antibotrópico (SAB)</h1>
+  <div class="sub">Gênero <i>Bothrops</i> · a jararaca e a maioria dos acidentes ofídicos do Brasil</div>
+</header>
+
+<nav class="tabs">
+  <button class="active" onclick="showSection('teoria',this)">📖 Teoria</button>
+  <button onclick="showSection('imagens',this)">🖼️ Imagens</button>
+  <button class="ck-tab" onclick="showSection('checklist',this)">✅ Checklist CVE</button>
+  <button class="qz-tab" onclick="showSection('quiz',this)">🧠 Quiz</button>
+</nav>
+
+<!-- ========================= TEORIA ========================= -->
+<div class="section active" id="teoria">
+<div class="container">
+
+  <div class="info-block orange">
+    <div class="label">Visão geral</div>
+    <h4>Por que o botrópico é o mais importante</h4>
+    <p>O gênero <b>Bothrops</b> (jararaca, jararacuçu, urutu, caiçaca) responde pela grande maioria dos acidentes ofídicos no Brasil. Dominar o botrópico é dominar o cenário mais provável em qualquer pronto-socorro do país.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Ação do veneno</h3></div>
+  <div class="info-block">
+    <div class="label">Fisiopatologia</div>
+    <p>O veneno botrópico age por três mecanismos principais:</p>
+    <ul>
+      <li><b>Ação proteolítica (inflamatória):</b> dor, edema, bolhas e necrose no local da picada.</li>
+      <li><b>Ação coagulante:</b> consome fibrinogênio e leva à <b>incoagulabilidade sanguínea</b> — o sangue deixa de coagular.</li>
+      <li><b>Ação hemorrágica:</b> lesão de vasos + plaquetopenia → sangramentos locais e sistêmicos.</li>
+    </ul>
+  </div>
+
+  <div class="info-block danger">
+    <div class="label">Complicação que mais mata</div>
+    <h4>⚠️ Lesão renal aguda (LRA)</h4>
+    <p>A insuficiência renal aguda é a principal complicação sistêmica capaz de levar ao óbito no acidente botrópico. Por isso, <b>hidratação venosa adequada e precoce</b> é prioridade — mantendo boa diurese (30–40 mL/h no adulto; 1–2 mL/kg/h na criança).</p>
+  </div>
+
+  <div class="sec-divider"><h3>Manifestações clínicas</h3></div>
+  <div class="pill-list">
+    <span class="pill danger">Dor e edema local</span>
+    <span class="pill danger">Equimoses</span>
+    <span class="pill danger">Bolhas / necrose</span>
+    <span class="pill danger">Sangramento no ferimento</span>
+    <span class="pill danger">Gengivorragia / hematúria</span>
+    <span class="pill danger">Sudorese, hipotensão</span>
+    <span class="pill danger">Síndrome compartimental</span>
+    <span class="pill danger">Choque</span>
+  </div>
+
+  <div class="sec-divider"><h3>Classificação e soroterapia (SAB)</h3></div>
+  <table class="compare-table">
+    <thead><tr><th>Gravidade</th><th>Quadro clínico</th><th>Nº de ampolas (SAB)</th></tr></thead>
+    <tbody>
+      <tr><td class="sev-leve">Leve</td><td>Quadro local discreto ou ausente; sangramento leve; pode haver distúrbio da coagulação</td><td class="sev-leve">2 a 4</td></tr>
+      <tr><td class="sev-mod">Moderado</td><td>Edema e equimose evidentes; sangramento sem comprometimento do estado geral</td><td class="sev-mod">4 a 8</td></tr>
+      <tr><td class="sev-grave">Grave</td><td>Alterações locais intensas; hemorragia grave; hipotensão/choque; anúria</td><td class="sev-grave">12</td></tr>
+    </tbody>
+  </table>
+
+  <div class="info-block warn">
+    <div class="label">Ponto de atenção — dose fixa vs. faixa</div>
+    <h4>Você pode ver "3 ampolas" para o caso leve. Por quê?</h4>
+    <p>A tabela acima (faixa 2–4 / 4–8 / 12) segue o <b>Guia de Vigilância em Saúde do MS</b> e a bula do <b>Butantan</b>. Já os <b>checklists do CVE-SP</b> usam uma <b>dose fixa</b> (ex.: 3 ampolas no leve), adotada desde 2014 para padronizar e racionar o uso do soro. <b>As duas são oficiais</b> — a diferença é faixa clínica × dose fixa padronizada. Sempre siga o protocolo vigente no seu serviço.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Critério de dose adicional</h3></div>
+  <div class="info-block success">
+    <div class="label">Controle de eficácia</div>
+    <p>O <b>tempo de coagulação (TC)</b> é o marcador de eficácia da soroterapia. Deve ser reavaliado <b>12h e 24h</b> após o soro. Se permanecer <b>incoagulável 24h após</b> a dose inicial, administrar <b>2 ampolas adicionais</b> de SAB.</p>
+  </div>
+
+  <div class="info-block">
+    <div class="label">Sobre o soro (Butantan)</div>
+    <ul>
+      <li>Cada ampola de SAB (10 mL) neutraliza <b>≥ 50 mg</b> de veneno-referência de <i>B. jararaca</i>.</li>
+      <li><b>Sem</b> contraindicação por faixa etária — a dose depende da gravidade, não do peso/idade.</li>
+      <li>Via <b>intravenosa</b>, diluído em soro fisiológico, em <b>infusão lenta</b> (risco de reação anafilática — ter adrenalina e hidrocortisona à disposição).</li>
+      <li>Armazenar entre <b>+2 e +8 °C</b>; nunca congelar; usar imediatamente após abrir.</li>
+    </ul>
+  </div>
+
+  <div class="source-note">
+    <b>Fontes:</b> Instituto Butantan (bula do soro antibotrópico); Guia de Vigilância em Saúde / Ministério da Saúde; FioCruz (Manual de Diagnóstico e Tratamento de Acidentes por Animais Peçonhentos); Nota Técnica MS nº 64/2021 (checklists CVE-SP). Conteúdo educativo — não substitui o protocolo institucional vigente.
+  </div>
+
+</div>
+</div>
+
+<!-- ========================= IMAGENS ========================= -->
+<div class="section" id="imagens">
+<div class="container">
+  <div class="chapter-title"><span>🖼️</span> Imagens reais — <i>Bothrops jararaca</i></div>
+  <div class="info-block">
+    <div class="label">Como usar</div>
+    <p>As imagens abaixo têm licença livre para uso (Creative Commons). Baixe cada arquivo, salve em <code>img/</code> com o nome indicado e o crédito aparecerá automaticamente. Enquanto o arquivo não existir, mostra-se um espaço reservado.</p>
+  </div>
+
+  <div class="gallery" id="galleryWrap"></div>
+
+  <div class="source-note">
+    <b>Créditos das imagens:</b> exibidos individualmente em cada foto, conforme exige a licença Creative Commons (autor + licença + link). Substituir/atualizar sempre que trocar a imagem.
+  </div>
+</div>
+</div>
+
+<!-- ========================= CHECKLIST CVE ========================= -->
+<div class="section" id="checklist">
+<div class="container">
+  <div class="chapter-title"><span>✅</span> Checklist — Acidente Botrópico (CVE-SP)</div>
+  <div class="checklist-intro">
+    <p>Reproduza o raciocínio da ficha oficial do CVE. Marque os itens conforme avalia o paciente — ao final, o sistema sugere a categoria de gravidade. <b>Ferramenta de treino</b>: a conduta final é sempre do médico assistente, segundo protocolo vigente.</p>
+  </div>
+
+  <div class="ck-group">
+    <h4>Tratamento inicial (admissão)</h4>
+    <div class="ck-items" id="ckAdmissao"></div>
+  </div>
+
+  <div class="ck-group">
+    <h4>Sinais locais e sistêmicos</h4>
+    <div class="ck-items" id="ckSinais"></div>
+  </div>
+
+  <div class="ck-result" id="ckResult">Marque os sinais para estimar a gravidade.</div>
+</div>
+</div>
+
+<!-- ========================= QUIZ ========================= -->
+<div class="section" id="quiz">
+<div class="container">
+  <div class="chapter-title"><span>🧠</span> Quiz — fixação</div>
+  <div class="quiz-header">
+    <div class="score-box"><div class="sn">Certas</div><div class="sv" id="sC" style="color:var(--green)">0</div></div>
+    <div class="score-box"><div class="sn">Erradas</div><div class="sv" id="sW" style="color:var(--red)">0</div></div>
+    <div class="score-box"><div class="sn">Restantes</div><div class="sv" id="sP" style="color:var(--accent)">0</div></div>
+  </div>
+  <div id="quizContainer"></div>
+  <div style="text-align:center"><button class="reset-btn" onclick="resetQuiz()">🔄 Refazer quiz</button></div>
+
+  <div class="complete-panel">
+    <h3>✔️ Concluir esta aula</h3>
+    <p>Ao concluir, sua barra de progresso no curso é atualizada e você pode continuar de onde parou.</p>
+    <button class="complete-btn" id="completeBtn" onclick="concluirAula()">Marcar aula como concluída</button>
+  </div>
+</div>
+</div>
+
+<a href="curso-peconhentos.html" id="backBtn">← Voltar ao curso</a>
+
+<script>
+/* ============ IDENTIDADE DA AULA ============ */
+var CURSO = "peconhentos";
+var AULA_ID = "m2-botropico";
+
+/* ============ NAV ABAS ============ */
+function showSection(id, btn){
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('nav.tabs button').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ============ GALERIA DE IMAGENS ============ */
+/* file: nome do arquivo local em img/ ; se não existir, mostra placeholder com legenda */
+var IMAGENS = [
+  { file:"img/m2-jararaca-01.jpg", titulo:"Bothrops jararaca (galho)", credito:"Wikimedia Commons — CC BY 2.0" },
+  { file:"img/m2-jararaca-02.jpg", titulo:"Jararaca-da-mata (postura de bote)", credito:"Wikimedia Commons — CC BY-SA 4.0" },
+  { file:"img/m2-jararaca-03.jpg", titulo:"Bothrops jararaca (detalhe da cabeça)", credito:"vinicius_s_domingues / iNaturalist — CC BY-SA 4.0" },
+  { file:"img/m2-jararacussu-01.jpg", titulo:"Bothrops jararacussu", credito:"Wikimedia Commons — CC BY-SA 4.0" }
+];
+
+function renderGallery(){
+  var wrap = document.getElementById('galleryWrap');
+  wrap.innerHTML = '';
+  IMAGENS.forEach(function(im){
+    var card = document.createElement('div');
+    card.className = 'img-card';
+    card.innerHTML =
+      '<div class="img-frame">' +
+        '<img src="'+im.file+'" alt="'+im.titulo+'" ' +
+             'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">' +
+        '<div class="placeholder" style="display:none">' +
+          '<span class="ph-emoji">🐍</span>' +
+          '<span>Adicione <b>'+im.file+'</b> na pasta do curso</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="cap">' +
+        '<div class="cap-title">'+im.titulo+'</div>' +
+        '<div class="cap-credit">'+im.credito+'</div>' +
+      '</div>';
+    wrap.appendChild(card);
+  });
+}
+
+/* ============ CHECKLIST CVE ============ */
+var CK_ADMISSAO = [
+  "Hidratação venosa adequada (diurese 30–40 mL/h adulto; 1–2 mL/kg/h criança)",
+  "Analgesia (NÃO usar AAS)",
+  "Manter membro acometido elevado",
+  "Solicitar exames: HMG, ureia, creatinina, CPK, urina I, fibrinogênio, coagulograma/TC (admissão, 12h e 24h)",
+  "Profilaxia antitetânica (após correção do coagulograma, quando necessária)"
+];
+var CK_SINAIS = [
+  { t:"Edema — 1 segmento", peso:"leve" },
+  { t:"Edema — 2 segmentos", peso:"moderado" },
+  { t:"Edema — 3 segmentos", peso:"grave" },
+  { t:"Hemorragia discreta ou ausente", peso:"leve" },
+  { t:"Hemorragia grave", peso:"grave" },
+  { t:"Hipotensão / choque", peso:"grave" }
+];
+
+var ckState = {};
+
+function renderChecklist(){
+  var a = document.getElementById('ckAdmissao');
+  a.innerHTML = '';
+  CK_ADMISSAO.forEach(function(txt,i){
+    var id = 'adm'+i;
+    a.appendChild(makeCkItem(id, txt, null));
+  });
+  var s = document.getElementById('ckSinais');
+  s.innerHTML = '';
+  CK_SINAIS.forEach(function(o,i){
+    var id = 'sin'+i;
+    s.appendChild(makeCkItem(id, o.t, o.peso));
+  });
+}
+function makeCkItem(id, txt, peso){
+  var div = document.createElement('div');
+  div.className = 'ck-item';
+  div.setAttribute('data-id', id);
+  if (peso) div.setAttribute('data-peso', peso);
+  div.onclick = function(){ toggleCk(id); };
+  div.innerHTML = '<div class="ck-box">✓</div><div class="ck-text">'+txt+'</div>';
+  ckState[id] = false;
+  return div;
+}
+function toggleCk(id){
+  ckState[id] = !ckState[id];
+  var el = document.querySelector('.ck-item[data-id="'+id+'"]');
+  if (el) el.classList.toggle('checked', ckState[id]);
+  updateCkResult();
+}
+function updateCkResult(){
+  var box = document.getElementById('ckResult');
+  var grave=false, moderado=false, leve=false;
+  CK_SINAIS.forEach(function(o,i){
+    if (ckState['sin'+i]){
+      if (o.peso==='grave') grave=true;
+      else if (o.peso==='moderado') moderado=true;
+      else leve=true;
+    }
+  });
+  if (grave){
+    box.style.color = 'var(--red)';
+    box.innerHTML = '🔴 Sugere acidente GRAVE → SAB 12 ampolas (seguir protocolo vigente)';
+  } else if (moderado){
+    box.style.color = 'var(--gold)';
+    box.innerHTML = '🟡 Sugere acidente MODERADO → SAB 4–8 ampolas (seguir protocolo vigente)';
+  } else if (leve){
+    box.style.color = 'var(--green)';
+    box.innerHTML = '🟢 Sugere acidente LEVE → SAB 2–4 ampolas (ou dose fixa do CVE; seguir protocolo vigente)';
+  } else {
+    box.style.color = 'var(--accent2)';
+    box.innerHTML = 'Marque os sinais para estimar a gravidade.';
+  }
+}
+
+/* ============ QUIZ ============ */
+var QD = [
+  {
+    n:1, q:"Qual é a complicação sistêmica do acidente botrópico mais associada a óbito?",
+    o:[{l:"A",v:"Insuficiência hepática"},{l:"B",v:"Lesão renal aguda"},{l:"C",v:"Insuficiência respiratória por paralisia"},{l:"D",v:"Bloqueio atrioventricular"}],
+    cr:"B",
+    ex:"A lesão renal aguda é a principal complicação sistêmica capaz de levar a óbito no acidente botrópico. A paralisia/BAV são mais ligados a crotálico e escorpionismo."
+  },
+  {
+    n:2, q:"Um paciente com edema em 2 segmentos e equimose evidente, sem comprometimento do estado geral. Classificação e conduta (faixa MS/Butantan)?",
+    o:[{l:"A",v:"Leve — 2 a 4 ampolas"},{l:"B",v:"Moderado — 4 a 8 ampolas"},{l:"C",v:"Grave — 12 ampolas"},{l:"D",v:"Não indicar soro"}],
+    cr:"B",
+    ex:"Edema em 2 segmentos com equimose evidente e estado geral preservado configura acidente MODERADO → 4 a 8 ampolas de SAB pela faixa do MS/Butantan."
+  },
+  {
+    n:3, q:"Sobre o controle da soroterapia botrópica, é correto afirmar:",
+    o:[{l:"A",v:"O TC deve ser reavaliado em 12h e 24h; se incoagulável após 24h, dar 2 ampolas adicionais"},{l:"B",v:"A dose depende do peso do paciente"},{l:"C",v:"O soro deve ser congelado até o uso"},{l:"D",v:"AAS é o analgésico de escolha"}],
+    cr:"A",
+    ex:"O tempo de coagulação (TC) é o marcador de eficácia: reavaliar em 12h e 24h; se permanecer incoagulável após 24h, administrar 2 ampolas adicionais. A dose depende da GRAVIDADE (não do peso); o soro nunca é congelado; e o AAS é contraindicado (antiagregante, piora sangramento)."
+  },
+  {
+    n:4, q:"Por que alguns checklists (CVE-SP) indicam '3 ampolas' no acidente botrópico leve, enquanto a bula do Butantan traz '2 a 4'?",
+    o:[{l:"A",v:"Porque um dos dois está errado"},{l:"B",v:"Porque o CVE usa dose fixa padronizada/racionada, e o Butantan usa faixa clínica — ambas oficiais"},{l:"C",v:"Porque depende da idade do paciente"},{l:"D",v:"Porque a jararaca tem venenos diferentes por região"}],
+    cr:"B",
+    ex:"São duas referências oficiais com lógicas distintas: o Butantan/MS trazem uma faixa clínica (2–4) e o CVE-SP adota dose fixa padronizada (adotada desde 2014 para racionalizar o uso). Nenhuma está errada — siga o protocolo vigente no seu serviço."
+  }
+];
+var QS={c:0,w:0,a:0};
+function renderQuiz(){
+  var ct=document.getElementById('quizContainer');
+  ct.innerHTML='';
+  QD.forEach(function(q,i){
+    var d=document.createElement('div');
+    d.className='q-card';d.id='q'+i;
+    var body='<div class="opts">'+q.o.map(function(o){
+      return '<button class="opt-btn" data-q="'+i+'" data-l="'+o.l+'" onclick="answerMC('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+o.v+'</span></button>';
+    }).join('')+'</div>';
+    d.innerHTML='<div class="q-num">Questão '+q.n+'</div><div class="res-ind" id="ri'+i+'"></div><p class="q-text">'+q.q+'</p>'+body+'<div class="exp-box" id="ex'+i+'"><div class="et">📖 Explicação</div><p>'+q.ex+'</p></div>';
+    ct.appendChild(d);
+  });
+  updateScores();
+}
+function answerMC(i,ch){
+  var q=QD[i];var card=document.getElementById('q'+i);
+  if(card.classList.contains('ans'))return;
+  card.querySelectorAll('.opt-btn').forEach(function(b){b.disabled=true;if(b.dataset.l===q.cr)b.classList.add('ca');if(b.dataset.l===ch&&ch!==q.cr)b.classList.add('wa');});
+  var ok=ch===q.cr;card.classList.add('ans',ok?'cq':'wq');
+  var ri=document.getElementById('ri'+i);ri.className='res-ind vis '+(ok?'c':'w');ri.innerHTML=ok?'✅ Correto!':'❌ Incorreto. Resposta: '+q.cr;
+  document.getElementById('ex'+i).classList.add('vis');
+  ok?QS.c++:QS.w++;QS.a++;updateScores();
+}
+function updateScores(){
+  document.getElementById('sC').textContent=QS.c;
+  document.getElementById('sW').textContent=QS.w;
+  document.getElementById('sP').textContent=QD.length-QS.a;
+}
+function resetQuiz(){QS={c:0,w:0,a:0};renderQuiz();}
+
+/* ============ CONCLUIR AULA (grava em curso_progresso) ============ */
+function getClient(){
+  if (window.authClient) return window.authClient;
+  if (window.supabaseClient) return window.supabaseClient;
+  return null;
+}
+async function concluirAula(){
+  var btn = document.getElementById('completeBtn');
+  var sb = getClient();
+  if (!sb){ marcarConcluidaUI(btn); return; }
+  try {
+    var u = await sb.auth.getUser();
+    var user = u && u.data ? u.data.user : null;
+    if (user){
+      await sb.from('curso_progresso').upsert({
+        user_id: user.id,
+        curso: CURSO,
+        aula_id: AULA_ID,
+        concluida: true,
+        quiz_score: QS.c,
+        quiz_total: QD.length,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'user_id,curso,aula_id' });
+    }
+  } catch(e){ console.warn('Falha ao salvar progresso:', e); }
+  marcarConcluidaUI(btn);
+}
+function marcarConcluidaUI(btn){
+  btn.classList.add('done');
+  btn.textContent = '✓ Aula concluída';
+  btn.onclick = function(){ window.location.href = 'curso-peconhentos.html'; };
+  setTimeout(function(){ window.location.href = 'curso-peconhentos.html'; }, 900);
+}
+
+/* ============ INIT ============ */
+document.addEventListener("authReady", function(){
+  renderGallery(); renderChecklist(); renderQuiz();
+});
+setTimeout(function(){
+  if (!document.getElementById('quizContainer').children.length){
+    renderGallery(); renderChecklist(); renderQuiz();
+  }
+}, 1200);
+</script>
+
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
+</body>
+</html>
