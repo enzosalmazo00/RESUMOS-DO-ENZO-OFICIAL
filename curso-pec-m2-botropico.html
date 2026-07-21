@@ -207,16 +207,8 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
 <div class="section" id="imagens">
 <div class="container">
   <div class="chapter-title"><span>🖼️</span> Imagens reais — <i>Bothrops jararaca</i></div>
-  <div class="info-block">
-    <div class="label">Como usar</div>
-    <p>As imagens abaixo têm licença livre para uso (Creative Commons). Baixe cada arquivo, salve em <code>img/</code> com o nome indicado e o crédito aparecerá automaticamente. Enquanto o arquivo não existir, mostra-se um espaço reservado.</p>
-  </div>
 
   <div class="gallery" id="galleryWrap"></div>
-
-  <div class="source-note">
-    <b>Créditos das imagens:</b> exibidos individualmente em cada foto, conforme exige a licença Creative Commons (autor + licença + link). Substituir/atualizar sempre que trocar a imagem.
-  </div>
 </div>
 </div>
 
@@ -299,7 +291,7 @@ function renderGallery(){
              'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">' +
         '<div class="placeholder" style="display:none">' +
           '<span class="ph-emoji">🐍</span>' +
-          '<span>Adicione <b>'+im.file+'</b> na pasta do curso</span>' +
+          '<span>'+im.titulo+'</span>' +
         '</div>' +
       '</div>' +
       '<div class="cap">' +
