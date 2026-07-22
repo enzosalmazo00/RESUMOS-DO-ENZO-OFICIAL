@@ -67,6 +67,11 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
 .complete-btn{padding:13px 28px;border:none;border-radius:12px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--green),var(--accent2));color:var(--bg);transition:all .2s}
 .complete-btn:hover{box-shadow:0 0 24px rgba(79,249,132,0.4);transform:translateY(-1px)}
 .complete-btn.done{background:var(--card2);color:var(--green);cursor:default;border:1px solid var(--green)}
+.img-inline{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+.img-inline img{width:100%;display:block;object-fit:cover}
+.img-inline .img-leg{padding:12px 16px;font-size:12px;color:var(--muted);line-height:1.5}
+.img-inline .img-leg b{color:var(--accent2)}
+.img-inline .img-leg .img-credit{font-family:var(--font-mono);font-size:10px;margin-top:4px;color:var(--muted);opacity:.7}
 .source-note{margin-top:22px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}.source-note b{color:var(--accent2)}
 #backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow)}
 #backBtn:hover{border-color:var(--accent);background:var(--card2)}
@@ -130,6 +135,11 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
     <div class="label">Ofídico</div>
     <p>Mordeduras por serpentes tendem a causar <b>infecção polimicrobiana</b> (Gram-positivos, Gram-negativos e anaeróbios). Quando há sinais de infecção, uma cobertura possível é <b>ceftriaxona</b> (Gram-negativos) + <b>clindamicina</b> (Gram-positivos e anaeróbios). O antibiótico é <b>terapêutico</b> (quando há infecção), <b>não profilático</b> de rotina.</p>
   </div>
+  <div class="img-inline" style="max-width:480px">
+    <img src="img/m1-infeccao-local.jpg" alt="Infecção secundária no local de picada ofídica com sinais de celulite">
+    <div class="img-leg"><b>Infecção secundária</b> — sinais de celulite no local da picada (hiperemia, calor, secreção). Indicação de antibioticoterapia (ceftriaxona + clindamicina).<div class="img-credit">Fonte: substituir pelo crédito</div></div>
+  </div>
+
   <div class="info-block warn">
     <div class="label">Detalhe de conduta</div>
     <p>Se houver <b>bacteremia</b>, coletar hemocultura. No local, geralmente é celulite, sem material para cultura. Sempre confirmar o esquema antimicrobiano com o protocolo do serviço.</p>

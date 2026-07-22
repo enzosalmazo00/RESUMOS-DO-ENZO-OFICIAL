@@ -66,6 +66,13 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
 .complete-btn{padding:13px 28px;border:none;border-radius:12px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--green),var(--accent2));color:var(--bg);transition:all .2s}
 .complete-btn:hover{box-shadow:0 0 24px rgba(79,249,132,0.4);transform:translateY(-1px)}
 .complete-btn.done{background:var(--card2);color:var(--green);cursor:default;border:1px solid var(--green)}
+.img-inline{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+.img-inline img{width:100%;display:block;object-fit:cover}
+.img-inline .img-leg{padding:12px 16px;font-size:12px;color:var(--muted);line-height:1.5}
+.img-inline .img-leg b{color:var(--accent2)}
+.img-inline .img-leg .img-credit{font-family:var(--font-mono);font-size:10px;margin-top:4px;color:var(--muted);opacity:.7}
+.img-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+@media(max-width:560px){.img-pair{grid-template-columns:1fr}}
 .source-note{margin-top:22px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}.source-note b{color:var(--accent2)}
 #backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow)}
 #backBtn:hover{border-color:var(--accent);background:var(--card2)}
@@ -103,6 +110,18 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
     <div class="step-item"><span><b>Avaliar sinais de infecção</b> no local; se presentes, prescrever antibiótico.</span></div>
     <div class="step-item"><span><b>Internação por no mínimo 24h.</b></span></div>
     <div class="step-item"><span><b>Profilaxia antitetânica</b> — após correção do coagulograma, quando necessária (detalhes na próxima aula).</span></div>
+  </div>
+
+  <div class="sec-divider"><h3>Manifestações locais — o que você vai ver</h3></div>
+  <div class="img-pair">
+    <div class="img-inline">
+      <img src="img/m1-edema-botropico.jpg" alt="Edema local progressivo em acidente botrópico">
+      <div class="img-leg"><b>Edema local progressivo</b> — acidente botrópico. O edema pode se estender a todo o membro nas primeiras horas.<div class="img-credit">Fonte: substituir pelo crédito</div></div>
+    </div>
+    <div class="img-inline">
+      <img src="img/m1-equimose-ofidico.jpg" alt="Equimose e sangramento local em acidente ofídico">
+      <div class="img-leg"><b>Equimose perilesional</b> — comum no botrópico e laquético. Observe o extravasamento sanguíneo ao redor da picada.<div class="img-credit">Fonte: substituir pelo crédito</div></div>
+    </div>
   </div>
 
   <div class="info-block danger">

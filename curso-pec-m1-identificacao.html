@@ -77,6 +77,13 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
 .source-note{margin-top:22px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}.source-note b{color:var(--accent2)}
 #backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow)}
 #backBtn:hover{border-color:var(--accent);background:var(--card2)}
+.img-inline{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+.img-inline img{width:100%;display:block;object-fit:cover}
+.img-inline .img-leg{padding:12px 16px;font-size:12px;color:var(--muted);line-height:1.5}
+.img-inline .img-leg b{color:var(--accent2)}
+.img-inline .img-leg .img-credit{font-family:var(--font-mono);font-size:10px;margin-top:4px;color:var(--muted);opacity:.7}
+.img-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+@media(max-width:560px){.img-pair{grid-template-columns:1fr}}
 .diagram{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:20px}
 .diagram svg{width:100%;height:auto;display:block}
 .diagram .dcap{text-align:center;font-size:12px;color:var(--muted);margin-top:12px;font-family:var(--font-mono)}
@@ -125,6 +132,11 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
     <div class="label">Cuidado — a exceção que engana</div>
     <h4>⚠️ Micrurus (coral verdadeira) NÃO tem fosseta loreal</h4>
     <p>A coral é peçonhenta, mas <b>não</b> tem fosseta e tem presas pequenas e fixas — externamente parece uma serpente inofensiva. Nunca use "ausência de fosseta" para liberar um caso de coral. Além disso, existem <b>falsas-corais</b> que imitam o padrão de anéis coloridos, mas <b>não têm dente inoculador</b>.</p>
+  </div>
+
+  <div class="img-inline">
+    <img src="img/m1-fosseta-loreal-real.jpg" alt="Foto real da fosseta loreal em serpente peçonhenta — orifício entre o olho e a narina">
+    <div class="img-leg"><b>Fosseta loreal em serpente peçonhenta</b> — observe o orifício (seta) localizado entre o olho e a narina. Presente em Bothrops, Crotalus e Lachesis.<div class="img-credit">Fonte: substituir pelo crédito da imagem</div></div>
   </div>
 
   <div class="diagram">
@@ -194,6 +206,21 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
     <div class="dcap">Diagrama esquemático · Resumos do Enzo</div>
   </div>
 
+  <div class="img-pair">
+    <div class="img-inline">
+      <img src="img/m1-cauda-bothrops.jpg" alt="Cauda lisa de Bothrops (jararaca)">
+      <div class="img-leg"><b>Bothrops</b> — cauda lisa, afinamento abrupto<div class="img-credit">Fonte: substituir pelo crédito</div></div>
+    </div>
+    <div class="img-inline">
+      <img src="img/m1-cauda-crotalus.jpg" alt="Guizo/chocalho na cauda de Crotalus (cascavel)">
+      <div class="img-leg"><b>Crotalus</b> — guizo (chocalho) na ponta da cauda<div class="img-credit">Fonte: substituir pelo crédito</div></div>
+    </div>
+  </div>
+  <div class="img-inline" style="max-width:420px">
+    <img src="img/m1-cauda-lachesis.jpg" alt="Escamas eriçadas na cauda de Lachesis (surucucu)">
+    <div class="img-leg"><b>Lachesis</b> — escamas eriçadas na ponta ("escova")<div class="img-credit">Fonte: substituir pelo crédito</div></div>
+  </div>
+
   <table class="compare-table">
     <thead><tr><th>Gênero</th><th>Cauda</th><th>Nome popular</th></tr></thead>
     <tbody>
@@ -216,6 +243,18 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
       <tr><td>Hábitos</td><td>Noturnos, lentas</td><td>Diurnos, ágeis</td></tr>
     </tbody>
   </table>
+  <div class="sec-divider"><h3>Coral verdadeira × falsa coral</h3></div>
+  <div class="img-pair">
+    <div class="img-inline">
+      <img src="img/m1-coral-verdadeira.jpg" alt="Micrurus (coral verdadeira) — anéis completos em tríades">
+      <div class="img-leg"><b>Coral verdadeira (<i>Micrurus</i>)</b> — anéis completos que circundam todo o corpo, dispostos em tríades<div class="img-credit">Fonte: substituir pelo crédito</div></div>
+    </div>
+    <div class="img-inline">
+      <img src="img/m1-falsa-coral.jpg" alt="Falsa coral — anéis incompletos no ventre">
+      <div class="img-leg"><b>Falsa coral</b> — anéis geralmente incompletos no ventre, padrão irregular<div class="img-credit">Fonte: substituir pelo crédito</div></div>
+    </div>
+  </div>
+
   <div class="info-block warn">
     <div class="label">Atenção clínica</div>
     <p>Essas regras ajudam, mas <b>nenhuma é absoluta</b> — pupila e hábitos podem enganar, e a coral quebra a regra da fosseta. Na prática, o <b>diagnóstico do envenenamento é clínico-epidemiológico</b>: não dependa apenas de ter visto o animal.</p>
