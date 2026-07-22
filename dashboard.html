@@ -181,6 +181,24 @@
     .soon-dot { width:5px; height:5px; border-radius:50%; background:rgba(251,191,36,0.6); }
 
     /* ── LOJA ── */
+    /* ── SEMESTRE CARDS (acordeão) ── */
+    .sem-card { border-radius:16px; border:1px solid var(--border); background:rgba(34,211,238,0.03); margin-bottom:12px; overflow:hidden; transition:all .3s; }
+    .sem-card:hover { border-color:rgba(34,211,238,0.3); }
+    .sem-card-soon { opacity:0.45; cursor:default; }
+    .sem-card-soon .sem-card-header { cursor:default; }
+    .sem-card-header { display:flex; justify-content:space-between; align-items:center; padding:18px 20px; cursor:pointer; gap:12px; user-select:none; transition:background .2s; }
+    .sem-card-header:hover { background:rgba(34,211,238,0.04); }
+    .sem-card-left { display:flex; align-items:center; gap:14px; flex:1; min-width:0; }
+    .sem-card-emoji { font-size:28px; flex-shrink:0; }
+    .sem-card-title { font-size:15px; font-weight:700; color:#e2f8fc; }
+    .sem-card-sub { font-size:11px; color:rgba(125,211,232,0.4); margin-top:2px; line-height:1.4; }
+    .sem-card-right { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+    .sem-card-badge { font-size:10px; font-weight:600; padding:4px 10px; border-radius:20px; background:rgba(34,211,238,0.08); border:1px solid rgba(34,211,238,0.2); color:rgba(125,211,232,0.7); white-space:nowrap; }
+    .sem-card-chevron { font-size:12px; color:rgba(125,211,232,0.4); transition:transform .3s; }
+    .sem-card.open .sem-card-chevron { transform:rotate(180deg); }
+    .sem-card-body { max-height:0; overflow:hidden; transition:max-height .4s cubic-bezier(.4,0,.2,1); padding:0 20px; }
+    .sem-card.open .sem-card-body { max-height:3000px; padding:0 20px 24px; }
+
     /* ── LOJA PREMIUM ── */
     .store-intro { margin-bottom:28px; }
     .store-intro h2 { font-size:20px; font-weight:700; margin-bottom:6px; letter-spacing:-0.5px; }
@@ -279,9 +297,15 @@
     .cart-summary-row { display:flex; justify-content:space-between; font-size:13px; color:rgba(125,211,232,0.5); }
     .cart-summary-row.total { font-size:16px; font-weight:700; color:#e2f8fc; padding-top:8px; border-top:1px solid rgba(34,211,238,0.1); }
     .cart-summary-row.desconto { color:#4ade80; }
-    .cart-checkout-btn { width:100%; padding:14px; border-radius:13px; border:none; cursor:pointer; font-size:14px; font-weight:700; font-family:'Poppins',sans-serif; background:linear-gradient(135deg,#22d3ee,#0891b2); color:#fff; box-shadow:0 4px 20px rgba(34,211,238,0.3); transition:all .25s; display:flex; align-items:center; justify-content:center; gap:8px; }
-    .cart-checkout-btn:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(34,211,238,0.5); }
+    .cart-checkout-duo { display:flex; gap:10px; }
+    .cart-checkout-btn { flex:1; padding:14px; border-radius:13px; border:none; cursor:pointer; font-size:14px; font-weight:700; font-family:'Poppins',sans-serif; color:#fff; transition:all .25s; display:flex; align-items:center; justify-content:center; gap:8px; }
+    .cart-btn-pix { background:linear-gradient(135deg,#22d3ee,#0891b2); box-shadow:0 4px 20px rgba(34,211,238,0.3); }
+    .cart-btn-card { background:linear-gradient(135deg,#a78bfa,#7c3aed); box-shadow:0 4px 20px rgba(139,92,246,0.3); }
+    .cart-checkout-btn:hover { transform:translateY(-2px); }
+    .cart-btn-pix:hover { box-shadow:0 8px 32px rgba(34,211,238,0.5); }
+    .cart-btn-card:hover { box-shadow:0 8px 32px rgba(139,92,246,0.5); }
     .cart-checkout-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+    .cart-checkout-hint { text-align:center; font-size:10px; color:rgba(125,211,232,0.35); margin-top:8px; }
 
     /* ── TERMOS DA LOJA ── */
     .store-terms { margin-top:36px; padding:20px 22px; border-radius:16px; border:1px solid rgba(251,191,36,0.18); background:rgba(251,191,36,0.04); }
@@ -628,6 +652,16 @@
       .produto-nome { font-size:11px; }
       .combo-card { padding:16px; }
 
+      .sem-card-header { padding:14px 16px; }
+      .sem-card-emoji { font-size:22px; }
+      .sem-card-title { font-size:13px; }
+      .sem-card-sub { font-size:10px; }
+      .sem-card-body { padding:0 14px; }
+      .sem-card.open .sem-card-body { padding:0 14px 18px; }
+
+      .cart-checkout-btns { gap:8px; }
+      .cart-checkout-btn { padding:12px 8px; font-size:13px; }
+
       .cart-fab { bottom:16px; right:16px; width:48px; height:48px; font-size:18px; }
       .cart-drawer { width:100%; right:-100%; }
 
@@ -949,12 +983,12 @@
     <div class="tab-panel" id="tab-loja">
       <div class="store-intro">
         <h2>🛍️ Loja — Cursos e Resumos</h2>
-        <p>Adicione ao carrinho e pague tudo de uma vez com PIX. Acesso liberado automaticamente após confirmação.</p>
+        <p>Escolha o semestre, adicione ao carrinho e pague com PIX ou Cartão. Acesso liberado automaticamente.</p>
       </div>
 
       <!-- ★★★ CURSO — DESTAQUE PRINCIPAL ★★★ -->
       <div class="store-section">
-        <div class="store-section-title" style="color:#f9c94f;">🎓 Curso com Certificado</div>
+        <div class="store-section-title" style="color:#f9c94f;">🎓 Cursos com Certificado</div>
         <div class="combo-card" id="curso-pec-card" style="border-color:rgba(249,201,79,0.4);background:linear-gradient(135deg,rgba(249,201,79,0.08) 0%,rgba(249,120,79,0.05) 100%);position:relative;overflow:hidden;">
           <div style="position:absolute;top:12px;right:14px;background:linear-gradient(135deg,#f43f5e,#e11d48);color:#fff;font-size:9px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:0.5px;animation:pulse 2s infinite;">🔥 PREÇO DE LANÇAMENTO</div>
           <div class="combo-header">
@@ -982,98 +1016,127 @@
         </div>
       </div>
 
-      <!-- P1 ENCERRADOS -->
+      <!-- ═══ SEMESTRES ═══ -->
       <div class="store-section">
-        <div class="store-section-title" style="color:rgba(248,113,113,0.4);">⏰ P1 — Período encerrado</div>
-        <div style="padding:16px 20px;border-radius:14px;border:1px solid rgba(248,113,113,0.1);background:rgba(248,113,113,0.03);font-size:13px;color:rgba(248,113,113,0.45);text-align:center;">
-          Os resumos de P1 não estão mais disponíveis para compra.
-        </div>
-      </div>
+        <div class="store-section-title">📂 Resumos por Semestre</div>
 
-      <!-- COMBO DESTAQUE -->
-      <div class="store-section">
-        <div class="store-section-title">🔥 Melhor negócio</div>
-        <div class="combo-card" id="combo-p2-card">
-          <div class="combo-header">
-            <div>
-              <div class="combo-title">📦 Pacote Completo P2</div>
-              <div class="combo-sub">Todos os 7 resumos de P2 — 3º Semestre</div>
+        <!-- 3º SEMESTRE -->
+        <div class="sem-card" id="sem-3">
+          <div class="sem-card-header" onclick="toggleSemLoja(this)">
+            <div class="sem-card-left">
+              <span class="sem-card-emoji">🧬</span>
+              <div>
+                <div class="sem-card-title">3º Semestre</div>
+                <div class="sem-card-sub">Bioquímica, Biofísica, Genética, Fisiologia, Microbiologia, Micro Prática, Imunologia</div>
+              </div>
             </div>
-            <div class="combo-preco-box">
-              <div class="combo-preco-old">R$ 105,00</div>
-              <div class="combo-preco-new">R$ 69,90</div>
-              <div class="combo-desconto">🏷️ 33% off</div>
+            <div class="sem-card-right">
+              <span class="sem-card-badge">P2 + Final</span>
+              <span class="sem-card-chevron">▼</span>
             </div>
           </div>
-          <div class="combo-materias">
-            <span class="combo-tag">📚 Bioquímica</span>
-            <span class="combo-tag">⚡ Biofísica</span>
-            <span class="combo-tag">🧬 Genética</span>
-            <span class="combo-tag">❤️ Fisiologia</span>
-            <span class="combo-tag">🦠 Microbiologia</span>
-            <span class="combo-tag">🧫 Micro Prática</span>
-            <span class="combo-tag">🛡️ Imunologia</span>
-          </div>
-          <button class="combo-btn" id="combo-p2-btn" onclick="addComboToCart()">
-            🛒 Adicionar pacote ao carrinho — R$ 69,90
-          </button>
-        </div>
-      </div>
-
-      <!-- INDIVIDUAIS P2 -->
-      <div class="store-section">
-        <div class="store-section-title">📝 Resumos individuais P2
-          <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
-            R$ 15,00 unit · <span style="color:#4ade80;">R$ 12,00 com 3+</span>
-          </span>
-        </div>
-        <div class="store-grid" id="store-grid-p2"></div>
-      </div>
-
-      <!-- COMBO FINAL -->
-      <div class="store-section" id="store-combo-final-section" style="display:none;">
-        <div class="store-section-title" style="color:#fb7185;">🔥 Promo Recuperatória</div>
-        <div class="combo-card" id="combo-final-card" style="border-color:rgba(244,63,94,0.3);background:linear-gradient(135deg,rgba(244,63,94,0.07) 0%,rgba(6,182,212,0.04) 100%);">
-          <div class="combo-header">
-            <div>
-              <div class="combo-title" style="color:#fb7185;">🎓 Pacote Completo Final — Recuperatória</div>
-              <div class="combo-sub">Todas as 7 matérias · todos os resumos finais — 3º Semestre</div>
+          <div class="sem-card-body">
+            <!-- P1 encerrado -->
+            <div style="padding:12px 16px;border-radius:12px;border:1px solid rgba(248,113,113,0.1);background:rgba(248,113,113,0.03);font-size:12px;color:rgba(248,113,113,0.45);text-align:center;margin-bottom:20px;">
+              ⏰ Resumos de P1 — período encerrado
             </div>
-            <div class="combo-preco-box">
-              <div class="combo-preco-old" id="combo-final-old" style="font-size:22px;color:rgba(248,113,113,0.55);">R$ 174,93</div>
-              <div class="combo-preco-new" id="combo-final-new" style="color:#fb7185;">R$ 39,99</div>
-              <div class="combo-desconto" id="combo-final-pct" style="background:rgba(244,63,94,0.12);color:#fb7185;border-color:rgba(244,63,94,0.3);">🏷️ 77% off</div>
+
+            <!-- COMBO P2 -->
+            <div class="combo-card" id="combo-p2-card">
+              <div class="combo-header">
+                <div>
+                  <div class="combo-title">📦 Pacote Completo P2</div>
+                  <div class="combo-sub">Todos os 7 resumos de P2 — 3º Semestre</div>
+                </div>
+                <div class="combo-preco-box">
+                  <div class="combo-preco-old">R$ 105,00</div>
+                  <div class="combo-preco-new">R$ 69,90</div>
+                  <div class="combo-desconto">🏷️ 33% off</div>
+                </div>
+              </div>
+              <div class="combo-materias">
+                <span class="combo-tag">📚 Bioquímica</span>
+                <span class="combo-tag">⚡ Biofísica</span>
+                <span class="combo-tag">🧬 Genética</span>
+                <span class="combo-tag">❤️ Fisiologia</span>
+                <span class="combo-tag">🦠 Microbiologia</span>
+                <span class="combo-tag">🧫 Micro Prática</span>
+                <span class="combo-tag">🛡️ Imunologia</span>
+              </div>
+              <button class="combo-btn" id="combo-p2-btn" onclick="addComboToCart()">
+                🛒 Adicionar pacote ao carrinho — R$ 69,90
+              </button>
+            </div>
+
+            <!-- INDIVIDUAIS P2 -->
+            <div style="margin-top:20px;">
+              <div class="store-section-title" style="margin-bottom:12px;">📝 Individuais P2
+                <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
+                  R$ 15,00 unit · <span style="color:#4ade80;">R$ 12,00 com 3+</span>
+                </span>
+              </div>
+              <div class="store-grid" id="store-grid-p2"></div>
+            </div>
+
+            <!-- COMBO FINAL -->
+            <div id="store-combo-final-section" style="display:none;margin-top:24px;">
+              <div class="combo-card" id="combo-final-card" style="border-color:rgba(244,63,94,0.3);background:linear-gradient(135deg,rgba(244,63,94,0.07) 0%,rgba(6,182,212,0.04) 100%);">
+                <div class="combo-header">
+                  <div>
+                    <div class="combo-title" style="color:#fb7185;">🎓 Pacote Completo Final — Recuperatória</div>
+                    <div class="combo-sub">Todas as 7 matérias · todos os resumos finais — 3º Semestre</div>
+                  </div>
+                  <div class="combo-preco-box">
+                    <div class="combo-preco-old" id="combo-final-old" style="font-size:22px;color:rgba(248,113,113,0.55);">R$ 174,93</div>
+                    <div class="combo-preco-new" id="combo-final-new" style="color:#fb7185;">R$ 39,99</div>
+                    <div class="combo-desconto" id="combo-final-pct" style="background:rgba(244,63,94,0.12);color:#fb7185;border-color:rgba(244,63,94,0.3);">🏷️ 77% off</div>
+                  </div>
+                </div>
+                <div class="combo-materias" id="combo-final-tags"></div>
+                <button class="combo-btn" id="combo-final-btn" onclick="addComboFinalToCart()" style="background:linear-gradient(135deg,#f43f5e,#e11d48);box-shadow:0 4px 20px rgba(244,63,94,0.3);">
+                  🛒 Adicionar pacote ao carrinho — R$ 39,99
+                </button>
+              </div>
+            </div>
+
+            <!-- FINAIS INDIVIDUAIS -->
+            <div style="margin-top:20px;">
+              <div class="store-section-title" style="color:#fb7185;margin-bottom:12px;">🎓 Individuais Final — Promo Recuperatória</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+                <div style="flex:1;min-width:130px;border-radius:12px;padding:12px;background:rgba(244,63,94,0.07);border:1px solid rgba(244,63,94,0.25);text-align:center;">
+                  <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(251,113,133,0.6);margin-bottom:4px;">Individual</div>
+                  <div style="font-size:11px;color:rgba(125,211,232,0.35);text-decoration:line-through;">R$ 24,99</div>
+                  <div style="font-size:20px;font-weight:800;color:#fb7185;">R$ 10,00</div>
+                </div>
+                <div style="flex:1;min-width:130px;border-radius:12px;padding:12px;background:rgba(244,63,94,0.13);border:1px solid rgba(244,63,94,0.45);text-align:center;position:relative;">
+                  <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f43f5e,#e11d48);color:#fff;font-size:8px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;">MELHOR NEGÓCIO ⭐</div>
+                  <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(251,113,133,0.6);margin-bottom:4px;">Pacote 7 resumos</div>
+                  <div style="font-size:11px;color:rgba(125,211,232,0.35);text-decoration:line-through;">R$ 174,93</div>
+                  <div style="font-size:20px;font-weight:800;color:#fb7185;">R$ 39,99</div>
+                </div>
+              </div>
+              <div class="store-grid" id="store-grid-final"></div>
+              <div id="store-final-breve" style="padding:14px 18px;border-radius:12px;border:1px solid rgba(251,191,36,0.15);background:rgba(251,191,36,0.04);font-size:12px;color:rgba(251,191,36,0.5);text-align:center;margin-top:10px;display:none;">
+                As demais finais serão disponibilizadas em breve.
+              </div>
             </div>
           </div>
-          <div class="combo-materias" id="combo-final-tags"></div>
-          <button class="combo-btn" id="combo-final-btn" onclick="addComboFinalToCart()" style="background:linear-gradient(135deg,#f43f5e,#e11d48);box-shadow:0 4px 20px rgba(244,63,94,0.3);">
-            🛒 Adicionar pacote ao carrinho — R$ 39,99
-          </button>
         </div>
-      </div>
 
-      <!-- FINAIS INDIVIDUAIS -->
-      <div class="store-section">
-        <div class="store-section-title" style="color:#fb7185;">🎓 Resumos Finais — Promo Recuperatória</div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
-          <div style="flex:1;min-width:150px;border-radius:12px;padding:14px;background:rgba(244,63,94,0.07);border:1px solid rgba(244,63,94,0.25);text-align:center;position:relative;">
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(251,113,133,0.6);margin-bottom:6px;">Resumo individual</div>
-            <div style="font-size:12px;color:rgba(125,211,232,0.35);text-decoration:line-through;">R$ 24,99</div>
-            <div style="font-size:24px;font-weight:800;color:#fb7185;">R$ 10,00</div>
-            <div style="font-size:10px;color:rgba(125,211,232,0.4);margin-top:3px;">por resumo · qualquer quantidade</div>
+        <!-- 4º SEMESTRE (em breve) -->
+        <div class="sem-card sem-card-soon">
+          <div class="sem-card-header">
+            <div class="sem-card-left">
+              <span class="sem-card-emoji" style="opacity:0.4;">🔬</span>
+              <div>
+                <div class="sem-card-title" style="color:rgba(125,211,232,0.35);">4º Semestre</div>
+                <div class="sem-card-sub" style="color:rgba(125,211,232,0.2);">Em breve</div>
+              </div>
+            </div>
+            <div class="sem-card-right">
+              <span class="sem-card-badge" style="background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.2);color:rgba(251,191,36,0.5);">🔜 Em breve</span>
+            </div>
           </div>
-          <div style="flex:1;min-width:150px;border-radius:12px;padding:14px;background:rgba(244,63,94,0.13);border:1px solid rgba(244,63,94,0.45);text-align:center;position:relative;">
-            <div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f43f5e,#e11d48);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;">MELHOR NEGÓCIO ⭐</div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(251,113,133,0.6);margin-bottom:6px;">Todas as matérias</div>
-            <div style="font-size:12px;color:rgba(125,211,232,0.35);text-decoration:line-through;">R$ 174,93</div>
-            <div style="font-size:24px;font-weight:800;color:#fb7185;">R$ 39,99</div>
-            <div style="font-size:10px;color:rgba(125,211,232,0.4);margin-top:3px;">7 resumos finais · ~R$ 5,71 cada</div>
-          </div>
-        </div>
-        <div style="font-size:11px;color:rgba(125,211,232,0.4);margin-bottom:14px;text-align:center;">🔥 Promo válida para a recuperatória · Desconto aplicado automaticamente no carrinho · Cupom não acumulável com o Pacote Completo</div>
-        <div class="store-grid" id="store-grid-final"></div>
-        <div id="store-final-breve" style="padding:16px 20px;border-radius:14px;border:1px solid rgba(251,191,36,0.15);background:rgba(251,191,36,0.04);font-size:13px;color:rgba(251,191,36,0.5);text-align:center;margin-top:10px;display:none;">
-          As demais finais serão disponibilizadas em breve.
         </div>
       </div>
 
@@ -1082,7 +1145,8 @@
         <div class="store-terms-title">⚠️ Informações importantes</div>
         <ul>
           <li>⏳ <strong>90 dias de acesso</strong> para cursos e <strong>50 dias</strong> para resumos, a partir da confirmação do pagamento.</li>
-          <li>✅ <strong>Liberação automática</strong> após a confirmação do PIX.</li>
+          <li>✅ <strong>Liberação automática</strong> após a confirmação do PIX ou cartão.</li>
+          <li>💳 <strong>Cartão de crédito</strong> em até 6x sem juros via Mercado Pago.</li>
           <li>📱 <strong>Um dispositivo por vez</strong> — segurança da sua conta.</li>
           <li>🔄 <strong>Conteúdo atualizado</strong> conforme o semestre.</li>
           <li>🎓 <strong>Certificado do curso</strong> emitido após aprovação (≥ 61%) em todas as provas.</li>
@@ -1221,9 +1285,15 @@
         <span id="cartTotal">R$ 0,00</span>
       </div>
     </div>
-    <button class="cart-checkout-btn" id="cartCheckoutBtn" onclick="checkoutCart()">
-      ⚡ Pagar com PIX
-    </button>
+    <div class="cart-checkout-duo">
+      <button class="cart-checkout-btn cart-btn-pix" id="cartBtnPix" onclick="checkoutCart('pix')">
+        ⚡ PIX
+      </button>
+      <button class="cart-checkout-btn cart-btn-card" id="cartBtnCard" onclick="checkoutCart('card')">
+        💳 Cartão
+      </button>
+    </div>
+    <div class="cart-checkout-hint">PIX: aprovação instantânea · Cartão: até 6x sem juros</div>
   </div>
 </div>
 
@@ -2649,6 +2719,12 @@ window.closePresenteModal = function() {
 
 window.goToStore = function() { switchTab("loja"); };
 
+window.toggleSemLoja = function(header) {
+  var card = header.parentElement;
+  if (card.classList.contains("sem-card-soon")) return;
+  card.classList.toggle("open");
+};
+
 // ── CURSOS ──────────────────────────────────────────────────────────────────
 // Catálogo de cursos. `chave` = valor em `acessos.resumo` e PAGE_KEY do arquivo.
 var CURSOS = [
@@ -2726,7 +2802,7 @@ window.addToCart = function(key) {
 
 window.addCursoToCart = function() {
   /* Verifica se já tem acesso */
-  if (acessosCache && acessosCache.find(function(a){ return a.resumo === "curso-peconhentos"; })){
+  if (cursoLiberado("curso-peconhentos")){
     alert("Você já possui acesso a este curso!"); return;
   }
   /* Remove curso duplicado do carrinho se existir */
@@ -2925,7 +3001,7 @@ function updateCartUI() {
     var precoOriginal = (c.tipo === "final" && !c.isPacoteCompleto && PROMO_FINAL_ATIVA && precoFinalEfetivo < PRECO_FINAL_DE)
       ? '<span style="text-decoration:line-through;color:rgba(125,211,232,0.3);font-size:11px;margin-right:4px;">' + formatPrice(PRECO_FINAL_DE) + '</span>'
       : '';
-    var subLabel = c.isPacoteCompleto ? "Pacote Completo · 50 dias" : "3º Semestre · 50 dias de acesso";
+    var subLabel = c.isPacoteCompleto ? "Pacote Completo · 50 dias" : (c.tipo === "curso" ? "Curso · 90 dias de acesso" : "3º Semestre · 50 dias de acesso");
     return '<div class="cart-item">' +
       '<span class="cart-item-emoji">' + c.emoji + '</span>' +
       '<div class="cart-item-info">' +
@@ -3023,8 +3099,9 @@ function updateCartUI() {
   }
 }
 
-window.checkoutCart = function() {
+window.checkoutCart = function(metodo) {
   if (cart.length === 0) return;
+  metodo = metodo || "pix";
   var calc = calcCartTotal();
   var nomes = cart.map(function(c){ return c.label; }).join(", ");
   var keys = cart.map(function(c){ return c.key; });
@@ -3034,14 +3111,12 @@ window.checkoutCart = function() {
   var temPacoteCheckout = cart.some(function(c){ return c.isPacoteCompleto; });
   if (cupomAtivo && finalTotal > 0) {
     if (temPacoteCheckout) {
-      // Cupom só nos itens P2 se houver
       var p2Only = cart.filter(function(c){ return c.tipo !== "final"; });
       if (p2Only.length > 0) {
         var baseP2 = finalTotal - PRECO_PACK_FINAL;
         var cupomVal = Math.round(baseP2 * cupomAtivo.desconto_pct) / 100;
         finalTotal = Math.max(0, finalTotal - cupomVal);
       }
-      // Se só pacote: sem desconto de cupom
     } else {
       var cupomVal = Math.round(finalTotal * cupomAtivo.desconto_pct) / 100;
       finalTotal = Math.max(0, finalTotal - cupomVal);
@@ -3051,18 +3126,54 @@ window.checkoutCart = function() {
   // Se for 1 item só, usa fluxo normal
   if (keys.length === 1) {
     var item = cart[0];
-    initPayment(item.key, item.label, finalTotal);
+    initPayment(item.key, item.label, finalTotal, metodo);
     closeCart();
     return;
   }
 
   // Múltiplos: manda lista completa
-  initPaymentMultiple(keys, nomes, finalTotal);
+  initPaymentMultiple(keys, nomes, finalTotal, metodo);
   closeCart();
 };
 
 // ── Pagamento múltiplo ────────────────────────────────────────────────────────
-window.initPaymentMultiple = async function(productKeys, productName, totalPrice) {
+window.initPaymentMultiple = async function(productKeys, productName, totalPrice, metodo) {
+  metodo = metodo || "pix";
+
+  // ── CARTÃO: gera preference e redireciona pro Checkout Pro ──
+  if (metodo === "card") {
+    try {
+      var session = window.authSession;
+      var res = await fetch(
+        "https://chqhdmjqnjjdatowfyif.supabase.co/functions/v1/create-payment",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": "Bearer " + session.access_token },
+          body: JSON.stringify({
+            produto_key:  productKeys.join(","),
+            produto_nome: productName,
+            valor:        totalPrice,
+            user_id:      session.user.id,
+            user_email:   session.user.email,
+            metodo:       "card",
+          }),
+        }
+      );
+      var data = await res.json();
+      if (!res.ok || !data.init_point) {
+        alert("Erro ao gerar pagamento com cartão. Tente novamente.");
+        return;
+      }
+      // Redireciona para o Checkout Pro do Mercado Pago
+      window.location.href = data.init_point;
+    } catch(err) {
+      console.error(err);
+      alert("Erro de conexão. Tente novamente.");
+    }
+    return;
+  }
+
+  // ── PIX: fluxo existente com QR Code ──
   document.getElementById("modalProductName").textContent = productName.length > 60 ? productName.substring(0,57)+"..." : productName;
   document.getElementById("modalProductPrice").textContent = formatPrice(totalPrice);
   document.getElementById("pixCode").textContent = "Gerando...";
@@ -3085,6 +3196,7 @@ window.initPaymentMultiple = async function(productKeys, productName, totalPrice
           valor:        totalPrice,
           user_id:      session.user.id,
           user_email:   session.user.email,
+          metodo:       "pix",
         }),
       }
     );
@@ -3141,6 +3253,9 @@ window.initPaymentMultiple = async function(productKeys, productName, totalPrice
 // ── Renderiza loja ────────────────────────────────────────────────────────────
 function renderStore() {
   renderStoreGrid();
+  // Abrir 3º semestre por padrão
+  var sem3 = document.getElementById("sem-3");
+  if (sem3 && !sem3.classList.contains("open")) sem3.classList.add("open");
 }
 
 function renderStoreGrid() {
@@ -3292,7 +3407,42 @@ function renderStoreGridFinal() {
 }
 
 // ── Inicia pagamento via Edge Function ────────────────────────────────────────
-window.initPayment = async function(productKey, productName, price) {
+window.initPayment = async function(productKey, productName, price, metodo) {
+  metodo = metodo || "pix";
+
+  // ── CARTÃO: gera preference e redireciona ──
+  if (metodo === "card") {
+    try {
+      var session = window.authSession;
+      var res = await fetch(
+        "https://chqhdmjqnjjdatowfyif.supabase.co/functions/v1/create-payment",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": "Bearer " + session.access_token },
+          body: JSON.stringify({
+            produto_key:  productKey,
+            produto_nome: productName,
+            valor:        price,
+            user_id:      session.user.id,
+            user_email:   session.user.email,
+            metodo:       "card",
+          }),
+        }
+      );
+      var data = await res.json();
+      if (!res.ok || !data.init_point) {
+        alert("Erro ao gerar pagamento com cartão. Tente novamente.");
+        return;
+      }
+      window.location.href = data.init_point;
+    } catch(err) {
+      console.error(err);
+      alert("Erro de conexão. Tente novamente.");
+    }
+    return;
+  }
+
+  // ── PIX: fluxo QR Code ──
   document.getElementById("modalProductName").textContent  = productName;
   document.getElementById("modalProductPrice").textContent = formatPrice(price);
   document.getElementById("pixCode").textContent = "Gerando...";
@@ -3318,6 +3468,7 @@ window.initPayment = async function(productKey, productName, price) {
           valor:        price,
           user_id:      session.user.id,
           user_email:   session.user.email,
+          metodo:       "pix",
         }),
       }
     );
@@ -3330,10 +3481,8 @@ window.initPayment = async function(productKey, productName, price) {
       return;
     }
 
-    // Preenche copia-e-cola
     document.getElementById("pixCode").textContent = data.qr_code;
 
-    // QR Code
     var qrEl = document.getElementById("qrcode-modal");
     qrEl.innerHTML = "";
     if (data.qr_code_base64) {
@@ -3351,7 +3500,6 @@ window.initPayment = async function(productKey, productName, price) {
 
     currentPaymentId = data.payment_id;
 
-    // Polling: verifica a cada 5s se o perfil foi atualizado
     if (pollingTimer) clearInterval(pollingTimer);
     pollingTimer = setInterval(async function() {
       try {
@@ -3364,8 +3512,6 @@ window.initPayment = async function(productKey, productName, price) {
         if (pr.data && pr.data[productKey] === true) {
           clearInterval(pollingTimer);
           pollingTimer = null;
-
-          // Atualiza perfil local
           profile[productKey] = true;
 
           document.getElementById("modalStatus").className = "modal-status success";
