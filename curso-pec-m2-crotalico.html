@@ -46,6 +46,14 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
 .pill-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
 .pill{background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--text)}
 .pill.danger{border-color:rgba(249,95,95,.4);color:var(--red)}.pill.warn{border-color:rgba(249,201,79,.4);color:var(--gold)}
+/* IMAGENS INLINE NA TEORIA */
+.img-inline{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+.img-inline img{width:100%;display:block;object-fit:cover}
+.img-inline .img-leg{padding:12px 16px;font-size:12px;color:var(--muted);line-height:1.5}
+.img-inline .img-leg b{color:var(--accent2)}
+.img-inline .img-leg .img-credit{font-family:var(--font-mono);font-size:10px;margin-top:4px;color:var(--muted);opacity:.7}
+.img-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+@media(max-width:560px){.img-pair{grid-template-columns:1fr}}
 .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:24px}
 .img-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .25s}
 .img-card:hover{border-color:var(--gold);transform:translateY(-2px)}
@@ -158,6 +166,11 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
     </ul>
   </div>
 
+  <div class="img-inline" style="max-width:480px">
+    <img src="img/m2-ptose-palpebral.jpg" alt="Ptose palpebral bilateral em acidente crotálico">
+    <div class="img-leg"><b>Ptose palpebral bilateral</b> — paciente com manifestação de ptose palpebral do tipo bilateral em acidente crotálico. Sinal precoce e característico do envenenamento por cascavel, causado pelo bloqueio pré-sináptico da crotoxina na junção neuromuscular.<div class="img-credit">Foto: Marcelo Ribeiro Duarte — Instituto Butantan</div></div>
+  </div>
+
   <div class="info-block danger">
     <div class="label">Rabdomiólise</div>
     <h4>Mialgia + colúria = sinal de alarme</h4>
@@ -168,6 +181,11 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
       <li><b>LDH e AST</b> também elevadas (origem muscular);</li>
       <li>Risco de <b>IRA</b> por necrose tubular aguda (depósito de mioglobina nos túbulos renais).</li>
     </ul>
+  </div>
+
+  <div class="img-inline" style="max-width:480px">
+    <img src="img/m2-coluria-crotalico.jpg" alt="Colúria (urina escura) por mioglobinúria — acidente crotálico">
+    <div class="img-leg"><b>Colúria (urina "cor de coca-cola")</b> — mioglobinúria por rabdomiólise no acidente crotálico. A mioglobina liberada pela destruição muscular se deposita nos túbulos renais, podendo causar necrose tubular aguda e IRA.<div class="img-credit">Foto: Marcelo Ribeiro Duarte — Instituto Butantan</div></div>
   </div>
 
   <div class="pill-list">

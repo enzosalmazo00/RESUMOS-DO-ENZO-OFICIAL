@@ -55,6 +55,14 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
 .pill{background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--text)}
 .pill.danger{border-color:rgba(249,95,95,.4);color:var(--red)}
 .pill.warn{border-color:rgba(249,201,79,.4);color:var(--gold)}
+/* IMAGENS INLINE NA TEORIA */
+.img-inline{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+.img-inline img{width:100%;display:block;object-fit:cover}
+.img-inline .img-leg{padding:12px 16px;font-size:12px;color:var(--muted);line-height:1.5}
+.img-inline .img-leg b{color:var(--accent2)}
+.img-inline .img-leg .img-credit{font-family:var(--font-mono);font-size:10px;margin-top:4px;color:var(--muted);opacity:.7}
+.img-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+@media(max-width:560px){.img-pair{grid-template-columns:1fr}}
 /* GALERIA */
 .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:24px}
 .img-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .25s}
@@ -177,6 +185,28 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
       <li><b>Infecção secundária</b> — a boca da serpente abriga flora polimicrobiana (Gram-positivos, Gram-negativos e anaeróbios), podendo causar abscessos e celulite;</li>
       <li><b>Síndrome compartimental</b> — edema tenso em compartimentos fasciais fechados → isquemia → necessidade de fasciotomia de emergência.</li>
     </ul>
+  </div>
+
+  <div class="img-pair">
+    <div class="img-inline">
+      <img src="img/m2-edema-botropico.jpg" alt="Edema progressivo em membro inferior — acidente botrópico">
+      <div class="img-leg"><b>Edema local progressivo</b> — acidente botrópico. O edema endurado pode se estender a todo o membro nas primeiras horas após a picada.<div class="img-credit">Acervo CEPCLAM/FMT-HVD — via Ministério da Saúde (Protocolo SAVING, 2022)</div></div>
+    </div>
+    <div class="img-inline">
+      <img src="img/m2-equimose-botropico.jpg" alt="Equimose perilesional em acidente botrópico">
+      <div class="img-leg"><b>Equimose perilesional</b> — extravasamento sanguíneo ao redor do local da picada, resultado da ação hemorrágica do veneno botrópico.<div class="img-credit">Fonte: Da Silva et al. (2022) — ResearchGate, CC BY 4.0</div></div>
+    </div>
+  </div>
+
+  <div class="img-pair">
+    <div class="img-inline">
+      <img src="img/m2-bolhas-botropico.jpg" alt="Bolhas hemorrágicas em acidente botrópico">
+      <div class="img-leg"><b>Bolhas hemorrágicas</b> — surgem horas após a picada por ação proteolítica e hemorrágica do veneno. Indicam comprometimento local moderado a grave.<div class="img-credit">Fonte: Perfil epidemiológico dos acidentes ofídicos de Minas Gerais — ResearchGate (2022)</div></div>
+    </div>
+    <div class="img-inline">
+      <img src="img/m2-necrose-botropico.jpg" alt="Necrose tecidual em acidente botrópico">
+      <div class="img-leg"><b>Necrose tecidual em acidente botrópico</b> — A: segundo pododáctilo com necrose já em estágio de amputação; B: necrose em quinto quirodáctilo; C: necrose tecidual em estado avançado. Complicação local favorecida pelo atendimento tardio, uso de torniquete ou substâncias caseiras.<div class="img-credit">Foto: Marcelo Ribeiro Duarte — Instituto Butantan</div></div>
+    </div>
   </div>
 
   <div class="info-block danger">
