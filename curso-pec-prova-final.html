@@ -1313,36 +1313,47 @@ function showResult() {
 function saveScore(pct) {
   if (!window.authClient || !window.authSession) return;
   var uid = window.authSession.user.id;
-  window.authClient.from("curso_provas").upsert({
+  var aprovado = rights >= PASSING;
+  /* INSERT na tabela curso_provas — mesma lógica das provas de módulo */
+  window.authClient.from("curso_provas").insert({
     user_id: uid,
-    curso: "curso-peconhentos",
+    curso: "peconhentos",
     modulo: MODULO,
-    nota: pct,
-    tentativa_em: new Date().toISOString()
-  }, { onConflict: "user_id,curso,modulo,tentativa_em" }).then(function(res) {
+    acertos: rights,
+    total: TOTAL,
+    percentual: pct,
+    aprovado: aprovado
+  }).then(function(res) {
     if (res.error) console.error("Erro ao salvar prova:", res.error);
-    else console.log("Prova salva:", pct + "%");
+    else console.log("Prova final salva:", pct + "%");
   });
+  /* Marcar progresso da prova final */
+  window.authClient.from("curso_progresso").upsert({
+    user_id: uid,
+    curso: "peconhentos",
+    aula_id: "prova-final",
+    concluida: true,
+    quiz_score: rights,
+    quiz_total: TOTAL,
+    updated_at: new Date().toISOString()
+  }, { onConflict: "user_id,curso,aula_id" });
 }
 
 function loadBest() {
   if (!window.authClient || !window.authSession) return;
   var uid = window.authSession.user.id;
   window.authClient.from("curso_melhor_prova")
-    .select("melhor_nota,ultima_tentativa")
+    .select("melhor_percentual, ja_aprovado, tentativas")
     .eq("user_id", uid)
-    .eq("curso", "curso-peconhentos")
+    .eq("curso", "peconhentos")
     .eq("modulo", MODULO)
     .maybeSingle()
     .then(function(res) {
-      if (res.data && res.data.melhor_nota !== null) {
+      if (res.data && res.data.melhor_percentual !== null) {
         var bp = document.getElementById("bestPanel");
         bp.style.display = "flex";
-        document.getElementById("bestScore").textContent = res.data.melhor_nota + "%";
-        if (res.data.ultima_tentativa) {
-          var d = new Date(res.data.ultima_tentativa);
-          document.getElementById("bestDate").textContent = d.toLocaleDateString("pt-BR");
-        }
+        document.getElementById("bestScore").textContent = Math.round(res.data.melhor_percentual) + "%";
+        document.getElementById("bestScore").style.color = res.data.ja_aprovado ? "var(--green)" : "var(--red)";
       }
     });
 }

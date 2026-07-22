@@ -45,6 +45,12 @@
     <div class="step-item"><span><b>Armazenamento:</b> +2°C a +8°C. <b>NUNCA congelar.</b> Validade: 36 meses desde a fabricação (verificar rótulo).</span></div>
   </div>
 
+  <div class="info-block danger">
+    <div class="label">Regra absoluta — internação pós-soro</div>
+    <h4>🚨 JAMAIS dispensar paciente após infusão de soro</h4>
+    <p>Todo paciente que recebeu soro antiveneno <b>deve permanecer internado</b> com monitorização contínua. Reações tardias (anafilactoide/doença do soro) podem ocorrer <b>horas a dias</b> após a infusão. A alta só ocorre após estabilização clínica completa e liberação médica, nunca imediatamente após a infusão.</p>
+  </div>
+
   <div class="info-block warn">
     <div class="label">Pode administrar a qualquer momento</div>
     <p>O soro antiveneno pode ser dado mesmo após refeições ou ingestão de bebidas alcoólicas — mas exige cuidado maior pelo <b>risco de vômitos (aspiração)</b>. O uso de outros medicamentos ao mesmo tempo <b>não compromete</b> o tratamento com soro.</p>
@@ -72,16 +78,21 @@
 
   <div class="sec-divider"><h3>Reações adversas à soroterapia</h3></div>
   <div class="info-block danger">
-    <div class="label">Reação anafilática — emergência</div>
-    <h4>🚨 MUITO CUIDADO: ter adrenalina e hidrocortisona SEMPRE à disposição</h4>
-    <p>Reações precoces podem ocorrer <b>durante a infusão e até 2h após</b>. São geralmente leves (prurido, urticária, rubor), mas podem evoluir para <b>anafilaxia grave</b> (broncoespasmo, hipotensão, edema de glote). Conduta:</p>
+    <div class="label">Reações adversas precoces — anafilática × anafilactoide</div>
+    <h4>🚨 Ter adrenalina, anti-histamínico e corticoide SEMPRE à disposição</h4>
+    <p>Existem dois tipos de reações precoces ao soro:</p>
     <ul>
-      <li><b>Interromper a infusão</b> imediatamente</li>
-      <li><b>Adrenalina IM</b> (face anterolateral da coxa): adulto 0,3–0,5 mg; criança 0,01 mg/kg</li>
-      <li><b>Hidrocortisona IV:</b> 500 mg adulto; 10 mg/kg criança</li>
-      <li>Anti-histamínico (prometazina/difenidramina)</li>
-      <li>Suporte: O₂, acesso venoso, volume se hipotensão</li>
-      <li>Após estabilização: <b>retomar a infusão em velocidade menor</b> — a necessidade do soro permanece</li>
+      <li><b>Reação ANAFILÁTICA (IgE-mediada):</b> verdadeira alergia. Mais rara, mas potencialmente fatal. Ocorre em pacientes previamente sensibilizados. Quadro: urticária, broncoespasmo, edema de glote, hipotensão, choque. Pode ocorrer mesmo com pequenos volumes.</li>
+      <li><b>Reação ANAFILACTOIDE (não-IgE):</b> mais comum. Causada pela ativação direta do complemento pelas proteínas heterólogas do soro. Dose-dependente — relacionada à velocidade de infusão. Quadro semelhante (rubor, prurido, urticária, calafrios, hipotensão), mas geralmente menos grave.</li>
+    </ul>
+    <p><b>Conduta para AMBAS — protocolo de choque anafilático:</b></p>
+    <ul>
+      <li><b>1º — Interromper a infusão</b> imediatamente</li>
+      <li><b>2º — Adrenalina IM</b> (face anterolateral da coxa): adulto 0,3–0,5 mg (1:1.000); criança 0,01 mg/kg (máx 0,3 mg)</li>
+      <li><b>3º — Anti-histamínico IV:</b> prometazina 25–50 mg ou difenidramina 25–50 mg (adulto); 0,5–1 mg/kg (criança)</li>
+      <li><b>4º — Corticoide IV:</b> hidrocortisona 500 mg (adulto); 10 mg/kg (criança) — previne recorrência bifásica</li>
+      <li><b>5º — Suporte:</b> O₂ suplementar, manter acesso venoso calibroso, SF 0,9% em bolus se hipotensão</li>
+      <li><b>6º — Após estabilização: RETOMAR a infusão do soro em velocidade MENOR</b> — a necessidade de neutralizar o veneno permanece. Suspender definitivamente o soro só é aceitável se a reação for refratária ao tratamento</li>
     </ul>
   </div>
 
@@ -130,12 +141,12 @@
 var CURSO="peconhentos",AULA_ID="m5-soroterapia";
 function showSection(id,btn){document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');document.querySelectorAll('nav.tabs button').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
 var QD=[
-  {n:1,q:"A dose de soro antiveneno é definida por:",o:[{l:"A",v:"Peso do paciente"},{l:"B",v:"Idade do paciente"},{l:"C",v:"Gravidade do acidente (classificação leve/moderado/grave)"},{l:"D",v:"Altura do paciente"}],cr:"C",ex:"A dose depende da gravidade do acidente, não do peso ou idade. Adultos e crianças recebem a mesma dose, porque o objetivo é neutralizar a quantidade de veneno inoculado."},
-  {n:2,q:"O tempo de infusão recomendado para os soros antiveneno é:",o:[{l:"A",v:"Bolus rápido em 2 minutos"},{l:"B",v:"Entre 20 e 60 minutos, em infusão lenta"},{l:"C",v:"12 horas contínuas"},{l:"D",v:"Via oral"}],cr:"B",ex:"Infusão lenta entre 20–60 minutos. Infusão rápida demais aumenta o risco de reações alérgicas e anafilaxia."},
-  {n:3,q:"Diante de reação anafilática durante a infusão do soro, a primeira conduta é:",o:[{l:"A",v:"Aumentar a velocidade da infusão"},{l:"B",v:"Interromper a infusão + adrenalina IM"},{l:"C",v:"Apenas anti-histamínico oral"},{l:"D",v:"Suspender o soro definitivamente"}],cr:"B",ex:"Interromper imediatamente + adrenalina IM (0,3–0,5mg adulto; 0,01mg/kg criança). Após estabilização, a infusão pode ser retomada em velocidade menor — a necessidade do soro permanece."},
-  {n:4,q:"Qual soro tem ampola de 5 mL (diferente dos ofídicos que têm 10 mL)?",o:[{l:"A",v:"SAB e SAC"},{l:"B",v:"SAEsc e SAA"},{l:"C",v:"SAEL"},{l:"D",v:"Todos têm 10 mL"}],cr:"B",ex:"SAEsc (antiescorpiônico) e SAA (antiaracnídico) têm ampolas de 5 mL. Os soros ofídicos (SAB, SAC, SABL, SAEL, SABC) têm ampolas de 10 mL. Detalhe importante para não errar a dose."},
-  {n:5,q:"Sobre o armazenamento dos soros antiveneno:",o:[{l:"A",v:"Temperatura ambiente"},{l:"B",v:"Congelador a -20°C"},{l:"C",v:"Refrigeração entre +2°C e +8°C, nunca congelar"},{l:"D",v:"Não há restrição de temperatura"}],cr:"C",ex:"Todos os soros devem ser armazenados entre +2°C e +8°C. O congelamento é ESTRITAMENTE contraindicado. Usar imediatamente após abrir a ampola."},
-  {n:6,q:"O fornecimento dos soros antiveneno no Brasil é:",o:[{l:"A",v:"Pago pelo paciente"},{l:"B",v:"Gratuito — os soros pertencem ao Estado"},{l:"C",v:"Coberto pelo plano de saúde"},{l:"D",v:"Vendido em farmácias"}],cr:"B",ex:"Todos os soros pertencem ao Estado e seu fornecimento é gratuito. Pacientes vítimas de peçonhentos são atendimento de 'porta aberta' — sem necessidade de regulação."}
+  {n:1,q:"A dose de soro antiveneno é definida por:",o:[{l:"A",v:"Peso do paciente"},{l:"B",v:"Idade do paciente"},{l:"C",v:"Gravidade do acidente (classificação leve/moderado/grave)"},{l:"D",v:"Altura do paciente"},{l:"E",v:"Sexo do paciente"}],cr:"C",ex:"A dose depende da gravidade do acidente, não do peso ou idade. Adultos e crianças recebem a mesma dose, porque o objetivo é neutralizar a quantidade de veneno inoculado — que é a mesma independente do tamanho do paciente."},
+  {n:2,q:"Diante de reação anafilática ou anafilactoide durante a infusão do soro, a conduta correta segue a sequência:",o:[{l:"A",v:"Aumentar a velocidade da infusão para terminar logo"},{l:"B",v:"Interromper infusão → Adrenalina IM → Anti-histamínico IV → Corticoide IV → estabilizar → retomar soro mais lento"},{l:"C",v:"Apenas anti-histamínico oral e manter infusão"},{l:"D",v:"Suspender o soro definitivamente e dar alta"},{l:"E",v:"Corticoide oral + observação, sem interromper o soro"}],cr:"B",ex:"Protocolo de choque anafilático: interromper → adrenalina IM (0,3–0,5mg adulto) → anti-histamínico IV → hidrocortisona IV → suporte → após estabilizar, RETOMAR o soro em velocidade menor."},
+  {n:3,q:"Sobre a internação após infusão de soro antiveneno:",o:[{l:"A",v:"O paciente pode ir embora 30 minutos após o término da infusão"},{l:"B",v:"O paciente DEVE permanecer internado — jamais dispensar após infusão de soro"},{l:"C",v:"A internação só é necessária se houve reação"},{l:"D",v:"A alta pode ser dada se o paciente não apresentar sintomas em 1h"},{l:"E",v:"Apenas crianças precisam de internação pós-soro"}],cr:"B",ex:"Todo paciente que recebeu soro antiveneno deve permanecer internado com monitorização. Reações tardias podem ocorrer horas a dias após. A alta só após estabilização completa e liberação médica."},
+  {n:4,q:"A diferença entre reação anafilática e anafilactoide ao soro é:",o:[{l:"A",v:"Não existe diferença — são a mesma coisa"},{l:"B",v:"A anafilática é IgE-mediada (alergia verdadeira); a anafilactoide é por ativação direta do complemento (dose-dependente)"},{l:"C",v:"A anafilactoide é sempre mais grave que a anafilática"},{l:"D",v:"A anafilática ocorre só em crianças"},{l:"E",v:"A anafilactoide não requer tratamento"}],cr:"B",ex:"Anafilática = IgE-mediada, alergia verdadeira, rara mas potencialmente fatal. Anafilactoide = ativação direta do complemento, mais comum, dose-dependente (relacionada à velocidade de infusão). A conduta de emergência é a MESMA para ambas."},
+  {n:5,q:"Sobre o armazenamento dos soros antiveneno:",o:[{l:"A",v:"Temperatura ambiente"},{l:"B",v:"Congelador a -20°C"},{l:"C",v:"Refrigeração entre +2°C e +8°C, nunca congelar"},{l:"D",v:"Não há restrição de temperatura"},{l:"E",v:"Podem ser congelados para transporte"}],cr:"C",ex:"Todos os soros devem ser armazenados entre +2°C e +8°C. O congelamento é ESTRITAMENTE contraindicado — desnatura as imunoglobulinas. Usar imediatamente após abrir a ampola."},
+  {n:6,q:"Os soros antiveneno no Brasil são:",o:[{l:"A",v:"Pagos pelo paciente na farmácia"},{l:"B",v:"Gratuitos — pertencem ao Estado, atendimento de porta aberta"},{l:"C",v:"Cobertos pelo plano de saúde"},{l:"D",v:"Vendidos apenas pelo Instituto Butantan"},{l:"E",v:"Disponíveis apenas em hospitais universitários"}],cr:"B",ex:"Todos os soros pertencem ao Estado e seu fornecimento é gratuito. Pacientes vítimas de peçonhentos são atendimento de 'porta aberta' — sem necessidade de regulação. Produzidos por: Instituto Butantan (SP), Instituto Vital Brazil (RJ) e Fundação Ezequiel Dias (MG)."}
 ];
 var QS={c:0,w:0,a:0};
 function renderQuiz(){var ct=document.getElementById('quizContainer');ct.innerHTML='';QD.forEach(function(q,i){var d=document.createElement('div');d.className='q-card';d.id='q'+i;var body='<div class="opts">'+q.o.map(function(o){return '<button class="opt-btn" data-q="'+i+'" data-l="'+o.l+'" onclick="answerMC('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+o.v+'</span></button>';}).join('')+'</div>';d.innerHTML='<div class="q-num">Questão '+q.n+'</div><div class="res-ind" id="ri'+i+'"></div><p class="q-text">'+q.q+'</p>'+body+'<div class="exp-box" id="ex'+i+'"><div class="et">📖 Explicação</div><p>'+q.ex+'</p></div>';ct.appendChild(d);});updateScores();}
