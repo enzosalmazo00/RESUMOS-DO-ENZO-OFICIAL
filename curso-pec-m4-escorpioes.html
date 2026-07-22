@@ -61,6 +61,17 @@
     <p>O escorpionismo é, junto com o ofidismo, um dos acidentes por peçonhentos mais frequentes no país. O gênero <b>Tityus</b> é o de importância médica: <i>T. serrulatus</i> (escorpião amarelo, o mais perigoso), <i>T. bahiensis</i> (marrom) e <i>T. stigmurus</i> (amarelo do Nordeste). O <b>escorpião amarelo</b> causa os acidentes mais graves — e é o que mais se reproduz em ambiente urbano (partenogênese).</p>
   </div>
 
+  <div class="img-pair">
+    <div class="img-inline">
+      <img src="img/m4-escorpiao-amarelo-01.jpg" alt="Tityus serrulatus — escorpião amarelo">
+      <div class="img-leg"><b>Tityus serrulatus (escorpião amarelo)</b> — principal espécie de importância médica no Brasil. Coloração amarelo-clara, pernas e cauda com manchas escuras, reprodução por partenogênese, adaptado ao ambiente urbano.<div class="img-credit">Foto: José Roberto Peruca / Flickr — CC BY 2.0</div></div>
+    </div>
+    <div class="img-inline">
+      <img src="img/m4-escorpiao-marrom-01.jpg" alt="Tityus bahiensis — escorpião marrom">
+      <div class="img-leg"><b>Tityus bahiensis (escorpião marrom)</b> — segunda espécie mais frequente. Coloração marrom-escura com pernas amareladas. Acidentes geralmente menos graves que os causados por T. serrulatus.<div class="img-credit">Manual de Identificação de Escorpiões — Governo do Estado de São Paulo</div></div>
+    </div>
+  </div>
+
   <div class="sec-divider"><h3>Ação do veneno</h3></div>
   <div class="info-block">
     <div class="label">Fisiopatologia</div>
@@ -193,7 +204,7 @@ var CURSO="peconhentos",AULA_ID="m4-escorpioes";
 function showSection(id,btn){document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');document.querySelectorAll('nav.tabs button').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
 
 var IMAGENS=[
-  {file:"img/m4-escorpiao-amarelo-01.jpg",titulo:"Tityus serrulatus (escorpião amarelo — o mais perigoso)",credito:"Wikimedia Commons — CC BY-SA 4.0"},
+  {file:"img/m4-escorpiao-amarelo-01.jpg",titulo:"Tityus serrulatus (escorpião amarelo — o mais perigoso)",credito:"Foto: José Roberto Peruca / Flickr — CC BY 2.0"},
   {file:"img/m4-escorpiao-marrom-01.jpg",titulo:"Tityus bahiensis (escorpião marrom)",credito:"Manual de Identificação de Escorpiões — Governo do Estado de São Paulo"}
 ];
 function renderGallery(){var w=document.getElementById('galleryWrap');w.innerHTML='';IMAGENS.forEach(function(im){var c=document.createElement('div');c.className='img-card';c.innerHTML='<div class="img-frame"><img src="'+im.file+'" alt="'+im.titulo+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><div class="placeholder" style="display:none"><span class="ph-emoji">🦂</span><span>'+im.titulo+'</span></div></div><div class="cap"><div class="cap-title">'+im.titulo+'</div><div class="cap-credit">'+im.credito+'</div></div>';w.appendChild(c);});}
