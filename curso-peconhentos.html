@@ -95,6 +95,27 @@ header .by{margin-top:14px;color:var(--muted);font-family:var(--font-mono);font-
 .source-note{margin-top:24px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}
 .source-note b{color:var(--accent2)}
 
+/* APRESENTAÇÃO */
+.apr-section{margin-bottom:32px}
+.apr-title{font-family:var(--font-display);font-size:clamp(18px,3vw,24px);font-weight:800;color:#fff;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.apr-subtitle{color:var(--muted);font-size:13px;margin-bottom:22px;line-height:1.6}
+.apr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.apr-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 14px;text-align:center;transition:all .25s}
+.apr-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 24px rgba(79,156,249,.15)}
+.apr-card .apr-val{font-family:var(--font-display);font-size:clamp(22px,3.5vw,32px);font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;margin-bottom:4px}
+.apr-card .apr-label{font-size:11px;color:var(--muted);line-height:1.4}
+.apr-card .apr-src{font-family:var(--font-mono);font-size:9px;color:rgba(255,255,255,.2);margin-top:6px}
+.apr-cat{font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--accent2);margin:22px 0 10px;display:flex;align-items:center;gap:8px}
+.apr-cat.orange{color:var(--accent3)}
+.apr-cat.purple{color:var(--accent4)}
+.apr-cat.gold{color:var(--gold)}
+.apr-ref{margin-top:16px;padding:12px 16px;background:var(--bg3);border-radius:12px;font-size:11px;color:var(--muted);line-height:1.6}
+.apr-ref b{color:var(--accent2)}
+.apr-toggle{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--card2);border:1px solid var(--border);border-radius:10px;cursor:pointer;color:var(--accent);font-family:var(--font-body);font-size:13px;font-weight:600;transition:all .2s;margin-bottom:14px}
+.apr-toggle:hover{border-color:var(--accent);background:var(--card)}
+.apr-collapse{max-height:0;overflow:hidden;transition:max-height .5s ease}
+.apr-collapse.open{max-height:3000px}
+
 /* VOLTAR */
 #backBtn{position:fixed;bottom:20px;left:20px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow);transition:all .2s}
 #backBtn:hover{border-color:var(--accent);background:var(--card2)}
@@ -150,6 +171,104 @@ header .by{margin-top:14px;color:var(--muted);font-family:var(--font-mono);font-
     <a href="#" class="continue-btn" id="continueBtn">▶ Continuar de onde parei</a>
   </div>
 
+  <!-- ============ APRESENTAÇÃO DO CURSO ============ -->
+  <div class="apr-section">
+    <div class="apr-title">📋 Apresentação do Curso</div>
+    <div class="apr-subtitle">Panorama epidemiológico dos acidentes por animais peçonhentos no Brasil — dados que fundamentam cada módulo deste curso.</div>
+
+    <!-- ─── SERPENTES ─── -->
+    <div class="apr-cat">🐍 Ofidismo — Serpentes</div>
+    <div class="apr-grid">
+      <div class="apr-card"><div class="apr-val">~430</div><div class="apr-label">Espécies de serpentes no Brasil</div><div class="apr-src">Costa et al., 2021</div></div>
+      <div class="apr-card"><div class="apr-val">76</div><div class="apr-label">Espécies de importância médica</div><div class="apr-src">Costa et al., 2021</div></div>
+      <div class="apr-card"><div class="apr-val">~30 mil</div><div class="apr-label">Acidentes ofídicos/ano</div><div class="apr-src">MS / SINAN</div></div>
+      <div class="apr-card"><div class="apr-val">~80%</div><div class="apr-label">Causados por <i>Bothrops</i></div><div class="apr-src">Da Silva et al., 2022</div></div>
+      <div class="apr-card"><div class="apr-val">&lt;1%</div><div class="apr-label">Letalidade geral</div><div class="apr-src">Da Silva et al., 2022</div></div>
+      <div class="apr-card"><div class="apr-val">75%</div><div class="apr-label">Vítimas do sexo masculino</div><div class="apr-src">Da Silva et al., 2022</div></div>
+      <div class="apr-card"><div class="apr-val">~82%</div><div class="apr-label">Picadas em membros inferiores</div><div class="apr-src">Da Silva et al., 2022</div></div>
+      <div class="apr-card"><div class="apr-val">4</div><div class="apr-label">Gêneros peçonhentos: <i>Bothrops, Crotalus, Lachesis, Micrurus</i></div><div class="apr-src">MS / Butantan</div></div>
+    </div>
+
+    <div class="apr-toggle" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('span').textContent=this.nextElementSibling.classList.contains('open')?'▾':'▸'"><span>▸</span> Principais dentições e famílias</div>
+    <div class="apr-collapse">
+      <div style="padding:0 4px 16px;font-size:13px;color:var(--muted);line-height:1.7;">
+        <b style="color:var(--text)">Família Viperidae</b> — dentição solenóglifa (presas ocas, grandes e móveis). Fosseta loreal presente. Inclui <i>Bothrops</i> (jararacas), <i>Crotalus</i> (cascavel) e <i>Lachesis</i> (surucucu). Responsáveis pela maioria dos acidentes graves no Brasil.<br><br>
+        <b style="color:var(--text)">Família Elapidae</b> — dentição proteróglifa (presas fixas, curtas, sulcadas). Sem fosseta loreal. Inclui <i>Micrurus</i> (corais verdadeiras). Todo acidente elapídico é considerado potencialmente grave.<br><br>
+        <b style="color:var(--text)">Tipos de dentição:</b> Áglifa (sem presas — jiboia), Opistóglifa (presas posteriores — cobra-cipó), Proteróglifa (presas fixas anteriores — coral), Solenóglifa (presas móveis ocas — jararaca, cascavel).
+        <div style="font-size:10px;color:rgba(255,255,255,.2);margin-top:8px">Fonte: Albuquerque NR (2022). Manual de Identificação das Serpentes Peçonhentas de MS. Ed. UFMS (CC BY).</div>
+      </div>
+    </div>
+
+    <!-- ─── ESCORPIÕES ─── -->
+    <div class="apr-cat orange">🦂 Escorpionismo — Escorpiões</div>
+    <div class="apr-grid">
+      <div class="apr-card"><div class="apr-val">2.800</div><div class="apr-label">Espécies catalogadas no mundo</div><div class="apr-src">Cartilha SES-SP, 2024</div></div>
+      <div class="apr-card"><div class="apr-val">104</div><div class="apr-label">De importância médica</div><div class="apr-src">Cartilha SES-SP, 2024</div></div>
+      <div class="apr-card"><div class="apr-val">4</div><div class="apr-label">Espécies no Brasil: <i>T. serrulatus, T. bahiensis, T. stigmurus, T. obscurus</i></div><div class="apr-src">Cartilha SES-SP / Butantan</div></div>
+      <div class="apr-card"><div class="apr-val">100%</div><div class="apr-label">Dor local em todos os casos</div><div class="apr-src">Cartilha SES-SP, 2024</div></div>
+      <div class="apr-card"><div class="apr-val">&lt;10 anos</div><div class="apr-label">Crianças: maior risco de gravidade e óbito</div><div class="apr-src">Cartilha SES-SP, 2024</div></div>
+      <div class="apr-card"><div class="apr-val">Partenogênese</div><div class="apr-label"><i>T. serrulatus</i> se reproduz sem macho → rápida expansão urbana</div><div class="apr-src">Cartilha SES-SP / Butantan</div></div>
+    </div>
+
+    <div class="apr-toggle" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('span').textContent=this.nextElementSibling.classList.contains('open')?'▾':'▸'"><span>▸</span> Espécies e características biológicas</div>
+    <div class="apr-collapse">
+      <div style="padding:0 4px 16px;font-size:13px;color:var(--muted);line-height:1.7;">
+        <b style="color:var(--accent3)"><i>Tityus serrulatus</i></b> (Escorpião amarelo) — corpo amarelo claro, cauda serrilhada no 3° e 4° segmentos, até 7 cm. Causa os acidentes <b style="color:var(--red)">de maior gravidade</b>. Reprodução partenogenética. Habitat: esgotos, áreas urbanas.<br><br>
+        <b style="color:var(--accent3)"><i>Tityus bahiensis</i></b> (Escorpião marrom) — corpo marrom avermelhado, sem serrilha na cauda, até 7 cm. Igualmente perigoso. Habitat: locais úmidos, sob pedras e troncos.<br><br>
+        <b style="color:var(--accent3)"><i>Tityus stigmurus</i></b> (Escorpião do Nordeste) — amarelo com triângulo escuro no dorso, serrilha dorsal, 5-7 cm. Predomina na região Nordeste.<br><br>
+        <b style="color:var(--text)">Características gerais:</b> aracnídeos, hábito noturno, ~2 partos/ano com ~20 filhotes cada, gestação de 45-60 dias, vivem 2-10 anos (até 25 anos). Controle químico é contraindicado — manejo ambiental (regra dos 4 As: Água, Abrigo, Alimento, Acesso).
+        <div style="font-size:10px;color:rgba(255,255,255,.2);margin-top:8px">Fontes: Cartilha de Orientação de Manejo Ambiental para Prevenção e Controle de Escorpiões — SES-SP (2024); Instituto Butantan — Aranhas e Escorpiões.</div>
+      </div>
+    </div>
+
+    <!-- ─── ARANHAS ─── -->
+    <div class="apr-cat purple">🕷️ Araneísmo — Aranhas</div>
+    <div class="apr-grid">
+      <div class="apr-card"><div class="apr-val">3</div><div class="apr-label">Gêneros de importância médica no Brasil</div><div class="apr-src">Butantan</div></div>
+      <div class="apr-card"><div class="apr-val"><i>Phoneutria</i></div><div class="apr-label">Aranha armadeira — Foneutrismo (Ctenidae, 4-5 cm, até 18 cm envergadura)</div><div class="apr-src">Butantan</div></div>
+      <div class="apr-card"><div class="apr-val"><i>Loxosceles</i></div><div class="apr-label">Aranha marrom — Loxoscelismo (Sicariidae, 1-1,5 cm, sedentária)</div><div class="apr-src">Butantan</div></div>
+      <div class="apr-card"><div class="apr-val"><i>Latrodectus</i></div><div class="apr-label">Viúva-negra — Latrodectismo (Theridiidae, 1-1,5 cm)</div><div class="apr-src">Butantan</div></div>
+    </div>
+
+    <div class="apr-toggle" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('span').textContent=this.nextElementSibling.classList.contains('open')?'▾':'▸'"><span>▸</span> Detalhes das espécies</div>
+    <div class="apr-collapse">
+      <div style="padding:0 4px 16px;font-size:13px;color:var(--muted);line-height:1.7;">
+        <b style="color:var(--accent4)"><i>Phoneutria nigriventer</i></b> — hábitos errantes e noturnos, comportamento de defesa (levanta os pares de pernas). Comum em bananais e peridomicílio. Envergadura de 15-18 cm. Habitat: Mata Atlântica e áreas urbanas.<br><br>
+        <b style="color:var(--accent4)"><i>Loxosceles gaucho</i></b> — sedentária, noturna, constrói teias irregulares. 3-4 cm de envergadura. Responsável por lesões dermonecróticas graves (loxoscelismo). Habitat: cascas de árvores, domicílios.<br><br>
+        <b style="color:var(--accent4)"><i>Latrodectus curacaviensis</i></b> — flamenguinha / viúva-negra. Hábitos gregários, teias tridimensionais. 3 cm de envergadura. Habitat: vegetação rasteira, peridomicílio, sob móveis.<br><br>
+        <b style="color:var(--text)">Outras espécies notáveis:</b> <i>Lycosa erythrognatha</i> (aranha de grama — veneno pouco tóxico, mas grande frequência de acidentes) e <i>Pachistopelma rufonigrum</i> (caranguejeira — pêlos urticantes no abdômen).
+        <div style="font-size:10px;color:rgba(255,255,255,.2);margin-top:8px">Fonte: Instituto Butantan — Aranhas e Escorpiões.</div>
+      </div>
+    </div>
+
+    <!-- ─── SOROTERAPIA ─── -->
+    <div class="apr-cat gold">💉 Soroterapia — Soros antiveneno</div>
+    <div class="apr-grid">
+      <div class="apr-card"><div class="apr-val">SAB</div><div class="apr-label">Soro antibotrópico — acidentes por <i>Bothrops</i></div><div class="apr-src">MS / Butantan</div></div>
+      <div class="apr-card"><div class="apr-val">SAC</div><div class="apr-label">Soro anticrotálico — acidentes por <i>Crotalus</i></div><div class="apr-src">MS / Butantan</div></div>
+      <div class="apr-card"><div class="apr-val">SABL</div><div class="apr-label">Soro antibothrópico-laquético</div><div class="apr-src">MS / Butantan</div></div>
+      <div class="apr-card"><div class="apr-val">SAEL</div><div class="apr-label">Soro antielapídico — acidentes por <i>Micrurus</i></div><div class="apr-src">MS / Butantan</div></div>
+      <div class="apr-card"><div class="apr-val">SAEsc</div><div class="apr-label">Soro antiescorpiônico — acidentes escorpiônicos</div><div class="apr-src">MS / Butantan</div></div>
+      <div class="apr-card"><div class="apr-val">SAAr</div><div class="apr-label">Soro antiaracnídico — acidentes por aranhas</div><div class="apr-src">MS / Butantan</div></div>
+    </div>
+
+    <div style="padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:6px">
+      <b style="color:var(--gold)">⚠️</b> Os soros antiveneno são produzidos pelo <b style="color:var(--text)">Instituto Butantan</b> e pela <b style="color:var(--text)">Fundação Ezequiel Dias (FUNED)</b>, distribuídos gratuitamente pelo SUS. A soroterapia é o <b style="color:var(--text)">único tratamento específico</b> para envenenamentos por animais peçonhentos. Deve ser administrada <b style="color:var(--text)">por via intravenosa</b>, em ambiente hospitalar, com material de reanimação disponível.
+    </div>
+
+    <!-- REFERÊNCIAS -->
+    <div class="apr-ref">
+      <b>Referências da apresentação:</b> Costa HC et al. (2021) — Lista de Répteis do Brasil; Da Silva et al. (2022) — <i>Rev. Ciênc. Farm. Básica Apl.</i>, v.11, n.13 (CC BY 4.0); Albuquerque NR (2022) — Manual de Identificação das Serpentes Peçonhentas de MS, Ed. UFMS (CC BY); Cartilha de Orientação de Manejo Ambiental para Prevenção e Controle de Escorpiões — SES-SP (2024); Instituto Butantan — Aranhas e Escorpiões; Ministério da Saúde — Guia de Vigilância em Saúde; Protocolo SAVING/MS (2022).
+    </div>
+
+    <div style="text-align:center;margin-top:18px;font-size:12px;color:var(--muted);">
+      <span style="font-family:var(--font-display);font-weight:700;font-size:20px;color:#fff;">5</span> módulos &nbsp;·&nbsp;
+      <span style="font-family:var(--font-display);font-weight:700;font-size:20px;color:#fff;">11</span> aulas &nbsp;·&nbsp;
+      <span style="font-family:var(--font-display);font-weight:700;font-size:20px;color:#fff;">6</span> provas &nbsp;·&nbsp;
+      <span style="font-family:var(--font-display);font-weight:700;font-size:20px;color:#fff;">1</span> certificado
+    </div>
+  </div>
+
   <!-- MÓDULOS (renderizados via JS a partir de COURSE) -->
   <div id="modulesWrap"></div>
 
@@ -158,7 +277,7 @@ header .by{margin-top:14px;color:var(--muted);font-family:var(--font-mono);font-
     <div style="font-size:36px;flex-shrink:0;">🏆</div>
     <div style="flex:1;">
       <div style="font-family:var(--font-display);font-size:17px;font-weight:700;color:#fff;margin-bottom:4px;">Prova Final do Curso</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.5;">15 questões cobrindo todos os 5 módulos · mínimo 61% para aprovação · sem limite de tentativas</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.5;">35 questões cobrindo todos os 5 módulos · mínimo 61% para aprovação · sem limite de tentativas</div>
     </div>
     <div style="flex-shrink:0;" id="finalExamStatus">
       <span style="font-family:var(--font-mono);font-size:12px;color:var(--accent4);">▶ Iniciar</span>
