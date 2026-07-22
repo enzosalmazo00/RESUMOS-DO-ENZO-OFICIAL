@@ -53,7 +53,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 .p1-footer{display:flex;justify-content:space-between;align-items:flex-end;width:100%;max-width:850px;margin-top:auto;gap:30px}
 .p1-sign{text-align:center}
 .p1-sign-line{width:220px;border-top:1.5px solid #333;margin-bottom:4px}
-.p1-sign-img{width:140px;max-height:50px;object-fit:contain;margin-bottom:4px;display:block;margin-left:auto;margin-right:auto}
+.p1-sign-img{width:160px;height:auto;margin-bottom:2px;display:block;margin-left:auto;margin-right:auto}
 .p1-sign-name{font-size:12px;font-weight:700;color:#1a1a2e}
 .p1-sign-title{font-size:9.5px;color:#666;font-family:'DM Sans',sans-serif;max-width:220px;line-height:1.4}
 .p1-date-block{text-align:center}
@@ -133,13 +133,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
           <div class="p1-sign-title">Farmacêutico · CRF-SP: 107.700<br>Esp. Farmácia Clínica — Albert Einstein</div>
         </div>
         <div class="p1-sign">
-          <div style="height:54px"></div>
+          <div style="height:56px"></div>
           <div class="p1-sign-line"></div>
           <div class="p1-sign-name" id="certNomeSign">Nome do Participante</div>
           <div class="p1-sign-title">Participante</div>
         </div>
         <div class="p1-date-block">
-          <div style="height:54px"></div>
+          <div style="height:56px"></div>
           <div class="p1-sign-line"></div>
           <div class="p1-date" id="certData">00 de mês de 0000</div>
         </div>
@@ -333,41 +333,64 @@ async function gerarCertificado(nome, documento){
   document.getElementById("certData").textContent = dataExtenso(new Date());
 
   /* Buscar notas dos módulos + prova final */
+  var grid = document.getElementById("notasGrid");
+  grid.innerHTML = "";
+  var modNames = {
+    1: "Módulo 1 — Fundamentos",
+    2: "Módulo 2 — Botrópico e Crotálico",
+    3: "Módulo 3 — Laquético e Elapídico",
+    4: "Módulo 4 — Escorpiônicos",
+    5: "Módulo 5 — Aracnídeos e Soroterapia",
+    0: "Prova Final do Curso"
+  };
   try {
     var sb = getClient();
     if(sb){
       var userRes = await sb.auth.getUser();
       var uid = userRes && userRes.data ? userRes.data.user.id : null;
+      console.log("Certificado — uid:", uid);
       if(uid){
         var notasRes = await sb.from("curso_melhor_prova")
           .select("modulo, melhor_percentual")
           .eq("user_id", uid)
           .eq("curso", CURSO)
           .order("modulo", {ascending: true});
-        if(notasRes.data){
-          var grid = document.getElementById("notasGrid");
-          grid.innerHTML = "";
-          var modNames = {
-            1: "Módulo 1 — Fundamentos",
-            2: "Módulo 2 — Botrópico e Crotálico",
-            3: "Módulo 3 — Laquético e Elapídico",
-            4: "Módulo 4 — Escorpiônicos",
-            5: "Módulo 5 — Aracnídeos e Soroterapia",
-            0: "Prova Final do Curso"
-          };
-          notasRes.data.forEach(function(r){
+        console.log("Certificado — notas response:", JSON.stringify(notasRes));
+        if(notasRes.data && notasRes.data.length > 0){
+          /* Separar módulos (1-5) e prova final (0) */
+          var modulos = notasRes.data.filter(function(r){ return r.modulo > 0; });
+          var final = notasRes.data.filter(function(r){ return r.modulo === 0; });
+          modulos.forEach(function(r){
             var pct = Math.round(r.melhor_percentual);
             var nota = (pct / 10).toFixed(1);
             var label = modNames[r.modulo] || ("Módulo " + r.modulo);
             var div = document.createElement("div");
             div.className = "p2-nota-item";
-            div.innerHTML = '<span class="p2-nota-label">' + label + '</span><span class="p2-nota-val">' + pct + '% (nota ' + nota + ')</span>';
+            div.innerHTML = '<span class="p2-nota-label">' + label + '</span><span class="p2-nota-val">' + pct + '% — nota ' + nota + '</span>';
             grid.appendChild(div);
           });
+          if(final.length > 0){
+            var pctF = Math.round(final[0].melhor_percentual);
+            var notaF = (pctF / 10).toFixed(1);
+            var divF = document.createElement("div");
+            divF.className = "p2-nota-item";
+            divF.style.borderTop = "1.5px solid #b8860b";
+            divF.style.paddingTop = "6px";
+            divF.style.marginTop = "4px";
+            divF.style.fontWeight = "700";
+            divF.innerHTML = '<span class="p2-nota-label" style="font-weight:700">Prova Final do Curso</span><span class="p2-nota-val" style="font-size:13px">' + pctF + '% — nota ' + notaF + '</span>';
+            grid.appendChild(divF);
+          }
+        } else {
+          grid.innerHTML = '<div style="font-size:11px;color:#999;">Notas não disponíveis</div>';
+          console.warn("Certificado — nenhuma nota encontrada. Erro:", notasRes.error);
         }
       }
     }
-  } catch(e){ console.warn("Erro ao buscar notas:", e); }
+  } catch(e){ console.warn("Erro ao buscar notas:", e); grid.innerHTML = '<div style="font-size:11px;color:#999;">Erro ao carregar notas</div>'; }
+
+  /* Aguardar renderização do DOM antes de capturar o PDF */
+  await new Promise(function(resolve){ setTimeout(resolve, 500); });
 
   /* Mover wrapper para visível temporariamente (html2pdf precisa) */
   var wrapper = document.getElementById("certWrapper");
