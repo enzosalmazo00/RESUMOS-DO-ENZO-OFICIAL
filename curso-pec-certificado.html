@@ -44,15 +44,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 .p1-badge{font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#b8860b;margin-bottom:8px;font-weight:600}
 .p1-title{font-size:36px;font-weight:700;color:#1a1a2e;margin-bottom:4px;letter-spacing:1px}
 .p1-subtitle{font-size:13px;color:#666;letter-spacing:2px;text-transform:uppercase;margin-bottom:28px;font-family:'DM Sans',sans-serif}
-.p1-certifica{font-size:13px;color:#888;margin-bottom:6px;font-family:'DM Sans',sans-serif}
-.p1-nome{font-size:30px;font-weight:700;color:#1a1a2e;border-bottom:2px solid #b8860b;padding-bottom:6px;margin-bottom:6px;min-width:400px;font-style:italic}
+.p1-certifica{font-size:16px;color:#666;margin-bottom:10px;font-family:'DM Sans',sans-serif}
+.p1-nome{font-size:34px;font-weight:700;color:#1a1a2e;border-bottom:2px solid #b8860b;padding-bottom:6px;margin-bottom:6px;min-width:400px;font-style:italic}
 .p1-doc{font-size:11px;color:#666;margin-bottom:16px;font-family:'DM Sans',sans-serif;letter-spacing:0.5px}
-.p1-desc{font-size:12.5px;color:#444;line-height:1.7;max-width:700px;margin-bottom:20px;font-family:'DM Sans',sans-serif}
-.p1-curso-name{font-size:16px;font-weight:700;color:#1a1a2e;margin-bottom:6px}
-.p1-ch{font-size:12px;color:#666;margin-bottom:24px;font-family:'DM Sans',sans-serif}
+.p1-desc{font-size:14px;color:#333;line-height:1.8;max-width:750px;margin-bottom:16px;font-family:'DM Sans',sans-serif}
+.p1-curso-name{font-size:20px;font-weight:700;color:#1a1a2e;margin-bottom:8px}
+.p1-ch{font-size:16px;color:#333;font-weight:700;margin-bottom:20px;letter-spacing:0.5px;font-family:'DM Sans',sans-serif}
 .p1-footer{display:flex;justify-content:space-between;align-items:flex-end;width:100%;max-width:700px;margin-top:auto}
 .p1-sign{text-align:center}
 .p1-sign-line{width:220px;border-top:1.5px solid #333;margin-bottom:4px}
+.p1-sign-img{width:180px;height:auto;margin-bottom:6px;display:block;margin-left:auto;margin-right:auto}
 .p1-sign-name{font-size:12px;font-weight:700;color:#1a1a2e}
 .p1-sign-title{font-size:9.5px;color:#666;font-family:'DM Sans',sans-serif;max-width:220px;line-height:1.4}
 .p1-date-block{text-align:center}
@@ -68,6 +69,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 .p2-mod-title{font-size:13px;font-weight:700;color:#1a1a2e;border-bottom:1.5px solid #b8860b;padding-bottom:3px;margin-bottom:6px;font-family:'DM Sans',sans-serif}
 .p2-mod-items{font-size:11px;color:#444;line-height:1.7;font-family:'DM Sans',sans-serif;padding-left:14px}
 .p2-mod-items li{margin-bottom:3px}
+.p2-notas{break-inside:avoid;margin-top:20px;border:1.5px solid #b8860b;border-radius:6px;padding:14px 18px;background:#fefdf5}
+.p2-notas-title{font-size:14px;font-weight:700;color:#1a1a2e;border-bottom:1.5px solid #b8860b;padding-bottom:4px;margin-bottom:10px;font-family:'DM Sans',sans-serif}
+.p2-notas-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;font-size:11.5px;font-family:'DM Sans',sans-serif;color:#333}
+.p2-nota-item{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dotted #ddd}
+.p2-nota-item:last-child{border-bottom:none}
+.p2-nota-label{color:#444}
+.p2-nota-val{font-weight:700;font-family:'JetBrains Mono',monospace;color:#1a1a2e}
 .p2-footer{position:absolute;bottom:20px;left:50px;right:50px;display:flex;justify-content:space-between;font-size:9px;color:#999;font-family:'DM Sans',sans-serif;border-top:1px solid #ddd;padding-top:8px}
 </style>
 </head>
@@ -114,12 +122,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
       <div class="p1-nome" id="certNome">Nome do Aluno</div>
       <div class="p1-doc" id="certDoc">Documento</div>
       <div class="p1-desc">
-        concluiu com aproveitamento o curso livre
+        concluiu o curso livre <b>«Acidentes por Animais Peçonhentos e Uso de Soro Antiveneno»</b>, englobando serpentes, escorpiões e aranhas de interesse médico. O presente certificado é emitido sob critérios de aproveitamento em prova final de curso, com nota mínima de 61%.
       </div>
-      <div class="p1-curso-name">Acidentes por Animais Peçonhentos e Uso de Soro Antiveneno</div>
-      <div class="p1-ch">Carga horária: 20 horas · Modalidade: EAD · Categoria: Curso livre para profissionais e estudantes da área da saúde</div>
+      <div class="p1-ch">Carga horária: 20 horas · Modalidade: EAD</div>
       <div class="p1-footer">
         <div class="p1-sign">
+          <img src="img/assinatura-enzo.png" alt="Assinatura" class="p1-sign-img" crossorigin="anonymous">
           <div class="p1-sign-line"></div>
           <div class="p1-sign-name">Enzo S. Salmazo</div>
           <div class="p1-sign-title">Farmacêutico pela Universidade Brasil · CRF-SP: 107.700<br>Especialista em Farmácia Clínica pelo Hospital Israelita Albert Einstein</div>
@@ -193,6 +201,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
           <li>Preparo e infusão de soros antiveneno: diluição, via IV, tempo 20–60 min, reações anafiláticas</li>
           <li>Remanejamento de soros entre pontos estratégicos; informações sobre fornecimento gratuito</li>
         </ul>
+      </div>
+    </div>
+    <div class="p2-notas" id="certNotas">
+      <div class="p2-notas-title">Desempenho do Aluno — Notas por Módulo</div>
+      <div class="p2-notas-grid" id="notasGrid">
+        <!-- Preenchido dinamicamente pelo JS -->
       </div>
     </div>
     <div class="p2-footer">
@@ -309,6 +323,43 @@ async function gerarCertificado(nome, documento){
   document.getElementById("certNome").textContent = nome;
   document.getElementById("certDoc").textContent = "Documento: " + documento;
   document.getElementById("certData").textContent = dataExtenso(new Date());
+
+  /* Buscar notas dos módulos + prova final */
+  try {
+    var sb = getClient();
+    if(sb){
+      var userRes = await sb.auth.getUser();
+      var uid = userRes && userRes.data ? userRes.data.user.id : null;
+      if(uid){
+        var notasRes = await sb.from("curso_melhor_prova")
+          .select("modulo, melhor_percentual")
+          .eq("user_id", uid)
+          .eq("curso", CURSO)
+          .order("modulo", {ascending: true});
+        if(notasRes.data){
+          var grid = document.getElementById("notasGrid");
+          grid.innerHTML = "";
+          var modNames = {
+            1: "Módulo 1 — Fundamentos",
+            2: "Módulo 2 — Botrópico e Crotálico",
+            3: "Módulo 3 — Laquético e Elapídico",
+            4: "Módulo 4 — Escorpiônicos",
+            5: "Módulo 5 — Aracnídeos e Soroterapia",
+            0: "Prova Final do Curso"
+          };
+          notasRes.data.forEach(function(r){
+            var pct = Math.round(r.melhor_percentual);
+            var nota = (pct / 10).toFixed(1);
+            var label = modNames[r.modulo] || ("Módulo " + r.modulo);
+            var div = document.createElement("div");
+            div.className = "p2-nota-item";
+            div.innerHTML = '<span class="p2-nota-label">' + label + '</span><span class="p2-nota-val">' + pct + '% (nota ' + nota + ')</span>';
+            grid.appendChild(div);
+          });
+        }
+      }
+    }
+  } catch(e){ console.warn("Erro ao buscar notas:", e); }
 
   /* Mover wrapper para visível temporariamente (html2pdf precisa) */
   var wrapper = document.getElementById("certWrapper");
