@@ -43,7 +43,6 @@ header .sub{color:var(--muted);font-size:13px}
 .exp-box{display:none;margin-top:14px;padding:14px 18px;background:rgba(184,79,249,.06);border-left:3px solid var(--accent4);border-radius:0 10px 10px 0;font-size:13px;color:var(--text);line-height:1.7}
 .exp-box.vis{display:block}
 .et{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent4);margin-bottom:8px}
-/* RESULTADO FINAL */
 .result-panel{display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-top:24px;text-align:center;box-shadow:var(--shadow)}
 .result-panel.vis{display:block}
 .result-panel .rp-icon{font-size:48px;margin-bottom:12px}
@@ -66,7 +65,7 @@ header .sub{color:var(--muted);font-size:13px}
 <header>
   <div class="badge">Prova de Proficiência</div>
   <h1>Módulo 2 — Botrópico e Crotálico</h1>
-  <div class="sub">10 questões · mínimo 61% para aprovação · sem limite de tentativas</div>
+  <div class="sub">15 questões · mínimo 61% para aprovação · sem limite de tentativas</div>
 </header>
 
 <div class="container">
@@ -74,7 +73,7 @@ header .sub{color:var(--muted);font-size:13px}
     <div class="ei-icon">📝</div>
     <div class="ei-text">
       <h3>Prova do Módulo 2</h3>
-      <p>Cobre: acidente botrópico (SAB), acidente crotálico (SAC), classificação, doses e diagnóstico diferencial.</p>
+      <p>Cobre: acidente botrópico (SAB), acidente crotálico (SAC), fisiopatologia, classificação, doses, diagnóstico diferencial, complicações e manejo.</p>
     </div>
     <div class="ei-best">
       <div class="eb-label">Melhor nota</div>
@@ -108,7 +107,23 @@ var MODULO = 2;
 var AULA_ID = "m2-prova";
 var MIN_PCT = 61;
 
-var QD = [{"n": 1, "q": "O veneno botrópico causa bolhas e necrose local por qual ação?", "o": [{"l": "A", "v": "Coagulante"}, {"l": "B", "v": "Proteolítica (inflamatória)"}, {"l": "C", "v": "Hemorrágica"}, {"l": "D", "v": "Neurotóxica"}], "cr": "B", "ex": "A ação proteolítica causa edema, bolhas e necrose no local da picada."}, {"n": 2, "q": "No botrópico GRAVE, quantas ampolas de SAB?", "o": [{"l": "A", "v": "2–4"}, {"l": "B", "v": "4–8"}, {"l": "C", "v": "12"}, {"l": "D", "v": "20"}], "cr": "C", "ex": "Grave = 12 ampolas SAB."}, {"n": 3, "q": "Complicação que mais mata no botrópico:", "o": [{"l": "A", "v": "Paralisia respiratória"}, {"l": "B", "v": "IRA"}, {"l": "C", "v": "Embolia pulmonar"}, {"l": "D", "v": "Arritmia"}], "cr": "B", "ex": "IRA é a principal causa de óbito no botrópico."}, {"n": 4, "q": "No crotálico, o quadro local é:", "o": [{"l": "A", "v": "Exuberante com necrose"}, {"l": "B", "v": "Discreto — quadro predominantemente sistêmico"}, {"l": "C", "v": "Igual ao botrópico"}, {"l": "D", "v": "Com bolhas hemorrágicas"}], "cr": "B", "ex": "No crotálico, pouca alteração local; o quadro sistêmico domina."}, {"n": 5, "q": "Colúria no crotálico indica:", "o": [{"l": "A", "v": "Hematúria"}, {"l": "B", "v": "Mioglobinúria por rabdomiólise"}, {"l": "C", "v": "Infecção urinária"}, {"l": "D", "v": "Hemoglobinúria"}], "cr": "B", "ex": "Colúria = mioglobinúria pela rabdomiólise causada pela crotoxina."}, {"n": 6, "q": "Crotálico MODERADO — dose de SAC:", "o": [{"l": "A", "v": "5"}, {"l": "B", "v": "10"}, {"l": "C", "v": "20"}, {"l": "D", "v": "Sem soro"}], "cr": "B", "ex": "Moderado = 10 ampolas SAC."}, {"n": 7, "q": "SAB (10 mL) neutraliza no mínimo:", "o": [{"l": "A", "v": "15 mg de C. durissus"}, {"l": "B", "v": "50 mg de B. jararaca"}, {"l": "C", "v": "5 mg de T. serrulatus"}, {"l": "D", "v": "30 mg de L. muta"}], "cr": "B", "ex": "SAB ≥50 mg de veneno de B. jararaca por ampola."}, {"n": 8, "q": "Fácies miastênica é clássica de qual acidente?", "o": [{"l": "A", "v": "Botrópico"}, {"l": "B", "v": "Crotálico"}, {"l": "C", "v": "Escorpiônico"}, {"l": "D", "v": "Fonêutrico"}], "cr": "B", "ex": "Fácies miastênica = crotálico (bloqueio neuromuscular pela crotoxina)."}, {"n": 9, "q": "TC incoagulável 24h após SAB — conduta:", "o": [{"l": "A", "v": "Alta"}, {"l": "B", "v": "2 ampolas adicionais de SAB"}, {"l": "C", "v": "Trocar para SAC"}, {"l": "D", "v": "Exames em 48h"}], "cr": "B", "ex": "TC incoagulável após 24h → 2 ampolas adicionais de SAB."}, {"n": 10, "q": "Soro para dúvida botrópico/crotálico:", "o": [{"l": "A", "v": "SABL"}, {"l": "B", "v": "SAEL"}, {"l": "C", "v": "SABC"}, {"l": "D", "v": "SAA"}], "cr": "C", "ex": "SABC neutraliza venenos de Bothrops e Crotalus."}];
+var QD = [
+  {n:1,q:"A tríade fisiopatológica do veneno botrópico consiste em:",o:[{l:"A",v:"Neurotóxica, miotóxica e coagulante"},{l:"B",v:"Proteolítica (inflamatória), coagulante e hemorrágica"},{l:"C",v:"Hemolítica, nefrotóxica e cardiotóxica"},{l:"D",v:"Neurotóxica, hemorrágica e miotóxica"},{l:"E",v:"Proteolítica, neurotóxica e hemorrágica"}],cr:"B",ex:"A tríade botrópica é: proteolítica/inflamatória (metaloproteases → edema, bolhas, necrose), coagulante (serinoproteases → consumo de fibrinogênio) e hemorrágica (SVMPs → lesão endotelial). Ações neurotóxica e miotóxica são típicas do crotálico."},
+  {n:2,q:"No acidente botrópico GRAVE, a dose de SAB (faixa MS/Butantan) é:",o:[{l:"A",v:"2 a 4 ampolas"},{l:"B",v:"4 a 8 ampolas"},{l:"C",v:"12 ampolas"},{l:"D",v:"20 ampolas"},{l:"E",v:"5 ampolas"}],cr:"C",ex:"Botrópico grave = 12 ampolas SAB. Leve = 2–4, Moderado = 4–8."},
+  {n:3,q:"A principal complicação sistêmica associada a óbito no acidente botrópico é:",o:[{l:"A",v:"Paralisia respiratória"},{l:"B",v:"Lesão renal aguda (IRA)"},{l:"C",v:"Embolia pulmonar"},{l:"D",v:"Arritmia cardíaca"},{l:"E",v:"Meningoencefalite"}],cr:"B",ex:"A IRA é a principal causa de óbito no botrópico. Prevenção: hidratação IV vigorosa mantendo diurese adequada. Paralisia respiratória é do crotálico."},
+  {n:4,q:"No acidente crotálico, o local da picada tipicamente apresenta:",o:[{l:"A",v:"Edema intenso com bolhas hemorrágicas e necrose"},{l:"B",v:"Manifestações mínimas — dor discreta e edema leve ou ausente"},{l:"C",v:"Síndrome compartimental precoce"},{l:"D",v:"Exatamente o mesmo quadro local do botrópico"},{l:"E",v:"Equimose extensa e sangramento ativo pelo ferimento"}],cr:"B",ex:"No crotálico, o local é benigno (dor discreta, edema mínimo). O quadro sistêmico (neurotóxico + miotóxico) é que predomina. A lesão local exuberante é assinatura do botrópico."},
+  {n:5,q:"A colúria ('urina cor de coca-cola') no acidente crotálico é causada por:",o:[{l:"A",v:"Hematúria maciça por ação hemorrágica"},{l:"B",v:"Mioglobinúria — resultado da rabdomiólise pela crotoxina/crotamina"},{l:"C",v:"Hemoglobinúria por hemólise intravascular"},{l:"D",v:"Bilirrubinúria por hepatite tóxica"},{l:"E",v:"Piúria por infecção urinária associada"}],cr:"B",ex:"Colúria = mioglobinúria pela rabdomiólise. A destruição de fibras musculares esqueléticas libera mioglobina, que se deposita nos túbulos renais podendo causar IRA. O marcador é a CPK elevada."},
+  {n:6,q:"No acidente crotálico MODERADO, a dose de SAC é:",o:[{l:"A",v:"5 ampolas"},{l:"B",v:"10 ampolas"},{l:"C",v:"20 ampolas"},{l:"D",v:"12 ampolas"},{l:"E",v:"Sem indicação de soro"}],cr:"B",ex:"Crotálico moderado = 10 ampolas SAC IV. Leve = 5, Grave = 20."},
+  {n:7,q:"Cada ampola de SAB (10 mL) neutraliza, no mínimo:",o:[{l:"A",v:"15 mg de veneno de C. durissus"},{l:"B",v:"50 mg de veneno de B. jararaca"},{l:"C",v:"5 mg de veneno de T. serrulatus"},{l:"D",v:"30 mg de veneno de L. muta"},{l:"E",v:"100 mg de veneno genérico"}],cr:"B",ex:"SAB ≥ 50 mg de veneno-referência de B. jararaca por ampola. Já o SAC neutraliza ≥ 15 mg de C. durissus terrificus."},
+  {n:8,q:"A fácies miastênica (ptose palpebral bilateral + queda da mandíbula) é sinal clássico de qual acidente?",o:[{l:"A",v:"Botrópico"},{l:"B",v:"Crotálico"},{l:"C",v:"Escorpiônico"},{l:"D",v:"Fonêutrico"},{l:"E",v:"Laquético"}],cr:"B",ex:"Fácies miastênica = crotálico. É causada pelo bloqueio neuromuscular pré-sináptico da crotoxina. Nenhum dos outros acidentes listados causa esse quadro."},
+  {n:9,q:"TC incoagulável 24h após a administração de SAB no botrópico — conduta:",o:[{l:"A",v:"Alta hospitalar com analgesia"},{l:"B",v:"2 ampolas adicionais de SAB"},{l:"C",v:"Trocar para SAC"},{l:"D",v:"Repetir exames em 48h e aguardar"},{l:"E",v:"Iniciar anticoagulação com heparina"}],cr:"B",ex:"TC incoagulável após 24h da dose inicial → 2 ampolas adicionais de SAB. O TC é reavaliado em 12h e 24h como marcador de eficácia."},
+  {n:10,q:"Em caso de dúvida entre acidente botrópico e crotálico, o soro indicado é:",o:[{l:"A",v:"SABL (antibotrópico-laquético)"},{l:"B",v:"SAEL (antielapídico)"},{l:"C",v:"SABC (antibotrópico-crotálico)"},{l:"D",v:"SAA (antiaracnídeo)"},{l:"E",v:"SAEsc (antiescorpiônico)"}],cr:"C",ex:"O SABC neutraliza venenos de Bothrops e Crotalus — é a escolha quando não é possível identificar com certeza o gênero da serpente."},
+  {n:11,q:"No acidente botrópico, a síndrome compartimental exige:",o:[{l:"A",v:"Dose adicional de 12 ampolas de SAB"},{l:"B",v:"Aplicação de gelo no membro por 6h"},{l:"C",v:"Fasciotomia de emergência"},{l:"D",v:"Garroteamento proximal ao edema"},{l:"E",v:"Antibioticoterapia isolada"}],cr:"C",ex:"A síndrome compartimental é uma emergência cirúrgica que exige fasciotomia (abertura do compartimento fascial para aliviar a pressão). Gelo e garrote são contraindicados. A soroterapia neutraliza veneno circulante, mas não resolve pressão intracompartimental já instalada."},
+  {n:12,q:"A crotoxina age na junção neuromuscular por:",o:[{l:"A",v:"Bloqueio pós-sináptico competitivo com a acetilcolina"},{l:"B",v:"Inibição da liberação de acetilcolina (bloqueio pré-sináptico)"},{l:"C",v:"Ativação excessiva dos receptores muscarínicos"},{l:"D",v:"Destruição dos receptores nicotínicos"},{l:"E",v:"Desmielinização aguda do nervo periférico"}],cr:"B",ex:"A crotoxina (PLA₂ + crotapotina) causa bloqueio pré-sináptico — impede a liberação de ACh na fenda sináptica. Por isso, anticolinesterásicos como neostigmina são ineficazes (o problema não é a degradação da ACh, mas sim sua não-liberação)."},
+  {n:13,q:"Qual analgésico é CONTRAINDICADO no acidente botrópico e por quê?",o:[{l:"A",v:"Dipirona — risco de agranulocitose"},{l:"B",v:"Tramadol — risco de convulsão"},{l:"C",v:"AAS — é antiagregante plaquetário e piora o sangramento"},{l:"D",v:"Paracetamol — risco de hepatotoxicidade"},{l:"E",v:"Morfina — risco de depressão respiratória"}],cr:"C",ex:"O AAS (ácido acetilsalicílico) é contraindicado porque é um antiagregante plaquetário — no contexto de coagulopatia e hemorragia do botrópico, piora significativamente o sangramento. A analgesia deve ser feita com dipirona ou tramadol."},
+  {n:14,q:"Cada ampola de SAC (10 mL) neutraliza, no mínimo:",o:[{l:"A",v:"50 mg de veneno de B. jararaca"},{l:"B",v:"15 mg de veneno de C. durissus terrificus"},{l:"C",v:"100 mg de veneno genérico"},{l:"D",v:"5 mg de veneno de Micrurus corallinus"},{l:"E",v:"30 mg de veneno de Lachesis muta"}],cr:"B",ex:"SAC ≥ 15 mg de veneno-referência de C. durissus terrificus por ampola. Diferente do SAB (≥ 50 mg de B. jararaca). São soros distintos com especificidades diferentes."},
+  {n:15,q:"Sobre a dose de antiveneno nos acidentes ofídicos, é CORRETO afirmar:",o:[{l:"A",v:"A dose depende do peso corporal — crianças recebem menos ampolas"},{l:"B",v:"A dose é ajustada pela idade — idosos recebem mais ampolas"},{l:"C",v:"A dose é definida pela gravidade do envenenamento — crianças recebem a mesma dose que adultos"},{l:"D",v:"A dose é fixa independentemente da gravidade"},{l:"E",v:"O soro deve ser administrado por via intramuscular para melhor absorção"}],cr:"C",ex:"A dose de antiveneno depende da GRAVIDADE do envenenamento, não do peso ou idade. Crianças recebem a mesma dose que adultos — o veneno inoculado é o mesmo, e o soro neutraliza o veneno, não o paciente. A via é sempre intravenosa."}
+];
 
 var answers = [];
 var answered = 0;
@@ -170,18 +185,16 @@ async function finalizarProva(){
   document.getElementById('rpIcon').textContent = aprovado ? '🎉' : '😔';
   document.getElementById('rpTitle').textContent = aprovado ? 'Aprovado!' : 'Não atingiu a nota mínima';
   document.getElementById('rpScore').textContent = pct + '%';
-  document.getElementById('rpDetail').textContent = correct + ' de ' + QD.length + ' corretas · Mínimo: ' + MIN_PCT + '% · ' + (aprovado ? 'Módulo 1 concluído!' : 'Você pode refazer quantas vezes quiser.');
+  document.getElementById('rpDetail').textContent = correct + ' de ' + QD.length + ' corretas · Mínimo: ' + MIN_PCT + '% · ' + (aprovado ? 'Módulo 2 concluído!' : 'Você pode refazer quantas vezes quiser.');
 
   panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-  /* Salvar no Supabase */
   var sb = getClient();
   if(sb){
     try {
       var u = await sb.auth.getUser();
       var user = u && u.data ? u.data.user : null;
       if(user){
-        /* Salvar tentativa na tabela curso_provas */
         await sb.from('curso_provas').insert({
           user_id: user.id,
           curso: CURSO,
@@ -192,7 +205,6 @@ async function finalizarProva(){
           aprovado: aprovado
         });
 
-        /* Marcar aula como concluída no progresso */
         await sb.from('curso_progresso').upsert({
           user_id: user.id,
           curso: CURSO,
@@ -203,7 +215,6 @@ async function finalizarProva(){
           updated_at: new Date().toISOString()
         }, { onConflict: 'user_id,curso,aula_id' });
 
-        /* Atualizar melhor nota exibida */
         loadBestScore(sb, user.id);
       }
     } catch(e){ console.warn('Erro ao salvar prova:', e); }

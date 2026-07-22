@@ -54,6 +54,7 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
 .img-frame .placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:12px;text-align:center;padding:16px}
 .img-frame .placeholder .ph-emoji{font-size:34px;opacity:.5}
 .img-card .cap{padding:12px 14px}.img-card .cap .cap-title{font-size:13px;font-weight:700;margin-bottom:4px}.img-card .cap .cap-credit{font-size:10px;color:var(--muted);font-family:var(--font-mono);line-height:1.4}
+.checklist-intro{background:rgba(249,201,79,0.06);border:1px solid rgba(249,201,79,0.25);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px}
 .ck-group{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;overflow:hidden}
 .ck-group h4{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--gold);padding:14px 18px;background:var(--card2);border-bottom:1px solid var(--border)}
 .ck-items{padding:10px 18px}
@@ -64,7 +65,6 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
 .ck-item .ck-text{font-size:13px;color:var(--text)}
 .ck-item.checked .ck-text{color:var(--muted);text-decoration:line-through}
 .ck-result{position:sticky;bottom:76px;background:var(--card2);border:1px solid var(--accent);border-radius:14px;padding:14px 18px;margin-top:16px;text-align:center;font-size:14px;font-weight:700;color:var(--accent2);box-shadow:var(--shadow)}
-.checklist-intro{background:rgba(249,201,79,0.06);border:1px solid rgba(249,201,79,0.25);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px}
 .quiz-header{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px;justify-content:center}
 .score-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 20px;text-align:center;min-width:90px}
 .score-box .sn{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
@@ -117,74 +117,162 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
   <div class="info-block orange">
     <div class="label">Visão geral</div>
     <h4>A cascavel: poucos acidentes, alta letalidade</h4>
-    <p>O gênero <b>Crotalus</b> (cascavel) responde por cerca de 7–10% dos acidentes ofídicos no Brasil, mas tem a <b>maior letalidade</b> entre eles. A cascavel habita regiões secas e abertas (cerrado, caatinga) e é reconhecida pelo <b>guizo/chocalho</b> na ponta da cauda. Diferente do botrópico, o quadro é <b>predominantemente sistêmico</b> — com pouca alteração local.</p>
+    <p>O gênero <b><i>Crotalus</i></b> é representado no Brasil por uma única espécie — <i>Crotalus durissus</i> — com várias subespécies, entre elas <i>C. d. terrificus</i> (Sul/Sudeste), <i>C. d. cascavella</i> (Nordeste), <i>C. d. collilineatus</i> (Centro-Oeste) e <i>C. d. marajoensis</i> (Amazônia). Responde por cerca de <b>7–10% dos acidentes ofídicos</b> notificados no Brasil, mas apresenta a <b>maior taxa de letalidade</b> entre os gêneros de importância médica — podendo ultrapassar <b>1,5–2%</b> quando o atendimento é tardio.</p>
+    <p>A cascavel habita regiões secas e abertas (cerrado, caatinga, campos, restinga) e é reconhecida pelo <b>guizo (chocalho)</b> na ponta da cauda — estrutura formada por anéis de queratina que se acumulam a cada troca de pele. Possui fosseta loreal, cabeça triangular destacada e pupilas em fenda vertical.</p>
   </div>
 
-  <div class="sec-divider"><h3>Ações do veneno</h3></div>
+  <div class="info-block warn">
+    <div class="label">Ponto-chave clínico</div>
+    <h4>⚡ Diferença fundamental vs. botrópico</h4>
+    <p>No acidente crotálico, as manifestações locais são <b>mínimas</b> — dor discreta, edema leve ou ausente, sem necrose significativa. O quadro é <b>predominantemente sistêmico</b>: neurotóxico + miotóxico. Isso pode enganar: a vítima parece "bem" no local da picada, mas está evoluindo com envenenamento sistêmico potencialmente fatal. <b>Não subestime o acidente crotálico pela aparência benigna do local!</b></p>
+  </div>
+
+  <div class="sec-divider"><h3>Composição e ações do veneno</h3></div>
   <div class="info-block">
-    <div class="label">Tríade fisiopatológica</div>
-    <p>O veneno crotálico age por três mecanismos principais — e a ordem de importância clínica é diferente do botrópico:</p>
+    <div class="label">Tríade crotálica</div>
+    <p>O veneno da cascavel contém toxinas com três ações principais, numa ordem de importância clínica diferente do botrópico:</p>
     <ul>
-      <li><b>Ação neurotóxica (crotoxina):</b> inibe a liberação de acetilcolina na junção neuromuscular → <b>bloqueio neuromuscular</b> → ptose palpebral, fácies miastênica, oftalmoplegia, dificuldade de deglutição e, nos casos graves, <b>paralisia da musculatura respiratória</b>.</li>
-      <li><b>Ação miotóxica (crotoxina + crotamina):</b> causa <b>rabdomiólise</b> → destruição de fibras musculares esqueléticas → liberação de <b>mioglobina</b> na circulação → <b>mioglobinúria</b> (urina escura/"cor de coca-cola") → risco de <b>insuficiência renal aguda</b> por necrose tubular aguda.</li>
-      <li><b>Ação coagulante:</b> semelhante ao botrópico (consumo de fibrinogênio → incoagulabilidade), porém hemorragias clinicamente importantes são <b>raras</b>.</li>
+      <li><b>Ação neurotóxica (crotoxina):</b> a <b>crotoxina</b> é a principal toxina do veneno crotálico. É composta por duas subunidades: a <b>fosfolipase A₂</b> (PLA₂ — subunidade catalítica) e a <b>crotapotina</b> (subunidade ácida, que direciona a PLA₂ ao alvo). Age na <b>junção neuromuscular</b>, inibindo a liberação de acetilcolina na fenda sináptica (<b>bloqueio pré-sináptico</b>). O resultado é uma <b>paralisia muscular descendente</b>: ptose palpebral → fácies miastênica → oftalmoplegia → disfagia → disfonia → paralisia da musculatura respiratória (insuficiência respiratória aguda).</li>
+      <li><b>Ação miotóxica (crotoxina + crotamina):</b> a crotoxina e a <b>crotamina</b> causam destruição direta de fibras musculares esqueléticas → <b>rabdomiólise</b>. A liberação maciça de <b>mioglobina</b> na circulação resulta em <b>mioglobinúria</b> (urina escura, "cor de coca-cola") e risco de <b>necrose tubular aguda</b> → <b>IRA</b>. A <b>CPK</b> (creatinofosfoquinase) eleva-se acentuadamente — é o marcador laboratorial da rabdomiólise.</li>
+      <li><b>Ação coagulante:</b> semelhante ao botrópico, enzimas tipo-trombina convertem fibrinogênio em fibrina de forma desregulada → consumo de fibrinogênio → <b>incoagulabilidade sanguínea</b>. Porém, hemorragias clinicamente significativas são <b>raras</b> no crotálico — a coagulopatia tem menos expressão clínica do que no botrópico.</li>
+    </ul>
+  </div>
+
+  <div class="sec-divider"><h3>Manifestações clínicas</h3></div>
+  <div class="info-block">
+    <div class="label">Quadro local — mínimo</div>
+    <p>No local da picada: dor discreta (ou sensação de "dormência"/parestesia), edema mínimo ou ausente, sem as bolhas e necrose exuberantes do botrópico. A marca das presas pode ser discreta ou visível. O aspecto benigno do local é enganoso — o veneno já está agindo sistemicamente.</p>
+  </div>
+
+  <div class="info-block danger">
+    <div class="label">Quadro sistêmico — predominante</div>
+    <h4>Fácies miastênica (fácies neurotóxica)</h4>
+    <p>O quadro sistêmico se instala em horas e segue uma sequência clássica:</p>
+    <ul>
+      <li><b>Ptose palpebral bilateral</b> — sinal precoce e muito sugestivo;</li>
+      <li><b>Fácies miastênica</b> — ptose + queda da mandíbula + expressão apática (olhar "sonolento");</li>
+      <li><b>Oftalmoplegia</b> (paresia dos músculos oculares) → <b>visão turva, diplopia</b>;</li>
+      <li><b>Midríase bilateral</b>;</li>
+      <li><b>Disfagia e disfonia</b> — dificuldade de deglutir e alteração da voz;</li>
+      <li><b>Paralisia da musculatura respiratória</b> — nos casos graves, pode evoluir para <b>insuficiência respiratória aguda</b> → necessidade de <b>intubação e ventilação mecânica</b>.</li>
     </ul>
   </div>
 
   <div class="info-block danger">
-    <div class="label">O que mais mata</div>
-    <h4>⚠️ IRA por mioglobinúria + insuficiência respiratória</h4>
-    <p>As duas causas de óbito no acidente crotálico são: (1) <b>insuficiência renal aguda</b> por depósito de mioglobina nos túbulos renais — prevenida por <b>hidratação vigorosa e diurese forçada</b>; e (2) <b>paralisia respiratória</b> por bloqueio neuromuscular — exige <b>suporte ventilatório imediato</b>.</p>
-  </div>
-
-  <div class="sec-divider"><h3>Manifestações clínicas</h3></div>
-  <div class="info-block warn">
-    <div class="label">Diferença crucial vs. botrópico</div>
-    <h4>Pouca dor e edema local — quadro predominantemente sistêmico</h4>
-    <p>No crotálico, o local da picada tem <b>dor discreta</b> e <b>edema mínimo ou ausente</b> — não há a lesão local exuberante do botrópico. Isso pode enganar: a vítima parece "bem" no local, mas está evoluindo com envenenamento sistêmico grave.</p>
+    <div class="label">Rabdomiólise</div>
+    <h4>Mialgia + colúria = sinal de alarme</h4>
+    <ul>
+      <li><b>Mialgia generalizada</b> — dor muscular difusa, que pode ser intensa;</li>
+      <li><b>Colúria</b> — urina escura ("cor de coca-cola") = mioglobinúria;</li>
+      <li><b>CPK elevada</b> (frequentemente > 10× o normal);</li>
+      <li><b>LDH e AST</b> também elevadas (origem muscular);</li>
+      <li>Risco de <b>IRA</b> por necrose tubular aguda (depósito de mioglobina nos túbulos renais).</li>
+    </ul>
   </div>
 
   <div class="pill-list">
-    <span class="pill warn">Fácies miastênica (ptose palpebral + mandibular)</span>
+    <span class="pill warn">Fácies miastênica (ptose + mandibular)</span>
     <span class="pill warn">Visão turva / diplopia</span>
-    <span class="pill warn">Oftalmoplegia</span>
+    <span class="pill warn">Oftalmoplegia / midríase</span>
     <span class="pill danger">Mialgia generalizada</span>
-    <span class="pill danger">Colúria (urina escura)</span>
+    <span class="pill danger">Colúria (urina "cor de coca-cola")</span>
     <span class="pill danger">Oligúria / anúria</span>
-    <span class="pill warn">Parestesia local</span>
+    <span class="pill danger">Insuficiência respiratória</span>
+    <span class="pill">Parestesia local</span>
     <span class="pill">Edema local discreto</span>
     <span class="pill">Cefaleia, mal-estar, vômitos</span>
-    <span class="pill">Sonolência ou agitação</span>
   </div>
 
-  <div class="sec-divider"><h3>Classificação e soroterapia (SAC)</h3></div>
+  <div class="sec-divider"><h3>O que mais mata</h3></div>
+  <div class="info-block danger">
+    <div class="label">Atenção máxima</div>
+    <h4>⚠️ IRA por mioglobinúria + insuficiência respiratória</h4>
+    <p>As duas principais causas de óbito no acidente crotálico são:</p>
+    <ul>
+      <li><b>Insuficiência renal aguda</b> por depósito de mioglobina nos túbulos renais — prevenida por <b>hidratação vigorosa e diurese forçada</b> (30–40 mL/h no adulto; 1–2 mL/kg/h na criança);</li>
+      <li><b>Insuficiência respiratória aguda</b> por paralisia da musculatura respiratória — exige <b>suporte ventilatório imediato</b> (ventilação mecânica invasiva).</li>
+    </ul>
+    <p>O atendimento tardio (&gt; 6h) aumenta significativamente o risco dessas complicações — daí a importância do diagnóstico precoce e da soroterapia em tempo hábil.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Exames laboratoriais</h3></div>
+  <div class="info-block">
+    <div class="label">Exames essenciais na admissão</div>
+    <ul>
+      <li><b>CPK</b> (creatinofosfoquinase) — marcador de rabdomiólise; pode atingir valores muito elevados;</li>
+      <li><b>LDH, AST/TGO</b> — complementam avaliação de lesão muscular;</li>
+      <li><b>Ureia e creatinina</b> — rastreamento de IRA;</li>
+      <li><b>TC (tempo de coagulação)</b> — frequentemente alterado (incoagulável), embora hemorragia clínica seja rara;</li>
+      <li><b>Coagulograma completo</b> (TAP, TTPa, fibrinogênio);</li>
+      <li><b>Hemograma</b> — pode haver leucocitose;</li>
+      <li><b>EAS / urina I</b> — pesquisa de mioglobinúria (urina escura, pH ácido);</li>
+      <li><b>Eletrólitos</b> (Na⁺, K⁺) — hipercalemia pode ocorrer na rabdomiólise com IRA;</li>
+      <li><b>Gasometria</b> — se sinais de insuficiência respiratória.</li>
+    </ul>
+  </div>
+
+  <div class="sec-divider"><h3>Classificação de gravidade e soroterapia (SAC)</h3></div>
   <table class="compare-table">
     <thead><tr><th>Gravidade</th><th>Fácies miastênica</th><th>Mialgia</th><th>Mioglobinúria</th><th>Ampolas SAC</th></tr></thead>
     <tbody>
       <tr><td class="sev-leve">Leve</td><td>Ausente ou tardia</td><td>Discreta ou ausente</td><td>Ausente</td><td class="sev-leve">5</td></tr>
       <tr><td class="sev-mod">Moderado</td><td>Discreta ou evidente</td><td>Discreta</td><td>Pouco evidente ou ausente</td><td class="sev-mod">10</td></tr>
-      <tr><td class="sev-grave">Grave</td><td>Evidente</td><td>Presente/intensa</td><td>Presente</td><td class="sev-grave">20</td></tr>
+      <tr><td class="sev-grave">Grave</td><td>Evidente / intensa</td><td>Intensa</td><td>Presente (colúria)</td><td class="sev-grave">20</td></tr>
     </tbody>
   </table>
 
   <div class="info-block success">
-    <div class="label">Sobre o soro (Butantan)</div>
+    <div class="label">Sobre o soro anticrotálico (SAC) — Butantan</div>
     <ul>
-      <li>Cada ampola de SAC (10 mL) neutraliza <b>≥ 15 mg</b> de veneno-referência de <i>Crotalus durissus terrificus</i>.</li>
-      <li>A dose é definida pela <b>gravidade</b>, não pelo peso/idade — mesma dose para adultos e crianças.</li>
-      <li>Via <b>intravenosa</b>, diluído em SF 0,9% ou SG 5%, infusão a 8–12 mL/min.</li>
-      <li>Doses adicionais <b>raramente</b> são indicadas — avaliadas pelo TC e quadro clínico.</li>
-      <li>Alternativa: pode-se usar o <b>SABC</b> (soro antibotrópico-crotálico), que neutraliza ambos os venenos.</li>
+      <li>Cada ampola de SAC (10 mL) neutraliza <b>&ge; 15 mg</b> de veneno-referência de <i>Crotalus durissus terrificus</i>.</li>
+      <li>A dose é definida pela <b>gravidade</b>, não pelo peso/idade — <b>crianças recebem a mesma dose que adultos</b>.</li>
+      <li>Via <b>intravenosa</b>, diluído em SF 0,9% ou SG 5%, infusão a 8–12 mL/min (ajustar conforme tolerância).</li>
+      <li>Ter sempre à disposição: adrenalina IM (1:1.000), hidrocortisona IV e difenidramina IV para reações anafiláticas.</li>
+      <li>Doses adicionais <b>raramente</b> são indicadas — avaliadas pelo TC e evolução clínica.</li>
+      <li>Alternativa: pode-se usar o <b>SABC</b> (soro antibotrópico-crotálico), que neutraliza venenos de <i>Bothrops</i> e <i>Crotalus</i> — útil quando a identificação do gênero é incerta.</li>
+      <li>Armazenar entre <b>+2 e +8 °C</b>; nunca congelar; usar imediatamente após abrir.</li>
     </ul>
   </div>
 
+  <div class="sec-divider"><h3>Manejo das complicações</h3></div>
   <div class="info-block">
-    <div class="label">Manejo da IRA</div>
-    <p>A prevenção da insuficiência renal é <b>fundamental</b>: hidratação IV para manter diurese ≥ 30–40 mL/h no adulto (1–2 mL/kg/h na criança). Se oligúria persistir, pode-se usar <b>manitol 20%</b> (5 mL/kg na criança, 100 mL no adulto) ou <b>furosemida</b> IV. Nos casos com comprometimento renal estabelecido, pode ser necessário procedimento dialítico.</p>
+    <div class="label">Prevenção e tratamento da IRA</div>
+    <ul>
+      <li><b>Hidratação IV vigorosa</b> — manter diurese &ge; 30–40 mL/h (adulto) / 1–2 mL/kg/h (criança);</li>
+      <li>Se oligúria persistir: <b>manitol 20%</b> (5 mL/kg na criança; 100 mL no adulto) ou <b>furosemida</b> IV;</li>
+      <li>Nos casos com comprometimento renal estabelecido: <b>procedimento dialítico</b>;</li>
+      <li>Monitorar potássio sérico — a hipercalemia na rabdomiólise com IRA pode causar arritmias graves.</li>
+    </ul>
+  </div>
+
+  <div class="info-block danger">
+    <div class="label">Insuficiência respiratória</div>
+    <ul>
+      <li>Monitorar padrão respiratório (FR, SpO₂, gasometria) em todo paciente com fácies miastênica;</li>
+      <li>Se sinais de fadiga respiratória ou dessaturação → <b>intubação orotraqueal + ventilação mecânica</b> imediata;</li>
+      <li>A paralisia é reversível com a neutralização do veneno e suporte — mas pode durar <b>horas a dias</b>;</li>
+      <li>A <b>neostigmina</b> (anticolinesterásico) NÃO é eficaz no crotálico (o bloqueio é pré-sináptico, não por competição no receptor — diferente da Miastenia Gravis).</li>
+    </ul>
+  </div>
+
+  <div class="info-block warn">
+    <div class="label">Diagnóstico diferencial crotálico × botrópico</div>
+    <table class="compare-table" style="margin-top:12px">
+      <thead><tr><th>Característica</th><th>Botrópico</th><th>Crotálico</th></tr></thead>
+      <tbody>
+        <tr><td>Quadro local</td><td>Exuberante (edema, bolhas, necrose)</td><td>Mínimo (parestesia, edema discreto)</td></tr>
+        <tr><td>Quadro sistêmico dominante</td><td>Hemorrágico (coagulopatia, sangramento)</td><td>Neurotóxico + miotóxico</td></tr>
+        <tr><td>Fácies miastênica</td><td>Ausente</td><td>Presente (sinal clássico)</td></tr>
+        <tr><td>Colúria/mioglobinúria</td><td>Rara</td><td>Frequente nos moderados/graves</td></tr>
+        <tr><td>Complicação fatal principal</td><td>IRA (por hipoperfusão/ação direta)</td><td>IRA (por mioglobina) + insuf. respiratória</td></tr>
+        <tr><td>Soro específico</td><td>SAB</td><td>SAC</td></tr>
+        <tr><td>Soro polivalente</td><td colspan="2" style="text-align:center">SABC (neutraliza ambos)</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <div class="source-note">
-    <b>Fontes:</b> Instituto Butantan (bula do soro anticrotálico, 2024); Guia de Vigilância em Saúde / Ministério da Saúde; FioCruz — Manual de Diagnóstico e Tratamento de Acidentes por Animais Peçonhentos; Nota Técnica MS nº 64/2021 (checklists CVE-SP). Conteúdo educativo — não substitui protocolo institucional vigente.
+    <b>Fontes:</b> Instituto Butantan (bula do soro anticrotálico, 2024); Guia de Vigilância em Saúde / Ministério da Saúde (2022); FioCruz — Manual de Diagnóstico e Tratamento de Acidentes por Animais Peçonhentos (2001); Manual de Identificação de Serpentes Peçonhentas — UFMS (CC BY); Nota Técnica MS nº 64/2021 (checklists CVE-SP). Conteúdo educativo — não substitui protocolo institucional vigente.
   </div>
 </div>
 </div>
@@ -202,7 +290,11 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
 <div class="container">
   <div class="chapter-title"><span>✅</span> Checklist — Acidente Crotálico (CVE-SP)</div>
   <div class="checklist-intro">
-    <p>Marque os achados do paciente para estimar a gravidade do acidente crotálico. A conduta final é do médico assistente.</p>
+    <p>Marque os achados clínicos do paciente para estimar a gravidade do acidente crotálico e a faixa de ampolas de SAC. <b>Ferramenta de treino</b>: a conduta final é do médico assistente, segundo protocolo vigente.</p>
+  </div>
+  <div class="ck-group">
+    <h4>Medidas iniciais (admissão)</h4>
+    <div class="ck-items" id="ckAdmissao"></div>
   </div>
   <div class="ck-group">
     <h4>Sinais neurológicos</h4>
@@ -250,35 +342,52 @@ var IMAGENS=[
 function renderGallery(){var w=document.getElementById('galleryWrap');w.innerHTML='';IMAGENS.forEach(function(im){var c=document.createElement('div');c.className='img-card';c.innerHTML='<div class="img-frame"><img src="'+im.file+'" alt="'+im.titulo+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><div class="placeholder" style="display:none"><span class="ph-emoji">🐍</span><span>'+im.titulo+'</span></div></div><div class="cap"><div class="cap-title">'+im.titulo+'</div><div class="cap-credit">'+im.credito+'</div></div>';w.appendChild(c);});}
 
 /* ============ CHECKLIST CVE ============ */
+var CK_ADMISSAO=[
+  "Hidratação IV vigorosa (meta: diurese ≥ 30–40 mL/h adulto; 1–2 mL/kg/h criança)",
+  "Solicitar exames: CPK, LDH, ureia, creatinina, TC, coagulograma, HMG, EAS, eletrólitos, gasometria",
+  "Monitorar padrão respiratório (FR, SpO₂) — atenção à paralisia descendente",
+  "Ter material de intubação e ventilação mecânica disponível",
+  "Analgesia (dipirona ou tramadol)",
+  "Profilaxia antitetânica — após correção do coagulograma"
+];
 var CK_NEURO=[
-  {t:"Ptose palpebral / fácies miastênica — leve",peso:"leve"},
-  {t:"Ptose palpebral / fácies miastênica — evidente",peso:"grave"},
+  {t:"Ptose palpebral leve / fácies miastênica discreta",peso:"leve"},
+  {t:"Ptose palpebral evidente / fácies miastênica franca",peso:"grave"},
   {t:"Visão turva / diplopia",peso:"moderado"},
+  {t:"Oftalmoplegia / midríase bilateral",peso:"grave"},
+  {t:"Disfagia / disfonia",peso:"grave"},
   {t:"Dor discreta no local (sem edema significativo)",peso:"leve"},
   {t:"Parestesia local",peso:"leve"}
 ];
 var CK_MIO=[
   {t:"Mialgia discreta",peso:"moderado"},
-  {t:"Mialgia intensa",peso:"grave"},
+  {t:"Mialgia intensa / generalizada",peso:"grave"},
   {t:"Colúria (urina escura / cor de coca-cola)",peso:"grave"},
+  {t:"CPK muito elevada (> 10× normal)",peso:"grave"},
   {t:"Oligúria / anúria",peso:"grave"},
-  {t:"Insuficiência respiratória",peso:"grave"}
+  {t:"Insuficiência respiratória (queda SpO₂, fadiga)",peso:"grave"}
 ];
 var ckState={};
 function renderChecklist(){
-  renderCkGroup('ckNeuro',CK_NEURO,'n');
-  renderCkGroup('ckMio',CK_MIO,'m');
+  renderCkGroup('ckAdmissao',CK_ADMISSAO.map(function(t){return{t:t};}),null,'a');
+  renderCkGroup('ckNeuro',CK_NEURO,'peso','n');
+  renderCkGroup('ckMio',CK_MIO,'peso','m');
 }
-function renderCkGroup(elId,arr,prefix){
+function renderCkGroup(elId,arr,pesoKey,prefix){
   var el=document.getElementById(elId);el.innerHTML='';
-  arr.forEach(function(o,i){var id=prefix+i;ckState[id]=false;var d=document.createElement('div');d.className='ck-item';d.setAttribute('data-id',id);d.setAttribute('data-peso',o.peso);d.onclick=function(){toggleCk(id);};d.innerHTML='<div class="ck-box">✓</div><div class="ck-text">'+o.t+'</div>';el.appendChild(d);});
+  arr.forEach(function(o,i){
+    var id=prefix+i;ckState[id]=false;
+    var div=document.createElement('div');div.className='ck-item';div.setAttribute('data-id',id);
+    if(pesoKey&&o[pesoKey])div.setAttribute('data-peso',o[pesoKey]);
+    div.onclick=function(){toggleCk(id);};
+    div.innerHTML='<div class="ck-box">✓</div><div class="ck-text">'+o.t+'</div>';
+    el.appendChild(div);
+  });
 }
 function toggleCk(id){ckState[id]=!ckState[id];var el=document.querySelector('.ck-item[data-id="'+id+'"]');if(el)el.classList.toggle('checked',ckState[id]);updateCkResult();}
 function updateCkResult(){
   var box=document.getElementById('ckResult');
   var grave=false,moderado=false,leve=false;
-  var allItems=CK_NEURO.concat(CK_MIO);
-  var prefixes=['n','m'];var idx=0;
   CK_NEURO.forEach(function(o,i){if(ckState['n'+i]){if(o.peso==='grave')grave=true;else if(o.peso==='moderado')moderado=true;else leve=true;}});
   CK_MIO.forEach(function(o,i){if(ckState['m'+i]){if(o.peso==='grave')grave=true;else if(o.peso==='moderado')moderado=true;else leve=true;}});
   if(grave){box.style.color='var(--red)';box.innerHTML='🔴 Sugere acidente GRAVE → SAC 20 ampolas (seguir protocolo vigente)';}
@@ -289,11 +398,42 @@ function updateCkResult(){
 
 /* ============ QUIZ ============ */
 var QD=[
-  {n:1,q:"Qual é a principal diferença clínica entre o acidente crotálico e o botrópico no que diz respeito às manifestações locais?",o:[{l:"A",v:"O crotálico causa edema muito intenso no local"},{l:"B",v:"O crotálico tem pouca dor e edema local — o quadro é predominantemente sistêmico"},{l:"C",v:"O crotálico causa necrose local extensa"},{l:"D",v:"Ambos têm o mesmo perfil de lesão local"}],cr:"B",ex:"O acidente crotálico se distingue pela escassez de manifestações locais (dor discreta, edema mínimo), enquanto o quadro sistêmico (neurotóxico + miotóxico) domina. Isso pode enganar o profissional desavisado."},
-  {n:2,q:"A urina escura ('cor de coca-cola') no acidente crotálico indica:",o:[{l:"A",v:"Hematúria por ação hemorrágica"},{l:"B",v:"Mioglobinúria por rabdomiólise"},{l:"C",v:"Hemoglobinúria por hemólise"},{l:"D",v:"Infecção urinária"}],cr:"B",ex:"A colúria no crotálico é por mioglobinúria — resultado da rabdomiólise (destruição muscular) causada pela crotoxina e crotamina. A mioglobina depositada nos túbulos renais pode levar a IRA."},
-  {n:3,q:"No acidente crotálico classificado como MODERADO (fácies miastênica discreta/evidente, mialgia discreta), a conduta com SAC é:",o:[{l:"A",v:"5 ampolas IV"},{l:"B",v:"10 ampolas IV"},{l:"C",v:"20 ampolas IV"},{l:"D",v:"Não indicar soro, apenas observação"}],cr:"B",ex:"Moderado = 10 ampolas de SAC por via intravenosa. Leve = 5, Grave = 20. A dose independe do peso/idade do paciente."},
-  {n:4,q:"A ação neurotóxica do veneno crotálico se dá por:",o:[{l:"A",v:"Destruição direta dos neurônios centrais"},{l:"B",v:"Inibição da liberação de acetilcolina na junção neuromuscular (bloqueio pré-sináptico)"},{l:"C",v:"Ativação excessiva de receptores nicotínicos"},{l:"D",v:"Desmielinização periférica aguda"}],cr:"B",ex:"A crotoxina inibe a liberação de acetilcolina na junção neuromuscular, causando bloqueio pré-sináptico. O resultado clínico é a paralisia muscular descendente (ptose palpebral → oftalmoplegia → disfagia → paralisia respiratória)."},
-  {n:5,q:"Cada ampola de SAC (10 mL) neutraliza, no mínimo:",o:[{l:"A",v:"50 mg de veneno de B. jararaca"},{l:"B",v:"15 mg de veneno de C. durissus terrificus"},{l:"C",v:"100 mg de veneno genérico"},{l:"D",v:"5 mg de veneno de Micrurus"}],cr:"B",ex:"Cada ampola de SAC neutraliza no mínimo 15 mg de veneno-referência de Crotalus durissus terrificus. Já o SAB neutraliza ≥50 mg de veneno de B. jararaca — são soros diferentes para venenos diferentes."}
+  {
+    n:1,q:"Qual é a principal diferença clínica entre o acidente crotálico e o botrópico no que diz respeito ao local da picada?",
+    o:[{l:"A",v:"O crotálico causa edema local intenso e bolhas hemorrágicas"},{l:"B",v:"O crotálico tem manifestações locais mínimas — o quadro é predominantemente sistêmico"},{l:"C",v:"O crotálico causa necrose local extensa"},{l:"D",v:"Ambos têm exatamente o mesmo perfil de lesão local"},{l:"E",v:"O crotálico causa síndrome compartimental mais frequentemente"}],
+    cr:"B",
+    ex:"O acidente crotálico se distingue pela escassez de manifestações locais (dor discreta, edema mínimo ou ausente), enquanto o quadro sistêmico (neurotóxico + miotóxico) domina. A lesão local exuberante é assinatura do botrópico."
+  },
+  {
+    n:2,q:"A urina escura ('cor de coca-cola') no acidente crotálico indica:",
+    o:[{l:"A",v:"Hematúria por ação hemorrágica do veneno sobre os vasos renais"},{l:"B",v:"Mioglobinúria por rabdomiólise — destruição de fibras musculares esqueléticas"},{l:"C",v:"Hemoglobinúria por hemólise intravascular"},{l:"D",v:"Infecção urinária com piúria"},{l:"E",v:"Bilirrubinúria por lesão hepática direta"}],
+    cr:"B",
+    ex:"A colúria no crotálico é por mioglobinúria — resultado da rabdomiólise causada pela crotoxina e crotamina. A mioglobina depositada nos túbulos renais pode levar a necrose tubular aguda e IRA. O marcador laboratorial é a CPK elevada."
+  },
+  {
+    n:3,q:"A crotoxina age na junção neuromuscular causando paralisia. Qual é o mecanismo?",
+    o:[{l:"A",v:"Bloqueio pós-sináptico por competição com a acetilcolina no receptor nicotínico"},{l:"B",v:"Destruição direta da fibra muscular (sem envolvimento da junção)"},{l:"C",v:"Inibição da liberação de acetilcolina na fenda sináptica (bloqueio pré-sináptico)"},{l:"D",v:"Ativação excessiva e persistente dos receptores muscarínicos"},{l:"E",v:"Desmielinização periférica aguda tipo Guillain-Barré"}],
+    cr:"C",
+    ex:"A crotoxina (PLA₂ + crotapotina) inibe a liberação de acetilcolina na junção neuromuscular — é um bloqueio pré-sináptico. Isso causa paralisia muscular descendente: ptose → oftalmoplegia → disfagia → paralisia respiratória. Como o bloqueio é pré-sináptico, a neostigmina (anticolinesterásico) NÃO é eficaz."
+  },
+  {
+    n:4,q:"No acidente crotálico classificado como GRAVE (fácies miastênica evidente, mialgia intensa, colúria), a dose de SAC é:",
+    o:[{l:"A",v:"5 ampolas IV"},{l:"B",v:"10 ampolas IV"},{l:"C",v:"15 ampolas IV"},{l:"D",v:"20 ampolas IV"},{l:"E",v:"Não indicar soro, apenas suporte ventilatório"}],
+    cr:"D",
+    ex:"Grave = 20 ampolas de SAC IV. Leve = 5, Moderado = 10. A dose é definida pela gravidade, não pelo peso ou idade — crianças recebem a mesma dose. O suporte ventilatório complementa, mas não substitui a soroterapia."
+  },
+  {
+    n:5,q:"Cada ampola de SAC (10 mL) neutraliza, no mínimo:",
+    o:[{l:"A",v:"50 mg de veneno de B. jararaca"},{l:"B",v:"15 mg de veneno de C. durissus terrificus"},{l:"C",v:"100 mg de veneno genérico ofídico"},{l:"D",v:"5 mg de veneno de Micrurus corallinus"},{l:"E",v:"30 mg de veneno de Lachesis muta"}],
+    cr:"B",
+    ex:"Cada ampola de SAC neutraliza ≥ 15 mg de veneno-referência de Crotalus durissus terrificus. Já o SAB neutraliza ≥ 50 mg de B. jararaca. São soros com especificidade diferente — por isso a importância de identificar o gênero da serpente (ou usar o SABC em caso de dúvida)."
+  },
+  {
+    n:6,q:"Por que a neostigmina (anticolinesterásico) NÃO é eficaz na paralisia do acidente crotálico?",
+    o:[{l:"A",v:"Porque a neostigmina não atravessa a barreira hematoencefálica"},{l:"B",v:"Porque o veneno crotálico destrói os receptores nicotínicos de forma irreversível"},{l:"C",v:"Porque o bloqueio é pré-sináptico (a crotoxina impede a liberação de ACh, não compete pelo receptor)"},{l:"D",v:"Porque a neostigmina é inativada pelo veneno crotálico no plasma"},{l:"E",v:"Porque a paralisia é de origem central, não periférica"}],
+    cr:"C",
+    ex:"A neostigmina inibe a acetilcolinesterase, aumentando a ACh disponível na fenda sináptica. Isso funciona quando o bloqueio é pós-sináptico (competição pelo receptor, como na Miastenia Gravis). No crotálico, o bloqueio é pré-sináptico — a crotoxina impede a liberação da ACh. Não adianta preservar ACh na fenda se ela não está sendo liberada."
+  }
 ];
 var QS={c:0,w:0,a:0};
 function renderQuiz(){var ct=document.getElementById('quizContainer');ct.innerHTML='';QD.forEach(function(q,i){var d=document.createElement('div');d.className='q-card';d.id='q'+i;var body='<div class="opts">'+q.o.map(function(o){return '<button class="opt-btn" data-q="'+i+'" data-l="'+o.l+'" onclick="answerMC('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+o.v+'</span></button>';}).join('')+'</div>';d.innerHTML='<div class="q-num">Questão '+q.n+'</div><div class="res-ind" id="ri'+i+'"></div><p class="q-text">'+q.q+'</p>'+body+'<div class="exp-box" id="ex'+i+'"><div class="et">📖 Explicação</div><p>'+q.ex+'</p></div>';ct.appendChild(d);});updateScores();}

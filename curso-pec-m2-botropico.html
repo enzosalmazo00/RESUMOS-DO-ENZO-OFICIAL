@@ -54,6 +54,7 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
 .pill-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
 .pill{background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--text)}
 .pill.danger{border-color:rgba(249,95,95,.4);color:var(--red)}
+.pill.warn{border-color:rgba(249,201,79,.4);color:var(--gold)}
 /* GALERIA */
 .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:24px}
 .img-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .25s}
@@ -131,46 +132,108 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
 
   <div class="info-block orange">
     <div class="label">Visão geral</div>
-    <h4>Por que o botrópico é o mais importante</h4>
-    <p>O gênero <b>Bothrops</b> (jararaca, jararacuçu, urutu, caiçaca) responde pela grande maioria dos acidentes ofídicos no Brasil. Dominar o botrópico é dominar o cenário mais provável em qualquer pronto-socorro do país.</p>
+    <h4>Por que o botrópico é o acidente ofídico mais importante do Brasil</h4>
+    <p>O gênero <b><i>Bothrops</i></b> reúne mais de 30 espécies no Brasil — entre elas a jararaca (<i>B. jararaca</i>), a jararacuçu (<i>B. jararacussu</i>), o urutu-cruzeiro (<i>B. alternatus</i>), a caiçaca (<i>B. moojeni</i>) e a jararaca-ilhoa (<i>B. insularis</i>). Juntas, respondem por aproximadamente <b>75–90% de todos os acidentes ofídicos</b> notificados no SINAN. São serpentes peçonhentas, solenóglifas (presas anteriores articuladas), com fosseta loreal e cauda que afina abruptamente. Habitam áreas rurais e periurbanas em todo o território nacional e apresentam hábitos predominantemente noturnos e crepusculares.</p>
+    <p>A letalidade geral do acidente botrópico é baixa (&lt; 1% quando tratado adequadamente), mas a <b>morbidade é alta</b>: complicações locais (necrose, amputação, infecção) podem gerar sequelas permanentes se o atendimento for tardio.</p>
   </div>
 
-  <div class="sec-divider"><h3>Ação do veneno</h3></div>
+  <div class="sec-divider"><h3>Epidemiologia</h3></div>
   <div class="info-block">
-    <div class="label">Fisiopatologia</div>
-    <p>O veneno botrópico age por três mecanismos principais:</p>
+    <div class="label">Dados do SINAN / Ministério da Saúde</div>
     <ul>
-      <li><b>Ação proteolítica (inflamatória):</b> dor, edema, bolhas e necrose no local da picada.</li>
-      <li><b>Ação coagulante:</b> consome fibrinogênio e leva à <b>incoagulabilidade sanguínea</b> — o sangue deixa de coagular.</li>
-      <li><b>Ação hemorrágica:</b> lesão de vasos + plaquetopenia → sangramentos locais e sistêmicos.</li>
+      <li>O Brasil registra cerca de <b>26.000–30.000 acidentes ofídicos/ano</b>. O gênero <i>Bothrops</i> responde por 75–90% deles (variação conforme a região e o método de contagem).</li>
+      <li>A maioria das vítimas é do <b>sexo masculino (≈75%)</b>, em idade produtiva, durante atividades agrícolas ou de lazer ao ar livre.</li>
+      <li>Os membros inferiores são o segmento mais atingido (<b>≈70–80%</b> dos casos — pés, tornozelos e pernas), seguidos pelos membros superiores (mãos e antebraços).</li>
+      <li>A <b>notificação compulsória</b> (ficha SINAN) é obrigatória para todo acidente por animal peçonhento no Brasil.</li>
+    </ul>
+  </div>
+
+  <div class="sec-divider"><h3>Composição e ações do veneno</h3></div>
+  <div class="info-block">
+    <div class="label">Fisiopatologia — tríade botrópica</div>
+    <p>O veneno botrópico é uma mistura complexa de enzimas e peptídeos. Suas ações se organizam em uma <b>tríade fisiopatológica</b>:</p>
+    <ul>
+      <li><b>Ação proteolítica/inflamatória:</b> mediada por <b>metaloproteases</b> (SVMPs), hialuronidase e fosfolipases A₂ (PLA₂). Provoca dor intensa, edema progressivo, bolhas serosas ou hemorrágicas e necrose tecidual. O edema pode progredir por todo o membro e, se não tratado, evoluir para <b>síndrome compartimental</b> — uma emergência que requer fasciotomia.</li>
+      <li><b>Ação coagulante:</b> enzimas tipo-trombina (<b>serinoproteases</b>) convertem fibrinogênio em fibrina de forma desregulada, levando ao consumo do fibrinogênio plasmático → <b>incoagulabilidade sanguínea</b> (coagulopatia de consumo). O tempo de coagulação (TC) fica alargado ou incoagulável — este é o principal marcador laboratorial e de eficácia da soroterapia.</li>
+      <li><b>Ação hemorrágica:</b> as SVMPs degradam a membrana basal dos vasos sanguíneos. Associada à plaquetopenia e ao consumo de fatores de coagulação, resulta em sangramento local e sistêmico — desde gengivorragia e equimoses até hemorragia cerebral nos casos mais graves.</li>
+    </ul>
+  </div>
+
+  <div class="info-block warn">
+    <div class="label">Ponto-chave</div>
+    <h4>🔬 A tríade proteolítica + coagulante + hemorrágica é a assinatura do botrópico</h4>
+    <p>Essa combinação distingue o acidente botrópico dos demais ofídicos brasileiros. O <b>crotálico</b> (cascavel) tem pouca ação local e predomina o quadro neurotóxico-miotóxico. O <b>laquético</b> (surucucu) assemelha-se ao botrópico, mas com manifestações vagais (bradicardia, hipotensão, diarreia). O <b>elapídico</b> (coral) causa quase exclusivamente bloqueio neuromuscular.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Manifestações clínicas</h3></div>
+  <div class="info-block">
+    <div class="label">Quadro local</div>
+    <h4>As manifestações locais dominam o botrópico</h4>
+    <p>A dor no local da picada é imediata e intensa, acompanhada de <b>edema endurado progressivo</b> que se estende pelo membro acometido. Em horas, podem surgir:</p>
+    <ul>
+      <li><b>Equimoses</b> e sufusões hemorrágicas perilesionais;</li>
+      <li><b>Bolhas</b> (serosas ou hemorrágicas);</li>
+      <li><b>Necrose</b> tecidual — favorecida pelo retardo no atendimento, uso de torniquete, incisões e substâncias caseiras;</li>
+      <li><b>Infecção secundária</b> — a boca da serpente abriga flora polimicrobiana (Gram-positivos, Gram-negativos e anaeróbios), podendo causar abscessos e celulite;</li>
+      <li><b>Síndrome compartimental</b> — edema tenso em compartimentos fasciais fechados → isquemia → necessidade de fasciotomia de emergência.</li>
     </ul>
   </div>
 
   <div class="info-block danger">
-    <div class="label">Complicação que mais mata</div>
-    <h4>⚠️ Lesão renal aguda (LRA)</h4>
-    <p>A insuficiência renal aguda é a principal complicação sistêmica capaz de levar ao óbito no acidente botrópico. Por isso, <b>hidratação venosa adequada e precoce</b> é prioridade — mantendo boa diurese (30–40 mL/h no adulto; 1–2 mL/kg/h na criança).</p>
+    <div class="label">Quadro sistêmico</div>
+    <h4>Manifestações hemorrágicas à distância</h4>
+    <ul>
+      <li>Gengivorragia, epistaxe, hematúria, sangramento pelo local da picada;</li>
+      <li>Equimoses extensas à distância do local da mordedura;</li>
+      <li>Nos casos graves: hemorragia digestiva, hematêmese, melena;</li>
+      <li>Raramente: hemorragia intracraniana (complicação fatal);</li>
+      <li>Sudorese, náuseas, vômitos, hipotensão, taquicardia — sinais de gravidade sistêmica;</li>
+      <li>Choque hipovolêmico nos casos com hemorragia maciça.</li>
+    </ul>
   </div>
 
-  <div class="sec-divider"><h3>Manifestações clínicas</h3></div>
   <div class="pill-list">
-    <span class="pill danger">Dor e edema local</span>
+    <span class="pill danger">Dor e edema intensos</span>
     <span class="pill danger">Equimoses</span>
     <span class="pill danger">Bolhas / necrose</span>
     <span class="pill danger">Sangramento no ferimento</span>
     <span class="pill danger">Gengivorragia / hematúria</span>
-    <span class="pill danger">Sudorese, hipotensão</span>
+    <span class="pill warn">Sudorese, hipotensão</span>
     <span class="pill danger">Síndrome compartimental</span>
-    <span class="pill danger">Choque</span>
+    <span class="pill danger">Choque hipovolêmico</span>
+    <span class="pill warn">Infecção secundária</span>
   </div>
 
-  <div class="sec-divider"><h3>Classificação e soroterapia (SAB)</h3></div>
+  <div class="sec-divider"><h3>Complicação que mais mata</h3></div>
+  <div class="info-block danger">
+    <div class="label">Atenção máxima</div>
+    <h4>⚠️ Lesão renal aguda (LRA)</h4>
+    <p>A <b>insuficiência renal aguda</b> é a principal complicação sistêmica capaz de levar ao óbito no acidente botrópico. Seus mecanismos incluem: hipoperfusão renal (choque/hipovolemia), ação direta do veneno sobre o parênquima renal, deposição de fibrina nos glomérulos e rabdomiólise secundária. Por isso, <b>hidratação venosa adequada e precoce</b> é prioridade absoluta — o objetivo é manter diurese de <b>30–40 mL/h no adulto</b> e <b>1–2 mL/kg/h na criança</b>.</p>
+    <p>Se persistir oligúria após reposição volêmica, considerar <b>furosemida</b> IV e, nos casos refratários, procedimento dialítico.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Exames laboratoriais na admissão</h3></div>
+  <div class="info-block">
+    <div class="label">Exames essenciais</div>
+    <p>Na admissão de todo acidente botrópico, solicitar:</p>
+    <ul>
+      <li><b>TC (tempo de coagulação)</b> — marcador de eficácia da soroterapia. Repetir em <b>12h e 24h</b>;</li>
+      <li><b>Coagulograma completo</b> (TAP, TTPa, fibrinogênio) — confirma a coagulopatia de consumo;</li>
+      <li><b>Hemograma</b> — avaliar plaquetopenia e leucocitose (infecção);</li>
+      <li><b>Ureia e creatinina</b> — rastreamento de LRA;</li>
+      <li><b>CPK</b> — rabdomiólise (mais comum no crotálico, mas pode ocorrer em botrópicos com necrose extensa);</li>
+      <li><b>EAS / urina I</b> — pesquisa de hematúria, proteinúria;</li>
+      <li><b>Eletrólitos</b> (Na⁺, K⁺) — se houver comprometimento renal.</li>
+    </ul>
+  </div>
+
+  <div class="sec-divider"><h3>Classificação de gravidade e soroterapia (SAB)</h3></div>
   <table class="compare-table">
-    <thead><tr><th>Gravidade</th><th>Quadro clínico</th><th>Nº de ampolas (SAB)</th></tr></thead>
+    <thead><tr><th>Gravidade</th><th>Quadro clínico</th><th>Coagulação</th><th>Nº de ampolas (SAB)</th></tr></thead>
     <tbody>
-      <tr><td class="sev-leve">Leve</td><td>Quadro local discreto ou ausente; sangramento leve; pode haver distúrbio da coagulação</td><td class="sev-leve">2 a 4</td></tr>
-      <tr><td class="sev-mod">Moderado</td><td>Edema e equimose evidentes; sangramento sem comprometimento do estado geral</td><td class="sev-mod">4 a 8</td></tr>
-      <tr><td class="sev-grave">Grave</td><td>Alterações locais intensas; hemorragia grave; hipotensão/choque; anúria</td><td class="sev-grave">12</td></tr>
+      <tr><td class="sev-leve">Leve</td><td>Edema local discreto (1 segmento); dor; sem hemorragia sistêmica; estado geral preservado</td><td>Normal ou alterado</td><td class="sev-leve">2 a 4</td></tr>
+      <tr><td class="sev-mod">Moderado</td><td>Edema evidente (até 2 segmentos); equimose; hemorragia local/sistêmica discreta; sem comprometimento do estado geral</td><td>Geralmente alterado</td><td class="sev-mod">4 a 8</td></tr>
+      <tr><td class="sev-grave">Grave</td><td>Edema extenso (&ge;3 segmentos); bolhas/necrose; hemorragia grave; hipotensão/choque; oligúria/anúria; síndrome compartimental</td><td>Incoagulável</td><td class="sev-grave">12</td></tr>
     </tbody>
   </table>
 
@@ -180,24 +243,50 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
     <p>A tabela acima (faixa 2–4 / 4–8 / 12) segue o <b>Guia de Vigilância em Saúde do MS</b> e a bula do <b>Butantan</b>. Já os <b>checklists do CVE-SP</b> usam uma <b>dose fixa</b> (ex.: 3 ampolas no leve), adotada desde 2014 para padronizar e racionar o uso do soro. <b>As duas são oficiais</b> — a diferença é faixa clínica × dose fixa padronizada. Sempre siga o protocolo vigente no seu serviço.</p>
   </div>
 
-  <div class="sec-divider"><h3>Critério de dose adicional</h3></div>
+  <div class="sec-divider"><h3>Controle de eficácia e dose adicional</h3></div>
   <div class="info-block success">
-    <div class="label">Controle de eficácia</div>
-    <p>O <b>tempo de coagulação (TC)</b> é o marcador de eficácia da soroterapia. Deve ser reavaliado <b>12h e 24h</b> após o soro. Se permanecer <b>incoagulável 24h após</b> a dose inicial, administrar <b>2 ampolas adicionais</b> de SAB.</p>
+    <div class="label">TC — o termômetro da soroterapia</div>
+    <p>O <b>tempo de coagulação (TC)</b> é o marcador de eficácia. Deve ser reavaliado <b>12h e 24h</b> após o soro. Se permanecer <b>incoagulável 24h após</b> a dose inicial, administrar <b>2 ampolas adicionais</b> de SAB. A normalização do TC (≤ 10 min) indica que o veneno circulante foi neutralizado, mas não reverte danos teciduais já instalados — por isso a importância da <b>soroterapia precoce</b>.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Sobre o soro antibotrópico (SAB)</h3></div>
+  <div class="info-block">
+    <div class="label">Dados do Instituto Butantan</div>
+    <ul>
+      <li>Cada ampola de SAB (10 mL) neutraliza <b>&ge; 50 mg</b> de veneno-referência de <i>B. jararaca</i>.</li>
+      <li>A dose é definida pela <b>gravidade do envenenamento</b>, não pelo peso ou idade do paciente — <b>crianças recebem a mesma dose que adultos</b>.</li>
+      <li>Via <b>intravenosa</b>, diluído em SF 0,9% ou SG 5%, em <b>infusão lenta</b> (iniciar a 8–12 mL/min, ajustar conforme tolerância).</li>
+      <li>Ter sempre à disposição: <b>adrenalina IM</b> (1:1.000), <b>hidrocortisona IV</b> e <b>difenidramina IV</b> para reações anafiláticas/anafilactoides.</li>
+      <li>Armazenar entre <b>+2 e +8 °C</b>; <b>nunca congelar</b>; usar imediatamente após abrir.</li>
+      <li>Quando a identificação do gênero é duvidosa (Bothrops ou Crotalus?), pode-se usar o <b>SABC</b> (soro antibotrópico-crotálico), que neutraliza ambos os venenos.</li>
+    </ul>
   </div>
 
   <div class="info-block">
-    <div class="label">Sobre o soro (Butantan)</div>
+    <div class="label">Conduta paralela à soroterapia</div>
     <ul>
-      <li>Cada ampola de SAB (10 mL) neutraliza <b>≥ 50 mg</b> de veneno-referência de <i>B. jararaca</i>.</li>
-      <li><b>Sem</b> contraindicação por faixa etária — a dose depende da gravidade, não do peso/idade.</li>
-      <li>Via <b>intravenosa</b>, diluído em soro fisiológico, em <b>infusão lenta</b> (risco de reação anafilática — ter adrenalina e hidrocortisona à disposição).</li>
-      <li>Armazenar entre <b>+2 e +8 °C</b>; nunca congelar; usar imediatamente após abrir.</li>
+      <li><b>Hidratação vigorosa</b> — manter diurese 30–40 mL/h (adulto) / 1–2 mL/kg/h (criança);</li>
+      <li><b>Analgesia</b> — dipirona ou tramadol; <b>NUNCA AAS</b> (antiagregante plaquetário → piora sangramento);</li>
+      <li><b>Membro elevado</b> — favorece drenagem do edema;</li>
+      <li><b>Profilaxia antitetânica</b> — conforme calendário vacinal, <b>após correção do coagulograma</b> (IM pode causar hematoma se coagulograma alterado);</li>
+      <li><b>Antibioticoterapia</b> — indicada se sinais de infecção: ceftriaxona 1–2 g/dia IV + clindamicina 600 mg 6/6h IV (cobertura para Gram+, Gram− e anaeróbios da flora oral da serpente);</li>
+      <li><b>Fasciotomia</b> — indicação cirúrgica se houver síndrome compartimental confirmada (pressão intracompartimental &gt; 30 mmHg ou critérios clínicos inequívocos).</li>
+    </ul>
+  </div>
+
+  <div class="info-block warn">
+    <div class="label">Mitos e erros — NÃO FAZER</div>
+    <ul>
+      <li>❌ <b>Torniquete/garrote</b> — piora isquemia e necrose local;</li>
+      <li>❌ <b>Sucção, incisão ou corte no local</b> — ineficaz e aumenta risco de infecção;</li>
+      <li>❌ <b>Aplicar substâncias caseiras</b> (ervas, terra, café, álcool) — sem evidência e risco de infecção;</li>
+      <li>❌ <b>AAS como analgésico</b> — é antiagregante plaquetário e agrava o sangramento;</li>
+      <li>❌ <b>Crioterapia no membro</b> — agrava isquemia tecidual.</li>
     </ul>
   </div>
 
   <div class="source-note">
-    <b>Fontes:</b> Instituto Butantan (bula do soro antibotrópico); Guia de Vigilância em Saúde / Ministério da Saúde; FioCruz (Manual de Diagnóstico e Tratamento de Acidentes por Animais Peçonhentos); Nota Técnica MS nº 64/2021 (checklists CVE-SP). Conteúdo educativo — não substitui o protocolo institucional vigente.
+    <b>Fontes:</b> Instituto Butantan (bula do soro antibotrópico); Guia de Vigilância em Saúde / Ministério da Saúde (2022); FioCruz — Manual de Diagnóstico e Tratamento de Acidentes por Animais Peçonhentos (2001); Manual de Identificação de Serpentes Peçonhentas — UFMS (CC BY); Nota Técnica MS nº 64/2021 (checklists CVE-SP); Da Silva et al. (2022) — Brazilian Epidemiology of Snakebites. Conteúdo educativo — não substitui o protocolo institucional vigente.
   </div>
 
 </div>
@@ -206,7 +295,7 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
 <!-- ========================= IMAGENS ========================= -->
 <div class="section" id="imagens">
 <div class="container">
-  <div class="chapter-title"><span>🖼️</span> Imagens reais — <i>Bothrops jararaca</i></div>
+  <div class="chapter-title"><span>🖼️</span> Imagens reais — <i>Bothrops</i></div>
 
   <div class="gallery" id="galleryWrap"></div>
 </div>
@@ -217,11 +306,11 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
 <div class="container">
   <div class="chapter-title"><span>✅</span> Checklist — Acidente Botrópico (CVE-SP)</div>
   <div class="checklist-intro">
-    <p>Reproduza o raciocínio da ficha oficial do CVE. Marque os itens conforme avalia o paciente — ao final, o sistema sugere a categoria de gravidade. <b>Ferramenta de treino</b>: a conduta final é sempre do médico assistente, segundo protocolo vigente.</p>
+    <p>Reproduza o raciocínio da ficha oficial do CVE. Marque os itens conforme avalia o paciente — ao final, o sistema sugere a categoria de gravidade e a faixa de ampolas. <b>Ferramenta de treino</b>: a conduta final é sempre do médico assistente, segundo protocolo vigente.</p>
   </div>
 
   <div class="ck-group">
-    <h4>Tratamento inicial (admissão)</h4>
+    <h4>Medidas iniciais (admissão)</h4>
     <div class="ck-items" id="ckAdmissao"></div>
   </div>
 
@@ -271,7 +360,6 @@ function showSection(id, btn){
 }
 
 /* ============ GALERIA DE IMAGENS ============ */
-/* file: nome do arquivo local em img/ ; se não existir, mostra placeholder com legenda */
 var IMAGENS = [
   { file:"img/m2-jararaca-01.jpg", titulo:"Bothrops jararaca (galho)", credito:"Wikimedia Commons — CC BY 2.0" },
   { file:"img/m2-jararaca-02.jpg", titulo:"Jararaca-da-mata (postura de bote)", credito:"Wikimedia Commons — CC BY-SA 4.0" },
@@ -304,19 +392,23 @@ function renderGallery(){
 
 /* ============ CHECKLIST CVE ============ */
 var CK_ADMISSAO = [
-  "Hidratação venosa adequada (diurese 30–40 mL/h adulto; 1–2 mL/kg/h criança)",
-  "Analgesia (NÃO usar AAS)",
+  "Hidratação venosa adequada (meta: diurese 30–40 mL/h no adulto; 1–2 mL/kg/h na criança)",
+  "Analgesia — dipirona ou tramadol (NÃO usar AAS nem AINEs)",
   "Manter membro acometido elevado",
-  "Solicitar exames: HMG, ureia, creatinina, CPK, urina I, fibrinogênio, coagulograma/TC (admissão, 12h e 24h)",
-  "Profilaxia antitetânica (após correção do coagulograma, quando necessária)"
+  "Solicitar exames: TC, coagulograma, HMG, ureia, creatinina, CPK, EAS, fibrinogênio, eletrólitos (admissão + 12h + 24h)",
+  "Profilaxia antitetânica — APÓS correção do coagulograma (IM pode causar hematoma)",
+  "Monitorar sinais de síndrome compartimental e infecção secundária"
 ];
 var CK_SINAIS = [
-  { t:"Edema — 1 segmento", peso:"leve" },
-  { t:"Edema — 2 segmentos", peso:"moderado" },
-  { t:"Edema — 3 segmentos", peso:"grave" },
-  { t:"Hemorragia discreta ou ausente", peso:"leve" },
-  { t:"Hemorragia grave", peso:"grave" },
-  { t:"Hipotensão / choque", peso:"grave" }
+  { t:"Edema — 1 segmento (discreto)", peso:"leve" },
+  { t:"Edema — 2 segmentos (evidente, com equimose)", peso:"moderado" },
+  { t:"Edema — ≥3 segmentos (extenso, com bolhas ou necrose)", peso:"grave" },
+  { t:"Sangramento discreto ou ausente", peso:"leve" },
+  { t:"Sangramento local/sistêmico moderado (gengivorragia, hematúria)", peso:"moderado" },
+  { t:"Hemorragia grave (hematêmese, melena, sangramento ativo)", peso:"grave" },
+  { t:"Hipotensão / choque hipovolêmico", peso:"grave" },
+  { t:"Oligúria / anúria (suspeita de LRA)", peso:"grave" },
+  { t:"Síndrome compartimental (edema tenso, dor desproporcional)", peso:"grave" }
 ];
 
 var ckState = {};
@@ -379,28 +471,76 @@ function updateCkResult(){
 /* ============ QUIZ ============ */
 var QD = [
   {
-    n:1, q:"Qual é a complicação sistêmica do acidente botrópico mais associada a óbito?",
-    o:[{l:"A",v:"Insuficiência hepática"},{l:"B",v:"Lesão renal aguda"},{l:"C",v:"Insuficiência respiratória por paralisia"},{l:"D",v:"Bloqueio atrioventricular"}],
+    n:1, q:"Qual é a tríade fisiopatológica clássica do veneno botrópico?",
+    o:[
+      {l:"A",v:"Neurotóxica, miotóxica e coagulante"},
+      {l:"B",v:"Proteolítica (inflamatória), coagulante e hemorrágica"},
+      {l:"C",v:"Hemolítica, nefrotóxica e cardiotóxica"},
+      {l:"D",v:"Neurotóxica, hemorrágica e proteolítica"},
+      {l:"E",v:"Miotóxica, coagulante e hemorrágica"}
+    ],
     cr:"B",
-    ex:"A lesão renal aguda é a principal complicação sistêmica capaz de levar a óbito no acidente botrópico. A paralisia/BAV são mais ligados a crotálico e escorpionismo."
+    ex:"A tríade botrópica é: ação proteolítica/inflamatória (metaloproteases → edema, bolhas, necrose), ação coagulante (serinoproteases tipo-trombina → consumo de fibrinogênio → incoagulabilidade) e ação hemorrágica (SVMPs → lesão endotelial → sangramento). A ação neurotóxica e miotóxica são características do acidente crotálico."
   },
   {
-    n:2, q:"Um paciente com edema em 2 segmentos e equimose evidente, sem comprometimento do estado geral. Classificação e conduta (faixa MS/Butantan)?",
-    o:[{l:"A",v:"Leve — 2 a 4 ampolas"},{l:"B",v:"Moderado — 4 a 8 ampolas"},{l:"C",v:"Grave — 12 ampolas"},{l:"D",v:"Não indicar soro"}],
+    n:2, q:"Um paciente com edema evidente em 2 segmentos, equimose perilesional e gengivorragia discreta, sem hipotensão. Classificação e dose de SAB (faixa MS/Butantan)?",
+    o:[
+      {l:"A",v:"Leve — 2 a 4 ampolas"},
+      {l:"B",v:"Moderado — 4 a 8 ampolas"},
+      {l:"C",v:"Grave — 12 ampolas"},
+      {l:"D",v:"Não indicar soro, apenas observação"},
+      {l:"E",v:"Moderado — 3 ampolas (dose fixa CVE)"}
+    ],
     cr:"B",
-    ex:"Edema em 2 segmentos com equimose evidente e estado geral preservado configura acidente MODERADO → 4 a 8 ampolas de SAB pela faixa do MS/Butantan."
+    ex:"Edema em 2 segmentos com equimose e sangramento discreto sem comprometimento do estado geral configura acidente MODERADO → 4 a 8 ampolas pela faixa do MS/Butantan. A alternativa E (3 ampolas) seria a dose fixa do CVE para o leve, não para o moderado."
   },
   {
-    n:3, q:"Sobre o controle da soroterapia botrópica, é correto afirmar:",
-    o:[{l:"A",v:"O TC deve ser reavaliado em 12h e 24h; se incoagulável após 24h, dar 2 ampolas adicionais"},{l:"B",v:"A dose depende do peso do paciente"},{l:"C",v:"O soro deve ser congelado até o uso"},{l:"D",v:"AAS é o analgésico de escolha"}],
+    n:3, q:"Qual é a complicação sistêmica do acidente botrópico mais associada a óbito, e como preveni-la?",
+    o:[
+      {l:"A",v:"Paralisia respiratória — ventilação mecânica precoce"},
+      {l:"B",v:"Lesão renal aguda — hidratação venosa para diurese 30–40 mL/h (adulto)"},
+      {l:"C",v:"Hemorragia cerebral — dose dobrada de SAB"},
+      {l:"D",v:"Bloqueio atrioventricular — marca-passo provisório"},
+      {l:"E",v:"Rabdomiólise — alcalinização da urina com bicarbonato"}
+    ],
+    cr:"B",
+    ex:"A IRA é a complicação que mais mata no botrópico. Prevenção: hidratação IV vigorosa mantendo diurese ≥ 30–40 mL/h no adulto (1–2 mL/kg/h na criança). Paralisia respiratória é do crotálico; rabdomiólise com mioglobinúria também predomina no crotálico."
+  },
+  {
+    n:4, q:"Sobre o controle da eficácia da soroterapia botrópica, é CORRETO afirmar:",
+    o:[
+      {l:"A",v:"O tempo de coagulação (TC) deve ser reavaliado em 12h e 24h; se incoagulável após 24h, administrar 2 ampolas adicionais"},
+      {l:"B",v:"A dose de SAB deve ser ajustada pelo peso corporal do paciente"},
+      {l:"C",v:"O soro antibotrópico deve ser congelado até o uso para preservar potência"},
+      {l:"D",v:"O AAS é o analgésico de escolha por sua ação anti-inflamatória"},
+      {l:"E",v:"O TC deve ser reavaliado apenas em 48h para definir alta"}
+    ],
     cr:"A",
-    ex:"O tempo de coagulação (TC) é o marcador de eficácia: reavaliar em 12h e 24h; se permanecer incoagulável após 24h, administrar 2 ampolas adicionais. A dose depende da GRAVIDADE (não do peso); o soro nunca é congelado; e o AAS é contraindicado (antiagregante, piora sangramento)."
+    ex:"O TC é o marcador de eficácia: reavaliar em 12h e 24h; se permanecer incoagulável após 24h, administrar 2 ampolas adicionais. A dose depende da gravidade, não do peso. O soro nunca é congelado (+2 a +8°C). O AAS é contraindicado (antiagregante → piora sangramento)."
   },
   {
-    n:4, q:"Por que alguns checklists (CVE-SP) indicam '3 ampolas' no acidente botrópico leve, enquanto a bula do Butantan traz '2 a 4'?",
-    o:[{l:"A",v:"Porque um dos dois está errado"},{l:"B",v:"Porque o CVE usa dose fixa padronizada/racionada, e o Butantan usa faixa clínica — ambas oficiais"},{l:"C",v:"Porque depende da idade do paciente"},{l:"D",v:"Porque a jararaca tem venenos diferentes por região"}],
-    cr:"B",
-    ex:"São duas referências oficiais com lógicas distintas: o Butantan/MS trazem uma faixa clínica (2–4) e o CVE-SP adota dose fixa padronizada (adotada desde 2014 para racionalizar o uso). Nenhuma está errada — siga o protocolo vigente no seu serviço."
+    n:5, q:"Qual é a conduta correta frente a uma síndrome compartimental no acidente botrópico?",
+    o:[
+      {l:"A",v:"Aplicar gelo no membro para reduzir o edema"},
+      {l:"B",v:"Elevar o membro e esperar resposta à soroterapia por 48h"},
+      {l:"C",v:"Fasciotomia de emergência, após confirmar pressão intracompartimental > 30 mmHg ou clínica inequívoca"},
+      {l:"D",v:"Dose adicional de 12 ampolas de SAB"},
+      {l:"E",v:"Garroteamento proximal para conter o edema"}
+    ],
+    cr:"C",
+    ex:"A síndrome compartimental é uma emergência cirúrgica que exige fasciotomia. Gelo e garrote são contraindicados (pioram isquemia). A soroterapia neutraliza o veneno circulante, mas não resolve o aumento de pressão já instalado no compartimento fascial."
+  },
+  {
+    n:6, q:"Por que alguns checklists (CVE-SP) indicam '3 ampolas' no acidente botrópico leve, enquanto o Guia do MS / bula do Butantan traz '2 a 4'?",
+    o:[
+      {l:"A",v:"Porque o CVE-SP está desatualizado e deve ser desconsiderado"},
+      {l:"B",v:"Porque o Butantan errou a dosagem na bula"},
+      {l:"C",v:"Porque o CVE usa dose fixa padronizada (desde 2014) e o MS/Butantan usa faixa clínica — ambas oficiais"},
+      {l:"D",v:"Porque a dose depende da região geográfica do acidente"},
+      {l:"E",v:"Porque a dose de 3 ampolas é só para crianças"}
+    ],
+    cr:"C",
+    ex:"São duas referências oficiais com lógicas diferentes: o MS/Butantan apresenta uma faixa clínica (2–4 / 4–8 / 12) e o CVE-SP adota dose fixa padronizada para racionalizar o uso do soro (adotada desde 2014). Nenhuma está errada — siga o protocolo vigente no seu serviço."
   }
 ];
 var QS={c:0,w:0,a:0};
