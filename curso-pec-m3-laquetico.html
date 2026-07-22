@@ -11,122 +11,376 @@
 <script>document.addEventListener("authReady", function(){ document.documentElement.style.visibility = "visible"; });</script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0d14;--bg2:#111520;--bg3:#161c2e;--card:#1a2138;--card2:#1f2845;--accent:#4f9cf9;--accent2:#38e8c0;--accent3:#f9784f;--accent4:#b84ff9;--gold:#f9c94f;--red:#f95f5f;--green:#4ff984;--text:#e8eaf6;--muted:#8892b0;--border:rgba(79,156,249,0.15);--shadow:0 8px 40px rgba(0,0,0,0.5);--radius:16px;--font-body:'DM Sans',sans-serif;--font-display:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace}*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;padding-bottom:90px}header{position:relative;z-index:10;text-align:center;padding:40px 24px 24px;background:linear-gradient(180deg,rgba(249,120,79,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border)}header .badge{display:inline-block;background:linear-gradient(135deg,var(--accent3),var(--gold));color:var(--bg);font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px}header h1{font-family:var(--font-display);font-size:clamp(22px,3.5vw,34px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--accent3) 60%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}header .sub{color:var(--muted);font-size:13px}nav.tabs{position:sticky;top:0;z-index:100;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;background:rgba(10,13,20,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:10px 16px}nav.tabs::-webkit-scrollbar{display:none}nav.tabs button{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:var(--font-body);font-size:12px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}nav.tabs button:hover{color:var(--accent);border-color:var(--accent)}nav.tabs button.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:var(--accent4)}.section{display:none;animation:fadeIn .4s ease}.section.active{display:block}@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}.container{max-width:900px;margin:0 auto;padding:28px 20px}.info-block{background:var(--card2);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:18px}.info-block.warn{border-color:var(--gold)}.info-block.danger{border-color:var(--red)}.info-block.success{border-color:var(--green)}.info-block.orange{border-color:var(--accent3)}.info-block .label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}.info-block h4{font-family:var(--font-display);font-weight:700;margin-bottom:8px;font-size:15px;color:#fff}.info-block p{color:var(--text);margin-bottom:6px}.info-block ul{padding-left:20px;margin-top:8px;color:var(--text)}.info-block li{margin:5px 0}.compare-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--radius);overflow:hidden;margin-bottom:24px;font-size:13px}.compare-table th{background:var(--card2);color:var(--accent3);font-family:var(--font-display);font-size:13px;font-weight:700;padding:12px 14px;text-align:left;border-bottom:1px solid var(--border)}.compare-table td{background:var(--card);padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text)}.compare-table tr:last-child td{border-bottom:none}.sev-mod{color:var(--gold);font-weight:700}.sev-grave{color:var(--red);font-weight:700}.sec-divider{display:flex;align-items:center;gap:12px;margin:28px 0 18px}.sec-divider h3{font-family:var(--font-display);font-weight:700;font-size:16px;color:var(--accent2);white-space:nowrap}.sec-divider::before,.sec-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}.pill-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.pill{background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--text)}.pill.danger{border-color:rgba(249,95,95,.4);color:var(--red)}.pill.warn{border-color:rgba(249,201,79,.4);color:var(--gold)}.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:24px}.img-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .25s}.img-card:hover{border-color:var(--accent3);transform:translateY(-2px)}.img-frame{width:100%;aspect-ratio:4/3;background:var(--bg3);display:flex;align-items:center;justify-content:center;overflow:hidden}.img-frame img{width:100%;height:100%;object-fit:cover;display:block}.img-frame .placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:12px;text-align:center;padding:16px}.img-frame .placeholder .ph-emoji{font-size:34px;opacity:.5}.img-card .cap{padding:12px 14px}.img-card .cap .cap-title{font-size:13px;font-weight:700;margin-bottom:4px}.img-card .cap .cap-credit{font-size:10px;color:var(--muted);font-family:var(--font-mono);line-height:1.4}.quiz-header{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px;justify-content:center}.score-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 20px;text-align:center;min-width:90px}.score-box .sn{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.score-box .sv{font-family:var(--font-display);font-size:26px;font-weight:800}.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}.q-card.cq{border-color:var(--green)}.q-card.wq{border-color:var(--red)}.q-num{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-bottom:10px}.q-text{font-size:14px;font-weight:600;color:#fff;margin-bottom:16px;line-height:1.5}.opts{display:flex;flex-direction:column;gap:8px}.opt-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:11px 16px;border-radius:10px;cursor:pointer;font-size:13px;text-align:left;transition:all .2s;display:flex;gap:10px;font-family:var(--font-body)}.opt-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(79,156,249,.08)}.opt-btn .ol{font-family:var(--font-mono);font-weight:700;color:var(--accent);min-width:20px}.opt-btn.ca{background:rgba(79,249,132,.1);border-color:var(--green);color:var(--green)}.opt-btn.wa{background:rgba(249,95,95,.1);border-color:var(--red);color:var(--red)}.res-ind{display:none;padding:8px 14px;border-radius:8px;margin-bottom:10px;font-size:13px;font-weight:700}.res-ind.vis{display:block}.res-ind.c{background:rgba(79,249,132,.1);color:var(--green)}.res-ind.w{background:rgba(249,95,95,.1);color:var(--red)}.exp-box{display:none;margin-top:14px;padding:14px 18px;background:rgba(79,156,249,.06);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;font-size:13px;color:var(--text);line-height:1.7}.exp-box.vis{display:block}.et{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}.reset-btn{display:inline-block;margin-top:16px;padding:10px 24px;background:var(--accent4);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:var(--font-body);font-size:13px;font-weight:700}.complete-panel{background:linear-gradient(135deg,rgba(79,249,132,0.06),rgba(56,232,192,0.06));border:1px solid rgba(79,249,132,0.25);border-radius:var(--radius);padding:24px;margin-top:28px;text-align:center}.complete-panel h3{font-family:var(--font-display);font-size:18px;color:var(--green);margin-bottom:8px}.complete-panel p{color:var(--muted);font-size:13px;margin-bottom:16px}.complete-btn{padding:13px 28px;border:none;border-radius:12px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--green),var(--accent2));color:var(--bg);transition:all .2s}.complete-btn:hover{box-shadow:0 0 24px rgba(79,249,132,0.4)}.complete-btn.done{background:var(--card2);color:var(--green);cursor:default;border:1px solid var(--green)}.source-note{margin-top:22px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}.source-note b{color:var(--accent2)}#backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow)}#backBtn:hover{border-color:var(--accent);background:var(--card2)}
+:root {
+  --bg: #0a0d14; --bg2: #111520; --bg3: #161c2e;
+  --card: #1a2138; --card2: #1f2845;
+  --accent: #4f9cf9; --accent2: #38e8c0; --accent3: #f9784f; --accent4: #b84ff9;
+  --gold: #f9c94f; --red: #f95f5f; --green: #4ff984;
+  --text: #e8eaf6; --muted: #8892b0; --border: rgba(79,156,249,0.15);
+  --shadow: 0 8px 40px rgba(0,0,0,0.5); --radius: 16px;
+  --font-body: 'DM Sans', sans-serif; --font-display: 'Syne', sans-serif; --font-mono: 'JetBrains Mono', monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;padding-bottom:90px}
+header{position:relative;z-index:10;text-align:center;padding:40px 24px 24px;background:linear-gradient(180deg,rgba(56,232,192,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border)}
+header .badge{display:inline-block;background:linear-gradient(135deg,var(--accent2),var(--accent));color:var(--bg);font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px}
+header h1{font-family:var(--font-display);font-size:clamp(22px,3.5vw,34px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--accent2) 60%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+header .sub{color:var(--muted);font-size:13px;letter-spacing:.5px}
+nav.tabs{position:sticky;top:0;z-index:100;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;background:rgba(10,13,20,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:10px 16px}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:var(--font-body);font-size:12px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
+nav.tabs button:hover{color:var(--accent);border-color:var(--accent)}
+nav.tabs button.active{background:var(--accent);color:var(--bg);border-color:var(--accent);box-shadow:0 0 20px rgba(79,156,249,0.4)}
+nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:var(--accent4)}
+nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.section{display:none;animation:fadeIn .4s ease}.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.container{max-width:900px;margin:0 auto;padding:28px 20px;position:relative;z-index:1}
+.chapter-title{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--accent2);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.chapter-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+.info-block{background:var(--card2);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:18px}
+.info-block.warn{border-color:var(--gold)}.info-block.danger{border-color:var(--red)}.info-block.success{border-color:var(--green)}.info-block.orange{border-color:var(--accent3)}
+.info-block .label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.info-block h4{font-family:var(--font-display);font-weight:700;margin-bottom:8px;font-size:15px;color:#fff}
+.info-block p{color:var(--text);margin-bottom:6px}.info-block ul,.info-block ol{padding-left:20px;margin-top:8px;color:var(--text)}.info-block li{margin:5px 0}
+.compare-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--radius);overflow:hidden;margin-bottom:24px;font-size:13px}
+.compare-table th{background:var(--card2);color:var(--accent2);font-family:var(--font-display);font-size:13px;font-weight:700;padding:12px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.compare-table td{background:var(--card);padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text)}
+.compare-table tr:last-child td{border-bottom:none}
+.sev-leve{color:var(--green);font-weight:700}.sev-mod{color:var(--gold);font-weight:700}.sev-grave{color:var(--red);font-weight:700}
+.sec-divider{display:flex;align-items:center;gap:12px;margin:28px 0 18px}
+.sec-divider h3{font-family:var(--font-display);font-weight:700;font-size:16px;color:var(--accent2);white-space:nowrap}
+.sec-divider::before,.sec-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+.pill-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.pill{background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--text)}
+.pill.danger{border-color:rgba(249,95,95,.4);color:var(--red)}
+.pill.warn{border-color:rgba(249,201,79,.4);color:var(--gold)}
+.pill.teal{border-color:rgba(56,232,192,.4);color:var(--accent2)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:24px}
+.img-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .25s}
+.img-card:hover{border-color:var(--accent2);transform:translateY(-2px);box-shadow:0 8px 30px rgba(56,232,192,.15)}
+.img-frame{width:100%;aspect-ratio:4/3;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.img-frame img{width:100%;height:100%;object-fit:cover;display:block}
+.img-frame .placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:12px;text-align:center;padding:16px}
+.img-frame .placeholder .ph-emoji{font-size:34px;opacity:.5}
+.img-card .cap{padding:12px 14px}
+.img-card .cap .cap-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.img-card .cap .cap-credit{font-size:10px;color:var(--muted);font-family:var(--font-mono);line-height:1.4}
+.checklist-intro{background:rgba(249,201,79,0.06);border:1px solid rgba(249,201,79,0.25);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px}
+.ck-group{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;overflow:hidden}
+.ck-group h4{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--gold);padding:14px 18px;background:var(--card2);border-bottom:1px solid var(--border)}
+.ck-items{padding:10px 18px}
+.ck-item{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;user-select:none}
+.ck-item:last-child{border-bottom:none}
+.ck-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;transition:all .2s;margin-top:1px}
+.ck-item.checked .ck-box{background:var(--green);border-color:var(--green);color:var(--bg)}
+.ck-item .ck-text{font-size:13px;color:var(--text)}
+.ck-item.checked .ck-text{color:var(--muted);text-decoration:line-through}
+.ck-result{position:sticky;bottom:76px;background:var(--card2);border:1px solid var(--accent);border-radius:14px;padding:14px 18px;margin-top:16px;text-align:center;font-size:14px;font-weight:700;color:var(--accent2);box-shadow:var(--shadow)}
+.quiz-header{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px;justify-content:center}
+.score-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 20px;text-align:center;min-width:90px}
+.score-box .sn{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.score-box .sv{font-family:var(--font-display);font-size:26px;font-weight:800}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.q-card.cq{border-color:var(--green)}.q-card.wq{border-color:var(--red)}
+.q-num{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-bottom:10px}
+.q-text{font-size:14px;font-weight:600;color:#fff;margin-bottom:16px;line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:11px 16px;border-radius:10px;cursor:pointer;font-size:13px;text-align:left;transition:all .2s;display:flex;gap:10px;font-family:var(--font-body)}
+.opt-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(79,156,249,.08)}
+.opt-btn .ol{font-family:var(--font-mono);font-weight:700;color:var(--accent);min-width:20px}
+.opt-btn.ca{background:rgba(79,249,132,.1);border-color:var(--green);color:var(--green)}
+.opt-btn.wa{background:rgba(249,95,95,.1);border-color:var(--red);color:var(--red)}
+.res-ind{display:none;padding:8px 14px;border-radius:8px;margin-bottom:10px;font-size:13px;font-weight:700}
+.res-ind.vis{display:block}.res-ind.c{background:rgba(79,249,132,.1);color:var(--green)}.res-ind.w{background:rgba(249,95,95,.1);color:var(--red)}
+.exp-box{display:none;margin-top:14px;padding:14px 18px;background:rgba(79,156,249,.06);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;font-size:13px;color:var(--text);line-height:1.7}
+.exp-box.vis{display:block}.et{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.reset-btn{display:inline-block;margin-top:16px;padding:10px 24px;background:var(--accent4);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:var(--font-body);font-size:13px;font-weight:700}
+.complete-panel{background:linear-gradient(135deg,rgba(79,249,132,0.06),rgba(56,232,192,0.06));border:1px solid rgba(79,249,132,0.25);border-radius:var(--radius);padding:24px;margin-top:28px;text-align:center}
+.complete-panel h3{font-family:var(--font-display);font-size:18px;color:var(--green);margin-bottom:8px}
+.complete-panel p{color:var(--muted);font-size:13px;margin-bottom:16px}
+.complete-btn{padding:13px 28px;border:none;border-radius:12px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--green),var(--accent2));color:var(--bg);transition:all .2s}
+.complete-btn:hover{box-shadow:0 0 24px rgba(79,249,132,0.4);transform:translateY(-1px)}
+.complete-btn.done{background:var(--card2);color:var(--green);cursor:default;border:1px solid var(--green)}
+.source-note{margin-top:22px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}
+.source-note b{color:var(--accent2)}
+#backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow)}
+#backBtn:hover{border-color:var(--accent);background:var(--card2)}
 </style>
 </head>
 <body>
+
 <header>
   <div class="badge">Módulo 3 · Aula 1</div>
-  <h1>Acidente Laquético — Soro Antilaquético (SABL)</h1>
-  <div class="sub">Gênero <i>Lachesis</i> · a surucucu — a maior víbora das Américas</div>
+  <h1>Acidente Laquético — Soro Antibotrópico-Laquético (SABL)</h1>
+  <div class="sub">Gênero <i>Lachesis</i> · a surucucu e o acidente com síndrome vagal</div>
 </header>
+
 <nav class="tabs">
   <button class="active" onclick="showSection('teoria',this)">📖 Teoria</button>
   <button onclick="showSection('imagens',this)">🖼️ Imagens</button>
+  <button class="ck-tab" onclick="showSection('checklist',this)">✅ Checklist CVE</button>
   <button class="qz-tab" onclick="showSection('quiz',this)">🧠 Quiz</button>
 </nav>
 
+<!-- ========================= TEORIA ========================= -->
 <div class="section active" id="teoria">
 <div class="container">
-  <div class="info-block orange">
+
+  <div class="info-block" style="border-color:var(--accent2)">
     <div class="label">Visão geral</div>
-    <h4>Raro, mas potencialmente devastador</h4>
-    <p>O gênero <b>Lachesis</b> (surucucu, pico-de-jaca) responde por apenas ~1,5% dos acidentes ofídicos no Brasil, mas são serpentes que podem ultrapassar <b>3 metros</b> e inocular <b>grandes volumes de veneno</b>. Habitam florestas úmidas e fechadas (Amazônia e Mata Atlântica). Não são agressivas, mas, pelo porte e pela quantidade de veneno, os acidentes costumam ser de <b>elevada gravidade</b>.</p>
+    <h4>A surucucu: a maior serpente peçonhenta das Américas</h4>
+    <p><b><i>Lachesis muta</i></b> (surucucu, surucucu-pico-de-jaca, surucutinga) é a <b>maior víbora peçonhenta do continente americano</b>, podendo ultrapassar <b>3,5 metros</b> de comprimento. É a <b>única serpente peçonhenta ovípara</b> do Brasil — todas as outras (Bothrops, Crotalus, Micrurus) são vivíparas ou ovovivíparas.</p>
+    <p>O acidente laquético é <b>raro</b> — responde por apenas <b>1,5–3%</b> dos acidentes ofídicos notificados no Brasil — mas é potencialmente grave. A surucucu habita florestas densas e úmidas da <b>Amazônia</b> e remanescentes de <b>Mata Atlântica</b> (Bahia ao Rio de Janeiro), sendo encontrada quase exclusivamente em ambientes de mata primária ou secundária bem preservada. É de hábito noturno e terrestre.</p>
   </div>
 
-  <div class="sec-divider"><h3>Ações do veneno</h3></div>
+  <div class="info-block warn">
+    <div class="label">Ponto-chave</div>
+    <h4>🔑 Laquético = botrópico + síndrome vagal</h4>
+    <p>Clinicamente, o acidente laquético se assemelha muito ao botrópico (dor, edema, coagulopatia, hemorragia), <b>acrescido de manifestações vagais</b> que não ocorrem nos outros acidentes ofídicos. Essa é a pista para o diagnóstico diferencial: se o paciente apresenta quadro "botrópico" + bradicardia, hipotensão, dor abdominal, diarreia e sudorese, pense em <b>laquético</b>.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Identificação da surucucu</h3></div>
+  <div class="info-block">
+    <div class="label">Características morfológicas</div>
+    <ul>
+      <li><b>Fosseta loreal presente</b> (como Bothrops e Crotalus);</li>
+      <li>Cabeça triangular destacada, pupilas em fenda vertical;</li>
+      <li><b>Escamas dorsais fortemente quilhadas e eriçadas</b> — aspecto áspero, quase "espinhoso" ao tato (diferente da cauda lisa do Bothrops e do guizo do Crotalus);</li>
+      <li>Coloração amarelada/alaranjada com <b>losangos negros dorsais</b> em padrão de "corrente";</li>
+      <li>Cauda com <b>escamas terminais eriçadas</b> (sem guizo) — a surucucu vibra a cauda contra folhas secas imitando um som semelhante ao chocalho da cascavel;</li>
+      <li>Porte grande: comprimento médio 2–2,5 m, podendo exceder 3,5 m;</li>
+      <li><b>Única peçonhenta ovípara do Brasil</b> — a fêmea põe ovos e os guarda (comportamento de nidificação).</li>
+    </ul>
+  </div>
+
+  <div class="sec-divider"><h3>Composição e ações do veneno</h3></div>
   <div class="info-block">
     <div class="label">Fisiopatologia</div>
-    <p>O veneno laquético combina ações semelhantes ao botrópico com um componente <b>vagal</b> (neurotóxico autonômico) que é a marca registrada deste acidente:</p>
+    <p>O veneno laquético compartilha muitos componentes com o veneno botrópico, apresentando as mesmas ações proteolítica, coagulante e hemorrágica, <b>acrescidas de uma ação neurotóxica vagal</b>:</p>
     <ul>
-      <li><b>Ação proteolítica/inflamatória:</b> dor, edema extenso, bolhas, necrose — similar ao botrópico, mas proporcionalmente maior pelo volume de veneno.</li>
-      <li><b>Ação hemorrágica:</b> distúrbios de coagulação e plaquetopenia, com risco de sangramento grave.</li>
-      <li><b>Ação vagal (neurotóxica autonômica):</b> diferencial do laquético — causa <b>bradicardia, hipotensão arterial, diarreia, cólicas abdominais</b> e amaurose (perda visual). Resulta da estimulação do sistema nervoso parassimpático.</li>
+      <li><b>Ação proteolítica/inflamatória:</b> metaloproteases e fosfolipases → dor, edema progressivo, bolhas e necrose no local da picada — semelhante ao botrópico;</li>
+      <li><b>Ação coagulante:</b> enzimas tipo-trombina → consumo de fibrinogênio → incoagulabilidade sanguínea (TC alargado/incoagulável);</li>
+      <li><b>Ação hemorrágica:</b> lesão endotelial → sangramento local e sistêmico;</li>
+      <li><b>Ação neurotóxica (vagal/autonômica):</b> componentes do veneno estimulam o <b>sistema nervoso parassimpático (vagal)</b>, causando bradicardia, hipotensão, dor abdominal em cólica, diarreia, náuseas, vômitos e sudorese intensa. <b>Este é o diferencial clínico do laquético.</b></li>
+    </ul>
+  </div>
+
+  <div class="sec-divider"><h3>Manifestações clínicas</h3></div>
+  <div class="info-block">
+    <div class="label">Quadro local — semelhante ao botrópico</div>
+    <ul>
+      <li>Dor intensa e edema progressivo no local da picada;</li>
+      <li>Bolhas serosas ou hemorrágicas;</li>
+      <li>Necrose tecidual;</li>
+      <li>Risco de síndrome compartimental (como no botrópico);</li>
+      <li>Infecção secundária.</li>
     </ul>
   </div>
 
   <div class="info-block danger">
-    <div class="label">Ponto-chave clínico</div>
-    <h4>⚠️ NÃO existe acidente laquético LEVE</h4>
-    <p>Devido à gravidade potencial, o Ministério da Saúde classifica o acidente laquético apenas como <b>moderado ou grave</b>. Não há categoria "leve".</p>
+    <div class="label">Quadro sistêmico — o diferencial</div>
+    <h4>⚠️ Síndrome vagal (estimulação parassimpática)</h4>
+    <ul>
+      <li><b>Bradicardia</b> (frequência cardíaca &lt; 60 bpm);</li>
+      <li><b>Hipotensão arterial</b>;</li>
+      <li><b>Dor abdominal em cólica</b>;</li>
+      <li><b>Diarreia</b> (pode ser intensa);</li>
+      <li><b>Náuseas e vômitos</b>;</li>
+      <li><b>Sudorese profusa</b>;</li>
+      <li>Choque vagal nos casos graves.</li>
+    </ul>
+    <p>Além da síndrome vagal, podem ocorrer as mesmas manifestações hemorrágicas do botrópico: gengivorragia, hematúria, equimoses à distância, sangramento pelo local da picada.</p>
   </div>
 
-  <div class="sec-divider"><h3>Manifestações clínicas</h3></div>
   <div class="pill-list">
-    <span class="pill danger">Dor e edema local intensos</span>
-    <span class="pill danger">Vesículas hemorrágicas</span>
-    <span class="pill danger">Sangramento local e sistêmico</span>
-    <span class="pill warn">Bradicardia</span>
-    <span class="pill warn">Hipotensão arterial</span>
-    <span class="pill warn">Diarreia / cólicas abdominais</span>
-    <span class="pill warn">Amaurose (perda visual)</span>
-    <span class="pill danger">Choque</span>
+    <span class="pill danger">Dor e edema intensos (local)</span>
+    <span class="pill danger">Bolhas / necrose</span>
+    <span class="pill teal">Bradicardia</span>
+    <span class="pill teal">Hipotensão</span>
+    <span class="pill teal">Dor abdominal / diarreia</span>
+    <span class="pill teal">Sudorese profusa</span>
+    <span class="pill danger">Gengivorragia / hematúria</span>
+    <span class="pill warn">Choque (vagal ou hipovolêmico)</span>
   </div>
 
+  <div class="sec-divider"><h3>Classificação de gravidade e soroterapia</h3></div>
   <div class="info-block warn">
-    <div class="label">Diagnóstico diferencial</div>
-    <h4>Laquético ou botrópico?</h4>
-    <p>Como a lesão local é muito parecida com a do botrópico, a diferenciação clínica depende dos <b>sinais vagais</b> (bradicardia, hipotensão, diarreia). Se houver dúvida entre laquético e botrópico, usar o <b>SABL</b> — ele neutraliza ambos. Na ausência de SABL, o SAB (antibotrópico) pode ser usado, mas <b>não cobre a fração antilaquética</b>.</p>
+    <div class="label">Atenção</div>
+    <h4>Todos os acidentes laquéticos são classificados como MODERADOS ou GRAVES</h4>
+    <p>Pela raridade do acidente e pelo volume de veneno inoculado (serpente de grande porte), o Ministério da Saúde <b>não classifica o acidente laquético como leve</b>. A tabela abaixo reflete essa diretriz:</p>
   </div>
 
-  <div class="sec-divider"><h3>Classificação e soroterapia (SABL)</h3></div>
   <table class="compare-table">
-    <thead><tr><th>Gravidade</th><th>Quadro clínico</th><th>Ampolas SABL</th></tr></thead>
+    <thead><tr><th>Gravidade</th><th>Quadro clínico</th><th>Síndrome vagal</th><th>Ampolas SABL</th></tr></thead>
     <tbody>
-      <tr><td class="sev-mod">Moderado</td><td>Dor, edema, bolhas e hemorragia discreta; sinais vagais discretos ou ausentes</td><td class="sev-mod">10</td></tr>
-      <tr><td class="sev-grave">Grave</td><td>Dor, edema, bolhas e hemorragia + cólicas abdominais, diarreia, bradicardia, hipotensão arterial</td><td class="sev-grave">20</td></tr>
+      <tr><td class="sev-mod">Moderado</td><td>Quadro local presente; sem hemorragia sistêmica grave; sem choque</td><td>Ausente ou discreta</td><td class="sev-mod">10</td></tr>
+      <tr><td class="sev-grave">Grave</td><td>Quadro local intenso; hemorragia sistêmica e/ou choque; síndrome vagal franca</td><td>Presente / intensa</td><td class="sev-grave">20</td></tr>
     </tbody>
   </table>
 
   <div class="info-block success">
-    <div class="label">Sobre o soro (Butantan)</div>
+    <div class="label">Sobre o soro (SABL)</div>
     <ul>
-      <li>O SABL é o <b>soro antibotrópico (pentavalente) e antilaquético</b> — cobre ambos os gêneros.</li>
-      <li>Cada ampola (10 mL) neutraliza <b>≥ 50 mg</b> de veneno de <i>Bothrops</i> e <b>≥ 30 mg</b> de veneno de <i>Lachesis muta</i>.</li>
-      <li>Via <b>intravenosa</b>, diluído, infusão lenta. Mesmo cuidado com reações anafiláticas.</li>
-      <li>Controle pelo <b>TC</b> (tempo de coagulação) em 12h e 24h — mesma lógica do botrópico.</li>
-      <li>A IRA é a complicação mais temida — hidratação vigorosa é fundamental.</li>
+      <li>O soro específico é o <b>SABL</b> (soro antibotrópico-laquético), que neutraliza venenos de <i>Bothrops</i> e <i>Lachesis</i>;</li>
+      <li>A dose é definida pela gravidade: <b>moderado = 10 ampolas</b>, <b>grave = 20 ampolas</b>;</li>
+      <li>Via <b>intravenosa</b>, diluído em SF 0,9% ou SG 5%, infusão lenta;</li>
+      <li>Mesma dose para crianças e adultos — depende da gravidade, não do peso/idade;</li>
+      <li>Na indisponibilidade do SABL, pode-se usar o <b>SAB</b> (soro antibotrópico) em doses equivalentes, pois há reatividade cruzada significativa entre os venenos de <i>Bothrops</i> e <i>Lachesis</i>;</li>
+      <li>Ter adrenalina, hidrocortisona e difenidramina à disposição para reações anafiláticas.</li>
     </ul>
   </div>
 
-  <div class="source-note">
-    <b>Fontes:</b> Instituto Butantan (bula do soro antibotrópico-antilaquético, 2025); Guia de Vigilância em Saúde / Ministério da Saúde (6ª ed.); FioCruz; Nota Técnica MS nº 64/2021. Conteúdo educativo — não substitui protocolo institucional vigente.
+  <div class="sec-divider"><h3>Conduta complementar</h3></div>
+  <div class="info-block">
+    <div class="label">Manejo da síndrome vagal</div>
+    <ul>
+      <li><b>Atropina IV</b> (0,5–1 mg no adulto; 0,01–0,02 mg/kg na criança) — indicada para bradicardia sintomática;</li>
+      <li><b>Hidratação IV vigorosa</b> — diurese 30–40 mL/h (adulto) / 1–2 mL/kg/h (criança) para prevenir IRA;</li>
+      <li>Analgesia: dipirona ou tramadol (<b>NÃO usar AAS</b>);</li>
+      <li>Membro elevado;</li>
+      <li>Profilaxia antitetânica após correção do coagulograma;</li>
+      <li>Antibioticoterapia se sinais de infecção secundária;</li>
+      <li>Monitorização contínua (FC, PA, SpO₂) — risco de choque vagal.</li>
+    </ul>
   </div>
+
+  <div class="info-block warn">
+    <div class="label">Dificuldade diagnóstica</div>
+    <h4>O grande dilema: acidente laquético ou botrópico?</h4>
+    <p>Como a surucucu habita áreas florestais remotas, o paciente muitas vezes <b>não traz a serpente</b> e chega com quadro clínico semelhante ao botrópico. A pista para o diagnóstico diferencial é a presença de <b>síndrome vagal</b> (bradicardia, hipotensão, diarreia, sudorese). Na dúvida, o <b>SABL</b> é a melhor opção (cobre ambos). Se indisponível, o <b>SAB</b> pode ser utilizado pela reatividade cruzada.</p>
+  </div>
+
+  <div class="source-note">
+    <b>Fontes:</b> Instituto Butantan (bula do soro antibotrópico-laquético); Guia de Vigilância em Saúde / Ministério da Saúde (2022); FioCruz — Manual de Diagnóstico e Tratamento de Acidentes por Animais Peçonhentos (2001); Manual de Identificação de Serpentes Peçonhentas — UFMS (CC BY). Conteúdo educativo — não substitui protocolo institucional vigente.
+  </div>
+
 </div>
 </div>
 
+<!-- ========================= IMAGENS ========================= -->
 <div class="section" id="imagens">
 <div class="container">
-  <div style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--accent3);margin-bottom:20px">🖼️ Imagens — <i>Lachesis muta</i> (surucucu)</div>
+  <div class="chapter-title"><span>🖼️</span> Imagens reais — <i>Lachesis muta</i> (surucucu)</div>
   <div class="gallery" id="galleryWrap"></div>
 </div>
 </div>
 
+<!-- ========================= CHECKLIST CVE ========================= -->
+<div class="section" id="checklist">
+<div class="container">
+  <div class="chapter-title"><span>✅</span> Checklist — Acidente Laquético</div>
+  <div class="checklist-intro">
+    <p>Marque os achados clínicos para diferenciar o laquético do botrópico e estimar a gravidade. Lembre-se: no laquético, <b>não existe classificação "leve"</b>. A conduta final é do médico assistente.</p>
+  </div>
+  <div class="ck-group">
+    <h4>Medidas iniciais (admissão)</h4>
+    <div class="ck-items" id="ckAdmissao"></div>
+  </div>
+  <div class="ck-group">
+    <h4>Quadro local (semelhante ao botrópico)</h4>
+    <div class="ck-items" id="ckLocal"></div>
+  </div>
+  <div class="ck-group">
+    <h4>Síndrome vagal (diferencial do laquético)</h4>
+    <div class="ck-items" id="ckVagal"></div>
+  </div>
+  <div class="ck-result" id="ckResult">Marque os sinais para estimar a gravidade.</div>
+</div>
+</div>
+
+<!-- ========================= QUIZ ========================= -->
 <div class="section" id="quiz">
 <div class="container">
-  <div style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--accent);margin-bottom:20px">🧠 Quiz — fixação</div>
-  <div class="quiz-header"><div class="score-box"><div class="sn">Certas</div><div class="sv" id="sC" style="color:var(--green)">0</div></div><div class="score-box"><div class="sn">Erradas</div><div class="sv" id="sW" style="color:var(--red)">0</div></div><div class="score-box"><div class="sn">Restantes</div><div class="sv" id="sP" style="color:var(--accent)">0</div></div></div>
+  <div class="chapter-title"><span>🧠</span> Quiz — fixação</div>
+  <div class="quiz-header">
+    <div class="score-box"><div class="sn">Certas</div><div class="sv" id="sC" style="color:var(--green)">0</div></div>
+    <div class="score-box"><div class="sn">Erradas</div><div class="sv" id="sW" style="color:var(--red)">0</div></div>
+    <div class="score-box"><div class="sn">Restantes</div><div class="sv" id="sP" style="color:var(--accent)">0</div></div>
+  </div>
   <div id="quizContainer"></div>
   <div style="text-align:center"><button class="reset-btn" onclick="resetQuiz()">🔄 Refazer quiz</button></div>
-  <div class="complete-panel"><h3>✔️ Concluir esta aula</h3><p>Ao concluir, sua barra de progresso no curso é atualizada.</p><button class="complete-btn" id="completeBtn" onclick="concluirAula()">Marcar aula como concluída</button></div>
+  <div class="complete-panel">
+    <h3>✔️ Concluir esta aula</h3>
+    <p>Ao concluir, sua barra de progresso no curso é atualizada.</p>
+    <button class="complete-btn" id="completeBtn" onclick="concluirAula()">Marcar aula como concluída</button>
+  </div>
 </div>
 </div>
 
 <a href="curso-peconhentos.html" id="backBtn">← Voltar ao curso</a>
 
 <script>
-var CURSO="peconhentos",AULA_ID="m3-laquetico";
+var CURSO="peconhentos", AULA_ID="m3-laquetico";
 function showSection(id,btn){document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');document.querySelectorAll('nav.tabs button').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+
+/* ============ GALERIA ============ */
 var IMAGENS=[
   {file:"img/m3-surucucu-01.jpg",titulo:"Lachesis muta (corpo — escamas eriçadas na cauda)",credito:"Christopher Murray / Wikimedia Commons — Domínio público"},
   {file:"img/m3-surucucu-02.jpg",titulo:"Surucucu — padrão dorsal losangular",credito:"salomao_janderson (iNaturalist) / Wikimedia Commons — CC BY 4.0"}
 ];
 function renderGallery(){var w=document.getElementById('galleryWrap');w.innerHTML='';IMAGENS.forEach(function(im){var c=document.createElement('div');c.className='img-card';c.innerHTML='<div class="img-frame"><img src="'+im.file+'" alt="'+im.titulo+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><div class="placeholder" style="display:none"><span class="ph-emoji">🐍</span><span>'+im.titulo+'</span></div></div><div class="cap"><div class="cap-title">'+im.titulo+'</div><div class="cap-credit">'+im.credito+'</div></div>';w.appendChild(c);});}
+
+/* ============ CHECKLIST ============ */
+var CK_ADMISSAO=[
+  "Hidratação IV vigorosa (meta: diurese ≥ 30–40 mL/h adulto; 1–2 mL/kg/h criança)",
+  "Solicitar exames: TC, coagulograma, HMG, ureia, creatinina, EAS, fibrinogênio, eletrólitos",
+  "Monitorização contínua (FC, PA, SpO₂) — risco de choque vagal",
+  "Analgesia — dipirona ou tramadol (NÃO usar AAS)",
+  "Membro acometido elevado",
+  "Profilaxia antitetânica — APÓS correção do coagulograma"
+];
+var CK_LOCAL=[
+  {t:"Edema local moderado (até 2 segmentos)",peso:"moderado"},
+  {t:"Edema extenso (≥3 segmentos) com bolhas ou necrose",peso:"grave"},
+  {t:"Sangramento local discreto",peso:"moderado"},
+  {t:"Hemorragia sistêmica (gengivorragia, hematúria, equimoses à distância)",peso:"grave"}
+];
+var CK_VAGAL=[
+  {t:"Bradicardia (FC < 60 bpm)",peso:"grave"},
+  {t:"Hipotensão arterial",peso:"grave"},
+  {t:"Dor abdominal em cólica",peso:"grave"},
+  {t:"Diarreia",peso:"grave"},
+  {t:"Náuseas / vômitos intensos",peso:"moderado"},
+  {t:"Sudorese profusa",peso:"grave"},
+  {t:"Choque (vagal ou hipovolêmico)",peso:"grave"}
+];
+var ckState={};
+function renderChecklist(){
+  renderCkGroup('ckAdmissao',CK_ADMISSAO.map(function(t){return{t:t};}),null,'a');
+  renderCkGroup('ckLocal',CK_LOCAL,'peso','l');
+  renderCkGroup('ckVagal',CK_VAGAL,'peso','v');
+}
+function renderCkGroup(elId,arr,pesoKey,prefix){
+  var el=document.getElementById(elId);el.innerHTML='';
+  arr.forEach(function(o,i){
+    var id=prefix+i;ckState[id]=false;
+    var div=document.createElement('div');div.className='ck-item';div.setAttribute('data-id',id);
+    if(pesoKey&&o[pesoKey])div.setAttribute('data-peso',o[pesoKey]);
+    div.onclick=function(){toggleCk(id);};
+    div.innerHTML='<div class="ck-box">✓</div><div class="ck-text">'+o.t+'</div>';
+    el.appendChild(div);
+  });
+}
+function toggleCk(id){ckState[id]=!ckState[id];var el=document.querySelector('.ck-item[data-id="'+id+'"]');if(el)el.classList.toggle('checked',ckState[id]);updateCkResult();}
+function updateCkResult(){
+  var box=document.getElementById('ckResult');
+  var grave=false,moderado=false;
+  CK_LOCAL.forEach(function(o,i){if(ckState['l'+i]){if(o.peso==='grave')grave=true;else moderado=true;}});
+  CK_VAGAL.forEach(function(o,i){if(ckState['v'+i]){if(o.peso==='grave')grave=true;else moderado=true;}});
+  if(grave){box.style.color='var(--red)';box.innerHTML='🔴 Sugere acidente GRAVE → SABL 20 ampolas (seguir protocolo vigente)';}
+  else if(moderado){box.style.color='var(--gold)';box.innerHTML='🟡 Sugere acidente MODERADO → SABL 10 ampolas (seguir protocolo vigente)';}
+  else{box.style.color='var(--accent2)';box.innerHTML='Marque os sinais para estimar a gravidade. Laquético não tem classificação "leve".';}
+}
+
+/* ============ QUIZ ============ */
 var QD=[
-  {n:1,q:"Qual é a característica que diferencia clinicamente o acidente laquético do botrópico?",o:[{l:"A",v:"Lesão local mais intensa"},{l:"B",v:"Presença de sinais vagais: bradicardia, hipotensão e diarreia"},{l:"C",v:"Fácies miastênica"},{l:"D",v:"Colúria por mioglobinúria"}],cr:"B",ex:"Os sinais vagais (bradicardia, hipotensão arterial, diarreia e cólicas) são a marca do acidente laquético — o quadro local é semelhante ao botrópico, mas os sintomas autonômicos diferenciam."},
-  {n:2,q:"Sobre a classificação de gravidade do acidente laquético, o Ministério da Saúde define:",o:[{l:"A",v:"Leve, moderado e grave"},{l:"B",v:"Apenas moderado e grave — não há caso leve"},{l:"C",v:"Apenas grave"},{l:"D",v:"Depende da idade do paciente"}],cr:"B",ex:"Devido à potencial gravidade, o MS classifica o acidente laquético apenas como moderado ou grave. Não há categoria leve."},
-  {n:3,q:"O SABL neutraliza veneno de quais gêneros?",o:[{l:"A",v:"Apenas Lachesis"},{l:"B",v:"Bothrops e Lachesis"},{l:"C",v:"Crotalus e Lachesis"},{l:"D",v:"Todos os gêneros ofídicos"}],cr:"B",ex:"O SABL é o soro antibotrópico (pentavalente) e antilaquético — neutraliza venenos de Bothrops (≥50mg) e Lachesis muta (≥30mg) por ampola. Não cobre Crotalus nem Micrurus."},
-  {n:4,q:"No acidente laquético GRAVE, o número de ampolas de SABL indicado é:",o:[{l:"A",v:"5"},{l:"B",v:"10"},{l:"C",v:"20"},{l:"D",v:"30"}],cr:"C",ex:"Grave = 20 ampolas SABL. Moderado = 10 ampolas. Não há caso leve no acidente laquético."}
+  {n:1,q:"O acidente laquético se diferencia do botrópico principalmente pela presença de:",o:[{l:"A",v:"Fácies miastênica e ptose palpebral"},{l:"B",v:"Síndrome vagal — bradicardia, hipotensão, dor abdominal, diarreia e sudorese"},{l:"C",v:"Rabdomiólise com mioglobinúria"},{l:"D",v:"Quadro local mínimo com predomínio sistêmico"},{l:"E",v:"Paralisia da musculatura respiratória"}],cr:"B",ex:"A síndrome vagal (bradicardia, hipotensão, dor abdominal em cólica, diarreia, sudorese profusa) é o diferencial clínico do laquético em relação ao botrópico. Fácies miastênica e rabdomiólise são do crotálico; paralisia respiratória é do crotálico ou elapídico."},
+  {n:2,q:"Uma característica biológica exclusiva da Lachesis muta entre as serpentes peçonhentas brasileiras é:",o:[{l:"A",v:"Presença de fosseta loreal"},{l:"B",v:"Hábito noturno e terrestre"},{l:"C",v:"Ser ovípara — a única peçonhenta brasileira que põe ovos"},{l:"D",v:"Possuir presas solenóglifas articuladas"},{l:"E",v:"Habitar áreas de cerrado e caatinga"}],cr:"C",ex:"A Lachesis muta é a ÚNICA serpente peçonhenta ovípara do Brasil. Todas as demais (Bothrops, Crotalus, Micrurus) são vivíparas ou ovovivíparas. A fosseta loreal também está em Bothrops e Crotalus; presas solenóglifas estão em Bothrops e Crotalus também."},
+  {n:3,q:"No acidente laquético, o Ministério da Saúde NÃO classifica como 'leve'. Por quê?",o:[{l:"A",v:"Porque a surucucu é pequena e inocula pouco veneno"},{l:"B",v:"Porque o acidente é raro, a serpente é de grande porte (alto volume de veneno inoculado) e o quadro tende a ser no mínimo moderado"},{l:"C",v:"Porque o soro SABL só existe na apresentação de 20 ampolas"},{l:"D",v:"Porque a surucucu não possui veneno proteolítico"},{l:"E",v:"Porque todos os acidentes laquéticos são fatais"}],cr:"B",ex:"A surucucu é a maior víbora das Américas (> 3,5 m), inoculando grande volume de veneno. Pela raridade do acidente e gravidade potencial, o MS classifica apenas como moderado (10 ampolas SABL) ou grave (20 ampolas SABL)."},
+  {n:4,q:"Na indisponibilidade do SABL (soro antibotrópico-laquético), a alternativa indicada é:",o:[{l:"A",v:"SAC (soro anticrotálico)"},{l:"B",v:"SAEL (soro antielapídico)"},{l:"C",v:"SAB (soro antibotrópico) — pela reatividade cruzada entre venenos de Bothrops e Lachesis"},{l:"D",v:"SAEsc (soro antiescorpiônico)"},{l:"E",v:"Não administrar soro e manter apenas suporte clínico"}],cr:"C",ex:"Na falta do SABL, pode-se usar o SAB (soro antibotrópico), pois há reatividade cruzada significativa entre os venenos de Bothrops e Lachesis — os componentes proteolíticos, coagulantes e hemorrágicos são semelhantes."},
+  {n:5,q:"Para o manejo da bradicardia sintomática na síndrome vagal do acidente laquético, utiliza-se:",o:[{l:"A",v:"Adrenalina IV em bolus"},{l:"B",v:"Atropina IV (0,5–1 mg no adulto)"},{l:"C",v:"Neostigmina IV"},{l:"D",v:"Amiodarona IV"},{l:"E",v:"Lidocaína IV"}],cr:"B",ex:"A atropina (anticolinérgico) é o tratamento da bradicardia vagal. A adrenalina é para reação anafilática, não para bradicardia vagal. A neostigmina é anticolinesterásico e PIORARIA a bradicardia. Amiodarona e lidocaína são antiarrítmicos usados em taquiarritmias."},
+  {n:6,q:"Como diferenciar clinicamente o acidente laquético do botrópico quando o paciente não trouxe a serpente?",o:[{l:"A",v:"Pela presença de fácies miastênica e urina escura"},{l:"B",v:"Pelo quadro local mínimo com predomínio neurotóxico"},{l:"C",v:"Pela presença de síndrome vagal: bradicardia, hipotensão, dor abdominal, diarreia e sudorese associadas ao quadro local típico de botrópico"},{l:"D",v:"Pela ausência de coagulopatia"},{l:"E",v:"Pela presença de paralisia respiratória descendente"}],cr:"C",ex:"O quadro local do laquético é semelhante ao botrópico. O diferencial é a síndrome vagal (bradicardia, hipotensão, dor abdominal, diarreia, sudorese). Se há quadro 'botrópico' + manifestações vagais → pensar em laquético. Fácies miastênica e paralisia são do crotálico/elapídico."}
 ];
 var QS={c:0,w:0,a:0};
 function renderQuiz(){var ct=document.getElementById('quizContainer');ct.innerHTML='';QD.forEach(function(q,i){var d=document.createElement('div');d.className='q-card';d.id='q'+i;var body='<div class="opts">'+q.o.map(function(o){return '<button class="opt-btn" data-q="'+i+'" data-l="'+o.l+'" onclick="answerMC('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+o.v+'</span></button>';}).join('')+'</div>';d.innerHTML='<div class="q-num">Questão '+q.n+'</div><div class="res-ind" id="ri'+i+'"></div><p class="q-text">'+q.q+'</p>'+body+'<div class="exp-box" id="ex'+i+'"><div class="et">📖 Explicação</div><p>'+q.ex+'</p></div>';ct.appendChild(d);});updateScores();}
@@ -136,8 +390,8 @@ function resetQuiz(){QS={c:0,w:0,a:0};renderQuiz();}
 function getClient(){if(window.authClient)return window.authClient;return null;}
 async function concluirAula(){var btn=document.getElementById('completeBtn');var sb=getClient();if(!sb){marcarConcluidaUI(btn);return;}try{var u=await sb.auth.getUser();var user=u&&u.data?u.data.user:null;if(user){await sb.from('curso_progresso').upsert({user_id:user.id,curso:CURSO,aula_id:AULA_ID,concluida:true,quiz_score:QS.c,quiz_total:QD.length,updated_at:new Date().toISOString()},{onConflict:'user_id,curso,aula_id'});}}catch(e){console.warn('Falha ao salvar progresso:',e);}marcarConcluidaUI(btn);}
 function marcarConcluidaUI(btn){btn.classList.add('done');btn.textContent='✓ Aula concluída';btn.onclick=function(){window.location.href='curso-peconhentos.html';};setTimeout(function(){window.location.href='curso-peconhentos.html';},900);}
-document.addEventListener("authReady",function(){renderGallery();renderQuiz();});
-setTimeout(function(){if(!document.getElementById('quizContainer').children.length){renderGallery();renderQuiz();}},1200);
+document.addEventListener("authReady",function(){renderGallery();renderChecklist();renderQuiz();});
+setTimeout(function(){if(!document.getElementById('quizContainer').children.length){renderGallery();renderChecklist();renderQuiz();}},1200);
 </script>
 <script src="study-timer.js"></script>
 <script src="enzo-ia.js"></script>

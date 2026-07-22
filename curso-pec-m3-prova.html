@@ -20,236 +20,81 @@ header h1{font-family:var(--font-display);font-size:clamp(22px,3.5vw,34px);font-
 header .sub{color:var(--muted);font-size:13px}
 .container{max-width:900px;margin:0 auto;padding:28px 20px}
 .exam-info{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:24px;display:flex;gap:20px;flex-wrap:wrap;align-items:center}
-.exam-info .ei-icon{font-size:36px}
-.exam-info .ei-text{flex:1;min-width:200px}
-.exam-info .ei-text h3{font-family:var(--font-display);font-size:16px;font-weight:700;margin-bottom:4px}
-.exam-info .ei-text p{color:var(--muted);font-size:12px;line-height:1.5}
-.exam-info .ei-best{text-align:center;min-width:100px}
-.exam-info .ei-best .eb-label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-.exam-info .ei-best .eb-val{font-family:var(--font-display);font-size:28px;font-weight:800}
-.progress-bar{width:100%;height:8px;background:var(--bg3);border-radius:10px;overflow:hidden;margin-bottom:24px}
-.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--accent4),var(--accent3));border-radius:10px;transition:width .4s}
-.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
-.q-card.answered{opacity:.85}
-.q-card.cq{border-color:var(--green)}.q-card.wq{border-color:var(--red)}
-.q-num{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-bottom:10px}
-.q-text{font-size:14px;font-weight:600;color:#fff;margin-bottom:16px;line-height:1.5}
+.exam-info .ei-icon{font-size:36px}.exam-info .ei-text{flex:1;min-width:200px}.exam-info .ei-text h3{font-family:var(--font-display);font-size:16px;font-weight:700;margin-bottom:4px}.exam-info .ei-text p{color:var(--muted);font-size:12px;line-height:1.5}
+.exam-info .ei-best{text-align:center;min-width:100px}.exam-info .ei-best .eb-label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.exam-info .ei-best .eb-val{font-family:var(--font-display);font-size:28px;font-weight:800}
+.progress-bar{width:100%;height:8px;background:var(--bg3);border-radius:10px;overflow:hidden;margin-bottom:24px}.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--accent4),var(--accent3));border-radius:10px;transition:width .4s}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}.q-card.answered{opacity:.85}.q-card.cq{border-color:var(--green)}.q-card.wq{border-color:var(--red)}
+.q-num{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-bottom:10px}.q-text{font-size:14px;font-weight:600;color:#fff;margin-bottom:16px;line-height:1.5}
 .opts{display:flex;flex-direction:column;gap:8px}
 .opt-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:11px 16px;border-radius:10px;cursor:pointer;font-size:13px;text-align:left;transition:all .2s;display:flex;gap:10px;font-family:var(--font-body)}
 .opt-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(79,156,249,.08)}
 .opt-btn .ol{font-family:var(--font-mono);font-weight:700;color:var(--accent4);min-width:20px}
-.opt-btn.ca{background:rgba(79,249,132,.1);border-color:var(--green);color:var(--green)}
-.opt-btn.wa{background:rgba(249,95,95,.1);border-color:var(--red);color:var(--red)}
-.exp-box{display:none;margin-top:14px;padding:14px 18px;background:rgba(184,79,249,.06);border-left:3px solid var(--accent4);border-radius:0 10px 10px 0;font-size:13px;color:var(--text);line-height:1.7}
-.exp-box.vis{display:block}
+.opt-btn.ca{background:rgba(79,249,132,.1);border-color:var(--green);color:var(--green)}.opt-btn.wa{background:rgba(249,95,95,.1);border-color:var(--red);color:var(--red)}
+.exp-box{display:none;margin-top:14px;padding:14px 18px;background:rgba(184,79,249,.06);border-left:3px solid var(--accent4);border-radius:0 10px 10px 0;font-size:13px;color:var(--text);line-height:1.7}.exp-box.vis{display:block}
 .et{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent4);margin-bottom:8px}
-/* RESULTADO FINAL */
-.result-panel{display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-top:24px;text-align:center;box-shadow:var(--shadow)}
-.result-panel.vis{display:block}
-.result-panel .rp-icon{font-size:48px;margin-bottom:12px}
-.result-panel .rp-title{font-family:var(--font-display);font-size:22px;font-weight:800;margin-bottom:6px}
-.result-panel .rp-score{font-family:var(--font-mono);font-size:36px;font-weight:800;margin-bottom:8px}
-.result-panel .rp-detail{color:var(--muted);font-size:13px;margin-bottom:18px}
-.result-panel.pass{border-color:var(--green)}.result-panel.pass .rp-score{color:var(--green)}
-.result-panel.fail{border-color:var(--red)}.result-panel.fail .rp-score{color:var(--red)}
+.result-panel{display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-top:24px;text-align:center;box-shadow:var(--shadow)}.result-panel.vis{display:block}
+.result-panel .rp-icon{font-size:48px;margin-bottom:12px}.result-panel .rp-title{font-family:var(--font-display);font-size:22px;font-weight:800;margin-bottom:6px}.result-panel .rp-score{font-family:var(--font-mono);font-size:36px;font-weight:800;margin-bottom:8px}.result-panel .rp-detail{color:var(--muted);font-size:13px;margin-bottom:18px}
+.result-panel.pass{border-color:var(--green)}.result-panel.pass .rp-score{color:var(--green)}.result-panel.fail{border-color:var(--red)}.result-panel.fail .rp-score{color:var(--red)}
 .rp-btn{padding:12px 24px;border:none;border-radius:12px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;margin:6px;transition:all .2s}
-.rp-btn.primary{background:linear-gradient(135deg,var(--accent4),var(--accent3));color:#fff}
-.rp-btn.primary:hover{box-shadow:0 0 24px rgba(184,79,249,.4)}
+.rp-btn.primary{background:linear-gradient(135deg,var(--accent4),var(--accent3));color:#fff}.rp-btn.primary:hover{box-shadow:0 0 24px rgba(184,79,249,.4)}
 .rp-btn.secondary{background:var(--card2);color:var(--accent);border:1px solid var(--border)}
 .source-note{margin-top:22px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent4);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}.source-note b{color:var(--accent4)}
-#backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow)}
-#backBtn:hover{border-color:var(--accent);background:var(--card2)}
+#backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow)}#backBtn:hover{border-color:var(--accent);background:var(--card2)}
 </style>
 </head>
 <body>
-
 <header>
   <div class="badge">Prova de Proficiência</div>
   <h1>Módulo 3 — Laquético e Elapídico</h1>
-  <div class="sub">10 questões · mínimo 61% para aprovação · sem limite de tentativas</div>
+  <div class="sub">15 questões · mínimo 61% para aprovação · sem limite de tentativas</div>
 </header>
-
 <div class="container">
   <div class="exam-info">
     <div class="ei-icon">📝</div>
     <div class="ei-text">
       <h3>Prova do Módulo 3</h3>
-      <p>Cobre: acidente laquético (SABL), acidente elapídico (SAEL), sinais vagais, neurotoxina curarizante.</p>
+      <p>Cobre: acidente laquético (SABL), acidente elapídico (SAEL), síndrome vagal, neurotoxina curarizante, diagnóstico diferencial e manejo.</p>
     </div>
-    <div class="ei-best">
-      <div class="eb-label">Melhor nota</div>
-      <div class="eb-val" id="bestScore">—</div>
-    </div>
+    <div class="ei-best"><div class="eb-label">Melhor nota</div><div class="eb-val" id="bestScore">—</div></div>
   </div>
-
   <div class="progress-bar"><div class="fill" id="progFill" style="width:0%"></div></div>
-
   <div id="examContainer"></div>
-
   <div class="result-panel" id="resultPanel">
-    <div class="rp-icon" id="rpIcon"></div>
-    <div class="rp-title" id="rpTitle"></div>
-    <div class="rp-score" id="rpScore"></div>
-    <div class="rp-detail" id="rpDetail"></div>
+    <div class="rp-icon" id="rpIcon"></div><div class="rp-title" id="rpTitle"></div><div class="rp-score" id="rpScore"></div><div class="rp-detail" id="rpDetail"></div>
     <button class="rp-btn primary" onclick="refazerProva()">🔄 Refazer prova</button>
     <button class="rp-btn secondary" onclick="window.location.href='curso-peconhentos.html'">← Voltar ao curso</button>
   </div>
-
-  <div class="source-note">
-    <b>Nota:</b> Esta prova avalia os conteúdos do Módulo 3.
-  </div>
+  <div class="source-note"><b>Nota:</b> Esta prova avalia os conteúdos do Módulo 3. A aprovação (≥ 61%) é um dos requisitos para a emissão do certificado.</div>
 </div>
-
 <a href="curso-peconhentos.html" id="backBtn">← Voltar ao curso</a>
-
 <script>
-var CURSO = "peconhentos";
-var MODULO = 3;
-var AULA_ID = "m3-prova";
-var MIN_PCT = 61;
-
-var QD = [{"n": 1, "q": "Diferencial clínico do laquético vs botrópico:", "o": [{"l": "A", "v": "Neurotóxicos"}, {"l": "B", "v": "Vagais (bradicardia, hipotensão, diarreia)"}, {"l": "C", "v": "Miotóxicos"}, {"l": "D", "v": "Hemolíticos"}], "cr": "B", "ex": "Sinais vagais são a marca do laquético."}, {"n": 2, "q": "Classificação do acidente laquético:", "o": [{"l": "A", "v": "Leve, moderado, grave"}, {"l": "B", "v": "Apenas moderado e grave"}, {"l": "C", "v": "Apenas grave"}, {"l": "D", "v": "Sem classificação"}], "cr": "B", "ex": "Não há caso leve no laquético (MS)."}, {"n": 3, "q": "SABL cobre:", "o": [{"l": "A", "v": "Apenas Lachesis"}, {"l": "B", "v": "Bothrops e Lachesis"}, {"l": "C", "v": "Crotalus e Lachesis"}, {"l": "D", "v": "Micrurus e Lachesis"}], "cr": "B", "ex": "SABL = antibotrópico + antilaquético."}, {"n": 4, "q": "Acidente elapídico é sempre classificado como:", "o": [{"l": "A", "v": "Leve"}, {"l": "B", "v": "Moderado"}, {"l": "C", "v": "Grave"}, {"l": "D", "v": "Depende"}], "cr": "C", "ex": "TODO elapídico = GRAVE. 10 ampolas SAEL."}, {"n": 5, "q": "Dose de SAEL:", "o": [{"l": "A", "v": "5 amp"}, {"l": "B", "v": "10 amp"}, {"l": "C", "v": "20 amp"}, {"l": "D", "v": "Depende"}], "cr": "B", "ex": "10 ampolas SAEL, dose fixa."}, {"n": 6, "q": "Veneno elapídico causa:", "o": [{"l": "A", "v": "Necrose local"}, {"l": "B", "v": "Bloqueio neuromuscular curarizante"}, {"l": "C", "v": "Rabdomiólise"}, {"l": "D", "v": "Sinais vagais"}], "cr": "B", "ex": "Veneno da coral = curarizante, bloqueia ACh."}, {"n": 7, "q": "Sem SAEL disponível:", "o": [{"l": "A", "v": "SAB"}, {"l": "B", "v": "Suporte ventilatório intensivo"}, {"l": "C", "v": "SAA"}, {"l": "D", "v": "Alta"}], "cr": "B", "ex": "Nenhum soro substitui SAEL. Manejo = suporte ventilatório."}, {"n": 8, "q": "Coral verdadeira vs falsa-coral:", "o": [{"l": "A", "v": "Cor dos anéis"}, {"l": "B", "v": "Tamanho"}, {"l": "C", "v": "Dente inoculador (presa proteróglifa)"}, {"l": "D", "v": "Habitat"}], "cr": "C", "ex": "Dente inoculador é a diferença definitiva."}, {"n": 9, "q": "Dúvida botrópico/laquético — usar:", "o": [{"l": "A", "v": "SAB"}, {"l": "B", "v": "SAC"}, {"l": "C", "v": "SABL"}, {"l": "D", "v": "SAEL"}], "cr": "C", "ex": "SABL cobre ambos."}, {"n": 10, "q": "Lachesis muta pode ultrapassar:", "o": [{"l": "A", "v": "50 cm"}, {"l": "B", "v": "1 m"}, {"l": "C", "v": "3 metros"}, {"l": "D", "v": "5 m"}], "cr": "C", "ex": "Surucucu >3m, maior víbora das Américas."}];
-
-var answers = [];
-var answered = 0;
-var correct = 0;
-
-function renderExam(){
-  var ct = document.getElementById('examContainer');
-  ct.innerHTML = '';
-  answers = [];
-  answered = 0;
-  correct = 0;
-  document.getElementById('resultPanel').className = 'result-panel';
-  document.getElementById('progFill').style.width = '0%';
-
-  QD.forEach(function(q, i){
-    answers.push(null);
-    var d = document.createElement('div');
-    d.className = 'q-card';
-    d.id = 'q' + i;
-    var body = '<div class="opts">' + q.o.map(function(o){
-      return '<button class="opt-btn" data-q="'+i+'" data-l="'+o.l+'" onclick="answerQ('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+o.v+'</span></button>';
-    }).join('') + '</div>';
-    d.innerHTML = '<div class="q-num">Questão ' + q.n + ' de ' + QD.length + '</div><p class="q-text">' + q.q + '</p>' + body + '<div class="exp-box" id="ex' + i + '"><div class="et">📖 Explicação</div><p>' + q.ex + '</p></div>';
-    ct.appendChild(d);
-  });
-}
-
-function answerQ(i, ch){
-  var q = QD[i];
-  var card = document.getElementById('q' + i);
-  if(card.classList.contains('answered')) return;
-
-  card.querySelectorAll('.opt-btn').forEach(function(b){
-    b.disabled = true;
-    if(b.dataset.l === q.cr) b.classList.add('ca');
-    if(b.dataset.l === ch && ch !== q.cr) b.classList.add('wa');
-  });
-
-  var ok = ch === q.cr;
-  card.classList.add('answered', ok ? 'cq' : 'wq');
-  document.getElementById('ex' + i).classList.add('vis');
-  answers[i] = ch;
-  answered++;
-  if(ok) correct++;
-
-  document.getElementById('progFill').style.width = Math.round(answered / QD.length * 100) + '%';
-
-  if(answered === QD.length){
-    setTimeout(function(){ finalizarProva(); }, 600);
-  }
-}
-
-async function finalizarProva(){
-  var pct = Math.round(correct / QD.length * 100);
-  var aprovado = pct >= MIN_PCT;
-
-  var panel = document.getElementById('resultPanel');
-  panel.className = 'result-panel vis ' + (aprovado ? 'pass' : 'fail');
-  document.getElementById('rpIcon').textContent = aprovado ? '🎉' : '😔';
-  document.getElementById('rpTitle').textContent = aprovado ? 'Aprovado!' : 'Não atingiu a nota mínima';
-  document.getElementById('rpScore').textContent = pct + '%';
-  document.getElementById('rpDetail').textContent = correct + ' de ' + QD.length + ' corretas · Mínimo: ' + MIN_PCT + '% · ' + (aprovado ? 'Módulo 1 concluído!' : 'Você pode refazer quantas vezes quiser.');
-
-  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-  /* Salvar no Supabase */
-  var sb = getClient();
-  if(sb){
-    try {
-      var u = await sb.auth.getUser();
-      var user = u && u.data ? u.data.user : null;
-      if(user){
-        /* Salvar tentativa na tabela curso_provas */
-        await sb.from('curso_provas').insert({
-          user_id: user.id,
-          curso: CURSO,
-          modulo: MODULO,
-          acertos: correct,
-          total: QD.length,
-          percentual: pct,
-          aprovado: aprovado
-        });
-
-        /* Marcar aula como concluída no progresso */
-        await sb.from('curso_progresso').upsert({
-          user_id: user.id,
-          curso: CURSO,
-          aula_id: AULA_ID,
-          concluida: true,
-          quiz_score: correct,
-          quiz_total: QD.length,
-          updated_at: new Date().toISOString()
-        }, { onConflict: 'user_id,curso,aula_id' });
-
-        /* Atualizar melhor nota exibida */
-        loadBestScore(sb, user.id);
-      }
-    } catch(e){ console.warn('Erro ao salvar prova:', e); }
-  }
-}
-
-function refazerProva(){
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  setTimeout(function(){ renderExam(); }, 300);
-}
-
-function getClient(){
-  if(window.authClient) return window.authClient;
-  return null;
-}
-
-async function loadBestScore(sb, userId){
-  try {
-    var res = await sb.from('curso_melhor_prova')
-      .select('melhor_percentual, ja_aprovado, tentativas')
-      .eq('user_id', userId)
-      .eq('curso', CURSO)
-      .eq('modulo', MODULO)
-      .single();
-    if(res.data){
-      var el = document.getElementById('bestScore');
-      el.textContent = Math.round(res.data.melhor_percentual) + '%';
-      el.style.color = res.data.ja_aprovado ? 'var(--green)' : 'var(--red)';
-    }
-  } catch(e){}
-}
-
-/* Init */
-document.addEventListener("authReady", function(){
-  renderExam();
-  var sb = getClient();
-  if(sb){
-    sb.auth.getUser().then(function(u){
-      var user = u && u.data ? u.data.user : null;
-      if(user) loadBestScore(sb, user.id);
-    });
-  }
-});
-setTimeout(function(){
-  if(!document.getElementById('examContainer').children.length) renderExam();
-}, 1200);
+var CURSO="peconhentos";var MODULO=3;var AULA_ID="m3-prova";var MIN_PCT=61;
+var QD=[
+  {n:1,q:"O diferencial clínico do acidente laquético em relação ao botrópico é:",o:[{l:"A",v:"Fácies miastênica e ptose palpebral"},{l:"B",v:"Síndrome vagal — bradicardia, hipotensão, dor abdominal, diarreia e sudorese"},{l:"C",v:"Rabdomiólise com mioglobinúria"},{l:"D",v:"Quadro local mínimo com predomínio neurotóxico"},{l:"E",v:"Paralisia da musculatura respiratória descendente"}],cr:"B",ex:"A síndrome vagal (bradicardia, hipotensão, dor abdominal, diarreia, sudorese) é a marca do laquético. Fácies miastênica é do crotálico; quadro local mínimo é do crotálico/elapídico."},
+  {n:2,q:"O Ministério da Saúde classifica o acidente laquético como:",o:[{l:"A",v:"Leve, moderado e grave"},{l:"B",v:"Apenas moderado e grave — não há caso leve"},{l:"C",v:"Apenas grave"},{l:"D",v:"Depende da idade do paciente"},{l:"E",v:"Depende da região geográfica"}],cr:"B",ex:"Pela raridade e gravidade potencial (serpente de grande porte, alto volume de veneno), o MS classifica apenas como moderado (10 ampolas) ou grave (20 ampolas)."},
+  {n:3,q:"O SABL (soro antibotrópico-laquético) neutraliza venenos de:",o:[{l:"A",v:"Apenas Lachesis"},{l:"B",v:"Bothrops e Lachesis"},{l:"C",v:"Crotalus e Lachesis"},{l:"D",v:"Micrurus e Lachesis"},{l:"E",v:"Todos os gêneros ofídicos brasileiros"}],cr:"B",ex:"SABL = antibotrópico (pentavalente) + antilaquético. Cada ampola neutraliza ≥50 mg de Bothrops e ≥30 mg de Lachesis muta."},
+  {n:4,q:"Todo acidente com coral verdadeira (Micrurus) é classificado como:",o:[{l:"A",v:"Leve até prova em contrário"},{l:"B",v:"Moderado inicialmente"},{l:"C",v:"Grave — independente da apresentação inicial"},{l:"D",v:"Depende do tamanho da serpente"},{l:"E",v:"Depende da presença de sintomas neurológicos"}],cr:"C",ex:"Todo elapídico é GRAVE. A paralisia respiratória pode se instalar rapidamente, mesmo em pacientes inicialmente assintomáticos."},
+  {n:5,q:"A dose de SAEL indicada para o acidente elapídico é:",o:[{l:"A",v:"5 ampolas IV"},{l:"B",v:"10 ampolas IV — dose fixa"},{l:"C",v:"20 ampolas IV"},{l:"D",v:"Depende da gravidade (leve/moderado/grave)"},{l:"E",v:"Depende do peso do paciente"}],cr:"B",ex:"Dose fixa: 10 ampolas de SAEL IV. Como todo caso é grave, não há escalonamento."},
+  {n:6,q:"O veneno elapídico causa paralisia muscular por:",o:[{l:"A",v:"Ação proteolítica sobre as fibras musculares"},{l:"B",v:"Bloqueio neuromuscular curarizante (pré e pós-sináptico)"},{l:"C",v:"Rabdomiólise com liberação de mioglobina"},{l:"D",v:"Estimulação vagal do sistema parassimpático"},{l:"E",v:"Consumo de fibrinogênio e coagulopatia"}],cr:"B",ex:"O veneno da coral atua como curarizante: PLA₂ (pré-sináptico) + neurotoxinas α (pós-sináptico). O bloqueio duplo causa paralisia descendente. Não causa necrose local, rabdomiólise nem coagulopatia."},
+  {n:7,q:"Na indisponibilidade de SAEL, a conduta prioritária é:",o:[{l:"A",v:"Administrar SAB como substituto"},{l:"B",v:"Administrar SAC pela semelhança neurotóxica"},{l:"C",v:"Suporte ventilatório intensivo — ventilação mecânica se necessário"},{l:"D",v:"Alta com observação domiciliar"},{l:"E",v:"Administrar SABC (antibotrópico-crotálico)"}],cr:"C",ex:"Nenhum soro substitui o SAEL. SAB, SAC, SABL e SABC NÃO cobrem veneno elapídico. O manejo é suporte ventilatório intensivo."},
+  {n:8,q:"A diferença definitiva entre coral verdadeira e falsa-coral é:",o:[{l:"A",v:"A cor e disposição dos anéis"},{l:"B",v:"O tamanho da serpente"},{l:"C",v:"A presença de dente inoculador (presa proteróglifa) na verdadeira"},{l:"D",v:"O habitat exclusivo da verdadeira em floresta"},{l:"E",v:"A velocidade de fuga"}],cr:"C",ex:"Dente inoculador (presa proteróglifa fixa) é a diferença definitiva. Cores podem ser similares — falsas-corais mimetizam o padrão. Na dúvida, tratar como verdadeira."},
+  {n:9,q:"Em caso de dúvida entre acidente botrópico e laquético, o soro indicado é:",o:[{l:"A",v:"SAB isolado"},{l:"B",v:"SAC"},{l:"C",v:"SABL — cobre ambos"},{l:"D",v:"SAEL"},{l:"E",v:"Nenhum soro, apenas observação"}],cr:"C",ex:"SABL neutraliza venenos de Bothrops e Lachesis — é a escolha na dúvida entre os dois."},
+  {n:10,q:"A Lachesis muta é a única serpente peçonhenta brasileira que:",o:[{l:"A",v:"Possui fosseta loreal"},{l:"B",v:"Tem presas solenóglifas"},{l:"C",v:"É ovípara — põe ovos e os guarda"},{l:"D",v:"Habita regiões de cerrado"},{l:"E",v:"Produz veneno coagulante"}],cr:"C",ex:"A surucucu é a ÚNICA peçonhenta ovípara do Brasil. Todas as demais são vivíparas ou ovovivíparas. Fosseta loreal e presas solenóglifas estão presentes também em Bothrops e Crotalus."},
+  {n:11,q:"Para tratar a bradicardia sintomática na síndrome vagal do acidente laquético, utiliza-se:",o:[{l:"A",v:"Adrenalina IV em bolus"},{l:"B",v:"Atropina IV (0,5–1 mg no adulto)"},{l:"C",v:"Neostigmina IV"},{l:"D",v:"Amiodarona IV"},{l:"E",v:"Propranolol IV"}],cr:"B",ex:"Atropina (anticolinérgico) é o tratamento da bradicardia vagal. Neostigmina é anticolinesterásico e PIORARIA a bradicardia. Adrenalina é para reação anafilática, não para bradicardia vagal."},
+  {n:12,q:"Por que a neostigmina pode ter efeito parcial no acidente elapídico, mas NÃO no crotálico?",o:[{l:"A",v:"Porque o veneno elapídico é menos potente"},{l:"B",v:"Porque o elapídico tem componente pós-sináptico (curarizante) além do pré-sináptico"},{l:"C",v:"Porque a neostigmina só funciona em crianças"},{l:"D",v:"Porque o veneno crotálico é inativado pela neostigmina"},{l:"E",v:"Porque o elapídico causa rabdomiólise"}],cr:"B",ex:"O veneno elapídico tem bloqueio pré E pós-sináptico. A neostigmina (anticolinesterásico) aumenta ACh na fenda, competindo com o bloqueio pós-sináptico. No crotálico, o bloqueio é exclusivamente pré-sináptico — não adianta preservar ACh na fenda se ela não está sendo liberada."},
+  {n:13,q:"A Micrurus quebra todas as regras de identificação do M1 porque:",o:[{l:"A",v:"É a única com guizo na cauda"},{l:"B",v:"NÃO possui fosseta loreal, tem pupila redonda, cabeça não destacada e presas fixas pequenas"},{l:"C",v:"É a maior serpente peçonhenta do Brasil"},{l:"D",v:"Possui veneno exclusivamente hemorrágico"},{l:"E",v:"Habita exclusivamente o cerrado"}],cr:"B",ex:"A coral é a exceção: sem fosseta loreal, pupila redonda, cabeça não triangular, presas proteróglifa fixas e pequenas. Pelos critérios visuais gerais, parece não-peçonhenta — mas possui veneno extremamente potente."},
+  {n:14,q:"No acidente laquético GRAVE, o número de ampolas de SABL é:",o:[{l:"A",v:"5"},{l:"B",v:"10"},{l:"C",v:"15"},{l:"D",v:"20"},{l:"E",v:"30"}],cr:"D",ex:"Laquético grave = 20 ampolas SABL. Moderado = 10 ampolas. Não há classificação leve."},
+  {n:15,q:"Qual das seguintes manifestações NÃO é esperada no acidente elapídico?",o:[{l:"A",v:"Ptose palpebral bilateral"},{l:"B",v:"Disfagia e disfonia"},{l:"C",v:"Edema local exuberante com bolhas hemorrágicas e necrose"},{l:"D",v:"Insuficiência respiratória aguda"},{l:"E",v:"Oftalmoplegia com diplopia"}],cr:"C",ex:"O elapídico NÃO causa lesão local significativa — sem edema intenso, bolhas ou necrose (isso é assinatura do botrópico). O quadro é exclusivamente neurotóxico: ptose, oftalmoplegia, disfagia, disfonia e paralisia respiratória."}
+];
+var answers=[],answered=0,correct=0;
+function renderExam(){var ct=document.getElementById('examContainer');ct.innerHTML='';answers=[];answered=0;correct=0;document.getElementById('resultPanel').className='result-panel';document.getElementById('progFill').style.width='0%';QD.forEach(function(q,i){answers.push(null);var d=document.createElement('div');d.className='q-card';d.id='q'+i;var body='<div class="opts">'+q.o.map(function(o){return '<button class="opt-btn" data-q="'+i+'" data-l="'+o.l+'" onclick="answerQ('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+o.v+'</span></button>';}).join('')+'</div>';d.innerHTML='<div class="q-num">Questão '+q.n+' de '+QD.length+'</div><p class="q-text">'+q.q+'</p>'+body+'<div class="exp-box" id="ex'+i+'"><div class="et">📖 Explicação</div><p>'+q.ex+'</p></div>';ct.appendChild(d);});}
+function answerQ(i,ch){var q=QD[i];var card=document.getElementById('q'+i);if(card.classList.contains('answered'))return;card.querySelectorAll('.opt-btn').forEach(function(b){b.disabled=true;if(b.dataset.l===q.cr)b.classList.add('ca');if(b.dataset.l===ch&&ch!==q.cr)b.classList.add('wa');});var ok=ch===q.cr;card.classList.add('answered',ok?'cq':'wq');document.getElementById('ex'+i).classList.add('vis');answers[i]=ch;answered++;if(ok)correct++;document.getElementById('progFill').style.width=Math.round(answered/QD.length*100)+'%';if(answered===QD.length){setTimeout(function(){finalizarProva();},600);}}
+async function finalizarProva(){var pct=Math.round(correct/QD.length*100);var aprovado=pct>=MIN_PCT;var panel=document.getElementById('resultPanel');panel.className='result-panel vis '+(aprovado?'pass':'fail');document.getElementById('rpIcon').textContent=aprovado?'🎉':'😔';document.getElementById('rpTitle').textContent=aprovado?'Aprovado!':'Não atingiu a nota mínima';document.getElementById('rpScore').textContent=pct+'%';document.getElementById('rpDetail').textContent=correct+' de '+QD.length+' corretas · Mínimo: '+MIN_PCT+'% · '+(aprovado?'Módulo 3 concluído!':'Você pode refazer quantas vezes quiser.');panel.scrollIntoView({behavior:'smooth',block:'center'});var sb=getClient();if(sb){try{var u=await sb.auth.getUser();var user=u&&u.data?u.data.user:null;if(user){await sb.from('curso_provas').insert({user_id:user.id,curso:CURSO,modulo:MODULO,acertos:correct,total:QD.length,percentual:pct,aprovado:aprovado});await sb.from('curso_progresso').upsert({user_id:user.id,curso:CURSO,aula_id:AULA_ID,concluida:true,quiz_score:correct,quiz_total:QD.length,updated_at:new Date().toISOString()},{onConflict:'user_id,curso,aula_id'});loadBestScore(sb,user.id);}}catch(e){console.warn('Erro ao salvar prova:',e);}}}
+function refazerProva(){window.scrollTo({top:0,behavior:'smooth'});setTimeout(function(){renderExam();},300);}
+function getClient(){if(window.authClient)return window.authClient;return null;}
+async function loadBestScore(sb,userId){try{var res=await sb.from('curso_melhor_prova').select('melhor_percentual, ja_aprovado, tentativas').eq('user_id',userId).eq('curso',CURSO).eq('modulo',MODULO).single();if(res.data){var el=document.getElementById('bestScore');el.textContent=Math.round(res.data.melhor_percentual)+'%';el.style.color=res.data.ja_aprovado?'var(--green)':'var(--red)';}}catch(e){}}
+document.addEventListener("authReady",function(){renderExam();var sb=getClient();if(sb){sb.auth.getUser().then(function(u){var user=u&&u.data?u.data.user:null;if(user)loadBestScore(sb,user.id);});}});
+setTimeout(function(){if(!document.getElementById('examContainer').children.length)renderExam();},1200);
 </script>
 <script src="study-timer.js"></script>
 <script src="enzo-ia.js"></script>
