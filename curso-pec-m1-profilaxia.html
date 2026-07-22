@@ -94,54 +94,81 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
 <div class="container">
 
   <div class="info-block orange">
-    <div class="label">Contexto</div>
-    <h4>A picada é um ferimento — e pode dar tétano</h4>
-    <p>A decisão de profilaxia antitetânica depende de dois fatores: o <b>risco do ferimento</b> (mínimo vs. alto risco) e o <b>histórico vacinal</b> do paciente. No acidente ofídico, a picada costuma ser ferimento de <b>alto risco</b> (puntiforme, contaminado, com possível tecido desvitalizado).</p>
+    <div class="label">Contexto clínico</div>
+    <h4>A picada é um ferimento contaminado — e pode dar tétano</h4>
+    <p>A mordedura de serpente é um ferimento <b>puntiforme, contaminado e potencialmente com tecido desvitalizado</b> — características que o classificam como <b>ferimento de alto risco para tétano</b>. A decisão de profilaxia antitetânica depende de dois fatores: o <b>risco do ferimento</b> e o <b>histórico vacinal</b> do paciente. Nesta aula, você vai aprender a tomar essa decisão em poucos segundos à beira-leito.</p>
   </div>
 
-  <div class="info-block warn">
-    <div class="label">Ordem importa</div>
-    <h4>⚠️ Corrigir a coagulação primeiro</h4>
-    <p>Em acidentes com distúrbio de coagulação (botrópico/crotálico/laquético), a vacina intramuscular deve ser feita <b>após correção do coagulograma</b> — aplicar IM em paciente incoagulável pode causar hematoma. Por isso, no fluxo, a profilaxia entra depois de estabilizar a coagulação.</p>
+  <div class="info-block danger">
+    <div class="label">Sequência importa — regra de segurança</div>
+    <h4>⚠️ PRIMEIRO corrigir a coagulação, DEPOIS vacinar</h4>
+    <p>Em acidentes com distúrbio de coagulação (botrópico, crotálico, laquético), a vacina intramuscular deve ser administrada <b>somente após a normalização do coagulograma</b>. Aplicar injeção IM em paciente incoagulável pode causar <b>hematoma muscular grave</b>, com risco de síndrome compartimental iatrogênica. No fluxo de atendimento, a profilaxia antitetânica entra <b>após</b> a correção da coagulação pelo soro antiveneno.</p>
   </div>
 
-  <div class="sec-divider"><h3>Ferimento de ALTO risco (caso do acidente ofídico)</h3></div>
+  <div class="sec-divider"><h3>Tabela — Ferimento de ALTO risco (caso do acidente ofídico)</h3></div>
   <table class="compare-table">
-    <thead><tr><th>Histórico vacinal</th><th>Vacina</th><th>SAT / IGHAT</th></tr></thead>
+    <thead><tr><th>Histórico vacinal</th><th>Vacina (dT ou dTpa)</th><th>Imunização passiva (SAT ou IGHAT)</th></tr></thead>
     <tbody>
-      <tr><td>Incerto ou &lt; 3 doses</td><td class="yes">Sim</td><td class="yes">Sim</td></tr>
-      <tr><td>≥ 3 doses, última &lt; 5 anos</td><td class="no">Não</td><td class="no">Não</td></tr>
-      <tr><td>≥ 3 doses, última entre 5 e 10 anos</td><td class="yes">Sim (1 reforço)</td><td class="no">Não*</td></tr>
-      <tr><td>≥ 3 doses, última ≥ 10 anos</td><td class="yes">Sim (1 reforço)</td><td class="no">Não*</td></tr>
+      <tr><td><b>Incerto ou &lt; 3 doses</b></td><td style="color:var(--red)"><b>Sim</b> — completar esquema</td><td style="color:var(--red)"><b>Sim</b></td></tr>
+      <tr><td><b>≥ 3 doses, última &lt; 5 anos</b></td><td style="color:var(--green)">Não</td><td style="color:var(--green)">Não</td></tr>
+      <tr><td><b>≥ 3 doses, última entre 5 e 10 anos</b></td><td style="color:var(--gold)"><b>Sim</b> (1 reforço)</td><td style="color:var(--green)">Não*</td></tr>
+      <tr><td><b>≥ 3 doses, última ≥ 10 anos</b></td><td style="color:var(--gold)"><b>Sim</b> (1 reforço)</td><td style="color:var(--green)">Não*</td></tr>
     </tbody>
   </table>
+
   <div class="info-block">
-    <div class="label">Notas da tabela</div>
+    <div class="label">Notas importantes da tabela</div>
     <ul>
-      <li><b>*</b> Para <b>imunodeprimido, desnutrido grave ou idoso</b>, além do reforço, também se indica IGHAT ou SAT.</li>
-      <li>Se o profissional julgar que os cuidados posteriores com o ferimento <b>não serão adequados</b>, considerar imunização passiva (SAT/IGHAT).</li>
-      <li>Quando vacina e SAT/IGHAT são usados juntos, aplicar em <b>locais diferentes</b>.</li>
-      <li><b>IGHAT</b> é preferível ao SAT (origem humana → menos risco de reação alérgica).</li>
+      <li><b>*</b> Para <b>imunodeprimidos, desnutridos graves ou idosos</b>, além do reforço, também se indica IGHAT ou SAT — mesmo com esquema completo.</li>
+      <li>Se o profissional julgar que os <b>cuidados posteriores com o ferimento não serão adequados</b> (paciente de zona rural remota, por exemplo), considerar imunização passiva.</li>
+      <li>Quando vacina e SAT/IGHAT são usados juntos, aplicar em <b>locais anatômicos diferentes</b>.</li>
+      <li><b>IGHAT</b> (Imunoglobulina Humana Antitetânica) é <b>preferível ao SAT</b> (Soro Antitetânico) — origem humana = menor risco de reação alérgica e doença do soro.</li>
+      <li><b>SAT</b> é de origem equina — risco de reação anafilática. Quando usado, manter observação por pelo menos 2 horas.</li>
     </ul>
   </div>
 
   <div class="info-block success">
-    <div class="label">Regra rápida</div>
-    <p>No ferimento de alto risco: <b>quem tem esquema completo e recente (&lt;5 anos) não faz nada</b>; entre 5–10 anos faz <b>reforço</b>; incerto/&lt;3 doses faz <b>vacina + soro/IGHAT</b>.</p>
+    <div class="label">Regra rápida para decorar</div>
+    <h4>A regra dos 5 anos</h4>
+    <p>No ferimento de alto risco: <b>esquema completo e última dose &lt;5 anos → não faz nada</b>. Última dose entre 5–10 anos → <b>reforço</b>. Incerto ou &lt;3 doses → <b>vacina + soro/IGHAT</b>. Simples assim — e cai em toda prova.</p>
   </div>
 
   <div class="sec-divider"><h3>Infecção no local da picada</h3></div>
   <div class="info-block">
-    <div class="label">Ofídico</div>
-    <p>Mordeduras por serpentes tendem a causar <b>infecção polimicrobiana</b> (Gram-positivos, Gram-negativos e anaeróbios). Quando há sinais de infecção, uma cobertura possível é <b>ceftriaxona</b> (Gram-negativos) + <b>clindamicina</b> (Gram-positivos e anaeróbios). O antibiótico é <b>terapêutico</b> (quando há infecção), <b>não profilático</b> de rotina.</p>
+    <div class="label">Microbiologia da mordedura</div>
+    <h4>Infecção polimicrobiana — a flora da boca da serpente</h4>
+    <p>A cavidade oral das serpentes abriga uma flora bacteriana diversificada. Quando há inoculação de veneno com ação proteolítica (especialmente o botrópico), o tecido desvitalizado se torna um meio de cultura ideal. A infecção resultante é tipicamente <b>polimicrobiana</b>:</p>
+    <ul>
+      <li><b>Gram-positivos</b>: <i>Staphylococcus</i>, <i>Streptococcus</i>, <i>Enterococcus</i></li>
+      <li><b>Gram-negativos</b>: <i>Morganella morganii</i>, <i>Proteus</i>, <i>Providencia</i>, <i>Escherichia coli</i></li>
+      <li><b>Anaeróbios</b>: <i>Clostridium</i>, <i>Bacteroides</i></li>
+    </ul>
   </div>
+
   <div class="info-block warn">
-    <div class="label">Detalhe de conduta</div>
-    <p>Se houver <b>bacteremia</b>, coletar hemocultura. No local, geralmente é celulite, sem material para cultura. Sempre confirmar o esquema antimicrobiano com o protocolo do serviço.</p>
+    <div class="label">Conduta antibiótica — terapêutica, NÃO profilática</div>
+    <h4>Antibiótico só quando há infecção — não é rotina</h4>
+    <p>O antibiótico é <b>terapêutico</b> (quando há sinais de infecção: celulite, secreção purulenta, febre, crepitação) e <b>não profilático de rotina</b>. Esquema de cobertura ampla:</p>
+    <ul>
+      <li><b>Ceftriaxona</b> 1–2g IV 1×/dia → cobertura de Gram-negativos</li>
+      <li><b>Clindamicina</b> 600mg IV 8/8h → cobertura de Gram-positivos e anaeróbios</li>
+      <li>Alternativa: <b>amoxicilina + clavulanato</b> (casos leves, via oral)</li>
+    </ul>
+    <p style="margin-top:8px">Se houver <b>bacteremia</b> ou suspeita de sepse, coletar <b>hemoculturas</b> antes de iniciar o antibiótico. No local, geralmente é celulite, sem material para cultura. <b>Sempre confirmar o esquema antimicrobiano com o protocolo institucional do serviço.</b></p>
+  </div>
+
+  <div class="info-block">
+    <div class="label">Complicações infecciosas graves</div>
+    <ul>
+      <li><b>Abscesso</b> — pode necessitar de drenagem cirúrgica</li>
+      <li><b>Necrose extensa</b> — desbridamento cirúrgico + antibioticoterapia prolongada</li>
+      <li><b>Gangrena gasosa</b> (<i>Clostridium perfringens</i>) — emergência cirúrgica, risco de amputação</li>
+      <li><b>Síndrome compartimental</b> — fasciotomia de emergência</li>
+    </ul>
   </div>
 
   <div class="source-note">
-    <b>Fontes:</b> TelessaúdeRS-UFRGS, adaptado do Ministério da Saúde (2022/2024); Guia de Vigilância em Saúde / MS; FioCruz — Manual de Diagnóstico e Tratamento de Acidentes por Animais Peçonhentos; Nota Técnica MS nº 64/2021. Conteúdo educativo — não substitui protocolo institucional vigente.
+    <b>Fontes:</b> TelessaúdeRS-UFRGS, adaptado do Ministério da Saúde (2022/2024); Guia de Vigilância em Saúde / MS; FioCruz — Manual de Diagnóstico e Tratamento de Acidentes por Animais Peçonhentos; Nota Técnica MS nº 64/2021; Protocolo SAVING/MS (2022). Conteúdo educativo — não substitui protocolo institucional vigente.
   </div>
 </div>
 </div>
@@ -170,10 +197,12 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
 var CURSO="peconhentos", AULA_ID="m1-profilaxia";
 function showSection(id,btn){document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');document.querySelectorAll('nav.tabs button').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
 var QD=[
-  {n:1,q:"No ferimento de alto risco, paciente com esquema completo e última dose há 3 anos. Conduta?",o:[{l:"A",v:"Vacina + IGHAT"},{l:"B",v:"Apenas reforço da vacina"},{l:"C",v:"Não fazer nada"},{l:"D",v:"Apenas SAT"}],cr:"C",ex:"Esquema completo com última dose há menos de 5 anos, mesmo em ferimento de alto risco: não é necessária nova vacina nem soro."},
-  {n:2,q:"Paciente com histórico vacinal incerto sofre acidente botrópico (ferimento de alto risco). Conduta antitetânica?",o:[{l:"A",v:"Nada"},{l:"B",v:"Apenas vacina"},{l:"C",v:"Vacina + SAT ou IGHAT"},{l:"D",v:"Apenas IGHAT"}],cr:"C",ex:"Histórico incerto ou menos de 3 doses, em ferimento de alto risco: indica-se vacina E imunização passiva (SAT ou IGHAT), aplicadas em locais diferentes."},
-  {n:3,q:"Por que a vacina antitetânica IM deve ser adiada até a correção do coagulograma no acidente botrópico?",o:[{l:"A",v:"A vacina não funciona com veneno no corpo"},{l:"B",v:"Risco de hematoma na injeção IM em paciente incoagulável"},{l:"C",v:"O soro antiofídico anula a vacina"},{l:"D",v:"É contraindicada em qualquer sangramento"}],cr:"B",ex:"Aplicar injeção intramuscular em paciente com incoagulabilidade pode causar hematoma. Por isso a profilaxia entra após a correção do coagulograma."},
-  {n:4,q:"Diante de infecção no local da picada por serpente, um esquema de cobertura razoável seria:",o:[{l:"A",v:"Ceftriaxona + clindamicina"},{l:"B",v:"Apenas AAS"},{l:"C",v:"Nenhum antibiótico é necessário"},{l:"D",v:"Antifúngico oral"}],cr:"A",ex:"A infecção costuma ser polimicrobiana; ceftriaxona cobre Gram-negativos e clindamicina cobre Gram-positivos e anaeróbios. O antibiótico é terapêutico (quando há infecção), não profilático de rotina."}
+  {n:1,q:"Paciente com esquema vacinal completo (3 doses), última dose há 3 anos, sofre acidente botrópico (ferimento de alto risco). Conduta antitetânica:",o:[{l:"A",v:"Vacina + IGHAT"},{l:"B",v:"Apenas reforço da vacina"},{l:"C",v:"Nenhuma medida"},{l:"D",v:"Apenas SAT"}],cr:"C",ex:"Esquema completo com última dose há menos de 5 anos → nenhuma medida é necessária, mesmo em ferimento de alto risco. É a 'regra dos 5 anos'."},
+  {n:2,q:"Paciente com histórico vacinal incerto sofre acidente botrópico. Conduta antitetânica correta:",o:[{l:"A",v:"Nada — o veneno 'esteriliza' a ferida"},{l:"B",v:"Apenas vacina"},{l:"C",v:"Vacina + SAT ou IGHAT, aplicados em locais diferentes"},{l:"D",v:"Apenas IGHAT"}],cr:"C",ex:"Histórico incerto ou <3 doses + ferimento de alto risco = vacina + imunização passiva (SAT ou IGHAT). Aplicar em locais anatômicos diferentes. IGHAT é preferível ao SAT (origem humana)."},
+  {n:3,q:"Por que a vacina antitetânica IM deve ser adiada até a correção do coagulograma?",o:[{l:"A",v:"A vacina não funciona com veneno circulante"},{l:"B",v:"Risco de hematoma muscular grave em paciente incoagulável"},{l:"C",v:"O soro antiofídico anula a resposta vacinal"},{l:"D",v:"O tétano não ocorre em picada de cobra"}],cr:"B",ex:"Aplicar injeção intramuscular em paciente com coagulopatia pode causar hematoma muscular grave, com risco de síndrome compartimental iatrogênica. Primeiro corrige a coagulação com o soro antiveneno, depois vacina."},
+  {n:4,q:"A antibioticoterapia no acidente ofídico é indicada como:",o:[{l:"A",v:"Profilática de rotina em todos os casos"},{l:"B",v:"Terapêutica — somente quando há sinais de infecção"},{l:"C",v:"Nunca — o veneno é bactericida"},{l:"D",v:"Apenas em crianças"}],cr:"B",ex:"O antibiótico é TERAPÊUTICO (quando há celulite, secreção purulenta, febre, necrose), NÃO profilático de rotina. Cobertura ampla: ceftriaxona + clindamicina para Gram+, Gram– e anaeróbios."},
+  {n:5,q:"Qual a principal vantagem da IGHAT sobre o SAT na profilaxia antitetânica?",o:[{l:"A",v:"Menor custo"},{l:"B",v:"Origem humana — menor risco de reação alérgica e doença do soro"},{l:"C",v:"Administração via oral"},{l:"D",v:"Imunidade mais duradoura"}],cr:"B",ex:"IGHAT = Imunoglobulina Humana Antitetânica (origem humana). SAT = Soro Antitetânico (origem equina → risco de reação anafilática e doença do soro). Quando disponível, a IGHAT é sempre preferível."},
+  {n:6,q:"Uma infecção de mordedura por serpente é tipicamente polimicrobiana. Qual esquema oferece cobertura adequada?",o:[{l:"A",v:"Azitromicina em dose única"},{l:"B",v:"Ceftriaxona + clindamicina"},{l:"C",v:"Fluconazol IV"},{l:"D",v:"Metronidazol isolado"}],cr:"B",ex:"Ceftriaxona cobre Gram-negativos (Morganella, Proteus, E. coli) e clindamicina cobre Gram-positivos (Staphylococcus, Streptococcus) + anaeróbios (Clostridium, Bacteroides). Alternativa VO: amoxicilina + clavulanato."}
 ];
 var QS={c:0,w:0,a:0};
 function renderQuiz(){var ct=document.getElementById('quizContainer');ct.innerHTML='';QD.forEach(function(q,i){var d=document.createElement('div');d.className='q-card';d.id='q'+i;var body='<div class="opts">'+q.o.map(function(o){return '<button class="opt-btn" data-q="'+i+'" data-l="'+o.l+'" onclick="answerMC('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+o.v+'</span></button>';}).join('')+'</div>';d.innerHTML='<div class="q-num">Questão '+q.n+'</div><div class="res-ind" id="ri'+i+'"></div><p class="q-text">'+q.q+'</p>'+body+'<div class="exp-box" id="ex'+i+'"><div class="et">📖 Explicação</div><p>'+q.ex+'</p></div>';ct.appendChild(d);});updateScores();}
