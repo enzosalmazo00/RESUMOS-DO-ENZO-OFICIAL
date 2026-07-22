@@ -50,10 +50,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 .p1-desc{font-size:14px;color:#333;line-height:1.8;max-width:750px;margin-bottom:16px;font-family:'DM Sans',sans-serif}
 .p1-curso-name{font-size:20px;font-weight:700;color:#1a1a2e;margin-bottom:8px}
 .p1-ch{font-size:16px;color:#333;font-weight:700;margin-bottom:20px;letter-spacing:0.5px;font-family:'DM Sans',sans-serif}
-.p1-footer{display:flex;justify-content:space-between;align-items:flex-end;width:100%;max-width:700px;margin-top:auto}
+.p1-footer{display:flex;justify-content:space-between;align-items:flex-end;width:100%;max-width:850px;margin-top:auto;gap:30px}
 .p1-sign{text-align:center}
 .p1-sign-line{width:220px;border-top:1.5px solid #333;margin-bottom:4px}
-.p1-sign-img{width:180px;height:auto;margin-bottom:6px;display:block;margin-left:auto;margin-right:auto}
+.p1-sign-img{width:140px;max-height:50px;object-fit:contain;margin-bottom:4px;display:block;margin-left:auto;margin-right:auto}
 .p1-sign-name{font-size:12px;font-weight:700;color:#1a1a2e}
 .p1-sign-title{font-size:9.5px;color:#666;font-family:'DM Sans',sans-serif;max-width:220px;line-height:1.4}
 .p1-date-block{text-align:center}
@@ -130,9 +130,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
           <img src="img/assinatura-enzo.png" alt="Assinatura" class="p1-sign-img" crossorigin="anonymous">
           <div class="p1-sign-line"></div>
           <div class="p1-sign-name">Enzo S. Salmazo</div>
-          <div class="p1-sign-title">Farmacêutico pela Universidade Brasil · CRF-SP: 107.700<br>Especialista em Farmácia Clínica pelo Hospital Israelita Albert Einstein</div>
+          <div class="p1-sign-title">Farmacêutico · CRF-SP: 107.700<br>Esp. Farmácia Clínica — Albert Einstein</div>
+        </div>
+        <div class="p1-sign">
+          <div style="height:54px"></div>
+          <div class="p1-sign-line"></div>
+          <div class="p1-sign-name" id="certNomeSign">Nome do Participante</div>
+          <div class="p1-sign-title">Participante</div>
         </div>
         <div class="p1-date-block">
+          <div style="height:54px"></div>
           <div class="p1-sign-line"></div>
           <div class="p1-date" id="certData">00 de mês de 0000</div>
         </div>
@@ -322,6 +329,7 @@ async function gerarCertificado(nome, documento){
   /* Preencher dados dinâmicos */
   document.getElementById("certNome").textContent = nome;
   document.getElementById("certDoc").textContent = "Documento: " + documento;
+  document.getElementById("certNomeSign").textContent = nome;
   document.getElementById("certData").textContent = dataExtenso(new Date());
 
   /* Buscar notas dos módulos + prova final */
