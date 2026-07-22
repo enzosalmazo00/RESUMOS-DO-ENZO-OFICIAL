@@ -380,6 +380,7 @@
       vertical-align:middle;
     }
     @keyframes spin { to { transform:rotate(360deg); } }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.85;transform:scale(1.05)} }
 
     .modal-expiry {
       margin-top:14px; text-align:center;
@@ -885,7 +886,7 @@
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('resumos')">📚 Meus Resumos</button>
       <button class="tab-btn" onclick="switchTab('cursos')">🎓 Cursos</button>
-      <button class="tab-btn" onclick="switchTab('loja')">🛒 Comprar Resumos</button>
+      <button class="tab-btn" onclick="switchTab('loja')">🛒 Loja</button>
       <button class="tab-btn" onclick="switchTab('streak')">🔥 Meu Streak</button>
     </div>
 
@@ -947,8 +948,38 @@
     <!-- TAB: LOJA -->
     <div class="tab-panel" id="tab-loja">
       <div class="store-intro">
-        <h2>🛍️ Loja de Resumos</h2>
+        <h2>🛍️ Loja — Cursos e Resumos</h2>
         <p>Adicione ao carrinho e pague tudo de uma vez com PIX. Acesso liberado automaticamente após confirmação.</p>
+      </div>
+
+      <!-- ★★★ CURSO — DESTAQUE PRINCIPAL ★★★ -->
+      <div class="store-section">
+        <div class="store-section-title" style="color:#f9c94f;">🎓 Curso com Certificado</div>
+        <div class="combo-card" id="curso-pec-card" style="border-color:rgba(249,201,79,0.4);background:linear-gradient(135deg,rgba(249,201,79,0.08) 0%,rgba(249,120,79,0.05) 100%);position:relative;overflow:hidden;">
+          <div style="position:absolute;top:12px;right:14px;background:linear-gradient(135deg,#f43f5e,#e11d48);color:#fff;font-size:9px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:0.5px;animation:pulse 2s infinite;">🔥 PREÇO DE LANÇAMENTO</div>
+          <div class="combo-header">
+            <div>
+              <div class="combo-title" style="color:#f9c94f;font-size:16px;">🐍 Acidentes por Animais Peçonhentos</div>
+              <div class="combo-sub" style="color:rgba(249,201,79,0.6);font-size:12px;line-height:1.5;max-width:380px;">Curso completo · 35 horas · Serpentes, escorpiões e aranhas · 5 módulos + provas + certificado PDF com notas</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">
+                <span class="combo-tag" style="border-color:rgba(249,201,79,0.25);color:rgba(249,201,79,0.8);">📖 11 aulas interativas</span>
+                <span class="combo-tag" style="border-color:rgba(249,201,79,0.25);color:rgba(249,201,79,0.8);">📝 6 provas + final</span>
+                <span class="combo-tag" style="border-color:rgba(249,201,79,0.25);color:rgba(249,201,79,0.8);">🎓 Certificado 35h</span>
+                <span class="combo-tag" style="border-color:rgba(249,201,79,0.25);color:rgba(249,201,79,0.8);">📅 90 dias de acesso</span>
+              </div>
+            </div>
+            <div class="combo-preco-box">
+              <div style="font-size:11px;color:rgba(249,201,79,0.5);margin-bottom:2px;">Após lançamento:</div>
+              <div class="combo-preco-old" style="font-size:20px;color:rgba(249,201,79,0.4);">R$ 129,90</div>
+              <div class="combo-preco-new" style="color:#f9c94f;font-size:28px;">R$ 79,90</div>
+              <div class="combo-desconto" style="background:rgba(249,201,79,0.12);color:#f9c94f;border-color:rgba(249,201,79,0.3);">🏷️ 38% off · lançamento</div>
+            </div>
+          </div>
+          <button class="combo-btn" id="curso-pec-btn" onclick="addCursoToCart()" style="background:linear-gradient(135deg,#f9c94f,#f59e0b);color:#000;box-shadow:0 4px 20px rgba(249,201,79,0.3);font-size:14px;padding:14px 24px;">
+            🛒 Adicionar curso ao carrinho — R$ 79,90
+          </button>
+          <div style="font-size:10px;color:rgba(249,201,79,0.4);text-align:center;margin-top:6px;">⏳ Preço promocional por tempo limitado · Após o período de lançamento: R$ 129,90</div>
+        </div>
       </div>
 
       <!-- P1 ENCERRADOS -->
@@ -1050,10 +1081,11 @@
       <div class="store-terms" id="store-terms-section">
         <div class="store-terms-title">⚠️ Informações importantes</div>
         <ul>
-          <li>⏳ <strong>50 dias de acesso</strong> a partir da confirmação do pagamento.</li>
+          <li>⏳ <strong>90 dias de acesso</strong> para cursos e <strong>50 dias</strong> para resumos, a partir da confirmação do pagamento.</li>
           <li>✅ <strong>Liberação automática</strong> após a confirmação do PIX.</li>
           <li>📱 <strong>Um dispositivo por vez</strong> — segurança da sua conta.</li>
           <li>🔄 <strong>Conteúdo atualizado</strong> conforme o semestre.</li>
+          <li>🎓 <strong>Certificado do curso</strong> emitido após aprovação (≥ 61%) em todas as provas.</li>
         </ul>
       </div>
     </div>
@@ -2692,6 +2724,21 @@ window.addToCart = function(key) {
   renderStoreGrid();
 };
 
+window.addCursoToCart = function() {
+  /* Verifica se já tem acesso */
+  if (acessosCache && acessosCache.find(function(a){ return a.resumo === "curso-peconhentos"; })){
+    alert("Você já possui acesso a este curso!"); return;
+  }
+  /* Remove curso duplicado do carrinho se existir */
+  cart = cart.filter(function(c){ return c.tipo !== "curso"; });
+  cart.push({ key: "curso-peconhentos", label: "Curso Peçonhentos — 35h", emoji: "🐍", preco: 79.90, tipo: "curso" });
+  updateCartUI();
+  openCart();
+  /* Atualizar botão */
+  var btn = document.getElementById("curso-pec-btn");
+  if(btn){ btn.textContent = "✅ Curso no carrinho"; btn.style.background = "rgba(249,201,79,0.2)"; btn.style.color = "#f9c94f"; }
+};
+
 window.addComboToCart = function() {
   // Limpa carrinho e adiciona todos os P2 não adquiridos
   var naoAdquiridos = MATERIAS.filter(function(m){ return !hasAccess(m,"p2"); });
@@ -2727,16 +2774,19 @@ function calcCartTotal() {
   var n = cart.length;
   if (n === 0) return { subtotal: 0, desconto: 0, total: 0, descLabel: "" };
 
-  // Separar itens P2 e Final
-  var p2Items = cart.filter(function(c){ return c.tipo !== "final"; });
+  // Separar itens P2, Final e Curso
+  var p2Items = cart.filter(function(c){ return c.tipo === "p2"; });
   var finalItems = cart.filter(function(c){ return c.tipo === "final"; });
+  var cursoItems = cart.filter(function(c){ return c.tipo === "curso"; });
 
   var subtotalP2 = p2Items.length * PRECO_UNIT;
   var subtotalFinal = finalItems.length * (PROMO_FINAL_ATIVA ? PRECO_FINAL_DE : PRECO_FINAL);
-  var subtotal = subtotalP2 + subtotalFinal;
+  var subtotalCurso = cursoItems.reduce(function(acc,c){ return acc + c.preco; }, 0);
+  var subtotal = subtotalP2 + subtotalFinal + subtotalCurso;
 
   var totalP2 = subtotalP2;
   var totalFinal = subtotalFinal;
+  var totalCurso = subtotalCurso;
   var descLabel = "";
 
   // Desconto P2: pacote completo ou 3+
@@ -2771,7 +2821,7 @@ function calcCartTotal() {
   // Expor flag para o cupom saber se tem pacote completo
   calcCartTotal._temPacoteCompleto = temPacoteCompleto;
 
-  var total = totalP2 + totalFinal;
+  var total = totalP2 + totalFinal + totalCurso;
   var desconto = subtotal - total;
 
   return { subtotal: subtotal, desconto: desconto, total: total, descLabel: descLabel };
