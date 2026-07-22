@@ -1391,8 +1391,8 @@ document.querySelectorAll(".q-card").forEach(function(card) {
   });
 });
 
-document.addEventListener("authReady", function() { loadBest(); });
-setTimeout(function() { loadBest(); }, 3000);
+document.addEventListener("authReady", function() { document.documentElement.style.visibility = "visible"; loadBest(); });
+setTimeout(function() { document.documentElement.style.visibility = "visible"; loadBest(); }, 3000);
 </script>
 
 <script src="study-timer.js"></script>
