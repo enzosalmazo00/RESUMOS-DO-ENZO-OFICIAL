@@ -261,16 +261,16 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
   <table class="compare-table">
     <thead><tr><th>Gravidade</th><th>Quadro clínico</th><th>Coagulação</th><th>Nº de ampolas (SAB)</th></tr></thead>
     <tbody>
-      <tr><td class="sev-leve">Leve</td><td>Edema local discreto (1 segmento); dor; sem hemorragia sistêmica; estado geral preservado</td><td>Normal ou alterado</td><td class="sev-leve">2 a 4</td></tr>
-      <tr><td class="sev-mod">Moderado</td><td>Edema evidente (até 2 segmentos); equimose; hemorragia local/sistêmica discreta; sem comprometimento do estado geral</td><td>Geralmente alterado</td><td class="sev-mod">4 a 8</td></tr>
+      <tr><td class="sev-leve">Leve</td><td>Edema local discreto (1 segmento); dor; sem hemorragia sistêmica; estado geral preservado</td><td>Normal ou alterado</td><td class="sev-leve">3</td></tr>
+      <tr><td class="sev-mod">Moderado</td><td>Edema evidente (até 2 segmentos); equimose; hemorragia local/sistêmica discreta; sem comprometimento do estado geral</td><td>Geralmente alterado</td><td class="sev-mod">6</td></tr>
       <tr><td class="sev-grave">Grave</td><td>Edema extenso (&ge;3 segmentos); bolhas/necrose; hemorragia grave; hipotensão/choque; oligúria/anúria; síndrome compartimental</td><td>Incoagulável</td><td class="sev-grave">12</td></tr>
     </tbody>
   </table>
 
   <div class="info-block warn">
     <div class="label">Ponto de atenção — dose fixa vs. faixa</div>
-    <h4>Você pode ver "3 ampolas" para o caso leve. Por quê?</h4>
-    <p>A tabela acima (faixa 2–4 / 4–8 / 12) segue o <b>Guia de Vigilância em Saúde do MS</b> e a bula do <b>Butantan</b>. Já os <b>checklists do CVE-SP</b> usam uma <b>dose fixa</b> (ex.: 3 ampolas no leve), adotada desde 2014 para padronizar e racionar o uso do soro. <b>As duas são oficiais</b> — a diferença é faixa clínica × dose fixa padronizada. Sempre siga o protocolo vigente no seu serviço.</p>
+    <h4>Doses fixas — PCDT 2026</h4>
+    <p>O PCDT dos Acidentes Ofídicos (MS, 2026) padronizou as doses em valores fixos: <b>leve = 3</b>, <b>moderado = 6</b>, <b>grave = 12 ampolas</b>. Publicações anteriores usavam faixas (2–4 / 4–8 / 12), mas a orientação vigente do Ministério da Saúde é a dose fixa. Sempre siga o protocolo vigente no seu serviço.</p>
   </div>
 
   <div class="sec-divider"><h3>Controle de eficácia e dose adicional</h3></div>
@@ -488,10 +488,10 @@ function updateCkResult(){
     box.innerHTML = '🔴 Sugere acidente GRAVE → SAB 12 ampolas (seguir protocolo vigente)';
   } else if (moderado){
     box.style.color = 'var(--gold)';
-    box.innerHTML = '🟡 Sugere acidente MODERADO → SAB 4–8 ampolas (seguir protocolo vigente)';
+    box.innerHTML = '🟡 Sugere acidente MODERADO → SAB 6 ampolas (seguir protocolo vigente)';
   } else if (leve){
     box.style.color = 'var(--green)';
-    box.innerHTML = '🟢 Sugere acidente LEVE → SAB 2–4 ampolas (ou dose fixa do CVE; seguir protocolo vigente)';
+    box.innerHTML = '🟢 Sugere acidente LEVE → SAB 3 ampolas (seguir protocolo vigente)';
   } else {
     box.style.color = 'var(--accent2)';
     box.innerHTML = 'Marque os sinais para estimar a gravidade.';
@@ -515,14 +515,14 @@ var QD = [
   {
     n:2, q:"Um paciente com edema evidente em 2 segmentos, equimose perilesional e gengivorragia discreta, sem hipotensão. Classificação e dose de SAB (faixa MS/Butantan)?",
     o:[
-      {l:"A",v:"Leve — 2 a 4 ampolas"},
-      {l:"B",v:"Moderado — 4 a 8 ampolas"},
+      {l:"A",v:"Leve — 3 ampolas"},
+      {l:"B",v:"Moderado — 6 ampolas"},
       {l:"C",v:"Grave — 12 ampolas"},
       {l:"D",v:"Não indicar soro, apenas observação"},
-      {l:"E",v:"Moderado — 3 ampolas (dose fixa CVE)"}
+      {l:"E",v:"Leve — 6 ampolas"}
     ],
     cr:"B",
-    ex:"Edema em 2 segmentos com equimose e sangramento discreto sem comprometimento do estado geral configura acidente MODERADO → 4 a 8 ampolas pela faixa do MS/Butantan. A alternativa E (3 ampolas) seria a dose fixa do CVE para o leve, não para o moderado."
+    ex:"Edema em 2 segmentos com equimose e sangramento discreto sem comprometimento do estado geral configura acidente MODERADO → 6 ampolas (PCDT 2026). Leve = 3, Grave = 12."
   },
   {
     n:3, q:"Qual é a complicação sistêmica do acidente botrópico mais associada a óbito, e como preveni-la?",
@@ -561,16 +561,16 @@ var QD = [
     ex:"A síndrome compartimental é uma emergência cirúrgica que exige fasciotomia. Gelo e garrote são contraindicados (pioram isquemia). A soroterapia neutraliza o veneno circulante, mas não resolve o aumento de pressão já instalado no compartimento fascial."
   },
   {
-    n:6, q:"Por que alguns checklists (CVE-SP) indicam '3 ampolas' no acidente botrópico leve, enquanto o Guia do MS / bula do Butantan traz '2 a 4'?",
+    n:6, q:"Segundo o PCDT 2026, qual a dose de SAB para o acidente botrópico LEVE (edema de até 1 segmento, sem hemorragia sistêmica)?",
     o:[
-      {l:"A",v:"Porque o CVE-SP está desatualizado e deve ser desconsiderado"},
-      {l:"B",v:"Porque o Butantan errou a dosagem na bula"},
-      {l:"C",v:"Porque o CVE usa dose fixa padronizada (desde 2014) e o MS/Butantan usa faixa clínica — ambas oficiais"},
-      {l:"D",v:"Porque a dose depende da região geográfica do acidente"},
-      {l:"E",v:"Porque a dose de 3 ampolas é só para crianças"}
+      {l:"A",v:"2 a 4 ampolas"},
+      {l:"B",v:"6 ampolas"},
+      {l:"C",v:"3 ampolas"},
+      {l:"D",v:"12 ampolas"},
+      {l:"E",v:"Não se usa soro no caso leve"}
     ],
     cr:"C",
-    ex:"São duas referências oficiais com lógicas diferentes: o MS/Butantan apresenta uma faixa clínica (2–4 / 4–8 / 12) e o CVE-SP adota dose fixa padronizada para racionalizar o uso do soro (adotada desde 2014). Nenhuma está errada — siga o protocolo vigente no seu serviço."
+    ex:"O PCDT 2026 padronizou as doses fixas: leve = 3 ampolas, moderado = 6, grave = 12. Publicações anteriores usavam faixas (2–4 / 4–8 / 12), mas a diretriz vigente é a dose fixa."
   }
 ];
 var QS={c:0,w:0,a:0};
