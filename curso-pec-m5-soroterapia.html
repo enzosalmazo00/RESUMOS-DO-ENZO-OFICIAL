@@ -13,6 +13,29 @@
 <style>
 :root{--bg:#0a0d14;--bg2:#111520;--bg3:#161c2e;--card:#1a2138;--card2:#1f2845;--accent:#4f9cf9;--accent2:#38e8c0;--accent3:#f9784f;--accent4:#b84ff9;--gold:#f9c94f;--red:#f95f5f;--green:#4ff984;--text:#e8eaf6;--muted:#8892b0;--border:rgba(79,156,249,0.15);--shadow:0 8px 40px rgba(0,0,0,0.5);--radius:16px;--font-body:'DM Sans',sans-serif;--font-display:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace}*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;padding-bottom:90px}header{position:relative;z-index:10;text-align:center;padding:40px 24px 24px;background:linear-gradient(180deg,rgba(56,232,192,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border)}header .badge{display:inline-block;background:linear-gradient(135deg,var(--accent2),var(--accent));color:var(--bg);font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px}header h1{font-family:var(--font-display);font-size:clamp(22px,3.5vw,34px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--accent2) 60%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}header .sub{color:var(--muted);font-size:13px}nav.tabs{position:sticky;top:0;z-index:100;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;background:rgba(10,13,20,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:10px 16px}nav.tabs::-webkit-scrollbar{display:none}nav.tabs button{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:var(--font-body);font-size:12px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}nav.tabs button:hover{color:var(--accent);border-color:var(--accent)}nav.tabs button.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:var(--accent4)}.section{display:none;animation:fadeIn .4s ease}.section.active{display:block}@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}.container{max-width:900px;margin:0 auto;padding:28px 20px}.info-block{background:var(--card2);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:18px}.info-block.warn{border-color:var(--gold)}.info-block.danger{border-color:var(--red)}.info-block.success{border-color:var(--green)}.info-block.orange{border-color:var(--accent3)}.info-block .label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}.info-block h4{font-family:var(--font-display);font-weight:700;margin-bottom:8px;font-size:15px;color:#fff}.info-block p{color:var(--text);margin-bottom:6px}.info-block ul{padding-left:20px;margin-top:8px;color:var(--text)}.info-block li{margin:5px 0}.sec-divider{display:flex;align-items:center;gap:12px;margin:28px 0 18px}.sec-divider h3{font-family:var(--font-display);font-weight:700;font-size:16px;color:var(--accent2);white-space:nowrap}.sec-divider::before,.sec-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}.steps-list{counter-reset:s;display:flex;flex-direction:column;gap:10px;margin:16px 0}.step-item{display:flex;gap:13px;font-size:13.5px;align-items:flex-start;line-height:1.6;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px}.step-item::before{counter-increment:s;content:counter(s);min-width:30px;height:30px;background:linear-gradient(135deg,var(--accent2),var(--accent));color:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;font-family:var(--font-mono)}.step-item b{color:#fff}.compare-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--radius);overflow:hidden;margin-bottom:24px;font-size:12.5px}.compare-table th{background:var(--card2);color:var(--accent2);font-family:var(--font-display);font-size:12.5px;font-weight:700;padding:11px 12px;text-align:left;border-bottom:1px solid var(--border)}.compare-table td{background:var(--card);padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text)}.compare-table tr:last-child td{border-bottom:none}
 .quiz-header{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px;justify-content:center}.score-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 20px;text-align:center;min-width:90px}.score-box .sn{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.score-box .sv{font-family:var(--font-display);font-size:26px;font-weight:800}.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}.q-card.cq{border-color:var(--green)}.q-card.wq{border-color:var(--red)}.q-num{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-bottom:10px}.q-text{font-size:14px;font-weight:600;color:#fff;margin-bottom:16px;line-height:1.5}.opts{display:flex;flex-direction:column;gap:8px}.opt-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:11px 16px;border-radius:10px;cursor:pointer;font-size:13px;text-align:left;transition:all .2s;display:flex;gap:10px;font-family:var(--font-body)}.opt-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(79,156,249,.08)}.opt-btn .ol{font-family:var(--font-mono);font-weight:700;color:var(--accent);min-width:20px}.opt-btn.ca{background:rgba(79,249,132,.1);border-color:var(--green);color:var(--green)}.opt-btn.wa{background:rgba(249,95,95,.1);border-color:var(--red);color:var(--red)}.res-ind{display:none;padding:8px 14px;border-radius:8px;margin-bottom:10px;font-size:13px;font-weight:700}.res-ind.vis{display:block}.res-ind.c{background:rgba(79,249,132,.1);color:var(--green)}.res-ind.w{background:rgba(249,95,95,.1);color:var(--red)}.exp-box{display:none;margin-top:14px;padding:14px 18px;background:rgba(79,156,249,.06);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;font-size:13px;color:var(--text);line-height:1.7}.exp-box.vis{display:block}.et{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}.reset-btn{display:inline-block;margin-top:16px;padding:10px 24px;background:var(--accent4);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:var(--font-body);font-size:13px;font-weight:700}.complete-panel{background:linear-gradient(135deg,rgba(79,249,132,0.06),rgba(56,232,192,0.06));border:1px solid rgba(79,249,132,0.25);border-radius:var(--radius);padding:24px;margin-top:28px;text-align:center}.complete-panel h3{font-family:var(--font-display);font-size:18px;color:var(--green);margin-bottom:8px}.complete-panel p{color:var(--muted);font-size:13px;margin-bottom:16px}.complete-btn{padding:13px 28px;border:none;border-radius:12px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--green),var(--accent2));color:var(--bg);transition:all .2s}.complete-btn:hover{box-shadow:0 0 24px rgba(79,249,132,0.4)}.complete-btn.done{background:var(--card2);color:var(--green);cursor:default;border:1px solid var(--green)}.source-note{margin-top:22px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}.source-note b{color:var(--accent2)}#backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;box-shadow:var(--shadow)}#backBtn:hover{border-color:var(--accent);background:var(--card2)}
+
+/* GALERIA DE SOROS */
+.soros-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin:18px 0 26px}
+.soro-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .25s,box-shadow .25s}
+.soro-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.4)}
+.soro-photo{height:110px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.soro-photo img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:2}
+.soro-photo img[style*="display: none"] + .ph-fallback{display:flex}
+.soro-photo .ph-fallback{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;width:100%;color:rgba(255,255,255,.85);font-family:var(--font-display);font-weight:800;position:relative;z-index:1}
+.soro-photo .ph-icon{font-size:28px;margin-bottom:4px}
+.soro-photo .ph-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;opacity:.85}
+.soro-info{padding:10px 12px}
+.soro-name{font-family:var(--font-display);font-weight:700;font-size:12.5px;color:#fff;margin-bottom:2px}
+.soro-target{font-size:10.5px;color:var(--muted);line-height:1.4}
+/* cores reais aproximadas das embalagens Butantan por classe de soro */
+.bg-botropico{background:linear-gradient(135deg,#e8993d,#c9711f)}
+.bg-crotalico{background:linear-gradient(135deg,#4f9cf9,#2563a8)}
+.bg-laquetico{background:linear-gradient(135deg,#b84ff9,#7c2fb0)}
+.bg-elapidico{background:linear-gradient(135deg,#f95f5f,#b32e2e)}
+.bg-botro-croto{background:linear-gradient(135deg,#38e8c0,#1f9c80)}
+.bg-escorpiao{background:linear-gradient(135deg,#f9c94f,#c99420)}
+.bg-aracnideo{background:linear-gradient(135deg,#8892b0,#4a5270)}
+@media(max-width:480px){.soros-gallery{grid-template-columns:repeat(2,1fr)}.soro-photo{height:90px}}
 </style>
 </head>
 <body>
@@ -35,70 +58,136 @@
     <p>Os soros antiveneno neutralizam as toxinas <b>circulantes</b>, impedindo que mais veneno se fixe nos tecidos. Mas <b>não revertem</b> lesões já estabelecidas (necrose, IRA, paralisia). Por isso: <b>quanto mais precoce, mais eficaz</b>. Complicações pós-soro devem ser tratadas conforme a clínica (ex.: embolia pulmonar → tratar como embolia, não dar mais soro).</p>
   </div>
 
-  <div class="sec-divider"><h3>Preparo e infusão</h3></div>
-  <div class="steps-list">
-    <div class="step-item"><span><b>Ambiente:</b> o soro deve ser administrado em <b>ambiente hospitalar</b>, seguindo check-lists e ficha do SINAN. Nunca em UBS sem estrutura de emergência.</span></div>
-    <div class="step-item"><span><b>Diluição:</b> diluído ou não em <b>solução fisiológica 0,9%</b>. Sugestão de conduta: soro (quantidade conforme gravidade) + 50 mL de SF 0,9%.</span></div>
-    <div class="step-item"><span><b>Via:</b> preferencialmente <b>intravenosa</b>. Exceção: soro antilatrodéctico → intramuscular. No escorpionismo: via <b>intraóssea</b> se IV não disponível (PCDT 2026).</span></div>
-    <div class="step-item"><span><b>Tempo de infusão:</b> entre <b>20 e 60 minutos</b>, em infusão lenta. Infusão rápida demais aumenta o risco de reação alérgica/anafilática.</span></div>
-    <div class="step-item"><span><b>Estabilidade:</b> uso <b>imediato após preparo</b>. Uma vez aberta a ampola, não armazenar — usar na hora.</span></div>
-    <div class="step-item"><span><b>Armazenamento:</b> +2°C a +8°C. <b>NUNCA congelar.</b> Validade: 36 meses desde a fabricação (verificar rótulo).</span></div>
+  <div class="sec-divider"><h3>Galeria — os 7 soros do curso</h3></div>
+  <div class="soros-gallery" id="sorosGallery">
+    <div class="soro-card">
+      <div class="soro-photo bg-botropico" id="ph-sab"><img src="img/soro-sab.jpg" alt="SAB" onerror="this.style.display='none'"><div class="ph-fallback"><span class="ph-icon">🐍</span><span class="ph-label">SAB</span></div></div>
+      <div class="soro-info"><div class="soro-name">SAB</div><div class="soro-target">Antibotrópico pentavalente · Bothrops</div></div>
+    </div>
+    <div class="soro-card">
+      <div class="soro-photo bg-crotalico" id="ph-sac"><img src="img/soro-sac.jpg" alt="SAC" onerror="this.style.display='none'"><div class="ph-fallback"><span class="ph-icon">🐍</span><span class="ph-label">SAC</span></div></div>
+      <div class="soro-info"><div class="soro-name">SAC</div><div class="soro-target">Anticrotálico · Crotalus</div></div>
+    </div>
+    <div class="soro-card">
+      <div class="soro-photo bg-laquetico" id="ph-sabl"><img src="img/soro-sabl.jpg" alt="SABL" onerror="this.style.display='none'"><div class="ph-fallback"><span class="ph-icon">🐍</span><span class="ph-label">SABL</span></div></div>
+      <div class="soro-info"><div class="soro-name">SABL</div><div class="soro-target">Antibotrópico + Antilaquético · Bothrops/Lachesis</div></div>
+    </div>
+    <div class="soro-card">
+      <div class="soro-photo bg-botro-croto" id="ph-sabc"><img src="img/soro-sabc.jpg" alt="SABC" onerror="this.style.display='none'"><div class="ph-fallback"><span class="ph-icon">🐍</span><span class="ph-label">SABC</span></div></div>
+      <div class="soro-info"><div class="soro-name">SABC</div><div class="soro-target">Antibotrópico + Anticrotálico</div></div>
+    </div>
+    <div class="soro-card">
+      <div class="soro-photo bg-elapidico" id="ph-sael"><img src="img/soro-saela.jpg" alt="SAELA" onerror="this.style.display='none'"><div class="ph-fallback"><span class="ph-icon">🐍</span><span class="ph-label">SAELA</span></div></div>
+      <div class="soro-info"><div class="soro-name">SAELA</div><div class="soro-target">Antielapídico bivalente · Micrurus</div></div>
+    </div>
+    <div class="soro-card">
+      <div class="soro-photo bg-escorpiao" id="ph-saesc"><img src="img/soro-saesc.jpg" alt="SAEsc" onerror="this.style.display='none'"><div class="ph-fallback"><span class="ph-icon">🦂</span><span class="ph-label">SAEsc</span></div></div>
+      <div class="soro-info"><div class="soro-name">SAEsc</div><div class="soro-target">Antiescorpiônico · Tityus</div></div>
+    </div>
+    <div class="soro-card">
+      <div class="soro-photo bg-aracnideo" id="ph-saa"><img src="img/soro-saa.jpg" alt="SAA" onerror="this.style.display='none'"><div class="ph-fallback"><span class="ph-icon">🕷️</span><span class="ph-label">SAA</span></div></div>
+      <div class="soro-info"><div class="soro-name">SAA</div><div class="soro-target">Antiaracnídico · Loxosceles/Phoneutria/Tityus</div></div>
+    </div>
   </div>
-
-  <div class="info-block danger">
-    <div class="label">Regra absoluta — internação pós-soro</div>
-    <h4>🚨 JAMAIS dispensar paciente após infusão de soro</h4>
-    <p>Todo paciente que recebeu soro antiveneno <b>deve permanecer internado</b> com monitorização contínua. Reações tardias (anafilactoide/doença do soro) podem ocorrer <b>horas a dias</b> após a infusão. A alta só ocorre após estabilização clínica completa e liberação médica, nunca imediatamente após a infusão.</p>
-  </div>
-
-  <div class="info-block warn">
-    <div class="label">Pode administrar a qualquer momento</div>
-    <p>O soro antiveneno pode ser dado mesmo após refeições ou ingestão de bebidas alcoólicas — mas exige cuidado maior pelo <b>risco de vômitos (aspiração)</b>. O uso de outros medicamentos ao mesmo tempo <b>não compromete</b> o tratamento com soro.</p>
-  </div>
+  <p style="font-size:11px;color:var(--muted);margin:-14px 0 22px;text-align:center;">📸 Suba as fotos na pasta <code style="color:var(--accent2);">img/</code> com os nomes: <code style="color:var(--accent2);">soro-sab.jpg</code>, <code style="color:var(--accent2);">soro-sac.jpg</code>, <code style="color:var(--accent2);">soro-sabl.jpg</code>, <code style="color:var(--accent2);">soro-sabc.jpg</code>, <code style="color:var(--accent2);">soro-saela.jpg</code>, <code style="color:var(--accent2);">soro-saesc.jpg</code>, <code style="color:var(--accent2);">soro-saa.jpg</code> — a foto substitui automaticamente a cor de fundo.</p>
 
   <div class="sec-divider"><h3>Dose: depende da GRAVIDADE, não do peso</h3></div>
   <div class="info-block danger">
     <div class="label">Regra crítica</div>
     <h4>⚠️ A dose de soro NÃO é baseada em idade ou peso</h4>
-    <p>As doses são categorizadas pelo <b>tipo de classificação do acidente</b> (leve/moderado/grave). <b>Adultos e crianças recebem a mesma dose.</b> Isso porque a dose visa neutralizar a quantidade de <b>veneno inoculado</b> — que é a mesma independente do tamanho do paciente.</p>
+    <p>As doses são categorizadas pelo <b>tipo de classificação do acidente</b> (leve/moderado/grave). <b>Adultos e crianças recebem a mesma dose.</b> O objetivo é neutralizar a quantidade de <b>veneno inoculado</b> — que é a mesma independente do tamanho do paciente. A dose recomendada <b>não deve ser fracionada</b>: administrar de uma só vez.</p>
   </div>
 
+  <div class="sec-divider"><h3>Ofídicos — doses por gravidade (PCDT MS 2026)</h3></div>
   <table class="compare-table">
-    <thead><tr><th>Soro</th><th>Ampola</th><th>Alvo</th><th>Via</th></tr></thead>
+    <thead><tr><th>Acidente</th><th>Leve</th><th>Moderado</th><th>Grave</th></tr></thead>
     <tbody>
-      <tr><td><b>SAB</b></td><td>10 mL</td><td>Bothrops (≥50mg/amp)</td><td>IV</td></tr>
-      <tr><td><b>SAC</b></td><td>10 mL</td><td>Crotalus (≥15mg/amp)</td><td>IV</td></tr>
-      <tr><td><b>SABL</b></td><td>10 mL</td><td>Bothrops + Lachesis (≥50+30mg/amp)</td><td>IV</td></tr>
-      <tr><td><b>SAEL</b></td><td>10 mL</td><td>Micrurus</td><td>IV</td></tr>
-      <tr><td><b>SABC</b></td><td>10 mL</td><td>Bothrops + Crotalus (≥50+15mg/amp)</td><td>IV</td></tr>
-      <tr><td><b>SAEsc</b></td><td><b>5 mL</b></td><td>Tityus (≥5mg/amp)</td><td>IV (ou IO)</td></tr>
-      <tr><td><b>SAA</b></td><td><b>5 mL</b></td><td>Loxosceles + Phoneutria + Tityus</td><td>IV</td></tr>
+      <tr><td><b>Botrópico</b> (SAB/SABL/SABC)</td><td>3 amp.</td><td>6 amp.</td><td>12 amp.</td></tr>
+      <tr><td><b>Laquético</b> (SABL)</td><td>—<span style="color:var(--muted)"> (não existe leve)</span></td><td>10 amp.</td><td>20 amp.</td></tr>
+      <tr><td><b>Crotálico</b> (SAC/SABC)</td><td>5 amp.</td><td>10 amp.</td><td>20 amp.</td></tr>
+      <tr><td><b>Elapídico</b> (SAELA)</td><td>— <span style="color:var(--muted)">(observação 24h)</span></td><td>5 amp.</td><td>10 amp.</td></tr>
+    </tbody>
+  </table>
+  <div class="info-block warn" style="margin-top:-6px;">
+    <p style="margin:0;"><b>Laquético</b> nunca é classificado como leve — a Lachesis é serpente de grande porte, com alto volume de veneno inoculado. <b>Elapídico leve</b> não recebe soro de imediato: fica em observação 24h e recebe soro se evoluir com miastenia.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Escorpiônico e Aracnídico — doses (PCDT Escorpionismo 2025)</h3></div>
+  <table class="compare-table">
+    <thead><tr><th>Acidente</th><th>Leve</th><th>Moderado</th><th>Grave</th></tr></thead>
+    <tbody>
+      <tr><td><b>Escorpiônico</b> (SAEsc ou SAA)</td><td>— <span style="color:var(--muted)">(só sintomático)</span></td><td>3 amp.</td><td>6 amp.</td></tr>
+      <tr><td><b>Aracnídico</b> — Loxosceles/Phoneutria (SAA)</td><td>— <span style="color:var(--muted)">(só sintomático)</span></td><td>3 amp.</td><td>6 amp.</td></tr>
+    </tbody>
+  </table>
+  <div class="info-block" style="margin-top:-6px;">
+    <p style="margin:0;"><b>Nunca administrar mais que 6 ampolas</b> de SAEsc/SAA, mesmo em reclassificação. Na dúvida diagnóstica entre escorpião × Phoneutria, ou na falta do SAEsc, usa-se o <b>SAA</b> nas mesmas doses — ele contém anticorpos para os três (Loxosceles + Phoneutria + Tityus).</p>
+  </div>
+
+  <div class="sec-divider"><h3>Composição, alvo e via — os 7 soros</h3></div>
+  <table class="compare-table">
+    <thead><tr><th>Soro</th><th>Frasco</th><th>Neutraliza</th><th>Via</th></tr></thead>
+    <tbody>
+      <tr><td><b>SAB</b> (pentavalente)</td><td>10 mL</td><td>5 mg/mL · veneno Bothrops</td><td>IV</td></tr>
+      <tr><td><b>SABL</b></td><td>10 mL</td><td>Bothrops 5mg/mL + Lachesis 3mg/mL</td><td>IV</td></tr>
+      <tr><td><b>SAC</b></td><td>10 mL</td><td>1,5 mg/mL · veneno Crotalus</td><td>IV</td></tr>
+      <tr><td><b>SABC</b></td><td>10 mL</td><td>Bothrops 5mg/mL + Crotalus 1,5mg/mL</td><td>IV</td></tr>
+      <tr><td><b>SAELA</b> (bivalente)</td><td>10 mL</td><td>1,5 mg/mL · veneno Micrurus</td><td>IV</td></tr>
+      <tr><td><b>SAEsc</b></td><td>5 mL</td><td>1,0 mg/mL · veneno Tityus serrulatus</td><td>IV (ou IO se sem acesso venoso)</td></tr>
+      <tr><td><b>SAA</b></td><td>5 mL</td><td>Loxosceles + Phoneutria + Tityus</td><td>IV</td></tr>
     </tbody>
   </table>
 
-  <div class="sec-divider"><h3>Reações adversas à soroterapia</h3></div>
+  <div class="sec-divider"><h3>Preparo, diluição e infusão</h3></div>
+  <div class="steps-list">
+    <div class="step-item"><span><b>Ambiente:</b> administrar em <b>ambiente hospitalar</b>, seguindo check-lists e ficha do SINAN. Nunca em UBS sem estrutura de emergência.</span></div>
+    <div class="step-item"><span><b>Diluição — ofídicos:</b> em <b>SF 0,9% ou SG 5%</b>. Para o SAELA, diluir na proporção de <b>1:2 a 1:5</b> (reduz reações adversas).</span></div>
+    <div class="step-item"><span><b>Diluição — escorpiônico/aracnídico:</b> em SF 0,9% ou SG 5%, proporção <b>1:1 a 1:5</b>.</span></div>
+    <div class="step-item"><span><b>Velocidade de infusão — ofídicos:</b> <b>8 a 12 mL/minuto</b>, com atenção à sobrecarga volêmica.</span></div>
+    <div class="step-item"><span><b>Tempo de infusão — SAEsc:</b> 10-15 min ou em bolus (8-12 mL/min). <b>SAA:</b> mais lento, entre <b>20 e 60 minutos</b> — atenção especial em crianças com EAP/insuficiência cardíaca.</span></div>
+    <div class="step-item"><span><b>Não fracionar:</b> a quantidade de frascos-ampola recomendada deve ser administrada <b>de uma só vez</b>, sob vigilância constante.</span></div>
+    <div class="step-item"><span><b>Pré-medicação (anti-histamínico/corticoide):</b> o PCDT 2026 <b>NÃO recomenda</b> pré-soroterapia de rotina — evidências não mostram benefício em reduzir reações anafiláticas, e pode atrasar o tratamento específico.</span></div>
+    <div class="step-item"><span><b>Estabilidade e armazenamento:</b> uso imediato após abertura da ampola. Conservar entre <b>+2°C e +8°C</b>. <b>NUNCA congelar.</b> Validade: 36 meses da fabricação.</span></div>
+  </div>
+
+  <div class="sec-divider"><h3>Tempo de observação pós-soro (PCDT 2026)</h3></div>
   <div class="info-block danger">
-    <div class="label">Reações adversas precoces — anafilática × anafilactoide</div>
-    <h4>🚨 Ter adrenalina, anti-histamínico e corticoide SEMPRE à disposição</h4>
-    <p>Existem dois tipos de reações precoces ao soro:</p>
+    <div class="label">Regra absoluta — internação pós-soro</div>
+    <h4>🚨 JAMAIS dispensar paciente logo após a infusão</h4>
+    <p>Após a soroterapia, o paciente deve ser mantido em observação por <b>no mínimo 24 horas</b>, independentemente do tipo de acidente — tempo necessário para normalização do TC, dos quadros hemorrágicos e identificação de complicações como IRA.</p>
     <ul>
-      <li><b>Reação ANAFILÁTICA (IgE-mediada):</b> verdadeira alergia. Mais rara, mas potencialmente fatal. Ocorre em pacientes previamente sensibilizados. Quadro: urticária, broncoespasmo, edema de glote, hipotensão, choque. Pode ocorrer mesmo com pequenos volumes.</li>
-      <li><b>Reação ANAFILACTOIDE (não-IgE):</b> mais comum. Causada pela ativação direta do complemento pelas proteínas heterólogas do soro. Dose-dependente — relacionada à velocidade de infusão. Quadro semelhante (rubor, prurido, urticária, calafrios, hipotensão), mas geralmente menos grave.</li>
-    </ul>
-    <p><b>Conduta para AMBAS — protocolo de choque anafilático:</b></p>
-    <ul>
-      <li><b>1º — Interromper a infusão</b> imediatamente</li>
-      <li><b>2º — Adrenalina IM</b> (face anterolateral da coxa): adulto 0,3–0,5 mg (1:1.000); criança 0,01 mg/kg (máx 0,3 mg)</li>
-      <li><b>3º — Anti-histamínico IV:</b> prometazina 25–50 mg ou difenidramina 25–50 mg (adulto); 0,5–1 mg/kg (criança)</li>
-      <li><b>4º — Corticoide IV:</b> hidrocortisona 500 mg (adulto); 10 mg/kg (criança) — previne recorrência bifásica</li>
-      <li><b>5º — Suporte:</b> O₂ suplementar, manter acesso venoso calibroso, SF 0,9% em bolus se hipotensão</li>
-      <li><b>6º — Após estabilização: RETOMAR a infusão do soro em velocidade MENOR</b> — a necessidade de neutralizar o veneno permanece. Suspender definitivamente o soro só é aceitável se a reação for refratária ao tratamento</li>
+      <li><b>Botrópico/laquético:</b> mínimo 6h se assintomático (regiões com predomínio botrópico); 24h se houve soroterapia</li>
+      <li><b>Crotálico:</b> observação prolongada — <b>24 a 72h</b>, pelo risco de IRA tardia por mioglobinúria</li>
+      <li><b>Elapídico:</b> mínimo <b>24h</b>, mesmo em casos leves (risco de miastenia tardia)</li>
+      <li><b>Escorpiônico/aracnídico sem soro (leve):</b> 6 a 12h de observação clínica</li>
+      <li><b>Escorpiônico/aracnídico com soro:</b> mínimo <b>24h</b></li>
     </ul>
   </div>
 
-  <div class="info-block">
-    <div class="label">Reação tardia (doença do soro)</div>
-    <p>Pode ocorrer <b>5–24 dias após</b>: febre, artralgia, urticária, linfadenopatia. Tratar com corticóide e anti-histamínico. É autolimitada.</p>
+  <div class="info-block warn">
+    <div class="label">Pode administrar a qualquer momento</div>
+    <p>A soroterapia pode ser feita mesmo após refeições ou ingestão de bebidas alcoólicas — mas exige cuidado maior pelo <b>risco de vômitos (aspiração)</b>. O uso de outros medicamentos ao mesmo tempo <b>não compromete</b> o tratamento com soro.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Reações adversas à soroterapia</h3></div>
+  <div class="info-block danger">
+    <div class="label">Reações adversas precoces — imediatas × tardias</div>
+    <h4>🚨 Ter adrenalina, anti-histamínico e corticoide SEMPRE à disposição</h4>
+    <p>O PCDT 2026 classifica as reações em dois grupos:</p>
+    <ul>
+      <li><b>Reações imediatas/precoces:</b> ocorrem durante a infusão ou até <b>2 horas</b> depois. A maioria é leve: prurido, urticária, rubor facial, exantema, taquicardia, rinorreia, espirros, tosse, náuseas, cólica abdominal e diarreia. Raramente evoluem para quadros graves (broncoespasmo, choque).</li>
+      <li><b>Reação tardia — "doença do soro":</b> surge entre <b>5 e 24 dias</b> após a infusão. Febre, urticária, erupções cutâneas, comprometimento articular, linfadenopatia e, raramente, vasculite/nefrite.</li>
+    </ul>
+    <p style="margin-top:8px;"><b>Importante:</b> testes de sensibilidade cutânea <b>não são mais recomendados</b> — têm baixa sensibilidade e atrasam o início do tratamento específico. A pré-medicação profilática com anti-histamínico/corticoide também <b>não é recomendada de rotina</b>.</p>
+    <p><b>Conduta diante de reação — protocolo de choque anafilático:</b></p>
+    <ul>
+      <li><b>1º — Interromper a infusão</b> imediatamente</li>
+      <li><b>2º — Adrenalina IM</b> (face anterolateral da coxa): prioritária, mesmo antes de corticoide/anti-histamínico</li>
+      <li><b>3º — Anti-histamínico IV:</b> prometazina ou difenidramina</li>
+      <li><b>4º — Corticoide IV:</b> hidrocortisona</li>
+      <li><b>5º — Suporte:</b> O₂ suplementar, acesso venoso calibroso, expansão volêmica se hipotensão; beta-2 agonista inalatório se broncoespasmo persistente</li>
+      <li><b>6º — Após estabilização: RETOMAR a infusão em velocidade menor</b> — a necessidade de neutralizar o veneno permanece. Em reação pirogênica recorrente, descartar a solução e preparar uma nova.</li>
+    </ul>
   </div>
 
   <div class="sec-divider"><h3>Sobre o atendimento e remanejamento</h3></div>
@@ -107,7 +196,6 @@
     <ul>
       <li>Todos os soros <b>pertencem ao Estado</b> — fornecimento <b>gratuito</b>.</li>
       <li>Pacientes vítimas de peçonhentos são atendimento de <b>"porta aberta"</b> — não precisam de regulação via CROSS, independente do município.</li>
-      <li>O <b>farmacêutico</b> do ponto estratégico tem autonomia para <b>ajustar doses e negar dispensação</b> de prescrição incorreta (quando não condiz com o protocolo vigente).</li>
       <li>Em caso de <b>fornecimento emergencial</b> para outro ponto estratégico: fornecer mediante prescrição + check-list + ficha do SINAN. Comunicar a GVE-Vacinas para reposição.</li>
       <li>Fabricantes no Brasil: <b>Instituto Butantan</b> (SP), <b>Instituto Vital Brazil</b> (RJ), <b>Fundação Ezequiel Dias</b> (MG). Seguir orientações do fabricante.</li>
     </ul>
@@ -120,7 +208,7 @@
   </div>
 
   <div class="source-note">
-    <b>Fontes:</b> Instituto Butantan (bulas SAB, SAC, SABL, SAEL, SAEsc, SAA — 2024); PCDT Escorpionismo MS 2026; Guia de Vigilância em Saúde / MS; FioCruz; CVE-SP. Conteúdo educativo — não substitui protocolo institucional vigente.
+    <b>Fontes:</b> Ministério da Saúde. Protocolo Clínico e Diretrizes Terapêuticas dos Acidentes Ofídicos, 2026. Ministério da Saúde/Conitec. Protocolo Clínico e Diretrizes Terapêuticas dos Acidentes Escorpiônicos, 2025. Bulas Instituto Butantan (SAB, SABL, SAC, SABC, SAELA, SAEsc, SAA — 2024). Guia de Animais Peçonhentos do Brasil, MS 2024. Conteúdo educativo — não substitui protocolo institucional vigente.
   </div>
 </div>
 </div>
@@ -142,11 +230,13 @@ var CURSO="peconhentos",AULA_ID="m5-soroterapia";
 function showSection(id,btn){document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');document.querySelectorAll('nav.tabs button').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
 var QD=[
   {n:1,q:"A dose de soro antiveneno é definida por:",o:[{l:"A",v:"Peso do paciente"},{l:"B",v:"Idade do paciente"},{l:"C",v:"Gravidade do acidente (classificação leve/moderado/grave)"},{l:"D",v:"Altura do paciente"},{l:"E",v:"Sexo do paciente"}],cr:"C",ex:"A dose depende da gravidade do acidente, não do peso ou idade. Adultos e crianças recebem a mesma dose, porque o objetivo é neutralizar a quantidade de veneno inoculado — que é a mesma independente do tamanho do paciente."},
-  {n:2,q:"Diante de reação anafilática ou anafilactoide durante a infusão do soro, a conduta correta segue a sequência:",o:[{l:"A",v:"Aumentar a velocidade da infusão para terminar logo"},{l:"B",v:"Interromper infusão → Adrenalina IM → Anti-histamínico IV → Corticoide IV → estabilizar → retomar soro mais lento"},{l:"C",v:"Apenas anti-histamínico oral e manter infusão"},{l:"D",v:"Suspender o soro definitivamente e dar alta"},{l:"E",v:"Corticoide oral + observação, sem interromper o soro"}],cr:"B",ex:"Protocolo de choque anafilático: interromper → adrenalina IM (0,3–0,5mg adulto) → anti-histamínico IV → hidrocortisona IV → suporte → após estabilizar, RETOMAR o soro em velocidade menor."},
-  {n:3,q:"Sobre a internação após infusão de soro antiveneno:",o:[{l:"A",v:"O paciente pode ir embora 30 minutos após o término da infusão"},{l:"B",v:"O paciente DEVE permanecer internado — jamais dispensar após infusão de soro"},{l:"C",v:"A internação só é necessária se houve reação"},{l:"D",v:"A alta pode ser dada se o paciente não apresentar sintomas em 1h"},{l:"E",v:"Apenas crianças precisam de internação pós-soro"}],cr:"B",ex:"Todo paciente que recebeu soro antiveneno deve permanecer internado com monitorização. Reações tardias podem ocorrer horas a dias após. A alta só após estabilização completa e liberação médica."},
-  {n:4,q:"A diferença entre reação anafilática e anafilactoide ao soro é:",o:[{l:"A",v:"Não existe diferença — são a mesma coisa"},{l:"B",v:"A anafilática é IgE-mediada (alergia verdadeira); a anafilactoide é por ativação direta do complemento (dose-dependente)"},{l:"C",v:"A anafilactoide é sempre mais grave que a anafilática"},{l:"D",v:"A anafilática ocorre só em crianças"},{l:"E",v:"A anafilactoide não requer tratamento"}],cr:"B",ex:"Anafilática = IgE-mediada, alergia verdadeira, rara mas potencialmente fatal. Anafilactoide = ativação direta do complemento, mais comum, dose-dependente (relacionada à velocidade de infusão). A conduta de emergência é a MESMA para ambas."},
+  {n:2,q:"Diante de reação de hipersensibilidade durante a infusão do soro, a conduta correta segue a sequência:",o:[{l:"A",v:"Aumentar a velocidade da infusão para terminar logo"},{l:"B",v:"Interromper infusão → Adrenalina IM → Anti-histamínico IV → Corticoide IV → estabilizar → retomar soro mais lento"},{l:"C",v:"Apenas anti-histamínico oral e manter infusão"},{l:"D",v:"Suspender o soro definitivamente e dar alta"},{l:"E",v:"Corticoide oral + observação, sem interromper o soro"}],cr:"B",ex:"Protocolo do PCDT 2026: interromper → adrenalina IM (prioritária) → anti-histamínico IV → corticoide IV → suporte → após estabilizar, RETOMAR o soro em velocidade menor, pois a necessidade de neutralizar o veneno permanece."},
+  {n:3,q:"Segundo o PCDT 2026, após a soroterapia, o paciente deve ser mantido em observação por, no mínimo:",o:[{l:"A",v:"1 hora"},{l:"B",v:"6 horas, sempre"},{l:"C",v:"24 horas, independentemente do tipo de acidente"},{l:"D",v:"Não precisa de observação se estiver assintomático"},{l:"E",v:"Apenas crianças precisam de observação"}],cr:"C",ex:"O PCDT 2026 recomenda observação mínima de 24 horas após a soroterapia, independentemente do tipo de acidente — tempo necessário para normalizar TC, quadros hemorrágicos e identificar complicações como IRA. Crotálico pode exigir até 72h."},
+  {n:4,q:"Sobre o teste de sensibilidade cutânea e a pré-medicação (anti-histamínico/corticoide) antes da soroterapia:",o:[{l:"A",v:"Ambos são obrigatórios antes de qualquer soro antiveneno"},{l:"B",v:"O PCDT 2026 NÃO recomenda nenhum dos dois de rotina — atrasam o tratamento e não reduzem reações graves"},{l:"C",v:"Apenas o teste cutâneo é recomendado"},{l:"D",v:"Apenas a pré-medicação é recomendada em crianças"},{l:"E",v:"Ambos são obrigatórios apenas no soro antielapídico"}],cr:"B",ex:"O PCDT 2026 não preconiza teste de sensibilidade (baixa sensibilidade, atrasa o tratamento) nem pré-medicação de rotina com anti-histamínico/corticoide, pois evidências não mostram benefício em prevenir reações anafiláticas."},
   {n:5,q:"Sobre o armazenamento dos soros antiveneno:",o:[{l:"A",v:"Temperatura ambiente"},{l:"B",v:"Congelador a -20°C"},{l:"C",v:"Refrigeração entre +2°C e +8°C, nunca congelar"},{l:"D",v:"Não há restrição de temperatura"},{l:"E",v:"Podem ser congelados para transporte"}],cr:"C",ex:"Todos os soros devem ser armazenados entre +2°C e +8°C. O congelamento é ESTRITAMENTE contraindicado — desnatura as imunoglobulinas. Usar imediatamente após abrir a ampola."},
-  {n:6,q:"Os soros antiveneno no Brasil são:",o:[{l:"A",v:"Pagos pelo paciente na farmácia"},{l:"B",v:"Gratuitos — pertencem ao Estado, atendimento de porta aberta"},{l:"C",v:"Cobertos pelo plano de saúde"},{l:"D",v:"Vendidos apenas pelo Instituto Butantan"},{l:"E",v:"Disponíveis apenas em hospitais universitários"}],cr:"B",ex:"Todos os soros pertencem ao Estado e seu fornecimento é gratuito. Pacientes vítimas de peçonhentos são atendimento de 'porta aberta' — sem necessidade de regulação. Produzidos por: Instituto Butantan (SP), Instituto Vital Brazil (RJ) e Fundação Ezequiel Dias (MG)."}
+  {n:6,q:"Qual a dose de SAB/SABL/SABC para acidente botrópico GRAVE (edema até raiz do membro, hemorragia grave, hipotensão/choque ou IRA)?",o:[{l:"A",v:"3 ampolas"},{l:"B",v:"6 ampolas"},{l:"C",v:"12 ampolas"},{l:"D",v:"20 ampolas"},{l:"E",v:"4 ampolas"}],cr:"C",ex:"Acidente botrópico grave: 12 ampolas. Leve: 3 ampolas. Moderado: 6 ampolas — conforme PCDT dos Acidentes Ofídicos, MS 2026."},
+  {n:7,q:"No acidente escorpiônico, qual a dose MÁXIMA de SAEsc/SAA que pode ser administrada, segundo o PCDT 2025?",o:[{l:"A",v:"3 ampolas"},{l:"B",v:"6 ampolas — nunca mais que isso"},{l:"C",v:"10 ampolas"},{l:"D",v:"20 ampolas"},{l:"E",v:"Não há limite máximo"}],cr:"B",ex:"O PCDT dos Acidentes Escorpiônicos (2025) é claro: grave = 6 ampolas, e o paciente NÃO deve receber mais que 6 frascos-ampola, mesmo em reclassificação de gravidade."},
+  {n:8,q:"Os soros antiveneno no Brasil são:",o:[{l:"A",v:"Pagos pelo paciente na farmácia"},{l:"B",v:"Gratuitos — pertencem ao Estado, atendimento de porta aberta"},{l:"C",v:"Cobertos pelo plano de saúde"},{l:"D",v:"Vendidos apenas pelo Instituto Butantan"},{l:"E",v:"Disponíveis apenas em hospitais universitários"}],cr:"B",ex:"Todos os soros pertencem ao Estado e seu fornecimento é gratuito. Pacientes vítimas de peçonhentos são atendimento de 'porta aberta' — sem necessidade de regulação. Produzidos por: Instituto Butantan (SP), Instituto Vital Brazil (RJ) e Fundação Ezequiel Dias (MG)."}
 ];
 var QS={c:0,w:0,a:0};
 function renderQuiz(){var ct=document.getElementById('quizContainer');ct.innerHTML='';QD.forEach(function(q,i){var d=document.createElement('div');d.className='q-card';d.id='q'+i;var body='<div class="opts">'+q.o.map(function(o){return '<button class="opt-btn" data-q="'+i+'" data-l="'+o.l+'" onclick="answerMC('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+o.v+'</span></button>';}).join('')+'</div>';d.innerHTML='<div class="q-num">Questão '+q.n+'</div><div class="res-ind" id="ri'+i+'"></div><p class="q-text">'+q.q+'</p>'+body+'<div class="exp-box" id="ex'+i+'"><div class="et">📖 Explicação</div><p>'+q.ex+'</p></div>';ct.appendChild(d);});updateScores();}
