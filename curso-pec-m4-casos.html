@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 4 · Caso Clínico Escorpiônico – Enzo Salmazo | 2026</title>
+<script>window.PAGE_KEY = "curso-peconhentos";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>document.addEventListener("authReady", function(){ document.documentElement.style.visibility = "visible"; });</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0d14;--bg2:#111520;--bg3:#161c2e;--card:#1a2138;--card2:#1f2845;--accent:#4f9cf9;--accent2:#38e8c0;--accent3:#f9784f;--accent4:#b84ff9;--gold:#f9c94f;--red:#f95f5f;--green:#4ff984;--text:#e8eaf6;--muted:#8892b0;--border:rgba(79,156,249,0.15);--shadow:0 8px 40px rgba(0,0,0,0.5);--radius:16px;--font-body:'DM Sans',sans-serif;--font-display:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;padding-bottom:90px}
+header{position:relative;z-index:10;text-align:center;padding:40px 24px 24px;background:linear-gradient(180deg,rgba(249,201,79,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border)}
+header .badge{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--accent3));color:var(--bg);font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px}
+header h1{font-family:var(--font-display);font-size:clamp(22px,3.5vw,34px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--gold) 60%,var(--accent3) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+header .sub{color:var(--muted);font-size:13px;letter-spacing:.5px}
+.container{max-width:900px;margin:0 auto;padding:28px 20px}
+.disclaimer{background:rgba(249,201,79,0.06);border:1px solid rgba(249,201,79,0.25);border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;font-size:12px;color:rgba(249,201,79,0.8);line-height:1.6}.disclaimer b{color:var(--gold)}
+.caso-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:24px;overflow:hidden;box-shadow:var(--shadow)}
+.caso-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;cursor:pointer;user-select:none}.caso-header:hover{background:var(--card2)}
+.caso-num{font-family:var(--font-display);font-size:18px;font-weight:800;color:var(--bg);background:linear-gradient(135deg,var(--gold),var(--accent3));min-width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.caso-info{flex:1}.caso-title{font-family:var(--font-display);font-size:15px;font-weight:700;color:#fff;margin-bottom:2px}.caso-type{font-size:11px;color:var(--muted);font-family:var(--font-mono);letter-spacing:1px;text-transform:uppercase}
+.caso-chevron{color:var(--accent);transition:transform .3s;font-size:14px}.caso-card.open .caso-chevron{transform:rotate(90deg)}
+.caso-body{max-height:0;overflow:hidden;transition:max-height .5s ease}.caso-card.open .caso-body{max-height:12000px}.caso-inner{padding:24px}
+.sec-label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;margin-top:20px;display:flex;align-items:center;gap:8px}.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.cs{background:var(--card2);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:14px}.cs.warn{border-color:var(--gold)}.cs.danger{border-color:var(--red)}.cs.success{border-color:var(--green)}.cs.orange{border-color:var(--accent3)}
+.cs h4{font-family:var(--font-display);font-weight:700;margin-bottom:8px;font-size:14px;color:#fff}.cs p,.cs li{color:var(--text);margin-bottom:5px;font-size:13px}.cs ul{padding-left:18px;margin-top:6px}
+.lab-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;margin:12px 0;font-size:12px}.lab-table th{background:var(--card2);color:var(--accent);font-family:var(--font-display);font-size:12px;font-weight:700;padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}.lab-table td{background:var(--card);padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.04)}.lab-table tr:last-child td{border-bottom:none}.lab-alt{color:var(--red);font-weight:600}
+.ref-box{background:rgba(79,156,249,0.04);border:1px solid rgba(79,156,249,0.15);border-radius:12px;padding:12px 16px;margin-top:16px;font-size:11px;color:var(--muted);line-height:1.6}.ref-box b{color:var(--accent)}
+.qa{margin-top:24px;padding-top:20px;border-top:2px solid var(--border)}.qa-title{font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--accent4);margin-bottom:16px}
+.qc{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}.q-stem{font-size:13px;font-weight:600;color:#fff;margin-bottom:12px;line-height:1.5}.q-opts{display:flex;flex-direction:column;gap:6px}.q-opt{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:12px;cursor:pointer;transition:all .2s;color:var(--text)}.q-opt:hover{border-color:var(--accent);background:rgba(79,156,249,0.06)}.q-opt.correct{background:rgba(79,249,132,0.1);border-color:var(--green);color:var(--green)}.q-opt.wrong{background:rgba(249,95,95,0.1);border-color:var(--red);color:var(--red);opacity:.6}.q-opt.disabled{pointer-events:none}.q-fb{margin-top:10px;padding:12px 16px;border-radius:10px;font-size:12px;line-height:1.5;display:none}.q-fb.show{display:block}.q-fb.ok{background:rgba(79,249,132,0.06);border:1px solid rgba(79,249,132,0.2);color:rgba(79,249,132,0.9)}.q-fb.err{background:rgba(249,95,95,0.06);border:1px solid rgba(249,95,95,0.2);color:rgba(249,95,95,0.9)}
+.complete-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:400px;margin:30px auto 0;padding:16px 28px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--bg);border:none;border-radius:14px;cursor:pointer;font-family:var(--font-body);font-size:15px;font-weight:700;transition:all .3s;box-shadow:0 4px 20px rgba(79,156,249,0.3)}.complete-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(79,156,249,0.5)}.complete-btn.done{background:var(--green);color:var(--bg);cursor:default}
+@media(max-width:480px){.caso-inner{padding:16px}.caso-header{padding:14px 16px}.caso-title{font-size:13px}header h1{font-size:20px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="badge">Módulo 4 · Caso Clínico</div>
+  <h1>Caso Clínico — Escorpionismo Grave</h1>
+  <div class="sub">Caso baseado em artigo científico — criança picada por Tityus serrulatus</div>
+</header>
+<div class="container">
+<div class="disclaimer"><b>⚠️ Sobre este caso:</b> Baseado em relato publicado na Revista Médica de Minas Gerais. Dados anonimizados e adaptados para fins didáticos. A referência original está citada ao final.</div>
+
+<div class="caso-card open" id="caso1">
+  <div class="caso-header" onclick="toggleCaso(this)">
+    <div class="caso-num">1</div>
+    <div class="caso-info">
+      <div class="caso-title">🦂 Escorpionismo Grave — Criança de 9 anos</div>
+      <div class="caso-type">Baseado em artigo científico · Dados anonimizados</div>
+    </div>
+    <span class="caso-chevron">▶</span>
+  </div>
+  <div class="caso-body"><div class="caso-inner">
+
+    <div class="sec-label">Identificação e História</div>
+    <div class="cs orange">
+      <h4>📋 Admissão</h4>
+      <p>Paciente de 9 anos, sexo masculino, previamente hígido, proveniente de cidade da região metropolitana de Minas Gerais. Foi picado por <b>escorpião de cor amarelada com dorso escurecido</b> (identificado pelo irmão como <i>Tityus serrulatus</i>) na <b>região plantar do 2º artelho do pé esquerdo</b>, às 21:15h, em horário noturno (março — mês chuvoso).</p>
+      <p>Apresentou <b>cefaleia intensa</b> e <b>4 episódios de vômitos</b> nas primeiras horas. A unidade de saúde local não dispunha de SAE, sendo solicitada transferência para hospital de referência toxicológica.</p>
+    </div>
+
+    <div class="sec-label">Exame Físico na Admissão (23:00h)</div>
+    <div class="cs danger">
+      <h4>🔍 Achados Clínicos</h4>
+      <ul>
+        <li><b>Dor intensa</b> no local da picada</li>
+        <li>Paciente <b>sonolento</b></li>
+        <li><b>Extremidades frias</b></li>
+        <li><b>Sialorreia</b> (salivação excessiva)</li>
+        <li>ECG: <b>bradicardia sinusal</b></li>
+        <li>Ausculta pulmonar: <b>sem sinais de acometimento pulmonar</b></li>
+        <li>Glicemia capilar: <b class="lab-alt">504 mg/dL</b> (hiperglicemia grave!)</li>
+      </ul>
+    </div>
+
+    <div class="sec-label">Exames Laboratoriais</div>
+    <table class="lab-table">
+      <tr><th>Exame</th><th>Resultado</th><th>Significado</th></tr>
+      <tr><td>Glicemia capilar</td><td class="lab-alt">504 mg/dL</td><td>Liberação maciça de catecolaminas</td></tr>
+      <tr><td>ECG</td><td class="lab-alt">Bradicardia sinusal</td><td>Efeito vagotônico do veneno</td></tr>
+      <tr><td>Amilase sérica</td><td>Solicitada</td><td>Estimulação pancreática</td></tr>
+      <tr><td>Gasometria</td><td>Solicitada</td><td>Avaliação de acidose metabólica</td></tr>
+      <tr><td>Rx tórax</td><td>Normal</td><td>Sem edema agudo de pulmão</td></tr>
+    </table>
+
+    <div class="sec-label">Diagnóstico e Conduta</div>
+    <div class="cs success">
+      <h4>💊 Manejo</h4>
+      <ul>
+        <li>Diagnóstico: <b>Escorpionismo GRAVE por T. serrulatus</b></li>
+        <li><b>4 ampolas de SAE (Soro Antiescorpiônico)</b>, sem diluição, via endovenosa, em <b>10 minutos</b></li>
+        <li>Analgesia com <b>dipirona IV</b></li>
+        <li>Tempo entre picada e soroterapia: <b>~2 horas e 45 minutos</b> (relativamente precoce)</li>
+        <li>Revisão laboratorial direcionada com monitorização contínua</li>
+      </ul>
+    </div>
+
+    <div class="sec-label">Evolução</div>
+    <div class="cs">
+      <h4>📈 Desfecho</h4>
+      <p><b>Boa evolução</b>. Melhora progressiva dos sintomas sistêmicos após a soroterapia. Glicemia normalizou em 24 horas. <b>Alta hospitalar assintomático</b> 2 dias após a admissão.</p>
+      <p style="margin-top:10px;color:var(--green);font-weight:600;">✅ Fatores determinantes para o bom prognóstico: idade de 9 anos (maior massa corporal que crianças menores), tempo precoce de soroterapia (~2h45) e diagnóstico correto desde o início.</p>
+    </div>
+
+    <div class="cs warn" style="margin-top:16px;">
+      <h4>⚠️ Contraste com caso fatal (mesmo artigo)</h4>
+      <p>No mesmo período, uma criança de <b>3 anos</b> na mesma região foi picada por escorpião e chegou ao hospital com <b>4 horas</b> de evolução. O diagnóstico inicial foi <b>erroneamente abordado como cetoacidose diabética</b> (pela hiperglicemia). A soroterapia só foi administrada após <b>11 horas</b> do acidente. A criança apresentou 14 paradas cardiorrespiratórias e evoluiu para <b>óbito</b>.</p>
+      <p style="margin-top:8px;color:var(--red);font-weight:600;">Lições: a hiperglicemia no escorpionismo é por liberação de catecolaminas (NÃO é cetoacidose). O atraso diagnóstico e da soroterapia foram fatais.</p>
+    </div>
+
+    <div class="ref-box"><b>📚 Referência:</b> Ciruffo PD, Coutinho LO, Boroni JD, Diniz AET, Diniz WF. Escorpionismo: quadro clínico e manejo dos pacientes graves. <i>Rev Med Minas Gerais</i>. 2012;22(Supl 8):S29-S33. Dados anonimizados e adaptados.</div>
+
+    <div class="qa">
+      <div class="qa-title">🧠 Questões sobre o caso</div>
+      <div class="qc" id="q-1-1">
+        <div class="q-stem">1. A hiperglicemia de 504 mg/dL neste paciente se deve a:</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(1,1,0,1)">a) Cetoacidose diabética desencadeada pelo estresse do acidente</div>
+          <div class="q-opt" onclick="answerQ(1,1,1,1)">b) Liberação maciça de catecolaminas (epinefrina e norepinefrina) pela ação do veneno nos canais de sódio, levando à glicogenólise hepática</div>
+          <div class="q-opt" onclick="answerQ(1,1,2,1)">c) Lesão pancreática direta pelo veneno escorpiônico</div>
+          <div class="q-opt" onclick="answerQ(1,1,3,1)">d) Desidratação severa pelos vômitos repetidos</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! As neurotoxinas do T. serrulatus atuam em canais de sódio, provocando liberação maciça de catecolaminas e acetilcolina. As catecolaminas causam hiperglicemia por glicogenólise hepática — NÃO é cetoacidose diabética." data-err="A hiperglicemia se deve à liberação maciça de CATECOLAMINAS pela ação neurotóxica do veneno nos canais de sódio. É glicogenólise hepática, não cetoacidose diabética — essa confusão diagnóstica pode ser fatal."></div>
+      </div>
+      <div class="qc" id="q-1-2">
+        <div class="q-stem">2. Quantas ampolas de SAE são preconizadas para escorpionismo GRAVE em crianças?</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(1,2,0,2)">a) 2 ampolas (casos leves)</div>
+          <div class="q-opt" onclick="answerQ(1,2,1,2)">b) 2-3 ampolas (casos moderados)</div>
+          <div class="q-opt" onclick="answerQ(1,2,2,2)">c) 4-6 ampolas IV, sem diluição, em 10-20 minutos</div>
+          <div class="q-opt" onclick="answerQ(1,2,3,2)">d) 12 ampolas (mesma dose do SAB grave)</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! Escorpionismo grave: 4-6 ampolas de SAE (ou SAAr se SAE indisponível), IV, sem diluição, em 10-20 min. Moderado: 2-3 amp. Leve: tratamento sintomático apenas (analgesia)." data-err="Escorpionismo grave: 4-6 ampolas de SAE IV. Leve: só analgesia. Moderado: 2-3 amp. Na falta do SAE, pode-se usar SAAr (soro antiaracnídico)."></div>
+      </div>
+      <div class="qc" id="q-1-3">
+        <div class="q-stem">3. Quais são as duas principais causas de óbito no escorpionismo grave?</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(1,3,0,0)">a) Edema agudo de pulmão e choque cardiogênico</div>
+          <div class="q-opt" onclick="answerQ(1,3,1,0)">b) Insuficiência renal aguda e coagulopatia</div>
+          <div class="q-opt" onclick="answerQ(1,3,2,0)">c) Insuficiência respiratória por paralisia muscular</div>
+          <div class="q-opt" onclick="answerQ(1,3,3,0)">d) Rabdomiólise e hipertermia maligna</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! As manifestações cardiorrespiratórias — edema agudo de pulmão (por disfunção miocárdica) e choque — são as principais causas de óbito no acidente escorpiônico grave, especialmente em crianças < 7 anos." data-err="As principais causas de óbito são EDEMA AGUDO DE PULMÃO (disfunção miocárdica pelas catecolaminas) e CHOQUE cardiogênico. Ocorrem predominantemente em crianças < 7 anos."></div>
+      </div>
+      <div class="qc" id="q-1-4">
+        <div class="q-stem">4. Crianças menores de qual idade constituem o principal grupo de risco para escorpionismo grave/fatal?</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(1,4,0,1)">a) Menores de 14 anos</div>
+          <div class="q-opt" onclick="answerQ(1,4,1,1)">b) Menores de 7 anos (especialmente < 4 anos)</div>
+          <div class="q-opt" onclick="answerQ(1,4,2,1)">c) Menores de 2 anos apenas</div>
+          <div class="q-opt" onclick="answerQ(1,4,3,1)">d) Qualquer criança, independente da idade</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! Crianças < 7 anos (especialmente < 4 anos) têm maior risco de gravidade e óbito por escorpionismo, devido à menor massa corporal (maior concentração relativa de veneno), imaturidade do sistema imune e cardiovascular." data-err="Crianças < 7 anos (especialmente < 4 anos) são o grupo de maior risco. A menor massa corporal resulta em maior concentração relativa de veneno, amplificando os efeitos sistêmicos."></div>
+      </div>
+      <div class="qc" id="q-1-5">
+        <div class="q-stem">5. Na falta do SAE, qual soro pode ser utilizado como alternativa no escorpionismo?</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(1,5,0,0)">a) SAAr (Soro Antiaracnídico) — contém anticorpos anti-Tityus</div>
+          <div class="q-opt" onclick="answerQ(1,5,1,0)">b) SAB (Soro Antibotrópico)</div>
+          <div class="q-opt" onclick="answerQ(1,5,2,0)">c) SAC (Soro Anticrotálico)</div>
+          <div class="q-opt" onclick="answerQ(1,5,3,0)">d) Soro fisiológico em alta infusão</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! O SAAr (antiaracnídico) é produzido com venenos de Tityus serrulatus + Phoneutria + Loxosceles, portanto possui anticorpos anti-escorpião que podem ser usados na ausência do SAE específico." data-err="Na falta do SAE, utiliza-se o SAAr (antiaracnídico), pois ele é produzido também com veneno de T. serrulatus, contendo anticorpos que neutralizam parcialmente o veneno escorpiônico."></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<button class="complete-btn" id="completeBtn" onclick="concluirAula()">✓ Concluir caso clínico</button>
+</div>
+<a href="curso-peconhentos.html" style="display:block;text-align:center;padding:16px;color:var(--muted);font-size:13px;text-decoration:none;">← Voltar ao curso</a>
+<script>
+var CURSO="peconhentos",AULA_ID="m4-casos";
+function toggleCaso(h){h.parentElement.classList.toggle('open');}
+function answerQ(c,q,opt,correct){var el=document.getElementById('q-'+c+'-'+q);if(!el)return;var opts=el.querySelectorAll('.q-opt'),fb=el.querySelector('.q-fb');opts.forEach(function(o,i){o.classList.add('disabled');if(i===correct)o.classList.add('correct');else if(i===opt&&i!==correct)o.classList.add('wrong');});if(opt===correct){fb.className='q-fb show ok';fb.innerHTML='✅ '+fb.getAttribute('data-ok');}else{fb.className='q-fb show err';fb.innerHTML='❌ '+fb.getAttribute('data-err');}}
+function getClient(){return window.authClient||window.supabaseClient||null;}
+async function concluirAula(){var btn=document.getElementById('completeBtn'),sb=getClient();if(!sb){marcarConcluidaUI(btn);return;}try{var u=await sb.auth.getUser();var user=u&&u.data?u.data.user:null;if(user){await sb.from('curso_progresso').upsert({user_id:user.id,curso:CURSO,aula_id:AULA_ID,concluida:true,quiz_score:0,quiz_total:0,updated_at:new Date().toISOString()},{onConflict:'user_id,curso,aula_id'});}}catch(e){console.warn(e);}marcarConcluidaUI(btn);}
+function marcarConcluidaUI(btn){btn.classList.add('done');btn.textContent='✓ Caso concluído';btn.onclick=function(){window.location.href='curso-peconhentos.html';};setTimeout(function(){window.location.href='curso-peconhentos.html';},900);}
+</script>
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 5 · Caso Clínico Araneídico – Enzo Salmazo | 2026</title>
+<script>window.PAGE_KEY = "curso-peconhentos";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>document.addEventListener("authReady", function(){ document.documentElement.style.visibility = "visible"; });</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0d14;--bg2:#111520;--bg3:#161c2e;--card:#1a2138;--card2:#1f2845;--accent:#4f9cf9;--accent2:#38e8c0;--accent3:#f9784f;--accent4:#b84ff9;--gold:#f9c94f;--red:#f95f5f;--green:#4ff984;--text:#e8eaf6;--muted:#8892b0;--border:rgba(79,156,249,0.15);--shadow:0 8px 40px rgba(0,0,0,0.5);--radius:16px;--font-body:'DM Sans',sans-serif;--font-display:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;padding-bottom:90px}
+header{position:relative;z-index:10;text-align:center;padding:40px 24px 24px;background:linear-gradient(180deg,rgba(56,232,192,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border)}
+header .badge{display:inline-block;background:linear-gradient(135deg,var(--accent2),var(--accent));color:var(--bg);font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px}
+header h1{font-family:var(--font-display);font-size:clamp(22px,3.5vw,34px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--accent2) 60%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+header .sub{color:var(--muted);font-size:13px;letter-spacing:.5px}
+.container{max-width:900px;margin:0 auto;padding:28px 20px}
+.disclaimer{background:rgba(249,201,79,0.06);border:1px solid rgba(249,201,79,0.25);border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;font-size:12px;color:rgba(249,201,79,0.8);line-height:1.6}.disclaimer b{color:var(--gold)}
+.caso-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:24px;overflow:hidden;box-shadow:var(--shadow)}
+.caso-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;cursor:pointer;user-select:none}.caso-header:hover{background:var(--card2)}
+.caso-num{font-family:var(--font-display);font-size:18px;font-weight:800;color:var(--bg);background:linear-gradient(135deg,var(--accent2),var(--accent));min-width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.caso-info{flex:1}.caso-title{font-family:var(--font-display);font-size:15px;font-weight:700;color:#fff;margin-bottom:2px}.caso-type{font-size:11px;color:var(--muted);font-family:var(--font-mono);letter-spacing:1px;text-transform:uppercase}
+.caso-chevron{color:var(--accent);transition:transform .3s;font-size:14px}.caso-card.open .caso-chevron{transform:rotate(90deg)}
+.caso-body{max-height:0;overflow:hidden;transition:max-height .5s ease}.caso-card.open .caso-body{max-height:12000px}.caso-inner{padding:24px}
+.sec-label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;margin-top:20px;display:flex;align-items:center;gap:8px}.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.cs{background:var(--card2);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:14px}.cs.warn{border-color:var(--gold)}.cs.danger{border-color:var(--red)}.cs.success{border-color:var(--green)}.cs.orange{border-color:var(--accent3)}.cs.purple{border-color:var(--accent4)}
+.cs h4{font-family:var(--font-display);font-weight:700;margin-bottom:8px;font-size:14px;color:#fff}.cs p,.cs li{color:var(--text);margin-bottom:5px;font-size:13px}.cs ul{padding-left:18px;margin-top:6px}
+.lab-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;margin:12px 0;font-size:12px}.lab-table th{background:var(--card2);color:var(--accent);font-family:var(--font-display);font-size:12px;font-weight:700;padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}.lab-table td{background:var(--card);padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.04)}.lab-table tr:last-child td{border-bottom:none}.lab-alt{color:var(--red);font-weight:600}
+.ref-box{background:rgba(79,156,249,0.04);border:1px solid rgba(79,156,249,0.15);border-radius:12px;padding:12px 16px;margin-top:16px;font-size:11px;color:var(--muted);line-height:1.6}.ref-box b{color:var(--accent)}
+.qa{margin-top:24px;padding-top:20px;border-top:2px solid var(--border)}.qa-title{font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--accent4);margin-bottom:16px}
+.qc{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}.q-stem{font-size:13px;font-weight:600;color:#fff;margin-bottom:12px;line-height:1.5}.q-opts{display:flex;flex-direction:column;gap:6px}.q-opt{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:12px;cursor:pointer;transition:all .2s;color:var(--text)}.q-opt:hover{border-color:var(--accent);background:rgba(79,156,249,0.06)}.q-opt.correct{background:rgba(79,249,132,0.1);border-color:var(--green);color:var(--green)}.q-opt.wrong{background:rgba(249,95,95,0.1);border-color:var(--red);color:var(--red);opacity:.6}.q-opt.disabled{pointer-events:none}.q-fb{margin-top:10px;padding:12px 16px;border-radius:10px;font-size:12px;line-height:1.5;display:none}.q-fb.show{display:block}.q-fb.ok{background:rgba(79,249,132,0.06);border:1px solid rgba(79,249,132,0.2);color:rgba(79,249,132,0.9)}.q-fb.err{background:rgba(249,95,95,0.06);border:1px solid rgba(249,95,95,0.2);color:rgba(249,95,95,0.9)}
+.complete-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:400px;margin:30px auto 0;padding:16px 28px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--bg);border:none;border-radius:14px;cursor:pointer;font-family:var(--font-body);font-size:15px;font-weight:700;transition:all .3s;box-shadow:0 4px 20px rgba(79,156,249,0.3)}.complete-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(79,156,249,0.5)}.complete-btn.done{background:var(--green);color:var(--bg);cursor:default}
+@media(max-width:480px){.caso-inner{padding:16px}.caso-header{padding:14px 16px}.caso-title{font-size:13px}header h1{font-size:20px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="badge">Módulo 5 · Caso Clínico</div>
+  <h1>Caso Clínico — Acidente por Loxosceles</h1>
+  <div class="sub">Caso baseado em artigo científico — aranha-marrom</div>
+</header>
+<div class="container">
+<div class="disclaimer"><b>⚠️ Sobre este caso:</b> Baseado em relato publicado na Revista Médica de Minas Gerais. Dados anonimizados e adaptados para fins didáticos. Referência citada ao final.</div>
+
+<div class="caso-card open" id="caso1">
+  <div class="caso-header" onclick="toggleCaso(this)">
+    <div class="caso-num">1</div>
+    <div class="caso-info">
+      <div class="caso-title">🕷️ Acidente Loxoscélico — Trabalhador Picado Dentro da Bota</div>
+      <div class="caso-type">Baseado em artigo científico · Dados anonimizados</div>
+    </div>
+    <span class="caso-chevron">▶</span>
+  </div>
+  <div class="caso-body"><div class="caso-inner">
+
+    <div class="sec-label">Identificação e História</div>
+    <div class="cs orange">
+      <h4>📋 Admissão</h4>
+      <p>Paciente de 31 anos, sexo masculino, bombeiro, relata ter <b>calçado a bota pela manhã e trabalhado por aproximadamente 12 horas</b> seguidas. Ao final do período, começou a sentir <b>dor progressivamente mais forte, em queimação, no pé direito</b>. Ao retirar a bota e a meia, observou uma <b>lesão no dorso do pé</b>.</p>
+      <p>Não viu o animal no momento da picada. Ao sacudir a bota, <b>nenhum animal foi encontrado</b>. Os sintomas iniciaram cerca de <b>10-12 horas</b> após calçar a bota.</p>
+    </div>
+
+    <div class="sec-label">Exame Físico</div>
+    <div class="cs danger">
+      <h4>🔍 Achados Clínicos</h4>
+      <ul>
+        <li>Lesão no dorso do pé direito: <b>vesícula com conteúdo serossanguinolento</b></li>
+        <li>Presença de <b>dois pontos de inoculação</b></li>
+        <li>Área <b>eritematosa ao redor</b> da vesícula</li>
+        <li>Dor em queimação progressiva (característica!)</li>
+        <li>Lesão compatível com ação <b>proteolítica e hemolítica</b></li>
+      </ul>
+    </div>
+
+    <div class="sec-label">Diagnóstico</div>
+    <div class="cs purple">
+      <h4>🔎 Raciocínio Diagnóstico</h4>
+      <p>A combinação de: (1) picada <b>não percebida</b> ou dor discreta inicial, (2) <b>início dos sintomas 8-12 horas depois</b>, (3) dor em <b>queimação progressiva</b>, (4) lesão com <b>placa de isquemia e halo eritematoso</b> (placa marmórea) é o quadro clássico de acidente por <b><i>Loxosceles</i> (aranha-marrom)</b>.</p>
+      <p style="margin-top:8px;">A aranha-marrom NÃO é agressiva — pica apenas quando <b>comprimida contra o corpo</b> (dentro de sapatos, roupas, atrás de móveis). O veneno tem ação <b>proteolítica, hemolítica e coagulante</b>.</p>
+    </div>
+
+    <div class="sec-label">Diagnósticos Diferenciais Descartados</div>
+    <div class="cs">
+      <ul>
+        <li><b><i>Phoneutria</i> (armadeira):</b> dor intensa IMEDIATA, sinais locais discretos, ação neurotóxica → descartada (dor tardio)</li>
+        <li><b><i>Tityus serrulatus</i> (escorpião):</b> dor imediata com irradiação/parestesia → descartada</li>
+        <li><b>Lacraia:</b> dor imediata + eritema/edema, pode ter necrose mas é incomum → descartada</li>
+      </ul>
+    </div>
+
+    <div class="sec-label">Conduta e Tratamento</div>
+    <div class="cs success">
+      <h4>💊 Manejo</h4>
+      <ul>
+        <li>Limpeza local com água e sabão</li>
+        <li>Analgesia com <b>dipirona ou AINES</b> + <b>hiper-hidratação</b> (prevenir lesão renal)</li>
+        <li>Em casos moderados/graves: <b>5-10 ampolas de Soro Antiloxoscélico ou Antiaracnídico (SAAr)</b>, IV</li>
+        <li><b>Prednisona 40-60 mg/dia</b> por 5-10 dias com redução gradativa (corticoide para hemólise)</li>
+        <li>Acompanhamento por <b>72 horas</b> obrigatório (evolução da lesão)</li>
+        <li>Propedêutica complementar nos graves: hemograma, bilirrubinas, amilase, ureia/creatinina, EAS, TP, PTTa, fibrinogênio</li>
+      </ul>
+    </div>
+
+    <div class="sec-label">Evolução Esperada</div>
+    <div class="cs warn">
+      <h4>📈 Prognóstico</h4>
+      <p>A lesão cutânea evolui nos dias seguintes com <b>expansão da área isquêmica</b>, podendo surgir <b>equimoses, bolhas e necrose tecidual</b> (forma cutânea). Em casos graves, pode haver <b>hemólise intravascular</b> (forma cutâneo-visceral) com anemia, icterícia, hemoglobinúria e insuficiência renal aguda.</p>
+      <p style="margin-top:8px;">A forma cutâneo-visceral é rara mas potencialmente fatal. A maioria dos casos resolve com tratamento adequado em 2-4 semanas, com cicatrização da necrose local.</p>
+    </div>
+
+    <div class="ref-box"><b>📚 Referência:</b> Schütze M, Silva MG, Pedroso MA, Magalhães SS, Parisotto VS. Caso 1 — Imagem. <i>Rev Med Minas Gerais</i>. 2011;21(1):121-122. Condutas complementares: Andrade Filho A, Campolina D, Borges M. Toxicologia na prática clínica. Belo Horizonte: Folium; 2001. Dados anonimizados e adaptados.</div>
+
+    <div class="qa">
+      <div class="qa-title">🧠 Questões sobre o caso</div>
+      <div class="qc" id="q-1-1">
+        <div class="q-stem">1. A "placa marmórea" (área de isquemia esbranquiçada com halo eritematoso) é achado clássico de acidente por:</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(1,1,0,1)">a) Phoneutria (aranha-armadeira)</div>
+          <div class="q-opt" onclick="answerQ(1,1,1,1)">b) Loxosceles (aranha-marrom)</div>
+          <div class="q-opt" onclick="answerQ(1,1,2,1)">c) Latrodectus (viúva-negra)</div>
+          <div class="q-opt" onclick="answerQ(1,1,3,1)">d) Tityus serrulatus (escorpião-amarelo)</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! A placa marmórea é patognomônica do acidente loxoscélico. Resulta da ação proteolítica e vasculotóxica do veneno, que causa isquemia central com halo eritematoso, evoluindo para necrose." data-err="A placa marmórea é achado clássico do acidente por LOXOSCELES (aranha-marrom). A ação proteolítica e vasculotóxica causa isquemia progressiva com halo eritematoso."></div>
+      </div>
+      <div class="qc" id="q-1-2">
+        <div class="q-stem">2. Diferente da maioria dos acidentes por animais peçonhentos, a dor no acidente loxoscélico:</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(1,2,0,0)">a) É TARDIA — inicia 8-12 horas após a picada, em queimação progressiva</div>
+          <div class="q-opt" onclick="answerQ(1,2,1,0)">b) É imediata e lancinante</div>
+          <div class="q-opt" onclick="answerQ(1,2,2,0)">c) É ausente em 100% dos casos</div>
+          <div class="q-opt" onclick="answerQ(1,2,3,0)">d) É tipo cólica com irradiação para o abdome</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! A picada da Loxosceles é frequentemente não percebida ou causa dor mínima. Os sintomas se manifestam após 8-12 horas, com dor em queimação progressiva. Isso é um diferencial importante dos outros acidentes (Phoneutria e escorpiões = dor imediata)." data-err="A dor no loxoscelismo é TARDIA (8-12h), em queimação progressiva. A picada pode nem ser percebida. Isso diferencia a Loxosceles da Phoneutria (dor imediata intensa) e do escorpião (dor imediata com parestesia)."></div>
+      </div>
+      <div class="qc" id="q-1-3">
+        <div class="q-stem">3. Por que a corticoterapia (prednisona) é indicada nos casos moderados/graves de loxoscelismo?</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(1,3,0,1)">a) Para analgesia potente como alternativa à morfina</div>
+          <div class="q-opt" onclick="answerQ(1,3,1,1)">b) Para tratar/prevenir a hemólise intravascular (ação hemolítica do veneno) e reduzir a resposta inflamatória local</div>
+          <div class="q-opt" onclick="answerQ(1,3,2,1)">c) Para prevenir infecção secundária da ferida</div>
+          <div class="q-opt" onclick="answerQ(1,3,3,1)">d) Para potencializar a ação do soro antiveneno</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! O corticoide é usado para modular a hemólise (o veneno loxoscélico tem ação hemolítica) e reduzir o componente inflamatório intenso. A prednisona 40-60 mg/dia por 5-10 dias é o esquema preconizado." data-err="O corticoide (prednisona 40-60 mg/dia, 5-10 dias) é indicado para tratar a hemólise intravascular causada pelo veneno e reduzir a resposta inflamatória. Essas ações são únicas do loxoscelismo entre os acidentes araneídicos."></div>
+      </div>
+      <div class="qc" id="q-1-4">
+        <div class="q-stem">4. A forma cutâneo-visceral do loxoscelismo se caracteriza por:</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(1,4,0,0)">a) Hemólise intravascular com anemia, icterícia, hemoglobinúria e risco de IRA</div>
+          <div class="q-opt" onclick="answerQ(1,4,1,0)">b) Paralisia muscular descendente tipo curare</div>
+          <div class="q-opt" onclick="answerQ(1,4,2,0)">c) Edema agudo de pulmão por disfunção miocárdica</div>
+          <div class="q-opt" onclick="answerQ(1,4,3,0)">d) Rabdomiólise com mioglobinúria</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! A forma cutâneo-visceral (mais grave, rara) cursa com hemólise intravascular intensa: anemia hemolítica, icterícia, hemoglobinúria (urina escura), e pode evoluir para IRA e CIVD. É potencialmente fatal." data-err="A forma cutâneo-visceral causa HEMÓLISE INTRAVASCULAR: anemia, icterícia, hemoglobinúria e risco de IRA. É rara mas potencialmente fatal, necessitando soroterapia precoce e suporte intensivo."></div>
+      </div>
+      <div class="qc" id="q-1-5">
+        <div class="q-stem">5. Por que NÃO se deve usar soro antiloxoscélico em casos LEVES?</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(1,5,0,0)">a) Para não sensibilizar a vítima ao soro heterólogo (risco de reação anafilática em futuras exposições), reservando-o para casos com comprometimento sistêmico</div>
+          <div class="q-opt" onclick="answerQ(1,5,1,0)">b) Porque o soro é ineficaz contra veneno de Loxosceles</div>
+          <div class="q-opt" onclick="answerQ(1,5,2,0)">c) Porque o soro agrava a necrose local</div>
+          <div class="q-opt" onclick="answerQ(1,5,3,0)">d) Porque todo caso loxoscélico é leve por definição</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! O soro é um produto heterólogo (equino) que pode sensibilizar o paciente. Em casos leves (lesão cutânea localizada, sem repercussão sistêmica), o risco da soroterapia supera o benefício. O soro é reservado para moderados/graves." data-err="O soro é heterólogo (equino) e sensibiliza o paciente. Em casos leves, o risco da soroterapia (reação anafilática, doença do soro) supera o benefício. Reserva-se para casos com progressão da lesão ou manifestações sistêmicas."></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<button class="complete-btn" id="completeBtn" onclick="concluirAula()">✓ Concluir caso clínico</button>
+</div>
+<a href="curso-peconhentos.html" style="display:block;text-align:center;padding:16px;color:var(--muted);font-size:13px;text-decoration:none;">← Voltar ao curso</a>
+<script>
+var CURSO="peconhentos",AULA_ID="m5-casos";
+function toggleCaso(h){h.parentElement.classList.toggle('open');}
+function answerQ(c,q,opt,correct){var el=document.getElementById('q-'+c+'-'+q);if(!el)return;var opts=el.querySelectorAll('.q-opt'),fb=el.querySelector('.q-fb');opts.forEach(function(o,i){o.classList.add('disabled');if(i===correct)o.classList.add('correct');else if(i===opt&&i!==correct)o.classList.add('wrong');});if(opt===correct){fb.className='q-fb show ok';fb.innerHTML='✅ '+fb.getAttribute('data-ok');}else{fb.className='q-fb show err';fb.innerHTML='❌ '+fb.getAttribute('data-err');}}
+function getClient(){return window.authClient||window.supabaseClient||null;}
+async function concluirAula(){var btn=document.getElementById('completeBtn'),sb=getClient();if(!sb){marcarConcluidaUI(btn);return;}try{var u=await sb.auth.getUser();var user=u&&u.data?u.data.user:null;if(user){await sb.from('curso_progresso').upsert({user_id:user.id,curso:CURSO,aula_id:AULA_ID,concluida:true,quiz_score:0,quiz_total:0,updated_at:new Date().toISOString()},{onConflict:'user_id,curso,aula_id'});}}catch(e){console.warn(e);}marcarConcluidaUI(btn);}
+function marcarConcluidaUI(btn){btn.classList.add('done');btn.textContent='✓ Caso concluído';btn.onclick=function(){window.location.href='curso-peconhentos.html';};setTimeout(function(){window.location.href='curso-peconhentos.html';},900);}
+</script>
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
+</body>
+</html>

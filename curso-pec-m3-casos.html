@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 3 · Casos Clínicos Ofídicos II – Enzo Salmazo | 2026</title>
+<script>window.PAGE_KEY = "curso-peconhentos";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>document.addEventListener("authReady", function(){ document.documentElement.style.visibility = "visible"; });</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0d14;--bg2:#111520;--bg3:#161c2e;--card:#1a2138;--card2:#1f2845;--accent:#4f9cf9;--accent2:#38e8c0;--accent3:#f9784f;--accent4:#b84ff9;--gold:#f9c94f;--red:#f95f5f;--green:#4ff984;--text:#e8eaf6;--muted:#8892b0;--border:rgba(79,156,249,0.15);--shadow:0 8px 40px rgba(0,0,0,0.5);--radius:16px;--font-body:'DM Sans',sans-serif;--font-display:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;padding-bottom:90px}
+header{position:relative;z-index:10;text-align:center;padding:40px 24px 24px;background:linear-gradient(180deg,rgba(184,79,249,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border)}
+header .badge{display:inline-block;background:linear-gradient(135deg,var(--accent4),var(--red));color:#fff;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px}
+header h1{font-family:var(--font-display);font-size:clamp(22px,3.5vw,34px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--accent4) 60%,var(--red) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+header .sub{color:var(--muted);font-size:13px;letter-spacing:.5px}
+.container{max-width:900px;margin:0 auto;padding:28px 20px}
+.disclaimer{background:rgba(249,201,79,0.06);border:1px solid rgba(249,201,79,0.25);border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;font-size:12px;color:rgba(249,201,79,0.8);line-height:1.6}.disclaimer b{color:var(--gold)}
+.caso-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:24px;overflow:hidden;box-shadow:var(--shadow)}
+.caso-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;cursor:pointer;user-select:none}.caso-header:hover{background:var(--card2)}
+.caso-num{font-family:var(--font-display);font-size:18px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--accent4),var(--red));min-width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.caso-info{flex:1}.caso-title{font-family:var(--font-display);font-size:15px;font-weight:700;color:#fff;margin-bottom:2px}.caso-type{font-size:11px;color:var(--muted);font-family:var(--font-mono);letter-spacing:1px;text-transform:uppercase}
+.caso-chevron{color:var(--accent);transition:transform .3s;font-size:14px}.caso-card.open .caso-chevron{transform:rotate(90deg)}
+.caso-body{max-height:0;overflow:hidden;transition:max-height .5s ease}.caso-card.open .caso-body{max-height:12000px}.caso-inner{padding:24px}
+.sec-label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;margin-top:20px;display:flex;align-items:center;gap:8px}.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.cs{background:var(--card2);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:14px}.cs.warn{border-color:var(--gold)}.cs.danger{border-color:var(--red)}.cs.success{border-color:var(--green)}.cs.orange{border-color:var(--accent3)}.cs.purple{border-color:var(--accent4)}
+.cs h4{font-family:var(--font-display);font-weight:700;margin-bottom:8px;font-size:14px;color:#fff}.cs p,.cs li{color:var(--text);margin-bottom:5px;font-size:13px}.cs ul{padding-left:18px;margin-top:6px}
+.lab-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;margin:12px 0;font-size:12px}.lab-table th{background:var(--card2);color:var(--accent);font-family:var(--font-display);font-size:12px;font-weight:700;padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}.lab-table td{background:var(--card);padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.04)}.lab-table tr:last-child td{border-bottom:none}.lab-alt{color:var(--red);font-weight:600}
+.ref-box{background:rgba(79,156,249,0.04);border:1px solid rgba(79,156,249,0.15);border-radius:12px;padding:12px 16px;margin-top:16px;font-size:11px;color:var(--muted);line-height:1.6}.ref-box b{color:var(--accent)}
+.qa{margin-top:24px;padding-top:20px;border-top:2px solid var(--border)}.qa-title{font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--accent4);margin-bottom:16px}
+.qc{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}.q-stem{font-size:13px;font-weight:600;color:#fff;margin-bottom:12px;line-height:1.5}.q-opts{display:flex;flex-direction:column;gap:6px}.q-opt{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:12px;cursor:pointer;transition:all .2s;color:var(--text)}.q-opt:hover{border-color:var(--accent);background:rgba(79,156,249,0.06)}.q-opt.correct{background:rgba(79,249,132,0.1);border-color:var(--green);color:var(--green)}.q-opt.wrong{background:rgba(249,95,95,0.1);border-color:var(--red);color:var(--red);opacity:.6}.q-opt.disabled{pointer-events:none}.q-fb{margin-top:10px;padding:12px 16px;border-radius:10px;font-size:12px;line-height:1.5;display:none}.q-fb.show{display:block}.q-fb.ok{background:rgba(79,249,132,0.06);border:1px solid rgba(79,249,132,0.2);color:rgba(79,249,132,0.9)}.q-fb.err{background:rgba(249,95,95,0.06);border:1px solid rgba(249,95,95,0.2);color:rgba(249,95,95,0.9)}
+.complete-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:400px;margin:30px auto 0;padding:16px 28px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--bg);border:none;border-radius:14px;cursor:pointer;font-family:var(--font-body);font-size:15px;font-weight:700;transition:all .3s;box-shadow:0 4px 20px rgba(79,156,249,0.3)}.complete-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(79,156,249,0.5)}.complete-btn.done{background:var(--green);color:var(--bg);cursor:default}
+@media(max-width:480px){.caso-inner{padding:16px}.caso-header{padding:14px 16px}.caso-title{font-size:13px}header h1{font-size:20px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="badge">Módulo 3 · Casos Clínicos</div>
+  <h1>Casos Clínicos — Laquético e Elapídico</h1>
+  <div class="sub">Casos simulados baseados nos protocolos do Ministério da Saúde</div>
+</header>
+<div class="container">
+<div class="disclaimer"><b>⚠️ Casos clínicos simulados:</b> Os casos a seguir foram elaborados exclusivamente para fins didáticos, com base nos protocolos do Ministério da Saúde (FUNASA/SVS) e na literatura médica vigente. Não representam pacientes reais. Todas as doses e condutas seguem as diretrizes brasileiras atualizadas.</div>
+
+<!-- ═══ CASO 1: LAQUÉTICO ═══ -->
+<div class="caso-card" id="caso1">
+  <div class="caso-header" onclick="toggleCaso(this)">
+    <div class="caso-num">1</div>
+    <div class="caso-info">
+      <div class="caso-title">🐍 Acidente Laquético — Trabalhador Rural na Amazônia</div>
+      <div class="caso-type">Caso clínico simulado · Fins didáticos</div>
+    </div>
+    <span class="caso-chevron">▶</span>
+  </div>
+  <div class="caso-body"><div class="caso-inner">
+
+    <div class="sec-label">Identificação e História</div>
+    <div class="cs orange">
+      <h4>📋 Admissão</h4>
+      <p>Paciente de 38 anos, sexo masculino, seringueiro, proveniente de comunidade ribeirinha no interior do Amazonas. Dá entrada em UBS fluvial às 6h com relato de ter sido picado no <b>terço inferior da perna esquerda</b> por serpente de <b>grande porte</b> (estimada em 2,5 metros) enquanto trabalhava na mata à noite.</p>
+      <p>O acidente ocorreu há aproximadamente <b>4 horas</b>. O paciente relata <b>dor intensa no local</b>, com evolução rápida de edema. Nas últimas 2 horas, apresentou <b>náuseas, vômitos, diarreia profusa e cólicas abdominais</b>. Referiu sensação de "tontura" e "visão escurecendo".</p>
+    </div>
+
+    <div class="sec-label">Exame Físico</div>
+    <div class="cs danger">
+      <h4>🔍 Achados Clínicos</h4>
+      <ul>
+        <li>PA: <b>80×50 mmHg</b> (hipotensão)</li>
+        <li>FC: <b>48 bpm</b> (bradicardia sinusal)</li>
+        <li>Sudorese profusa, pele fria e úmida</li>
+        <li>Edema tenso na perna esquerda, estendendo-se até o joelho (2 segmentos)</li>
+        <li>Presença de <b>marcas de duas presas</b> no local da picada, com sangramento ativo</li>
+        <li>Diarreia aquosa com 3 episódios nos últimos 60 minutos</li>
+        <li><b>Sialorreia</b> (salivação excessiva)</li>
+        <li>Sensório preservado, mas paciente pálido e prostrado</li>
+      </ul>
+    </div>
+
+    <div class="sec-label">Exames Laboratoriais</div>
+    <table class="lab-table">
+      <tr><th>Exame</th><th>Resultado</th><th>Referência</th></tr>
+      <tr><td>Tempo de Coagulação</td><td class="lab-alt">Prolongado (22 min)</td><td>Até 10 min</td></tr>
+      <tr><td>Hemoglobina</td><td>12,8 g/dL</td><td>13-17 g/dL</td></tr>
+      <tr><td>Creatinina</td><td>1,0 mg/dL</td><td>0,7-1,3 mg/dL</td></tr>
+      <tr><td>Potássio</td><td class="lab-alt">3,1 mEq/L</td><td>3,5-5,0 mEq/L</td></tr>
+      <tr><td>ECG</td><td class="lab-alt">Bradicardia sinusal</td><td>60-100 bpm</td></tr>
+    </table>
+
+    <div class="sec-label">Conduta e Tratamento</div>
+    <div class="cs success">
+      <h4>💊 Manejo</h4>
+      <ul>
+        <li>Classificação: <b>Acidente laquético MODERADO a GRAVE</b> (todo caso laquético é considerado ≥ moderado pelo MS)</li>
+        <li><b>20 ampolas de SABL (Soro Antibotrópico-Laquético)</b>, IV, em infusão lenta</li>
+        <li><b>Atropina 0,5 mg IV</b> para bradicardia vagal (repetida conforme FC)</li>
+        <li>Expansão volêmica com SF 0,9% — 1.000 mL em acesso rápido</li>
+        <li>Correção de hipopotassemia com KCl IV</li>
+        <li>Analgesia com <b>dipirona IV</b> (evitado AINES pelo risco de sangramento)</li>
+        <li>Profilaxia antitetânica verificada</li>
+        <li>Transferência para hospital de referência via SAMU fluvial</li>
+      </ul>
+    </div>
+
+    <div class="sec-label">Evolução</div>
+    <div class="cs">
+      <h4>📈 Desfecho</h4>
+      <p>Após soroterapia e atropina, FC normalizou para 72 bpm e PA subiu para 110×70 mmHg em 2 horas. Diarreia cessou após 6 horas. TC normalizou em 24 horas. <b>Alta hospitalar em 5 dias</b> com orientação ambulatorial. Desfecho favorável.</p>
+    </div>
+
+    <div class="ref-box"><b>📚 Referência:</b> Caso clínico simulado. Condutas baseadas em: Brasil. Ministério da Saúde. FUNASA. Manual de diagnóstico e tratamento de acidentes por animais peçonhentos. Brasília, 2001. Cupo P, Azevedo-Marques MM, Hering SE. Acidentes por animais peçonhentos: escorpiões e aranhas. Medicina (Ribeirão Preto). 2003;36:490-7.</div>
+
+    <div class="qa">
+      <div class="qa-title">🧠 Questões sobre o caso</div>
+      <div class="qc" id="q-1-1">
+        <div class="q-stem">1. A tríade diarreia + bradicardia + hipotensão diferencia o acidente laquético do botrópico. Essa manifestação se deve a:</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(1,1,0,0)">a) Estimulação vagal intensa pelo veneno da Lachesis (ação vagotônica)</div>
+          <div class="q-opt" onclick="answerQ(1,1,1,0)">b) Neurotoxicidade pré-sináptica semelhante ao acidente crotálico</div>
+          <div class="q-opt" onclick="answerQ(1,1,2,0)">c) Cardiotoxicidade direta do veneno laquético</div>
+          <div class="q-opt" onclick="answerQ(1,1,3,0)">d) Reação anafilática ao veneno</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! O veneno laquético possui ação vagotônica que o diferencia do botrópico: causa estimulação vagal intensa levando à 'síndrome vagal' — bradicardia, hipotensão, diarreia, cólica abdominal e sialorreia." data-err="A tríade vagal (bradicardia + hipotensão + diarreia) se deve à ação VAGOTÔNICA do veneno da Lachesis, que estimula intensamente o sistema parassimpático. Essa é a principal diferença em relação ao acidente botrópico."></div>
+      </div>
+      <div class="qc" id="q-1-2">
+        <div class="q-stem">2. Qual soro é indicado no acidente laquético?</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(1,2,0,2)">a) SAB (Soro Antibotrópico) isolado</div>
+          <div class="q-opt" onclick="answerQ(1,2,1,2)">b) SAC (Soro Anticrotálico)</div>
+          <div class="q-opt" onclick="answerQ(1,2,2,2)">c) SABL (Soro Antibotrópico-Laquético) — 10 a 20 ampolas IV</div>
+          <div class="q-opt" onclick="answerQ(1,2,3,2)">d) SAEL (Soro Antielapídico)</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! O SABL (antibotrópico-laquético) é o soro específico. Dose: 10 amp (moderado) a 20 amp (grave). Na indisponibilidade do SABL, pode-se usar o SAB isolado, já que há reação cruzada parcial." data-err="O soro indicado é o SABL (antibotrópico-laquético), 10-20 ampolas IV. Na sua ausência, SAB pode ser usado como alternativa (reação cruzada parcial)."></div>
+      </div>
+      <div class="qc" id="q-1-3">
+        <div class="q-stem">3. O MS classifica TODO acidente laquético como no mínimo:</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(1,3,0,1)">a) Leve — a maioria resolve com observação</div>
+          <div class="q-opt" onclick="answerQ(1,3,1,1)">b) Moderado a grave — não existe classificação "leve" para acidente laquético</div>
+          <div class="q-opt" onclick="answerQ(1,3,2,1)">c) Indeterminado até confirmação laboratorial</div>
+          <div class="q-opt" onclick="answerQ(1,3,3,1)">d) Leve se não houver alteração de coagulação</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! Diferente dos demais acidentes, o MS NÃO classifica acidente laquético como leve. Todo caso é ≥ moderado (10 amp) ou grave (20 amp), pela gravidade potencial do veneno da Lachesis." data-err="O MS não admite classificação 'leve' para acidente laquético. Todo caso é ≥ moderado. Isso se deve à alta toxicidade do veneno e à raridade do acidente (dificultando subclassificação segura)."></div>
+      </div>
+      <div class="qc" id="q-1-4">
+        <div class="q-stem">4. A atropina foi utilizada neste caso. Qual a indicação principal?</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(1,4,0,0)">a) Reverter a bradicardia e manifestações vagais (anticolinérgico)</div>
+          <div class="q-opt" onclick="answerQ(1,4,1,0)">b) Potencializar a ação do soro antiveneno</div>
+          <div class="q-opt" onclick="answerQ(1,4,2,0)">c) Prevenir reação anafilática ao SABL</div>
+          <div class="q-opt" onclick="answerQ(1,4,3,0)">d) Tratar a coagulopatia associada</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! A atropina é um anticolinérgico que antagoniza os efeitos vagais (bradicardia, sialorreia, diarreia) causados pelo veneno laquético. Dose: 0,5-1 mg IV, repetida conforme necessário." data-err="A atropina é utilizada como anticolinérgico para reverter os efeitos vagais do veneno laquético: bradicardia, hipotensão, diarreia e sialorreia. Dose: 0,5-1 mg IV."></div>
+      </div>
+      <div class="qc" id="q-1-5">
+        <div class="q-stem">5. Qual a principal serpente do gênero Lachesis encontrada no Brasil?</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(1,5,0,0)">a) Lachesis muta (surucucu-pico-de-jaca) — maior serpente peçonhenta das Américas</div>
+          <div class="q-opt" onclick="answerQ(1,5,1,0)">b) Lachesis stenophrys — encontrada apenas na América Central</div>
+          <div class="q-opt" onclick="answerQ(1,5,2,0)">c) Bothrops atrox — jararaca da Amazônia</div>
+          <div class="q-opt" onclick="answerQ(1,5,3,0)">d) Crotalus durissus terrificus — cascavel</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! A Lachesis muta (surucucu-pico-de-jaca) é a maior serpente peçonhenta das Américas, podendo atingir até 3,5 metros. Habita florestas tropicais úmidas (Amazônia e Mata Atlântica)." data-err="A Lachesis muta (surucucu) é a espécie brasileira — é a maior serpente peçonhenta das Américas. Habita áreas florestais da Amazônia e remanescentes de Mata Atlântica."></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ═══ CASO 2: ELAPÍDICO ═══ -->
+<div class="caso-card" id="caso2">
+  <div class="caso-header" onclick="toggleCaso(this)">
+    <div class="caso-num">2</div>
+    <div class="caso-info">
+      <div class="caso-title">🐍 Acidente Elapídico — Jovem Manipulando Coral Verdadeira</div>
+      <div class="caso-type">Caso clínico simulado · Fins didáticos</div>
+    </div>
+    <span class="caso-chevron">▶</span>
+  </div>
+  <div class="caso-body"><div class="caso-inner">
+
+    <div class="sec-label">Identificação e História</div>
+    <div class="cs purple">
+      <h4>📋 Admissão</h4>
+      <p>Paciente de 22 anos, sexo masculino, estudante de biologia, levado ao pronto-socorro de hospital terciário em cidade do interior de São Paulo com relato de <b>mordida por coral verdadeira (<i>Micrurus corallinus</i>)</b> na <b>mão direita (região tenar)</b> há <b>1 hora e 30 minutos</b>.</p>
+      <p>O paciente tentava capturar a serpente para "mostrar aos colegas" durante atividade de campo. Refere que a serpente <b>mordeu e não soltou</b> por alguns segundos (inoculação prolongada — padrão de dentição proteróglifas). Pouco após o acidente, desenvolveu <b>ptose palpebral bilateral</b> e <b>dificuldade para deglutir</b>.</p>
+    </div>
+
+    <div class="sec-label">Exame Físico</div>
+    <div class="cs danger">
+      <h4>🔍 Achados Clínicos — Emergência!</h4>
+      <ul>
+        <li><b>Fácies neurotóxica:</b> ptose palpebral bilateral, oftalmoplegia</li>
+        <li><b>Disfagia</b> + voz anasalada (paralisia de pares cranianos)</li>
+        <li>FR: <b>28 irpm</b> — uso de musculatura acessória</li>
+        <li>SatO₂: <b>88%</b> em ar ambiente</li>
+        <li>Mão direita: dor local <b>mínima</b>, edema discreto, <b>sem necrose</b></li>
+        <li>Mialgia difusa moderada</li>
+        <li>Glasgow 15, consciente e orientado, <b>angustiado</b></li>
+      </ul>
+    </div>
+
+    <div class="sec-label">Classificação</div>
+    <div class="cs danger">
+      <h4>⚠️ TODO acidente elapídico é GRAVE!</h4>
+      <p>Diferente dos demais acidentes ofídicos, o Ministério da Saúde classifica <b>todo acidente elapídico como grave</b>, independentemente dos sintomas na admissão. A paralisia respiratória pode se instalar <b>rapidamente</b> e ser fatal.</p>
+    </div>
+
+    <div class="sec-label">Conduta e Tratamento</div>
+    <div class="cs success">
+      <h4>💊 Manejo — Emergência de via aérea!</h4>
+      <ul>
+        <li><b>10 ampolas de SAEL (Soro Antielapídico)</b>, IV, sem diluição, em 10-20 minutos</li>
+        <li><b>Neostigmina 0,05 mg/kg IV</b> (anticolinesterásico) como teste terapêutico — melhora parcial da ptose em 15 min confirma bloqueio neuromuscular reversível</li>
+        <li>Pré-medicação com <b>atropina 0,5 mg IV</b> antes da neostigmina (para prevenir efeitos muscarínicos)</li>
+        <li>Monitorização contínua: <b>oximetria, capnografia, ventilação</b></li>
+        <li>Material de <b>IOT e ventilação mecânica</b> disponível à beira do leito</li>
+        <li>Paciente mantido em UTI com monitorização por 48 horas</li>
+      </ul>
+    </div>
+
+    <div class="sec-label">Evolução</div>
+    <div class="cs">
+      <h4>📈 Desfecho</h4>
+      <p>Após administração do SAEL, houve melhora progressiva da ptose em 6 horas. A neostigmina proporcionou melhora transitória da força muscular. SatO₂ normalizou sem necessidade de intubação. <b>Alta da UTI em 48 horas</b>, alta hospitalar em 4 dias. O paciente foi orientado sobre os riscos de manipulação de serpentes.</p>
+    </div>
+
+    <div class="ref-box"><b>📚 Referência:</b> Caso clínico simulado. Condutas baseadas em: Brasil. Ministério da Saúde. FUNASA. Manual de diagnóstico e tratamento de acidentes por animais peçonhentos. Brasília, 2001. Jorge MT, Ribeiro LA. Acidentes por serpentes peçonhentas do Brasil. Rev Assoc Med Bras. 1990;36(2):66-77.</div>
+
+    <div class="qa">
+      <div class="qa-title">🧠 Questões sobre o caso</div>
+      <div class="qc" id="q-2-1">
+        <div class="q-stem">1. O veneno elapídico tem ação predominantemente:</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(2,1,0,1)">a) Proteolítica e hemorrágica</div>
+          <div class="q-opt" onclick="answerQ(2,1,1,1)">b) Neurotóxica — bloqueio neuromuscular pós-sináptico (semelhante ao curare)</div>
+          <div class="q-opt" onclick="answerQ(2,1,2,1)">c) Miotóxica com rabdomiólise</div>
+          <div class="q-opt" onclick="answerQ(2,1,3,1)">d) Vagotônica com síndrome vagal</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! A neurotoxina elapídica atua predominantemente na junção neuromuscular PÓS-sináptica (diferente da crotoxina que é pré-sináptica), com ação semelhante ao curare. Causa paralisia muscular descendente que pode levar à insuficiência respiratória." data-err="O veneno elapídico é predominantemente NEUROTÓXICO, agindo na junção neuromuscular pós-sináptica (tipo curare). Causa paralisia muscular descendente progressiva."></div>
+      </div>
+      <div class="qc" id="q-2-2">
+        <div class="q-stem">2. A neostigmina é utilizada como teste terapêutico no acidente elapídico porque:</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(2,2,0,0)">a) É um anticolinesterásico que aumenta a disponibilidade de acetilcolina na junção neuromuscular, antagonizando parcialmente o bloqueio</div>
+          <div class="q-opt" onclick="answerQ(2,2,1,0)">b) Neutraliza diretamente o veneno elapídico</div>
+          <div class="q-opt" onclick="answerQ(2,2,2,0)">c) Previne a rabdomiólise associada</div>
+          <div class="q-opt" onclick="answerQ(2,2,3,0)">d) Serve como vasoconstritor para reverter hipotensão</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! A neostigmina inibe a acetilcolinesterase, aumentando a concentração de acetilcolina na fenda sináptica. Isso compete com a neurotoxina pelo receptor, produzindo melhora transitória da força muscular." data-err="A neostigmina é um anticolinesterásico: impede a degradação de acetilcolina, aumentando sua concentração na fenda sináptica para competir com a neurotoxina pelo receptor nicotínico."></div>
+      </div>
+      <div class="qc" id="q-2-3">
+        <div class="q-stem">3. Diferente do acidente botrópico, as manifestações LOCAIS do acidente elapídico são:</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(2,3,0,0)">a) Discretas ou ausentes — dor mínima, sem edema significativo, sem necrose</div>
+          <div class="q-opt" onclick="answerQ(2,3,1,0)">b) Exuberantes com equimoses extensas</div>
+          <div class="q-opt" onclick="answerQ(2,3,2,0)">c) Necrose precoce com placa marmórea</div>
+          <div class="q-opt" onclick="answerQ(2,3,3,0)">d) Edema tenso com síndrome compartimental</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! Assim como no crotálico, o acidente elapídico tem manifestações locais discretas (dor e edema leves). A gravidade é sistêmica (neurotoxicidade). Por isso, a ausência de sinais locais NÃO descarta acidente elapídico." data-err="Manifestações locais do elapídico são DISCRETAS ou ausentes. A gravidade é sistêmica (neurotoxicidade). A falta de sinais locais pode levar a subestimação do caso — todo elapídico é GRAVE."></div>
+      </div>
+      <div class="qc" id="q-2-4">
+        <div class="q-stem">4. Por que é importante administrar atropina ANTES da neostigmina?</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(2,4,0,0)">a) Para prevenir efeitos muscarínicos (bradicardia, sialorreia, broncoespasmo) causados pelo excesso de acetilcolina nos receptores muscarínicos</div>
+          <div class="q-opt" onclick="answerQ(2,4,1,0)">b) Para potencializar a ação da neostigmina na junção neuromuscular</div>
+          <div class="q-opt" onclick="answerQ(2,4,2,0)">c) Para neutralizar o veneno elapídico diretamente</div>
+          <div class="q-opt" onclick="answerQ(2,4,3,0)">d) Para prevenir anafilaxia ao SAEL</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! A neostigmina aumenta ACh em TODOS os receptores (nicotínicos e muscarínicos). A atropina bloqueia os muscarínicos, prevenindo efeitos indesejáveis como bradicardia, hipersecreção brônquica e sialorreia." data-err="A atropina previne os efeitos muscarínicos da neostigmina. Como a neostigmina aumenta ACh em todos os receptores, sem atropina haveria risco de bradicardia, broncoespasmo e hipersecreção."></div>
+      </div>
+      <div class="qc" id="q-2-5">
+        <div class="q-stem">5. Qual a principal causa de óbito no acidente elapídico?</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="answerQ(2,5,0,1)">a) Insuficiência renal aguda por rabdomiólise</div>
+          <div class="q-opt" onclick="answerQ(2,5,1,1)">b) Insuficiência respiratória aguda por paralisia da musculatura respiratória</div>
+          <div class="q-opt" onclick="answerQ(2,5,2,1)">c) Choque hemorrágico por coagulopatia</div>
+          <div class="q-opt" onclick="answerQ(2,5,3,1)">d) Edema agudo de pulmão cardiogênico</div>
+        </div>
+        <div class="q-fb" data-ok="Correto! A paralisia descendente atinge progressivamente diafragma e musculatura intercostal, causando insuficiência respiratória aguda. Por isso, material de IOT e VM deve estar à beira do leito em todo acidente elapídico." data-err="A causa de óbito é a insuficiência respiratória aguda por paralisia da musculatura respiratória (diafragma e intercostais). A IOT e VM devem estar sempre disponíveis."></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<button class="complete-btn" id="completeBtn" onclick="concluirAula()">✓ Concluir casos clínicos</button>
+</div>
+<a href="curso-peconhentos.html" style="display:block;text-align:center;padding:16px;color:var(--muted);font-size:13px;text-decoration:none;">← Voltar ao curso</a>
+<script>
+var CURSO="peconhentos",AULA_ID="m3-casos";
+function toggleCaso(h){h.parentElement.classList.toggle('open');}
+function answerQ(c,q,opt,correct){var el=document.getElementById('q-'+c+'-'+q);if(!el)return;var opts=el.querySelectorAll('.q-opt'),fb=el.querySelector('.q-fb');opts.forEach(function(o,i){o.classList.add('disabled');if(i===correct)o.classList.add('correct');else if(i===opt&&i!==correct)o.classList.add('wrong');});if(opt===correct){fb.className='q-fb show ok';fb.innerHTML='✅ '+fb.getAttribute('data-ok');}else{fb.className='q-fb show err';fb.innerHTML='❌ '+fb.getAttribute('data-err');}}
+function getClient(){return window.authClient||window.supabaseClient||null;}
+async function concluirAula(){var btn=document.getElementById('completeBtn'),sb=getClient();if(!sb){marcarConcluidaUI(btn);return;}try{var u=await sb.auth.getUser();var user=u&&u.data?u.data.user:null;if(user){await sb.from('curso_progresso').upsert({user_id:user.id,curso:CURSO,aula_id:AULA_ID,concluida:true,quiz_score:0,quiz_total:0,updated_at:new Date().toISOString()},{onConflict:'user_id,curso,aula_id'});}}catch(e){console.warn(e);}marcarConcluidaUI(btn);}
+function marcarConcluidaUI(btn){btn.classList.add('done');btn.textContent='✓ Casos concluídos';btn.onclick=function(){window.location.href='curso-peconhentos.html';};setTimeout(function(){window.location.href='curso-peconhentos.html';},900);}
+document.addEventListener("DOMContentLoaded",function(){var f=document.querySelector('.caso-card');if(f)f.classList.add('open');});
+</script>
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
+</body>
+</html>
