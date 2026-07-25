@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epidemiologia — Animais Peçonhentos no Brasil | Enzo Salmazo 2026</title>
+<script>window.PAGE_KEY = "curso-peconhentos";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>document.addEventListener("authReady", function(){ document.documentElement.style.visibility = "visible"; });</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0d14;--bg2:#111520;--bg3:#161c2e;--card:#1a2138;--card2:#1f2845;--accent:#4f9cf9;--accent2:#38e8c0;--accent3:#f9784f;--accent4:#b84ff9;--gold:#f9c94f;--red:#f95f5f;--green:#4ff984;--text:#e8eaf6;--muted:#8892b0;--border:rgba(79,156,249,0.15);--shadow:0 8px 40px rgba(0,0,0,0.5);--radius:16px;--font-body:'DM Sans',sans-serif;--font-display:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;padding-bottom:90px}
+header{position:relative;z-index:10;text-align:center;padding:40px 24px 24px;background:linear-gradient(180deg,rgba(79,156,249,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border)}
+header .badge{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--bg);font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px}
+header h1{font-family:var(--font-display);font-size:clamp(22px,3.5vw,34px);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,var(--accent) 60%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+header .sub{color:var(--muted);font-size:13px}
+nav.tabs{position:sticky;top:0;z-index:100;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;background:rgba(10,13,20,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:10px 16px}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:var(--font-body);font-size:12px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
+nav.tabs button:hover{color:var(--accent);border-color:var(--accent)}
+nav.tabs button.active{background:var(--accent);color:var(--bg);border-color:var(--accent);box-shadow:0 0 20px rgba(79,156,249,0.4)}
+nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:var(--accent4)}
+.section{display:none;animation:fadeIn .4s ease}.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.container{max-width:900px;margin:0 auto;padding:28px 20px}
+.chapter-title{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.chapter-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+.info-block{background:var(--card2);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:18px}
+.info-block.warn{border-color:var(--gold)}.info-block.danger{border-color:var(--red)}.info-block.success{border-color:var(--green)}.info-block.orange{border-color:var(--accent3)}
+.info-block .label{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.info-block h4{font-family:var(--font-display);font-weight:700;margin-bottom:8px;font-size:15px;color:#fff}
+.info-block p{color:var(--text);margin-bottom:6px}
+.sec-divider{display:flex;align-items:center;gap:12px;margin:28px 0 18px}
+.sec-divider h3{font-family:var(--font-display);font-weight:700;font-size:16px;color:var(--accent2);white-space:nowrap}
+.sec-divider::before,.sec-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+
+/* BIG STATS */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 16px;text-align:center}
+.stat-card .sv{font-family:var(--font-display);font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-card .sl{font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.stat-card.red .sv{background:linear-gradient(135deg,var(--red),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-card.gold .sv{background:linear-gradient(135deg,var(--gold),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* BAR CHART */
+.bar-chart{display:flex;flex-direction:column;gap:10px;margin:16px 0}
+.bar-row{display:flex;align-items:center;gap:10px}
+.bar-label{font-size:12px;font-weight:600;min-width:100px;text-align:right;color:var(--muted)}
+.bar-track{flex:1;background:var(--bg3);border-radius:6px;height:28px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:10px;font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--bg);transition:width 1s ease}
+.bar-pct{font-family:var(--font-mono);font-size:11px;font-weight:600;min-width:48px;text-align:right;color:var(--text)}
+.bar-fill.esc{background:linear-gradient(90deg,var(--gold),var(--accent3))}
+.bar-fill.ara{background:linear-gradient(90deg,var(--accent4),#e44ff9)}
+.bar-fill.ser{background:linear-gradient(90deg,var(--green),var(--accent2))}
+.bar-fill.abe{background:linear-gradient(90deg,var(--accent),#4f6ef9)}
+.bar-fill.out{background:linear-gradient(90deg,var(--muted),#666)}
+
+/* SEASON TABLE */
+.season-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin:12px 0}
+.season-cell{text-align:center;border-radius:6px;padding:8px 2px;font-family:var(--font-mono);font-size:10px;font-weight:600}
+.season-cell .month{color:var(--muted);display:block;margin-bottom:4px;font-size:9px}
+
+/* QUIZ */
+.quiz-header{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px;justify-content:center}
+.score-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 20px;text-align:center;min-width:90px}
+.score-box .sn{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.score-box .sv{font-family:var(--font-display);font-size:26px;font-weight:800}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.q-card.cq{border-color:var(--green)}.q-card.wq{border-color:var(--red)}
+.q-num{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-bottom:10px}
+.q-txt{font-size:14px;font-weight:600;margin-bottom:14px;color:#fff;line-height:1.55}
+.q-opt{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:6px;cursor:pointer;font-size:13px;transition:all .15s}
+.q-opt:hover{border-color:var(--accent);color:var(--accent)}
+.q-opt.sel{border-color:var(--accent);background:rgba(79,156,249,0.12)}
+.q-opt.ok{border-color:var(--green);background:rgba(79,249,132,0.12);color:var(--green)}
+.q-opt.nk{border-color:var(--red);background:rgba(249,95,95,0.08);color:var(--red)}
+.q-fb{margin-top:14px;padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.6;display:none}
+.q-fb.show{display:block}.q-fb.ok{background:rgba(79,249,132,0.08);border:1px solid var(--green);color:var(--green)}
+.q-fb.nk{background:rgba(249,95,95,0.06);border:1px solid var(--red);color:var(--red)}
+
+#backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none}
+.source-note{margin-top:24px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}
+.source-note b{color:var(--accent2)}
+</style>
+</head>
+<body>
+<a id="backBtn" href="curso-peconhentos.html">← Módulo 0</a>
+
+<header>
+  <div class="badge">Módulo 0 · Panorama</div>
+  <h1>Epidemiologia dos Acidentes por Animais Peçonhentos no Brasil</h1>
+  <p class="sub">SINAN · Boletim Epidemiológico MS · 2010–2024 (15 anos)</p>
+</header>
+
+<nav class="tabs">
+  <button class="active" onclick="showTab(0)">📊 Panorama</button>
+  <button onclick="showTab(1)">🗺️ Regiões</button>
+  <button onclick="showTab(2)">👤 Quem é a vítima?</button>
+  <button onclick="showTab(3)">📅 Sazonalidade</button>
+  <button onclick="showTab(4)">💀 Mortalidade</button>
+  <button class="qz-tab" onclick="showTab(5)">🧠 Quiz</button>
+</nav>
+
+<!-- ═══ TAB 0: PANORAMA ═══ -->
+<div class="section active" id="tab0"><div class="container">
+  <div class="chapter-title">O tamanho do problema</div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="sv">3,35 mi</div><div class="sl">casos em 15 anos</div></div>
+    <div class="stat-card gold"><div class="sv">223 mil</div><div class="sl">média anual</div></div>
+    <div class="stat-card red"><div class="sv">4.223</div><div class="sl">óbitos (15 anos)</div></div>
+    <div class="stat-card"><div class="sv">+146,8%</div><div class="sl">aumento incidência</div></div>
+  </div>
+
+  <div class="info-block">
+    <div class="label">Fonte oficial</div>
+    <h4>Boletim Epidemiológico Especial — MS, Dezembro 2025</h4>
+    <p>Os dados apresentados neste módulo são do Boletim de Morbimortalidade por Animais Peçonhentos no Brasil (2010–2024), publicado pelo Ministério da Saúde com base no SINAN e no SIM. Taxa de incidência média padronizada: <b>108,81 por 100 mil habitantes</b>.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Distribuição por tipo de animal</h3></div>
+
+  <div class="bar-chart">
+    <div class="bar-row"><span class="bar-label">🦂 Escorpiões</span><div class="bar-track"><div class="bar-fill esc" style="width:55.8%"></div></div><span class="bar-pct">55,8%</span></div>
+    <div class="bar-row"><span class="bar-label">🕷️ Aranhas</span><div class="bar-track"><div class="bar-fill ara" style="width:14.4%"></div></div><span class="bar-pct">14,4%</span></div>
+    <div class="bar-row"><span class="bar-label">🐍 Serpentes</span><div class="bar-track"><div class="bar-fill ser" style="width:13.6%"></div></div><span class="bar-pct">13,6%</span></div>
+    <div class="bar-row"><span class="bar-label">🐝 Abelhas</span><div class="bar-track"><div class="bar-fill abe" style="width:8%"></div></div><span class="bar-pct">8,0%</span></div>
+    <div class="bar-row"><span class="bar-label">Outros</span><div class="bar-track"><div class="bar-fill out" style="width:8.2%"></div></div><span class="bar-pct">8,2%</span></div>
+  </div>
+
+  <div class="info-block warn">
+    <h4>🦂 Escorpiões dominam</h4>
+    <p>Mais da metade de todos os acidentes. A taxa de incidência de escorpionismo <b>mais que dobrou</b> no período: de 34,22/100 mil (2010–2014) para 85,34/100 mil (2020–2024). Esse crescimento está associado à urbanização, expansão do <i>T. serrulatus</i> (reprodução partenogenética) e deficiências de saneamento.</p>
+  </div>
+
+  <div class="info-block danger">
+    <h4>🐍 Serpentes: menos casos, mais óbitos</h4>
+    <p>Apesar de representarem apenas 13,6% dos casos, as serpentes causaram <b>42,8% de todos os óbitos</b> (1.765 mortes em 15 anos). A letalidade do ofidismo é muito maior que a dos demais acidentes.</p>
+  </div>
+
+  <div class="source-note">
+    <b>Fonte:</b> Boletim Epidemiológico Especial — Morbimortalidade por Animais Peçonhentos no Brasil, 2010–2024. SVSA/MS, Dez. 2025. SINAN/SIM.
+  </div>
+</div></div>
+
+<!-- ═══ TAB 1: REGIÕES ═══ -->
+<div class="section" id="tab1"><div class="container">
+  <div class="chapter-title">Distribuição por região e estado</div>
+
+  <div class="sec-divider"><h3>Incidência por região (por 100 mil hab.)</h3></div>
+
+  <div class="bar-chart">
+    <div class="bar-row"><span class="bar-label">Nordeste</span><div class="bar-track"><div class="bar-fill esc" style="width:100%">135,62</div></div><span class="bar-pct">1ª</span></div>
+    <div class="bar-row"><span class="bar-label">Norte</span><div class="bar-track"><div class="bar-fill ser" style="width:79.7%">108,08</div></div><span class="bar-pct">2ª</span></div>
+    <div class="bar-row"><span class="bar-label">Sul</span><div class="bar-track"><div class="bar-fill abe" style="width:76.2%">103,31</div></div><span class="bar-pct">3ª</span></div>
+    <div class="bar-row"><span class="bar-label">Sudeste</span><div class="bar-track"><div class="bar-fill ara" style="width:71.9%">97,41</div></div><span class="bar-pct">4ª</span></div>
+    <div class="bar-row"><span class="bar-label">Centro-Oeste</span><div class="bar-track"><div class="bar-fill out" style="width:64.5%">87,41</div></div><span class="bar-pct">5ª</span></div>
+  </div>
+
+  <div class="info-block">
+    <h4>Estados com maior incidência</h4>
+    <p><b>Alagoas</b> lidera com 325,08/100 mil — 3× a média nacional. Seguido por <b>Tocantins</b> (250,56) e <b>Minas Gerais</b> (189,27). Em números absolutos, MG (592 mil casos) e SP (560 mil) lideram.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Ofidismo por região</h3></div>
+
+  <div class="info-block success">
+    <h4>🐍 Norte: epicentro do ofidismo</h4>
+    <p>A Região Norte tem taxas de incidência de acidentes por serpentes <b>muito superiores</b> às demais regiões, com períodos sazonais bem demarcados. É também a região com <b>maior mortalidade</b> (0,39/100 mil hab.). O acesso tardio ao soro antiveneno em áreas remotas é o principal fator.</p>
+  </div>
+
+  <div class="info-block warn">
+    <h4>🦂 Nordeste: epicentro do escorpionismo</h4>
+    <p>O Nordeste lidera a incidência geral impulsionado pelo escorpionismo. Capitais como Maceió (498,56/100 mil em 2024), João Pessoa (302,70) e Natal (291,94) têm taxas alarmantes. O <i>T. stigmurus</i> (partenogenético) é o principal responsável.</p>
+  </div>
+
+  <div class="info-block">
+    <h4>🕷️ Sul: maior incidência de araneísmo</h4>
+    <p>A Região Sul destaca-se com taxas de acidentes por aranhas muito superiores às demais regiões, especialmente nos meses quentes. <i>Loxosceles</i> (aranha-marrom) é a espécie mais prevalente no Sul.</p>
+  </div>
+
+  <div class="source-note"><b>Fonte:</b> Boletim Epidemiológico Especial — MS, Dez. 2025.</div>
+</div></div>
+
+<!-- ═══ TAB 2: QUEM É A VÍTIMA? ═══ -->
+<div class="section" id="tab2"><div class="container">
+  <div class="chapter-title">Perfil epidemiológico da vítima</div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="sv">55,5%</div><div class="sl">sexo masculino</div></div>
+    <div class="stat-card"><div class="sv">67,2%</div><div class="sl">faixa 15–59 anos</div></div>
+    <div class="stat-card gold"><div class="sv">211,35</div><div class="sl">incidência indígenas /100k</div></div>
+  </div>
+
+  <div class="sec-divider"><h3>Sexo</h3></div>
+  <div class="info-block">
+    <p>Homens: <b>123,73/100 mil</b> · Mulheres: <b>94,56/100 mil</b>. A diferença é mais acentuada no ofidismo (trabalho rural) e nos acidentes por abelhas. No escorpionismo e araneísmo, a distribuição é mais equilibrada entre os sexos.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Faixa etária</h3></div>
+  <div class="info-block">
+    <p>Maior taxa de incidência: <b>60+ anos</b> (121,60/100 mil), seguido por 15–59 anos (112,80/100 mil). Os idosos têm também a <b>maior taxa de mortalidade</b> (0,46/100 mil), com risco de injúria renal aguda no ofidismo e pior prognóstico no escorpionismo.</p>
+  </div>
+  <div class="info-block danger">
+    <h4>⚠️ Crianças de 0–4 anos</h4>
+    <p>Apesar de menor incidência (94,08/100 mil), apresentam mortalidade relevante (0,14/100 mil) — especialmente por escorpionismo, com risco até <b>6× maior de óbito</b> que adultos de 40–49 anos.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Raça/cor</h3></div>
+  <div class="info-block warn">
+    <h4>Indígenas: a população mais vulnerável</h4>
+    <p>Incidência: <b>211,35/100 mil</b> (quase 2× a média nacional). Mortalidade: <b>1,43/100 mil</b> (10× a de brancos). Fatores: áreas remotas, acesso tardio ao soro, tratamento tradicional prévio ao hospitalar, e falta de infraestrutura.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Ocupação</h3></div>
+  <div class="info-block">
+    <p>Entre os que informaram a ocupação (48,1%), os mais afetados foram: <b>trabalhadores rurais e da pesca</b> (12%), <b>estudantes</b> (10,9%) e <b>donas de casa</b> (7,2%). No ofidismo, trabalhadores rurais chegam a 26,8% dos casos.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Determinantes sociais</h3></div>
+  <div class="info-block">
+    <h4>Pobreza = mais acidentes + mais mortes</h4>
+    <p>Municípios com Índice Brasileiro de Privação (IBP) "muito alto" tiveram incidência de <b>169,32/100 mil</b> e mortalidade de <b>0,31/100 mil</b> — ambas as maiores entre todas as categorias. Municípios rurais remotos atingiram <b>199,04/100 mil</b> de incidência.</p>
+  </div>
+
+  <div class="source-note"><b>Fonte:</b> Boletim Epidemiológico Especial — MS, Dez. 2025.</div>
+</div></div>
+
+<!-- ═══ TAB 3: SAZONALIDADE ═══ -->
+<div class="section" id="tab3"><div class="container">
+  <div class="chapter-title">Sazonalidade — quando mais acontece?</div>
+
+  <div class="info-block">
+    <h4>Padrão geral: outubro a março (pico nov–jan)</h4>
+    <p>Todos os tipos de acidentes apresentam sazonalidade com picos nos meses quentes e chuvosos. As altas temperaturas aumentam a atividade dos animais, e as chuvas os forçam a buscar abrigo em áreas habitadas.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Mapa de calor — risco mensal</h3></div>
+
+  <div class="season-grid">
+    <div class="season-cell" style="background:rgba(79,156,249,0.15);color:var(--accent)"><span class="month">JAN</span>🔴</div>
+    <div class="season-cell" style="background:rgba(79,156,249,0.12);color:var(--accent)"><span class="month">FEV</span>🟠</div>
+    <div class="season-cell" style="background:rgba(79,156,249,0.08);color:var(--muted)"><span class="month">MAR</span>🟡</div>
+    <div class="season-cell" style="background:rgba(255,255,255,0.03);color:var(--muted)"><span class="month">ABR</span>🟢</div>
+    <div class="season-cell" style="background:rgba(255,255,255,0.02);color:var(--muted)"><span class="month">MAI</span>🟢</div>
+    <div class="season-cell" style="background:rgba(255,255,255,0.02);color:var(--muted)"><span class="month">JUN</span>🟢</div>
+    <div class="season-cell" style="background:rgba(255,255,255,0.02);color:var(--muted)"><span class="month">JUL</span>🟢</div>
+    <div class="season-cell" style="background:rgba(255,255,255,0.02);color:var(--muted)"><span class="month">AGO</span>🟢</div>
+    <div class="season-cell" style="background:rgba(255,255,255,0.03);color:var(--muted)"><span class="month">SET</span>🟡</div>
+    <div class="season-cell" style="background:rgba(249,199,79,0.12);color:var(--gold)"><span class="month">OUT</span>🟠</div>
+    <div class="season-cell" style="background:rgba(249,120,79,0.15);color:var(--accent3)"><span class="month">NOV</span>🔴</div>
+    <div class="season-cell" style="background:rgba(249,95,95,0.18);color:var(--red)"><span class="month">DEZ</span>🔴</div>
+  </div>
+
+  <div class="info-block warn" style="margin-top:16px;">
+    <h4>Exceções regionais</h4>
+    <p><b>Nordeste:</b> escorpionismo com baixa variação sazonal — risco o ano todo. <b>Norte:</b> ofidismo com sazonalidade marcada (pico na cheia dos rios), mas escorpionismo constante. <b>Sul:</b> araneísmo com picos muito acima da média nacional nos meses quentes.</p>
+  </div>
+
+  <div class="info-block">
+    <h4>Por que o verão?</h4>
+    <p>Três fatores se somam: (1) calor aumenta a atividade metabólica e reprodutiva dos animais, (2) chuvas desalojam escorpiões e serpentes de seus abrigos naturais, e (3) a atividade agrícola se intensifica, expondo mais trabalhadores rurais.</p>
+  </div>
+
+  <div class="source-note"><b>Fonte:</b> Boletim Epidemiológico Especial — MS, Dez. 2025.</div>
+</div></div>
+
+<!-- ═══ TAB 4: MORTALIDADE ═══ -->
+<div class="section" id="tab4"><div class="container">
+  <div class="chapter-title">Mortalidade — quem morre e por quê</div>
+
+  <div class="stats-row">
+    <div class="stat-card red"><div class="sv">4.223</div><div class="sl">óbitos em 15 anos</div></div>
+    <div class="stat-card red"><div class="sv">282</div><div class="sl">média anual</div></div>
+    <div class="stat-card gold"><div class="sv">+39,4%</div><div class="sl">aumento mortalidade</div></div>
+  </div>
+
+  <div class="sec-divider"><h3>Óbitos por tipo de animal</h3></div>
+
+  <div class="bar-chart">
+    <div class="bar-row"><span class="bar-label">🐍 Serpentes</span><div class="bar-track"><div class="bar-fill ser" style="width:42.8%">1.765</div></div><span class="bar-pct">42,8%</span></div>
+    <div class="bar-row"><span class="bar-label">🐝 Artrópodes*</span><div class="bar-track"><div class="bar-fill abe" style="width:38.2%">1.613</div></div><span class="bar-pct">38,2%</span></div>
+    <div class="bar-row"><span class="bar-label">🦂 Escorpiões</span><div class="bar-track"><div class="bar-fill esc" style="width:13.8%">581</div></div><span class="bar-pct">13,8%</span></div>
+    <div class="bar-row"><span class="bar-label">🕷️ Aranhas</span><div class="bar-track"><div class="bar-fill ara" style="width:4.7%">198</div></div><span class="bar-pct">4,7%</span></div>
+  </div>
+  <p style="font-size:11px;color:var(--muted);margin:-6px 0 16px;">*Inclui abelhas, vespas, marimbondos, formigas e lagartas (CID-10 X23-X25).</p>
+
+  <div class="info-block danger">
+    <h4>Fatores de risco para óbito</h4>
+    <p>Sexo masculino (76,2% dos óbitos), 60+ anos (taxa 0,46/100 mil), raça/cor indígena (taxa 1,43/100 mil), IBP "muito alto", município de pequeno porte, e tempo prolongado entre acidente e atendimento.</p>
+  </div>
+
+  <div class="sec-divider"><h3>Mortalidade por região</h3></div>
+  <div class="bar-chart">
+    <div class="bar-row"><span class="bar-label">Norte</span><div class="bar-track"><div class="bar-fill ser" style="width:100%">0,39</div></div><span class="bar-pct">/100k</span></div>
+    <div class="bar-row"><span class="bar-label">Centro-Oeste</span><div class="bar-track"><div class="bar-fill abe" style="width:51.3%">0,20</div></div><span class="bar-pct">/100k</span></div>
+    <div class="bar-row"><span class="bar-label">Nordeste</span><div class="bar-track"><div class="bar-fill esc" style="width:43.6%">0,17</div></div><span class="bar-pct">/100k</span></div>
+    <div class="bar-row"><span class="bar-label">Sul</span><div class="bar-track"><div class="bar-fill ara" style="width:25.6%">0,10</div></div><span class="bar-pct">/100k</span></div>
+    <div class="bar-row"><span class="bar-label">Sudeste</span><div class="bar-track"><div class="bar-fill out" style="width:20.5%">0,08</div></div><span class="bar-pct">/100k</span></div>
+  </div>
+
+  <div class="info-block">
+    <h4>Estado com maior mortalidade</h4>
+    <p><b>Roraima</b>: 0,93/100 mil hab. — quase 7× a média nacional. Seguido por Amazonas (0,50) e Tocantins (0,37). A maioria dos óbitos nesses estados é por ofidismo, agravado pela dificuldade de acesso ao soro e ao atendimento especializado.</p>
+  </div>
+
+  <div class="info-block warn">
+    <h4>Tendência crescente</h4>
+    <p>A mortalidade nacional apresentou tendência crescente (Vpam 3,58%, IC95% 1,97–5,43). Apesar dos avanços no acesso ao soro, o aumento da incidência e as barreiras de acesso em áreas remotas mantêm os óbitos em ascensão.</p>
+  </div>
+
+  <div class="source-note"><b>Fonte:</b> Boletim Epidemiológico Especial — MS, Dez. 2025. SIM/SINAN.</div>
+</div></div>
+
+<!-- ═══ TAB 5: QUIZ ═══ -->
+<div class="section" id="tab5"><div class="container">
+  <div class="chapter-title">🧠 Quiz — Epidemiologia</div>
+  <div class="quiz-header">
+    <div class="score-box"><div class="sn">Acertos</div><div class="sv" id="qAcertos" style="color:var(--green)">0</div></div>
+    <div class="score-box"><div class="sn">Erros</div><div class="sv" id="qErros" style="color:var(--red)">0</div></div>
+    <div class="score-box"><div class="sn">Restam</div><div class="sv" id="qRestam" style="color:var(--accent)">6</div></div>
+  </div>
+  <div id="quizArea"></div>
+</div></div>
+
+<script>
+// ═══ TABS ═══
+function showTab(i){
+  document.querySelectorAll('.section').forEach((s,j)=>{s.classList.toggle('active',j===i)});
+  document.querySelectorAll('nav.tabs button').forEach((b,j)=>{b.classList.toggle('active',j===i)});
+}
+
+// ═══ QUIZ ═══
+const QS=[
+  {n:1,q:"Qual tipo de animal é responsável pela MAIORIA dos acidentes por animais peçonhentos no Brasil (SINAN 2010–2024)?",
+  o:[{l:"A",v:"Serpentes"},{l:"B",v:"Aranhas"},{l:"C",v:"Escorpiões"},{l:"D",v:"Abelhas"},{l:"E",v:"Lagartas"}],
+  cr:"C",ex:"Escorpiões respondem por 55,8% de todos os casos (1.868.191 em 15 anos). A incidência mais que dobrou no período."},
+
+  {n:2,q:"Apesar de representarem apenas 13,6% dos casos, as SERPENTES são responsáveis por que porcentagem dos ÓBITOS?",
+  o:[{l:"A",v:"13,8%"},{l:"B",v:"28,5%"},{l:"C",v:"42,8%"},{l:"D",v:"55,8%"},{l:"E",v:"76,2%"}],
+  cr:"C",ex:"Serpentes causam 42,8% de todos os óbitos (1.765 em 15 anos), apesar de serem o 3º tipo em incidência."},
+
+  {n:3,q:"Qual região do Brasil apresenta a MAIOR taxa de incidência de acidentes por animais peçonhentos?",
+  o:[{l:"A",v:"Norte"},{l:"B",v:"Nordeste"},{l:"C",v:"Sudeste"},{l:"D",v:"Sul"},{l:"E",v:"Centro-Oeste"}],
+  cr:"B",ex:"Nordeste: 135,62/100 mil hab. — impulsionado pelo escorpionismo. O Norte é o 2º (108,08/100 mil), mas lidera em mortalidade."},
+
+  {n:4,q:"A população com MAIOR taxa de incidência E de mortalidade por acidentes por animais peçonhentos no Brasil é:",
+  o:[{l:"A",v:"Parda"},{l:"B",v:"Branca"},{l:"C",v:"Preta"},{l:"D",v:"Indígena"},{l:"E",v:"Amarela"}],
+  cr:"D",ex:"Indígenas: incidência 211,35/100 mil (quase 2× a média nacional) e mortalidade 1,43/100 mil (10× a de brancos). Fatores: áreas remotas, acesso tardio ao soro."},
+
+  {n:5,q:"A sazonalidade dos acidentes por animais peçonhentos no Brasil mostra picos em quais meses?",
+  o:[{l:"A",v:"Abril a agosto"},{l:"B",v:"Janeiro a março apenas"},{l:"C",v:"Outubro a março (pico nov–jan)"},{l:"D",v:"Distribuição uniforme o ano todo"},{l:"E",v:"Julho a setembro"}],
+  cr:"C",ex:"Padrão sazonal claro: picos de outubro a março, especialmente novembro, dezembro e janeiro. Exceção: Nordeste (escorpionismo constante o ano todo)."},
+
+  {n:6,q:"Qual estado brasileiro apresenta a MAIOR taxa de mortalidade por acidentes por animais peçonhentos?",
+  o:[{l:"A",v:"Minas Gerais"},{l:"B",v:"São Paulo"},{l:"C",v:"Amazonas"},{l:"D",v:"Roraima"},{l:"E",v:"Alagoas"}],
+  cr:"D",ex:"Roraima: 0,93/100 mil hab. — quase 7× a média nacional (0,14). A maioria dos óbitos é por ofidismo. MG tem mais óbitos em números absolutos, mas a taxa por população é menor."}
+];
+
+let ac=0,er=0,re=6;
+function buildQuiz(){
+  const area=document.getElementById('quizArea');area.innerHTML='';
+  QS.forEach((q,qi)=>{
+    let h=`<div class="q-card" id="qc${qi}"><div class="q-num">Questão ${q.n} de ${QS.length}</div><div class="q-txt">${q.q}</div>`;
+    q.o.forEach((o,oi)=>{h+=`<div class="q-opt" id="qo${qi}_${oi}" onclick="ansQ(${qi},${oi})">${o.l}) ${o.v}</div>`;});
+    h+=`<div class="q-fb" id="qf${qi}"></div></div>`;area.innerHTML+=h;
+  });
+}
+function ansQ(qi,oi){
+  const q=QS[qi],card=document.getElementById('qc'+qi);
+  if(card.classList.contains('cq')||card.classList.contains('wq'))return;
+  const sel=q.o[oi],correct=sel.l===q.cr;
+  q.o.forEach((_,j)=>{
+    const el=document.getElementById('qo'+qi+'_'+j);
+    if(q.o[j].l===q.cr)el.classList.add('ok');
+    else if(j===oi&&!correct)el.classList.add('nk');
+  });
+  const fb=document.getElementById('qf'+qi);
+  fb.textContent=(correct?'✅ Correto! ':'❌ Incorreto. ')+q.ex;
+  fb.className='q-fb show '+(correct?'ok':'nk');
+  card.classList.add(correct?'cq':'wq');
+  if(correct)ac++;else er++;re--;
+  document.getElementById('qAcertos').textContent=ac;
+  document.getElementById('qErros').textContent=er;
+  document.getElementById('qRestam').textContent=re;
+}
+buildQuiz();
+</script>
+</body>
+</html>

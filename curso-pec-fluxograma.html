@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluxograma de Decisão — Soroterapia | Enzo Salmazo 2026</title>
+<script>window.PAGE_KEY = "curso-peconhentos";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>document.addEventListener("authReady", function(){ document.documentElement.style.visibility = "visible"; });</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0d14;--bg2:#111520;--bg3:#161c2e;--card:#1a2138;--card2:#1f2845;--accent:#4f9cf9;--accent2:#38e8c0;--accent3:#f9784f;--accent4:#b84ff9;--gold:#f9c94f;--red:#f95f5f;--green:#4ff984;--text:#e8eaf6;--muted:#8892b0;--border:rgba(79,156,249,0.15);--radius:16px;--font-body:'DM Sans',sans-serif;--font-display:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;padding:20px;padding-bottom:90px}
+.wrap{max-width:600px;margin:0 auto}
+h1{font-family:var(--font-display);font-size:clamp(20px,3.5vw,28px);font-weight:800;text-align:center;background:linear-gradient(135deg,#fff,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+.sub{text-align:center;color:var(--muted);font-size:12px;margin-bottom:24px}
+.node{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.node .q{font-family:var(--font-display);font-weight:700;font-size:15px;color:#fff;margin-bottom:14px;text-align:center}
+.node .q .icon{font-size:28px;display:block;margin-bottom:8px}
+.choices{display:flex;flex-direction:column;gap:8px}
+.choice-btn{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text);text-align:left;transition:all .2s}
+.choice-btn:hover{border-color:var(--accent);color:var(--accent);transform:translateX(4px)}
+.choice-btn .emoji{margin-right:6px}
+.result{background:linear-gradient(135deg,rgba(79,249,132,0.06),rgba(56,232,192,0.06));border:1px solid var(--green);border-radius:var(--radius);padding:20px;text-align:center;animation:fadeIn .4s ease}
+.result .soro{font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--green);margin:10px 0 4px}
+.result .dose{font-family:var(--font-mono);font-size:14px;color:var(--accent2);margin-bottom:10px}
+.result .detail{font-size:12px;color:var(--muted);line-height:1.6}
+.result.warn-result{border-color:var(--gold);background:linear-gradient(135deg,rgba(249,199,79,0.06),rgba(249,120,79,0.06))}
+.result.warn-result .soro{color:var(--gold)}
+.restart-btn{display:block;margin:20px auto 0;background:var(--accent);color:var(--bg);border:none;padding:10px 28px;border-radius:10px;font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer}
+#backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none}
+.breadcrumb{font-family:var(--font-mono);font-size:10px;color:var(--muted);text-align:center;margin-bottom:16px;letter-spacing:1px}
+</style>
+</head>
+<body>
+<a id="backBtn" href="curso-peconhentos.html">← Voltar</a>
+<div class="wrap">
+<h1>🔀 Fluxograma de Decisão — Soroterapia</h1>
+<p class="sub">Responda as perguntas e descubra o soro e a dose indicados · PCDT 2026</p>
+<div class="breadcrumb" id="bread">INÍCIO</div>
+<div id="flow"></div>
+</div>
+
+<script>
+const TREE = {
+  start: {
+    q:"Qual animal causou o acidente?", icon:"🏥",
+    opts:[
+      {txt:"🐍 Serpente", next:"serpente"},
+      {txt:"🦂 Escorpião", next:"escorpiao"},
+      {txt:"🕷️ Aranha", next:"aranha"},
+      {txt:"❓ Não identificado / dúvida", next:"duvida"}
+    ]
+  },
+  serpente: {
+    q:"Qual tipo de serpente (ou quadro clínico)?", icon:"🐍",
+    opts:[
+      {txt:"Jararaca (Bothrops) — edema, dor, sangramento", next:"botro_grav"},
+      {txt:"Cascavel (Crotalus) — ptose, mialgia, urina escura", next:"crota_grav"},
+      {txt:"Surucucu (Lachesis) — quadro botrópico + manifestações vagais", next:"laque_grav"},
+      {txt:"Coral verdadeira (Micrurus) — parestesia, ptose, miastenia", next:"elap_grav"},
+      {txt:"Cobra não peçonhenta / Philodryas / Xenodon", next:"nao_pec"}
+    ]
+  },
+  botro_grav: {
+    q:"Qual a gravidade do acidente botrópico?", icon:"⚖️",
+    opts:[
+      {txt:"🟢 LEVE — edema ≤1 segmento, sem hemorragia sistêmica", next:"r_botro_l"},
+      {txt:"🟡 MODERADO — edema em 2 segmentos", next:"r_botro_m"},
+      {txt:"🔴 GRAVE — 3 segmentos ou complicações (hemorragia, choque, IRA)", next:"r_botro_g"}
+    ]
+  },
+  r_botro_l: {r:true, soro:"SAB (SABR, SABL ou SABC)", dose:"3 ampolas IV", detail:"Membro elevado. Observação mín. 6h (se sem soro) ou 24h (se soroterapia). TC na admissão. Dipirona/paracetamol para dor. AINE contraindicado."},
+  r_botro_m: {r:true, soro:"SAB (SABR, SABL ou SABC)", dose:"6 ampolas IV", detail:"Membro elevado. Hidratação vigorosa. TC + hemograma + ureia/creatinina. Observação 24h. Monitorar edema (contagem de segmentos)."},
+  r_botro_g: {r:true, soro:"SAB (SABR, SABL ou SABC)", dose:"12 ampolas IV", detail:"UTI se disponível. Hemograma + coagulograma + ureia/creatinina + urina I. Monitorar IRA, necrose, síndrome compartimental. Se coagulação não normalizar em 24h → +2 ampolas."},
+
+  crota_grav: {
+    q:"Qual a gravidade do acidente crotálico?", icon:"⚖️",
+    opts:[
+      {txt:"🟢 LEVE — alterações neuroparalíticas discretas, sem mialgia/oligúria", next:"r_crota_l"},
+      {txt:"🟡 MODERADO — neuroparalisia evidente, mialgia e mioglobinúria discretas", next:"r_crota_m"},
+      {txt:"🔴 GRAVE — neuroparalisia + mialgia + mioglobinúria intensas + oligúria", next:"r_crota_g"}
+    ]
+  },
+  r_crota_l: {r:true, soro:"SAC (ou SABC)", dose:"5 ampolas IV", detail:"Observação ≥24h (pode estender a 48–72h). CK total + TC + hemograma. Hidratação vigorosa para prevenir IRA. Monitorar cor da urina."},
+  r_crota_m: {r:true, soro:"SAC (ou SABC)", dose:"10 ampolas IV", detail:"Hidratação + alcalinização urinária se mioglobinúria. CK + ureia + creatinina + urina I. Observação 48–72h. Monitorar insuficiência respiratória."},
+  r_crota_g: {r:true, soro:"SAC (ou SABC)", dose:"20 ampolas IV", detail:"UTI. Risco de IRA por mioglobinúria + insuficiência respiratória. Diálise se necessário. Ventilação mecânica se paralisia respiratória. Observação ≥72h."},
+
+  laque_grav: {
+    q:"Qual a gravidade do acidente laquético?", icon:"⚖️",
+    opts:[
+      {txt:"🟡 MODERADO — quadro local, pode haver sangramento, SEM manifestações vagais", next:"r_laque_m"},
+      {txt:"🔴 GRAVE — quadro local intenso + hemorragia intensa E/OU manifestações vagais", next:"r_laque_g"}
+    ]
+  },
+  r_laque_m: {r:true, soro:"SABL", dose:"10 ampolas IV", detail:"Observação 24h. Monitorar manifestações vagais (bradicardia, hipotensão, diarreia). TC + hemograma. Hidratação."},
+  r_laque_g: {r:true, soro:"SABL", dose:"20 ampolas IV", detail:"UTI se disponível. Atropina para bradicardia sintomática. Monitorar IRA. TC + hemograma + ureia/creatinina."},
+
+  elap_grav: {
+    q:"Qual a gravidade do acidente elapídico? (PCDT 2026)", icon:"⚖️",
+    opts:[
+      {txt:"🟢 LEVE — só manifestações locais (parestesia, dor), sem miastenia", next:"r_elap_l"},
+      {txt:"🟡 MODERADO — ptose palpebral, miastenia, sem paralisia", next:"r_elap_m"},
+      {txt:"🔴 GRAVE — paralisia evidente, disfagia, insuficiência respiratória", next:"r_elap_g"}
+    ]
+  },
+  r_elap_l: {r:true, soro:"SAEL (observação)", dose:"Sem soro — observação 24h", detail:"Monitorar rigorosamente evolução para miastenia. Se surgir ptose, mialgia ou fraqueza muscular → reclassificar e administrar soroterapia. CK se disponível.", warn:true},
+  r_elap_m: {r:true, soro:"SAEL (antielapídico)", dose:"5 ampolas IV", detail:"Observação rigorosa ≥24h. Monitorar força muscular, deglutição, padrão respiratório. Se piora → reclassificar para grave e complementar dose. Diluição 1:2 a 1:5."},
+  r_elap_g: {r:true, soro:"SAEL (antielapídico)", dose:"10 ampolas IV", detail:"Suporte ventilatório imediato (ambu → IOT/VM se necessário). Neostigmina 0,05 mg/kg IV (após atropina 0,5 mg IV) se veneno pós-sináptico. Observação em UTI."},
+
+  escorpiao: {
+    q:"Qual a gravidade do escorpionismo?", icon:"🦂",
+    opts:[
+      {txt:"🟢 LEVE — dor, parestesia, sudorese. Náusea/vômito discretos.", next:"r_esc_l"},
+      {txt:"🟡 MODERADO — manifestações sistêmicas leves (sudorese, vômitos, FC alterada)", next:"r_esc_m"},
+      {txt:"🔴 GRAVE — vômitos incoercíveis, sudorese profusa, taquidispneia, convulsões, EAP", next:"r_esc_g"}
+    ]
+  },
+  r_esc_l: {r:true, soro:"Sem soroterapia", dose:"Tratamento sintomático", detail:"Dipirona VO (dor leve), IV (moderada), + lidocaína 2% local (dor intensa). Compressa morna. Observação 6–12h. NÃO usar soro no caso leve.", warn:true},
+  r_esc_m: {r:true, soro:"SAEsc (ou SAA)", dose:"3 ampolas IV", detail:"Observação 24h. Metoclopramida se vômitos persistentes. Hidratação cautelosa (risco de sobrecarga hídrica → choque cardiogênico em crianças). Máximo 6 ampolas."},
+  r_esc_g: {r:true, soro:"SAEsc (ou SAA)", dose:"6 ampolas IV", detail:"UTI se disponível. Dobutamina se choque. Furosemida se EAP. Ventilação mecânica se necessário. ECG + ecocardiograma. Máximo 6 ampolas. NUNCA ultrapassar 6."},
+
+  aranha: {
+    q:"Qual tipo de aranha?", icon:"🕷️",
+    opts:[
+      {txt:"🕸️ Loxosceles (aranha-marrom) — placa marmórea, necrose", next:"loxo_grav"},
+      {txt:"🕷️ Phoneutria (armadeira) — dor intensa, edema", next:"fone_grav"},
+      {txt:"🕷️ Latrodectus (viúva-negra) — contraturas, hipertensão", next:"r_latro"},
+      {txt:"❓ Dúvida entre escorpião e Phoneutria", next:"r_duvida_esc_pho"}
+    ]
+  },
+  loxo_grav: {
+    q:"Qual a forma clínica do loxoscelismo?", icon:"⚖️",
+    opts:[
+      {txt:"🟢 Cutânea LEVE — lesão incaracterística, sem alterações lab.", next:"r_loxo_l"},
+      {txt:"🟡 Cutânea MODERADA — placa marmórea <3cm, dor queimação", next:"r_loxo_m"},
+      {txt:"🔴 Cutânea GRAVE — placa marmórea >3cm", next:"r_loxo_g"},
+      {txt:"🔴 Cutânea-HEMOLÍTICA — hemólise (qualquer tamanho de lesão)", next:"r_loxo_h"}
+    ]
+  },
+  r_loxo_l: {r:true, soro:"Sem soroterapia", dose:"Tratamento sintomático", detail:"Compressas frias. Analgésicos. Observação clínica. Dapsona 50–100 mg/dia pode ser considerada (verificar G6PD antes). Reavaliação em 72h.", warn:true},
+  r_loxo_m: {r:true, soro:"SALox (ou SAAr)", dose:"5 ampolas IV", detail:"Idealmente nas primeiras 36h pós-picada. Dapsona pode ser associada. Monitorar hemólise (hemograma, bilirrubinas, DHL)."},
+  r_loxo_g: {r:true, soro:"SALox (ou SAAr)", dose:"10 ampolas IV", detail:"Monitorar hemólise e função renal. Desbridamento cirúrgico da necrose se necessário (após delimitação). Prednisona pode ser considerada."},
+  r_loxo_h: {r:true, soro:"SALox (ou SAAr)", dose:"10 ampolas IV", detail:"A hemólise define gravidade independente do tamanho da lesão. Monitorar hemoglobina, haptoglobina, bilirrubinas, ureia, creatinina. Risco de IRA. Hidratação vigorosa."},
+
+  fone_grav: {
+    q:"Qual a gravidade do foneutrismo?", icon:"⚖️",
+    opts:[
+      {txt:"🟢 LEVE — dor local, edema, parestesia, taquicardia por dor", next:"r_fone_l"},
+      {txt:"🟡 MODERADO — sudorese, taquicardia, vômitos, hipertensão", next:"r_fone_m"},
+      {txt:"🔴 GRAVE — prostração, sudorese profusa, bradicardia, EAP, choque", next:"r_fone_g"}
+    ]
+  },
+  r_fone_l: {r:true, soro:"Sem soroterapia", dose:"Tratamento sintomático", detail:"Bloqueio anestésico local com lidocaína 2% s/ vasoconstritor. Analgésicos. Observação 6h.", warn:true},
+  r_fone_m: {r:true, soro:"SAAr", dose:"2 a 4 ampolas IV", detail:"Observação 24h. Analgesia + tratamento sintomático. Monitorar evolução para quadro grave (especialmente crianças <7 anos)."},
+  r_fone_g: {r:true, soro:"SAAr", dose:"5 a 10 ampolas IV", detail:"UTI se disponível. Suporte hemodinâmico. Risco de EAP principalmente em crianças <7 anos."},
+
+  r_latro: {r:true, soro:"Sem soro disponível no Brasil", dose:"Tratamento sintomático", detail:"Analgésicos. Benzodiazepínicos (diazepam). Gluconato de cálcio 10% IV. Clorpromazina. Internação mín. 24h com suporte cardiorrespiratório.", warn:true},
+
+  r_duvida_esc_pho: {r:true, soro:"SAA / SAAr", dose:"Conforme gravidade (3–6 amp escorpião / 2–10 amp Phoneutria)", detail:"O SAA (antiaracnídico) contém anticorpos para Loxosceles + Phoneutria + Tityus. Na dúvida diagnóstica entre escorpião e Phoneutria, é o soro de escolha. Dose conforme classificação clínica de gravidade."},
+
+  duvida: {
+    q:"Qual o quadro clínico predominante?", icon:"❓",
+    opts:[
+      {txt:"Edema local + sangramento + coagulopatia → provável BOTRÓPICO", next:"botro_grav"},
+      {txt:"Ptose + mialgia + urina escura → provável CROTÁLICO", next:"crota_grav"},
+      {txt:"Dor intensa local + sudorese → dúvida ESCORPIÃO × PHONEUTRIA", next:"r_duvida_esc_pho"},
+      {txt:"Parestesia + ptose + miastenia → provável ELAPÍDICO", next:"elap_grav"},
+      {txt:"Quadro botrópico + bradicardia/diarreia → provável LAQUÉTICO", next:"laque_grav"}
+    ]
+  },
+
+  nao_pec: {r:true, soro:"Sem soroterapia antiveneno", dose:"Tratamento sintomático apenas", detail:"Serpentes de não importância médica (Philodryas, Xenodon, Clelia, Helicops) geralmente não causam coagulopatia. Lavar com água e sabão, analgesia, observação. TC pode auxiliar no diagnóstico diferencial.", warn:true}
+};
+
+let path = [];
+function render(nodeId){
+  path.push(nodeId);
+  document.getElementById('bread').textContent = path.map(p=>p.toUpperCase().replace(/_/g,' ')).join(' → ');
+  const node = TREE[nodeId];
+  const el = document.getElementById('flow');
+
+  if(node.r){
+    el.innerHTML = `<div class="result ${node.warn?'warn-result':''}">
+      <div style="font-size:28px">${node.warn?'⚠️':'✅'}</div>
+      <div class="soro">${node.soro}</div>
+      <div class="dose">${node.dose}</div>
+      <div class="detail">${node.detail}</div>
+      <button class="restart-btn" onclick="restart()">🔄 Recomeçar</button>
+    </div>`;
+    return;
+  }
+
+  let h = `<div class="node"><div class="q"><span class="icon">${node.icon}</span>${node.q}</div><div class="choices">`;
+  node.opts.forEach(o => {
+    h += `<div class="choice-btn" onclick="render('${o.next}')"><span class="emoji"></span>${o.txt}</div>`;
+  });
+  h += '</div></div>';
+  el.innerHTML = h;
+}
+
+function restart(){
+  path = [];
+  document.getElementById('bread').textContent = 'INÍCIO';
+  render('start');
+}
+
+render('start');
+</script>
+</body>
+</html>
