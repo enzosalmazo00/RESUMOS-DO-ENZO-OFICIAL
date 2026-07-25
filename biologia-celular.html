@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumen — Biología Celular · Enzo Salmazo</title>
+<script>window.PAGE_KEY = "biologia_celular";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>
+  document.addEventListener("authReady", function () {
+    document.documentElement.style.visibility = "visible";
+  });
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --bg: #0a0d14;
+  --bg2: #111520;
+  --bg3: #161c2e;
+  --card: #1a2138;
+  --card2: #1f2845;
+  --accent: #4f9cf9;
+  --accent2: #38e8c0;
+  --accent3: #f9784f;
+  --accent4: #b84ff9;
+  --gold: #f9c94f;
+  --red: #f95f5f;
+  --green: #4ff984;
+  --text: #e8eaf6;
+  --muted: #8892b0;
+  --border: rgba(79,156,249,0.15);
+  --shadow: 0 8px 40px rgba(0,0,0,0.5);
+  --radius: 16px;
+  --font-body: 'DM Sans', sans-serif;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#particles { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+header {
+  position: relative; z-index:10;
+  text-align: center;
+  padding: 48px 24px 32px;
+  background: linear-gradient(180deg, rgba(79,156,249,0.08) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border);
+}
+header .badge {
+  display:inline-block;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight:600;
+  letter-spacing:2px; text-transform:uppercase;
+  padding: 4px 14px; border-radius:20px; margin-bottom:16px;
+}
+header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4vw, 44px);
+  font-weight: 800; letter-spacing:-1px;
+  background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent2) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip: text; margin-bottom:8px;
+}
+header .sub { color: var(--muted); font-size:13px; letter-spacing:1px; }
+header .by { margin-top:12px; color: var(--accent); font-family:var(--font-mono); font-size:12px; }
+
+nav.tabs {
+  position:sticky; top:0; z-index:100;
+  display:flex; gap:4px; flex-wrap:wrap;
+  background: rgba(10,13,20,0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  justify-content: center;
+}
+nav.tabs button {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: var(--font-body); font-size:12px; font-weight:600;
+  padding: 6px 14px; border-radius: 8px; cursor:pointer;
+  transition: all 0.2s; letter-spacing: 0.3px;
+}
+nav.tabs button:hover { color: var(--accent); border-color: var(--accent); }
+nav.tabs button.active {
+  background: var(--accent); color: var(--bg);
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(79,156,249,0.4);
+}
+
+.section { display:none; animation: fadeIn 0.4s ease; }
+.section.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+.container { max-width:1100px; margin:0 auto; padding: 32px 20px; position:relative; z-index:1; }
+
+.chapter-title {
+  font-family: var(--font-display); font-size:22px; font-weight:700;
+  color: var(--accent); margin-bottom:24px;
+  display:flex; align-items:center; gap:12px;
+}
+.chapter-title::after {
+  content:''; flex:1; height:1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+.chap-icon { font-size:24px; }
+
+.info-block {
+  background: var(--card2); border-left: 3px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  padding: 16px 20px; margin-bottom:20px;
+}
+.info-block.warn { border-color: var(--gold); }
+.info-block.danger { border-color: var(--red); }
+.info-block.success { border-color: var(--green); }
+.info-block.purple { border-color: var(--accent4); }
+.info-block .label {
+  font-family:var(--font-mono); font-size:10px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--muted); margin-bottom:8px;
+}
+.info-block h4 { font-family:var(--font-display); font-weight:700; margin-bottom:8px; font-size:15px; color:#fff; }
+.info-block p { color: var(--text); }
+.info-block ul, .info-block ol { padding-left:20px; margin-top:8px; color:var(--text); }
+.info-block li { margin:4px 0; }
+
+.compare-table {
+  width:100%; border-collapse:separate; border-spacing:0;
+  border-radius:var(--radius); overflow:hidden; margin-bottom:28px;
+}
+.compare-table th {
+  background: var(--card2); color:var(--accent);
+  font-family:var(--font-display); font-size:13px; font-weight:700;
+  padding:12px 16px; text-align:left;
+  border-bottom:1px solid var(--border);
+}
+.compare-table td {
+  background: var(--card); padding:10px 16px; font-size:13px;
+  border-bottom:1px solid rgba(255,255,255,0.04); color:var(--text);
+  vertical-align:top;
+}
+
+.flashcards {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px; margin-bottom:32px;
+}
+.flashcard {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.flashcard::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(79,156,249,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.flashcard:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 12px 40px rgba(79,156,249,0.15);
+}
+.fc-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.fc-front, .fc-back {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.fc-front { color: var(--text); }
+.fc-back { color: var(--accent2); }
+.flashcard.flipped .fc-front { display: none; }
+.flashcard:not(.flipped) .fc-back { display: none; }
+.fc-hint {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 10px;
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+.q-card {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.q-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.q-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 14px;
+}
+.q-badges {
+  display: flex;
+  gap: 8px;
+}
+.q-badge, .prova-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.q-badge.mc { background: rgba(79,156,249,0.2); color: var(--accent); }
+.q-badge.vf { background: rgba(56,232,192,0.2); color: var(--accent2); }
+.prova-badge {
+  background: rgba(184,79,249,0.2);
+  color: var(--accent4);
+}
+.prova-badge.final {
+  background: rgba(249,120,79,0.2);
+  color: var(--accent3);
+}
+.q-text {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 20px;
+  color: var(--text);
+  line-height: 1.6;
+}
+.q-opts, .q-vf {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.q-opt {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.q-opt:hover:not(.done) {
+  border-color: var(--accent);
+  background: rgba(79,156,249,0.08);
+}
+.q-opt.done {
+  pointer-events: none;
+}
+.q-opt.correct {
+  background: rgba(79,249,132,0.15);
+  border-color: var(--green);
+  color: var(--green);
+}
+.q-opt.wrong {
+  background: rgba(249,95,95,0.15);
+  border-color: var(--red);
+  color: var(--red);
+}
+.q-letter {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.q-explain {
+  background: rgba(255,255,255,0.02);
+  border-left: 3px solid var(--border);
+  padding: 12px 16px;
+  margin-top: 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--muted);
+  display: none;
+}
+.q-explain.show {
+  display: block;
+}
+.q-explain strong { color: var(--text); }
+
+.scorebar {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+}
+
+.restart-btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: var(--bg);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  cursor: pointer;
+  margin: 24px auto;
+  display: block;
+  transition: transform 0.2s;
+}
+.restart-btn:hover { transform: scale(1.05); }
+
+/* MOBILE */
+@media(max-width: 768px) {
+  .flashcards {
+    grid-template-columns: 1fr;
+  }
+  header h1 { font-size: 28px; }
+  nav.tabs { padding: 8px 12px; gap: 2px; }
+  nav.tabs button { padding: 4px 10px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">📚 1º SEMESTRE</div>
+  <h1>Biología Celular</h1>
+  <div class="sub">RESUMEN COMPLETO</div>
+  <div class="by">Por <strong>Enzo Salmazo</strong></div>
+</header>
+
+<nav class="tabs">
+  <button onclick="switchTab('intro')">📖 Introducción</button>
+  <button onclick="switchTab('teorias')">📝 Teoría</button>
+  <button onclick="switchTab('flash')">🔄 Flashcards</button>
+  <button onclick="switchTab('quiz')">❓ Quiz</button>
+  <button onclick="switchTab('provas')">📋 Provas</button>
+</nav>
+
+<div class="container">
+
+<!-- ════════════════════════════════════════ INTRODUCCIÓN ════════════════════════════════════════ -->
+<div id="intro" class="section active">
+  <div class="info-block success">
+    <div class="label">Bienvenido</div>
+    <h4>Biología Celular: La Célula como Unidad Funcional</h4>
+    <p>Este resumo cubre la estructura y función de la célula eucariota y procariota, desde los ácidos nucleicos hasta las junções celulares, incluyendo los procesos críticos de mitosis y meiosis.</p>
+  </div>
+
+  <div class="info-block">
+    <div class="label">Contenido Incluido</div>
+    <h4>6 Capítulos + Teoría Expandida</h4>
+    <ul>
+      <li><strong>Cap. 1:</strong> Célula y Estructura Bacteriana</li>
+      <li><strong>Cap. 2:</strong> Ácidos Nucleicos (ADN, ARN)</li>
+      <li><strong>Cap. 3:</strong> Carbohidratos, Lípidos, Proteínas y Enzimas</li>
+      <li><strong>Cap. 4:</strong> Citoplasma y Citoesqueleto</li>
+      <li><strong>Cap. 5:</strong> Sistema de Endomembranas y Organelas</li>
+      <li><strong>Cap. 6:</strong> Junções Celulares y Matriz Extracelular</li>
+      <li><strong>Extra:</strong> Mitosis, Meiosis, Estructura de Proteínas</li>
+    </ul>
+  </div>
+
+  <div class="info-block warn">
+    <div class="label">Guía de Estudio</div>
+    <h4>Cómo Usar Este Resumen</h4>
+    <p><strong>1. Teoría:</strong> Lee el contenido completo de cada capítulo</p>
+    <p><strong>2. Flashcards:</strong> Usa para memorizar conceptos clave</p>
+    <p><strong>3. Quiz:</strong> Practica con 30 preguntas variadas</p>
+    <p><strong>4. Provas:</strong> Realiza las 3 provas de 20 preguntas cada una (P1, P2, FINAL)</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ TEORÍA ════════════════════════════════════════ -->
+<div id="teorias" class="section">
+
+  <div class="chapter-title"><span class="chap-icon">🧬</span> Cap. 1 — Célula y Estructura Bacteriana</div>
+  <div class="info-block">
+    <div class="label">Definición</div>
+    <h4>La Célula: Unidad de Vida</h4>
+    <p>La célula es la unidad estructural y funcional de todos los seres vivos. Realiza tres funciones básicas: <strong>nutrición, relación y reproducción</strong>.</p>
+    <ul>
+      <li><strong>Eucariotas:</strong> Poseen núcleo y organelas membranosas</li>
+      <li><strong>Procariotas:</strong> Sin núcleo definido, solo ribosomas como organela</li>
+    </ul>
+  </div>
+
+  <div class="info-block purple">
+    <div class="label">Estructura Bacteriana</div>
+    <h4>Componentes de la Célula Procariota</h4>
+    <ul>
+      <li><strong>Membrana Plasmática:</strong> Controla entrada/salida de sustancias</li>
+      <li><strong>Pared Bacteriana:</strong> Gram-positivas (simple) vs Gram-negativas (doble)</li>
+      <li><strong>Cápsula:</strong> Protección adicional contra desidratación</li>
+      <li><strong>Flagelos:</strong> Formados por flagelina, permiten movimiento</li>
+      <li><strong>Fímbrias:</strong> Fijación a superficies</li>
+      <li><strong>Citoplasma:</strong> Medio gelatinoso donde ocurren reacciones metabólicas</li>
+    </ul>
+  </div>
+
+  <div class="info-block">
+    <div class="label">Reproducción</div>
+    <h4>Bipartición (Fisión Binaria)</h4>
+    <p>Reproducción asexual donde la bacteria se divide en dos células idénticas:</p>
+    <ol>
+      <li>Replicación del ADN circular</li>
+      <li>Invaginación de membranas</li>
+      <li>Formación de pared transversal</li>
+      <li>Separación en dos células-hijas</li>
+    </ol>
+  </div>
+
+  <div class="chapter-title"><span class="chap-icon">🔬</span> Cap. 2 — Ácidos Nucleicos</div>
+  <div class="info-block">
+    <div class="label">Nucleótidos</div>
+    <h4>Estructura de ADN y ARN</h4>
+    <p>Formados por nucleótidos que contienen:</p>
+    <ul>
+      <li><strong>Pentosa:</strong> Ribosa (ARN) o Desoxirribosa (ADN)</li>
+      <li><strong>Base Nitrogenada:</strong> Purinas (A, G) o Pirimidinas (C, T, U)</li>
+      <li><strong>Grupo Fosfato:</strong> Da carga negativa</li>
+    </ul>
+  </div>
+
+  <div class="info-block success">
+    <div class="label">ADN</div>
+    <h4>Ácido Desoxirribonucleico</h4>
+    <ul>
+      <li>Doble hélice antiparalela</li>
+      <li>Emparejamiento: A↔T (2H), G↔C (3H)</li>
+      <li>Localización: Núcleo, mitocondrias</li>
+      <li>Herencia: Bivalente (ambos progenitores)</li>
+      <li><strong>ADN mitocondrial:</strong> Circular, sin histonas, herencia materna</li>
+    </ul>
+  </div>
+
+  <div class="info-block">
+    <div class="label">ARN</div>
+    <h4>Ácido Ribonucleico</h4>
+    <ul>
+      <li>Cadena única</li>
+      <li>Contiene uracilo (U) en lugar de timina</li>
+      <li>Tipos:
+        <ul>
+          <li><strong>ARNm:</strong> Lleva información al ribosoma</li>
+          <li><strong>ARNt:</strong> Transporta aminoácidos</li>
+          <li><strong>ARNr:</strong> Estructura del ribosoma</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="chapter-title"><span class="chap-icon">⚗️</span> Cap. 3 — Carbohidratos, Lípidos, Proteínas</div>
+  
+  <div class="info-block purple">
+    <div class="label">Carbohidratos</div>
+    <h4>Clasificación y Funciones</h4>
+    <ul>
+      <li><strong>Monosacaridos:</strong> Glucosa, fructosa (simples)</li>
+      <li><strong>Disacáridos:</strong> Sacarosa, maltosa, lactosa</li>
+      <li><strong>Oligosacaridos:</strong> 3-10 unidades, forman glucolípidos</li>
+      <li><strong>Polisacáridos:</strong> Almidón (reserva), glucógeno (reserva animal), celulosa (estructural)</li>
+    </ul>
+  </div>
+
+  <div class="info-block">
+    <div class="label">Lípidos</div>
+    <h4>Moléculas Hidrofóbicas y Anfipáticas</h4>
+    <ul>
+      <li><strong>Triglicéridos:</strong> Reserva energética (grasas)</li>
+      <li><strong>Fosfolípidos:</strong> Anfipáticos (cabeza hidrofílica + colas hidrofóbicas) → membranas</li>
+      <li><strong>Esteroides:</strong> Colesterol, vitamina D, hormonas sexuales</li>
+    </ul>
+  </div>
+
+  <div class="info-block success">
+    <div class="label">Proteínas: Estructura</div>
+    <h4>4 Niveles de Organización</h4>
+    <ul>
+      <li><strong>PRIMARIA:</strong> Secuencia de aminoácidos (20 tipos). <strong>Ejemplo:</strong> Hemoglobina: 2 cadenas α + 2 cadenas β</li>
+      <li><strong>SECUNDARIA:</strong> α-hélice o hoja β plegada. <strong>Ejemplo:</strong> Colágeno: triple hélice</li>
+      <li><strong>TERCIARIA:</strong> Estructura 3D completa. <strong>Ejemplo:</strong> Insulina: una cadena plegada</li>
+      <li><strong>CUATERNARIA:</strong> 2+ cadenas polipeptídicas. <strong>Ejemplo:</strong> Hemoglobina (4 subunidades)</li>
+    </ul>
+  </div>
+
+  <div class="info-block warn">
+    <div class="label">Enzimas</div>
+    <h4>Catalizadores Biológicos</h4>
+    <p>Proteínas que aceleran reacciones sin modificarse. <strong>Característica clave: Especificidad</strong> (cada enzima actúa sobre un sustrato específico).</p>
+    <p><strong>Mecanismo:</strong> Enzima + Sustrato → Complejo E-S → Productos + Enzima (reciclada)</p>
+    <p><strong>Ejemplo:</strong> Lactasa rompe lactosa en glucosa + galactosa</p>
+  </div>
+
+  <div class="chapter-title"><span class="chap-icon">🔀</span> Cap. 4 — MITOSIS Y MEIOSIS</div>
+  
+  <div class="info-block">
+    <div class="label">Mitosis</div>
+    <h4>División Celular para Crecimiento</h4>
+    <p><strong>Resultado:</strong> 2 células hijas IDÉNTICAS a la madre (2n → 2n)</p>
+    <p><strong>Fases:</strong></p>
+    <ol>
+      <li><strong>Profase:</strong> Cromosomas se condensan, aparato mitótico se forma</li>
+      <li><strong>Metafase:</strong> Cromosomas alineados en la placa metafásica</li>
+      <li><strong>Anafase:</strong> Cromátidas hermanas se separan, migran a polos</li>
+      <li><strong>Telofase:</strong> Se forman dos núcleos, comienza citocinesis</li>
+    </ol>
+    <p><strong>Función:</strong> Crecimiento, regeneración, reemplazo de células muertas</p>
+  </div>
+
+  <div class="info-block success">
+    <div class="label">Meiosis</div>
+    <h4>División Celular para Reproducción</h4>
+    <p><strong>Resultado:</strong> 4 células hijas DIFERENTES al progenitor (2n → n, gametos)</p>
+    <p><strong>Dos divisiones:</strong></p>
+    <ul>
+      <li><strong>MEIOSIS I:</strong> Separación de cromosomas homólogos
+        <ul>
+          <li>Profase I: Apareamiento de homólogos (recombinación)</li>
+          <li>Metafase I: Bivalentes en placa metafásica</li>
+          <li>Anafase I: Cromosomas homólogos se separan</li>
+          <li>Telofase I: Se forman dos núcleos (2n → n)</li>
+        </ul>
+      </li>
+      <li><strong>MEIOSIS II:</strong> Similar a mitosis (separación de cromátidas)
+        <ul>
+          <li>Resulta en 4 células haploides (n)</li>
+        </ul>
+      </li>
+    </ul>
+    <p><strong>Función:</strong> Producción de gametos (óvulos, espermatozoides)</p>
+  </div>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Característica</th>
+        <th>MITOSIS</th>
+        <th>MEIOSIS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Resultado</strong></td>
+        <td>2 células idénticas (2n)</td>
+        <td>4 células diferentes (n)</td>
+      </tr>
+      <tr>
+        <td><strong>Divisiones</strong></td>
+        <td>1</td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <td><strong>Variación genética</strong></td>
+        <td>No</td>
+        <td>Sí (recombinación)</td>
+      </tr>
+      <tr>
+        <td><strong>Función</strong></td>
+        <td>Crecimiento, reparación</td>
+        <td>Reproducción sexual</td>
+      </tr>
+      <tr>
+        <td><strong>Lugar</strong></td>
+        <td>Todas las células</td>
+        <td>Solo células germinales</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="chapter-title"><span class="chap-icon">🧪</span> Cap. 5 — Organelas y Endomembranas</div>
+  
+  <div class="info-block">
+    <div class="label">Ribosomas</div>
+    <h4>LA ÚNICA ORGANELA SIN MEMBRANA</h4>
+    <ul>
+      <li>Composición: ARNr + proteínas</li>
+      <li>Función: Síntesis de proteínas</li>
+      <li>Localización: Libres o adheridos a RER</li>
+    </ul>
+  </div>
+
+  <div class="info-block purple">
+    <div class="label">Retículo Endoplasmático</div>
+    <h4>RER vs REL</h4>
+    <ul>
+      <li><strong>RER (Rugoso):</strong> Con ribosomas. Síntesis de proteínas exportables. Proteína-señal dirige entrada</li>
+      <li><strong>REL (Liso):</strong> Sin ribosomas. Síntesis de lípidos, hormones esteroides, detoxificación, almacenamiento de Ca²⁺, forma autofagosomas</li>
+    </ul>
+  </div>
+
+  <div class="info-block">
+    <div class="label">Aparato de Golgi</div>
+    <h4>Centro de Procesamiento</h4>
+    <ul>
+      <li><strong>Función:</strong> Recibe proteínas/lípidos del RE, modifica (glicosilación), empaca y direcciona</li>
+      <li><strong>Unidad funcional:</strong> Dictiossoma</li>
+      <li><strong>Tipos de secreción:</strong> Constitutiva (continua) o Regulada (por señal)</li>
+    </ul>
+  </div>
+
+  <div class="info-block success">
+    <div class="label">Mitocondrias</div>
+    <h4>Central de Energía</h4>
+    <ul>
+      <li><strong>Función:</strong> Respiración celular → ATP</li>
+      <li><strong>Estructura:</strong> Dos membranas + matriz</li>
+      <li><strong>Reproducción:</strong> Bipartición (independiente)</li>
+      <li><strong>Genoma:</strong> ADN circular, herencia MATERNA, sus propios ribosomas y chaperonas</li>
+      <li><strong>Otras funciones:</strong> Apoptosis, síntesis de esteroides</li>
+    </ul>
+  </div>
+
+  <div class="info-block warn">
+    <div class="label">Lisosomas</div>
+    <h4>Usinas de Reciclaje Celular</h4>
+    <ul>
+      <li><strong>Formación:</strong> Vesículas del Golgi + endosomas</li>
+      <li><strong>Contenido:</strong> Enzimas hidrolíticas (lipasas, proteasas) en pH ácido</li>
+      <li><strong>Función:</strong> Fagocitosis (material externo), autofagia (organelas propias)</li>
+    </ul>
+  </div>
+
+  <div class="info-block purple">
+    <div class="label">Peroxisomas</div>
+    <h4>Detoxificación Celular</h4>
+    <ul>
+      <li><strong>Enzimas:</strong> Oxidasa (produce H₂O₂), Catalasa (convierte H₂O₂ → H₂O + O₂)</li>
+      <li><strong>Reproducción:</strong> Bipartición</li>
+      <li><strong>Diferencia:</strong> NO poseen chaperonas (proteínas llegan dobladas)</li>
+    </ul>
+  </div>
+
+  <div class="chapter-title"><span class="chap-icon">🔗</span> Cap. 6 — Junções y Matriz Extracelular</div>
+  
+  <div class="info-block">
+    <div class="label">Junções Célula-Matriz</div>
+    <h4>Adhesión a MEC</h4>
+    <ul>
+      <li><strong>Hemidesmosomas:</strong> Anclan epitelios a lámina basal (integrinas + queratina + laminina)</li>
+      <li><strong>Contatos Focais:</strong> Anclan fibroblastos a MEC (integrinas + actina + fibronectina)</li>
+    </ul>
+  </div>
+
+  <div class="info-block success">
+    <div class="label">Junções Intercelulares</div>
+    <h4>Entre Células Vecinas</h4>
+    <ul>
+      <li><strong>Oclusivas:</strong> Sellan espacios (ocludinas, claudinas) → barrera hematoencefálica</li>
+      <li><strong>Cinturón Adesivo:</strong> Conectan actina de células vecinas</li>
+      <li><strong>Desmosomas:</strong> Conectan filamentos intermediarios (resistencia máxima) → músculo cardíaco</li>
+      <li><strong>Comunicantes:</strong> Forman canales para iones/moléculas pequeñas (conexinas)</li>
+    </ul>
+  </div>
+
+  <div class="info-block warn">
+    <div class="label">Matriz Extracelular</div>
+    <h4>Red de Soporte</h4>
+    <ul>
+      <li><strong>Componentes:</strong> Glicosaminoglicanos (fluidos), Colágeno (resistencia), Fibronectina y Laminina (adhesión)</li>
+    </ul>
+  </div>
+
+  <div class="chapter-title"><span class="chap-icon">⛓️</span> Cap. Especial — Destino de Proteínas y Degradación</div>
+  <div class="info-block purple">
+    <div class="label">Control de Calidad</div>
+    <h4>Chaperonas, Ubiquitinas y Proteassomas</h4>
+    <ul>
+      <li><strong>Chaperonas (hsp60, hsp70):</strong> Ayudan a doblar proteínas correctamente</li>
+      <li><strong>Proteína mal-doblada:</strong> Se marca con ubiquitinas</li>
+      <li><strong>Proteassoma:</strong> Complejo que DEGRADA proteínas marcadas (NO es lisosoma)</li>
+      <li><strong>Autofagia:</strong> Lisosoma degrada ORGANELAS enteras</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════════ FLASHCARDS ════════════════════════════════════════ -->
+<div id="flash" class="section">
+  <div class="chapter-title"><span class="chap-icon">🔄</span> Flashcards Interactivos</div>
+  <p style="color:var(--muted); margin-bottom:20px;">Haz clic en cada tarjeta para girarla. Ideal para memorizar conceptos clave.</p>
+  
+  <div id="flashcard-container" class="flashcards"></div>
+</div>
+
+<!-- ════════════════════════════════════════ QUIZ ════════════════════════════════════════ -->
+<div id="quiz" class="section">
+  <div class="chapter-title"><span class="chap-icon">❓</span> Quiz de Práctica</div>
+  <div id="quiz-scorebar" class="scorebar">Aciertos: <strong>0</strong> / 0</div>
+  <div id="quiz-body"></div>
+  <button class="restart-btn" onclick="restartQuiz()">🔄 Reiniciar Quiz</button>
+</div>
+
+<!-- ════════════════════════════════════════ PROVAS ════════════════════════════════════════ -->
+<div id="provas" class="section">
+  <div class="chapter-title"><span class="chap-icon">📋</span> Provas Finales</div>
+  <div id="prova-scorebar" class="scorebar">Aciertos: <strong>0</strong> / 0</div>
+  <div id="prova-body"></div>
+  <button class="restart-btn" onclick="restartProva()">🔄 Reiniciar Prova</button>
+</div>
+
+</div>
+
+<script>
+// ════════════════════════════════════════
+// TAB SWITCHER
+// ════════════════════════════════════════
+function switchTab(tabName) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(tabName).classList.add('active');
+  
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// ════════════════════════════════════════
+// FLASHCARDS
+// ════════════════════════════════════════
+const flashcardsData = [
+  { label: "DEFINICIÓN", front: "¿Qué es la célula?", back: "Unidad estructural y funcional de todos los seres vivos. Realiza nutrición, relación y reproducción." },
+  { label: "PROCARIOTA", front: "Características de células procariotas", back: "Sin núcleo definido, solo ribosomas como organela, pared bacteriana, reproducción por bipartición." },
+  { label: "MITOCONDRIA", front: "¿Cuál es la función principal de las mitocondrias?", back: "Respiración celular y producción de ATP. Reproducción por bipartición, genoma circular, herencia materna." },
+  { label: "ADN vs ARN", front: "Diferencia entre ADN y ARN", back: "ADN: doble hélice, desoxirribosa, timina. ARN: cadena simple, ribosa, uracilo." },
+  { label: "PROTEÍNAS", front: "¿Cuál nivel proteico determina la función?", back: "Estructura TERCIARIA (y cuaternaria). La forma 3D completa determina qué hace la proteína." },
+  { label: "MITOSIS", front: "Resultado de mitosis", back: "2 células hijas IDÉNTICAS a la madre (2n → 2n). Para crecimiento y reparación." },
+  { label: "MEIOSIS", front: "Resultado de meiosis", back: "4 células hijas DIFERENTES, haploides (n). Para reproducción sexual (gametos)." },
+  { label: "LISOSOMA", front: "¿Cómo se forman los lisosomas?", back: "Fusión de vesículas del Golgi con endosomas. Contienen enzimas hidrolíticas para digestión celular." },
+  { label: "JUNCIÓN", front: "Junción para máxima resistencia en corazón", back: "Desmosomas. Conectan filamentos intermediarios entre células cardíacas." },
+  { label: "ENZIMAS", front: "Característica clave de las enzimas", back: "ESPECIFICIDAD: cada enzima actúa sobre UN substrato específico. Son catalizadores sin modificarse." },
+  { label: "COLÁGENO", front: "Función del colágeno en MEC", back: "Proteína estructural que confiere resistencia mecánica a la matriz extracelular." },
+  { label: "FOSFOLÍPIDOS", front: "¿Por qué los fosfolípidos forman membranas?", back: "Son anfipáticos: cabeza hidrofílica + colas hidrofóbicas. Se organizan en bicapas en agua." },
+  { label: "PROTEASSOMA", front: "¿Qué degrada el proteassoma?", back: "Proteínas MAL-DOBLADAS marcadas con ubiquitinas. NO es lisosoma (que degrada organelas)." },
+  { label: "HEMIDESMOSOMA", front: "¿Qué estructura ancla epitelios a lámina basal?", back: "Hemidesmosoma: integrinas + filamentos intermediarios (queratina) + laminina." },
+  { label: "LACTASA", front: "Función de la enzima lactasa", back: "Rompe lactosa en glucosa + galactosa. Si hay deficiencia = intolerancia a la lactosa." },
+  { label: "CARIOTIPO", front: "¿Qué detecta un cariotipo?", back: "Anomalías cromosómicas numéricas (trisomías, monosomías) y estructurales. Microfotografía de cromosomas en metáfase." },
+];
+
+function renderFlashcards() {
+  let html = '';
+  flashcardsData.forEach((fc, i) => {
+    html += `
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="fc-label">${fc.label}</div>
+        <div class="fc-front">${fc.front}</div>
+        <div class="fc-back">${fc.back}</div>
+        <div class="fc-hint">Haz clic para girar</div>
+      </div>
+    `;
+  });
+  document.getElementById('flashcard-container').innerHTML = html;
+}
+
+// ════════════════════════════════════════
+// QUIZ DATA
+// ════════════════════════════════════════
+const quizData = [
+  {prova:"QUIZ",badge:"quiz",q:"¿Cuál es la función principal de la célula?",opts:["Almacenar energía","Nutrición, relación y reproducción","Degradar material solamente","Sintetizar lípidos"],correct:1,explain:"La célula realiza las 3 funciones básicas: nutrición (obtener recursos), relación (interacción) y reproducción (crear nuevas células)."},
+  {prova:"QUIZ",badge:"quiz",q:"¿Cuál organela NO tiene membrana?",opts:["Mitocondria","Ribosoma","Lisosoma","Peroxisoma"],correct:1,explain:"Los ribosomas son la ÚNICA organela sin membrana. Están formados por ARNr y proteínas."},
+  {prova:"QUIZ",badge:"quiz",q:"¿Dónde se replica el ADN?",opts:["Citoplasma","Ribosoma","Núcleo","Lisosoma"],correct:2,explain:"El ADN se replica en el NÚCLEO. La mayoría del ADN está aquí (menos la pequeña cantidad en mitocondrias)."},
+  {prova:"QUIZ",badge:"quiz",q:"¿Cuál es la diferencia entre mitosis y meiosis?",opts:["Mitosis produce 4 células","Meiosis produce 2 células idénticas","Mitosis produce 2 células idénticas; meiosis produce 4 células diferentes","No hay diferencia"],correct:2,explain:"Mitosis: 2n → 2n (crecimiento). Meiosis: 2n → n (reproducción). Meiosis tiene recombinación, mitosis no."},
+  {prova:"QUIZ",badge:"quiz",q:"¿Cuál estructura ancla células epiteliales a lámina basal?",opts:["Desmosoma","Hemidesmosoma","Junción oclusiva","Comunicante"],correct:1,explain:"Hemidesmosomas anclan epitelios a matriz. Desmosomas conectan células entre sí."},
+  {prova:"QUIZ",badge:"quiz",q:"Lactasa es una enzima que rompe lactosa. ¿Cómo se llama esta característica?",opts:["Generalidad","Especificidad","Selectividad","Actividad"],correct:1,explain:"ESPECIFICIDAD: cada enzima actúa sobre UN substrato específico. Lactasa solo rompe lactosa."},
+  {prova:"QUIZ",badge:"quiz",q:"¿Cómo se forman los lisosomas?",opts:["Peroxisomas","Endosomas primarios","Vesículas del Golgi + endosomas","Ribosomas"],correct:2,explain:"Lisosomas = Vesículas del Golgi + Endosomas. Contienen enzimas hidrolíticas para digestión celular."},
+  {prova:"QUIZ",badge:"quiz",q:"¿Qué característica tienen los fosfolípidos?",opts:["Son totalmente hidrofóbicos","Son totalmente hidrofílicos","Anfipáticos (cabeza hidrofílica + colas hidrofóbicas)","Son proteínas"],correct:2,explain:"Anfipáticos permite que formen bicapas en agua, esencial para membranas celulares."},
+  {prova:"QUIZ",badge:"quiz",q:"¿Cuál es la unidad funcional del Complejo de Golgi?",opts:["Vesícula","Dictiossoma","Sáculo","Cisterna"],correct:1,explain:"Dictiossoma es el stack de cisternas del Golgi. Procesa, modifica y empaca proteínas/lípidos."},
+  {prova:"QUIZ",badge:"quiz",q:"¿Dónde ocurre la síntesis de proteínas?",opts:["Mitocondria","Ribosoma","Núcleo","Golgi"],correct:1,explain:"Ribosomas sintetizan proteínas usando información del ARNm. ARNt trae aminoácidos."},
+  {prova:"QUIZ",badge:"quiz",q:"ADN de mitocondrias: herencia",opts:["De ambos progenitores","Solo del padre","Solo de la madre","No se hereda"],correct:2,explain:"ADN mitocondrial tiene herencia MATERNA exclusiva. Solo el óvulo aporta mitocondrias al cigoto."},
+  {prova:"QUIZ",badge:"quiz",q:"¿Cuál enzima está en peroxisomas?",opts:["Lipasa","Catalasa","Proteasa","Amilasa"],correct:1,explain:"Catalasa convierte H₂O₂ tóxico en H₂O + O₂. Es clave en detoxificación peroxisomal."},
+  {prova:"QUIZ",badge:"quiz",q:"¿Qué nivel proteico es PRIMARIO?",opts:["Hélice alfa","Estructura 3D","Secuencia de aminoácidos","Múltiples cadenas"],correct:2,explain:"Estructura PRIMARIA = secuencia de aminoácidos. Determinada por el gen (ADN)."},
+  {prova:"QUIZ",badge:"quiz",q:"¿Cuál proceso produce variación genética?",opts:["Mitosis","Meiosis I sin recombinación","Meiosis CON recombinación","Bipartición"],correct:2,explain:"Recombinación (crossing over) en profase I de meiosis crea variación. Mitosis no produce variación."},
+  {prova:"QUIZ",badge:"quiz",q:"¿Qué degrada el PROTEASSOMA?",opts:["Organelas enteras","Polisacáridos","Proteínas mal-dobladas marcadas con ubiquitinas","Lípidos"],correct:2,explain:"Proteassoma degrada PROTEÍNAS. Lisosoma degrada ORGANELAS. Control de calidad diferente."},
+];
+
+// ════════════════════════════════════════
+// PROVA DATA
+// ════════════════════════════════════════
+const provasData = [
+  {prova:"P1",badge:"p1",q:"Estructura procariota que permite movimiento",opts:["Pared","Cápsula","Flagelo","Fimbria"],correct:2,explain:"Flagelos = movimiento. Fímbrias = adhesión. Ambos en bacterias pero funciones diferentes."},
+  {prova:"P1",badge:"p1",q:"Nucleótido contiene",opts:["Solo bases","Pentosa + base + fosfato","Solo pentosa","Lípido + proteína"],correct:1,explain:"Nucleótido = 3 componentes: pentosa (ribosa o desoxirribosa), base nitrogenada (A,G,C,T,U), grupo fosfato."},
+  {prova:"P1",badge:"p1",q:"ADN bases complementarias",opts:["A-G, T-C","A-T, G-C","A-C, T-G","No hay emparejamiento"],correct:1,explain:"A↔T (2 puentes H), G↔C (3 puentes H). Emparejamiento específico por complementariedad."},
+  {prova:"P1",badge:"p1",q:"Monosacarido ejemplo",opts:["Almidón","Glucosa","Sacarosa","Celulosa"],correct:1,explain:"Glucosa = azúcar simple (monosacarido). Almidón = polisacarido. Sacarosa = disacarido."},
+  {prova:"P1",badge:"p1",q:"Estructura proteica que es α-hélice",opts:["Primaria","Secundaria","Terciaria","Cuaternaria"],correct:1,explain:"SECUNDARIA: estructuras locales como α-hélice o hoja β plegada. Resultado de puentes H entre esqueleto peptídico."},
+  {prova:"P1",badge:"p1",q:"Mitosis fases en orden",opts:["Metafase, profase, anafase, telofase","Profase, metafase, anafase, telofase","Anafase, telofase, profase, metafase","Telofase, anafase, metafase, profase"],correct:1,explain:"Profase → Metafase → Anafase → Telofase. Mnemotécnica: (P)rofase (M)etafase (A)nafase (T)elofase."},
+  {prova:"P1",badge:"p1",q:"Meiosis I separa",opts:["Cromátidas hermanas","Cromosomas homólogos","Centriolos","ARNm"],correct:1,explain:"Meiosis I: separación de HOMÓLOGOS. Meiosis II: separación de cromátidas (como mitosis)."},
+  {prova:"P1",badge:"p1",q:"Autofagia degrada",opts:["Material externo","Proteínas mal-dobladas","Organelas propias","Lípidos solo"],correct:2,explain:"Autofagia = AUTO (propia) + phagia (comer). Lisosoma degrada organelas viejas de la célula."},
+  {prova:"P1",badge:"p1",q:"¿Dónde se sintetiza proteína exportable?",opts:["Citosol libre","RER","REL","Mitocondria"],correct:1,explain:"RER (Rugoso) sintetiza proteínas exportables. Señal peptídica dirige entrada al ER."},
+  {prova:"P1",badge:"p1",q:"Enzima lactasa deficiencia causa",opts:["Diabetes","Intolerancia a lactosa","Anemia","Obesidad"],correct:1,explain:"Sin lactasa → lactosa NO se rompe → acúmulo → osmosis → diarrea, flatulencia (intolerancia)."},
+  {prova:"FINAL",badge:"final",q:"Hemidesmosoma ancla: estructura + proteína matriz",opts:["Actina + colágeno","Actina + fibronectina","Queratina + laminina","Tubulina + proteoglicano"],correct:2,explain:"Hemidesmosoma = filamentos intermediarios (queratina) + integrinas + laminina (MEC). Ancla epitelios a lámina basal."},
+  {prova:"FINAL",badge:"final",q:"Desmosoma ubica + resiste",opts:["Corazón, conecta filamentos de actina","Pulmón, conecta tubulina","Corazón, conecta filamentos intermediarios","Cerebro, conecta ribosomas"],correct:2,explain:"Desmosomas en corazón máxima resistencia (latidos). Conectan filamentos intermediarios entre células."},
+  {prova:"FINAL",badge:"final",q:"Proteassoma vs Lisosoma",opts:["Ambos degradan proteínas","Proteassoma degrada proteínas mal-dobladas; lisosoma degrada organelas","Lisosoma degrada proteínas","Sin diferencia real"],correct:1,explain:"PROTEASSOMA = ubiquitina → proteínas defectuosas. LISOSOMA = enzimas hidrolíticas → organelas/material externo."},
+  {prova:"FINAL",badge:"final",q:"Colágeno función",opts:["Transporte de moléculas","Resistencia mecánica MEC","Síntesis ATP","Síntesis proteica"],correct:1,explain:"Colágeno es la proteína más abundante en MEC. Confiere resistencia tensil a tejidos."},
+  {prova:"FINAL",badge:"final",q:"Mitocondria característica ÚNICA",opts:["Solo tiene membrana","Reproducción independiente + genoma circular","Sintetiza ribosomas","Sin función"],correct:1,explain:"Mitocondrias y peroxisomas se reproducen por BIPARTICIÓN. Genoma circular, herencia materna (mito)."},
+  {prova:"FINAL",badge:"final",q:"Cariotipo detecta",opts:["Enzimas deficientes","Anomalías cromosómicas numéricas/estructurales","Proteínas anormales","Lípidos alterados"],correct:1,explain:"Cariotipo = microfotografía cromosomas en metáfase. Ordena por tamaño. Detecta Down (47,21), Turner (45,X), etc."},
+  {prova:"FINAL",badge:"final",q:"Ribosoma: único atributo",opts:["Tiene membrana","Sin membrana","Sintetiza ADN","Almacena ATP"],correct:1,explain:"Ribosoma es la ÚNICA organela SIN membrana. ARNr + proteínas. Sintetiza proteínas."},
+  {prova:"FINAL",badge:"final",q:"ARN tipos: funciones",opts:["Todos iguales","ARNm transporta; ARNt informa; ARNr estructura","ARNm informa; ARNt transporta; ARNr estructura","Sin funciones diferenciadas"],correct:2,explain:"ARNm lleva información al ribosoma. ARNt transporta aminoácidos. ARNr forma parte del ribosoma."},
+  {prova:"FINAL",badge:"final",q:"Chaperonas función",opts:["Degradan proteínas","Ayudan doblez correcto","Sintetizan lípidos","Transportan iones"],correct:1,explain:"Chaperonas (hsp60, hsp70) = molecular chaperones. Previenen aggregación, asisten doblez proteico."},
+  {prova:"FINAL",badge:"final",q:"Glucógeno localización",opts:["Núcleo solo","Membrana plasmática","Citoplasma (hepatócitos, músculo)","Mitocondria"],correct:2,explain:"Glucógeno = polisacarido de reserva animal. Acúmulo en citosol de hepatócitos y músculo."},
+];
+
+// ════════════════════════════════════════
+// QUIZ ENGINE
+// ════════════════════════════════════════
+const letters = ['A','B','C','D'];
+let quizScore=0, quizAnswered=0;
+let provaScore=0, provaAnswered=0;
+
+function isVF(opts){ return opts.length===2 && (opts[0].match(/^Verdader/i) || opts[1].match(/^Falso/i)); }
+
+function renderQuiz(){
+  quizScore=0; quizAnswered=0;
+  updateScorebar('quiz-scorebar',0,0);
+  let html='';
+  quizData.forEach((q,i)=>{
+    const vf=isVF(q.opts);
+    const tipo=vf?'V O F':'MÚLTIPLA ESCOLHA';
+    const badgeCls=vf?'vf':'mc';
+    html+=`<div class="q-card" id="qcard-${i}">`;
+    html+=`<div class="q-header"><span class="q-num">Pregunta ${i+1}</span><div class="q-badges"><span class="q-badge ${badgeCls}">${tipo}</span></div></div>`;
+    html+=`<div class="q-text">${q.q}</div>`;
+    if(vf){
+      html+=`<div class="q-vf">`;
+      html+=`<button class="q-opt" onclick="pickQuiz(${i},0)"><span class="q-letter">✅</span> VERDADERO</button>`;
+      html+=`<button class="q-opt" onclick="pickQuiz(${i},1)"><span class="q-letter">❌</span> FALSO</button>`;
+      html+=`</div>`;
+    } else {
+      html+=`<div class="q-opts">`;
+      q.opts.forEach((o,j)=>{
+        html+=`<button class="q-opt" onclick="pickQuiz(${i},${j})"><span class="q-letter">${letters[j]})</span> ${o}</button>`;
+      });
+      html+=`</div>`;
+    }
+    html+=`<div class="q-explain" id="qexp-${i}"></div>`;
+    html+=`</div>`;
+  });
+  document.getElementById('quiz-body').innerHTML=html;
+}
+
+function pickQuiz(qi,oi){
+  const card=document.getElementById('qcard-'+qi);
+  if(card.dataset.answered) return;
+  card.dataset.answered='1';
+  const q=quizData[qi];
+  const btns=card.querySelectorAll('.q-opt');
+  btns.forEach((b,i)=>{
+    b.classList.add('done');
+    if(i===q.correct) b.classList.add('correct');
+    if(i===oi && oi!==q.correct) b.classList.add('wrong');
+  });
+  if(oi===q.correct) quizScore++;
+  quizAnswered++;
+  updateScorebar('quiz-scorebar',quizScore,quizAnswered);
+  const expl=document.getElementById('qexp-'+qi);
+  expl.innerHTML=`<strong>${oi===q.correct?'✅ ¡Correcto!':'❌ Incorrecto'}</strong><br>${q.explain}`;
+  expl.style.borderColor=oi===q.correct?'var(--green)':'var(--red)';
+  expl.classList.add('show');
+}
+
+function restartQuiz(){ renderQuiz(); window.scrollTo(0, document.getElementById('quiz').offsetTop - 60); }
+
+// ════════════════════════════════════════
+// PROVAS ENGINE
+// ════════════════════════════════════════
+function renderProva(){
+  provaScore=0; provaAnswered=0;
+  updateScorebar('prova-scorebar',0,0);
+  let html='';
+  provasData.forEach((q,i)=>{
+    const vf=isVF(q.opts);
+    const tipo=vf?'V O F':'MÚLTIPLA ESCOLHA';
+    const badgeCls=vf?'vf':'mc';
+    html+=`<div class="q-card" id="pcard-${i}">`;
+    html+=`<div class="q-header"><span class="q-num">Questão ${i+1}</span><div class="q-badges"><span class="prova-badge ${q.badge}">${q.prova}</span><span class="q-badge ${badgeCls}">${tipo}</span></div></div>`;
+    html+=`<div class="q-text">${q.q}</div>`;
+    if(vf){
+      html+=`<div class="q-vf">`;
+      html+=`<button class="q-opt" onclick="pickProva(${i},0)"><span class="q-letter">✅</span> VERDADERO</button>`;
+      html+=`<button class="q-opt" onclick="pickProva(${i},1)"><span class="q-letter">❌</span> FALSO</button>`;
+      html+=`</div>`;
+    } else {
+      html+=`<div class="q-opts">`;
+      q.opts.forEach((o,j)=>{
+        html+=`<button class="q-opt" onclick="pickProva(${i},${j})"><span class="q-letter">${letters[j]})</span> ${o}</button>`;
+      });
+      html+=`</div>`;
+    }
+    html+=`<div class="q-explain" id="pexp-${i}"></div>`;
+    html+=`</div>`;
+  });
+  document.getElementById('prova-body').innerHTML=html;
+}
+
+function pickProva(qi,oi){
+  const card=document.getElementById('pcard-'+qi);
+  if(card.dataset.answered) return;
+  card.dataset.answered='1';
+  const q=provasData[qi];
+  const btns=card.querySelectorAll('.q-opt');
+  btns.forEach((b,i)=>{
+    b.classList.add('done');
+    if(i===q.correct) b.classList.add('correct');
+    if(i===oi && oi!==q.correct) b.classList.add('wrong');
+  });
+  if(oi===q.correct) provaScore++;
+  provaAnswered++;
+  updateScorebar('prova-scorebar',provaScore,provaAnswered);
+  const expl=document.getElementById('pexp-'+qi);
+  expl.innerHTML=`<strong>${oi===q.correct?'✅ ¡Correcto!':'❌ Incorrecto'}</strong><br>${q.explain}`;
+  expl.style.borderColor=oi===q.correct?'var(--green)':'var(--red)';
+  expl.classList.add('show');
+}
+
+function restartProva(){ renderProva(); window.scrollTo(0, document.getElementById('provas').offsetTop - 60); }
+
+function updateScorebar(id,s,a){
+  document.getElementById(id).innerHTML=`Aciertos: <strong>${s}</strong> / ${a}`;
+}
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  renderFlashcards();
+  renderQuiz();
+  renderProva();
+  document.querySelector('nav.tabs button').click();
+});
+</script>
+
+<!-- VOLVER -->
+<a href="dashboard.html" style="position:fixed;bottom:24px;left:24px;z-index:9999;background:rgba(79,156,249,0.12);border:1px solid rgba(79,156,249,0.3);color:#4f9cf9;padding:10px 20px;border-radius:30px;text-decoration:none;font-weight:600;font-size:0.85rem;backdrop-filter:blur(10px);transition:all .3s ease;display:flex;align-items:center;gap:8px;" onmouseover="this.style.background='rgba(79,156,249,0.25)'" onmouseout="this.style.background='rgba(79,156,249,0.12)'">
+  ← Volver
+</a>
+
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
+</body>
+</html>

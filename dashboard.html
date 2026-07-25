@@ -1099,6 +1099,100 @@
       <div class="store-section">
         <div class="store-section-title">📂 Resumos por Semestre</div>
 
+        <!-- 1º SEMESTRE -->
+        <div class="sem-card" id="sem-1">
+          <div class="sem-card-header" onclick="toggleSemLoja(this)">
+            <div class="sem-card-left">
+              <span class="sem-card-emoji">📗</span>
+              <div>
+                <div class="sem-card-title">1º Semestre</div>
+                <div class="sem-card-sub">Biologia Celular, Embriologia, Histologia I, Anatomia I</div>
+              </div>
+            </div>
+            <div class="sem-card-right">
+              <span class="sem-card-badge">Resumo Único</span>
+              <span class="sem-card-chevron">▼</span>
+            </div>
+          </div>
+          <div class="sem-card-body">
+            <!-- COMBO S1 -->
+            <div class="combo-card" id="combo-s1-card">
+              <div class="combo-header">
+                <div>
+                  <div class="combo-title">📦 Pacote Completo — 1º Semestre</div>
+                  <div class="combo-sub">Todas as 4 disciplinas do 1º Semestre</div>
+                </div>
+                <div class="combo-preco-box">
+                  <div class="combo-preco-old" id="combo-s1-old">R$ 60,00</div>
+                  <div class="combo-preco-new" id="combo-s1-new">R$ 39,90</div>
+                  <div class="combo-desconto" id="combo-s1-pct">🏷️ 33% off</div>
+                </div>
+              </div>
+              <div class="combo-materias" id="combo-s1-tags"></div>
+              <button class="combo-btn" id="combo-s1-btn" onclick="addComboS1ToCart()">
+                🛒 Adicionar pacote ao carrinho — R$ 39,90
+              </button>
+            </div>
+
+            <!-- INDIVIDUAIS S1 -->
+            <div style="margin-top:20px;">
+              <div class="store-section-title" style="margin-bottom:12px;">📝 Individuais
+                <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
+                  R$ 15,00 unit · <span style="color:#4ade80;">R$ 12,00 com 3+</span>
+                </span>
+              </div>
+              <div class="store-grid" id="store-grid-s1"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2º SEMESTRE -->
+        <div class="sem-card" id="sem-2">
+          <div class="sem-card-header" onclick="toggleSemLoja(this)">
+            <div class="sem-card-left">
+              <span class="sem-card-emoji">📘</span>
+              <div>
+                <div class="sem-card-title">2º Semestre</div>
+                <div class="sem-card-sub">Psicología en Salud, Medicina Comunitária, Histologia II, Guaraní, Anatomia II, Bioestatística</div>
+              </div>
+            </div>
+            <div class="sem-card-right">
+              <span class="sem-card-badge">Resumo Único</span>
+              <span class="sem-card-chevron">▼</span>
+            </div>
+          </div>
+          <div class="sem-card-body">
+            <!-- COMBO S2 -->
+            <div class="combo-card" id="combo-s2-card">
+              <div class="combo-header">
+                <div>
+                  <div class="combo-title">📦 Pacote Completo — 2º Semestre</div>
+                  <div class="combo-sub">Todas as 6 disciplinas do 2º Semestre</div>
+                </div>
+                <div class="combo-preco-box">
+                  <div class="combo-preco-old" id="combo-s2-old">R$ 90,00</div>
+                  <div class="combo-preco-new" id="combo-s2-new">R$ 59,90</div>
+                  <div class="combo-desconto" id="combo-s2-pct">🏷️ 33% off</div>
+                </div>
+              </div>
+              <div class="combo-materias" id="combo-s2-tags"></div>
+              <button class="combo-btn" id="combo-s2-btn" onclick="addComboS2ToCart()">
+                🛒 Adicionar pacote ao carrinho — R$ 59,90
+              </button>
+            </div>
+
+            <!-- INDIVIDUAIS S2 -->
+            <div style="margin-top:20px;">
+              <div class="store-section-title" style="margin-bottom:12px;">📝 Individuais
+                <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
+                  R$ 15,00 unit · <span style="color:#4ade80;">R$ 12,00 com 3+</span>
+                </span>
+              </div>
+              <div class="store-grid" id="store-grid-s2"></div>
+            </div>
+          </div>
+        </div>
+
         <!-- 3º SEMESTRE -->
         <div class="sem-card" id="sem-3">
           <div class="sem-card-header" onclick="toggleSemLoja(this)">
@@ -1159,39 +1253,43 @@
 
             <!-- COMBO FINAL -->
             <div id="store-combo-final-section" style="display:none;margin-top:24px;">
-              <div class="combo-card" id="combo-final-card" style="border-color:rgba(244,63,94,0.3);background:linear-gradient(135deg,rgba(244,63,94,0.07) 0%,rgba(6,182,212,0.04) 100%);">
+              <div class="combo-card" id="combo-final-card" style="border-color:rgba(74,222,128,0.3);background:linear-gradient(135deg,rgba(74,222,128,0.07) 0%,rgba(6,182,212,0.04) 100%);">
                 <div class="combo-header">
                   <div>
-                    <div class="combo-title" style="color:#fb7185;">🎓 Pacote Completo Final — Recuperatória</div>
+                    <div class="combo-title" style="color:#4ade80;">🎓 Pacote Completo Final</div>
                     <div class="combo-sub">Todas as 7 matérias · todos os resumos finais — 3º Semestre</div>
                   </div>
                   <div class="combo-preco-box">
-                    <div class="combo-preco-old" id="combo-final-old" style="font-size:22px;color:rgba(248,113,113,0.55);">R$ 174,93</div>
-                    <div class="combo-preco-new" id="combo-final-new" style="color:#fb7185;">R$ 39,99</div>
-                    <div class="combo-desconto" id="combo-final-pct" style="background:rgba(244,63,94,0.12);color:#fb7185;border-color:rgba(244,63,94,0.3);">🏷️ 77% off</div>
+                    <div class="combo-preco-old" id="combo-final-old" style="font-size:22px;color:rgba(74,222,128,0.55);">R$ 174,93</div>
+                    <div class="combo-preco-new" id="combo-final-new" style="color:#4ade80;">R$ 89,90</div>
+                    <div class="combo-desconto" id="combo-final-pct" style="background:rgba(74,222,128,0.12);color:#4ade80;border-color:rgba(74,222,128,0.3);">🏷️ 49% off</div>
                   </div>
                 </div>
                 <div class="combo-materias" id="combo-final-tags"></div>
-                <button class="combo-btn" id="combo-final-btn" onclick="addComboFinalToCart()" style="background:linear-gradient(135deg,#f43f5e,#e11d48);box-shadow:0 4px 20px rgba(244,63,94,0.3);">
-                  🛒 Adicionar pacote ao carrinho — R$ 39,99
+                <button class="combo-btn" id="combo-final-btn" onclick="addComboFinalToCart()" style="background:linear-gradient(135deg,#4ade80,#16a34a);box-shadow:0 4px 20px rgba(74,222,128,0.3);">
+                  🛒 Adicionar pacote ao carrinho — R$ 89,90
                 </button>
               </div>
             </div>
 
             <!-- FINAIS INDIVIDUAIS -->
             <div style="margin-top:20px;">
-              <div class="store-section-title" style="color:#fb7185;margin-bottom:12px;">🎓 Individuais Final — Promo Recuperatória</div>
+              <div class="store-section-title" style="color:#4ade80;margin-bottom:12px;">🎓 Individuais Final</div>
               <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
-                <div style="flex:1;min-width:130px;border-radius:12px;padding:12px;background:rgba(244,63,94,0.07);border:1px solid rgba(244,63,94,0.25);text-align:center;">
-                  <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(251,113,133,0.6);margin-bottom:4px;">Individual</div>
-                  <div style="font-size:11px;color:rgba(125,211,232,0.35);text-decoration:line-through;">R$ 24,99</div>
-                  <div style="font-size:20px;font-weight:800;color:#fb7185;">R$ 10,00</div>
+                <div style="flex:1;min-width:130px;border-radius:12px;padding:12px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.2);text-align:center;">
+                  <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(74,222,128,0.6);margin-bottom:4px;">Individual</div>
+                  <div style="font-size:20px;font-weight:800;color:#4ade80;">R$ 24,99</div>
                 </div>
-                <div style="flex:1;min-width:130px;border-radius:12px;padding:12px;background:rgba(244,63,94,0.13);border:1px solid rgba(244,63,94,0.45);text-align:center;position:relative;">
-                  <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f43f5e,#e11d48);color:#fff;font-size:8px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;">MELHOR NEGÓCIO ⭐</div>
-                  <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(251,113,133,0.6);margin-bottom:4px;">Pacote 7 resumos</div>
-                  <div style="font-size:11px;color:rgba(125,211,232,0.35);text-decoration:line-through;">R$ 174,93</div>
-                  <div style="font-size:20px;font-weight:800;color:#fb7185;">R$ 39,99</div>
+                <div style="flex:1;min-width:130px;border-radius:12px;padding:12px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);text-align:center;">
+                  <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(74,222,128,0.6);margin-bottom:4px;">3+ resumos</div>
+                  <div style="font-size:20px;font-weight:800;color:#4ade80;">R$ 19,99</div>
+                  <div style="font-size:10px;color:rgba(74,222,128,0.5);">20% off</div>
+                </div>
+                <div style="flex:1;min-width:130px;border-radius:12px;padding:12px;background:rgba(74,222,128,0.13);border:1px solid rgba(74,222,128,0.45);text-align:center;position:relative;">
+                  <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#4ade80,#16a34a);color:#fff;font-size:8px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;">MELHOR NEGÓCIO ⭐</div>
+                  <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(74,222,128,0.6);margin-bottom:4px;">Pacote 7 resumos</div>
+                  <div style="font-size:20px;font-weight:800;color:#4ade80;">R$ 89,90</div>
+                  <div style="font-size:10px;color:rgba(74,222,128,0.5);">49% off</div>
                 </div>
               </div>
               <div class="store-grid" id="store-grid-final"></div>
@@ -1438,10 +1536,28 @@ var MATERIAS = [
   { key:"imunologia",    label:"Imunologia",    emoji:"🛡️", desc:"Sistema imune e respostas do organismo.", file_p1:"imunologia_p1.html",    file_p2:"resumo_imunologia_p2.html",  file_final:"imunologia_final.html",    finalReady:true  },
 ];
 
+// ── Matérias 1º Semestre (resumo único por disciplina) ────────────────────────
+var MATERIAS_S1 = [
+  { key:"biologia_celular", label:"Biologia Celular", emoji:"🧬", desc:"Célula, organelas, divisão celular e junções.", file:"biologia-celular.html", ready:true  },
+  { key:"embriologia",      label:"Embriologia",      emoji:"🧫", desc:"Desenvolvimento embrionário humano.",        file:"embriologia.html",      ready:false },
+  { key:"histologia_1",     label:"Histologia I",     emoji:"🔬", desc:"Tecidos fundamentais do corpo humano.",     file:"histologia_1.html",     ready:false },
+  { key:"anatomia_1",       label:"Anatomia I",       emoji:"🦴", desc:"Anatomia humana descritiva.",              file:"anatomia_1.html",       ready:false },
+];
+
+// ── Matérias 2º Semestre (resumo único por disciplina) ──────────────────────
+var MATERIAS_S2 = [
+  { key:"psicologia_salud",     label:"Psicología en Salud",  emoji:"🧠", desc:"Aspectos psicológicos aplicados à saúde.",    file:"psicologia_salud.html",     ready:false },
+  { key:"medicina_comunitaria", label:"Medicina Comunitária",  emoji:"🏥", desc:"Saúde pública e atenção primária.",           file:"medicina_comunitaria.html", ready:false },
+  { key:"histologia_2",        label:"Histologia II",         emoji:"🔬", desc:"Histologia de órgãos e sistemas.",            file:"histologia_2.html",        ready:false },
+  { key:"guarani",              label:"Guaraní",               emoji:"🗣️", desc:"Língua guaraní aplicada à saúde.",           file:"guarani.html",             ready:false },
+  { key:"anatomia_2",          label:"Anatomia II",           emoji:"🦴", desc:"Anatomia humana aplicada.",                   file:"anatomia_2.html",          ready:false },
+  { key:"bioestatistica",      label:"Bioestatística",        emoji:"📊", desc:"Estatística aplicada às ciências da saúde.",  file:"bioestatistica.html",      ready:false },
+];
+
 var PROVAS = [
   { tipo:"p1",    label:"P1",    preco_unit:15.00, preco_pack:69.90 },
   { tipo:"p2",    label:"P2",    preco_unit:15.00, preco_pack:69.90 },
-  { tipo:"final", label:"Final", preco_unit:10.00, preco_pack:39.99 },
+  { tipo:"final", label:"Final", preco_unit:24.99, preco_pack:89.90 },
 ];
 
 // ── Estado ────────────────────────────────────────────────────────────────────
@@ -1458,16 +1574,24 @@ var cart = []; // [{key, label, emoji, preco, tipo}]
 var PRECO_UNIT = 15.00;
 var PRECO_COMBO3 = 12.00; // 3+ itens = 20% off
 var PRECO_PACK = 69.90;   // 7 itens = 33% off
-/* ── PROMO RECUPERATÓRIA ──────────────────────────────────────────────────────
-   Finais: preço único de R$ 10,00 por resumo · Pacote completo R$ 39,99
-   Para encerrar a promo: volte PRECO_FINAL=24.99 e PRECO_PACK_FINAL=89.90
-   e reative PROMO_FINAL_ATIVA=false.                                          */
-var PROMO_FINAL_ATIVA = true;
-var PRECO_FINAL_DE = 24.99;     // preço "de" (riscado) — só exibição
-var PRECO_FINAL = 10.00;        // Finais: preço único promocional por resumo
-var PRECO_FINAL_COMBO2 = 10.00; // sem escada de desconto na promo
-var PRECO_FINAL_COMBO3 = 10.00; // sem escada de desconto na promo
-var PRECO_PACK_FINAL = 39.99;   // Pacote completo TODOS os finais — SEM cupom
+/* ── PREÇOS FINAIS ────────────────────────────────────────────────────────────
+   Finais: R$ 24,99 por resumo · 3+ = R$ 19,99 (20% off) · Pacote 7 = R$ 89,90
+   Para ativar promo: PROMO_FINAL_ATIVA=true, PRECO_FINAL=valor_promo          */
+var PROMO_FINAL_ATIVA = false;
+var PRECO_FINAL_DE = 24.99;       // preço "de" (riscado) — só exibição em promo
+var PRECO_FINAL = 24.99;          // Finais: preço normal por resumo
+var PRECO_FINAL_COMBO2 = 24.99;   // 2 itens: preço normal
+var PRECO_FINAL_COMBO3 = 19.99;   // 3+ itens: 20% off
+var PRECO_PACK_FINAL = 89.90;     // Pacote completo TODOS os finais
+
+// ── Preços S1/S2 (resumo único por disciplina) ──────────────────────────────
+var PRECO_S1_UNIT = 15.00;        // Individual
+var PRECO_S1_COMBO3 = 12.00;      // 3+ itens: 20% off
+var PRECO_S1_PACK = 39.90;        // Pacote completo S1 (4 disciplinas)
+
+var PRECO_S2_UNIT = 15.00;        // Individual
+var PRECO_S2_COMBO3 = 12.00;      // 3+ itens: 20% off
+var PRECO_S2_PACK = 59.90;        // Pacote completo S2 (6 disciplinas)
 
 // ── Navegação estilo Google Drive ─────────────────────────────────────────────
 var currentMateria = null; // null = vista pastas | "bioquimica" = vista interna
@@ -2526,7 +2650,13 @@ window.salvarNome = async function() {
 };
 function renderResumosGrid() {
   if (currentMateria) {
-    renderMateriaInterna(currentMateria);
+    if (currentMateria.indexOf("s1_") === 0) {
+      renderMateriaInternaS1(currentMateria.replace("s1_",""));
+    } else if (currentMateria.indexOf("s2_") === 0) {
+      renderMateriaInternaS2(currentMateria.replace("s2_",""));
+    } else {
+      renderMateriaInterna(currentMateria);
+    }
   } else {
     renderPastas();
   }
@@ -2555,7 +2685,8 @@ window.filterMaterias = function(query) {
   query = query.toLowerCase().trim();
   var cards = document.querySelectorAll(".folder-card");
   cards.forEach(function(card) {
-    var nome = card.querySelector(".folder-name").textContent.toLowerCase();
+    var nomeEl = card.querySelector(".folder-name");
+    var nome = nomeEl ? nomeEl.textContent.toLowerCase() : "";
     card.style.display = (!query || nome.includes(query)) ? "" : "none";
   });
   // Abre semestres se há pesquisa ativa
@@ -2574,11 +2705,123 @@ function renderPastas() {
   cardsView.classList.remove("visible");
   wrap.innerHTML = "";
 
+  // ═══ 1º SEMESTRE ═══
+  var liberadosS1 = MATERIAS_S1.filter(function(m){ return m.ready && hasAccessS1(m); }).length;
+  var readyS1 = MATERIAS_S1.filter(function(m){ return m.ready; }).length;
+
+  var sem1 = document.createElement("div");
+  sem1.className = "semestre-card";
+
+  var s1Html = '<div class="materias-list">';
+  MATERIAS_S1.forEach(function(m) {
+    if (!m.ready) {
+      s1Html +=
+        '<div class="folder-card" style="opacity:0.4;cursor:default;">' +
+          '<span class="folder-emoji">' + m.emoji + '</span>' +
+          '<div class="folder-name">' + m.label + '</div>' +
+          '<div class="folder-status">' +
+            '<div class="folder-status-item" style="color:rgba(251,191,36,0.5);">🔜 Em breve</div>' +
+          '</div>' +
+        '</div>';
+      return;
+    }
+    var ac = hasAccessS1(m);
+    var dias = daysLeftForResumoS1(m);
+    var diasStr = dias !== null ? dias + " dias restantes" : "Acesso permanente";
+    s1Html +=
+      '<div class="folder-card" onclick="openMateriaS1(\'' + m.key + '\')">' +
+        '<span class="folder-emoji">' + m.emoji + '</span>' +
+        '<div class="folder-name">' + m.label + '</div>' +
+        '<div class="folder-status">' +
+          (ac
+            ? '<div class="folder-status-item" style="color:#22d3ee;">✓ Liberado · ' + diasStr + '</div>'
+            : '<div class="folder-status-item" style="color:rgba(125,211,232,0.35);">🔒 Bloqueado</div>') +
+        '</div>' +
+      '</div>';
+  });
+  s1Html += '</div>';
+
+  sem1.innerHTML =
+    '<div class="semestre-header" onclick="toggleSemestre(this)">' +
+      '<div class="semestre-header-left">' +
+        '<span class="semestre-icon">📗</span>' +
+        '<div>' +
+          '<div class="semestre-title">1º Semestre</div>' +
+          '<div class="semestre-subtitle">Biologia Celular · Embriologia · Histologia I · Anatomia I</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="semestre-meta">' +
+        '<span class="semestre-badge">' + liberadosS1 + '/' + readyS1 + ' liberados</span>' +
+        '<span class="semestre-chevron">▼</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="semestre-body">' +
+      '<div class="semestre-body-inner">' + s1Html + '</div>' +
+    '</div>';
+
+  wrap.appendChild(sem1);
+
+  // ═══ 2º SEMESTRE ═══
+  var liberadosS2 = MATERIAS_S2.filter(function(m){ return m.ready && hasAccessS2(m); }).length;
+  var readyS2 = MATERIAS_S2.filter(function(m){ return m.ready; }).length;
+
+  var sem2 = document.createElement("div");
+  sem2.className = "semestre-card";
+
+  var s2Html = '<div class="materias-list">';
+  MATERIAS_S2.forEach(function(m) {
+    if (!m.ready) {
+      s2Html +=
+        '<div class="folder-card" style="opacity:0.4;cursor:default;">' +
+          '<span class="folder-emoji">' + m.emoji + '</span>' +
+          '<div class="folder-name">' + m.label + '</div>' +
+          '<div class="folder-status">' +
+            '<div class="folder-status-item" style="color:rgba(251,191,36,0.5);">🔜 Em breve</div>' +
+          '</div>' +
+        '</div>';
+      return;
+    }
+    var ac = hasAccessS2(m);
+    var dias = daysLeftForResumoS2(m);
+    var diasStr = dias !== null ? dias + " dias restantes" : "Acesso permanente";
+    s2Html +=
+      '<div class="folder-card" onclick="openMateriaS2(\'' + m.key + '\')">' +
+        '<span class="folder-emoji">' + m.emoji + '</span>' +
+        '<div class="folder-name">' + m.label + '</div>' +
+        '<div class="folder-status">' +
+          (ac
+            ? '<div class="folder-status-item" style="color:#22d3ee;">✓ Liberado · ' + diasStr + '</div>'
+            : '<div class="folder-status-item" style="color:rgba(125,211,232,0.35);">🔒 Bloqueado</div>') +
+        '</div>' +
+      '</div>';
+  });
+  s2Html += '</div>';
+
+  sem2.innerHTML =
+    '<div class="semestre-header" onclick="toggleSemestre(this)">' +
+      '<div class="semestre-header-left">' +
+        '<span class="semestre-icon">📘</span>' +
+        '<div>' +
+          '<div class="semestre-title">2º Semestre</div>' +
+          '<div class="semestre-subtitle">Psicología · Med. Comunitária · Histologia II · Guaraní · Anatomia II · Bioestatística</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="semestre-meta">' +
+        '<span class="semestre-badge">' + liberadosS2 + '/' + readyS2 + ' liberados</span>' +
+        '<span class="semestre-chevron">▼</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="semestre-body">' +
+      '<div class="semestre-body-inner">' + s2Html + '</div>' +
+    '</div>';
+
+  wrap.appendChild(sem2);
+
+  // ═══ 3º SEMESTRE ═══
   var liberados = MATERIAS.filter(function(m){ return hasAccess(m,"p2"); }).length;
 
-  // 3º Semestre
   var sem3 = document.createElement("div");
-  sem3.className = "semestre-card"; // começa fechado
+  sem3.className = "semestre-card";
 
   var materiasHtml = '<div class="materias-list">';
   MATERIAS.forEach(function(m) {
@@ -2798,11 +3041,403 @@ window.closePresenteModal = function() {
 
 window.goToStore = function() { switchTab("loja"); };
 
+// ── S1: Acesso e dias restantes (resumo único por disciplina) ─────────────────
+function hasAccessS1(materia) {
+  if (!profile) return false;
+  var col = materia.key;
+  // Verifica acessos cache primeiro
+  var acesso = acessosCache[col];
+  if (acesso) {
+    if (!acesso.expira_em) return true;
+    return new Date(acesso.expira_em) > new Date();
+  }
+  // Fallback: profiles
+  if (!profile[col]) return false;
+  var expira = profile[col + "_expira"] || profile.acesso_expira_em;
+  if (!expira) return true;
+  return new Date(expira) > new Date();
+}
+
+function daysLeftForResumoS1(materia) {
+  if (!profile) return null;
+  var col = materia.key;
+  var acesso = acessosCache[col];
+  if (acesso && acesso.expira_em) {
+    var diff = new Date(acesso.expira_em) - new Date();
+    return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
+  }
+  var expira = profile[col + "_expira"] || profile.acesso_expira_em;
+  if (!expira) return null;
+  var diff = new Date(expira) - new Date();
+  return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
+}
+
+// ── S1: Navegação (abrir/fechar matéria) ─────────────────────────────────────
+window.openMateriaS1 = function(key) {
+  currentMateria = "s1_" + key;
+  var m = MATERIAS_S1.find(function(mt){ return mt.key === key; });
+  if (m) {
+    try { localStorage.setItem("ez-last-materia", m.label || key); } catch(e) {}
+  }
+  var searchBar = document.getElementById("searchBarWrap");
+  if (searchBar) searchBar.style.display = "none";
+  renderResumosGrid();
+};
+
+// ── S1: Vista interna (card único por disciplina) ────────────────────────────
+function renderMateriaInternaS1(key) {
+  var m = MATERIAS_S1.find(function(x){ return x.key === key; });
+  if (!m) return;
+
+  var wrap = document.getElementById("semestresWrap");
+  var breadcrumb = document.getElementById("materiaBreadcrumb");
+  var cardsView = document.getElementById("materiaCardsView");
+  var grid = document.getElementById("materiaCardsGrid");
+  var title = document.getElementById("materiaViewTitle");
+  var breadcrumbNome = document.getElementById("breadcrumbNome");
+
+  wrap.style.display = "none";
+  breadcrumb.classList.add("visible");
+  cardsView.classList.add("visible");
+
+  breadcrumbNome.textContent = m.label;
+  title.innerHTML = '<span>' + m.emoji + '</span> ' + m.label + ' <span style="font-size:12px;color:rgba(125,211,232,0.4);font-weight:400;">· 1º Semestre</span>';
+  grid.innerHTML = "";
+
+  if (!m.ready) {
+    var soonCard = document.createElement("div");
+    soonCard.className = "resumo-card soon";
+    soonCard.innerHTML =
+      '<span class="card-emoji">' + m.emoji + '</span>' +
+      '<div class="card-title" style="color:rgba(251,191,36,0.6);">' + m.label + '</div>' +
+      '<div class="card-desc">' + m.desc + '</div>' +
+      '<div class="soon-badge"><span class="soon-dot"></span> Em breve</div>';
+    grid.appendChild(soonCard);
+    return;
+  }
+
+  var ac = hasAccessS1(m);
+  var dias = daysLeftForResumoS1(m);
+
+  if (ac) {
+    var expiryHtml = dias !== null
+      ? '<div style="font-size:10px;color:' + (dias <= 7 ? '#fbbf24' : 'rgba(125,211,232,0.4)') + ';margin-top:6px;">' +
+          (dias <= 7 ? '⚠️ Expira em ' : '⏱️ ') + dias + ' dia' + (dias===1?'':'s') + (dias > 7 ? ' restantes' : '') +
+        '</div>'
+      : '';
+
+    var presentes = profile.resumos_presente || [];
+    var ehPresente = presentes.includes(m.key);
+
+    var card = document.createElement("a");
+    card.className = "resumo-card unlocked";
+    card.href = m.file;
+    card.style.position = "relative";
+    card.innerHTML =
+      (ehPresente ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>' : '') +
+      '<span class="card-emoji">' + m.emoji + '</span>' +
+      '<div class="card-title">' + m.label + '</div>' +
+      '<div class="card-desc">' + m.desc + '</div>' + expiryHtml;
+    grid.appendChild(card);
+  } else {
+    var lockedCard = document.createElement("div");
+    lockedCard.className = "resumo-card locked";
+    lockedCard.innerHTML =
+      '<span class="card-emoji">' + m.emoji + '</span>' +
+      '<div class="card-title">' + m.label + '</div>' +
+      '<div class="card-desc">' + m.desc + '</div>' +
+      '<div class="lock-badge" onclick="goToStore()">🔒 Comprar acesso</div>';
+    grid.appendChild(lockedCard);
+  }
+}
+
+// ── S1: Carrinho ─────────────────────────────────────────────────────────────
+window.addToCartS1 = function(key) {
+  var m = MATERIAS_S1.find(function(x){ return x.key === key; });
+  if (!m) return;
+  if (cart.find(function(c){ return c.key === key; })) {
+    removeFromCart(key); return;
+  }
+  cart.push({ key: key, label: m.label, emoji: m.emoji, preco: PRECO_S1_UNIT, tipo: "s1" });
+  updateCartUI();
+  renderStoreGridS1();
+};
+
+window.addComboS1ToCart = function() {
+  var naoAdquiridos = MATERIAS_S1.filter(function(m){ return m.ready && !hasAccessS1(m); });
+  if (naoAdquiridos.length === 0) { alert("Você já possui todos os resumos do 1º Semestre!"); return; }
+  cart = cart.filter(function(c){ return c.tipo !== "s1"; });
+  var precoPorItem = PRECO_S1_PACK / naoAdquiridos.length;
+  naoAdquiridos.forEach(function(m) {
+    cart.push({ key: m.key, label: m.label, emoji: m.emoji, preco: precoPorItem, tipo: "s1", isComboS1: true });
+  });
+  updateCartUI();
+  renderStoreGridS1();
+  openCart();
+};
+
+// ── S1: Loja grid ────────────────────────────────────────────────────────────
+function renderStoreGridS1() {
+  var grid = document.getElementById("store-grid-s1");
+  if (!grid) return;
+  grid.innerHTML = "";
+
+  MATERIAS_S1.forEach(function(m) {
+    if (!m.ready) {
+      var card = document.createElement("div");
+      card.className = "produto-card";
+      card.style.opacity = "0.4";
+      card.innerHTML =
+        '<span class="produto-emoji">' + m.emoji + '</span>' +
+        '<div class="produto-nome">' + m.label + '</div>' +
+        '<div class="produto-sub">1º Semestre · 50 dias</div>' +
+        '<div class="soon-badge" style="margin-top:auto;"><span class="soon-dot"></span> Em breve</div>';
+      grid.appendChild(card);
+      return;
+    }
+
+    var key = m.key;
+    var owned = hasAccessS1(m);
+    var inCart = !!cart.find(function(c){ return c.key === key; });
+
+    var card = document.createElement("div");
+    card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
+
+    var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "+ Adicionar");
+    var btnClass = "add-btn" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
+
+    card.innerHTML =
+      '<span class="produto-emoji">' + m.emoji + '</span>' +
+      '<div class="produto-nome">' + m.label + '</div>' +
+      '<div class="produto-sub">1º Semestre · 50 dias</div>' +
+      '<div class="produto-preco">R$ 15,00<span>/resumo</span></div>' +
+      '<button class="' + btnClass + '"' + (owned ? ' disabled' : ' onclick="addToCartS1(\'' + key + '\')"') + '>' + btnLabel + '</button>';
+
+    grid.appendChild(card);
+  });
+
+  // Combo S1 btn
+  var comboBtn = document.getElementById("combo-s1-btn");
+  if (comboBtn) {
+    var readyNaoAdq = MATERIAS_S1.filter(function(m){ return m.ready && !hasAccessS1(m); });
+    if (readyNaoAdq.length === 0) {
+      comboBtn.textContent = "✅ Você já possui todos os resumos disponíveis";
+      comboBtn.disabled = true;
+    } else {
+      comboBtn.textContent = "🛒 Adicionar pacote ao carrinho — R$ " + PRECO_S1_PACK.toFixed(2).replace(".",",");
+      comboBtn.disabled = false;
+    }
+  }
+  // Tags do combo S1
+  var comboTags = document.getElementById("combo-s1-tags");
+  if (comboTags) {
+    comboTags.innerHTML = MATERIAS_S1.map(function(m) {
+      var style = m.ready ? "" : "opacity:0.3;";
+      return '<span class="combo-tag" style="' + style + '">' + m.emoji + ' ' + m.label + (m.ready ? '' : ' 🔜') + '</span>';
+    }).join("");
+  }
+}
+
 window.toggleSemLoja = function(header) {
   var card = header.parentElement;
   if (card.classList.contains("sem-card-soon")) return;
   card.classList.toggle("open");
 };
+
+// ── S2: Acesso e dias restantes ──────────────────────────────────────────────
+function hasAccessS2(materia) {
+  if (!profile) return false;
+  var col = materia.key;
+  var acesso = acessosCache[col];
+  if (acesso) {
+    if (!acesso.expira_em) return true;
+    return new Date(acesso.expira_em) > new Date();
+  }
+  if (!profile[col]) return false;
+  var expira = profile[col + "_expira"] || profile.acesso_expira_em;
+  if (!expira) return true;
+  return new Date(expira) > new Date();
+}
+
+function daysLeftForResumoS2(materia) {
+  if (!profile) return null;
+  var col = materia.key;
+  var acesso = acessosCache[col];
+  if (acesso && acesso.expira_em) {
+    var diff = new Date(acesso.expira_em) - new Date();
+    return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
+  }
+  var expira = profile[col + "_expira"] || profile.acesso_expira_em;
+  if (!expira) return null;
+  var diff = new Date(expira) - new Date();
+  return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
+}
+
+// ── S2: Navegação ────────────────────────────────────────────────────────────
+window.openMateriaS2 = function(key) {
+  currentMateria = "s2_" + key;
+  var m = MATERIAS_S2.find(function(mt){ return mt.key === key; });
+  if (m) {
+    try { localStorage.setItem("ez-last-materia", m.label || key); } catch(e) {}
+  }
+  var searchBar = document.getElementById("searchBarWrap");
+  if (searchBar) searchBar.style.display = "none";
+  renderResumosGrid();
+};
+
+// ── S2: Vista interna (card único por disciplina) ────────────────────────────
+function renderMateriaInternaS2(key) {
+  var m = MATERIAS_S2.find(function(x){ return x.key === key; });
+  if (!m) return;
+
+  var wrap = document.getElementById("semestresWrap");
+  var breadcrumb = document.getElementById("materiaBreadcrumb");
+  var cardsView = document.getElementById("materiaCardsView");
+  var grid = document.getElementById("materiaCardsGrid");
+  var title = document.getElementById("materiaViewTitle");
+  var breadcrumbNome = document.getElementById("breadcrumbNome");
+
+  wrap.style.display = "none";
+  breadcrumb.classList.add("visible");
+  cardsView.classList.add("visible");
+
+  breadcrumbNome.textContent = m.label;
+  title.innerHTML = '<span>' + m.emoji + '</span> ' + m.label + ' <span style="font-size:12px;color:rgba(125,211,232,0.4);font-weight:400;">· 2º Semestre</span>';
+  grid.innerHTML = "";
+
+  if (!m.ready) {
+    var soonCard = document.createElement("div");
+    soonCard.className = "resumo-card soon";
+    soonCard.innerHTML =
+      '<span class="card-emoji">' + m.emoji + '</span>' +
+      '<div class="card-title" style="color:rgba(251,191,36,0.6);">' + m.label + '</div>' +
+      '<div class="card-desc">' + m.desc + '</div>' +
+      '<div class="soon-badge"><span class="soon-dot"></span> Em breve</div>';
+    grid.appendChild(soonCard);
+    return;
+  }
+
+  var ac = hasAccessS2(m);
+  var dias = daysLeftForResumoS2(m);
+
+  if (ac) {
+    var expiryHtml = dias !== null
+      ? '<div style="font-size:10px;color:' + (dias <= 7 ? '#fbbf24' : 'rgba(125,211,232,0.4)') + ';margin-top:6px;">' +
+          (dias <= 7 ? '⚠️ Expira em ' : '⏱️ ') + dias + ' dia' + (dias===1?'':'s') + (dias > 7 ? ' restantes' : '') +
+        '</div>'
+      : '';
+
+    var presentes = profile.resumos_presente || [];
+    var ehPresente = presentes.includes(m.key);
+
+    var card = document.createElement("a");
+    card.className = "resumo-card unlocked";
+    card.href = m.file;
+    card.style.position = "relative";
+    card.innerHTML =
+      (ehPresente ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>' : '') +
+      '<span class="card-emoji">' + m.emoji + '</span>' +
+      '<div class="card-title">' + m.label + '</div>' +
+      '<div class="card-desc">' + m.desc + '</div>' + expiryHtml;
+    grid.appendChild(card);
+  } else {
+    var lockedCard = document.createElement("div");
+    lockedCard.className = "resumo-card locked";
+    lockedCard.innerHTML =
+      '<span class="card-emoji">' + m.emoji + '</span>' +
+      '<div class="card-title">' + m.label + '</div>' +
+      '<div class="card-desc">' + m.desc + '</div>' +
+      '<div class="lock-badge" onclick="goToStore()">🔒 Comprar acesso</div>';
+    grid.appendChild(lockedCard);
+  }
+}
+
+// ── S2: Carrinho ─────────────────────────────────────────────────────────────
+window.addToCartS2 = function(key) {
+  var m = MATERIAS_S2.find(function(x){ return x.key === key; });
+  if (!m) return;
+  if (cart.find(function(c){ return c.key === key; })) {
+    removeFromCart(key); return;
+  }
+  cart.push({ key: key, label: m.label, emoji: m.emoji, preco: PRECO_S2_UNIT, tipo: "s2" });
+  updateCartUI();
+  renderStoreGridS2();
+};
+
+window.addComboS2ToCart = function() {
+  var naoAdquiridos = MATERIAS_S2.filter(function(m){ return m.ready && !hasAccessS2(m); });
+  if (naoAdquiridos.length === 0) { alert("Você já possui todos os resumos do 2º Semestre!"); return; }
+  cart = cart.filter(function(c){ return c.tipo !== "s2"; });
+  var precoPorItem = PRECO_S2_PACK / naoAdquiridos.length;
+  naoAdquiridos.forEach(function(m) {
+    cart.push({ key: m.key, label: m.label, emoji: m.emoji, preco: precoPorItem, tipo: "s2", isComboS2: true });
+  });
+  updateCartUI();
+  renderStoreGridS2();
+  openCart();
+};
+
+// ── S2: Loja grid ────────────────────────────────────────────────────────────
+function renderStoreGridS2() {
+  var grid = document.getElementById("store-grid-s2");
+  if (!grid) return;
+  grid.innerHTML = "";
+
+  MATERIAS_S2.forEach(function(m) {
+    if (!m.ready) {
+      var card = document.createElement("div");
+      card.className = "produto-card";
+      card.style.opacity = "0.4";
+      card.innerHTML =
+        '<span class="produto-emoji">' + m.emoji + '</span>' +
+        '<div class="produto-nome">' + m.label + '</div>' +
+        '<div class="produto-sub">2º Semestre · 50 dias</div>' +
+        '<div class="soon-badge" style="margin-top:auto;"><span class="soon-dot"></span> Em breve</div>';
+      grid.appendChild(card);
+      return;
+    }
+
+    var key = m.key;
+    var owned = hasAccessS2(m);
+    var inCart = !!cart.find(function(c){ return c.key === key; });
+
+    var card = document.createElement("div");
+    card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
+
+    var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "+ Adicionar");
+    var btnClass = "add-btn" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
+
+    card.innerHTML =
+      '<span class="produto-emoji">' + m.emoji + '</span>' +
+      '<div class="produto-nome">' + m.label + '</div>' +
+      '<div class="produto-sub">2º Semestre · 50 dias</div>' +
+      '<div class="produto-preco">R$ 15,00<span>/resumo</span></div>' +
+      '<button class="' + btnClass + '"' + (owned ? ' disabled' : ' onclick="addToCartS2(\'' + key + '\')"') + '>' + btnLabel + '</button>';
+
+    grid.appendChild(card);
+  });
+
+  // Combo S2 btn
+  var comboBtn = document.getElementById("combo-s2-btn");
+  if (comboBtn) {
+    var readyNaoAdq = MATERIAS_S2.filter(function(m){ return m.ready && !hasAccessS2(m); });
+    if (readyNaoAdq.length === 0) {
+      comboBtn.textContent = "✅ Você já possui todos os resumos disponíveis";
+      comboBtn.disabled = true;
+    } else {
+      comboBtn.textContent = "🛒 Adicionar pacote ao carrinho — R$ " + PRECO_S2_PACK.toFixed(2).replace(".",",");
+      comboBtn.disabled = false;
+    }
+  }
+  // Tags do combo S2
+  var comboTags = document.getElementById("combo-s2-tags");
+  if (comboTags) {
+    comboTags.innerHTML = MATERIAS_S2.map(function(m) {
+      var style = m.ready ? "" : "opacity:0.3;";
+      return '<span class="combo-tag" style="' + style + '">' + m.emoji + ' ' + m.label + (m.ready ? '' : ' 🔜') + '</span>';
+    }).join("");
+  }
+}
 
 // ── CURSOS ──────────────────────────────────────────────────────────────────
 // Catálogo de cursos. `chave` = valor em `acessos.resumo` e PAGE_KEY do arquivo.
@@ -2937,18 +3572,24 @@ function calcCartTotal() {
   var n = cart.length;
   if (n === 0) return { subtotal: 0, desconto: 0, total: 0, descLabel: "" };
 
-  // Separar itens P2, Final e Curso
+  // Separar itens P2, Final, S1, S2 e Curso
   var p2Items = cart.filter(function(c){ return c.tipo === "p2"; });
   var finalItems = cart.filter(function(c){ return c.tipo === "final"; });
+  var s1Items = cart.filter(function(c){ return c.tipo === "s1"; });
+  var s2Items = cart.filter(function(c){ return c.tipo === "s2"; });
   var cursoItems = cart.filter(function(c){ return c.tipo === "curso"; });
 
   var subtotalP2 = p2Items.length * PRECO_UNIT;
   var subtotalFinal = finalItems.length * (PROMO_FINAL_ATIVA ? PRECO_FINAL_DE : PRECO_FINAL);
+  var subtotalS1 = s1Items.length * PRECO_S1_UNIT;
+  var subtotalS2 = s2Items.length * PRECO_S2_UNIT;
   var subtotalCurso = cursoItems.reduce(function(acc,c){ return acc + c.preco; }, 0);
-  var subtotal = subtotalP2 + subtotalFinal + subtotalCurso;
+  var subtotal = subtotalP2 + subtotalFinal + subtotalS1 + subtotalS2 + subtotalCurso;
 
   var totalP2 = subtotalP2;
   var totalFinal = subtotalFinal;
+  var totalS1 = subtotalS1;
+  var totalS2 = subtotalS2;
   var totalCurso = subtotalCurso;
   var descLabel = "";
 
@@ -2965,26 +3606,45 @@ function calcCartTotal() {
     descLabel = "🏷️ Desconto P2 3+ itens (20% off)";
   }
 
-  // Desconto Final: pacote completo (preço fixo) ou preço único promocional
+  // Desconto Final: pacote completo ou 3+ itens (20% off)
   var temPacoteCompleto = finalItems.some(function(c){ return c.isPacoteCompleto; });
   var finalReady = MATERIAS.filter(function(m){ return m.finalReady; });
 
   if (temPacoteCompleto) {
-    // Pacote completo: preço fixo promocional independente da quantidade
     totalFinal = PRECO_PACK_FINAL;
-    var pctPack = Math.round((1 - PRECO_PACK_FINAL / (finalReady.length * PRECO_FINAL_DE)) * 100);
-    descLabel += (descLabel ? " + " : "") + "🏷️ Pacote Final Recuperatória (" + pctPack + "% off)";
+    var pctPack = Math.round((1 - PRECO_PACK_FINAL / (finalReady.length * PRECO_FINAL)) * 100);
+    descLabel += (descLabel ? " + " : "") + "🏷️ Pacote Final completo (" + pctPack + "% off)";
+  } else if (finalItems.length >= 3) {
+    totalFinal = finalItems.length * PRECO_FINAL_COMBO3;
+    descLabel += (descLabel ? " + " : "") + "🏷️ Desconto Final 3+ itens (20% off)";
   } else if (finalItems.length > 0) {
-    // Promo: preço único por resumo, sem escada de desconto
     totalFinal = finalItems.length * PRECO_FINAL;
-    var pctUnit = Math.round((1 - PRECO_FINAL / PRECO_FINAL_DE) * 100);
-    descLabel += (descLabel ? " + " : "") + "🏷️ Promo Recuperatória (" + pctUnit + "% off)";
+  }
+
+  // Desconto S1: pacote completo ou 3+ itens (20% off)
+  var temComboS1 = s1Items.some(function(c){ return c.isComboS1; });
+  if (temComboS1) {
+    totalS1 = PRECO_S1_PACK;
+    descLabel += (descLabel ? " + " : "") + "🏷️ Pacote S1 completo (33% off)";
+  } else if (s1Items.length >= 3) {
+    totalS1 = s1Items.length * PRECO_S1_COMBO3;
+    descLabel += (descLabel ? " + " : "") + "🏷️ Desconto S1 3+ itens (20% off)";
+  }
+
+  // Desconto S2: pacote completo ou 3+ itens (20% off)
+  var temComboS2 = s2Items.some(function(c){ return c.isComboS2; });
+  if (temComboS2) {
+    totalS2 = PRECO_S2_PACK;
+    descLabel += (descLabel ? " + " : "") + "🏷️ Pacote S2 completo (33% off)";
+  } else if (s2Items.length >= 3) {
+    totalS2 = s2Items.length * PRECO_S2_COMBO3;
+    descLabel += (descLabel ? " + " : "") + "🏷️ Desconto S2 3+ itens (20% off)";
   }
 
   // Expor flag para o cupom saber se tem pacote completo
   calcCartTotal._temPacoteCompleto = temPacoteCompleto;
 
-  var total = totalP2 + totalFinal + totalCurso;
+  var total = totalP2 + totalFinal + totalS1 + totalS2 + totalCurso;
   var desconto = subtotal - total;
 
   return { subtotal: subtotal, desconto: desconto, total: total, descLabel: descLabel };
@@ -3085,10 +3745,10 @@ function updateCartUI() {
     } else {
       precoItem = c.preco;
     }
-    var precoOriginal = (c.tipo === "final" && !c.isPacoteCompleto && PROMO_FINAL_ATIVA && precoFinalEfetivo < PRECO_FINAL_DE)
+    var precoOriginal = (c.tipo === "final" && !c.isPacoteCompleto && PROMO_FINAL_ATIVA && PRECO_FINAL < PRECO_FINAL_DE)
       ? '<span style="text-decoration:line-through;color:rgba(125,211,232,0.3);font-size:11px;margin-right:4px;">' + formatPrice(PRECO_FINAL_DE) + '</span>'
       : '';
-    var subLabel = c.isPacoteCompleto ? "Pacote Completo · 50 dias" : (c.tipo === "curso" ? "Curso · 90 dias de acesso" : "3º Semestre · 50 dias de acesso");
+    var subLabel = c.isPacoteCompleto ? "Pacote Completo · 50 dias" : (c.tipo === "curso" ? "Curso · 90 dias de acesso" : (c.tipo === "s1" ? "1º Semestre · 50 dias de acesso" : (c.tipo === "s2" ? "2º Semestre · 50 dias de acesso" : "3º Semestre · 50 dias de acesso")));
     return '<div class="cart-item">' +
       '<span class="cart-item-emoji">' + c.emoji + '</span>' +
       '<div class="cart-item-info">' +
@@ -3339,10 +3999,12 @@ window.initPaymentMultiple = async function(productKeys, productName, totalPrice
 
 // ── Renderiza loja ────────────────────────────────────────────────────────────
 function renderStore() {
+  renderStoreGridS1();
+  renderStoreGridS2();
   renderStoreGrid();
-  // Abrir 3º semestre por padrão
-  var sem3 = document.getElementById("sem-3");
-  if (sem3 && !sem3.classList.contains("open")) sem3.classList.add("open");
+  // Abrir 1º semestre por padrão
+  var sem1 = document.getElementById("sem-1");
+  if (sem1 && !sem1.classList.contains("open")) sem1.classList.add("open");
 }
 
 function renderStoreGrid() {
@@ -3427,7 +4089,6 @@ function renderStoreGridFinal() {
     var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "+ Adicionar");
     var btnClass = "add-btn" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
-    // Promo Recuperatória: preço único por resumo
     var precoExibido = formatPrice(PRECO_FINAL);
     var descTag = "";
     if (PROMO_FINAL_ATIVA && PRECO_FINAL < PRECO_FINAL_DE) {
@@ -3436,7 +4097,6 @@ function renderStoreGridFinal() {
       descTag = "<span style='font-size:9px;background:rgba(244,63,94,0.15);color:#fb7185;border:1px solid rgba(244,63,94,0.35);padding:1px 6px;border-radius:10px;margin-left:5px;'>" + pctOff + "% off</span>";
     }
     card.innerHTML =
-      '<span class="tag-popular" style="background:rgba(244,63,94,0.12);color:#fb7185;border-color:rgba(244,63,94,0.3);">Promo</span>' +
       '<span class="produto-emoji">' + m.emoji + '</span>' +
       '<div class="produto-nome">' + m.label + '</div>' +
       '<div class="produto-sub" style="color:rgba(74,222,128,0.5);">Final · 3º Semestre · 50 dias</div>' +
@@ -3467,7 +4127,7 @@ function renderStoreGridFinal() {
       }).join("");
     }
     // Old price
-    var refUnit = PROMO_FINAL_ATIVA ? PRECO_FINAL_DE : PRECO_FINAL;
+    var refUnit = PRECO_FINAL;
     if (comboOld) {
       comboOld.textContent = formatPrice(MATERIAS.length * refUnit);
     }
