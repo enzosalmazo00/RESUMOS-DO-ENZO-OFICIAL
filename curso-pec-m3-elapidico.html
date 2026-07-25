@@ -213,9 +213,20 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
 
   <div class="sec-divider"><h3>Soroterapia (SAEL)</h3></div>
   <div class="info-block danger">
-    <div class="label">Dose única — todo caso é grave</div>
-    <h4>Administrar 10 ampolas de SAEL por via intravenosa</h4>
-    <p>Confirmado ou suspeita de acidente elapídico (dor/parestesia local, ptose palpebral, história de contato com coral) → <b>10 ampolas de SAEL</b> IV imediatamente. Não há escalonamento de dose (leve/moderado/grave) — a única classificação é <b>GRAVE</b>.</p>
+    <div class="label">Classificação de gravidade e doses (PCDT 2026)</div>
+    <h4>Classificação em 3 níveis — Leve / Moderado / Grave</h4>
+    <p>O PCDT dos Acidentes Ofídicos (MS, 2026) adotou uma classificação em 3 níveis de gravidade para o acidente elapídico:</p>
+  </div>
+  <table class="compare-table">
+    <thead><tr><th>Gravidade</th><th>Quadro clínico</th><th>Ampolas SAEL</th></tr></thead>
+    <tbody>
+      <tr><td class="sev-leve">Leve</td><td>Manifestações locais: parestesia e dor de intensidade variável, com ou sem irradiação.</td><td class="sev-leve">— <span style="color:var(--muted)">(observação 24h)</span></td></tr>
+      <tr><td class="sev-mod">Moderado</td><td>Presença ou ausência de manifestações locais; miastenia aguda (ptose palpebral); diminuição objetiva da força muscular, sem sinais de paralisia.</td><td class="sev-mod">5</td></tr>
+      <tr><td class="sev-grave">Grave</td><td>Fraqueza muscular intensa e paralisia evidentes: dificuldade para se levantar/deambular; disfagia e salivação; respiração superficial até paralisia respiratória.</td><td class="sev-grave">10</td></tr>
+    </tbody>
+  </table>
+  <div class="info-block warn" style="margin-top:-6px;">
+    <p style="margin:0;"><b>Atenção:</b> Mesmo nos casos leves, recomenda-se observação clínica por <b>pelo menos 24 horas</b>, com administração de soroterapia caso o paciente evolua com miastenia. Casos leves ou moderados exigem acompanhamento rigoroso para reclassificação da gravidade caso haja piora clínica.</p>
   </div>
 
   <div class="info-block success">
@@ -253,7 +264,7 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
         <tr><td>Coagulopatia</td><td>Ausente</td><td>Presente (mas hemorragia rara)</td><td>Presente e clinicamente significativa</td></tr>
         <tr><td>Rabdomiólise</td><td>Ausente</td><td>Presente (CPK elevada, colúria)</td><td>Rara</td></tr>
         <tr><td>Neostigmina útil?</td><td>Parcialmente (componente pós-sináptico)</td><td>Não (bloqueio pré-sináptico puro)</td><td>N/A</td></tr>
-        <tr><td>Soro específico</td><td>SAEL (10 amp)</td><td>SAC (5/10/20)</td><td>SAB (2-4/4-8/12)</td></tr>
+        <tr><td>Soro específico</td><td>SAEL (—/5/10)</td><td>SAC (5/10/20)</td><td>SAB (3/6/12)</td></tr>
       </tbody>
     </table>
   </div>
@@ -277,7 +288,7 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
 <div class="container">
   <div class="chapter-title"><span>✅</span> Checklist — Acidente Elapídico</div>
   <div class="checklist-intro">
-    <p>Marque os achados do paciente. Lembre-se: <b>TODO caso é GRAVE</b> — 10 ampolas de SAEL imediatamente. O checklist ajuda a monitorar a evolução e antecipar a necessidade de suporte ventilatório.</p>
+    <p>Marque os achados do paciente. O PCDT 2026 classifica em <b>Leve (— ampolas, observação 24h)</b>, <b>Moderado (5 ampolas)</b> e <b>Grave (10 ampolas)</b>. O checklist ajuda a estimar a gravidade e antecipar a necessidade de suporte ventilatório.</p>
   </div>
   <div class="ck-group">
     <h4>Medidas imediatas (admissão)</h4>
@@ -287,7 +298,7 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
     <h4>Sinais neurológicos — monitorar evolução</h4>
     <div class="ck-items" id="ckNeuro"></div>
   </div>
-  <div class="ck-result" id="ckResult">🔴 GRAVE — Administrar 10 ampolas de SAEL IV imediatamente. Monitorar progressão neurológica e respiratória.</div>
+  <div class="ck-result" id="ckResult">Marque os achados clínicos para estimar a gravidade (Leve / Moderado / Grave).</div>
 </div>
 </div>
 
@@ -325,7 +336,7 @@ function renderGallery(){var w=document.getElementById('galleryWrap');w.innerHTM
 
 /* ============ CHECKLIST ============ */
 var CK_ADMISSAO=[
-  "Administrar 10 ampolas de SAEL IV imediatamente — TODO caso é GRAVE",
+  "Administrar SAEL conforme gravidade: Leve = observação 24h; Moderado = 5 amp IV; Grave = 10 amp IV",
   "Monitorização contínua (FR, SpO₂, gasometria) — prioridade absoluta",
   "Ter material de intubação e ventilação mecânica PRONTO à beira do leito",
   "Adrenalina IM, hidrocortisona IV e difenidramina IV à disposição (reação ao soro)",
@@ -371,14 +382,14 @@ function updateCkResult(){
   });
   if(critico){box.innerHTML='🚨 CRÍTICO — Intubação e ventilação mecânica AGORA. Manter SAEL. Solicitar UTI.';}
   else if(progressao){box.innerHTML='⚠️ PROGRESSÃO NEUROLÓGICA — Preparar material de intubação. Monitorar SpO₂ continuamente. SAEL já administrado?';}
-  else{box.innerHTML='🔴 GRAVE — Administrar 10 ampolas de SAEL IV imediatamente. Monitorar progressão neurológica e respiratória.';}
+  else{box.innerHTML='Marque os achados clínicos para estimar a gravidade. Leve (só local) = observação 24h sem soro; Moderado (ptose, miastenia sem paralisia) = 5 amp SAEL IV; Grave (paralisia, insuf. respiratória) = 10 amp SAEL IV.';}
 }
 
 /* ============ QUIZ ============ */
 var QD=[
-  {n:1,q:"Todo acidente com coral verdadeira (Micrurus) é classificado como:",o:[{l:"A",v:"Leve até prova em contrário"},{l:"B",v:"Moderado inicialmente, grave se piorar"},{l:"C",v:"Grave — independente da apresentação inicial"},{l:"D",v:"Depende do tamanho da serpente"},{l:"E",v:"Depende da presença de ptose palpebral"}],cr:"C",ex:"Todo acidente elapídico é GRAVE. A paralisia respiratória pode se instalar em poucas horas, mesmo em pacientes inicialmente assintomáticos. Não existe classificação leve ou moderado."},
+  {n:1,q:"Segundo o PCDT 2026, a classificação de gravidade do acidente elapídico é:",o:[{l:"A",v:"Todo caso é leve até prova em contrário"},{l:"B",v:"Apenas moderado ou grave"},{l:"C",v:"Leve (só local, observação 24h), Moderado (ptose/miastenia, 5 amp) e Grave (paralisia/insuf. respiratória, 10 amp)"},{l:"D",v:"Depende do tamanho da serpente"},{l:"E",v:"Todo caso é grave — 10 ampolas fixas"}],cr:"C",ex:"O PCDT 2026 introduziu 3 níveis: Leve (manifestações locais, sem soro, observação 24h), Moderado (miastenia sem paralisia, 5 amp SAEL) e Grave (paralisia evidente/insuf. respiratória, 10 amp SAEL). Todos exigem acompanhamento rigoroso."},
   {n:2,q:"O mecanismo de ação do veneno elapídico se diferencia do crotálico porque:",o:[{l:"A",v:"O elapídico causa apenas bloqueio pré-sináptico"},{l:"B",v:"O elapídico causa bloqueio pré E pós-sináptico (curarizante), permitindo uso parcial de neostigmina"},{l:"C",v:"O elapídico causa rabdomiólise intensa"},{l:"D",v:"O elapídico causa coagulopatia de consumo"},{l:"E",v:"O elapídico tem ação exclusivamente hemorrágica"}],cr:"B",ex:"O veneno elapídico atua na junção neuromuscular com componente pré-sináptico (PLA₂) E pós-sináptico (neurotoxinas α — curarizante). Essa dupla ação permite que a neostigmina (anticolinesterásico) tenha efeito parcial no componente pós-sináptico. No crotálico, o bloqueio é exclusivamente pré-sináptico, tornando neostigmina ineficaz."},
-  {n:3,q:"A dose de SAEL indicada é:",o:[{l:"A",v:"5 ampolas IV — caso leve"},{l:"B",v:"10 ampolas IV — dose fixa, todo caso é grave"},{l:"C",v:"20 ampolas IV — caso grave"},{l:"D",v:"Depende do peso do paciente"},{l:"E",v:"Depende do TC (tempo de coagulação)"}],cr:"B",ex:"Como todo caso é grave, a dose é fixa: 10 ampolas de SAEL IV. Não há escalonamento. O TC não se altera no elapídico (não há coagulopatia)."},
+  {n:3,q:"No acidente elapídico GRAVE (paralisia evidente, insuficiência respiratória), a dose de SAEL é:",o:[{l:"A",v:"5 ampolas IV"},{l:"B",v:"10 ampolas IV"},{l:"C",v:"20 ampolas IV"},{l:"D",v:"Depende do peso do paciente"},{l:"E",v:"Não se usa soro, apenas suporte ventilatório"}],cr:"B",ex:"Grave = 10 ampolas SAEL IV. Moderado (ptose/miastenia sem paralisia) = 5 ampolas. Leve (só manifestações locais) = sem soro, observação 24h (PCDT 2026)."},
   {n:4,q:"Na ausência de SAEL disponível, a conduta prioritária é:",o:[{l:"A",v:"Administrar SAB (antibotrópico) como substituto"},{l:"B",v:"Administrar SAC (anticrotálico) pela semelhança neurotóxica"},{l:"C",v:"Suporte ventilatório intensivo — ventilação mecânica se necessário"},{l:"D",v:"Apenas observação clínica por 24h"},{l:"E",v:"Administrar SABC (antibotrópico-crotálico)"}],cr:"C",ex:"Nenhum outro soro ofídico substitui o SAEL. SAB, SAC, SABL e SABC NÃO cobrem veneno elapídico. O manejo é suporte ventilatório intensivo até o veneno ser metabolizado — o paciente pode precisar de ventilação mecânica por horas a dias."},
   {n:5,q:"A principal diferença entre a coral verdadeira e a falsa-coral que define o risco é:",o:[{l:"A",v:"A cor dos anéis"},{l:"B",v:"O tamanho da serpente"},{l:"C",v:"A presença de dente inoculador (presa proteróglifa) na verdadeira"},{l:"D",v:"O habitat (floresta vs. cidade)"},{l:"E",v:"O comportamento de fuga"}],cr:"C",ex:"A diferenciação definitiva é a presença de dentes inoculadores (presas proteróglifa fixas) na coral verdadeira. O padrão de cor pode ser similar — falsas-corais mimetizam a coloração. Na dúvida, tratar como verdadeira. Na Amazônia, existem corais verdadeiras sem anéis vermelhos."},
   {n:6,q:"Por que a Micrurus (coral verdadeira) é considerada a 'exceção' na identificação de peçonhentas do M1?",o:[{l:"A",v:"Porque é a única com guizo na cauda"},{l:"B",v:"Porque NÃO possui fosseta loreal, tem pupila redonda, cabeça não destacada e presas fixas pequenas — parece não-peçonhenta"},{l:"C",v:"Porque é a única serpente ovípara do Brasil"},{l:"D",v:"Porque possui veneno exclusivamente proteolítico"},{l:"E",v:"Porque habita exclusivamente áreas urbanas"}],cr:"B",ex:"A coral quebra todas as regras: sem fosseta loreal, pupila redonda, cabeça não triangular, presas fixas e pequenas. Pelos critérios do M1, ela 'parece' não-peçonhenta — mas possui um dos venenos mais potentes. Ovípara é a Lachesis, não a Micrurus."}
