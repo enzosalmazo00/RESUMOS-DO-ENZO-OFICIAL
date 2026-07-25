@@ -152,10 +152,28 @@
     .modal-close{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:transparent;color:#7dd3e8;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
     .modal-close:hover{background:rgba(34,211,238,0.1);color:#fff;}
     .modal-email{font-size:12px;color:#7dd3e8;margin-bottom:16px;padding:8px 12px;background:rgba(34,211,238,0.06);border-radius:10px;word-break:break-all;}
-    .resumos-grid-modal{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:16px;}
+    .resumos-grid-modal{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;}
     .resumo-toggle{padding:7px 5px;border-radius:9px;border:1px solid rgba(34,211,238,0.15);background:rgba(255,255,255,0.02);text-align:center;font-size:10px;font-weight:600;color:rgba(125,211,232,0.5);cursor:pointer;transition:all .2s;user-select:none;}
     .resumo-toggle.on{background:rgba(74,222,128,0.12);border-color:rgba(74,222,128,0.3);color:#4ade80;}
     .resumo-toggle:hover{border-color:rgba(34,211,238,0.35);}
+
+    /* ── MODAL SEMESTER SECTIONS ── */
+    .modal-sem-section{margin-bottom:14px;border-radius:12px;border:1px solid rgba(34,211,238,0.08);overflow:hidden;}
+    .modal-sem-header{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:rgba(34,211,238,0.04);cursor:pointer;gap:8px;user-select:none;}
+    .modal-sem-header:hover{background:rgba(34,211,238,0.07);}
+    .modal-sem-title{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(34,211,238,0.6);display:flex;align-items:center;gap:6px;}
+    .modal-sem-title .sem-count{font-size:10px;font-weight:600;padding:1px 7px;border-radius:10px;background:rgba(74,222,128,0.12);color:#4ade80;}
+    .modal-sem-title .sem-count.zero{background:rgba(248,113,113,0.1);color:rgba(248,113,113,0.6);}
+    .modal-sem-actions{display:flex;gap:4px;flex-shrink:0;}
+    .modal-sem-actions .btn-micro{padding:3px 8px;border-radius:6px;border:1px solid;font-size:9px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'Poppins',sans-serif;}
+    .btn-micro.grant{border-color:rgba(74,222,128,0.3);background:rgba(74,222,128,0.08);color:#4ade80;}
+    .btn-micro.grant:hover{background:rgba(74,222,128,0.2);}
+    .btn-micro.revoke{border-color:rgba(248,113,113,0.3);background:rgba(248,113,113,0.08);color:#f87171;}
+    .btn-micro.revoke:hover{background:rgba(248,113,113,0.2);}
+    .modal-sem-body{padding:8px 10px;display:none;}
+    .modal-sem-section.open .modal-sem-body{display:block;}
+    .modal-sem-chevron{font-size:10px;color:rgba(125,211,232,0.4);transition:transform .2s;}
+    .modal-sem-section.open .modal-sem-chevron{transform:rotate(180deg);}
     .expiry-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
     .expiry-row label{font-size:11px;color:rgba(125,211,232,0.6);flex-shrink:0;}
     .expiry-input{flex:1;min-width:120px;padding:8px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(34,211,238,0.14);border-radius:10px;color:#fff;font-size:12px;font-family:'Poppins',sans-serif;}
@@ -373,10 +391,10 @@
       <button class="modal-close" onclick="closeModal()">&#10005;</button>
     </div>
     <div class="modal-email" id="modalEmail">&#8212;</div>
-    <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(34,211,238,0.5);margin-bottom:8px;">Resumos — clique para liberar/revogar</div>
-    <div class="resumos-grid-modal" id="resumosGrid"></div>
-    <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(184,79,249,0.6);margin:14px 0 8px;">🎓 Cursos — grava na tabela acessos</div>
-    <div class="resumos-grid-modal" id="cursosGridModal"></div>
+
+    <!-- Seções por semestre — renderizadas dinamicamente -->
+    <div id="modalSemSections"></div>
+
     <div class="expiry-row">
       <label>Acesso ate:</label>
       <input class="expiry-input" type="date" id="expiryInput">
@@ -400,18 +418,48 @@ var allAlunos=[],currentAluno=null,currentToggles={};
 var CURSOS_COLS=[
   {key:"curso-peconhentos",label:"Curso Peçonhentos"}
 ];
-var currentCursoToggles={};      // estado dos toggles de curso no modal
-var currentCursoOriginal={};     // estado que veio do banco (para diff no save)
-var RESUMOS_COLS=[
-  {key:"bioquimica_p1",label:"Bioquimica P1"},{key:"bioquimica_p2",label:"Bioquimica P2"},{key:"bioquimica_final",label:"Bioquimica Final"},
-  {key:"biofisica_p1",label:"Biofisica P1"},{key:"biofisica_p2",label:"Biofisica P2"},{key:"biofisica_final",label:"Biofisica Final"},
-  {key:"genetica_p1",label:"Genetica P1"},{key:"genetica_p2",label:"Genetica P2"},{key:"genetica_final",label:"Genetica Final"},
-  {key:"fisiologia_p1",label:"Fisiologia P1"},{key:"fisiologia_p2",label:"Fisiologia P2"},{key:"fisiologia_final",label:"Fisiologia Final"},
-  {key:"microbiologia_p1",label:"Micro P1"},{key:"microbiologia_p2",label:"Micro P2"},{key:"microbiologia_final",label:"Micro Final"},
-  {key:"micro_pratica_p1",label:"Micro Prat. P1"},{key:"micro_pratica_p2",label:"Micro Prat. P2"},{key:"micro_pratica_final",label:"Micro Prat. Final"},
-  {key:"imunologia_p1",label:"Imuno P1"},{key:"imunologia_p2",label:"Imuno P2"},{key:"imunologia_final",label:"Imuno Final"},
-  {key:"pacote_p1",label:"Pacote P1"},{key:"pacote_p2",label:"Pacote P2"},{key:"pacote_final",label:"Pacote Final"}
+var currentCursoToggles={};
+var currentCursoOriginal={};
+
+// ── RESUMOS POR SEMESTRE (organizado em seções) ──
+var SEMESTRES = [
+  { id:"s1", label:"1º Semestre", emoji:"📗", cols:[
+    {key:"biologia_celular",label:"Bio Celular"},
+    {key:"embriologia",label:"Embriologia"},
+    {key:"histologia_1",label:"Histologia I"},
+    {key:"anatomia_1",label:"Anatomia I"},
+  ]},
+  { id:"s2", label:"2º Semestre", emoji:"📘", cols:[
+    {key:"psicologia_salud",label:"Psic. Salud"},
+    {key:"medicina_comunitaria",label:"Med. Comun."},
+    {key:"histologia_2",label:"Histologia II"},
+    {key:"guarani",label:"Guaraní"},
+    {key:"anatomia_2",label:"Anatomia II"},
+    {key:"bioestatistica",label:"Bioestatística"},
+  ]},
+  { id:"s3p2", label:"3º Sem — P2", emoji:"🧬", cols:[
+    {key:"bioquimica_p2",label:"Bioquímica"},{key:"biofisica_p2",label:"Biofísica"},
+    {key:"genetica_p2",label:"Genética"},{key:"fisiologia_p2",label:"Fisiologia"},
+    {key:"microbiologia_p2",label:"Micro"},{key:"micro_pratica_p2",label:"Micro Prát."},
+    {key:"imunologia_p2",label:"Imuno"},{key:"pacote_p2",label:"📦 Pacote P2"},
+  ]},
+  { id:"s3final", label:"3º Sem — Final", emoji:"🎓", cols:[
+    {key:"bioquimica_final",label:"Bioquímica"},{key:"biofisica_final",label:"Biofísica"},
+    {key:"genetica_final",label:"Genética"},{key:"fisiologia_final",label:"Fisiologia"},
+    {key:"microbiologia_final",label:"Micro"},{key:"micro_pratica_final",label:"Micro Prát."},
+    {key:"imunologia_final",label:"Imuno"},{key:"pacote_final",label:"📦 Pacote Final"},
+  ]},
+  { id:"s3p1", label:"3º Sem — P1 (encerrado)", emoji:"⏰", cols:[
+    {key:"bioquimica_p1",label:"Bioquímica"},{key:"biofisica_p1",label:"Biofísica"},
+    {key:"genetica_p1",label:"Genética"},{key:"fisiologia_p1",label:"Fisiologia"},
+    {key:"microbiologia_p1",label:"Micro"},{key:"micro_pratica_p1",label:"Micro Prát."},
+    {key:"imunologia_p1",label:"Imuno"},{key:"pacote_p1",label:"📦 Pacote P1"},
+  ]},
 ];
+
+// Flat list para compatibilidade (stats, filtros, etc.)
+var RESUMOS_COLS = [];
+SEMESTRES.forEach(function(s){ s.cols.forEach(function(c){ RESUMOS_COLS.push(c); }); });
 
 // ── TAB NAVIGATION ──
 window.switchAdminTab=function(tab){
@@ -553,7 +601,95 @@ function renderActivity(){
 }
 
 // ── MODAL ──
-window.openModal=function(id){currentAluno=allAlunos.find(function(a){return a.id===id;});if(!currentAluno)return;document.getElementById("modalEmail").textContent=currentAluno.email||"\u2014";document.getElementById("expiryInput").value=currentAluno.acesso_expira_em?currentAluno.acesso_expira_em.substring(0,10):"";currentToggles={};RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=!!currentAluno[r.key];});renderResumosGrid();loadCursosDoAluno(currentAluno.id);document.getElementById("modalAluno").classList.add("open");};
+window.openModal=function(id){
+  currentAluno=allAlunos.find(function(a){return a.id===id;});
+  if(!currentAluno)return;
+  document.getElementById("modalEmail").textContent=currentAluno.email||"\u2014";
+  document.getElementById("expiryInput").value=currentAluno.acesso_expira_em?currentAluno.acesso_expira_em.substring(0,10):"";
+  currentToggles={};
+  RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=!!currentAluno[r.key];});
+  renderModalSections();
+  loadCursosDoAluno(currentAluno.id);
+  document.getElementById("modalAluno").classList.add("open");
+};
+
+function renderModalSections(){
+  var wrap=document.getElementById("modalSemSections");
+  var html="";
+
+  SEMESTRES.forEach(function(sem){
+    var onCount=sem.cols.filter(function(c){return currentToggles[c.key];}).length;
+    var totalCount=sem.cols.length;
+    var countClass=onCount>0?"":"zero";
+
+    html+='<div class="modal-sem-section open" data-sem="'+sem.id+'">';
+    html+='<div class="modal-sem-header" onclick="toggleModalSem(this)">';
+    html+='<div class="modal-sem-title">'+sem.emoji+' '+sem.label+' <span class="sem-count '+countClass+'" id="semCount-'+sem.id+'">'+onCount+'/'+totalCount+'</span></div>';
+    html+='<div class="modal-sem-actions">';
+    html+='<button class="btn-micro grant" onclick="event.stopPropagation();grantSem(\''+sem.id+'\')">✓ Tudo</button>';
+    html+='<button class="btn-micro revoke" onclick="event.stopPropagation();revokeSem(\''+sem.id+'\')">✕ Limpar</button>';
+    html+='<span class="modal-sem-chevron">▼</span>';
+    html+='</div></div>';
+    html+='<div class="modal-sem-body"><div class="resumos-grid-modal">';
+    sem.cols.forEach(function(c){
+      var cls=currentToggles[c.key]?"resumo-toggle on":"resumo-toggle";
+      html+='<div class="'+cls+'" data-act="toggle" data-key="'+c.key+'">'+c.label+'</div>';
+    });
+    html+='</div></div></div>';
+  });
+
+  // Cursos (renderizado separadamente após loadCursosDoAluno)
+  html+='<div class="modal-sem-section open" data-sem="cursos">';
+  html+='<div class="modal-sem-header" onclick="toggleModalSem(this)">';
+  html+='<div class="modal-sem-title" style="color:rgba(184,79,249,0.6);">🎓 Cursos</div>';
+  html+='<span class="modal-sem-chevron">▼</span>';
+  html+='</div>';
+  html+='<div class="modal-sem-body"><div class="resumos-grid-modal" id="cursosGridModal"></div></div></div>';
+
+  wrap.innerHTML=html;
+}
+
+window.toggleModalSem=function(header){
+  var section=header.parentElement;
+  section.classList.toggle("open");
+};
+
+window.grantSem=function(semId){
+  var sem=SEMESTRES.find(function(s){return s.id===semId;});
+  if(!sem)return;
+  sem.cols.forEach(function(c){currentToggles[c.key]=true;});
+  renderModalSections();
+  // Re-render cursos se já carregados
+  if(Object.keys(currentCursoToggles).length>0) renderCursosGrid();
+};
+
+window.revokeSem=function(semId){
+  var sem=SEMESTRES.find(function(s){return s.id===semId;});
+  if(!sem)return;
+  sem.cols.forEach(function(c){currentToggles[c.key]=false;});
+  renderModalSections();
+  if(Object.keys(currentCursoToggles).length>0) renderCursosGrid();
+};
+
+function renderResumosGrid(){
+  // Atualiza só os toggles visuais sem reconstruir tudo
+  RESUMOS_COLS.forEach(function(r){
+    var el=document.querySelector('[data-key="'+r.key+'"]');
+    if(el){
+      if(currentToggles[r.key]) el.classList.add("on");
+      else el.classList.remove("on");
+    }
+  });
+  // Atualiza contadores
+  SEMESTRES.forEach(function(sem){
+    var cnt=sem.cols.filter(function(c){return currentToggles[c.key];}).length;
+    var el=document.getElementById("semCount-"+sem.id);
+    if(el){
+      el.textContent=cnt+"/"+sem.cols.length;
+      el.className="sem-count "+(cnt>0?"":"zero");
+    }
+  });
+}
 
 // Lê da tabela acessos os cursos já liberados para este aluno
 async function loadCursosDoAluno(userId){
@@ -586,7 +722,7 @@ function renderCursosGridModal(){
   }).join("");
 }
 window.toggleCurso=function(k){currentCursoToggles[k]=!currentCursoToggles[k];renderCursosGridModal();};
-function renderResumosGrid(){var g=document.getElementById("resumosGrid");var pr=(currentAluno&&currentAluno.resumos_presente)||[];g.innerHTML=RESUMOS_COLS.map(function(r){var on=currentToggles[r.key],ip=pr.includes(r.key);return"<div style='display:flex;gap:4px;align-items:stretch;'><div class='resumo-toggle "+(on?"on":"")+"' style='flex:1' data-key='"+r.key+"' data-act='toggle'>"+(on?"&#9989; ":"&#128274; ")+r.label+"</div>"+(on?"<div title='Presente' style='padding:4px 8px;border-radius:10px;cursor:pointer;font-size:14px;border:1px solid rgba(251,191,36,"+(ip?"0.5":"0.15")+");background:rgba(251,191,36,"+(ip?"0.15":"0.04")+");display:flex;align-items:center;justify-content:center;' data-key='"+r.key+"' data-act='presente'>&#127873;</div>":"")+"</div>";}).join("");}
+function renderCursosGrid(){renderCursosGridModal();}
 window.toggleResumo=function(k){currentToggles[k]=!currentToggles[k];renderResumosGrid();};
 window.togglePresente=function(k){if(!currentAluno)return;var p=(currentAluno.resumos_presente||[]).slice(),i=p.indexOf(k);if(i>=0)p.splice(i,1);else p.push(k);currentAluno.resumos_presente=p;renderResumosGrid();};
 window.set50Days=function(){var d=new Date();d.setDate(d.getDate()+50);document.getElementById("expiryInput").value=d.toISOString().substring(0,10);};
