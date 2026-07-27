@@ -113,6 +113,11 @@
     </ul>
   </div>
 
+  <div class="img-inline" style="max-width:420px">
+    <img src="img/m4-escorpiao-quadro-grave-01.jpg" alt="Escorpionismo grave — quadro sistêmico pediátrico">
+    <div class="img-leg"><b>Quadro sistêmico grave em criança</b> — palidez, sudorese profusa e agitação após picada de escorpião. Vômitos repetidos nessa faixa etária são sinal premonitório de gravidade e indicam soroterapia imediata.<div class="img-credit">Foto: aguardando upload</div></div>
+  </div>
+
   <!-- ========== SEGUNDO ALERTA CRIANÇAS — REFORÇO ========== -->
   <div class="child-alert">
     <div class="ca-badge">👶 Conduta em crianças — reforço</div>
@@ -205,7 +210,8 @@ function showSection(id,btn){document.querySelectorAll('.section').forEach(funct
 
 var IMAGENS=[
   {file:"img/m4-escorpiao-amarelo-01.jpg",titulo:"Tityus serrulatus (escorpião amarelo — o mais perigoso)",credito:"Foto: José Roberto Peruca / Flickr — CC BY 2.0"},
-  {file:"img/m4-escorpiao-marrom-01.jpg",titulo:"Tityus bahiensis (escorpião marrom)",credito:"Manual de Identificação de Escorpiões — Governo do Estado de São Paulo"}
+  {file:"img/m4-escorpiao-marrom-01.jpg",titulo:"Tityus bahiensis (escorpião marrom)",credito:"Manual de Identificação de Escorpiões — Governo do Estado de São Paulo"},
+  {file:"img/m4-escorpiao-quadro-grave-01.jpg",titulo:"Escorpionismo grave — quadro sistêmico pediátrico",credito:"Foto: aguardando upload"}
 ];
 function renderGallery(){var w=document.getElementById('galleryWrap');w.innerHTML='';IMAGENS.forEach(function(im){var c=document.createElement('div');c.className='img-card';c.innerHTML='<div class="img-frame"><img src="'+im.file+'" alt="'+im.titulo+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><div class="placeholder" style="display:none"><span class="ph-emoji">🦂</span><span>'+im.titulo+'</span></div></div><div class="cap"><div class="cap-title">'+im.titulo+'</div><div class="cap-credit">'+im.credito+'</div></div>';w.appendChild(c);});}
 

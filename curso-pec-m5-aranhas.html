@@ -52,6 +52,11 @@
   </div>
   <div class="info-block"><div class="label">Manifestações</div><ul><li><b>Dor intensa irradiada</b> para a raiz do membro — a queixa mais marcante</li><li>Eritema e edema local</li><li>Parestesia</li><li><b>Priapismo</b> (sinal clássico de foneutrismo em homens)</li><li>Sudorese, taquicardia, hipertensão</li><li>Nos graves: edema agudo de pulmão, choque</li></ul></div>
 
+  <div class="img-inline" style="max-width:420px">
+    <img src="img/m5-foneutria-edema-01.jpg" alt="Foneutrismo — eritema e edema local no ponto de picada">
+    <div class="img-leg"><b>Quadro local do foneutrismo</b> — eritema e edema no ponto de picada, com dor intensa irradiada para a raiz do membro (a queixa mais característica).<div class="img-credit">Foto: aguardando upload</div></div>
+  </div>
+
   <div class="child-alert">
     <div class="ca-badge">👶 Crianças</div>
     <h4>Foneutrismo em crianças: mesma lógica do escorpionismo</h4>
@@ -80,6 +85,17 @@
   </div>
   <div class="info-block"><div class="label">Manifestações</div><ul><li>Dor (pode ser tipo queimação), eritema, edema</li><li><b>Placa marmórea</b> (isquêmica, com áreas pálidas e violáceas)</li><li>Bolhas hemorrágicas → necrose</li><li>Hemólise intravascular → icterícia, urina escura, IRA</li></ul></div>
 
+  <div class="img-pair">
+    <div class="img-inline">
+      <img src="img/m5-loxo-placa-marmorea-01.jpg" alt="Loxoscelismo — placa marmórea">
+      <div class="img-leg"><b>Placa marmórea</b> — lesão isquêmica com áreas pálidas e violáceas alternadas, achado dermatológico clássico do loxoscelismo cutâneo.<div class="img-credit">Foto: aguardando upload</div></div>
+    </div>
+    <div class="img-inline">
+      <img src="img/m5-loxo-necrose-01.jpg" alt="Loxoscelismo — necrose cutânea evoluída">
+      <div class="img-leg"><b>Necrose cutânea</b> — evolução da placa marmórea para escara necrótica, típica dos casos moderados a graves de loxoscelismo.<div class="img-credit">Foto: aguardando upload</div></div>
+    </div>
+  </div>
+
   <table class="compare-table">
     <thead><tr><th>Gravidade</th><th>Quadro</th><th>Conduta</th></tr></thead>
     <tbody>
@@ -101,6 +117,11 @@
     <p>A <b>alfa-latrotoxina</b> é uma neurotoxina pré-sináptica que aumenta Ca²⁺ intracelular → liberação maciça de <b>neurotransmissores adrenérgicos, colinérgicos e GABA</b> → dor, contraturas, sudorese generalizada, sintomas autonômicos difusos.</p>
   </div>
   <div class="info-block"><div class="label">Manifestações</div><ul><li>Dor local, edema discreto, sudorese local</li><li>Dor nos membros inferiores, parestesia, tremores e <b>contraturas musculares</b></li><li>Dor abdominal ("abdome em tábua" — pode simular abdome agudo)</li><li><b>Fácies latrodectísmica</b> (contraturas faciais)</li><li>Taquicardia/bradicardia, hipertensão, taquidispneia</li><li>Priapismo, retenção urinária</li></ul></div>
+
+  <div class="img-inline" style="max-width:420px">
+    <img src="img/m5-latrodectus-facies-01.jpg" alt="Fácies latrodectísmica — contratura facial">
+    <div class="img-leg"><b>Fácies latrodectísmica</b> — contratura da musculatura facial (blefaroconjuntivite, trismo, contração dos masseteres), achado característico do latrodectismo grave.<div class="img-credit">Foto: aguardando upload</div></div>
+  </div>
 
   <div class="info-block warn">
     <div class="label">Soro antilatrodéctico (SALatr)</div>
@@ -151,7 +172,11 @@ function showSection(id,btn){document.querySelectorAll('.section').forEach(funct
 var IMAGENS=[
   {file:"img/m5-armadeira-01.jpg",titulo:"Phoneutria nigriventer (armadeira)",credito:"Foto: Rogério Bertani"},
   {file:"img/m5-marrom-01.jpg",titulo:"Loxosceles sp. (aranha-marrom)",credito:"Foto: Antônio R. da Costa / Instituto Butantan — Divulgação"},
-  {file:"img/m5-viuva-negra-01.jpg",titulo:"Latrodectus sp. (viúva-negra)",credito:"Foto: Shenrich91 / Wikimedia Commons — CC BY-SA 3.0"}
+  {file:"img/m5-viuva-negra-01.jpg",titulo:"Latrodectus sp. (viúva-negra)",credito:"Foto: Shenrich91 / Wikimedia Commons — CC BY-SA 3.0"},
+  {file:"img/m5-foneutria-edema-01.jpg",titulo:"Foneutrismo — eritema e edema local",credito:"Foto: aguardando upload"},
+  {file:"img/m5-loxo-placa-marmorea-01.jpg",titulo:"Loxoscelismo — placa marmórea",credito:"Foto: aguardando upload"},
+  {file:"img/m5-loxo-necrose-01.jpg",titulo:"Loxoscelismo — necrose cutânea",credito:"Foto: aguardando upload"},
+  {file:"img/m5-latrodectus-facies-01.jpg",titulo:"Fácies latrodectísmica",credito:"Foto: aguardando upload"}
 ];
 function renderGallery(){var w=document.getElementById('galleryWrap');w.innerHTML='';IMAGENS.forEach(function(im){var c=document.createElement('div');c.className='img-card';c.innerHTML='<div class="img-frame"><img src="'+im.file+'" alt="'+im.titulo+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><div class="placeholder" style="display:none"><span class="ph-emoji">🕷️</span><span>'+im.titulo+'</span></div></div><div class="cap"><div class="cap-title">'+im.titulo+'</div><div class="cap-credit">'+im.credito+'</div></div>';w.appendChild(c);});}
 var QD=[
