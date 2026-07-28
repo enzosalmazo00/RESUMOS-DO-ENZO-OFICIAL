@@ -127,6 +127,18 @@ header .badge{display:inline-block;background:var(--accent);color:#000;font-size
 }
 #backBtn:hover{border-color:var(--accent);background:var(--card2)}
 
+.case-divider{
+  display:flex;align-items:center;gap:12px;margin:44px 0 22px;text-align:center
+}
+.case-divider::before,.case-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+.case-divider .cd-inner{white-space:nowrap}
+.case-divider h2{font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--accent2)}
+.case-divider .cd-sub{font-size:12px;color:var(--text2);margin-top:4px}
+.q-card.case-card{border-left:3px solid var(--accent2)}
+.case-tag{display:inline-block;background:rgba(56,232,192,.15);color:var(--accent2);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 9px;border-radius:6px;margin-right:6px}
+.case-vignette{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:14px;font-size:14px;line-height:1.7}
+.case-vignette b{color:var(--accent)}
+
 @media(max-width:560px){
   .score-bar{flex-direction:column;align-items:flex-start}
   .q-card{padding:16px}
@@ -138,7 +150,7 @@ header .badge{display:inline-block;background:var(--accent);color:#000;font-size
 <header>
   <div class="badge">PROVA FINAL</div>
   <h1>Acidentes por Animais Peçonhentos</h1>
-  <div class="sub">35 questões · Todos os módulos · Mínimo 61% para aprovação</div>
+  <div class="sub">43 questões (35 teóricas + 8 casos clínicos) · Todos os módulos · Mínimo 61% para aprovação</div>
 </header>
 
 <div class="container">
@@ -156,7 +168,7 @@ header .badge{display:inline-block;background:var(--accent);color:#000;font-size
     <div class="sb-left">
       <span class="sb-correct">✓ <span id="nRight">0</span></span>
       <span class="sb-wrong">✗ <span id="nWrong">0</span></span>
-      <span class="sb-pending">◯ <span id="nPending">35</span></span>
+      <span class="sb-pending">◯ <span id="nPending">43</span></span>
     </div>
     <div class="sb-right">
       <span class="sb-pct" id="pctLabel">0%</span>
@@ -1249,6 +1261,149 @@ header .badge{display:inline-block;background:var(--accent);color:#000;font-size
           <div class="exp-body">Diante de reação adversa precoce: (1) INTERROMPER a infusão temporariamente; (2) tratar a reação: adrenalina IM 0,01 mg/kg (máx 0,5 mg adulto), anti-histamínico IV (prometazina ou difenidramina), corticoide IV (hidrocortisona), broncodilatador se broncoespasmo; (3) após estabilização, RETOMAR a infusão em velocidade mais lenta. O soro NÃO deve ser abandonado, pois é o ÚNICO tratamento eficaz contra o envenenamento. A reação não contraindica a continuidade da soroterapia.</div>
         </div>
       </div>
+
+      <div class="case-divider">
+        <div class="cd-inner">
+          <h2>🏥 Casos Clínicos — Tomada de Decisão Integrada</h2>
+          <div class="cd-sub">Um caso completo para cada tipo de acidente peçonhento — leia o quadro e escolha a conduta correta</div>
+        </div>
+      </div>
+
+      <div class="q-card case-card" data-q="35" data-ans="1">
+        <div class="q-num">Caso 1 — Botrópico <span class="q-badge" id="badge35"></span></div>
+        <div class="case-vignette"><span class="case-tag">CASO CLÍNICO</span><b>Homem, 34 anos</b>, picado por serpente há 2h no pé direito. Refere <b>dor moderada</b> local. Ao exame: <b>edema até o terço médio da perna</b>, equimose local discreta e <b>sangramento gengival</b> ao escovar os dentes. Serpente com fosseta loreal, compatível com <i>Bothrops</i>.</div>
+        <div class="q-text">Qual a classificação de gravidade e a conduta correta?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0"><span class="opt-letter">A</span><span>Leve — 3 ampolas de SAB</span></label>
+          <label class="opt" data-idx="1"><span class="opt-letter">B</span><span>Moderado — 6 ampolas de SAB, pois há manifestação hemorrágica sistêmica (sangramento gengival) associada a edema evidente</span></label>
+          <label class="opt" data-idx="2"><span class="opt-letter">C</span><span>Grave — 12 ampolas de SAB</span></label>
+          <label class="opt" data-idx="3"><span class="opt-letter">D</span><span>Sem indicação de soro — apenas observação e analgesia</span></label>
+          <label class="opt" data-idx="4"><span class="opt-letter">E</span><span>SABL (antibotrópico-laquético), pela localização em membro inferior</span></label>
+        </div>
+        <div class="q-exp" id="exp35">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A presença de <b>manifestação hemorrágica sistêmica</b> (sangramento gengival), mesmo discreta, associada a edema que não é mínimo (ultrapassa o local da picada mas não atinge todo o membro), classifica o caso como <b>moderado</b> — dose de <b>6 ampolas de SAB</b> (protocolo PCDT 2026: leve 3 / moderado 6 / grave 12). SABL só é indicado quando há confirmação de <i>Lachesis</i> ou síndrome vagal associada, o que não é o caso aqui.</div>
+        </div>
+      </div>
+
+      <div class="q-card case-card" data-q="36" data-ans="2">
+        <div class="q-num">Caso 2 — Crotálico <span class="q-badge" id="badge36"></span></div>
+        <div class="case-vignette"><span class="case-tag">CASO CLÍNICO</span><b>Homem, 28 anos</b>, picado por cascavel há 6h. Refere <b>pouca dor local</b> e ausência de edema significativo. Ao exame: <b>ptose palpebral bilateral</b>, diplopia, mialgia difusa e <b>urina de coloração escura</b> (compatível com mioglobinúria).</div>
+        <div class="q-text">Diante do quadro neuroparalítico + mioglobinúria, qual a conduta?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0"><span class="opt-letter">A</span><span>Leve — 5 ampolas de SAC</span></label>
+          <label class="opt" data-idx="1"><span class="opt-letter">B</span><span>Moderado — 10 ampolas de SAC</span></label>
+          <label class="opt" data-idx="2"><span class="opt-letter">C</span><span>Grave — 20 ampolas de SAC, com atenção para IRA por rabdomiólise/mioglobinúria e necessidade de hidratação vigorosa</span></label>
+          <label class="opt" data-idx="3"><span class="opt-letter">D</span><span>SAB, já que não houve edema local característico de Bothrops</span></label>
+          <label class="opt" data-idx="4"><span class="opt-letter">E</span><span>Sem soro — tratamento apenas sintomático da fácies miastênica</span></label>
+        </div>
+        <div class="q-exp" id="exp36">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">O acidente crotálico classicamente cursa com <b>pouca reação local</b> (diferente do botrópico), mas com <b>fácies miastênica</b> (ptose, diplopia) e <b>mioglobinúria</b> por rabdomiólise. A presença de mioglobinúria já define o caso como <b>grave</b> — <b>20 ampolas de SAC</b> (protocolo: leve 5 / moderado 10 / grave 20) — com hidratação adequada para prevenir insuficiência renal aguda por depósito de mioglobina nos túbulos renais.</div>
+        </div>
+      </div>
+
+      <div class="q-card case-card" data-q="37" data-ans="2">
+        <div class="q-num">Caso 3 — Laquético <span class="q-badge" id="badge37"></span></div>
+        <div class="case-vignette"><span class="case-tag">CASO CLÍNICO</span><b>Homem, 45 anos</b>, trabalhador rural na região amazônica, picado por serpente de grande porte no dorso do pé. Apresenta <b>edema importante</b> ascendendo até o joelho, equimoses, sangramento em ferimentos prévios, além de <b>bradicardia, hipotensão, diarreia e dor abdominal</b> (síndrome vagal).</div>
+        <div class="q-text">A síndrome vagal associada ao quadro hemorrágico indica qual soro e dose?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0"><span class="opt-letter">A</span><span>SAB — 6 ampolas, por se tratar de manifestação hemorrágica típica de Bothrops</span></label>
+          <label class="opt" data-idx="1"><span class="opt-letter">B</span><span>SABL — 10 ampolas (caso moderado)</span></label>
+          <label class="opt" data-idx="2"><span class="opt-letter">C</span><span>SABL — 20 ampolas, pois a síndrome vagal (bradicardia, hipotensão, diarreia) associada a edema importante caracteriza acidente laquético grave</span></label>
+          <label class="opt" data-idx="3"><span class="opt-letter">D</span><span>SAC — 20 ampolas, pela gravidade do quadro</span></label>
+          <label class="opt" data-idx="4"><span class="opt-letter">E</span><span>Nenhum soro — síndrome vagal é autolimitada e não indica gravidade</span></label>
+        </div>
+        <div class="q-exp" id="exp37">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A <b>síndrome vagal</b> (bradicardia, hipotensão, diarreia, dor abdominal, tontura) é um achado <b>característico e exclusivo do acidente laquético</b>, distinguindo-o do botrópico mesmo com quadro hemorrágico/local semelhante. Sua presença, associada a edema importante, define gravidade e indica a dose máxima de <b>20 ampolas de SABL</b> (protocolo: apenas 2 níveis — 10 moderado / 20 grave).</div>
+        </div>
+      </div>
+
+      <div class="q-card case-card" data-q="38" data-ans="1">
+        <div class="q-num">Caso 4 — Elapídico <span class="q-badge" id="badge38"></span></div>
+        <div class="case-vignette"><span class="case-tag">CASO CLÍNICO</span><b>Homem, 22 anos</b>, picado por serpente de anéis coloridos (coral verdadeira, confirmada por identificação). Após 3h, evolui com <b>ptose palpebral progressiva</b> e <b>dificuldade de deglutição</b>, sem sinais de insuficiência respiratória no momento.</div>
+        <div class="q-text">Segundo a nova classificação em 3 níveis, qual a conduta?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0"><span class="opt-letter">A</span><span>Leve — apenas observação, sem soro</span></label>
+          <label class="opt" data-idx="1"><span class="opt-letter">B</span><span>Moderado — 5 ampolas de SAEL, diante de sinais neuroparalíticos iniciais (ptose, disfagia) sem insuficiência respiratória</span></label>
+          <label class="opt" data-idx="2"><span class="opt-letter">C</span><span>Grave — 10 ampolas de SAEL, reservado apenas para paralisia respiratória instalada</span></label>
+          <label class="opt" data-idx="3"><span class="opt-letter">D</span><span>SAB 12 ampolas, pela gravidade do quadro neurológico</span></label>
+          <label class="opt" data-idx="4"><span class="opt-letter">E</span><span>SAEsc, pois cobre quadros neurotóxicos</span></label>
+        </div>
+        <div class="q-exp" id="exp38">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A classificação atualizada do acidente elapídico tem <b>3 níveis</b>: leve (sem sinais neuroparalíticos, observação), moderado (sinais neuroparalíticos iniciais como ptose e disfagia, sem insuficiência respiratória — <b>5 ampolas SAEL</b>) e grave (insuficiência respiratória instalada — <b>10 ampolas SAEL</b>). O caso descrito, com ptose e disfagia mas sem falência respiratória, é <b>moderado</b>.</div>
+        </div>
+      </div>
+
+      <div class="q-card case-card" data-q="39" data-ans="2">
+        <div class="q-num">Caso 5 — Escorpiônico <span class="q-badge" id="badge39"></span></div>
+        <div class="case-vignette"><span class="case-tag">CASO CLÍNICO</span><b>Criança, 6 anos</b>, picada por escorpião amarelo (<i>Tityus serrulatus</i>) identificado pelos pais. Após 1h, apresenta <b>vômitos profusos e repetidos</b>, sudorese generalizada abundante e <b>agitação psicomotora acentuada</b>, ainda sem sinais de insuficiência cardíaca ou edema pulmonar.</div>
+        <div class="q-text">Qual a classificação e a dose de SAEsc indicada?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0"><span class="opt-letter">A</span><span>Leve — sem soro, apenas observação</span></label>
+          <label class="opt" data-idx="1"><span class="opt-letter">B</span><span>Moderado — 3 ampolas de SAEsc</span></label>
+          <label class="opt" data-idx="2"><span class="opt-letter">C</span><span>Grave — 6 ampolas de SAEsc (dose máxima), pois vômitos profusos e frequentes são sinal premonitório de gravidade, aqui associados a sudorese abundante e agitação acentuada</span></label>
+          <label class="opt" data-idx="3"><span class="opt-letter">D</span><span>SAA, já que se trata de criança</span></label>
+          <label class="opt" data-idx="4"><span class="opt-letter">E</span><span>Aguardar piora clínica (edema pulmonar) antes de indicar soro</span></label>
+        </div>
+        <div class="q-exp" id="exp39">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body"><b>Vômitos profusos e frequentes</b> ("sentinel vomiting") são o principal sinal premonitório de gravidade no escorpionismo, especialmente em crianças. Associados a sudorese generalizada abundante e agitação psicomotora acentuada, caracterizam <b>quadro grave</b>, indicando a dose máxima de <b>6 ampolas de SAEsc</b> — não se deve aguardar a instalação de insuficiência cardíaca ou edema pulmonar para tratar.</div>
+        </div>
+      </div>
+
+      <div class="q-card case-card" data-q="40" data-ans="1">
+        <div class="q-num">Caso 6 — Loxoscelismo (aranha-marrom) <span class="q-badge" id="badge40"></span></div>
+        <div class="case-vignette"><span class="case-tag">CASO CLÍNICO</span><b>Mulher, 40 anos</b>, lesão no braço há 24h, com evolução para <b>placa marmórea</b> (áreas pálidas e violáceas). Exames laboratoriais (bilirrubina, hemoglobina, função renal) <b>normais</b>, sem sinais de hemólise.</div>
+        <div class="q-text">Qual a conduta correta diante da placa marmórea sem hemólise?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0"><span class="opt-letter">A</span><span>Leve — apenas corticoide, sem soro</span></label>
+          <label class="opt" data-idx="1"><span class="opt-letter">B</span><span>Moderado — 5 ampolas de SAA + prednisona por 7 dias</span></label>
+          <label class="opt" data-idx="2"><span class="opt-letter">C</span><span>Grave (cutâneo-hemolítico) — 10 ampolas de SAA</span></label>
+          <label class="opt" data-idx="3"><span class="opt-letter">D</span><span>SAEsc, por se tratar de aracnídeo</span></label>
+          <label class="opt" data-idx="4"><span class="opt-letter">E</span><span>SALatr, pela lesão cutânea extensa</span></label>
+        </div>
+        <div class="q-exp" id="exp40">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">A presença de <b>placa marmórea característica sem hemólise</b> define o loxoscelismo <b>moderado</b> — indicação de <b>5 ampolas de SAA</b> + prednisona por 7 dias. Caso houvesse hemólise intravascular associada (icterícia, hemoglobinúria, IRA), seria classificado como grave cutâneo-hemolítico, com dose de 10 ampolas.</div>
+        </div>
+      </div>
+
+      <div class="q-card case-card" data-q="41" data-ans="1">
+        <div class="q-num">Caso 7 — Foneutrismo (armadeira) <span class="q-badge" id="badge41"></span></div>
+        <div class="case-vignette"><span class="case-tag">CASO CLÍNICO</span><b>Criança, 5 anos</b>, picada na mão por aranha armadeira (<i>Phoneutria</i>) identificada pelos pais. Apresenta <b>dor intensa irradiada</b>, sudorese ocasional e vômitos ocasionais, sem sinais de choque ou edema pulmonar.</div>
+        <div class="q-text">Qual a conduta correta, considerando a idade da paciente?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0"><span class="opt-letter">A</span><span>Observação domiciliar, sem necessidade de soro nessa faixa etária</span></label>
+          <label class="opt" data-idx="1"><span class="opt-letter">B</span><span>2–4 ampolas de SAA imediatamente + internação obrigatória, pois em crianças até 7 anos qualquer sintoma sistêmico (mesmo leve) indica soroterapia e internação</span></label>
+          <label class="opt" data-idx="2"><span class="opt-letter">C</span><span>Aguardar 6h de observação antes de decidir pelo soro</span></label>
+          <label class="opt" data-idx="3"><span class="opt-letter">D</span><span>SAEsc, por ser mais específico para o quadro autonômico</span></label>
+          <label class="opt" data-idx="4"><span class="opt-letter">E</span><span>Alta hospitalar com anti-histamínico oral</span></label>
+        </div>
+        <div class="q-exp" id="exp41">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">Em <b>crianças até 7 anos</b>, a regra especial do foneutrismo determina que qualquer sintoma sistêmico — mesmo brando, como sudorese ocasional e vômitos ocasionais — já indica <b>SAA imediatamente</b> (2–4 ampolas, dose de quadro moderado) <b>+ internação obrigatória</b>, pela maior vulnerabilidade dessa faixa etária à evolução para quadro grave (edema pulmonar, choque).</div>
+        </div>
+      </div>
+
+      <div class="q-card case-card" data-q="42" data-ans="2">
+        <div class="q-num">Caso 8 — Latrodectismo (viúva-negra) <span class="q-badge" id="badge42"></span></div>
+        <div class="case-vignette"><span class="case-tag">CASO CLÍNICO</span><b>Homem, 35 anos</b>, picado por viúva-negra. Apresenta <b>dor abdominal em tábua</b>, <b>fácies latrodectísmica</b> (contratura facial), contraturas musculares generalizadas e sudorese profusa. O <b>SALatr não está disponível</b> na unidade de atendimento.</div>
+        <div class="q-text">Diante da indisponibilidade do soro específico, qual a conduta correta?</div>
+        <div class="q-opts">
+          <label class="opt" data-idx="0"><span class="opt-letter">A</span><span>Usar SAA, já que cobre acidentes aracnídicos em geral</span></label>
+          <label class="opt" data-idx="1"><span class="opt-letter">B</span><span>Usar SAEsc como substituto, por mecanismo de ação semelhante</span></label>
+          <label class="opt" data-idx="2"><span class="opt-letter">C</span><span>Tratamento sintomático: gluconato de cálcio 10% (10–20 mL IM) + clorpromazina (25–50 mg IM), já que o SAA NÃO cobre Latrodectus e o SALatr está indisponível</span></label>
+          <label class="opt" data-idx="3"><span class="opt-letter">D</span><span>Aguardar transferência para outro serviço sem qualquer tratamento sintomático</span></label>
+          <label class="opt" data-idx="4"><span class="opt-letter">E</span><span>Não há tratamento possível sem o soro específico</span></label>
+        </div>
+        <div class="q-exp" id="exp42">
+          <div class="exp-title">📚 Explicação</div>
+          <div class="exp-body">O <b>SAA NÃO cobre Latrodectus</b> (cobre apenas Loxosceles, Phoneutria e Tityus), e o SALatr é produzido exclusivamente pelo Instituto Vital Brazil (RJ), podendo ter disponibilidade limitada. Quando indisponível, o tratamento é <b>sintomático</b>: <b>gluconato de cálcio 10%</b> (adulto 10–20 mL IM) + <b>clorpromazina</b> (adulto 25–50 mg IM), de 4/4h e 8/8h respectivamente, até resolução das contraturas.</div>
+        </div>
+      </div>
   </div>
 
   <div class="result-panel" id="resultPanel">
@@ -1267,7 +1422,7 @@ header .badge{display:inline-block;background:var(--accent);color:#000;font-size
 <script>
 var MODULO = 0;
 var AULA_ID = "prova-final";
-var TOTAL = 35;
+var TOTAL = 43;
 var PASSING = Math.ceil(TOTAL * 0.61);
 var answered = 0, rights = 0, wrongs = 0;
 
