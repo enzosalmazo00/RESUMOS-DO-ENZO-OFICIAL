@@ -85,6 +85,12 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
 #backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none}
 .source-note{margin-top:24px;padding:14px 18px;background:var(--card2);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;font-size:12px;color:var(--muted)}
 .source-note b{color:var(--accent2)}
+.complete-panel{background:linear-gradient(135deg,rgba(79,249,132,0.06),rgba(56,232,192,0.06));border:1px solid rgba(79,249,132,0.25);border-radius:var(--radius);padding:24px;margin-top:28px;text-align:center}
+.complete-panel h3{font-family:var(--font-display);font-size:18px;color:var(--green);margin-bottom:8px}
+.complete-panel p{color:var(--muted);font-size:13px;margin-bottom:16px}
+.complete-btn{padding:13px 28px;border:none;border-radius:12px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--green),var(--accent2));color:var(--bg);transition:all .2s}
+.complete-btn:hover{box-shadow:0 0 24px rgba(79,249,132,0.4);transform:translateY(-1px)}
+.complete-btn.done{background:var(--card2);color:var(--green);cursor:default;border:1px solid var(--green)}
 </style>
 </head>
 <body>
@@ -325,9 +331,19 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
     <div class="score-box"><div class="sn">Restam</div><div class="sv" id="qRestam" style="color:var(--accent)">6</div></div>
   </div>
   <div id="quizArea"></div>
+  <div class="complete-panel">
+    <h3>✔️ Concluir esta aula</h3>
+    <p>Ao concluir, sua barra de progresso no curso é atualizada.</p>
+    <button class="complete-btn" id="completeBtn" onclick="concluirAula()">Marcar aula como concluída</button>
+  </div>
 </div></div>
 
 <script>
+var CURSO="peconhentos", AULA_ID="m0-epidemiologia";
+function getClient(){if(window.authClient)return window.authClient;if(window.supabaseClient)return window.supabaseClient;return null;}
+async function concluirAula(){var btn=document.getElementById('completeBtn');var sb=getClient();if(!sb){marcarConcluidaUI(btn);return;}try{var u=await sb.auth.getUser();var user=u&&u.data?u.data.user:null;if(user){await sb.from('curso_progresso').upsert({user_id:user.id,curso:CURSO,aula_id:AULA_ID,concluida:true,quiz_score:ac,quiz_total:QS.length,updated_at:new Date().toISOString()},{onConflict:'user_id,curso,aula_id'});}}catch(e){console.warn('Falha ao salvar progresso:',e);}marcarConcluidaUI(btn);}
+function marcarConcluidaUI(btn){btn.classList.add('done');btn.textContent='✓ Aula concluída';btn.onclick=function(){window.location.href='curso-peconhentos.html';};setTimeout(function(){window.location.href='curso-peconhentos.html';},900);}
+
 // ═══ TABS ═══
 function showTab(i){
   document.querySelectorAll('.section').forEach((s,j)=>{s.classList.toggle('active',j===i)});

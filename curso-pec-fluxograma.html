@@ -34,6 +34,12 @@ h1{font-family:var(--font-display);font-size:clamp(20px,3.5vw,28px);font-weight:
 .restart-btn{display:block;margin:20px auto 0;background:var(--accent);color:var(--bg);border:none;padding:10px 28px;border-radius:10px;font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer}
 #backBtn{position:fixed;bottom:18px;left:18px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--accent);padding:10px 18px;border-radius:12px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none}
 .breadcrumb{font-family:var(--font-mono);font-size:10px;color:var(--muted);text-align:center;margin-bottom:16px;letter-spacing:1px}
+.complete-panel{background:linear-gradient(135deg,rgba(79,249,132,0.06),rgba(56,232,192,0.06));border:1px solid rgba(79,249,132,0.25);border-radius:var(--radius);padding:24px;margin-top:20px;text-align:center}
+.complete-panel h3{font-family:var(--font-display);font-size:18px;color:var(--green);margin-bottom:8px}
+.complete-panel p{color:var(--muted);font-size:13px;margin-bottom:16px}
+.complete-btn{padding:13px 28px;border:none;border-radius:12px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--green),var(--accent2));color:var(--bg);transition:all .2s}
+.complete-btn:hover{box-shadow:0 0 24px rgba(79,249,132,0.4);transform:translateY(-1px)}
+.complete-btn.done{background:var(--card2);color:var(--green);cursor:default;border:1px solid var(--green)}
 </style>
 </head>
 <body>
@@ -43,6 +49,11 @@ h1{font-family:var(--font-display);font-size:clamp(20px,3.5vw,28px);font-weight:
 <p class="sub">Responda as perguntas e descubra o soro e a dose indicados · PCDT 2026</p>
 <div class="breadcrumb" id="bread">INÍCIO</div>
 <div id="flow"></div>
+<div class="complete-panel">
+  <h3>✔️ Concluir esta aula</h3>
+  <p>Ao concluir, sua barra de progresso no curso é atualizada.</p>
+  <button class="complete-btn" id="completeBtn" onclick="concluirAula()">Marcar aula como concluída</button>
+</div>
 </div>
 
 <script>
@@ -210,6 +221,11 @@ function restart(){
 }
 
 render('start');
+
+var CURSO="peconhentos", AULA_ID="m5-fluxograma";
+function getClient(){if(window.authClient)return window.authClient;if(window.supabaseClient)return window.supabaseClient;return null;}
+async function concluirAula(){var btn=document.getElementById('completeBtn');var sb=getClient();if(!sb){marcarConcluidaUI(btn);return;}try{var u=await sb.auth.getUser();var user=u&&u.data?u.data.user:null;if(user){await sb.from('curso_progresso').upsert({user_id:user.id,curso:CURSO,aula_id:AULA_ID,concluida:true,updated_at:new Date().toISOString()},{onConflict:'user_id,curso,aula_id'});}}catch(e){console.warn('Falha ao salvar progresso:',e);}marcarConcluidaUI(btn);}
+function marcarConcluidaUI(btn){btn.classList.add('done');btn.textContent='✓ Aula concluída';btn.onclick=function(){window.location.href='curso-peconhentos.html';};setTimeout(function(){window.location.href='curso-peconhentos.html';},900);}
 </script>
 </body>
 </html>
