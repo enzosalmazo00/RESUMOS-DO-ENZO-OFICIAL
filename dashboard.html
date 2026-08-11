@@ -1300,18 +1300,28 @@
           </div>
         </div>
 
-        <!-- 4º SEMESTRE (em breve) -->
-        <div class="sem-card sem-card-soon">
-          <div class="sem-card-header">
+        <!-- 4º SEMESTRE -->
+        <div class="sem-card" id="sem-4">
+          <div class="sem-card-header" onclick="toggleSemLoja(this)">
             <div class="sem-card-left">
-              <span class="sem-card-emoji" style="opacity:0.4;">🔬</span>
+              <span class="sem-card-emoji">🔬</span>
               <div>
-                <div class="sem-card-title" style="color:rgba(125,211,232,0.35);">4º Semestre</div>
-                <div class="sem-card-sub" style="color:rgba(125,211,232,0.2);">Em breve</div>
+                <div class="sem-card-title">4º Semestre</div>
+                <div class="sem-card-sub">Fisiologia II, Bioquímica II, Epidemiologia, Nutrição, Microbiologia II, Eletrocardiograma</div>
               </div>
             </div>
             <div class="sem-card-right">
-              <span class="sem-card-badge" style="background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.2);color:rgba(251,191,36,0.5);">🔜 Em breve</span>
+              <span class="sem-card-badge" style="background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.2);color:rgba(251,191,36,0.6);">🔜 Em breve</span>
+              <span class="sem-card-chevron">▼</span>
+            </div>
+          </div>
+          <div class="sem-card-body">
+            <div style="padding:12px 16px;border-radius:12px;border:1px solid rgba(251,191,36,0.12);background:rgba(251,191,36,0.03);font-size:12px;color:rgba(251,191,36,0.55);text-align:center;margin-bottom:16px;">
+              🚧 Conteúdo em preparação — disponibilizado ao longo do semestre.
+            </div>
+            <div style="margin-top:4px;">
+              <div class="store-section-title" style="margin-bottom:12px;">📝 Disciplinas</div>
+              <div class="store-grid" id="store-grid-s4"></div>
             </div>
           </div>
         </div>
@@ -1554,6 +1564,16 @@ var MATERIAS_S2 = [
   { key:"bioestatistica",      label:"Bioestatística",        emoji:"📊", desc:"Estatística aplicada às ciências da saúde.",  file:"bioestatistica.html",      ready:false },
 ];
 
+// ── Matérias 4º Semestre (resumo único por disciplina) ──────────────────────
+var MATERIAS_S4 = [
+  { key:"fisiologia_2",      label:"Fisiologia II",     emoji:"❤️", desc:"Fisiologia avançada dos sistemas humanos.",       file:"fisiologia_2.html",      ready:false },
+  { key:"bioquimica_2",      label:"Bioquímica II",     emoji:"🧪", desc:"Metabolismo avançado e bioquímica clínica.",      file:"bioquimica_2.html",      ready:false },
+  { key:"epidemiologia",     label:"Epidemiologia",     emoji:"📊", desc:"Métodos epidemiológicos e saúde coletiva.",       file:"epidemiologia.html",     ready:false },
+  { key:"nutricao",          label:"Nutrição",          emoji:"🥗", desc:"Nutrição clínica e metabolismo nutricional.",     file:"nutricao.html",          ready:false },
+  { key:"microbiologia_2",   label:"Microbiologia II",  emoji:"🦠", desc:"Virologia, micologia e microbiologia avançada.",  file:"microbiologia_2.html",   ready:false },
+  { key:"eletrocardiograma", label:"Eletrocardiograma", emoji:"🫀", desc:"Interpretação de ECG na prática clínica.",        file:"eletrocardiograma.html", ready:false },
+];
+
 var PROVAS = [
   { tipo:"p1",    label:"P1",    preco_unit:15.00, preco_pack:69.90 },
   { tipo:"p2",    label:"P2",    preco_unit:15.00, preco_pack:69.90 },
@@ -1592,6 +1612,10 @@ var PRECO_S1_PACK = 39.90;        // Pacote completo S1 (4 disciplinas)
 var PRECO_S2_UNIT = 15.00;        // Individual
 var PRECO_S2_COMBO3 = 12.00;      // 3+ itens: 20% off
 var PRECO_S2_PACK = 59.90;        // Pacote completo S2 (6 disciplinas)
+
+var PRECO_S4_UNIT = 15.00;        // Individual
+var PRECO_S4_COMBO3 = 12.00;      // 3+ itens: 20% off
+var PRECO_S4_PACK = 59.90;        // Pacote completo S4 (6 disciplinas)
 
 // ── Navegação estilo Google Drive ─────────────────────────────────────────────
 var currentMateria = null; // null = vista pastas | "bioquimica" = vista interna
@@ -2873,31 +2897,38 @@ function renderPastas() {
 
   wrap.appendChild(sem3);
 
-  // 4º Semestre (em breve)
+  // ═══ 4º SEMESTRE ═══
+  var s4Html = '<div class="materias-list">';
+  MATERIAS_S4.forEach(function(m) {
+    s4Html +=
+      '<div class="folder-card" style="opacity:0.4;cursor:default;">' +
+        '<span class="folder-emoji">' + m.emoji + '</span>' +
+        '<div class="folder-name">' + m.label + '</div>' +
+        '<div class="folder-status">' +
+          '<div class="folder-status-item" style="color:rgba(251,191,36,0.5);">🔜 Em breve</div>' +
+        '</div>' +
+      '</div>';
+  });
+  s4Html += '</div>';
+
   var sem4 = document.createElement("div");
-  sem4.className = "semestre-card soon";
+  sem4.className = "semestre-card";
   sem4.innerHTML =
     '<div class="semestre-header" onclick="toggleSemestre(this)">' +
       '<div class="semestre-header-left">' +
-        '<span class="semestre-icon">📚</span>' +
+        '<span class="semestre-icon">🔬</span>' +
         '<div>' +
-          '<div class="semestre-title" style="color:rgba(251,191,36,0.7);">4º Semestre</div>' +
-          '<div class="semestre-subtitle">Resumos em preparação</div>' +
+          '<div class="semestre-title">4º Semestre</div>' +
+          '<div class="semestre-subtitle">Fisiologia II · Bioquímica II · Epidemiologia · Nutrição · Microbiologia II · ECG</div>' +
         '</div>' +
       '</div>' +
       '<div class="semestre-meta">' +
         '<span class="semestre-badge soon">Em breve</span>' +
-        '<span class="semestre-chevron" style="color:rgba(251,191,36,0.4);">▼</span>' +
+        '<span class="semestre-chevron">▼</span>' +
       '</div>' +
     '</div>' +
     '<div class="semestre-body">' +
-      '<div class="semestre-body-inner">' +
-        '<div style="text-align:center;padding:32px 20px;">' +
-          '<div style="font-size:36px;margin-bottom:12px;">🚧</div>' +
-          '<div style="font-size:14px;font-weight:600;color:rgba(251,191,36,0.7);margin-bottom:8px;">Em preparação</div>' +
-          '<div style="font-size:12px;color:rgba(125,211,232,0.4);line-height:1.6;">Os resumos do 4º semestre serão<br>disponibilizados em breve.</div>' +
-        '</div>' +
-      '</div>' +
+      '<div class="semestre-body-inner">' + s4Html + '</div>' +
     '</div>';
 
   wrap.appendChild(sem4);
@@ -3243,6 +3274,25 @@ window.toggleSemLoja = function(header) {
   if (card.classList.contains("sem-card-soon")) return;
   card.classList.toggle("open");
 };
+
+// ── S4: Loja grid (todas em preparação) ───────────────────────────────────────
+function renderStoreGridS4() {
+  var grid = document.getElementById("store-grid-s4");
+  if (!grid) return;
+  grid.innerHTML = "";
+
+  MATERIAS_S4.forEach(function(m) {
+    var card = document.createElement("div");
+    card.className = "produto-card";
+    card.style.opacity = "0.4";
+    card.innerHTML =
+      '<span class="produto-emoji">' + m.emoji + '</span>' +
+      '<div class="produto-nome">' + m.label + '</div>' +
+      '<div class="produto-sub">4º Semestre · 50 dias</div>' +
+      '<div class="soon-badge" style="margin-top:auto;"><span class="soon-dot"></span> Em breve</div>';
+    grid.appendChild(card);
+  });
+}
 
 // ── S2: Acesso e dias restantes ──────────────────────────────────────────────
 function hasAccessS2(materia) {
@@ -4001,6 +4051,7 @@ window.initPaymentMultiple = async function(productKeys, productName, totalPrice
 function renderStore() {
   renderStoreGridS1();
   renderStoreGridS2();
+  renderStoreGridS4();
   renderStoreGrid();
   // Abrir 1º semestre por padrão
   var sem1 = document.getElementById("sem-1");
