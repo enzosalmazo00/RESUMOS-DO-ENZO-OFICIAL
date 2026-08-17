@@ -933,14 +933,14 @@
                 </div>
               </div>
               <div class="curso-loja-preco">
-                <div style="font-size:10px;color:rgba(255,255,255,0.5);">Após lançamento:</div>
-                <div style="font-size:18px;color:rgba(255,255,255,0.35);text-decoration:line-through;">R$ 129,90</div>
-                <div style="font-size:32px;font-weight:800;color:#f9c94f;text-shadow:0 2px 12px rgba(249,201,79,0.5);">R$ 79,90</div>
-                <div class="curso-loja-pct">🏷️ 38% off</div>
+                <div style="font-size:10px;color:rgba(255,255,255,0.5);">De:</div>
+                <div style="font-size:18px;color:rgba(255,255,255,0.35);text-decoration:line-through;">R$ 79,99</div>
+                <div style="font-size:32px;font-weight:800;color:#f9c94f;text-shadow:0 2px 12px rgba(249,201,79,0.5);">R$ 29,99</div>
+                <div class="curso-loja-pct">🏷️ 63% off</div>
               </div>
             </div>
             <button class="curso-loja-btn" id="curso-pec-btn" onclick="addCursoToCart()">
-              🛒 Adicionar curso ao carrinho — R$ 79,90
+              🛒 Adicionar curso ao carrinho — R$ 29,99
             </button>
             <div style="font-size:10px;color:rgba(255,255,255,0.3);text-align:center;margin-top:6px;">⏳ Preço promocional por tempo limitado</div>
           </div>
@@ -2523,7 +2523,7 @@ window.addCursoToCart = function() {
   }
   /* Remove curso duplicado do carrinho se existir */
   cart = cart.filter(function(c){ return c.tipo !== "curso"; });
-  cart.push({ key: "curso-peconhentos", label: "Curso Peçonhentos — 35h", emoji: "🐍", preco: 79.90, tipo: "curso" });
+  cart.push({ key: "curso-peconhentos", label: "Curso Peçonhentos — 35h", emoji: "🐍", preco: 29.99, tipo: "curso" });
   updateCartUI();
   openCart();
   /* Atualizar botão */
