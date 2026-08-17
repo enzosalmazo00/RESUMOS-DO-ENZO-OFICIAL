@@ -2759,7 +2759,7 @@ function updateCartUI() {
   footer.style.display = "block";
 
   // Dica inteligente
-  var p2InCart = cart.filter(function(c){ return c.tipo !== "final"; });
+  var p2InCart = cart.filter(function(c){ return c.tipo === "p2"; });
   var p2NaoAdquiridos = MATERIAS.filter(function(m){ return !hasAccess(m,"p2"); });
   var faltamParaPacote = p2NaoAdquiridos.filter(function(m){ return !cart.find(function(c){ return c.key === m.key+"_p2"; }); }).length;
   var faltamPara3 = Math.max(0, 3 - p2InCart.length);
