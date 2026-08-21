@@ -119,14 +119,18 @@ header .sub{color:var(--muted);font-size:13px;letter-spacing:.5px}
     <div class="cs success">
       <h4>💊 Manejo Realizado</h4>
       <ul>
-        <li>Na UPA: pré-medicação com <b>hidrocortisona 10 mg/kg</b> + <b>difenidramina 1 mg/kg</b> (15 min antes do soro)</li>
+        <li>Na UPA: pré-medicação com <b>hidrocortisona 10 mg/kg</b> + <b>difenidramina 1 mg/kg</b> (15 min antes do soro) — conduta do relato original; não é rotina recomendada pelo PCDT atual, que não preconiza pré-medicação de rotina no acidente ofídico</li>
         <li><b>12 ampolas de Soro Antibotrópico (SAB)</b> — caso grave</li>
-        <li>Hidratação endovenosa com controle rigoroso de diurese</li>
+        <li>Hidratação endovenosa individualizada, com monitorização de perfusão, diurese e função renal</li>
         <li>Analgesia com <b>morfina</b> (dor intensa) + <b>dexametasona</b></li>
-        <li>Antibioticoterapia: <b>ceftriaxona + clindamicina</b> (prevenção de infecção por flora bucal da serpente)</li>
+        <li>Antibioticoterapia com <b>ceftriaxona + clindamicina</b> — conduta adotada no relato original; <b>não é indicação profilática de rotina</b>. Antimicrobianos não devem ser usados profilaticamente no botropismo; investigar infecção secundária apenas quando houver sinais clínicos e, se confirmada, tratar conforme foco, epidemiologia e protocolo local</li>
         <li>Contraindicado AINES (risco hemorrágico)</li>
         <li>Transfusão de 300 mL de concentrado de hemácias (anemia aguda persistente)</li>
       </ul>
+    </div>
+    <div class="cs warn">
+      <h4>⏳ Conduta histórica × recomendação vigente</h4>
+      <p>Este relato preserva detalhes da conduta original (pré-medicação e antibioticoterapia) como contexto do caso publicado. A recomendação atual do PCDT não inclui pré-medicação de rotina nem antibiótico profilático — a questão 5 abaixo cobra a conduta vigente, não a do relato.</p>
     </div>
 
     <div class="sec-label">Evolução</div>
@@ -188,14 +192,14 @@ header .sub{color:var(--muted);font-size:13px;letter-spacing:.5px}
       </div>
 
       <div class="qc" id="q-1-5">
-        <div class="q-stem">5. A antibioticoterapia com ceftriaxona + clindamicina foi iniciada neste caso. Qual a principal justificativa?</div>
+        <div class="q-stem">5. A antibioticoterapia com ceftriaxona + clindamicina foi utilizada no relato original deste caso. Qual é a recomendação atual do PCDT sobre antibióticos no botropismo?</div>
         <div class="q-opts">
           <div class="q-opt" onclick="answerQ(1,5,0,1)">a) Profilaxia obrigatória em todo acidente ofídico, independente da gravidade</div>
-          <div class="q-opt" onclick="answerQ(1,5,1,1)">b) Prevenção de infecção secundária pela flora bucal da serpente (anaeróbios e Gram-negativos) associada à necrose tecidual</div>
-          <div class="q-opt" onclick="answerQ(1,5,2,1)">c) Tratamento da leucocitose presente nos exames laboratoriais</div>
-          <div class="q-opt" onclick="answerQ(1,5,3,1)">d) Redução do risco de reação anafilática ao soro antiveneno</div>
+          <div class="q-opt" onclick="answerQ(1,5,1,1)">b) Não usar antimicrobianos profilaticamente; investigar e tratar infecção secundária apenas se houver sinais clínicos confirmados</div>
+          <div class="q-opt" onclick="answerQ(1,5,2,1)">c) Antibiótico é indicado apenas pela leucocitose presente nos exames laboratoriais</div>
+          <div class="q-opt" onclick="answerQ(1,5,3,1)">d) Antibiótico reduz o risco de reação anafilática ao soro antiveneno</div>
         </div>
-        <div class="q-fb" data-ok="Correto! A flora bucal das serpentes contém bactérias anaeróbicas e Gram-negativas. Associado à ação proteolítica do veneno e necrose local, há risco significativo de infecção secundária (abscesso, celulite)." data-err="A antibioticoterapia visa prevenir infecção secundária pela flora bucal da serpente (anaeróbios e Gram-negativos), que pode causar abscessos e celulite no local da picada."></div>
+        <div class="q-fb" data-ok="Correto! O PCDT não recomenda antibiótico profilático de rotina no botropismo. Investigar infecção secundária quando houver sinais clínicos e, se confirmada, tratar conforme foco, epidemiologia e protocolo local." data-err="A recomendação atual é NÃO usar antimicrobianos profilaticamente. Investigar infecção secundária apenas diante de sinais clínicos e tratar conforme confirmação, foco e protocolo local — leucocitose isolada não indica antibiótico."></div>
       </div>
     </div>
 
@@ -237,13 +241,17 @@ header .sub{color:var(--muted);font-size:13px;letter-spacing:.5px}
       <h4>💊 Manejo</h4>
       <ul>
         <li>Hospital de pequeno porte: <b>5 ampolas de SAC (Soro Anticrotálico)</b> na admissão</li>
-        <li>Transferência via SAMU para hospital de médio porte: <b>+10 ampolas de SAB (Soro Antibotrópico)</b> durante o transporte (por suspeita de acidente misto ou indisponibilidade de SAC adicional)</li>
+        <li>Transferência via SAMU para hospital de médio porte: complementação com <b>+10 ampolas de SAC (ou SABC)</b> durante o transporte, para completar a dose adequada à gravidade (o relato original administrou SAB nesse momento — ver nota abaixo)</li>
         <li><b>Internação em UTI por 7 dias</b> (total de 10 dias de internação)</li>
         <li>Manejo de <b>insuficiência renal aguda</b> (IRA) + suporte clínico intensivo</li>
-        <li>Hidratação vigorosa com controle de diurese (prevenção de NTA por mioglobina)</li>
+        <li>Reposição volêmica individualizada com monitorização de perfusão, diurese e função renal (evitar "hidratação vigorosa" com metas fixas de rotina)</li>
         <li>TC de crânio sem contraste: sem alterações</li>
         <li>Alta com: cervicalgia residual, episódios de amnésia, HAS sustentada → <b>Enalapril 10 mg/dia</b></li>
       </ul>
+    </div>
+    <div class="cs warn">
+      <h4>⏳ Conduta histórica × recomendação vigente</h4>
+      <p>No relato original, o paciente recebeu SAB (soro antibotrópico) na complementação por suspeita de acidente misto ou indisponibilidade de SAC adicional. O <b>SAB isolado não neutraliza o componente crotálico</b> e não trata crotalismo. A conduta correta, hoje, é complementar com <b>SAC ou SABC</b> conforme a gravidade; em caso de dúvida real entre Bothrops × Crotalus (ou indisponibilidade de SAC), o soro polivalente indicado é o <b>SABC</b> — nunca SAB isolado.</p>
     </div>
 
     <div class="sec-label">Exames Relevantes</div>
@@ -259,7 +267,7 @@ header .sub{color:var(--muted);font-size:13px;letter-spacing:.5px}
     <div class="sec-label">Evolução</div>
     <div class="cs warn">
       <h4>📈 Desfecho</h4>
-      <p>Alta hospitalar após 10 dias com sequelas residuais: cervicalgia, amnésia episódica e hipertensão arterial. Meses após o acidente, o paciente desenvolveu <b>quadro psiquiátrico</b> (sintomas psicóticos prodrômicos → diagnóstico de esquizofrenia), necessitando internação psiquiátrica. Embora raro e ainda debatido na literatura, há relatos na Índia e Bangladesh de desfechos neuropsiquiátricos a longo prazo associados a envenenamento ofídico.</p>
+      <p>Alta hospitalar após 10 dias com sequelas residuais: cervicalgia, amnésia episódica e hipertensão arterial. Meses após o acidente, o paciente apresentou <b>quadro psiquiátrico</b> (sintomas psicóticos prodrômicos → diagnóstico de esquizofrenia), necessitando internação. A relação causal entre o envenenamento e o quadro psiquiátrico <b>não está estabelecida</b> — é um relato pontual, e a literatura sobre desfechos neuropsiquiátricos tardios em ofidismo (com relatos esparsos na Índia e Bangladesh) ainda é escassa e debatida. Não interpretar como consequência esperada ou mecanismo comprovado.</p>
     </div>
 
     <div class="ref-box">
@@ -294,12 +302,12 @@ header .sub{color:var(--muted);font-size:13px;letter-spacing:.5px}
       <div class="qc" id="q-2-3">
         <div class="q-stem">3. Qual a principal medida para prevenir a IRA por mioglobinúria no acidente crotálico?</div>
         <div class="q-opts">
-          <div class="q-opt" onclick="answerQ(2,3,0,0)">a) Hidratação vigorosa com controle rigoroso de diurese (manter débito urinário ≥ 1-2 mL/kg/h)</div>
-          <div class="q-opt" onclick="answerQ(2,3,1,0)">b) Diuréticos de alça imediatos (furosemida em bolus)</div>
+          <div class="q-opt" onclick="answerQ(2,3,0,0)">a) Manter euvolemia com reposição individualizada, monitorando perfusão, diurese e função renal</div>
+          <div class="q-opt" onclick="answerQ(2,3,1,0)">b) Diuréticos de alça imediatos (furosemida em bolus) de rotina</div>
           <div class="q-opt" onclick="answerQ(2,3,2,0)">c) Restrição hídrica para evitar edema</div>
           <div class="q-opt" onclick="answerQ(2,3,3,0)">d) Hemodiálise profilática em todo caso crotálico</div>
         </div>
-        <div class="q-fb" data-ok="Correto! A hidratação vigorosa é a medida principal para prevenir NTA por mioglobina. Manter diurese adequada (1-2 mL/kg/h) dilui e favorece a excreção da mioglobina antes que precipite nos túbulos." data-err="A medida principal é hidratação vigorosa com controle de diurese. A alta perfusão renal dilui a mioglobina e impede sua precipitação nos túbulos renais."></div>
+        <div class="q-fb" data-ok="Correto! A reposição volêmica individualizada, com monitorização de perfusão, diurese e função renal, é a medida central para reduzir o risco de NTA por mioglobina. Metas fixas de diurese e diuréticos/manitol de rotina não são recomendados como prevenção universal — a decisão é individualizada conforme o fenótipo clínico." data-err="A medida principal é manter euvolemia com reposição individualizada, monitorando perfusão, diurese e função renal — não 'hidratação vigorosa' com metas fixas nem diurese forçada de rotina. Diuréticos, alcalinização ou terapia renal substitutiva são decisões individualizadas conforme a evolução."></div>
       </div>
 
       <div class="qc" id="q-2-4">

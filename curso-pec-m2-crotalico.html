@@ -207,7 +207,7 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
     <h4>⚠️ IRA por mioglobinúria + insuficiência respiratória</h4>
     <p>As duas principais causas de óbito no acidente crotálico são:</p>
     <ul>
-      <li><b>Insuficiência renal aguda</b> por depósito de mioglobina nos túbulos renais — prevenida por <b>hidratação vigorosa e diurese forçada</b> (30–40 mL/h no adulto; 1–2 mL/kg/h na criança);</li>
+      <li><b>Insuficiência renal aguda</b> por depósito de mioglobina nos túbulos renais — reduzida com <b>reposição volêmica individualizada</b> e monitorização de perfusão, diurese e função renal;</li>
       <li><b>Insuficiência respiratória aguda</b> por paralisia da musculatura respiratória — exige <b>suporte ventilatório imediato</b> (ventilação mecânica invasiva).</li>
     </ul>
     <p>O atendimento tardio (&gt; 6h) aumenta significativamente o risco dessas complicações — daí a importância do diagnóstico precoce e da soroterapia em tempo hábil.</p>
@@ -231,13 +231,14 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
 
   <div class="sec-divider"><h3>Classificação de gravidade e soroterapia (SAC)</h3></div>
   <table class="compare-table">
-    <thead><tr><th>Gravidade</th><th>Fácies miastênica</th><th>Mialgia</th><th>Mioglobinúria</th><th>Ampolas SAC</th></tr></thead>
+    <thead><tr><th>Gravidade</th><th>Fácies miastênica</th><th>Mialgia / mioglobinúria</th><th>Diurese</th><th>Ampolas SAC</th></tr></thead>
     <tbody>
-      <tr><td class="sev-leve">Leve</td><td>Ausente ou tardia</td><td>Discreta ou ausente</td><td>Ausente</td><td class="sev-leve">5</td></tr>
-      <tr><td class="sev-mod">Moderado</td><td>Discreta ou evidente</td><td>Discreta</td><td>Pouco evidente ou ausente</td><td class="sev-mod">10</td></tr>
-      <tr><td class="sev-grave">Grave</td><td>Evidente / intensa</td><td>Intensa</td><td>Presente (colúria)</td><td class="sev-grave">20</td></tr>
+      <tr><td class="sev-leve">Leve</td><td>Ausente ou discreta</td><td>Sem mialgia, sem urina escura</td><td>Normal, sem oligúria</td><td class="sev-leve">5</td></tr>
+      <tr><td class="sev-mod">Moderado</td><td>Evidente</td><td>Mialgia discreta, com mioglobinúria</td><td>Normal, sem oligúria</td><td class="sev-mod">10</td></tr>
+      <tr><td class="sev-grave">Grave</td><td>Evidente</td><td>Mialgia e mioglobinúria intensas</td><td>Oligúria</td><td class="sev-grave">20</td></tr>
     </tbody>
   </table>
+  <p class="small" style="color:var(--muted);margin-top:-8px">A classificação combina neurotoxicidade (fácies miastênica), intensidade de mialgia/mioglobinúria e presença de oligúria — não apenas CK ou urina isoladas.</p>
 
   <div class="info-block success">
     <div class="label">Sobre o soro anticrotálico (SAC) — Butantan</div>
@@ -256,9 +257,8 @@ nav.tabs button.ck-tab.active{background:var(--gold);color:var(--bg);border-colo
   <div class="info-block">
     <div class="label">Prevenção e tratamento da IRA</div>
     <ul>
-      <li><b>Hidratação IV vigorosa</b> — manter diurese &ge; 30–40 mL/h (adulto) / 1–2 mL/kg/h (criança);</li>
-      <li>Se oligúria persistir: <b>manitol 20%</b> (5 mL/kg na criança; 100 mL no adulto) ou <b>furosemida</b> IV;</li>
-      <li>Nos casos com comprometimento renal estabelecido: <b>procedimento dialítico</b>;</li>
+      <li><b>Manter euvolemia com reposição individualizada</b>, monitorando perfusão, diurese e função renal — evitar metas fixas de diurese ou hidratação "vigorosa" de rotina;</li>
+      <li>Diuréticos (furosemida), manitol, alcalinização ou terapia renal substitutiva são <b>decisões individualizadas</b> conforme o fenótipo clínico e a evolução — não uma sequência escalonada de rotina;</li>
       <li>Monitorar potássio sérico — a hipercalemia na rabdomiólise com IRA pode causar arritmias graves.</li>
     </ul>
   </div>
@@ -361,7 +361,7 @@ function renderGallery(){var w=document.getElementById('galleryWrap');w.innerHTM
 
 /* ============ CHECKLIST CVE ============ */
 var CK_ADMISSAO=[
-  "Hidratação IV vigorosa (meta: diurese ≥ 30–40 mL/h adulto; 1–2 mL/kg/h criança)",
+  "Manter euvolemia com reposição individualizada, monitorando perfusão, diurese e função renal",
   "Solicitar exames: CPK, LDH, ureia, creatinina, TC, coagulograma, HMG, EAS, eletrólitos, gasometria",
   "Monitorar padrão respiratório (FR, SpO₂) — atenção à paralisia descendente",
   "Ter material de intubação e ventilação mecânica disponível",

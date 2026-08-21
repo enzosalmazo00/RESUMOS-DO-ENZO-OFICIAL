@@ -128,7 +128,7 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
   <div class="sec-divider"><h3>A fosseta loreal — o sinal-chave</h3></div>
   <div class="info-block">
     <div class="label">O que é</div>
-    <p>A <b>fosseta loreal</b> é um órgão termorreceptor — um orifício situado <b>entre o olho e a narina</b>, exclusivo da subfamília Crotalinae (família Viperidae). Conectada ao olho por meio de um nervo óptico, essa estrutura funciona como uma <b>"visão térmica"</b>, permitindo que a serpente detecte variações de temperatura de até <b>0,003 °C</b> — essencial para localizar presas endotérmicas (roedores) no escuro.</p>
+    <p>A <b>fosseta loreal</b> é um órgão termorreceptor — um orifício situado <b>entre o olho e a narina</b>, exclusivo da subfamília Crotalinae (família Viperidae). É inervada por aferências somatossensoriais do <b>sistema trigeminal</b> (não pelo nervo óptico) — os sinais térmicos captados pela fosseta convergem com os sinais visuais em centros encefálicos, funcionando como uma <b>"visão térmica"</b> que permite à serpente detectar variações de temperatura de até <b>0,003 °C</b> — essencial para localizar presas endotérmicas (roedores) no escuro.</p>
     <ul>
       <li><b>Presente</b> em <b>Bothrops</b>, <b>Crotalus</b> e <b>Lachesis</b> → indica serpente peçonhenta da família Viperidae.</li>
       <li>Vista de frente, a cabeça mostra <b>4 orifícios</b> (2 narinas + 2 fossetas) — daí o nome popular <i>"cobra de quatro ventas"</i>.</li>
@@ -278,7 +278,7 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
   <div class="sec-divider"><h3>Coral verdadeira × falsa coral</h3></div>
   <div class="info-block">
     <div class="label">Identificação visual</div>
-    <p>As corais verdadeiras (<i>Micrurus</i>) possuem <b>anéis completos</b> (circundam todo o corpo) dispostos em <b>tríades</b> (3 anéis pretos intercalados por 2 brancos/amarelos, separados por anéis vermelhos longos). As falsas-corais geralmente têm anéis <b>incompletos no ventre</b> e padrão irregular. Porém, essa regra <b>não é 100% confiável</b> — a identificação definitiva requer análise da dentição.</p>
+    <p>As corais verdadeiras (<i>Micrurus</i>) costumam ter <b>anéis completos</b> (circundam todo o corpo) dispostos em <b>tríades</b> (3 anéis pretos intercalados por 2 brancos/amarelos, separados por anéis vermelhos longos). As falsas-corais frequentemente têm anéis <b>incompletos no ventre</b> e padrão irregular. Essas características são <b>pistas, não regra de exclusão</b> — a identificação definitiva depende da síndrome clínica, registro fotográfico seguro e identificação especializada/CIATox. <b>Não capturar o animal.</b> Na dúvida, tratar como coral verdadeira.</p>
   </div>
   <div class="img-pair">
     <div class="img-inline">
@@ -287,7 +287,7 @@ nav.tabs button.qz-tab.active{background:var(--accent4);color:#fff;border-color:
     </div>
     <div class="img-inline">
       <img src="img/m1-falsa-coral.jpg" alt="Falsa coral — anéis incompletos no ventre">
-      <div class="img-leg"><b>Falsa coral</b> — anéis geralmente incompletos no ventre, padrão irregular. Dentição áglifa ou opistóglifa — sem risco significativo.<div class="img-credit">Foto: Alessandher Piva / iNaturalist</div></div>
+      <div class="img-leg"><b>Falsa coral</b> — anéis geralmente incompletos no ventre, padrão irregular. Dentição áglifa (maioria) ou opistóglifa (algumas espécies) — risco bem menor que o elapídico, mas espécies opistóglifas podem morder defensivamente e causar envenenamento leve.<div class="img-credit">Foto: Alessandher Piva / iNaturalist</div></div>
     </div>
   </div>
 
@@ -351,7 +351,7 @@ var IMAGENS=[
 function renderGallery(){var w=document.getElementById('galleryWrap');w.innerHTML='';IMAGENS.forEach(function(im){var c=document.createElement('div');c.className='img-card';c.innerHTML='<div class="img-frame"><img src="'+im.file+'" alt="'+im.titulo+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><div class="placeholder" style="display:none"><span class="ph-emoji">🐍</span><span>'+im.titulo+'</span></div></div><div class="cap"><div class="cap-title">'+im.titulo+'</div><div class="cap-credit">'+im.credito+'</div></div>';w.appendChild(c);});}
 
 var QD=[
-  {n:1,q:"A fosseta loreal é um órgão termorreceptor capaz de detectar variações de temperatura de até:",o:[{l:"A",v:"1 °C"},{l:"B",v:"0,1 °C"},{l:"C",v:"0,003 °C"},{l:"D",v:"10 °C"}],cr:"C",ex:"A fosseta loreal detecta variações de até 0,003 °C, funcionando como uma 'visão térmica' conectada ao olho via nervo óptico. Isso permite que serpentes da subfamília Crotalinae localizem presas endotérmicas no escuro."},
+  {n:1,q:"A fosseta loreal é um órgão termorreceptor capaz de detectar variações de temperatura de até:",o:[{l:"A",v:"1 °C"},{l:"B",v:"0,1 °C"},{l:"C",v:"0,003 °C"},{l:"D",v:"10 °C"}],cr:"C",ex:"A fosseta loreal detecta variações de até 0,003 °C, funcionando como uma 'visão térmica' inervada pelo sistema trigeminal (não pelo nervo óptico), com convergência dos sinais térmicos e visuais em centros encefálicos. Isso permite que serpentes da subfamília Crotalinae localizem presas endotérmicas no escuro."},
   {n:2,q:"Qual conjunto de gêneros possui fosseta loreal?",o:[{l:"A",v:"Bothrops, Crotalus e Lachesis"},{l:"B",v:"Bothrops, Crotalus e Micrurus"},{l:"C",v:"Apenas Bothrops e Crotalus"},{l:"D",v:"Todos os 4 gêneros peçonhentos"}],cr:"A",ex:"A fosseta loreal está presente em Bothrops, Crotalus e Lachesis (família Viperidae, subfamília Crotalinae). A Micrurus (Elapidae) NÃO possui fosseta loreal — é a grande exceção."},
   {n:3,q:"A dentição solenóglifa é caracterizada por presas:",o:[{l:"A",v:"Fixas, curtas e sulcadas na região anterior"},{l:"B",v:"Sulcadas na região posterior da maxila"},{l:"C",v:"Ocas, grandes e móveis, que se projetam no bote"},{l:"D",v:"Sem presas especializadas"}],cr:"C",ex:"Solenóglifa = presas ocas (tubo suco), grandes, móveis, que se dobram contra o céu da boca e se projetam na hora do bote. Exclusiva da família Viperidae (Bothrops, Crotalus, Lachesis). Permite inocular grande volume de veneno."},
   {n:4,q:"Uma serpente sem fosseta loreal foi trazida ao PS. Isso permite descartar acidente peçonhento?",o:[{l:"A",v:"Sim — ausência de fosseta descarta envenenamento"},{l:"B",v:"Não — a coral (Micrurus) é peçonhenta e não tem fosseta"},{l:"C",v:"Sim, desde que a cauda seja lisa"},{l:"D",v:"Só se a pupila for redonda"}],cr:"B",ex:"Micrurus (coral verdadeira) é peçonhenta, altamente neurotóxica, e NÃO tem fosseta loreal (Elapidae, proteróglifa). Ausência de fosseta NUNCA descarta envenenamento."},
