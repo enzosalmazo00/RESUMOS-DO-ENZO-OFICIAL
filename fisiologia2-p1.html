@@ -406,7 +406,6 @@ em { color: var(--accent2); font-style:normal; }
   <h1>Fisiologia II — P1</h1>
   <p class="sub">Ventilação Pulmonar · Circulação Pulmonar · Trocas Gasosas · Transporte de O₂/CO₂ · Regulação da Respiração</p>
   <p class="by">⚡ Elaborado por Enzo Salmazo · Guyton &amp; Hall · Caps. 38–42</p>
-  <p class="psalm">📖 "O Senhor é a minha luz e a minha salvação; a quem temerei?" — Salmos 27:1</p>
 </header>
 
 <!-- ═══════════════════ NAV TABS ═══════════════════ -->
@@ -418,7 +417,7 @@ em { color: var(--accent2); font-style:normal; }
   <button onclick="showSection('cap41',this)">Cap. 41 — Transporte de Gases</button>
   <button onclick="showSection('cap42',this)">Cap. 42 — Regulação</button>
   <button class="fc-tab" onclick="showSection('flashcards',this)">🃏 Flashcards</button>
-  <button class="qz-tab" onclick="showSection('quiz',this)">📝 Simulado (50)</button>
+  <button class="qz-tab" onclick="showSection('quiz',this)">📝 Simulado (<span data-question-count>78</span>)</button>
 </nav>
 
 <!-- ════════════════════════════════════════════════
@@ -432,7 +431,7 @@ em { color: var(--accent2); font-style:normal; }
 <div class="info-block">
   <div class="label">Visão Geral</div>
   <h4>Sobre este material</h4>
-  <p>Este resumo cobre os Capítulos <strong>38 a 42</strong> de Guyton &amp; Hall, o bloco de <strong>fisiologia respiratória</strong>: <strong>ventilação pulmonar</strong>, <strong>circulação pulmonar e edema pulmonar</strong>, <strong>princípios físicos das trocas gasosas</strong>, <strong>transporte de O₂ e CO₂</strong> e <strong>regulação da respiração</strong>. Inclui <strong>flashcards interativos</strong> e um <strong>simulado de 50 questões</strong> (10 por capítulo) com correção imediata.</p>
+  <p>Este resumo cobre os Capítulos <strong>38 a 42</strong> de Guyton &amp; Hall, o bloco de <strong>fisiologia respiratória</strong>: <strong>ventilação pulmonar</strong>, <strong>circulação pulmonar e edema pulmonar</strong>, <strong>princípios físicos das trocas gasosas</strong>, <strong>transporte de O₂ e CO₂</strong> e <strong>regulação da respiração</strong>. Inclui <strong>flashcards interativos</strong> e um <strong>simulado de <span data-question-count>78</span> questões</strong>, organizado por capítulo e com correção imediata.</p>
 </div>
 
 <div class="info-block warn">
@@ -1401,13 +1400,13 @@ em { color: var(--accent2); font-style:normal; }
 <div id="quiz" class="section">
 <div class="container">
 
-<div class="chapter-title"><span class="chap-icon">📝</span> Simulado P1 — 50 Questões</div>
-<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Múltipla escolha, Verdadeiro/Falso e questões abertas, com correção e explicação imediata. 10 questões por capítulo (38 a 42).</p>
+<div class="chapter-title"><span class="chap-icon">📝</span> Simulado P1 — <span data-question-count>78</span> Questões</div>
+<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Múltipla escolha, Verdadeiro/Falso e questões abertas, com correção e explicação imediata. As questões estão organizadas por capítulo e incluem os exercícios trabalhados em sala, sem repetir itens equivalentes.</p>
 
 <div class="q-stats">
   <div class="sbox c"><div class="sv" id="sC">0</div><div class="sl">Corretas</div></div>
   <div class="sbox w"><div class="sv" id="sW">0</div><div class="sl">Incorretas</div></div>
-  <div class="sbox p"><div class="sv" id="sP">50</div><div class="sl">Pendentes</div></div>
+  <div class="sbox p"><div class="sv" id="sP">78</div><div class="sl">Pendentes</div></div>
 </div>
 
 <div id="quizContainer"></div>
@@ -1671,7 +1670,112 @@ const QD=[
    cr:'F',ex:'FALSO. Opioides ativam receptores μ no sistema nervoso central e reduzem a sensibilidade dos centros respiratórios ao CO₂. A frequência e o volume corrente podem cair, causando hipoventilação alveolar.\n\nMenor ventilação retém CO₂, produz hipercapnia e acidose respiratória; a oxigenação também pode cair. Em intoxicação grave, ocorre apneia. Essa é a base fisiológica da urgência da depressão respiratória por opioides.'},
   {t:'ab',c:'42',n:50,q:'Explique por que a aclimatação total à altitude leva de 2 a 3 dias para se completar.',
    ex:'Na altitude, a menor pressão barométrica reduz a pressão inspirada e alveolar de O₂. Os corpos carotídeos detectam a hipóxia e aumentam a ventilação. Porém, a hiperventilação elimina CO₂, produz hipocapnia e alcalose respiratória; o pH elevado do LCR inibe parcialmente o centro respiratório e limita a resposta inicial.\n\nNas horas e nos dias seguintes, os rins excretam HCO₃⁻, bicarbonato, e o LCR também reduz bicarbonato. O pH próximo aos quimiorreceptores aproxima-se do normal, retirando o freio alcalótico. Assim, após cerca de 2–3 dias, a ventilação pode aumentar muito mais e elevar a PAO₂.\n\nOutras adaptações, como aumento de eritropoietina e 2,3-BPG, exigem períodos diferentes; portanto, 2–3 dias referem-se principalmente à aclimatação ventilatória.'},
+
+  {t:'mc',c:'38',n:51,q:'Durante uma inspiração tranquila, qual sequência descreve corretamente a ação do diafragma?',
+   o:[{l:'A',v:'Relaxa, sobe e aumenta a pressão intratorácica'},{l:'B',v:'Contrai, desce, aumenta o volume torácico e torna a pressão pleural mais negativa'},{l:'C',v:'Contrai, sobe e eleva a pressão alveolar acima da atmosférica'},{l:'D',v:'Relaxa, desce e empurra o ar para dentro dos alvéolos'}],
+   cr:'B',ex:'Na inspiração tranquila, o diafragma contrai e sua cúpula desce. Isso aumenta o volume da cavidade torácica. Como o pulmão está acoplado à parede torácica pelas pleuras, a pressão pleural torna-se mais negativa e a pressão transpulmonar aumenta.\n\nO pulmão se expande, a pressão alveolar cai discretamente abaixo da pressão atmosférica e o ar entra seguindo esse gradiente. Não é o músculo que “puxa” diretamente o ar: ele muda o volume, o volume muda a pressão e a diferença de pressão produz o fluxo.'},
+  {t:'mc',c:'38',n:52,q:'O que ocorre com as pressões pleural e alveolar durante uma inspiração tranquila normal?',
+   o:[{l:'A',v:'A pleural fica menos negativa e a alveolar sobe acima da atmosférica'},{l:'B',v:'A pleural fica mais negativa e a alveolar cai levemente abaixo da atmosférica'},{l:'C',v:'As duas se igualam e o gradiente desaparece'},{l:'D',v:'A alveolar fica mais negativa que a pleural durante todo o ciclo'}],
+   cr:'B',ex:'A pressão pleural costuma passar de aproximadamente −5 para −7,5 cmH₂O (centímetros de água), refletindo o aumento da tração que mantém o pulmão expandido. A pressão alveolar cai por pouco tempo para cerca de −1 cmH₂O, valor suficiente para fazer o ar atmosférico entrar.\n\nAo final da inspiração, a pressão alveolar volta a se igualar à atmosférica e o fluxo cessa, embora o pulmão permaneça com volume maior. A pressão pleural continua mais negativa que a alveolar; essa diferença é a pressão transpulmonar.'},
+  {t:'mc',c:'38',n:53,q:'Por que asma e enfisema podem limitar o esforço físico ao elevar o trabalho respiratório?',
+   o:[{l:'A',v:'Porque reduzem sempre a atividade dos músculos respiratórios'},{l:'B',v:'Porque aumentam a energia necessária para vencer resistência das vias aéreas ou alterações elásticas do pulmão'},{l:'C',v:'Porque o trabalho respiratório depende apenas da frequência cardíaca'},{l:'D',v:'Porque aumentam exclusivamente a tensão superficial alveolar'}],
+   cr:'B',ex:'Na asma, o estreitamento dos brônquios aumenta a resistência ao fluxo, sobretudo na expiração. No enfisema, há perda do retrocesso elástico e tendência ao aprisionamento de ar; o paciente precisa trabalhar mais para movimentar o ar e evitar o colapso das pequenas vias.\n\nDurante exercício, a ventilação exigida cresce muito. Se uma parcela grande da energia e do oxigênio passa a ser consumida pelos próprios músculos respiratórios, sobra menos reserva para os músculos dos membros, surgindo dispneia e limitação do esforço.'},
+  {t:'tf',c:'38',n:54,q:'O condicionamento do ar realizado pelo nariz inclui aquecer, umidificar e filtrar parcialmente o ar inspirado.',
+   cr:'V',ex:'VERDADEIRO. A mucosa nasal é muito vascularizada e aquece o ar; sua superfície úmida acrescenta vapor de água; pelos, muco e o fluxo turbulento retêm parte das partículas.\n\nEsse condicionamento protege as vias aéreas inferiores contra ressecamento, variações térmicas e partículas. A filtração é parcial, não absoluta: partículas muito pequenas ainda podem alcançar regiões profundas do pulmão.'},
+  {t:'tf',c:'38',n:55,q:'Os cílios do nariz e das vias aéreas inferiores empurram o muco sempre em direção aos alvéolos.',
+   cr:'F',ex:'FALSO. O sistema mucociliar funciona como uma esteira que conduz secreções em direção à faringe, onde o material pode ser deglutido ou eliminado. No nariz, o muco é movido posteriormente; na traqueia e nos brônquios, é movido superiormente.\n\nEm ambos os casos, o destino é a faringe, não os alvéolos. Levar muco para regiões profundas favoreceria obstrução e infecção; a direção coordenada para fora é um importante mecanismo de defesa.'},
+  {t:'ab',c:'38',n:56,q:'Um paciente apresenta volume corrente de 500 mL e volume de reserva inspiratório de 3.000 mL. Qual capacidade pulmonar é obtida pela soma, qual seu valor e como ela é medida?',
+   ex:'A soma é a capacidade inspiratória: CI = VC + VRI. VC significa volume corrente, o ar de uma respiração tranquila; VRI significa volume de reserva inspiratório, o volume adicional que ainda pode ser inspirado após uma inspiração normal.\n\nCI = 500 + 3.000 = 3.500 mL, ou 3,5 L. Ela é medida quando a pessoa, partindo do final de uma expiração tranquila, inspira até o máximo possível. Como não contém volume residual, pode ser obtida por espirometria simples.'},
+
+  {t:'mc',c:'39',n:57,q:'Qual comparação entre as pressões do ventrículo direito e do ventrículo esquerdo está correta?',
+   o:[{l:'A',v:'A pressão sistólica do ventrículo direito é cerca de 25 mmHg, aproximadamente um quinto da esquerda'},{l:'B',v:'As pressões sistólicas são iguais porque os dois ventrículos ejetam o mesmo volume'},{l:'C',v:'A pressão diastólica do ventrículo direito é sempre maior que a do esquerdo'},{l:'D',v:'A artéria pulmonar trabalha com pressão superior à aorta'}],
+   cr:'A',ex:'Os dois ventrículos ejetam praticamente o mesmo volume por minuto, mas enfrentam resistências muito diferentes. A circulação pulmonar é curta, distensível e de baixa resistência; por isso o ventrículo direito gera cerca de 25 mmHg na sístole. O ventrículo esquerdo precisa vencer a resistência da circulação sistêmica e produz cerca de 120 mmHg.\n\nA ideia-chave é: fluxo semelhante não exige pressão semelhante quando a resistência é diferente. Pela relação ΔP = fluxo × resistência, menor resistência pulmonar requer menor diferença de pressão.'},
+  {t:'mc',c:'39',n:58,q:'Por que se descreve o fluxo de sangue nas paredes alveolares como uma “lâmina de fluxo”?',
+   o:[{l:'A',v:'Porque os capilares alveolares são longos, retos e sem ramificações'},{l:'B',v:'Porque a rede capilar é tão densa e interconectada que funciona como uma camada contínua de sangue ao redor dos alvéolos'},{l:'C',v:'Porque o sangue pulmonar nunca sofre variações de velocidade'},{l:'D',v:'Porque artérias brônquicas substituem os capilares alveolares'}],
+   cr:'B',ex:'Os septos alveolares contêm uma rede extremamente densa de capilares comunicantes. Em vez de imaginar poucos tubos isolados, é mais útil visualizar uma película ou lâmina de sangue percorrendo a parede do alvéolo.\n\nEssa organização distribui as hemácias por grande superfície e as aproxima do gás alveolar através de uma barreira muito fina. O resultado é maior área de contato e troca rápida de oxigênio e dióxido de carbono.'},
+  {t:'tf',c:'39',n:59,q:'Na posição deitada, a maior parte do pulmão comporta-se como zona 1 de West, sem fluxo sanguíneo.',
+   cr:'F',ex:'FALSO. A zona 1 exige pressão alveolar maior que a pressão arterial pulmonar, situação incomum no pulmão saudável e mais provável quando a pressão arterial cai muito ou a pressão alveolar aumenta.\n\nAo deitar, a diferença gravitacional entre as regiões do pulmão diminui. A maior parte tende a apresentar fluxo contínuo, compatível com zona 3, porque as pressões arterial e venosa permanecem acima da pressão alveolar. A zona 1 não deve predominar em condições normais.'},
+  {t:'ab',c:'39',n:60,q:'Como se mantém a pressão negativa do líquido pleural e o que aconteceria se a drenagem linfática falhasse?',
+   ex:'Os vasos linfáticos da pleura removem continuamente líquido, proteínas e pequenas partículas do espaço pleural. Essa sucção linfática, somada às forças elásticas opostas do pulmão e da caixa torácica, ajuda a manter uma camada mínima de líquido sob pressão negativa.\n\nSe a drenagem falhar, o líquido e as proteínas se acumulam, formando derrame pleural. A pressão pleural fica menos negativa, o acoplamento entre pulmão e parede torácica piora e o pulmão é comprimido, reduzindo sua expansão e podendo causar falta de ar.'},
+  {t:'ab',c:'39',n:61,q:'Compare edema pulmonar e derrame pleural: indique uma causa que pode participar dos dois e uma diferença essencial entre eles.',
+   ex:'Uma causa comum é a insuficiência cardíaca esquerda, que eleva a pressão hidrostática na circulação pulmonar e pode favorecer tanto edema pulmonar quanto derrame pleural. Redução da pressão coloidosmótica plasmática e falha de drenagem linfática também podem contribuir, dependendo do quadro.\n\nA diferença essencial é o compartimento: no edema pulmonar, o líquido se acumula no interstício e, nos casos graves, dentro dos alvéolos, prejudicando diretamente a difusão dos gases. No derrame pleural, o líquido se acumula entre as pleuras e comprime o pulmão por fora, dificultando sua expansão.'},
+
+  {t:'mc',c:'40',n:62,q:'Mesmo com hiperventilação extrema ao nível do mar, por que a pressão alveolar de oxigênio não pode superar a pressão inspirada de oxigênio umidificado, próxima de 149 mmHg?',
+   o:[{l:'A',v:'Porque o surfactante bloqueia oxigênio adicional'},{l:'B',v:'Porque o alvéolo recebe esse gás como limite de entrada e o sangue remove oxigênio continuamente'},{l:'C',v:'Porque a hiperventilação transforma todo o ar em espaço morto'},{l:'D',v:'Porque o dióxido de carbono substitui completamente o oxigênio alveolar'}],
+   cr:'B',ex:'Ao nível do mar, o ar seco tem pressão de oxigênio próxima de 159 mmHg. Nas vias aéreas, o vapor de água ocupa 47 mmHg da pressão total; por isso a pressão inspirada de oxigênio, PIO₂, fica em torno de 0,21 × (760 − 47) = 149 mmHg.\n\nA hiperventilação pode aproximar a pressão alveolar desse limite ao remover mais dióxido de carbono, mas não cria oxigênio nem fornece uma pressão maior que a do gás inspirado. Além disso, o sangue continua retirando oxigênio dos alvéolos.'},
+  {t:'mc',c:'40',n:63,q:'O que acontece com a intensidade da difusão quando aumenta a distância que um gás precisa atravessar?',
+   o:[{l:'A',v:'Aumenta na mesma proporção da distância'},{l:'B',v:'Não muda, pois depende apenas da pressão'},{l:'C',v:'Diminui, porque as moléculas levam mais tempo para atravessar a barreira'},{l:'D',v:'Diminui apenas para gases de alto peso molecular'}],
+   cr:'C',ex:'Pela lei de Fick, a velocidade de difusão é inversamente proporcional à espessura, isto é, à distância do percurso. Se a barreira dobra de espessura e os demais fatores permanecem iguais, a difusão tende a cair pela metade.\n\nNo edema, líquido adicional aumenta a distância entre o gás alveolar e a hemácia. Na fibrose, o tecido da membrana fica espessado. Em ambos, o oxigênio encontra mais dificuldade para completar a difusão durante o tempo de passagem capilar.'},
+  {t:'mc',c:'40',n:64,q:'Se a ventilação alveolar diminui de modo sustentado, sem mudança no consumo de oxigênio nem na produção de dióxido de carbono, o que ocorre?',
+   o:[{l:'A',v:'A pressão alveolar de oxigênio sobe e a de dióxido de carbono cai'},{l:'B',v:'A pressão alveolar de oxigênio cai e a de dióxido de carbono sobe'},{l:'C',v:'As duas pressões permanecem iguais'},{l:'D',v:'As duas pressões se igualam entre si'}],
+   cr:'B',ex:'Com hipoventilação, entra menos oxigênio novo por minuto, enquanto o metabolismo continua retirando oxigênio do alvéolo. Por isso a pressão alveolar e, depois, a arterial de oxigênio diminuem.\n\nAo mesmo tempo, o organismo continua produzindo dióxido de carbono, mas a ventilação elimina uma quantidade menor. A pressão alveolar e arterial de dióxido de carbono aumenta, podendo produzir hipercapnia e acidose respiratória.'},
+  {t:'tf',c:'40',n:65,q:'A pressão de oxigênio do ar expirado aumenta na fase final da expiração porque nesse momento sai o ar do espaço morto anatômico.',
+   cr:'F',ex:'FALSO. O ar do espaço morto anatômico é o primeiro a sair no início da expiração. Ele participou pouco das trocas e, por isso, possui mais oxigênio e menos dióxido de carbono que o gás alveolar.\n\nNa fase final da expiração predomina o gás proveniente dos alvéolos: sua pressão de oxigênio é menor e a de dióxido de carbono é maior. A frase inverte a ordem dos compartimentos ao longo da expiração.'},
+  {t:'ab',c:'40',n:66,q:'Qual é a base molecular da difusão dos gases e por que existe uma direção líquida do movimento?',
+   ex:'As moléculas possuem energia cinética, isto é, energia associada ao movimento. Elas se deslocam aleatoriamente e colidem continuamente com outras moléculas e com as superfícies. Não há uma “bomba” empurrando cada molécula através da membrana.\n\nQuando a pressão parcial é maior de um lado, há mais impactos e mais moléculas atravessando daquele lado para o outro por unidade de tempo. Moléculas também voltam, mas em menor número. A diferença entre os dois fluxos produz difusão líquida da maior para a menor pressão parcial.'},
+  {t:'ab',c:'40',n:67,q:'Quais são os quatro fatores principais que determinam a intensidade da difusão gasosa através da membrana respiratória?',
+   ex:'1) Gradiente de pressão parcial: quanto maior a diferença entre os dois lados, maior a força para difusão. 2) Área disponível: mais superfície alveolocapilar permite mais moléculas atravessando ao mesmo tempo.\n\n3) Espessura ou distância: quanto maior o percurso, menor a difusão; edema e fibrose atrapalham por esse mecanismo. 4) Coeficiente de difusão do gás: aumenta com a solubilidade e diminui com a raiz quadrada do peso molecular. Assim, o dióxido de carbono, muito mais solúvel, difunde-se muito mais facilmente que o oxigênio.'},
+
+  {t:'mc',c:'41',n:68,q:'Por que uma pressão intracelular de oxigênio entre aproximadamente 5 e 23 mmHg ainda costuma sustentar o metabolismo aeróbio?',
+   o:[{l:'A',v:'Porque as reações oxidativas precisam de apenas cerca de 1 a 3 mmHg para funcionar'},{l:'B',v:'Porque a mitocôndria não utiliza oxigênio'},{l:'C',v:'Porque a pressão intracelular é sempre igual à capilar'},{l:'D',v:'Porque o dióxido de carbono substitui o oxigênio na cadeia respiratória'}],
+   cr:'A',ex:'As mitocôndrias conseguem manter as reações oxidativas com pressão de oxigênio muito baixa, em torno de 1 a 3 mmHg. Portanto, uma média intracelular próxima de 23 mmHg — e mesmo valores locais próximos de 5 mmHg — ainda oferece margem para difusão e utilização.\n\nEssa margem não significa que a célula funcione sem oxigênio. Se a oferta cair abaixo do necessário, a fosforilação oxidativa diminui, a produção eficiente de ATP (adenosina trifosfato) cai e aumenta a dependência da glicólise anaeróbia.'},
+  {t:'mc',c:'41',n:69,q:'Por que o transporte de dióxido de carbono costuma ser considerado menos limitante que o transporte de oxigênio?',
+   o:[{l:'A',v:'Porque todo o dióxido de carbono permanece dissolvido no plasma'},{l:'B',v:'Porque sua alta solubilidade e suas formas dissolvida, carbamino e bicarbonato permitem transportar grandes quantidades'},{l:'C',v:'Porque sua eliminação não participa do equilíbrio ácido-base'},{l:'D',v:'Porque ele nunca interage com a hemoglobina'}],
+   cr:'B',ex:'O dióxido de carbono é muito solúvel e pode viajar de três formas: dissolvido, ligado a grupos amino de proteínas como composto carbamino e, principalmente, convertido em bicarbonato. Isso oferece grande capacidade de transporte com gradientes de pressão relativamente pequenos.\n\nEle continua sendo fisiologicamente essencial: retenção de dióxido de carbono aumenta íons hidrogênio, reduz o pH e causa acidose respiratória. “Menos limitante” não significa “sem importância”, mas que a transferência é facilitada por solubilidade e transformação química.'},
+  {t:'mc',c:'41',n:70,q:'Durante a captação de dióxido de carbono nos tecidos, qual é a função do intercâmbio cloreto–bicarbonato na hemácia?',
+   o:[{l:'A',v:'Fazer cloreto sair e manter todo o bicarbonato preso na hemácia'},{l:'B',v:'Permitir que bicarbonato saia para o plasma enquanto cloreto entra, preservando a neutralidade elétrica'},{l:'C',v:'Bombear oxigênio para fora da hemácia'},{l:'D',v:'Impedir a formação de ácido carbônico'}],
+   cr:'B',ex:'Nos tecidos, o dióxido de carbono entra na hemácia e é convertido em ácido carbônico, que se dissocia em íon hidrogênio e bicarbonato. O bicarbonato sai para o plasma pelo transportador AE1 (trocador de ânions 1); para que a hemácia não perca carga negativa, o cloreto entra em troca.\n\nEsse desvio do cloreto permite que grande parte do dióxido de carbono seja carregada no plasma como bicarbonato. Nos pulmões, tudo se inverte: bicarbonato entra, cloreto sai e o dióxido de carbono é reconstruído para ser expirado.'},
+  {t:'mc',c:'41',n:71,q:'Como a curva de dissociação do dióxido de carbono se compara à curva de dissociação da oxi-hemoglobina no intervalo fisiológico?',
+   o:[{l:'A',v:'As duas são igualmente sigmoides'},{l:'B',v:'A curva do dióxido de carbono é mais sigmoide que a do oxigênio'},{l:'C',v:'A curva do dióxido de carbono é aproximadamente linear, enquanto a da oxi-hemoglobina é sigmoide'},{l:'D',v:'A curva do dióxido de carbono não depende de sua pressão parcial'}],
+   cr:'C',ex:'Dentro da faixa fisiológica, o conteúdo total de dióxido de carbono aumenta de maneira aproximadamente linear com sua pressão parcial. Já a curva entre pressão de oxigênio e saturação da hemoglobina tem forma sigmoide por causa da ligação cooperativa do oxigênio.\n\nA oxigenação da hemoglobina também modifica a curva do dióxido de carbono pelo efeito Haldane: para a mesma pressão de dióxido de carbono, o sangue desoxigenado consegue carregar mais gás que o sangue oxigenado.'},
+  {t:'ab',c:'41',n:72,q:'Por que o oxigênio utiliza um gradiente aproximado de 64 mmHg entre alvéolo e sangue venoso, enquanto o dióxido de carbono difunde com cerca de 5 mmHg?',
+   ex:'A velocidade de difusão não depende apenas do gradiente de pressão. Ela também depende do coeficiente de difusão, que aumenta muito com a solubilidade do gás. O dióxido de carbono é aproximadamente 20 vezes mais solúvel nos líquidos da membrana que o oxigênio e, por isso, atravessa a barreira com muito mais facilidade.\n\nAssim, o oxigênio passa de aproximadamente 104 mmHg no alvéolo para 40 mmHg no sangue venoso que chega, diferença de 64 mmHg. O dióxido de carbono passa de cerca de 45 mmHg no sangue para 40 mmHg no alvéolo, diferença de apenas 5 mmHg, mas sua alta difusibilidade torna essa pequena diferença suficiente.'},
+
+  {t:'mc',c:'42',n:73,q:'Qual é o mecanismo fisiopatológico principal da apneia obstrutiva do sono?',
+   o:[{l:'A',v:'Interrupção primária do comando neural para todos os músculos respiratórios'},{l:'B',v:'Colapso repetido da faringe durante o sono, favorecido por redução do tônus e fatores anatômicos'},{l:'C',v:'Lesão obrigatória e permanente do centro pneumotáxico'},{l:'D',v:'Perda isolada da sensibilidade central ao dióxido de carbono'}],
+   cr:'B',ex:'Na apneia obstrutiva, o cérebro continua enviando comando para respirar e há esforço do tórax e do abdome, mas a via aérea superior estreita ou fecha. Durante o sono, o tônus dos músculos dilatadores da faringe diminui; obesidade, maior circunferência cervical, retrognatia e amígdalas aumentadas favorecem o colapso.\n\nA obstrução reduz o fluxo, causa queda do oxigênio, aumento do dióxido de carbono e despertares breves que reabrem a via aérea. A repetição fragmenta o sono mesmo quando o paciente não percebe cada despertar.'},
+  {t:'tf',c:'42',n:74,q:'O estímulo direto mais importante para os neurônios da área quimiossensível do bulbo é o íon hidrogênio, embora esse íon atravesse com dificuldade a barreira hematoencefálica.',
+   cr:'V',ex:'VERDADEIRO. O que estimula diretamente os neurônios quimiossensíveis é o aumento local de íons hidrogênio e a consequente queda do pH. O íon hidrogênio presente no sangue atravessa mal a barreira hematoencefálica.\n\nO dióxido de carbono, porém, atravessa facilmente. No líquido cefalorraquidiano, ele reage com água, forma ácido carbônico e depois íon hidrogênio e bicarbonato. Portanto, o dióxido de carbono é o principal estímulo químico central no organismo, mas atua em grande parte por gerar íon hidrogênio perto dos neurônios.'},
+  {t:'tf',c:'42',n:75,q:'Durante o exercício, os fatores químicos fazem o ajuste final da ventilação quando o comando neurológico fica um pouco acima ou abaixo da necessidade metabólica.',
+   cr:'V',ex:'VERDADEIRO. No início do exercício, o comando antecipatório do córtex motor e os sinais de músculos e articulações elevam rapidamente a ventilação. Essa resposta é muito eficiente, mas não precisa ser matematicamente perfeita em todos os instantes.\n\nSe a ventilação for insuficiente, o dióxido de carbono e os íons hidrogênio tendem a aumentar e o oxigênio pode cair, estimulando os quimiorreceptores. Se for excessiva, ocorre o inverso e o estímulo diminui. Esse feedback químico realiza o ajuste fino.'},
+  {t:'tf',c:'42',n:76,q:'Se, em uma situação teórica, os sinais neurológicos previssem perfeitamente a necessidade metabólica durante todo o exercício, o controle químico não precisaria corrigir a ventilação.',
+   cr:'V',ex:'VERDADEIRO como hipótese teórica. Se o comando antecipatório aumentasse a ventilação exatamente na mesma proporção que o consumo de oxigênio e a produção de dióxido de carbono, as pressões arteriais e o pH permaneceriam constantes. Sem erro, não haveria sinal químico corretivo.\n\nNa vida real, intensidade, duração, temperatura, metabolismo e eficiência mecânica variam. Por isso, os quimiorreceptores continuam importantes: detectam qualquer desvio e completam a regulação por feedback.'},
+  {t:'ab',c:'42',n:77,q:'Qual é a diferença entre apneia obstrutiva e apneia central do sono?',
+   ex:'Na apneia obstrutiva, existe comando respiratório e esforço dos músculos, mas a via aérea superior colapsa: há tentativa de inspirar sem fluxo adequado. Na apneia central, o problema é a interrupção transitória do comando do sistema nervoso central: durante o episódio, faltam fluxo e esforço respiratório.\n\nUma imagem mental útil: na obstrutiva, a “bomba” tenta funcionar, mas o tubo está fechado; na central, o tubo pode estar aberto, mas a bomba não recebe comando. Algumas pessoas apresentam eventos mistos, com componentes dos dois mecanismos.'},
+  {t:'ab',c:'42',n:78,q:'Por que os quimiorreceptores periféricos são importantes no início do exercício, embora o controle central do dióxido de carbono seja mais potente?',
+   ex:'Os corpos carotídeos e aórticos recebem sangue arterial e respondem rapidamente a pequenas alterações de oxigênio, dióxido de carbono e pH. Essa velocidade ajuda a detectar e corrigir os primeiros desvios enquanto a produção metabólica muda de forma abrupta.\n\nOs quimiorreceptores centrais exercem grande influência sustentada sobre a ventilação, mas dependem da passagem do dióxido de carbono para o líquido cefalorraquidiano e da alteração local do pH. No exercício, os sensores periféricos complementam o comando neurogênico e ajudam no ajuste fino precoce.'},
 ];
+
+// Mantém as questões agrupadas por capítulo e calcula a numeração real automaticamente.
+QD.sort((a,b)=>Number(a.c)-Number(b.c)||a.n-b.n);
+QD.forEach((q,i)=>{q.n=i+1;});
+document.querySelectorAll('[data-question-count]').forEach(el=>{el.textContent=QD.length;});
+
+// Acrescenta o nome dos compostos às fórmulas exibidas, sem alterar HTML, IDs ou eventos.
+const CHEMICAL_LABELS=[
+  {re:/(^|[^\p{L}\p{N}])H₂CO₃(?!\s*\(ácido carbônico\))/gu,value:'$1H₂CO₃ (ácido carbônico)'},
+  {re:/(^|[^\p{L}\p{N}])HCO₃⁻(?!\s*\((?:íon )?bicarbonato\))/gu,value:'$1HCO₃⁻ (íon bicarbonato)'},
+  {re:/(^|[^\p{L}\p{N}])HbO₂(?!\s*\(oxi-hemoglobina\))/gu,value:'$1HbO₂ (oxi-hemoglobina)'},
+  {re:/(^|[^\p{L}\p{N}])CO₂(?!\s*\(dióxido de carbono\))/gu,value:'$1CO₂ (dióxido de carbono)'},
+  {re:/(^|[^\p{L}\p{N}])O₂(?!\s*\(oxigênio\))/gu,value:'$1O₂ (oxigênio)'},
+  {re:/(^|[^\p{L}\p{N}])H₂O(?!\s*\(água\))/gu,value:'$1H₂O (água)'},
+  {re:/(^|[^\p{L}\p{N}])H⁺(?!\s*\(íon hidrogênio\))/gu,value:'$1H⁺ (íon hidrogênio)'},
+  {re:/(^|[^\p{L}\p{N}])Cl⁻(?!\s*\(íon cloreto\))/gu,value:'$1Cl⁻ (íon cloreto)'},
+  {re:/(^|[^\p{L}\p{N}])N₂(?!\s*\(nitrogênio\))/gu,value:'$1N₂ (nitrogênio)'},
+  {re:/(^|[^\p{L}\p{N}])Fe²⁺(?!\s*\(íon ferroso\))/gu,value:'$1Fe²⁺ (íon ferroso)'},
+  {re:/(^|[^\p{L}\p{N}])Ca²⁺(?!\s*\(íon cálcio\))/gu,value:'$1Ca²⁺ (íon cálcio)'},
+  {re:/(^|[^\p{L}\p{N}])CO(?![₂\p{L}\p{N}]|\s*\(monóxido de carbono\))/gu,value:'$1CO (monóxido de carbono)'}
+];
+function annotateChemicalNames(root){
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+  const nodes=[];
+  while(walker.nextNode())nodes.push(walker.currentNode);
+  nodes.forEach(node=>{
+    let value=node.nodeValue;
+    CHEMICAL_LABELS.forEach(item=>{value=value.replace(item.re,item.value);});
+    node.nodeValue=value;
+  });
+}
 
 let QS={c:0,w:0,a:0};
 
@@ -1691,6 +1795,7 @@ function renderQuiz(){
     ct.appendChild(d);
   });
   updateScores();
+  annotateChemicalNames(ct);
 }
 
 function answerMC(i,ch){
@@ -1730,6 +1835,7 @@ function updateScores(){
 function resetQuiz(){QS={c:0,w:0,a:0};renderQuiz();}
 
 renderQuiz();
+document.querySelectorAll('.section').forEach(section=>annotateChemicalNames(section));
 </script>
 <script src="study-timer.js"></script>
 <script src="enzo-ia.js"></script>
