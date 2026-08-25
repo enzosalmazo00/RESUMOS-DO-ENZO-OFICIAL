@@ -1179,21 +1179,105 @@
               </div>
             </div>
             <div class="sem-card-right">
-              <span class="sem-card-badge" style="background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.2);color:rgba(251,191,36,0.6);">🔜 Em breve</span>
+              <span class="sem-card-badge" id="sem4-badge" style="background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.2);color:rgba(251,191,36,0.6);">🔜 Em breve</span>
               <span class="sem-card-chevron">▼</span>
             </div>
           </div>
           <div class="sem-card-body">
             <div style="padding:12px 16px;border-radius:12px;border:1px solid rgba(251,191,36,0.12);background:rgba(251,191,36,0.03);font-size:12px;color:rgba(251,191,36,0.55);text-align:center;margin-bottom:16px;">
-              🚧 Conteúdo em preparação — disponibilizado ao longo do semestre.
+              🚧 Conteúdo em preparação — provas liberadas aos poucos ao longo do semestre.
             </div>
-            <div style="margin-top:4px;">
-              <div class="store-section-title" style="margin-bottom:12px;">📝 Disciplinas</div>
-              <div class="store-grid" id="store-grid-s4"></div>
+
+            <!-- COMBO P1 -->
+            <div class="combo-card" id="combo-s4p1-card" style="display:none;">
+              <div class="combo-header">
+                <div>
+                  <div class="combo-title">📦 Pacote Completo — P1 · 4º Semestre</div>
+                  <div class="combo-sub">Todas as disciplinas com P1 disponível</div>
+                </div>
+                <div class="combo-preco-box">
+                  <div class="combo-preco-old" id="combo-s4p1-old">R$ 90,00</div>
+                  <div class="combo-preco-new" id="combo-s4p1-new">R$ 59,90</div>
+                  <div class="combo-desconto" id="combo-s4p1-pct">🏷️ 33% off</div>
+                </div>
+              </div>
+              <div class="combo-materias" id="combo-s4p1-tags"></div>
+              <button class="combo-btn" id="combo-s4p1-btn" onclick="addComboS4ToCart('p1')">
+                🛒 Adicionar pacote ao carrinho
+              </button>
+            </div>
+
+            <!-- INDIVIDUAIS P1 -->
+            <div style="margin-top:20px;">
+              <div class="store-section-title" style="margin-bottom:12px;">📝 Individuais P1
+                <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
+                  R$ 15,00 unit · <span style="color:#4ade80;">R$ 12,00 com 3+</span>
+                </span>
+              </div>
+              <div class="store-grid" id="store-grid-s4-p1"></div>
+            </div>
+
+            <!-- COMBO P2 -->
+            <div class="combo-card" id="combo-s4p2-card" style="display:none;margin-top:24px;">
+              <div class="combo-header">
+                <div>
+                  <div class="combo-title">📦 Pacote Completo — P2 · 4º Semestre</div>
+                  <div class="combo-sub">Todas as disciplinas com P2 disponível</div>
+                </div>
+                <div class="combo-preco-box">
+                  <div class="combo-preco-old" id="combo-s4p2-old">R$ 90,00</div>
+                  <div class="combo-preco-new" id="combo-s4p2-new">R$ 59,90</div>
+                  <div class="combo-desconto" id="combo-s4p2-pct">🏷️ 33% off</div>
+                </div>
+              </div>
+              <div class="combo-materias" id="combo-s4p2-tags"></div>
+              <button class="combo-btn" id="combo-s4p2-btn" onclick="addComboS4ToCart('p2')">
+                🛒 Adicionar pacote ao carrinho
+              </button>
+            </div>
+
+            <!-- INDIVIDUAIS P2 -->
+            <div style="margin-top:20px;">
+              <div class="store-section-title" style="margin-bottom:12px;">📝 Individuais P2
+                <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
+                  R$ 15,00 unit · <span style="color:#4ade80;">R$ 12,00 com 3+</span>
+                </span>
+              </div>
+              <div class="store-grid" id="store-grid-s4-p2"></div>
+            </div>
+
+            <!-- COMBO FINAL -->
+            <div class="combo-card" id="combo-s4final-card" style="display:none;margin-top:24px;border-color:rgba(74,222,128,0.3);background:linear-gradient(135deg,rgba(74,222,128,0.07) 0%,rgba(6,182,212,0.04) 100%);">
+              <div class="combo-header">
+                <div>
+                  <div class="combo-title" style="color:#4ade80;">🎓 Pacote Completo — Final · 4º Semestre</div>
+                  <div class="combo-sub">Todas as disciplinas com Final disponível</div>
+                </div>
+                <div class="combo-preco-box">
+                  <div class="combo-preco-old" id="combo-s4final-old" style="font-size:22px;color:rgba(74,222,128,0.55);">R$ 90,00</div>
+                  <div class="combo-preco-new" id="combo-s4final-new" style="color:#4ade80;">R$ 59,90</div>
+                  <div class="combo-desconto" id="combo-s4final-pct" style="background:rgba(74,222,128,0.12);color:#4ade80;border-color:rgba(74,222,128,0.3);">🏷️ 33% off</div>
+                </div>
+              </div>
+              <div class="combo-materias" id="combo-s4final-tags"></div>
+              <button class="combo-btn" id="combo-s4final-btn" onclick="addComboS4ToCart('final')" style="background:linear-gradient(135deg,#4ade80,#16a34a);box-shadow:0 4px 20px rgba(74,222,128,0.3);">
+                🛒 Adicionar pacote ao carrinho
+              </button>
+            </div>
+
+            <!-- INDIVIDUAIS FINAL -->
+            <div style="margin-top:20px;">
+              <div class="store-section-title" style="color:#4ade80;margin-bottom:12px;">🎓 Individuais Final
+                <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
+                  R$ 15,00 unit · <span style="color:#4ade80;">R$ 12,00 com 3+</span>
+                </span>
+              </div>
+              <div class="store-grid" id="store-grid-s4-final"></div>
             </div>
           </div>
         </div>
       </div>
+
 
       <!-- TERMOS -->
       <div class="store-terms" id="store-terms-section">
@@ -1364,14 +1448,16 @@ var MATERIAS_S2 = [
   { key:"bioestatistica",      label:"Bioestatística",        emoji:"📊", desc:"Estatística aplicada às ciências da saúde.",  file:"bioestatistica.html",      ready:false },
 ];
 
-// ── Matérias 4º Semestre (resumo único por disciplina) ──────────────────────
+// ── Matérias 4º Semestre (quebrado em P1 / P2 / Final, igual ao 3º semestre) ──
+// p1Ready/p2Ready/finalReady controlam se aquela prova já está pronta pra liberar.
+// file_p1/file_p2/file_final só importam quando o Ready correspondente vira true.
 var MATERIAS_S4 = [
-  { key:"fisiologia_2",      label:"Fisiologia II",     emoji:"❤️", desc:"Fisiologia avançada dos sistemas humanos.",       file:"fisiologia_2.html",      ready:false },
-  { key:"bioquimica_2",      label:"Bioquímica II",     emoji:"🧪", desc:"Metabolismo avançado e bioquímica clínica.",      file:"bioquimica_2.html",      ready:false },
-  { key:"epidemiologia",     label:"Epidemiologia",     emoji:"📊", desc:"Métodos epidemiológicos e saúde coletiva.",       file:"epidemiologia.html",     ready:false },
-  { key:"nutricao",          label:"Nutrição",          emoji:"🥗", desc:"Nutrição clínica e metabolismo nutricional.",     file:"nutricao.html",          ready:false },
-  { key:"microbiologia_2",   label:"Microbiologia II",  emoji:"🦠", desc:"Virologia, micologia e microbiologia avançada.",  file:"microbiologia_2.html",   ready:false },
-  { key:"eletrocardiograma", label:"Eletrocardiograma", emoji:"🫀", desc:"Interpretação de ECG na prática clínica.",        file:"eletrocardiograma.html", ready:false },
+  { key:"fisiologia_2",      label:"Fisiologia II",     emoji:"❤️", desc:"Fisiologia avançada dos sistemas humanos.",       file_p1:"fisiologia2-p1.html",      file_p2:"fisiologia_2_p2.html",      file_final:"fisiologia_2_final.html",      p1Ready:true, p2Ready:false, finalReady:false },
+  { key:"bioquimica_2",      label:"Bioquímica II",     emoji:"🧪", desc:"Metabolismo avançado e bioquímica clínica.",      file_p1:"bioquimica_2_p1.html",     file_p2:"bioquimica_2_p2.html",      file_final:"bioquimica_2_final.html",      p1Ready:false, p2Ready:false, finalReady:false },
+  { key:"epidemiologia",     label:"Epidemiologia",     emoji:"📊", desc:"Métodos epidemiológicos e saúde coletiva.",       file_p1:"epidemiologia_p1.html",    file_p2:"epidemiologia_p2.html",     file_final:"epidemiologia_final.html",     p1Ready:false, p2Ready:false, finalReady:false },
+  { key:"nutricao",          label:"Nutrição",          emoji:"🥗", desc:"Nutrição clínica e metabolismo nutricional.",     file_p1:"nutricao_p1.html",         file_p2:"nutricao_p2.html",          file_final:"nutricao_final.html",          p1Ready:false, p2Ready:false, finalReady:false },
+  { key:"microbiologia_2",   label:"Microbiologia II",  emoji:"🦠", desc:"Virologia, micologia e microbiologia avançada.",  file_p1:"microbiologia_2_p1.html",  file_p2:"microbiologia_2_p2.html",   file_final:"microbiologia_2_final.html",   p1Ready:false, p2Ready:false, finalReady:false },
+  { key:"eletrocardiograma", label:"Eletrocardiograma", emoji:"🫀", desc:"Interpretação de ECG na prática clínica.",        file_p1:"eletrocardiograma_p1.html", file_p2:"eletrocardiograma_p2.html", file_final:"eletrocardiograma_final.html", p1Ready:false, p2Ready:false, finalReady:false },
 ];
 
 var PROVAS = [
@@ -1413,9 +1499,17 @@ var PRECO_S2_UNIT = 15.00;        // Individual
 var PRECO_S2_COMBO3 = 12.00;      // 3+ itens: 20% off
 var PRECO_S2_PACK = 59.90;        // Pacote completo S2 (6 disciplinas)
 
-var PRECO_S4_UNIT = 15.00;        // Individual
-var PRECO_S4_COMBO3 = 12.00;      // 3+ itens: 20% off
-var PRECO_S4_PACK = 59.90;        // Pacote completo S4 (6 disciplinas)
+var PRECO_S4_P1_UNIT = 15.00;        // Individual P1
+var PRECO_S4_P1_COMBO3 = 12.00;      // 3+ itens: 20% off
+var PRECO_S4_P1_PACK = 59.90;        // Pacote completo P1 (todas as disciplinas com P1 pronto)
+
+var PRECO_S4_P2_UNIT = 15.00;        // Individual P2
+var PRECO_S4_P2_COMBO3 = 12.00;      // 3+ itens: 20% off
+var PRECO_S4_P2_PACK = 59.90;        // Pacote completo P2
+
+var PRECO_S4_FINAL_UNIT = 15.00;     // Individual Final
+var PRECO_S4_FINAL_COMBO3 = 12.00;   // 3+ itens: 20% off
+var PRECO_S4_FINAL_PACK = 59.90;     // Pacote completo Final
 
 // ── Navegação estilo Google Drive ─────────────────────────────────────────────
 var currentMateria = null; // null = vista pastas | "bioquimica" = vista interna
@@ -1515,7 +1609,13 @@ function daysLeft() {
     "fisiologia_p1","fisiologia_p2","fisiologia_final",
     "microbiologia_p1","microbiologia_p2","microbiologia_final",
     "micro_pratica_p1","micro_pratica_p2","micro_pratica_final",
-    "imunologia_p1","imunologia_p2","imunologia_final"];
+    "imunologia_p1","imunologia_p2","imunologia_final",
+    "fisiologia_2_p1","fisiologia_2_p2","fisiologia_2_final",
+    "bioquimica_2_p1","bioquimica_2_p2","bioquimica_2_final",
+    "epidemiologia_p1","epidemiologia_p2","epidemiologia_final",
+    "nutricao_p1","nutricao_p2","nutricao_final",
+    "microbiologia_2_p1","microbiologia_2_p2","microbiologia_2_final",
+    "eletrocardiograma_p1","eletrocardiograma_p2","eletrocardiograma_final"];
   COLS.forEach(function(col) {
     if (!profile[col]) return;
     var expira = profile[col + "_expira"] || profile.acesso_expira_em;
@@ -1612,6 +1712,8 @@ function renderResumosGrid() {
       renderMateriaInternaS1(currentMateria.replace("s1_",""));
     } else if (currentMateria.indexOf("s2_") === 0) {
       renderMateriaInternaS2(currentMateria.replace("s2_",""));
+    } else if (currentMateria.indexOf("s4_") === 0) {
+      renderMateriaInternaS4(currentMateria.replace("s4_",""));
     } else {
       renderMateriaInterna(currentMateria);
     }
@@ -1826,15 +1928,52 @@ function renderPastas() {
 
   wrap.appendChild(sem3);
 
-  // ═══ 4º SEMESTRE ═══
+  // ═══ 4º SEMESTRE (quebrado em P1/P2/Final) ═══
+  var totalProvasReadyS4 = 0, liberadasS4 = 0;
+  MATERIAS_S4.forEach(function(m) {
+    [["p1","p1Ready"],["p2","p2Ready"],["final","finalReady"]].forEach(function(pair){
+      if (m[pair[1]]) {
+        totalProvasReadyS4++;
+        if (hasAccess(m, pair[0])) liberadasS4++;
+      }
+    });
+  });
+
   var s4Html = '<div class="materias-list">';
   MATERIAS_S4.forEach(function(m) {
+    if (!m.p1Ready && !m.p2Ready && !m.finalReady) {
+      s4Html +=
+        '<div class="folder-card" style="opacity:0.4;cursor:default;">' +
+          '<span class="folder-emoji">' + m.emoji + '</span>' +
+          '<div class="folder-name">' + m.label + '</div>' +
+          '<div class="folder-status">' +
+            '<div class="folder-status-item" style="color:rgba(251,191,36,0.5);">🔜 Em breve</div>' +
+          '</div>' +
+        '</div>';
+      return;
+    }
+
+    function statusLine(tipo, ready, corLiberado) {
+      var rotulo = tipo === "p1" ? "P1" : (tipo === "p2" ? "P2" : "Final");
+      if (!ready) {
+        return '<div class="folder-status-item" style="color:rgba(251,191,36,0.5);">🔜 ' + rotulo + ' em breve</div>';
+      }
+      var ac = hasAccess(m, tipo);
+      var dias = daysLeftForResumo(m, tipo);
+      var diasStr = dias !== null ? dias + " dias restantes" : "Acesso permanente";
+      return ac
+        ? '<div class="folder-status-item" style="color:' + corLiberado + ';">✓ ' + rotulo + ' · ' + diasStr + '</div>'
+        : '<div class="folder-status-item" style="color:rgba(125,211,232,0.35);">🔒 ' + rotulo + ' bloqueado</div>';
+    }
+
     s4Html +=
-      '<div class="folder-card" style="opacity:0.4;cursor:default;">' +
+      '<div class="folder-card" onclick="openMateriaS4(\'' + m.key + '\')">' +
         '<span class="folder-emoji">' + m.emoji + '</span>' +
         '<div class="folder-name">' + m.label + '</div>' +
         '<div class="folder-status">' +
-          '<div class="folder-status-item" style="color:rgba(251,191,36,0.5);">🔜 Em breve</div>' +
+          statusLine("p1", m.p1Ready, "#22d3ee") +
+          statusLine("p2", m.p2Ready, "#22d3ee") +
+          statusLine("final", m.finalReady, "#4ade80") +
         '</div>' +
       '</div>';
   });
@@ -1852,7 +1991,9 @@ function renderPastas() {
         '</div>' +
       '</div>' +
       '<div class="semestre-meta">' +
-        '<span class="semestre-badge soon">Em breve</span>' +
+        (totalProvasReadyS4 === 0
+          ? '<span class="semestre-badge soon">Em breve</span>'
+          : '<span class="semestre-badge">' + liberadasS4 + '/' + totalProvasReadyS4 + ' liberados</span>') +
         '<span class="semestre-chevron">▼</span>' +
       '</div>' +
     '</div>' +
@@ -1975,7 +2116,90 @@ function renderMateriaInterna(key) {
       '<div class="soon-badge"><span class="soon-dot"></span> Em breve</div>';
     grid.appendChild(finalSoon);
   }
-  grid.appendChild(final);
+}
+
+// ── S4: abre a matéria (cards P1/P2/Final) ────────────────────────────────────
+window.openMateriaS4 = function(key) {
+  currentMateria = "s4_" + key;
+  var searchBar = document.getElementById("searchBarWrap");
+  if (searchBar) searchBar.style.display = "none";
+  renderResumosGrid();
+};
+
+// ── S4: Vista INTERNA de uma matéria (cards P1, P2, Final — cada um com seu próprio Ready) ──
+function renderMateriaInternaS4(key) {
+  var m = MATERIAS_S4.find(function(x){ return x.key === key; });
+  if (!m) return;
+
+  var wrap = document.getElementById("semestresWrap");
+  var breadcrumb = document.getElementById("materiaBreadcrumb");
+  var cardsView = document.getElementById("materiaCardsView");
+  var grid = document.getElementById("materiaCardsGrid");
+  var title = document.getElementById("materiaViewTitle");
+  var breadcrumbNome = document.getElementById("breadcrumbNome");
+
+  wrap.style.display = "none";
+  breadcrumb.classList.add("visible");
+  cardsView.classList.add("visible");
+
+  breadcrumbNome.textContent = m.label;
+  title.innerHTML = '<span>' + m.emoji + '</span> ' + m.label + ' <span style="font-size:12px;color:rgba(125,211,232,0.4);font-weight:400;">· 4º Semestre</span>';
+  grid.innerHTML = "";
+
+  function buildCard(tipo, ready, file, corTema) {
+    var rotulo = tipo === "p1" ? "P1" : (tipo === "p2" ? "P2" : "Final");
+
+    if (!ready) {
+      var soon = document.createElement("div");
+      soon.className = "resumo-card soon";
+      soon.innerHTML =
+        '<span class="card-emoji" style="filter:grayscale(1);opacity:0.5;">' + m.emoji + '</span>' +
+        '<div class="card-title" style="color:rgba(251,191,36,0.6);">' + m.label + ' — ' + rotulo + '</div>' +
+        '<div class="card-desc">' + m.desc + '</div>' +
+        '<div class="soon-badge"><span class="soon-dot"></span> Em breve</div>';
+      grid.appendChild(soon);
+      return;
+    }
+
+    var ac = hasAccess(m, tipo);
+    var dias = daysLeftForResumo(m, tipo);
+
+    if (ac) {
+      var expiryHtml = dias !== null
+        ? '<div style="font-size:10px;color:' + (dias <= 7 ? '#fbbf24' : 'rgba(125,211,232,0.4)') + ';margin-top:6px;">' +
+            (dias <= 7 ? '⚠️ Expira em ' : '⏱️ ') + dias + ' dia' + (dias===1?'':'s') + (dias > 7 ? ' restantes' : '') +
+          '</div>'
+        : '';
+
+      var presentes = profile.resumos_presente || [];
+      var ehPresente = presentes.includes(m.key + "_" + tipo);
+
+      var card = document.createElement("a");
+      card.className = "resumo-card unlocked";
+      card.href = file;
+      card.style.position = "relative";
+      if (tipo === "final") card.style.borderColor = "rgba(74,222,128,0.25)";
+      card.innerHTML =
+        (ehPresente ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>' : '') +
+        '<span class="card-emoji">' + m.emoji + '</span>' +
+        '<div class="card-title" style="color:' + corTema + ';">' + m.label + ' — ' + rotulo + '</div>' +
+        '<div class="card-desc">' + m.desc + '</div>' + expiryHtml;
+      grid.appendChild(card);
+    } else {
+      var locked = document.createElement("div");
+      locked.className = "resumo-card locked";
+      locked.innerHTML =
+        '<span class="card-emoji">' + m.emoji + '</span>' +
+        '<div class="card-title" style="color:' + corTema + ';">' + m.label + ' — ' + rotulo + '</div>' +
+        '<div class="card-desc">' + m.desc + '</div>' +
+        '<div class="lock-badge" onclick="goToStore()"' + (tipo === "final" ? ' style="background:rgba(74,222,128,0.08);border-color:rgba(74,222,128,0.3);color:#4ade80;"' : '') + '>🔒 Comprar acesso</div>';
+      grid.appendChild(locked);
+    }
+  }
+
+  buildCard("p1", m.p1Ready, m.file_p1, "#e8eaf6");
+  buildCard("p2", m.p2Ready, m.file_p2, "#22d3ee");
+  buildCard("final", m.finalReady, m.file_final, "#4ade80");
 }
 
 window.toggleSemestre = function(header) {
@@ -2200,23 +2424,154 @@ window.toggleSemLoja = function(header) {
   card.classList.toggle("open");
 };
 
-// ── S4: Loja grid (todas em preparação) ───────────────────────────────────────
-function renderStoreGridS4() {
-  var grid = document.getElementById("store-grid-s4");
-  if (!grid) return;
-  grid.innerHTML = "";
+// ── S4: adicionar item individual ao carrinho (key já vem com sufixo _p1/_p2/_final) ──
+window.addToCartS4 = function(key) {
+  var tipo, m;
+  if (key.indexOf("_final") === key.length - 6) {
+    tipo = "final";
+    m = MATERIAS_S4.find(function(x){ return x.key + "_final" === key; });
+  } else if (key.indexOf("_p2") === key.length - 3) {
+    tipo = "p2";
+    m = MATERIAS_S4.find(function(x){ return x.key + "_p2" === key; });
+  } else {
+    tipo = "p1";
+    m = MATERIAS_S4.find(function(x){ return x.key + "_p1" === key; });
+  }
+  if (!m) return;
+  if (cart.find(function(c){ return c.key === key; })) {
+    removeFromCart(key); return;
+  }
+  var precoMap = { p1: PRECO_S4_P1_UNIT, p2: PRECO_S4_P2_UNIT, final: PRECO_S4_FINAL_UNIT };
+  var rotuloMap = { p1: "P1", p2: "P2", final: "Final" };
+  cart.push({ key: key, label: m.label + " — " + rotuloMap[tipo], emoji: m.emoji, preco: precoMap[tipo], tipo: "s4_" + tipo });
+  updateCartUI();
+  renderStoreGridS4();
+};
 
-  MATERIAS_S4.forEach(function(m) {
-    var card = document.createElement("div");
-    card.className = "produto-card";
-    card.style.opacity = "0.4";
-    card.innerHTML =
-      '<span class="produto-emoji">' + m.emoji + '</span>' +
-      '<div class="produto-nome">' + m.label + '</div>' +
-      '<div class="produto-sub">4º Semestre · 50 dias</div>' +
-      '<div class="soon-badge" style="margin-top:auto;"><span class="soon-dot"></span> Em breve</div>';
-    grid.appendChild(card);
+// ── S4: pacote completo por prova (P1, P2 ou Final) ────────────────────────────
+window.addComboS4ToCart = function(tipo) {
+  var readyField = tipo === "p1" ? "p1Ready" : (tipo === "p2" ? "p2Ready" : "finalReady");
+  var naoAdquiridos = MATERIAS_S4.filter(function(m){ return m[readyField] && !hasAccess(m, tipo); });
+  if (naoAdquiridos.length === 0) { alert("Você já possui todos os resumos dessa prova disponíveis no momento!"); return; }
+
+  var packMap = { p1: PRECO_S4_P1_PACK, p2: PRECO_S4_P2_PACK, final: PRECO_S4_FINAL_PACK };
+  var rotuloMap = { p1: "P1", p2: "P2", final: "Final" };
+  var precoPorItem = packMap[tipo] / naoAdquiridos.length;
+
+  cart = cart.filter(function(c){ return c.tipo !== "s4_" + tipo; });
+  naoAdquiridos.forEach(function(m) {
+    cart.push({ key: m.key + "_" + tipo, label: m.label + " — " + rotuloMap[tipo], emoji: m.emoji, preco: precoPorItem, tipo: "s4_" + tipo, isComboS4: tipo });
   });
+  updateCartUI();
+  renderStoreGridS4();
+  openCart();
+};
+
+// ── S4: Loja grid (P1/P2/Final — cada prova com seu combo + individuais) ──────
+function renderStoreGridS4() {
+  var packMap = { p1: PRECO_S4_P1_PACK, p2: PRECO_S4_P2_PACK, final: PRECO_S4_FINAL_PACK };
+  var unitMap = { p1: PRECO_S4_P1_UNIT, p2: PRECO_S4_P2_UNIT, final: PRECO_S4_FINAL_UNIT };
+  var readyFieldMap = { p1: "p1Ready", p2: "p2Ready", final: "finalReady" };
+
+  var totalProntas = 0;
+  ["p1","p2","final"].forEach(function(tipo) {
+    var readyField = readyFieldMap[tipo];
+    var grid = document.getElementById("store-grid-s4-" + tipo);
+    if (!grid) return;
+    grid.innerHTML = "";
+
+    var itensReady = MATERIAS_S4.filter(function(m){ return m[readyField]; });
+    totalProntas += itensReady.length;
+
+    MATERIAS_S4.forEach(function(m) {
+      if (!m[readyField]) {
+        var soonCard = document.createElement("div");
+        soonCard.className = "produto-card";
+        soonCard.style.opacity = "0.4";
+        soonCard.innerHTML =
+          '<span class="produto-emoji">' + m.emoji + '</span>' +
+          '<div class="produto-nome">' + m.label + '</div>' +
+          '<div class="produto-sub">4º Semestre · 50 dias</div>' +
+          '<div class="soon-badge" style="margin-top:auto;"><span class="soon-dot"></span> Em breve</div>';
+        grid.appendChild(soonCard);
+        return;
+      }
+
+      var key = m.key + "_" + tipo;
+      var owned = hasAccess(m, tipo);
+      var inCart = !!cart.find(function(c){ return c.key === key; });
+
+      var card = document.createElement("div");
+      card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
+
+      var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "+ Adicionar");
+      var btnClass = "add-btn" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
+
+      card.innerHTML =
+        '<span class="produto-emoji">' + m.emoji + '</span>' +
+        '<div class="produto-nome">' + m.label + '</div>' +
+        '<div class="produto-sub">4º Semestre · 50 dias</div>' +
+        '<div class="produto-preco">R$ ' + unitMap[tipo].toFixed(2).replace(".",",") + '<span>/resumo</span></div>' +
+        '<button class="' + btnClass + '"' + (owned ? ' disabled' : ' onclick="addToCartS4(\'' + key + '\')"') + '>' + btnLabel + '</button>';
+
+      grid.appendChild(card);
+    });
+
+    // Combo por tipo
+    var comboCard = document.getElementById("combo-s4" + tipo + "-card");
+    var comboBtn = document.getElementById("combo-s4" + tipo + "-btn");
+    var comboTags = document.getElementById("combo-s4" + tipo + "-tags");
+    var comboOld = document.getElementById("combo-s4" + tipo + "-old");
+    var comboNew = document.getElementById("combo-s4" + tipo + "-new");
+    var comboPct = document.getElementById("combo-s4" + tipo + "-pct");
+
+    if (!comboCard) return;
+
+    if (itensReady.length < 2) {
+      comboCard.style.display = "none";
+      return;
+    }
+    comboCard.style.display = "block";
+
+    var readyNaoAdq = itensReady.filter(function(m){ return !hasAccess(m, tipo); });
+    var precoCheio = itensReady.length * unitMap[tipo];
+    var pct = precoCheio > 0 ? Math.round((1 - packMap[tipo] / precoCheio) * 100) : 0;
+
+    if (comboOld) comboOld.textContent = formatPrice(precoCheio);
+    if (comboNew) comboNew.textContent = formatPrice(packMap[tipo]);
+    if (comboPct) comboPct.textContent = "🏷️ " + Math.max(0, pct) + "% off";
+
+    if (comboBtn) {
+      if (readyNaoAdq.length === 0) {
+        comboBtn.textContent = "✅ Você já possui todos os resumos disponíveis";
+        comboBtn.disabled = true;
+      } else {
+        comboBtn.textContent = "🛒 Adicionar pacote ao carrinho — " + formatPrice(packMap[tipo]);
+        comboBtn.disabled = false;
+      }
+    }
+    if (comboTags) {
+      comboTags.innerHTML = MATERIAS_S4.map(function(m) {
+        var style = m[readyField] ? "" : "opacity:0.3;";
+        return '<span class="combo-tag" style="' + style + '">' + m.emoji + ' ' + m.label + (m[readyField] ? '' : ' 🔜') + '</span>';
+      }).join("");
+    }
+  });
+
+  var sem4Badge = document.getElementById("sem4-badge");
+  if (sem4Badge) {
+    if (totalProntas === 0) {
+      sem4Badge.textContent = "🔜 Em breve";
+      sem4Badge.style.background = "rgba(251,191,36,0.08)";
+      sem4Badge.style.borderColor = "rgba(251,191,36,0.2)";
+      sem4Badge.style.color = "rgba(251,191,36,0.6)";
+    } else {
+      sem4Badge.textContent = totalProntas + " prova" + (totalProntas === 1 ? "" : "s") + " disponível" + (totalProntas === 1 ? "" : "eis");
+      sem4Badge.style.background = "rgba(34,211,238,0.08)";
+      sem4Badge.style.borderColor = "rgba(34,211,238,0.25)";
+      sem4Badge.style.color = "#22d3ee";
+    }
+  }
 }
 
 // ── S2: Acesso e dias restantes ──────────────────────────────────────────────
@@ -2566,24 +2921,33 @@ function calcCartTotal() {
   var n = cart.length;
   if (n === 0) return { subtotal: 0, desconto: 0, total: 0, descLabel: "" };
 
-  // Separar itens P2, Final, S1, S2 e Curso
+  // Separar itens P2, Final, S1, S2, S4 (p1/p2/final) e Curso
   var p2Items = cart.filter(function(c){ return c.tipo === "p2"; });
   var finalItems = cart.filter(function(c){ return c.tipo === "final"; });
   var s1Items = cart.filter(function(c){ return c.tipo === "s1"; });
   var s2Items = cart.filter(function(c){ return c.tipo === "s2"; });
+  var s4p1Items = cart.filter(function(c){ return c.tipo === "s4_p1"; });
+  var s4p2Items = cart.filter(function(c){ return c.tipo === "s4_p2"; });
+  var s4finalItems = cart.filter(function(c){ return c.tipo === "s4_final"; });
   var cursoItems = cart.filter(function(c){ return c.tipo === "curso"; });
 
   var subtotalP2 = p2Items.length * PRECO_UNIT;
   var subtotalFinal = finalItems.length * (PROMO_FINAL_ATIVA ? PRECO_FINAL_DE : PRECO_FINAL);
   var subtotalS1 = s1Items.length * PRECO_S1_UNIT;
   var subtotalS2 = s2Items.length * PRECO_S2_UNIT;
+  var subtotalS4P1 = s4p1Items.length * PRECO_S4_P1_UNIT;
+  var subtotalS4P2 = s4p2Items.length * PRECO_S4_P2_UNIT;
+  var subtotalS4Final = s4finalItems.length * PRECO_S4_FINAL_UNIT;
   var subtotalCurso = cursoItems.reduce(function(acc,c){ return acc + c.preco; }, 0);
-  var subtotal = subtotalP2 + subtotalFinal + subtotalS1 + subtotalS2 + subtotalCurso;
+  var subtotal = subtotalP2 + subtotalFinal + subtotalS1 + subtotalS2 + subtotalS4P1 + subtotalS4P2 + subtotalS4Final + subtotalCurso;
 
   var totalP2 = subtotalP2;
   var totalFinal = subtotalFinal;
   var totalS1 = subtotalS1;
   var totalS2 = subtotalS2;
+  var totalS4P1 = subtotalS4P1;
+  var totalS4P2 = subtotalS4P2;
+  var totalS4Final = subtotalS4Final;
   var totalCurso = subtotalCurso;
   var descLabel = "";
 
@@ -2635,10 +2999,31 @@ function calcCartTotal() {
     descLabel += (descLabel ? " + " : "") + "🏷️ Desconto S2 3+ itens (20% off)";
   }
 
+  // Desconto S4 P1/P2/Final: pacote completo (por prova) ou 3+ itens (20% off)
+  var s4Combos = [
+    { items: s4p1Items, pack: PRECO_S4_P1_PACK, combo3: PRECO_S4_P1_COMBO3, rotulo: "P1" },
+    { items: s4p2Items, pack: PRECO_S4_P2_PACK, combo3: PRECO_S4_P2_COMBO3, rotulo: "P2" },
+    { items: s4finalItems, pack: PRECO_S4_FINAL_PACK, combo3: PRECO_S4_FINAL_COMBO3, rotulo: "Final" },
+  ];
+  var totalS4 = { p1: totalS4P1, p2: totalS4P2, final: totalS4Final };
+  var keyMap = { P1: "p1", P2: "p2", Final: "final" };
+  s4Combos.forEach(function(sc) {
+    var k = keyMap[sc.rotulo];
+    var temCombo = sc.items.some(function(c){ return c.isComboS4; });
+    if (temCombo) {
+      totalS4[k] = sc.pack;
+      descLabel += (descLabel ? " + " : "") + "🏷️ Pacote " + sc.rotulo + " 4º Sem. completo";
+    } else if (sc.items.length >= 3) {
+      totalS4[k] = sc.items.length * sc.combo3;
+      descLabel += (descLabel ? " + " : "") + "🏷️ Desconto " + sc.rotulo + " 4º Sem. 3+ itens (20% off)";
+    }
+  });
+  totalS4P1 = totalS4.p1; totalS4P2 = totalS4.p2; totalS4Final = totalS4.final;
+
   // Expor flag para o cupom saber se tem pacote completo
   calcCartTotal._temPacoteCompleto = temPacoteCompleto;
 
-  var total = totalP2 + totalFinal + totalS1 + totalS2 + totalCurso;
+  var total = totalP2 + totalFinal + totalS1 + totalS2 + totalS4P1 + totalS4P2 + totalS4Final + totalCurso;
   var desconto = subtotal - total;
 
   return { subtotal: subtotal, desconto: desconto, total: total, descLabel: descLabel };
@@ -2742,7 +3127,7 @@ function updateCartUI() {
     var precoOriginal = (c.tipo === "final" && !c.isPacoteCompleto && PROMO_FINAL_ATIVA && PRECO_FINAL < PRECO_FINAL_DE)
       ? '<span style="text-decoration:line-through;color:rgba(125,211,232,0.3);font-size:11px;margin-right:4px;">' + formatPrice(PRECO_FINAL_DE) + '</span>'
       : '';
-    var subLabel = c.isPacoteCompleto ? "Pacote Completo · 50 dias" : (c.tipo === "curso" ? "Curso · 90 dias de acesso" : (c.tipo === "s1" ? "1º Semestre · 50 dias de acesso" : (c.tipo === "s2" ? "2º Semestre · 50 dias de acesso" : "3º Semestre · 50 dias de acesso")));
+    var subLabel = c.isPacoteCompleto ? "Pacote Completo · 50 dias" : (c.tipo === "curso" ? "Curso · 90 dias de acesso" : (c.tipo === "s1" ? "1º Semestre · 50 dias de acesso" : (c.tipo === "s2" ? "2º Semestre · 50 dias de acesso" : ((c.tipo === "s4_p1" || c.tipo === "s4_p2" || c.tipo === "s4_final") ? "4º Semestre · 50 dias de acesso" : "3º Semestre · 50 dias de acesso"))));
     return '<div class="cart-item">' +
       '<span class="cart-item-emoji">' + c.emoji + '</span>' +
       '<div class="cart-item-info">' +
