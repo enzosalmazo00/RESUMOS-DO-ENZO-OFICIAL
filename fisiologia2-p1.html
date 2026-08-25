@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fisiologia II – P1 – Enzo | 2026</title>
+<script>window.PAGE_KEY = "fisiologia2_p1";</script>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<script>document.addEventListener("authReady", function(){ document.documentElement.style.visibility = "visible"; });</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+
+:root {
+  --bg: #0a0d14;
+  --bg2: #111520;
+  --bg3: #161c2e;
+  --card: #1a2138;
+  --card2: #1f2845;
+  --accent: #4f9cf9;
+  --accent2: #38e8c0;
+  --accent3: #f9784f;
+  --accent4: #b84ff9;
+  --gold: #f9c94f;
+  --red: #f95f5f;
+  --green: #4ff984;
+  --text: #e8eaf6;
+  --muted: #8892b0;
+  --border: rgba(79,156,249,0.15);
+  --shadow: 0 8px 40px rgba(0,0,0,0.5);
+  --radius: 16px;
+  --font-body: 'DM Sans', sans-serif;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#particles { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+/* ── HEADER ── */
+header {
+  position: relative; z-index:10;
+  text-align: center;
+  padding: 48px 24px 32px;
+  background: linear-gradient(180deg, rgba(79,156,249,0.08) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border);
+}
+header .badge {
+  display:inline-block;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight:600;
+  letter-spacing:2px; text-transform:uppercase;
+  padding: 4px 14px; border-radius:20px; margin-bottom:16px;
+}
+header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4vw, 44px);
+  font-weight: 800; letter-spacing:-1px;
+  background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent2) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip: text; margin-bottom:8px;
+}
+header .sub { color: var(--muted); font-size:13px; letter-spacing:1px; }
+header .by { margin-top:12px; color: var(--accent2); font-family:var(--font-mono); font-size:12px; }
+header .psalm { margin-top:8px; color:var(--gold); font-size:12px; font-style:italic; opacity:0.8; }
+
+/* ── TABS ── */
+nav.tabs {
+  position:sticky; top:0; z-index:100;
+  display:flex; gap:4px; flex-wrap:wrap;
+  background: rgba(10,13,20,0.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  justify-content: center;
+}
+nav.tabs button {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: var(--font-body); font-size:12px; font-weight:600;
+  padding: 6px 14px; border-radius: 8px; cursor:pointer;
+  transition: all 0.2s; letter-spacing: 0.3px;
+}
+nav.tabs button:hover { color: var(--accent); border-color: var(--accent); }
+nav.tabs button.active {
+  background: var(--accent); color: var(--bg);
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(79,156,249,0.4);
+}
+nav.tabs button.fc-tab.active { background: var(--gold); color: var(--bg); border-color: var(--gold); box-shadow: 0 0 20px rgba(249,201,79,0.4); }
+nav.tabs button.qz-tab.active { background: var(--accent4); color: #fff; border-color: var(--accent4); box-shadow: 0 0 20px rgba(184,79,249,0.4); }
+
+/* ── SECTIONS ── */
+.section { display:none; animation: fadeIn 0.4s ease; }
+.section.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+.container { max-width:1100px; margin:0 auto; padding: 32px 20px; position:relative; z-index:1; }
+
+/* ── CHAPTER TITLE ── */
+.chapter-title {
+  font-family: var(--font-display); font-size:22px; font-weight:700;
+  color: var(--accent); margin-bottom:24px;
+  display:flex; align-items:center; gap:12px;
+}
+.chapter-title::after {
+  content:''; flex:1; height:1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+.chap-icon { font-size:24px; }
+
+/* ── GLOSSARY GRID ── */
+.glossary-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px; margin-bottom:32px;
+}
+.gloss-card {
+  background: var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:18px 20px;
+  cursor:pointer; transition: all 0.25s;
+  position:relative; overflow:hidden;
+}
+.gloss-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius:3px 3px 0 0;
+}
+.gloss-card:hover {
+  transform:translateY(-2px); border-color: var(--accent);
+  box-shadow: 0 8px 30px rgba(79,156,249,0.2);
+}
+.gloss-card .term {
+  font-family:var(--font-mono); font-size:13px; color:var(--accent2);
+  font-weight:600; margin-bottom:6px;
+}
+.gloss-card .def { color:var(--text); font-size:13px; line-height:1.6; }
+
+/* ── INFO BLOCKS ── */
+.info-block {
+  background: var(--card2); border-left: 3px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  padding: 16px 20px; margin-bottom:20px;
+}
+.info-block.warn { border-color: var(--gold); }
+.info-block.danger { border-color: var(--red); }
+.info-block.success { border-color: var(--green); }
+.info-block.purple { border-color: var(--accent4); }
+.info-block .label {
+  font-family:var(--font-mono); font-size:10px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--muted); margin-bottom:8px;
+}
+.info-block h4 { font-family:var(--font-display); font-weight:700; margin-bottom:8px; font-size:15px; color:#fff; }
+.info-block p { color: var(--text); }
+.info-block ul, .info-block ol { padding-left:20px; margin-top:8px; color:var(--text); }
+.info-block li { margin:4px 0; }
+
+/* ── COMPARE TABLE ── */
+.compare-table {
+  width:100%; border-collapse:separate; border-spacing:0;
+  border-radius:var(--radius); overflow:hidden; margin-bottom:28px;
+}
+.compare-table th {
+  background: var(--card2); color:var(--accent);
+  font-family:var(--font-display); font-size:13px; font-weight:700;
+  padding:12px 16px; text-align:left;
+  border-bottom:1px solid var(--border);
+}
+.compare-table td {
+  background: var(--card); padding:10px 16px; font-size:13px;
+  border-bottom:1px solid rgba(255,255,255,0.04); color:var(--text);
+}
+.compare-table tr:last-child td { border-bottom:none; }
+.compare-table tr:hover td { background: var(--card2); }
+
+/* ── SECTION DIVIDER ── */
+.sec-divider {
+  display:flex; align-items:center; gap:12px;
+  margin: 32px 0 20px;
+}
+.sec-divider h3 {
+  font-family:var(--font-display); font-weight:700; font-size:17px;
+  color:var(--accent3); white-space:nowrap;
+}
+.sec-divider::before, .sec-divider::after {
+  content:''; flex:1; height:1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+/* ── FORMULA BOX ── */
+.formula-box {
+  background: rgba(56,232,192,0.06);
+  border: 1px solid rgba(56,232,192,0.25);
+  border-left: 4px solid var(--accent2);
+  border-radius: 0 12px 12px 0;
+  padding:14px 20px; margin-bottom:20px;
+  font-family: var(--font-mono); font-size:15px;
+  color: var(--accent2); font-weight:700;
+}
+.formula-box .formula-label {
+  font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--muted); margin-bottom:6px; font-family:var(--font-body);
+}
+
+/* ── EXAMPLE BOX ── */
+.example-box {
+  background:rgba(249,120,79,0.06);
+  border:1px solid rgba(249,120,79,0.2);
+  border-left:4px solid var(--accent3);
+  border-radius:0 12px 12px 0;
+  padding:12px 18px; margin:12px 0 20px;
+}
+.example-box .ex-label {
+  font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--accent3); font-weight:700; margin-bottom:6px;
+}
+.example-box p { color:var(--text); font-size:13px; }
+
+/* ── FLASHCARD GRID ── */
+.flashcard-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+  gap:20px; margin-bottom:32px;
+}
+.flashcard { perspective:1000px; height:235px; cursor:pointer; }
+.flashcard-inner {
+  position:relative; width:100%; height:100%;
+  transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+  transform-style: preserve-3d;
+}
+.flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+.flashcard-front, .flashcard-back {
+  position:absolute; inset:0; border-radius:var(--radius);
+  backface-visibility:hidden; padding:22px;
+  display:flex; flex-direction:column; justify-content:space-between;
+}
+.flashcard-front {
+  background: linear-gradient(135deg, var(--card) 0%, var(--card2) 100%);
+  border: 1px solid var(--border);
+}
+.flashcard-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, #1a1a3a 0%, #1a2a3e 100%);
+  border: 1px solid rgba(79,156,249,0.3);
+  overflow-y:auto; font-size:12.5px; line-height:1.7;
+}
+.fc-tag {
+  font-family:var(--font-mono); font-size:11px;
+  color:var(--accent2); letter-spacing:1px; text-transform:uppercase;
+}
+.fc-q {
+  font-family:var(--font-display); font-size:16px; font-weight:700;
+  color:#fff; line-height:1.3; margin:8px 0;
+}
+.fc-hint { font-size:11px; color:var(--accent); text-align:right; opacity:0.7; }
+.fc-back-text { color:var(--text); white-space:pre-line; }
+
+/* ── QUIZ ── */
+.q-stats { display:flex; gap:1rem; justify-content:center; margin-bottom:2rem; flex-wrap:wrap; }
+.sbox { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:.65rem 1.1rem; text-align:center; min-width:80px; }
+.sbox .sv { font-size:1.5rem; font-weight:900; font-family:var(--font-display); }
+.sbox .sl { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); }
+.sbox.c .sv { color:var(--green); } .sbox.w .sv { color:var(--red); } .sbox.p .sv { color:var(--accent); }
+
+.q-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:1.8rem; margin-bottom:1.5rem; transition:border-color .3s; }
+.q-card.ans.cq { border-color:var(--green); } .q-card.ans.wq { border-color:var(--red); }
+.q-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:.9rem; gap:.5rem; flex-wrap:wrap; }
+.q-num { font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:2px; }
+.q-tbadge { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:1px; padding:.2rem .55rem; border-radius:20px; }
+.tmc { background:rgba(79,156,249,0.15); color:var(--accent); } .ttf { background:rgba(184,79,249,0.15); color:var(--accent4); } .tab { background:rgba(249,201,79,0.15); color:var(--gold); }
+.ctag { font-size:10px; font-weight:700; background:rgba(255,255,255,.06); color:var(--muted); padding:.2rem .55rem; border-radius:20px; }
+.q-text { font-size:15px; font-weight:700; color:#fff; margin-bottom:1.1rem; line-height:1.6; }
+.opts { display:flex; flex-direction:column; gap:.5rem; margin-bottom:.9rem; }
+.opt-btn { background:var(--card2); border:1px solid var(--border); color:var(--text); padding:.7rem 1rem; border-radius:10px; cursor:pointer; font-family:var(--font-body); font-size:14px; text-align:left; transition:all .2s; display:flex; gap:.7rem; align-items:flex-start; width:100%; }
+.opt-btn:hover:not(:disabled) { border-color:var(--accent); color:#fff; }
+.opt-btn:disabled { cursor:default; }
+.opt-btn.ca { background:rgba(79,249,132,0.12); border-color:var(--green); color:var(--green); }
+.opt-btn.wa { background:rgba(249,95,95,0.1); border-color:var(--red); color:var(--red); }
+.ol { font-weight:900; font-size:12px; flex-shrink:0; width:18px; text-align:center; margin-top:1px; }
+.tf-opts { display:flex; gap:1rem; margin-bottom:.9rem; }
+.tf-btn { flex:1; background:var(--card2); border:1px solid var(--border); color:var(--text); padding:.8rem; border-radius:10px; cursor:pointer; font-family:var(--font-body); font-size:15px; font-weight:800; text-align:center; transition:all .2s; }
+.tf-btn:hover:not(:disabled) { border-color:var(--accent4); }
+.tf-btn:disabled { cursor:default; }
+.tf-btn.ca { background:rgba(79,249,132,0.12); border-color:var(--green); color:var(--green); }
+.tf-btn.wa { background:rgba(249,95,95,0.1); border-color:var(--red); color:var(--red); }
+.open-btn { background:var(--card2); border:1px dashed var(--gold); color:var(--gold); padding:.65rem 1.4rem; border-radius:10px; cursor:pointer; font-family:var(--font-body); font-size:14px; font-weight:700; transition:all .2s; margin-bottom:.9rem; }
+.open-btn:hover { background:rgba(249,201,79,0.1); }
+.exp-box { display:none; background:rgba(0,0,0,.2); border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:.9rem 1.1rem; margin-top:.6rem; }
+.exp-box.vis { display:block; }
+.exp-box .et { font-size:11px; font-weight:800; color:var(--accent2); text-transform:uppercase; letter-spacing:1px; margin-bottom:.4rem; }
+.exp-box p { font-size:13px; color:var(--text); line-height:1.7; }
+.res-ind { display:none; align-items:center; gap:.5rem; font-size:14px; font-weight:700; margin-bottom:.6rem; }
+.res-ind.vis { display:flex; }
+.res-ind.c { color:var(--green); } .res-ind.w { color:var(--red); }
+.reset-btn { background:var(--card); border:1px solid var(--border); color:var(--muted); padding:.6rem 1.5rem; border-radius:50px; cursor:pointer; font-family:var(--font-body); font-size:14px; font-weight:700; display:block; margin:2rem auto; transition:all .2s; }
+.reset-btn:hover { border-color:var(--red); color:var(--red); }
+
+/* ── SCROLL TOP ── */
+#scrolltop {
+  position:fixed; bottom:24px; right:24px; z-index:200;
+  background:var(--accent); color:var(--bg);
+  width:40px; height:40px; border-radius:50%;
+  border:none; cursor:pointer; font-size:18px;
+  box-shadow:0 4px 20px rgba(79,156,249,0.4);
+  transition:all 0.2s; display:none;
+}
+#scrolltop:hover { transform:translateY(-2px); }
+
+/* ── BACK BTN ── */
+.back-btn {
+  position:fixed; bottom:24px; left:24px; z-index:9999;
+  display:flex; align-items:center; gap:9px;
+  padding:12px 26px;
+  background:rgba(10,13,20,0.93);
+  border:1.5px solid rgba(79,156,249,0.42);
+  border-radius:50px;
+  color:#e8eaf6;
+  font-size:13px; font-weight:600; letter-spacing:0.03em;
+  text-decoration:none;
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  box-shadow:0 4px 24px rgba(79,156,249,0.16), inset 0 1px 0 rgba(255,255,255,0.04);
+  transition:all .25s ease;
+}
+.back-btn:hover {
+  background:rgba(79,156,249,0.14);
+  border-color:rgba(79,156,249,0.85);
+  transform:translateY(-3px);
+  box-shadow:0 8px 32px rgba(79,156,249,0.26);
+}
+
+/* ── UTILITIES ── */
+p { margin: 8px 0; color: var(--text); }
+strong { color: #fff; }
+em { color: var(--accent2); font-style:normal; }
+
+.tag-prova {
+  display:inline-block; background:rgba(249,95,95,0.15);
+  border:1px solid var(--red); color:var(--red);
+  font-family:var(--font-mono); font-size:10px; letter-spacing:2px;
+  padding:2px 10px; border-radius:6px; margin-left:8px;
+  vertical-align:middle; text-transform:uppercase;
+}
+
+/* ── INTRO COVER CARDS ── */
+.intro-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+  gap:16px; margin-bottom:28px;
+}
+.intro-card {
+  background: var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:20px;
+  text-align:center; transition:all 0.25s; cursor:pointer;
+}
+.intro-card:hover { border-color:var(--accent); transform:translateY(-3px); box-shadow:0 8px 30px rgba(79,156,249,0.2); }
+.intro-card .ic-icon { font-size:32px; margin-bottom:10px; }
+.intro-card .ic-name { font-family:var(--font-display); font-size:14px; font-weight:700; color:#fff; margin-bottom:4px; }
+.intro-card .ic-desc { font-size:12px; color:var(--muted); }
+
+/* ── MINI BADGE ── */
+.mbadge {
+  display:inline-flex; align-items:center; gap:.3rem;
+  padding:.2rem .55rem; border-radius:20px;
+  font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;
+}
+.mbadge.blue { background:rgba(79,156,249,0.15); color:var(--accent); border:1px solid rgba(79,156,249,0.3); }
+.mbadge.red  { background:rgba(249,95,95,0.15); color:var(--red); border:1px solid rgba(249,95,95,0.3); }
+.mbadge.grn  { background:rgba(79,249,132,0.15); color:var(--green); border:1px solid rgba(79,249,132,0.3); }
+.mbadge.gld  { background:rgba(249,201,79,0.15); color:var(--gold); border:1px solid rgba(249,201,79,0.3); }
+
+@media(max-width:768px) {
+  nav.tabs { flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; padding:8px; gap:6px; }
+  nav.tabs::-webkit-scrollbar { display:none; }
+  nav.tabs button { flex-shrink:0; font-size:12px; padding:6px 12px; white-space:nowrap; }
+  .tf-opts { flex-direction:column; }
+}
+@media(max-width:600px) {
+  header { padding:32px 16px 24px; }
+  .container { padding:16px 14px; }
+  .flashcard-grid { grid-template-columns:1fr; }
+  .compare-table { font-size:12px; }
+  .compare-table th, .compare-table td { padding:8px 10px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header>
+  <div class="badge">🫁 Fisiologia II · P1 · 2026</div>
+  <h1>Fisiologia II — P1</h1>
+  <p class="sub">Ventilação Pulmonar · Circulação Pulmonar · Trocas Gasosas · Transporte de O₂/CO₂ · Regulação da Respiração</p>
+  <p class="by">⚡ Elaborado por Enzo Salmazo · Guyton &amp; Hall · Caps. 38–42</p>
+  <p class="psalm">📖 "O Senhor é a minha luz e a minha salvação; a quem temerei?" — Salmos 27:1</p>
+</header>
+
+<!-- ═══════════════════ NAV TABS ═══════════════════ -->
+<nav class="tabs">
+  <button class="active" onclick="showSection('intro',this)">📖 Intro</button>
+  <button onclick="showSection('cap38',this)">Cap. 38 — Ventilação</button>
+  <button onclick="showSection('cap39',this)">Cap. 39 — Circulação Pulmonar</button>
+  <button onclick="showSection('cap40',this)">Cap. 40 — Trocas Gasosas</button>
+  <button onclick="showSection('cap41',this)">Cap. 41 — Transporte de Gases</button>
+  <button onclick="showSection('cap42',this)">Cap. 42 — Regulação</button>
+  <button class="fc-tab" onclick="showSection('flashcards',this)">🃏 Flashcards</button>
+  <button class="qz-tab" onclick="showSection('quiz',this)">📝 Simulado (50)</button>
+</nav>
+
+<!-- ════════════════════════════════════════════════
+     INTRO
+════════════════════════════════════════════════ -->
+<div id="intro" class="section active">
+<div class="container">
+
+<div class="chapter-title"><span class="chap-icon">📖</span> Introdução — Fisiologia II P1</div>
+
+<div class="info-block">
+  <div class="label">Visão Geral</div>
+  <h4>Sobre este material</h4>
+  <p>Este resumo cobre os Capítulos <strong>38 a 42</strong> de Guyton &amp; Hall, o bloco de <strong>fisiologia respiratória</strong>: <strong>ventilação pulmonar</strong>, <strong>circulação pulmonar e edema pulmonar</strong>, <strong>princípios físicos das trocas gasosas</strong>, <strong>transporte de O₂ e CO₂</strong> e <strong>regulação da respiração</strong>. Inclui <strong>flashcards interativos</strong> e um <strong>simulado de 50 questões</strong> (10 por capítulo) com correção imediata.</p>
+</div>
+
+<div class="info-block warn">
+  <div class="label">Em construção</div>
+  <h4>Próximos capítulos da P1</h4>
+  <p>Os Capítulos <strong>43 (Insuficiência Respiratória)</strong> e os Capítulos <strong>46 a 49 (Sistema Nervoso — Organização, Receptores Sensoriais, Sensações Somáticas I e II)</strong> ainda serão adicionados a este material assim que o resumo-base for construído. Este arquivo já está pronto para receber essas seções sem quebrar o layout.</p>
+</div>
+
+<div class="info-block success">
+  <div class="label">Como estudar</div>
+  <h4>Roteiro de estudo sugerido</h4>
+  <ol>
+    <li>Leia o Cap. 38 (mecânica ventilatória — a base de tudo o que vem depois).</li>
+    <li>Avance para o Cap. 39 (circulação pulmonar, pressões, edema e derrame pleural).</li>
+    <li>Estude os Caps. 40 e 41 juntos — física da difusão e transporte sanguíneo dos gases se completam.</li>
+    <li>Feche com o Cap. 42 (regulação nervosa e química da respiração).</li>
+    <li>Faça os flashcards por capítulo ao terminar cada bloco.</li>
+    <li>Realize o simulado completo ao final e revise os erros.</li>
+  </ol>
+</div>
+
+<div class="sec-divider"><h3>🗂️ Glossário Essencial — Fisiologia Respiratória</h3></div>
+<p style="color:var(--muted);font-size:13px;margin-bottom:16px;">Clique em cada cartão para expandir a definição.</p>
+
+<div class="glossary-grid">
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Pressão Transpulmonar</div><div class="def" style="display:none">P.transpulmonar = P.alveolar − P.pleural. É a força que mantém o pulmão aberto contra sua tendência ao colapso. No repouso: 0 − (−5) = +5 cmH₂O.</div></div>
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Surfactante Pulmonar</div><div class="def" style="display:none">Mistura de fosfolipídios (principal: DPPC), proteínas e cálcio, secretada pelos pneumócitos tipo II. Reduz a tensão superficial alveolar de ~50 para 5–30 dinas/cm, evitando o colapso dos alvéolos.</div></div>
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Ventilação Alveolar (V̇A)</div><div class="def" style="display:none">V̇A = FR × (VC − VM). Só o ar que realmente chega às zonas de troca gasosa, descontando o espaço morto (~150 mL). Fisiologicamente mais importante que a ventilação-minuto.</div></div>
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Complacência Pulmonar Arterial</div><div class="def" style="display:none">A árvore arterial pulmonar apresenta complacência de ~7 mL/mmHg, o que permite acomodar o volume sistólico do VD com pequena elevação da pressão.</div></div>
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Vasoconstrição Pulmonar Hipóxica</div><div class="def" style="display:none">Ao contrário da circulação sistêmica, a hipóxia alveolar causa vasoconstrição (não vasodilatação) nos capilares pulmonares locais, desviando o sangue para áreas mais bem ventiladas. Torna-se significativa abaixo de ~73 mmHg de PO₂ alveolar.</div></div>
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Zonas de West (1, 2 e 3)</div><div class="def" style="display:none">Zona 1: Palv &gt; Part &gt; Pven — ausência de fluxo. Zona 2: Part &gt; Palv &gt; Pven — fluxo intermitente (predomina no ápice, em pé). Zona 3: Part &gt; Pven &gt; Palv — fluxo contínuo (predomina na base).</div></div>
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Lei de Henry</div><div class="def" style="display:none">C = S × P. A quantidade de gás dissolvida em um líquido é proporcional à pressão parcial e ao coeficiente de solubilidade do gás. O CO₂ é ~20× mais solúvel que o O₂.</div></div>
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Membrana Respiratória</div><div class="def" style="display:none">6 camadas (líquido com surfactante, epitélio alveolar, membrana basal alveolar, interstício, membrana basal capilar, endotélio capilar). Espessura média ~0,6 μm; área total ~70 m².</div></div>
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Relação Ventilação-Perfusão (V̇A/Q̇)</div><div class="def" style="display:none">V̇A/Q̇ = 0 → só perfusão, sem ventilação → comportamento de shunt (PAO₂≈40, PACO₂≈45). V̇A/Q̇ = ∞ → só ventilação, sem perfusão → espaço morto alveolar (PAO₂≈149, PACO₂≈0).</div></div>
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Efeito Bohr</div><div class="def" style="display:none">↑ CO₂ e ↑ H⁺ nos tecidos → desloca a curva de dissociação Hb-O₂ para a direita → ↓ afinidade da Hb pelo O₂ → ↑ liberação de O₂ tecidual.</div></div>
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Efeito Haldane</div><div class="def" style="display:none">A ligação do O₂ à hemoglobina reduz a capacidade da Hb de carrear CO₂ e H⁺. Nos pulmões, a oxigenação favorece a liberação de CO₂; nos tecidos, a desoxigenação favorece sua captação.</div></div>
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Desvio do Cloreto</div><div class="def" style="display:none">Nos tecidos, o HCO₃⁻ sai da hemácia para o plasma e o Cl⁻ entra para manter a neutralidade elétrica (transportador bicarbonato-cloreto). Se inverte nos pulmões.</div></div>
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Centro Pneumotáxico</div><div class="def" style="display:none">Localizado na ponte (núcleo parabraquial). Controla o ponto de interrupção da rampa inspiratória, regulando a duração da inspiração, o volume corrente e a frequência respiratória.</div></div>
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Reflexo de Hering-Breuer</div><div class="def" style="display:none">Receptores de estiramento pulmonar → nervo vago → grupo respiratório dorsal → interrompe a inspiração. Só relevante em humanos quando VC ultrapassa ~1,5 L.</div></div>
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Área Quimiossensível Central</div><div class="def" style="display:none">Localizada ~0,2 mm abaixo da superfície ventral do bulbo. Estimulada por H⁺; o CO₂ atravessa facilmente a barreira hematoencefálica e gera H⁺ localmente — por isso é o estímulo respiratório central mais potente.</div></div>
+  <div class="gloss-card" onclick="toggleGloss(this)"><div class="term">Corpos Carotídeos e Aórticos</div><div class="def" style="display:none">Quimiorreceptores periféricos que detectam ↓ PaO₂ (principalmente abaixo de 60-70 mmHg), ↑ PaCO₂ e ↑ H⁺. Carotídeos → n. de Hering → glossofaríngeo. Aórticos → n. vago.</div></div>
+</div>
+
+<div class="info-block purple">
+  <div class="label">Capítulos neste material</div>
+  <h4>Panorama dos 5 capítulos</h4>
+  <div class="intro-grid" style="margin-top:12px">
+    <div class="intro-card" onclick="showSectionByName('cap38')"><div class="ic-icon">🌬️</div><div class="ic-name">Cap. 38</div><div class="ic-desc">Ventilação Pulmonar — mecânica, volumes, ventilação alveolar</div></div>
+    <div class="intro-card" onclick="showSectionByName('cap39')"><div class="ic-icon">🫀</div><div class="ic-name">Cap. 39</div><div class="ic-desc">Circulação pulmonar, edema pulmonar, líquido pleural</div></div>
+    <div class="intro-card" onclick="showSectionByName('cap40')"><div class="ic-icon">🔬</div><div class="ic-name">Cap. 40</div><div class="ic-desc">Princípios físicos das trocas gasosas — difusão</div></div>
+    <div class="intro-card" onclick="showSectionByName('cap41')"><div class="ic-icon">🩸</div><div class="ic-name">Cap. 41</div><div class="ic-desc">Transporte de O₂ e CO₂ no sangue e nos tecidos</div></div>
+    <div class="intro-card" onclick="showSectionByName('cap42')"><div class="ic-icon">🧠</div><div class="ic-name">Cap. 42</div><div class="ic-desc">Regulação nervosa e química da respiração</div></div>
+  </div>
+</div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════════════
+     CAP 38 — VENTILAÇÃO PULMONAR
+════════════════════════════════════════════════ -->
+<div id="cap38" class="section">
+<div class="container">
+
+<div class="chapter-title"><span class="chap-icon">🌬️</span> Capítulo 38 — Ventilação Pulmonar</div>
+
+<div class="info-block">
+  <div class="label">Conceito fundamental</div>
+  <h4>As 4 funções da respiração</h4>
+  <ol>
+    <li><strong>Ventilação pulmonar:</strong> entrada e saída de ar entre a atmosfera e os alvéolos.</li>
+    <li><strong>Difusão pulmonar:</strong> passagem de O₂ dos alvéolos ao sangue e de CO₂ do sangue aos alvéolos.</li>
+    <li><strong>Transporte de O₂/CO₂:</strong> realizado pelo sangue entre pulmões e tecidos.</li>
+    <li><strong>Regulação da ventilação:</strong> controle nervoso e químico da frequência e profundidade respiratória.</li>
+  </ol>
+</div>
+
+<div class="sec-divider"><h3>38.1 Mecânica da Ventilação Pulmonar</h3></div>
+
+<div class="info-block">
+  <h4>Como o ar se move</h4>
+  <p>A ventilação ocorre porque mudanças no volume torácico geram mudanças nas pressões pleural e alveolar, criando gradientes que deslocam o ar. Os pulmões se expandem/contraem por dois mecanismos: <strong>movimento do diafragma</strong> e <strong>elevação/depressão das costelas</strong> (diâmetro anteroposterior).</p>
+</div>
+
+<table class="compare-table">
+  <tr><th>Fase</th><th>Processo</th><th>Mecanismo</th></tr>
+  <tr><td><strong>Inspiração tranquila</strong></td><td>Ativo</td><td>Diafragma contrai → ↑ vol. torácico → P.pleural mais negativa → P.alveolar cai → ar entra</td></tr>
+  <tr><td><strong>Expiração tranquila</strong></td><td>Passivo</td><td>Diafragma relaxa → retrocesso elástico → P.alveolar sobe → ar sai</td></tr>
+  <tr><td><strong>Expiração forçada</strong></td><td>Ativo</td><td>Músculos abdominais + intercostais internos contraem → ↑ P.alveolar rapidamente</td></tr>
+</table>
+
+<div class="example-box">
+  <div class="ex-label">💡 Ponto-chave</div>
+  <p>Em repouso, os músculos respiratórios trabalham <strong>principalmente na inspiração</strong>. A expiração forçada (ex.: durante exercício ou tosse) exige participação ativa de reto abdominal, músculos abdominais e intercostais internos.</p>
+</div>
+
+<table class="compare-table">
+  <tr><th>Categoria</th><th>Músculos</th><th>Ação</th></tr>
+  <tr><td>Inspiratórios principais</td><td>Diafragma, intercostais externos</td><td>Elevam a caixa torácica</td></tr>
+  <tr><td>Inspiratórios acessórios</td><td>Esternocleidomastoideo, escalenos, serráteis anteriores</td><td>Atuam em esforço respiratório</td></tr>
+  <tr><td>Expiratórios</td><td>Intercostais internos, reto abdominal e demais abdominais</td><td>Deprimem a caixa torácica</td></tr>
+</table>
+
+<div class="sec-divider"><h3>38.2 Pressões da Ventilação</h3></div>
+
+<div class="formula-box">
+  <div class="formula-label">Pressão transpulmonar — a força que mantém o pulmão aberto</div>
+  P.transpulmonar = P.alveolar − P.pleural &nbsp;→&nbsp; repouso: 0 − (−5) = +5 cmH₂O
+</div>
+
+<table class="compare-table">
+  <tr><th>Momento</th><th>P. pleural</th><th>P. alveolar</th><th>Resultado</th></tr>
+  <tr><td>Repouso entre respirações</td><td>−5 cmH₂O</td><td>0 cmH₂O</td><td>Sem fluxo</td></tr>
+  <tr><td>Inspiração</td><td>até −7,5 cmH₂O</td><td>≈ −1 cmH₂O</td><td>Entrada de ar (~500 mL)</td></tr>
+  <tr><td>Expiração</td><td>volta a −5 cmH₂O</td><td>≈ +1 cmH₂O</td><td>Saída de ar</td></tr>
+</table>
+
+<div class="info-block warn">
+  <div class="label">Por que os pulmões não colapsam</div>
+  <h4>Pleura visceral + pleura parietal + líquido pleural</h4>
+  <p>Não há fixação ampla entre pulmão e parede torácica (só o hilo). Os pulmões acompanham o tórax porque a drenagem linfática contínua mantém uma leve sucção entre as pleuras, mantendo-as "coladas" mesmo deslizando livremente.</p>
+</div>
+
+<div class="sec-divider"><h3>38.3 Tensão Superficial e Surfactante</h3></div>
+
+<div class="info-block danger">
+  <div class="label">★ Conceito-chave</div>
+  <h4>De onde vem a elasticidade pulmonar</h4>
+  <p>~1/3 da elasticidade pulmonar vem das fibras elásticas do tecido; ~2/3 vêm da <strong>tensão superficial</strong> na interface ar-líquido alveolar. Sem surfactante, essa tensão favoreceria fortemente o colapso alveolar.</p>
+</div>
+
+<table class="compare-table">
+  <tr><th>Superfície</th><th>Tensão superficial</th></tr>
+  <tr><td>Água pura</td><td>72 dinas/cm</td></tr>
+  <tr><td>Líquido alveolar sem surfactante</td><td>~50 dinas/cm</td></tr>
+  <tr><td>Líquido alveolar com surfactante</td><td>~5 a 30 dinas/cm</td></tr>
+</table>
+
+<div class="info-block success">
+  <h4>Surfactante pulmonar</h4>
+  <p>Secretado pelos <strong>pneumócitos tipo II</strong> (~10% da área alveolar). Principal componente: <strong>DPPC</strong> (dipalmitoilfosfatidilcolina), com porção hidrofílica (voltada ao líquido) e hidrofóbica (voltada ao ar). Reduz a tensão superficial, facilita a expansão pulmonar, reduz o esforço muscular e estabiliza os alvéolos.</p>
+</div>
+
+<div class="sec-divider"><h3>38.4 Trabalho e Gasto Energético da Respiração</h3></div>
+
+<table class="compare-table">
+  <tr><th>Componente do trabalho inspiratório</th><th>O que vence</th></tr>
+  <tr><td>Elástico / distensibilidade</td><td>Forças elásticas do pulmão, tensão superficial, parede torácica</td></tr>
+  <tr><td>Resistência tecidual</td><td>Viscosidade/atrito dos tecidos pulmonares e torácicos</td></tr>
+  <tr><td>Resistência das vias aéreas</td><td>Fluxo de ar pela árvore respiratória (piora com muco, edema, broncoconstrição)</td></tr>
+</table>
+
+<div class="example-box">
+  <div class="ex-label">💡 Aplicação clínica</div>
+  <p>Em repouso, a ventilação consome ~3–5% da energia total do corpo. No exercício intenso, esse gasto pode aumentar em até <strong>50 vezes</strong>. Em doenças pulmonares (asma, enfisema), o trabalho respiratório aumenta e pode limitar drasticamente a tolerância ao esforço.</p>
+</div>
+
+<div class="sec-divider"><h3>38.5 Volumes e Capacidades Pulmonares</h3></div>
+
+<table class="compare-table">
+  <tr><th>Volume</th><th>Definição</th><th>Valor médio</th></tr>
+  <tr><td>Volume Corrente (VC)</td><td>Ar mobilizado em respiração tranquila</td><td>500 mL</td></tr>
+  <tr><td>Vol. de Reserva Inspiratório (VRI)</td><td>Extra inspirável após inspiração normal</td><td>3.000 mL</td></tr>
+  <tr><td>Vol. de Reserva Expiratório (VRE)</td><td>Extra expirável após expiração normal</td><td>1.100 mL</td></tr>
+  <tr><td>Volume Residual (VR)</td><td>Fica nos pulmões após expiração forçada máxima</td><td>1.200 mL</td></tr>
+</table>
+
+<div class="formula-box">
+  <div class="formula-label">Capacidades pulmonares — onde usar cada fórmula</div>
+  CI = VC + VRI = 3.500 mL &nbsp;|&nbsp; CRF = VRE + VR = 2.300 mL &nbsp;|&nbsp; CV = VRI+VC+VRE = 4.600 mL &nbsp;|&nbsp; CPT = CV + VR = 5.800 mL
+</div>
+
+<div class="info-block">
+  <h4>Para que serve cada capacidade</h4>
+  <ul>
+    <li><strong>CI (Capacidade Inspiratória):</strong> quanto ainda dá para inspirar partindo do fim de uma expiração normal.</li>
+    <li><strong>CRF (Capacidade Residual Funcional):</strong> o que sobra no pulmão ao fim de uma expiração tranquila — importante para entender a renovação lenta do ar alveolar (Cap. 40).</li>
+    <li><strong>CV (Capacidade Vital):</strong> o máximo que dá para expirar após uma inspiração máxima — usada na espirometria.</li>
+    <li><strong>CPT (Capacidade Pulmonar Total):</strong> volume pulmonar máximo possível.</li>
+  </ul>
+  <p style="margin-top:8px">Valores ~20–25% menores em mulheres. O <strong>volume residual</strong> não pode ser eliminado voluntariamente e não é medido pela espirometria simples.</p>
+</div>
+
+<div class="sec-divider"><h3>38.6 Ventilação-Minuto vs. Ventilação Alveolar</h3></div>
+
+<div class="formula-box">
+  <div class="formula-label">Ventilação-minuto — quanto ar é movimentado no total</div>
+  V̇E = FR × VC = 12 × 500 = 6.000 mL/min = 6 L/min
+</div>
+
+<div class="formula-box">
+  <div class="formula-label">Ventilação alveolar — quanto ar novo chega às trocas gasosas</div>
+  V̇A = FR × (VC − VM) = 12 × (500 − 150) = 4.200 mL/min = 4,2 L/min
+</div>
+
+<div class="info-block danger">
+  <div class="label">★ A diferença mais cobrada em prova</div>
+  <h4>Ventilação-minuto ≠ Ventilação alveolar</h4>
+  <p>A ventilação-minuto mede <strong>todo</strong> o ar mobilizado, incluindo o que fica no espaço morto (~150 mL, vias condutoras: nariz, faringe, laringe, traqueia, brônquios). A ventilação alveolar mede só o ar que <strong>efetivamente chega</strong> às regiões de troca gasosa — por isso é a variável fisiologicamente mais importante, pois determina diretamente as concentrações alveolares de O₂ e CO₂.</p>
+</div>
+
+<div class="sec-divider"><h3>38.7 Controle Bronquiolar e Defesas das Vias Aéreas</h3></div>
+
+<table class="compare-table">
+  <tr><th>Sistema</th><th>Mediador</th><th>Efeito no calibre bronquiolar</th></tr>
+  <tr><td>Simpático (via adrenal)</td><td>Epinefrina/norepinefrina (receptores β-adrenérgicos)</td><td>Dilatação — ↓ resistência das vias aéreas</td></tr>
+  <tr><td>Parassimpático (vago)</td><td>Acetilcolina</td><td>Constrição leve a moderada</td></tr>
+  <tr><td>Fatores locais</td><td>Histamina, substância de reação lenta da anafilaxia</td><td>Broncoconstrição (asma alérgica)</td></tr>
+</table>
+
+<div class="info-block">
+  <h4>Muco, cílios, tosse e espirro</h4>
+  <ul>
+    <li><strong>Muco:</strong> umidifica, aprisiona partículas; transportado pelos cílios (~10–20 batimentos/seg) sempre em direção à faringe.</li>
+    <li><strong>Tosse:</strong> via aferente pelo vago → inspiração de ~2,5 L → fechamento da glote → contração abdominal → P.intrapulmonar ↑ a 100 mmHg → abertura súbita → ar a 120–160 km/h.</li>
+    <li><strong>Espirro:</strong> via aferente pelo trigêmeo (V par) → limpeza das vias nasais.</li>
+    <li><strong>Nariz:</strong> aquece, umidifica e filtra o ar — "condicionamento do ar". Sua ausência (ex.: traqueostomia) predispõe a ressecamento e infecção.</li>
+  </ul>
+</div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════════════
+     CAP 39 — CIRCULAÇÃO PULMONAR
+════════════════════════════════════════════════ -->
+<div id="cap39" class="section">
+<div class="container">
+
+<div class="chapter-title"><span class="chap-icon">🫀</span> Capítulo 39 — Circulação Pulmonar, Edema Pulmonar e Líquido Pleural</div>
+
+<div class="sec-divider"><h3>39.1 Anatomia Fisiológica — Dupla Circulação</h3></div>
+
+<table class="compare-table">
+  <tr><th></th><th>Circulação brônquica</th><th>Circulação pulmonar</th></tr>
+  <tr><td>Tipo</td><td>Alta pressão, baixo fluxo</td><td>Baixa pressão, alto fluxo</td></tr>
+  <tr><td>Origem</td><td>Artérias brônquicas (ramos da aorta torácica)</td><td>Artéria pulmonar (todo o débito do VD)</td></tr>
+  <tr><td>% do débito cardíaco</td><td>~1–2%</td><td>~100%</td></tr>
+  <tr><td>Função</td><td>Nutrir traqueia, brônquios, septos, tecido conjuntivo</td><td>Hematose (trocas gasosas)</td></tr>
+  <tr><td>Drenagem</td><td>Principalmente veias pulmonares → átrio esquerdo</td><td>Veias pulmonares → átrio esquerdo</td></tr>
+</table>
+
+<div class="example-box">
+  <div class="ex-label">💡 Consequência prática</div>
+  <p>Como parte do sangue da circulação brônquica desvia direto para o átrio esquerdo sem passar pela troca gasosa, o débito do <strong>ventrículo esquerdo é ~1–2% maior</strong> que o do ventrículo direito. Esse sangue "não oxigenado" que se mistura no lado esquerdo é chamado de shunt fisiológico.</p>
+</div>
+
+<div class="info-block">
+  <h4>Vasos pulmonares — características anatômicas</h4>
+  <p>A artéria pulmonar tem parede com apenas ~1/3 da espessura da aorta, ramos mais curtos e vasos mais distensíveis. Complacência da árvore arterial pulmonar: <strong>~7 mL/mmHg</strong> — permite acomodar o volume sistólico do VD com pequena elevação de pressão.</p>
+</div>
+
+<div class="sec-divider"><h3>39.2 Pressões no Sistema Pulmonar</h3></div>
+
+<table class="compare-table">
+  <tr><th>Local</th><th>Pressão sistólica</th><th>Pressão diastólica</th><th>Pressão média</th></tr>
+  <tr><td>Ventrículo direito</td><td>25 mmHg</td><td>0–1 mmHg</td><td>—</td></tr>
+  <tr><td>Artéria pulmonar</td><td>25 mmHg</td><td>8 mmHg</td><td>15 mmHg</td></tr>
+  <tr><td>Capilar pulmonar</td><td>—</td><td>—</td><td>7 mmHg</td></tr>
+  <tr><td>Veias pulmonares / átrio esquerdo</td><td>—</td><td>—</td><td>~2 mmHg</td></tr>
+</table>
+
+<div class="info-block warn">
+  <div class="label">Por que a pressão pulmonar é tão mais baixa</div>
+  <h4>~1/5 das pressões do lado esquerdo</h4>
+  <p>Isso é possível porque a circulação pulmonar tem baixa resistência vascular. Essa baixa pressão é essencial para <strong>evitar a saída excessiva de líquido</strong> dos capilares para o interstício e os alvéolos.</p>
+</div>
+
+<div class="sec-divider"><h3>39.3 Volume Sanguíneo dos Pulmões</h3></div>
+
+<div class="formula-box">
+  <div class="formula-label">Volume sanguíneo pulmonar total</div>
+  ~450 mL (≈ 9% do volume sanguíneo total) &nbsp;|&nbsp; Capilares: 70 mL &nbsp;|&nbsp; Artérias: ~190 mL &nbsp;|&nbsp; Veias: ~190 mL
+</div>
+
+<div class="info-block">
+  <h4>Pulmões como reservatório sanguíneo</h4>
+  <p>O volume pode variar de metade a duas vezes o normal. Ao assoprar com força, até ~250 mL de sangue podem ser deslocados para a circulação sistêmica. Já em doenças cardíacas esquerdas (IC, estenose ou regurgitação mitral), o volume sanguíneo pulmonar pode <strong>aumentar até 100%</strong>, elevando as pressões vasculares pulmonares.</p>
+</div>
+
+<div class="sec-divider"><h3>39.4 Fluxo Sanguíneo Pulmonar e sua Distribuição</h3></div>
+
+<div class="info-block danger">
+  <div class="label">★ Vasoconstrição Pulmonar Hipóxica</div>
+  <h4>O oposto do que acontece no resto do corpo</h4>
+  <p>Nos tecidos sistêmicos, hipóxia → vasodilatação. Nos <strong>pulmões</strong>, a hipóxia alveolar causa <strong>vasoconstrição</strong> local — torna-se significativa quando a PO₂ alveolar cai abaixo de ~73 mmHg, podendo aumentar a resistência local em mais de 5×.</p>
+</div>
+
+<div class="formula-box">
+  <div class="formula-label">Função da vasoconstrição hipóxica</div>
+  Alvéolo mal ventilado → ↓ O₂ alveolar → vasoconstrição local → desvio do sangue para áreas bem ventiladas
+</div>
+
+<div class="sec-divider"><h3>39.5 Efeito da Pressão Hidrostática — Zonas 1, 2 e 3</h3></div>
+
+<table class="compare-table">
+  <tr><th>Zona</th><th>Relação de pressões</th><th>Fluxo</th><th>Localização (em pé)</th></tr>
+  <tr><td>Zona 1</td><td>P.alv &gt; P.art &gt; P.ven</td><td>Ausente</td><td>Geralmente ausente em saudável; surge em hemorragia grave ou ventilação com pressão positiva</td></tr>
+  <tr><td>Zona 2</td><td>P.art &gt; P.alv &gt; P.ven</td><td>Intermitente (só na sístole)</td><td>Predomina no ápice</td></tr>
+  <tr><td>Zona 3</td><td>P.art &gt; P.ven &gt; P.alv</td><td>Contínuo</td><td>Predomina na base</td></tr>
+</table>
+
+<div class="example-box">
+  <div class="ex-label">💡 Analogia didática</div>
+  <p>Na posição em pé, a diferença hidrostática entre ápice e base pulmonar (~30 cm) gera até ~23 mmHg de diferença de pressão. Por isso, em repouso, o fluxo na <strong>base</strong> pode ser ~5× maior que no <strong>ápice</strong>. No decúbito, praticamente todo o pulmão vira zona 3.</p>
+</div>
+
+<div class="sec-divider"><h3>39.6 Efeito do Exercício sobre o Fluxo Pulmonar</h3></div>
+
+<div class="info-block success">
+  <h4>Como o exercício aumenta o fluxo sem estourar a pressão</h4>
+  <p>Durante exercício intenso, o fluxo pode aumentar 4–7×, por: <strong>recrutamento</strong> de capilares antes fechados, <strong>distensão</strong> dos já abertos, e ↑ velocidade do fluxo — com pequeno aumento da pressão arterial pulmonar. Regiões apicais aumentam proporcionalmente mais (700–800%) que as basais (200–300%), pois o exercício converte ápices de zona 2 para zona 3.</p>
+</div>
+
+<div class="sec-divider"><h3>39.7 Dinâmica Capilar Pulmonar</h3></div>
+
+<div class="formula-box">
+  <div class="formula-label">Balanço de Starling nos capilares pulmonares — onde usar</div>
+  Forças para fora: 7 (P.hidrostática capilar) + 14 (COP intersticial) + 8 (sucção intersticial) = 29 mmHg<br>
+  Força para dentro: 28 mmHg (COP plasmático)<br>
+  Filtração líquida = 29 − 28 = <strong>+1 mmHg</strong>
+</div>
+
+<div class="info-block">
+  <h4>Por que os alvéolos ficam secos</h4>
+  <p>Essa pequena filtração de +1 mmHg é normalmente drenada pelo sistema linfático, mantendo apenas uma fina película de líquido sobre o epitélio alveolar. O sangue permanece nos capilares pulmonares por ~0,8 segundo em repouso, caindo a ~0,3 segundo no exercício (compensado pelo recrutamento capilar).</p>
+</div>
+
+<div class="sec-divider"><h3>39.8 Edema Pulmonar</h3></div>
+
+<div class="formula-box">
+  <div class="formula-label">Fator de segurança agudo — onde é usado</div>
+  Fator de segurança = COP plasmática (28) − P.capilar normal (7) = <strong>21 mmHg</strong>
+</div>
+
+<div class="info-block danger">
+  <div class="label">★ Interpretação clínica</div>
+  <h4>Quanto a pressão capilar pode subir antes do edema</h4>
+  <p>Esse fator de segurança indica o quanto a pressão capilar pulmonar pode aumentar antes de surgir edema significativo. Se a P.capilar subir 25–30 mmHg acima do limite, o edema pode se tornar fatal em <strong>20–30 minutos</strong>. Na adaptação crônica (≥2 semanas de pressão elevada), os linfáticos dilatam e a drenagem pode aumentar até 10×, permitindo que pacientes com estenose mitral crônica tolerem pressões de 40–45 mmHg sem edema letal imediato.</p>
+</div>
+
+<table class="compare-table">
+  <tr><th>Causa de edema pulmonar</th><th>Mecanismo</th></tr>
+  <tr><td>Insuficiência cardíaca esquerda</td><td>↑ P.átrio esquerdo → ↑ P.venosa/capilar pulmonar → ↑ filtração</td></tr>
+  <tr><td>Doenças da valva mitral (estenose/regurgitação)</td><td>Dificultam esvaziamento do AE → ↑ P.retrógrada</td></tr>
+  <tr><td>Lesão da membrana capilar (pneumonia, gases tóxicos)</td><td>↑ permeabilidade → extravasamento de proteínas e líquido</td></tr>
+</table>
+
+<div class="sec-divider"><h3>39.9 Líquido na Cavidade Pleural</h3></div>
+
+<div class="info-block">
+  <h4>Espaço virtual e pressão negativa</h4>
+  <p>O espaço pleural é chamado de "virtual/potencial" — só fica evidente com acúmulo de ar ou líquido. A tendência de colapso pulmonar é de ~−4 mmHg, mas a pressão do líquido pleural normal é de ~<strong>−7 mmHg</strong>, mantendo os pulmões acompanhando a parede torácica.</p>
+</div>
+
+<div class="example-box">
+  <div class="ex-label">💡 Derrame pleural</div>
+  <p>É essencialmente um "edema da cavidade pleural" — acúmulo anormal de líquido livre. Causas: obstrução da drenagem linfática, insuficiência cardíaca, ↓ COP plasmática (desnutrição) e infecção/inflamação pleural (↑ permeabilidade capilar).</p>
+</div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════════════
+     CAP 40 — PRINCÍPIOS FÍSICOS DAS TROCAS GASOSAS
+════════════════════════════════════════════════ -->
+<div id="cap40" class="section">
+<div class="container">
+
+<div class="chapter-title"><span class="chap-icon">🔬</span> Capítulo 40 — Princípios Físicos das Trocas Gasosas</div>
+
+<div class="info-block">
+  <div class="label">Conceito fundamental</div>
+  <h4>Difusão é passiva e segue o gradiente de pressão parcial</h4>
+  <p>O O₂ se difunde dos alvéolos para o sangue; o CO₂, do sangue para os alvéolos. A direção é sempre da <strong>maior</strong> para a <strong>menor pressão parcial</strong> — não consome ATP.</p>
+</div>
+
+<div class="sec-divider"><h3>40.1 Pressões Parciais — Lei de Dalton e Lei de Henry</h3></div>
+
+<div class="formula-box">
+  <div class="formula-label">Lei de Dalton — para gases em mistura (ar)</div>
+  P.gás = fração do gás × P.total &nbsp;|&nbsp; P.total = soma das pressões parciais (760 mmHg ao nível do mar)
+</div>
+
+<div class="formula-box">
+  <div class="formula-label">Lei de Henry — para gases dissolvidos em líquido</div>
+  C = S × P &nbsp;→&nbsp; a quantidade dissolvida depende da pressão parcial E do coeficiente de solubilidade
+</div>
+
+<div class="info-block warn">
+  <div class="label">Onde essa lei é usada na prova</div>
+  <h4>Concentração ≠ Pressão parcial</h4>
+  <p>O CO₂ é ~<strong>20× mais solúvel</strong> que o O₂ (coeficientes 0,57 vs. 0,024). Por isso, para a mesma pressão parcial, muito mais CO₂ pode estar dissolvido. A <strong>direção da difusão</strong> depende da pressão parcial, não da concentração total.</p>
+</div>
+
+<div class="sec-divider"><h3>40.2 Fatores que Determinam a Intensidade da Difusão</h3></div>
+
+<table class="compare-table">
+  <tr><th>Fator</th><th>Relação</th><th>Aplicação prática</th></tr>
+  <tr><td>Diferença de pressão parcial (ΔP)</td><td>Diretamente proporcional</td><td>Força propulsora da troca gasosa</td></tr>
+  <tr><td>Área disponível (A)</td><td>Diretamente proporcional</td><td>↓ na pneumonectomia e no enfisema</td></tr>
+  <tr><td>Solubilidade (S)</td><td>Diretamente proporcional</td><td>CO₂ difunde ~20× mais rápido que O₂</td></tr>
+  <tr><td>Distância (d)</td><td>Inversamente proporcional</td><td>↑ no edema intersticial e na fibrose</td></tr>
+  <tr><td>Peso molecular (PM)</td><td>Inversamente proporcional à raiz de PM</td><td>Gases mais pesados difundem mais devagar</td></tr>
+</table>
+
+<div class="example-box">
+  <div class="ex-label">💡 Coeficiente de difusão relativo (O₂ = 1,0)</div>
+  <p>CO₂ = 20,3 | CO = 0,81 | N₂ = 0,53 | Hélio = 0,95. Na prática: o CO₂ atravessa tecidos ~20× mais rápido que o O₂ para o mesmo gradiente de pressão.</p>
+</div>
+
+<div class="sec-divider"><h3>40.3 Ar Atmosférico × Ar Alveolar — Por que são diferentes</h3></div>
+
+<div class="info-block">
+  <h4>4 razões para a diferença de composição</h4>
+  <ol>
+    <li>Só parte do ar alveolar é substituída a cada respiração.</li>
+    <li>O O₂ é continuamente removido pelo sangue.</li>
+    <li>O CO₂ é continuamente adicionado pelo sangue.</li>
+    <li>O ar inspirado é totalmente umidificado antes de chegar aos alvéolos.</li>
+  </ol>
+</div>
+
+<table class="compare-table">
+  <tr><th>Gás</th><th>Ar atmosférico seco</th><th>Ar inspirado umidificado</th><th>Ar alveolar</th></tr>
+  <tr><td>PO₂</td><td>159 mmHg</td><td>149 mmHg</td><td>104 mmHg</td></tr>
+  <tr><td>PCO₂</td><td>0,3 mmHg</td><td>0,3 mmHg</td><td>40 mmHg</td></tr>
+  <tr><td>PH₂O</td><td>3,7 mmHg</td><td>47 mmHg</td><td>47 mmHg</td></tr>
+  <tr><td>PN₂</td><td>597 mmHg</td><td>563 mmHg</td><td>569 mmHg</td></tr>
+</table>
+
+<div class="info-block danger">
+  <div class="label">★ Renovação lenta do ar alveolar</div>
+  <h4>Só ~1/7 do ar alveolar é trocado por respiração</h4>
+  <p>Da CRF de ~2.300 mL, entram só ~350 mL de ar novo por respiração (2.300/350 ≈ 1/7). Essa renovação lenta é o que <strong>estabiliza</strong> a PO₂ e a PCO₂ alveolares, evitando oscilações abruptas no sangue e no pH — mesmo diante de interrupções transitórias da ventilação.</p>
+</div>
+
+<div class="sec-divider"><h3>40.4 Membrana Respiratória</h3></div>
+
+<div class="info-block">
+  <h4>As 6 camadas (do ar ao sangue)</h4>
+  <ol>
+    <li>Camada líquida com surfactante</li>
+    <li>Epitélio alveolar (pneumócitos tipo I)</li>
+    <li>Membrana basal do epitélio alveolar</li>
+    <li>Espaço intersticial</li>
+    <li>Membrana basal capilar (frequentemente fundida à anterior)</li>
+    <li>Endotélio capilar</li>
+  </ol>
+  <p style="margin-top:8px">Espessura média: <strong>~0,6 μm</strong> (mínima ~0,2 μm) | Área total: <strong>~70 m²</strong>. As hemácias se deformam para atravessar os capilares, ficando bem próximas da parede — reduz o plasma a atravessar e acelera a difusão.</p>
+</div>
+
+<div class="sec-divider"><h3>40.5 Capacidade de Difusão</h3></div>
+
+<div class="formula-box">
+  <div class="formula-label">Capacidade de difusão — para que serve</div>
+  DL = V̇gás / ΔP &nbsp;(mL/min/mmHg) — mede o quanto de gás atravessa a membrana por minuto para cada 1 mmHg de gradiente
+</div>
+
+<table class="compare-table">
+  <tr><th>Gás / condição</th><th>Capacidade de difusão</th></tr>
+  <tr><td>O₂ em repouso</td><td>~21 mL/min/mmHg</td></tr>
+  <tr><td>O₂ em exercício intenso</td><td>~65 mL/min/mmHg (~3× repouso)</td></tr>
+  <tr><td>CO₂ em repouso</td><td>400–450 mL/min/mmHg</td></tr>
+  <tr><td>CO₂ em exercício</td><td>1.200–1.300 mL/min/mmHg</td></tr>
+</table>
+
+<div class="example-box">
+  <div class="ex-label">💡 Por que a capacidade de difusão aumenta no exercício</div>
+  <p>Recrutamento de capilares antes fechados, dilatação dos já abertos, ↑ área de contato sangue-membrana e melhor relação ventilação-perfusão — os mesmos mecanismos vistos no Cap. 39.</p>
+</div>
+
+<div class="sec-divider"><h3>40.6 Relação Ventilação-Perfusão (V̇A/Q̇)</h3></div>
+
+<table class="compare-table">
+  <tr><th>Estado</th><th>V̇A/Q̇</th><th>PAO₂</th><th>PACO₂</th><th>Interpretação</th></tr>
+  <tr><td>Sem ventilação, com perfusão</td><td>0</td><td>≈40 mmHg</td><td>≈45 mmHg</td><td>Comportamento de <strong>shunt</strong> — gás alveolar se equilibra com sangue venoso</td></tr>
+  <tr><td>Ventilação e perfusão normais</td><td>Normal</td><td>≈104 mmHg</td><td>≈40 mmHg</td><td>Troca gasosa ideal</td></tr>
+  <tr><td>Com ventilação, sem perfusão</td><td>∞</td><td>≈149 mmHg</td><td>≈0 mmHg</td><td><strong>Espaço morto alveolar</strong> — não há sangue para trocar gases</td></tr>
+</table>
+
+<div class="info-block warn">
+  <div class="label">Cortocircuito fisiológico (shunt)</div>
+  <h4>Componentes</h4>
+  <ul>
+    <li>Sangue de alvéolos com V̇A/Q̇ reduzida.</li>
+    <li>Sangue de alvéolos totalmente não ventilados.</li>
+    <li>Sangue da circulação brônquica (~2% do débito cardíaco) que chega ao lado esquerdo sem passar por capilares alveolares ventilados.</li>
+  </ul>
+  <p style="margin-top:8px">Quanto maior o shunt fisiológico, menor a oxigenação final do sangue arterial e maior o comprometimento da eficiência pulmonar.</p>
+</div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════════════
+     CAP 41 — TRANSPORTE DE O₂ E CO₂
+════════════════════════════════════════════════ -->
+<div id="cap41" class="section">
+<div class="container">
+
+<div class="chapter-title"><span class="chap-icon">🩸</span> Capítulo 41 — Transporte de Oxigênio e Dióxido de Carbono no Sangue e nos Tecidos</div>
+
+<div class="sec-divider"><h3>41.1 Transporte de Oxigênio — Trajeto e Gradientes</h3></div>
+
+<div class="formula-box">
+  <div class="formula-label">Trajeto do O₂ — de onde vem o gradiente em cada etapa</div>
+  Alvéolo (104 mmHg) → sangue arterial (95 mmHg) → interstício (40 mmHg) → célula (23 mmHg)
+</div>
+
+<table class="compare-table">
+  <tr><th>Etapa</th><th>Gradiente inicial</th><th>Observação</th></tr>
+  <tr><td>Alvéolo → capilar pulmonar</td><td>104 − 40 = 64 mmHg</td><td>Equilíbrio já ocorre no 1º terço do capilar — os 2/3 restantes são reserva de segurança</td></tr>
+  <tr><td>Capilar sistêmico → interstício</td><td>95 − 40 = 55 mmHg</td><td>PO₂ venosa sistêmica cai para ~40 mmHg</td></tr>
+  <tr><td>Interstício → célula</td><td>—</td><td>PO₂ intracelular média: 23 mmHg (mínimo 5, máximo 40) — bem acima do mínimo necessário (1–3 mmHg) para as reações oxidativas</td></tr>
+</table>
+
+<div class="info-block danger">
+  <div class="label">★ Por que a oxigenação continua eficiente no exercício</div>
+  <h4>Duas margens de segurança</h4>
+  <ol>
+    <li><strong>Capacidade de difusão</strong> aumenta ~3× (recrutamento e distensão de capilares).</li>
+    <li><strong>Tempo de trânsito:</strong> em repouso, o sangue fica no capilar ~3× mais tempo do que o necessário para equilibrar a PO₂ — sobra tempo mesmo quando o trânsito cai durante o exercício intenso.</li>
+  </ol>
+</div>
+
+<div class="example-box">
+  <div class="ex-label">💡 Por que a PO₂ arterial é 95 e não 104 mmHg</div>
+  <p>~2% do sangue que chega ao átrio esquerdo vem da circulação brônquica (não passou pela hematose) e tem PO₂ ≈ 40 mmHg — o shunt fisiológico. Essa mistura reduz a PO₂ final de 104 para ~<strong>95 mmHg</strong>.</p>
+</div>
+
+<div class="sec-divider"><h3>41.2 Efeito do Fluxo e do Metabolismo sobre PO₂/PCO₂ Teciduais</h3></div>
+
+<table class="compare-table">
+  <tr><th>Alteração</th><th>PO₂ tecidual</th><th>PCO₂ tecidual</th></tr>
+  <tr><td>↑ Fluxo sanguíneo</td><td>Aumenta</td><td>Diminui</td></tr>
+  <tr><td>↓ Fluxo sanguíneo</td><td>Diminui</td><td>Aumenta</td></tr>
+  <tr><td>↑ Metabolismo</td><td>Diminui</td><td>Aumenta</td></tr>
+  <tr><td>↓ Metabolismo</td><td>Aumenta</td><td>Diminui</td></tr>
+</table>
+
+<div class="sec-divider"><h3>41.3 Hemoglobina e a Curva de Dissociação O₂-Hb</h3></div>
+
+<div class="info-block">
+  <h4>97% ligado, 3% dissolvido</h4>
+  <p>Hb + O₂ ⇌ HbO₂ — ligação fraca e reversível, dependente da PO₂. Nos pulmões (PO₂ alta) a Hb capta O₂; nos tecidos (PO₂ baixa) a Hb libera O₂. A curva é <strong>sigmoide</strong> por ligação cooperativa.</p>
+</div>
+
+<table class="compare-table">
+  <tr><th></th><th>PO₂</th><th>Saturação da Hb</th></tr>
+  <tr><td>Sangue arterial</td><td>95 mmHg</td><td>~97%</td></tr>
+  <tr><td>Sangue venoso</td><td>40 mmHg</td><td>~75%</td></tr>
+</table>
+
+<div class="formula-box">
+  <div class="formula-label">Capacidade máxima e liberação de O₂ — onde usar</div>
+  15 g/dL Hb × 1,34 mL O₂/g ≈ 20 mL O₂/100 mL (sangue totalmente saturado)<br>
+  Diferença arteriovenosa em repouso: 19,4 − 14,4 = <strong>5 mL O₂/100 mL liberados aos tecidos</strong>
+</div>
+
+<div class="info-block success">
+  <h4>Coeficiente de utilização</h4>
+  <p>Repouso: ~25% do O₂ transportado é extraído. Exercício intenso: 75–85% (pode chegar perto de 100% em tecidos com metabolismo muito alto + fluxo lento). No exercício intenso, a liberação por 100 mL de sangue pode chegar a 15 mL (3× o repouso) — e com o débito cardíaco 6–7× maior em atletas, a oferta total de O₂ pode alcançar ~20× o valor de repouso.</p>
+</div>
+
+<div class="sec-divider"><h3>41.4 Deslocamentos da Curva de Dissociação — Efeito Bohr</h3></div>
+
+<table class="compare-table">
+  <tr><th>Deslocamento</th><th>Fatores</th><th>Efeito</th></tr>
+  <tr><td>Para a direita</td><td>↓ pH, ↑ PCO₂, ↑ temperatura, ↑ 2,3-BPG</td><td>↓ afinidade Hb-O₂ → ↑ liberação tecidual de O₂</td></tr>
+  <tr><td>Para a esquerda</td><td>↑ pH, ↓ PCO₂, ↓ temperatura, ↓ 2,3-BPG</td><td>↑ afinidade Hb-O₂ → ↑ captação pulmonar</td></tr>
+</table>
+
+<div class="formula-box">
+  <div class="formula-label">Efeito Bohr — onde ele age</div>
+  Nos tecidos: ↑ CO₂ e ↑ H⁺ → curva à direita → ↑ liberação de O₂<br>
+  Nos pulmões: ↓ CO₂ → curva à esquerda → ↑ captação de O₂
+</div>
+
+<div class="sec-divider"><h3>41.5 Transporte de CO₂</h3></div>
+
+<table class="compare-table">
+  <tr><th>Forma de transporte</th><th>% do total</th><th>Mecanismo</th></tr>
+  <tr><td>Dissolvido</td><td>~7%</td><td>CO₂ molecular livre no plasma</td></tr>
+  <tr><td>Carbaminoemoglobina</td><td>~20–23% (efetivo)</td><td>CO₂ se liga aos grupos amino da globina (não ao ferro do heme)</td></tr>
+  <tr><td><strong>Bicarbonato</strong></td><td><strong>~70%</strong></td><td>CO₂ + H₂O ⇌ H₂CO₃ ⇌ H⁺ + HCO₃⁻ (anidrase carbônica acelera ~5.000×)</td></tr>
+</table>
+
+<div class="formula-box">
+  <div class="formula-label">Desvio do cloreto — onde ele ocorre</div>
+  Nos tecidos: HCO₃⁻ sai da hemácia → Cl⁻ entra (neutralidade elétrica)<br>
+  Nos pulmões: processo se inverte — HCO₃⁻ volta à hemácia, Cl⁻ sai
+</div>
+
+<div class="sec-divider"><h3>41.6 Efeito Haldane</h3></div>
+
+<div class="info-block danger">
+  <div class="label">★ Ligação de O₂ favorece a liberação de CO₂</div>
+  <h4>Praticamente duplica o transporte de CO₂</h4>
+  <p>Nos pulmões: O₂ se liga à Hb → Hb torna-se ácido mais forte → libera CO₂ ligado e H⁺, que se combina com HCO₃⁻ → forma H₂CO₃ → CO₂ + H₂O → CO₂ é eliminado. Nos tecidos: a desoxi-hemoglobina liga-se mais facilmente ao CO₂ e ao H⁺, favorecendo a captação tecidual de CO₂.</p>
+</div>
+
+<table class="compare-table">
+  <tr><th>Efeito</th><th>Gás que provoca</th><th>Consequência principal</th></tr>
+  <tr><td>Bohr</td><td>CO₂ e H⁺ agem sobre a ligação do O₂</td><td>Facilita a liberação de O₂ nos tecidos</td></tr>
+  <tr><td>Haldane</td><td>O₂ age sobre o transporte de CO₂</td><td>Facilita a eliminação de CO₂ nos pulmões</td></tr>
+</table>
+
+<div class="example-box">
+  <div class="ex-label">💡 Síntese numérica</div>
+  <p>Em repouso, ~4 mL de CO₂ são transportados dos tecidos aos pulmões por 100 mL de sangue (concentração total ~50 vol%; ~52 vol% pós-tecidos, ~48 vol% pós-pulmões).</p>
+</div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════════════
+     CAP 42 — REGULAÇÃO DA RESPIRAÇÃO
+════════════════════════════════════════════════ -->
+<div id="cap42" class="section">
+<div class="container">
+
+<div class="chapter-title"><span class="chap-icon">🧠</span> Capítulo 42 — Regulação da Respiração</div>
+
+<div class="info-block">
+  <div class="label">Objetivo do sistema</div>
+  <h4>Manter estáveis PaO₂, PaCO₂, H⁺ e pH</h4>
+  <p>Mesmo no exercício intenso, o controle é tão preciso que PaO₂ (~100 mmHg) e PaCO₂ (~40 mmHg) se mantêm próximos do normal.</p>
+</div>
+
+<div class="sec-divider"><h3>42.1 Centro Respiratório</h3></div>
+
+<table class="compare-table">
+  <tr><th>Componente</th><th>Localização</th><th>Função predominante</th></tr>
+  <tr><td>Grupo Respiratório Dorsal (GRD)</td><td>Núcleo do trato solitário (NTS), bulbo dorsal</td><td>Inspiração + geração do ritmo básico</td></tr>
+  <tr><td>Grupo Respiratório Ventral (GRV)</td><td>Bulbo ventrolateral</td><td>Respiração forçada (inspiração e expiração)</td></tr>
+  <tr><td>Centro Pneumotáxico</td><td>Ponte dorsal superior (núcleo parabraquial)</td><td>Limita a inspiração, controla FR e amplitude</td></tr>
+</table>
+
+<div class="info-block">
+  <h4>Grupo Respiratório Dorsal — o gerador de ritmo</h4>
+  <p>O NTS recebe aferências pelos nervos <strong>glossofaríngeo (IX)</strong> e <strong>vago (X)</strong> — de quimiorreceptores periféricos, barorreceptores e receptores de estiramento pulmonar. Mesmo sem aferências periféricas, redes neuronais bulbares continuam gerando descargas inspiratórias rítmicas.</p>
+</div>
+
+<div class="sec-divider"><h3>42.2 Sinal Inspiratório em Rampa</h3></div>
+
+<div class="formula-box">
+  <div class="formula-label">Padrão temporal — para que serve</div>
+  Rampa inspiratória: ~2 segundos (crescente) &nbsp;|&nbsp; Interrupção + expiração: ~3 segundos
+</div>
+
+<div class="info-block warn">
+  <div class="label">Como a FR é controlada</div>
+  <h4>Duas formas de modificar a rampa</h4>
+  <ul>
+    <li><strong>Velocidade de crescimento:</strong> mais rápida = respiração mais intensa.</li>
+    <li><strong>Ponto de interrupção:</strong> interrupção precoce → inspiração curta → ↓ tempo inspiratório → ↑ FR.</li>
+  </ul>
+  <p style="margin-top:8px">A vantagem da rampa (em vez de uma descarga máxima instantânea) é proporcionar <strong>insuflação gradual</strong>, evitando "golfadas" de ar.</p>
+</div>
+
+<div class="sec-divider"><h3>42.3 Centro Pneumotáxico</h3></div>
+
+<table class="compare-table">
+  <tr><th>Sinal pneumotáxico</th><th>Duração da inspiração</th><th>Frequência respiratória</th></tr>
+  <tr><td>Intenso</td><td>~0,5 segundo</td><td>Pode subir a 30–40 mrm</td></tr>
+  <tr><td>Fraco</td><td>5 segundos ou mais</td><td>Pode cair a 3–5 mrm</td></tr>
+</table>
+
+<div class="sec-divider"><h3>42.4 Reflexo de Hering-Breuer</h3></div>
+
+<div class="formula-box">
+  <div class="formula-label">Via do reflexo — proteção contra hiperinsuflação</div>
+  Distensão pulmonar → receptores de estiramento → nervo vago → GRD → interrompe a rampa inspiratória
+</div>
+
+<div class="info-block">
+  <p>Em humanos adultos, só se torna relevante quando o <strong>volume corrente ultrapassa ~1,5 L</strong> — não é o principal regulador da respiração tranquila, mas um mecanismo protetor contra insuflação excessiva.</p>
+</div>
+
+<div class="sec-divider"><h3>42.5 Controle Químico — CO₂/H⁺ vs. O₂</h3></div>
+
+<table class="compare-table">
+  <tr><th>Alteração</th><th>Principal local de atuação</th></tr>
+  <tr><td>↑ PCO₂</td><td>Área quimiossensível central</td></tr>
+  <tr><td>↑ H⁺</td><td>Centro respiratório central + quimiorreceptores periféricos</td></tr>
+  <tr><td>↓ PO₂</td><td>Quimiorreceptores periféricos (corpos carotídeos e aórticos)</td></tr>
+</table>
+
+<div class="info-block danger">
+  <div class="label">★ Por que o CO₂ é o controlador central mais potente</div>
+  <h4>O H⁺ não atravessa bem a barreira hematoencefálica — o CO₂ sim</h4>
+  <p>O H⁺ é o estímulo direto dos neurônios quimiossensíveis, mas tem dificuldade de cruzar a barreira. Já o CO₂ atravessa facilmente, reage com a água no LCR, forma H₂CO₃ → H⁺ localmente → estimula a área quimiossensível → ↑ ventilação. Por isso, o CO₂ é o controlador químico cotidiano da respiração em pessoas saudáveis ao nível do mar.</p>
+</div>
+
+<div class="formula-box">
+  <div class="formula-label">Encadeamento central — onde memorizar</div>
+  ↑ PaCO₂ → ↑ CO₂ no LCR → ↑ H⁺ → ↓ pH → ↑ ventilação (que corrige elimando mais CO₂)
+</div>
+
+<div class="sec-divider"><h3>42.6 Sistema Quimiorreceptor Periférico e o Papel do O₂</h3></div>
+
+<div class="info-block">
+  <h4>Corpos carotídeos e aórticos</h4>
+  <ul>
+    <li><strong>Corpos carotídeos</strong> (bifurcação das carótidas) → nervo de Hering → glossofaríngeo (IX) → GRD. São os mais importantes na resposta à hipóxia.</li>
+    <li><strong>Corpos aórticos</strong> (arco aórtico) → nervo vago (X) → GRD.</li>
+    <li>Irrigação extremamente alta (~20× seu próprio peso/min) — detectam quase diretamente a PaO₂ arterial.</li>
+  </ul>
+</div>
+
+<div class="formula-box">
+  <div class="formula-label">Resposta à hipóxia — onde ela se torna relevante</div>
+  PaO₂ &gt; 100 mmHg → efeito quase nulo &nbsp;|&nbsp; PaO₂ ≈ 60 mmHg → ventilação pode duplicar &nbsp;|&nbsp; PaO₂ muito baixa → ventilação pode aumentar ~5×
+</div>
+
+<div class="info-block warn">
+  <div class="label">Comparação central vs. periférico</div>
+  <table class="compare-table" style="margin:8px 0 0">
+    <tr><th>Característica</th><th>Controle central</th><th>Controle periférico</th></tr>
+    <tr><td>Potência ao CO₂/H⁺</td><td>~7× maior</td><td>Menor</td></tr>
+    <tr><td>Velocidade</td><td>Mais lenta</td><td>~5× mais rápida</td></tr>
+    <tr><td>Estímulo característico</td><td>CO₂ (via H⁺ no LCR)</td><td>Hipóxia arterial</td></tr>
+  </table>
+</div>
+
+<div class="sec-divider"><h3>42.7 Aclimatação à Altitude</h3></div>
+
+<div class="example-box">
+  <div class="ex-label">💡 Por que o corpo demora dias para se adaptar</div>
+  <p>Na exposição aguda, a hiperventilação induzida pela hipóxia também elimina CO₂ → hipocapnia e alcalose inibem o centro respiratório → aumento ventilatório limitado a ~70%. Após 2–3 dias, o centro respiratório perde ~80% da sensibilidade inibitória à queda de CO₂, permitindo que a hipóxia estimule uma ventilação de <strong>400–500%</strong> acima do normal.</p>
+</div>
+
+<div class="sec-divider"><h3>42.8 Regulação da Respiração Durante o Exercício</h3></div>
+
+<div class="info-block danger">
+  <div class="label">★ O aumento inicial é neurogênico, não químico</div>
+  <h4>Controle antecipatório (feedforward)</h4>
+  <p>O córtex motor envia impulsos colaterais ao centro respiratório <strong>simultaneamente</strong> ao comando muscular — a ventilação sobe antes mesmo de CO₂, O₂ ou pH se alterarem de forma significativa. Depois de ~30–40 segundos, a produção muscular de CO₂ passa a corresponder ao aumento ventilatório, e a PaCO₂ volta a ~40 mmHg.</p>
+</div>
+
+<table class="compare-table">
+  <tr><th>Componente</th><th>Papel no exercício</th></tr>
+  <tr><td>Controle neural (cortical, feedforward)</td><td>Aumento antecipatório e principal da ventilação</td></tr>
+  <tr><td>Controle químico (CO₂/H⁺)</td><td>Ajuste fino — corrige pequenos desvios da PaCO₂</td></tr>
+</table>
+
+<div class="sec-divider"><h3>42.9 Outros Fatores que Influenciam a Respiração</h3></div>
+
+<table class="compare-table">
+  <tr><th>Fator</th><th>Mecanismo / efeito</th></tr>
+  <tr><td>Receptores irritativos (traqueia/brônquios)</td><td>Fumaça, poeira, secreções → tosse, espirro, broncoconstrição reflexa</td></tr>
+  <tr><td>Receptores J (justacapilares)</td><td>Congestão capilar, edema pulmonar → dispneia, respiração rápida e superficial</td></tr>
+  <tr><td>Edema cerebral</td><td>↑ PIC → ↓ perfusão do tronco → depressão do centro respiratório</td></tr>
+  <tr><td>Anestésicos/opioides (ex.: morfina)</td><td>↓ resposta ao CO₂, ↓ FR e VC → hipercapnia, hipoxemia, pode evoluir a apneia</td></tr>
+</table>
+
+<div class="info-block warn">
+  <div class="label">Respiração de Cheyne-Stokes</div>
+  <h4>Ciclo hiperventilação-apneia por atraso circulatório</h4>
+  <p>Hiperventilação → ↓ CO₂ → chega ao cérebro com atraso → inibição tardia → apneia → ↑ CO₂ → chega com atraso → estimulação tardia → hiperventilação novamente. Ciclo de 40–60 segundos, favorecido por <strong>insuficiência cardíaca grave</strong> (retardo circulatório) ou ganho excessivo do feedback respiratório (lesões do centro respiratório).</p>
+</div>
+
+<div class="info-block">
+  <h4>Controle voluntário</h4>
+  <p>O córtex pode gerar apneia, hiper/hipoventilação voluntárias (fala, canto, sopro) — mas é limitado, pois o acúmulo de CO₂, H⁺ e, depois, a queda de O₂, retomam o impulso automático de respirar.</p>
+</div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════════════
+     FLASHCARDS
+════════════════════════════════════════════════ -->
+<div id="flashcards" class="section">
+<div class="container">
+
+<div class="chapter-title"><span class="chap-icon">🃏</span> Flashcards — Revisão Ativa</div>
+<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Clique em cada cartão para virá-lo e revelar a resposta. Cobrindo os Caps. 38–42.</p>
+
+<div class="flashcard-grid" id="flashcard-grid"></div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════════════
+     QUIZ
+════════════════════════════════════════════════ -->
+<div id="quiz" class="section">
+<div class="container">
+
+<div class="chapter-title"><span class="chap-icon">📝</span> Simulado P1 — 50 Questões</div>
+<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Múltipla escolha, Verdadeiro/Falso e questões abertas, com correção e explicação imediata. 10 questões por capítulo (38 a 42).</p>
+
+<div class="q-stats">
+  <div class="sbox c"><div class="sv" id="sC">0</div><div class="sl">Corretas</div></div>
+  <div class="sbox w"><div class="sv" id="sW">0</div><div class="sl">Incorretas</div></div>
+  <div class="sbox p"><div class="sv" id="sP">50</div><div class="sl">Pendentes</div></div>
+</div>
+
+<div id="quizContainer"></div>
+<button class="reset-btn" onclick="resetQuiz()">🔄 Reiniciar Simulado</button>
+
+</div></div>
+
+<!-- ── SCROLL TOP ── -->
+<button id="scrolltop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- ── BACK BTN ── -->
+<a class="back-btn" href="dashboard.html">← Voltar</a>
+
+<script>
+// ═══ PARTICLES ═══
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+for(let i=0;i<60;i++){
+  particles.push({
+    x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+    r: Math.random()*2+0.5,
+    dx: (Math.random()-0.5)*0.3, dy: (Math.random()-0.5)*0.3,
+    alpha: Math.random()*0.35+0.08,
+    color: Math.random() > 0.5 ? '79,156,249' : '56,232,192'
+  });
+}
+function animParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.x+=p.dx; p.y+=p.dy;
+    if(p.x<0||p.x>canvas.width) p.dx*=-1;
+    if(p.y<0||p.y>canvas.height) p.dy*=-1;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${p.color},${p.alpha})`; ctx.fill();
+  });
+  requestAnimationFrame(animParticles);
+}
+animParticles();
+
+// ═══ NAV ═══
+function showSection(id, btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showSectionByName(id){
+  const btn = document.querySelector(`nav.tabs button[onclick="showSection('${id}',this)"]`);
+  showSection(id, btn);
+}
+function toggleGloss(el){
+  const def = el.querySelector('.def');
+  def.style.display = def.style.display==='none'?'block':'none';
+  el.style.borderColor = def.style.display==='none'?'var(--border)':'var(--accent2)';
+}
+window.addEventListener('scroll',()=>{
+  document.getElementById('scrolltop').style.display = window.scrollY>300?'block':'none';
+});
+
+// ═══ FLASHCARDS DATA ═══
+const FC=[
+  {c:'Cap 38',q:'Qual a fórmula da pressão transpulmonar e o que ela representa?',a:'P.transpulmonar = P.alveolar − P.pleural\\n\\nÉ a força que mantém o pulmão aberto contra sua tendência ao colapso. No repouso: 0 − (−5) = +5 cmH₂O.\\nQuanto maior, maior a distensão pulmonar.'},
+  {c:'Cap 38',q:'Por que a inspiração tranquila é ativa e a expiração tranquila é passiva?',a:'Inspiração: diafragma CONTRAI ativamente → ↑ volume torácico → entrada de ar.\\nExpiração tranquila: diafragma RELAXA, e o retrocesso elástico dos pulmões/parede torácica expulsa o ar — sem gasto muscular extra.'},
+  {c:'Cap 38',q:'Quais são os músculos inspiratórios principais e os acessórios?',a:'Principais: diafragma (o mais importante) e intercostais externos.\\nAcessórios (esforço): esternocleidomastoideo, escalenos, serráteis anteriores.'},
+  {c:'Cap 38',q:'Quem produz o surfactante pulmonar e qual sua função?',a:'Produzido pelos PNEUMÓCITOS TIPO II (~10% da área alveolar).\\nPrincipal componente: DPPC (dipalmitoilfosfatidilcolina).\\nFunção: reduz a tensão superficial (de ~50 para 5-30 dinas/cm), evitando o colapso alveolar e reduzindo o esforço respiratório.'},
+  {c:'Cap 38',q:'Quais são os 4 volumes pulmonares e seus valores médios?',a:'VC (Volume Corrente): 500 mL\\nVRI (Reserva Inspiratório): 3.000 mL\\nVRE (Reserva Expiratório): 1.100 mL\\nVR (Volume Residual): 1.200 mL'},
+  {c:'Cap 38',q:'Como se calculam a CI, CRF, CV e CPT?',a:'CI = VC + VRI = 3.500 mL\\nCRF = VRE + VR = 2.300 mL\\nCV = VRI + VC + VRE = 4.600 mL\\nCPT = CV + VR = 5.800 mL'},
+  {c:'Cap 38',q:'Qual a diferença entre ventilação-minuto e ventilação alveolar?',a:'Ventilação-minuto: V̇E = FR × VC = 6 L/min (TODO o ar mobilizado, incluindo espaço morto)\\nVentilação alveolar: V̇A = FR × (VC−VM) = 4,2 L/min (só o ar que chega às trocas gasosas)\\n\\nV̇A é a fisiologicamente mais importante.'},
+  {c:'Cap 38',q:'O que é o espaço morto anatômico e qual seu valor normal?',a:'Volume de ar que entra nas vias respiratórias mas NÃO participa das trocas gasosas (nariz, faringe, laringe, traqueia, brônquios).\\nValor normal: ~150 mL no adulto jovem.'},
+  {c:'Cap 39',q:'Compare a circulação brônquica e a circulação pulmonar.',a:'BRÔNQUICA: alta pressão, baixo fluxo (~1-2% do DC), nutre traqueia/brônquios/tecido conjuntivo.\\nPULMONAR: baixa pressão, alto fluxo (~100% do DC do VD), função é a hematose (trocas gasosas).'},
+  {c:'Cap 39',q:'Quais as pressões normais no VD, artéria pulmonar, capilar pulmonar e átrio esquerdo?',a:'VD: 25/0-1 mmHg\\nArtéria pulmonar: 25/8 mmHg (média 15)\\nCapilar pulmonar: média 7 mmHg\\nÁtrio esquerdo: média ~2 mmHg'},
+  {c:'Cap 39',q:'Qual o volume sanguíneo pulmonar total e como os pulmões funcionam como reservatório?',a:'~450 mL (~9% do volume sanguíneo total): 70 mL capilares, ~190 mL artérias, ~190 mL veias.\\nPode variar de metade a 2× o normal. Em IC esquerda, pode aumentar até 100%.'},
+  {c:'Cap 39',q:'O que é a vasoconstrição pulmonar hipóxica e qual sua função?',a:'Ao contrário dos tecidos sistêmicos, a hipóxia ALVEOLAR causa VASOCONSTRIÇÃO local (significativa abaixo de ~73 mmHg de PO₂).\\nFunção: desviar o sangue para alvéolos mais bem ventilados, otimizando a relação V/Q.'},
+  {c:'Cap 39',q:'Descreva as Zonas 1, 2 e 3 do fluxo pulmonar (Zonas de West).',a:'Zona 1: P.alv > P.art > P.ven → sem fluxo (ausente em saudável)\\nZona 2: P.art > P.alv > P.ven → fluxo intermitente (predomina no ápice, em pé)\\nZona 3: P.art > P.ven > P.alv → fluxo contínuo (predomina na base)'},
+  {c:'Cap 39',q:'Qual o resultado do balanço de Starling nos capilares pulmonares?',a:'Forças para fora: 7 (P.hidrostática) + 14 (COP intersticial) + 8 (sucção intersticial) = 29 mmHg\\nForça para dentro: 28 mmHg (COP plasmático)\\nFiltração líquida = +1 mmHg → drenada pelo sistema linfático'},
+  {c:'Cap 39',q:'O que é o fator de segurança contra edema pulmonar?',a:'Fator de segurança = COP plasmática (28) − P.capilar normal (7) = 21 mmHg\\n\\nRepresenta o quanto a P.capilar pode subir antes de um edema significativo aparecer.'},
+  {c:'Cap 39',q:'Qual a pressão normal do líquido pleural e o que é o derrame pleural?',a:'Pressão normal: ~−7 mmHg (mais negativa que a tendência de colapso pulmonar, de ~−4 mmHg), mantendo os pulmões colados à parede torácica.\\nDerrame pleural = acúmulo anormal de líquido no espaço pleural ("edema da cavidade pleural").'},
+  {c:'Cap 40',q:'Qual a diferença entre a Lei de Dalton e a Lei de Henry?',a:'DALTON: para gases em mistura (ar). P.gás = fração × P.total.\\nHENRY: para gases dissolvidos em líquido. C = S × P (concentração depende da solubilidade E da pressão parcial).'},
+  {c:'Cap 40',q:'Quais os 5 fatores que determinam a intensidade da difusão gasosa?',a:'∝ ΔP (gradiente de pressão)\\n∝ A (área disponível)\\n∝ S (solubilidade)\\n∝ 1/d (distância — inversa)\\n∝ 1/√PM (peso molecular — inversa)'},
+  {c:'Cap 40',q:'Por que o ar alveolar é diferente do ar atmosférico?',a:'1) Só parte do ar alveolar é substituída por respiração\\n2) O₂ é continuamente removido pelo sangue\\n3) CO₂ é continuamente adicionado pelo sangue\\n4) O ar inspirado é totalmente umidificado (PH₂O = 47 mmHg)'},
+  {c:'Cap 40',q:'Por que a renovação do ar alveolar é tão lenta?',a:'Só ~350 mL de ar novo entram por respiração, de uma CRF de ~2.300 mL → apenas ~1/7 é renovado a cada respiração.\\nIsso estabiliza a PO₂ e PCO₂ alveolares, evitando oscilações abruptas.'},
+  {c:'Cap 40',q:'Quais as 6 camadas da membrana respiratória?',a:'1) Líquido com surfactante\\n2) Epitélio alveolar\\n3) Membrana basal do epitélio\\n4) Espaço intersticial\\n5) Membrana basal capilar\\n6) Endotélio capilar\\n\\nEspessura média: ~0,6 μm. Área total: ~70 m².'},
+  {c:'Cap 40',q:'O que mede a capacidade de difusão (DL) e como ela muda no exercício?',a:'DL = V̇gás / ΔP (mL/min/mmHg) — quanto de gás atravessa a membrana por minuto para cada 1 mmHg de gradiente.\\nO₂ em repouso: ~21 mL/min/mmHg → exercício: ~65 mL/min/mmHg (≈3×).'},
+  {c:'Cap 40',q:'O que significa V̇A/Q̇ = 0 e V̇A/Q̇ = ∞?',a:'V̇A/Q̇ = 0: perfusão sem ventilação → comportamento de SHUNT (PAO₂≈40, PACO₂≈45)\\nV̇A/Q̇ = ∞: ventilação sem perfusão → ESPAÇO MORTO ALVEOLAR (PAO₂≈149, PACO₂≈0)'},
+  {c:'Cap 41',q:'Qual o trajeto da PO₂ dos alvéolos até a célula?',a:'Alvéolo (104 mmHg) → sangue arterial (95 mmHg) → interstício (40 mmHg) → célula (23 mmHg, média)\\n\\nA queda de 104→95 se deve ao shunt fisiológico (~2% do sangue vem da circulação brônquica).'},
+  {c:'Cap 41',q:'Qual a saturação da hemoglobina no sangue arterial e no venoso?',a:'Sangue arterial: PO₂ 95 mmHg → saturação ~97%\\nSangue venoso: PO₂ 40 mmHg → saturação ~75%\\n\\nDiferença arteriovenosa em repouso: ~5 mL O₂/100 mL de sangue liberados.'},
+  {c:'Cap 41',q:'O que é o Efeito Bohr?',a:'Nos TECIDOS: ↑ CO₂ e ↑ H⁺ → desloca a curva de dissociação Hb-O₂ para a DIREITA → ↓ afinidade da Hb → ↑ liberação de O₂.\\nNos PULMÕES: ↓ CO₂ → curva à esquerda → ↑ captação de O₂.'},
+  {c:'Cap 41',q:'Quais as 3 formas de transporte do CO₂ no sangue e suas proporções?',a:'Dissolvido: ~7%\\nCarbaminoemoglobina (ligado aos grupos amino da globina): ~20-23%\\nBicarbonato (HCO₃⁻): ~70% — a forma PRINCIPAL'},
+  {c:'Cap 41',q:'O que é o desvio do cloreto?',a:'Nos tecidos: HCO₃⁻ sai da hemácia para o plasma → Cl⁻ entra na hemácia (mantém neutralidade elétrica).\\nNos pulmões: o processo se inverte.'},
+  {c:'Cap 41',q:'O que é o Efeito Haldane?',a:'A ligação do O₂ à hemoglobina FACILITA a liberação de CO₂.\\nNos pulmões: oxigenação da Hb → libera CO₂ e H⁺ → formam H₂CO₃ → CO₂ eliminado.\\nNos tecidos: desoxi-Hb capta CO₂ e H⁺ mais facilmente. Praticamente duplica o transporte de CO₂.'},
+  {c:'Cap 41',q:'Qual a capacidade máxima de transporte de O₂ pela hemoglobina?',a:'15 g/dL Hb × 1,34 mL O₂/g ≈ 20 mL O₂/100 mL de sangue totalmente saturado (também chamado 20 volumes percentuais).'},
+  {c:'Cap 41',q:'Qual o coeficiente de utilização de O₂ em repouso e no exercício intenso?',a:'Repouso: ~25% do O₂ transportado é extraído pelos tecidos.\\nExercício intenso: 75-85% (podendo se aproximar de 100% em tecidos com metabolismo muito alto e fluxo lento).'},
+  {c:'Cap 42',q:'Quais os 3 componentes do centro respiratório e onde ficam?',a:'Grupo Respiratório Dorsal (bulbo, NTS) — inspiração e ritmo básico\\nGrupo Respiratório Ventral (bulbo ventrolateral) — respiração forçada\\nCentro Pneumotáxico (ponte, núcleo parabraquial) — limita a inspiração'},
+  {c:'Cap 42',q:'Como funciona o sinal inspiratório em rampa?',a:'Cresce gradualmente por ~2 segundos → é interrompido → ~3 segundos de expiração/relaxamento.\\nInterrupção PRECOCE → inspiração curta → ↑ FR.\\nInterrupção TARDIA → inspiração longa → ↓ FR.'},
+  {c:'Cap 42',q:'Qual a função do centro pneumotáxico?',a:'Controla o PONTO DE INTERRUPÇÃO da rampa inspiratória.\\nSinal intenso → inspiração curta (~0,5s) → FR pode subir a 30-40/min.\\nSinal fraco → inspiração longa (5s+) → FR pode cair a 3-5/min.'},
+  {c:'Cap 42',q:'O que é o Reflexo de Hering-Breuer?',a:'Distensão pulmonar → receptores de estiramento → nervo vago → GRD → interrompe a inspiração.\\nSó relevante em adultos quando VC ultrapassa ~1,5 L — mecanismo protetor, não regulador da respiração tranquila.'},
+  {c:'Cap 42',q:'Por que o CO₂ é o principal controlador químico central, e não o H⁺ diretamente?',a:'O H⁺ é o estímulo direto dos neurônios quimiossensíveis, mas atravessa mal a barreira hematoencefálica.\\nO CO₂ atravessa facilmente, forma H⁺ no LCR → estimula a área quimiossensível central de forma mais potente e mais rápida.'},
+  {c:'Cap 42',q:'Onde estão localizados os quimiorreceptores periféricos e quais suas vias?',a:'Corpos carotídeos (bifurcação das carótidas) → n. de Hering → glossofaríngeo (IX) → GRD. Mais importantes na resposta à hipóxia.\\nCorpos aórticos (arco aórtico) → n. vago (X) → GRD.'},
+  {c:'Cap 42',q:'Por que o aumento da ventilação no início do exercício é considerado neurogênico?',a:'O córtex motor envia impulsos colaterais ao centro respiratório JUNTO com o comando muscular — a ventilação sobe ANTES de qualquer alteração significativa de CO₂, O₂ ou pH. É um mecanismo antecipatório (feedforward).'},
+  {c:'Cap 42',q:'Qual o mecanismo da respiração de Cheyne-Stokes?',a:'Hiperventilação → ↓CO₂ → chega ao cérebro com atraso → inibição tardia → apneia → ↑CO₂ → chega com atraso → estimulação tardia → hiperventilação. Ciclo de 40-60s.\\nFavorecida por IC grave (atraso circulatório) ou ganho excessivo do feedback respiratório.'},
+];
+
+const fcGrid = document.getElementById('flashcard-grid');
+FC.forEach(({c,q,a})=>{
+  const card = document.createElement('div');
+  card.className = 'flashcard';
+  card.innerHTML = `
+    <div class="flashcard-inner">
+      <div class="flashcard-front">
+        <div class="fc-tag">${c}</div>
+        <div class="fc-q">${q}</div>
+        <div class="fc-hint">clique para virar ↻</div>
+      </div>
+      <div class="flashcard-back">
+        <div class="fc-tag" style="color:var(--green)">Resposta</div>
+        <div class="fc-back-text" style="margin-top:8px">${a}</div>
+      </div>
+    </div>`;
+  card.onclick = ()=>card.classList.toggle('flipped');
+  fcGrid.appendChild(card);
+});
+</script>
+<script>
+// ═══ QUIZ DATA ═══
+const QD=[
+  {t:'mc',c:'38',n:1,q:'Qual é a fórmula correta da pressão transpulmonar?',
+   o:[{l:'A',v:'P.pleural − P.alveolar'},{l:'B',v:'P.alveolar − P.pleural'},{l:'C',v:'P.alveolar + P.pleural'},{l:'D',v:'P.atmosférica − P.alveolar'}],
+   cr:'B',ex:'P.transpulmonar = P.alveolar − P.pleural. No repouso: 0 − (−5) = +5 cmH₂O. É a força que mantém o pulmão aberto contra sua tendência ao colapso.'},
+  {t:'mc',c:'38',n:2,q:'Qual é o valor médio do Volume Corrente (VC) em uma respiração tranquila?',
+   o:[{l:'A',v:'150 mL'},{l:'B',v:'500 mL'},{l:'C',v:'1.100 mL'},{l:'D',v:'3.000 mL'}],
+   cr:'B',ex:'O VC (Volume Corrente) médio é de 500 mL — o ar mobilizado em uma respiração tranquila normal.'},
+  {t:'tf',c:'38',n:3,q:'A expiração tranquila em repouso é um processo ativo, que consome energia muscular.',
+   cr:'F',ex:'FALSO. A expiração tranquila é predominantemente PASSIVA — depende do retrocesso elástico dos pulmões, parede torácica e estruturas abdominais. Apenas a expiração FORÇADA é ativa (músculos abdominais e intercostais internos).'},
+  {t:'mc',c:'38',n:4,q:'A Capacidade Residual Funcional (CRF) é calculada por:',
+   o:[{l:'A',v:'VC + VRI'},{l:'B',v:'VRI + VC + VRE'},{l:'C',v:'VRE + VR'},{l:'D',v:'CV + VR'}],
+   cr:'C',ex:'CRF = VRE + VR = 1.100 + 1.200 = 2.300 mL. Representa o volume que permanece nos pulmões ao final de uma expiração tranquila.'},
+  {t:'mc',c:'38',n:5,q:'Qual o volume normal do espaço morto anatômico em um adulto jovem?',
+   o:[{l:'A',v:'~50 mL'},{l:'B',v:'~150 mL'},{l:'C',v:'~350 mL'},{l:'D',v:'~500 mL'}],
+   cr:'B',ex:'O espaço morto anatômico normal é de ~150 mL — o ar que fica nas vias condutoras (nariz, faringe, laringe, traqueia, brônquios) e não participa das trocas gasosas.'},
+  {t:'tf',c:'38',n:6,q:'A ventilação alveolar é fisiologicamente mais importante que a ventilação-minuto.',
+   cr:'V',ex:'VERDADEIRO. A ventilação alveolar (V̇A) é o que realmente determina as concentrações alveolares de O₂ e CO₂, pois representa só o ar novo que chega às zonas de troca gasosa — descontando o espaço morto.'},
+  {t:'mc',c:'38',n:7,q:'O surfactante pulmonar é secretado por:',
+   o:[{l:'A',v:'Pneumócitos tipo I'},{l:'B',v:'Pneumócitos tipo II'},{l:'C',v:'Células caliciformes'},{l:'D',v:'Macrófagos alveolares'}],
+   cr:'B',ex:'Os pneumócitos tipo II (~10% da área alveolar) secretam o surfactante, cujo principal componente é a DPPC (dipalmitoilfosfatidilcolina).'},
+  {t:'mc',c:'38',n:8,q:'Aproximadamente que fração da elasticidade pulmonar decorre da tensão superficial alveolar (e não das fibras elásticas)?',
+   o:[{l:'A',v:'1/4'},{l:'B',v:'1/3'},{l:'C',v:'1/2'},{l:'D',v:'2/3'}],
+   cr:'D',ex:'Cerca de 2/3 da elasticidade pulmonar vêm da tensão superficial na interface ar-líquido alveolar; apenas 1/3 vem das fibras elásticas do tecido pulmonar.'},
+  {t:'tf',c:'38',n:9,q:'Os intercostais internos são classificados como músculos inspiratórios acessórios.',
+   cr:'F',ex:'FALSO. Os intercostais internos são músculos EXPIRATÓRIOS — puxam as costelas para baixo. Os inspiratórios acessórios são: esternocleidomastoideo, escalenos e serráteis anteriores.'},
+  {t:'ab',c:'38',n:10,q:'Explique por que uma pessoa pode ter ventilação-minuto normal, mas ventilação alveolar reduzida (ex.: respiração rápida e superficial).',
+   ex:'Se a FR aumenta mas o VC diminui proporcionalmente (respiração rápida e superficial), a ventilação-minuto (FR×VC) pode se manter normal. Porém, como uma fração fixa de cada respiração (~150 mL) vai para o espaço morto, respirações mais curtas fazem essa fração representar uma parcela MAIOR do VC — reduzindo a ventilação alveolar efetiva (FR×(VC−VM)), mesmo com V̇E normal. Por isso a V̇A é a variável clinicamente mais relevante.'},
+
+  {t:'mc',c:'39',n:11,q:'Qual é a pressão arterial pulmonar média normal?',
+   o:[{l:'A',v:'7 mmHg'},{l:'B',v:'15 mmHg'},{l:'C',v:'25 mmHg'},{l:'D',v:'93 mmHg'}],
+   cr:'B',ex:'A pressão arterial pulmonar média é de ~15 mmHg (sistólica 25, diastólica 8) — bem menor que a sistêmica, compatível com a baixa resistência da circulação pulmonar.'},
+  {t:'mc',c:'39',n:12,q:'Aproximadamente qual porcentagem do débito cardíaco corresponde à circulação brônquica?',
+   o:[{l:'A',v:'~1-2%'},{l:'B',v:'~10%'},{l:'C',v:'~25%'},{l:'D',v:'~50%'}],
+   cr:'A',ex:'A circulação brônquica representa apenas ~1-2% do débito cardíaco. É de alta pressão e baixo fluxo, nutrindo os tecidos pulmonares (não participa da hematose).'},
+  {t:'tf',c:'39',n:13,q:'A hipóxia alveolar causa vasodilatação dos capilares pulmonares locais, assim como ocorre nos tecidos sistêmicos.',
+   cr:'F',ex:'FALSO. Ao contrário dos tecidos sistêmicos (onde hipóxia → vasodilatação), nos pulmões a hipóxia alveolar causa VASOCONSTRIÇÃO local — desviando o sangue para áreas mais bem ventiladas.'},
+  {t:'mc',c:'39',n:14,q:'Qual o volume sanguíneo pulmonar total aproximado?',
+   o:[{l:'A',v:'~150 mL'},{l:'B',v:'~450 mL'},{l:'C',v:'~1.000 mL'},{l:'D',v:'~2.300 mL'}],
+   cr:'B',ex:'O volume sanguíneo pulmonar total é de ~450 mL (≈9% do volume sanguíneo total do corpo), podendo variar de metade a 2× o normal, funcionando como reservatório.'},
+  {t:'mc',c:'39',n:15,q:'Na posição em pé, qual zona de West predomina no ápice pulmonar?',
+   o:[{l:'A',v:'Zona 1'},{l:'B',v:'Zona 2'},{l:'C',v:'Zona 3'},{l:'D',v:'Nenhuma — não há fluxo no ápice'}],
+   cr:'B',ex:'A Zona 2 (Part > Palv > Pven, fluxo intermitente só na sístole) predomina no ápice em pé, devido à menor pressão hidrostática nessa região. A Zona 3 predomina na base.'},
+  {t:'tf',c:'39',n:16,q:'O fator de segurança agudo contra o edema pulmonar é de aproximadamente 21 mmHg.',
+   cr:'V',ex:'VERDADEIRO. Fator de segurança = COP plasmática (28 mmHg) − P.capilar normal (7 mmHg) = 21 mmHg — quanto a pressão capilar pode subir antes de um edema significativo.'},
+  {t:'mc',c:'39',n:17,q:'Qual a pressão normal do líquido pleural?',
+   o:[{l:'A',v:'0 mmHg'},{l:'B',v:'−2 mmHg'},{l:'C',v:'−7 mmHg'},{l:'D',v:'+5 mmHg'}],
+   cr:'C',ex:'A pressão do líquido pleural normal é de ~−7 mmHg — mais negativa que a tendência de colapso pulmonar (~−4 mmHg), mantendo os pulmões "colados" à parede torácica.'},
+  {t:'mc',c:'39',n:18,q:'Qual das opções abaixo é uma causa clássica de edema pulmonar por congestão retrógrada?',
+   o:[{l:'A',v:'Pneumonectomia'},{l:'B',v:'Insuficiência cardíaca esquerda'},{l:'C',v:'Vasoconstrição pulmonar hipóxica'},{l:'D',v:'Aumento da complacência arterial pulmonar'}],
+   cr:'B',ex:'A insuficiência cardíaca esquerda eleva a pressão do átrio esquerdo → veias pulmonares → capilar pulmonar → aumenta a filtração e pode causar edema intersticial e alveolar.'},
+  {t:'tf',c:'39',n:19,q:'A redução da pressão coloidosmótica plasmática (ex.: desnutrição) pode favorecer o derrame pleural.',
+   cr:'V',ex:'VERDADEIRO. Menos proteínas plasmáticas → menor força atraindo líquido de volta aos capilares → favorece a transudação de líquido para o espaço pleural.'},
+  {t:'ab',c:'39',n:20,q:'Explique como a baixa pressão capilar pulmonar (~7 mmHg) protege contra o edema pulmonar.',
+   ex:'A pressão capilar pulmonar normal é muito baixa (~7 mmHg) comparada à pressão coloidosmótica plasmática (~28 mmHg). Isso mantém o balanço de Starling levemente favorável à filtração (apenas +1 mmHg), gerando um pequeno volume de líquido que é facilmente drenado pelo sistema linfático. Se a pressão capilar subisse muito (ex.: insuficiência cardíaca esquerda), esse equilíbrio se perderia e o excesso de líquido invadiria o interstício e os alvéolos, superando a capacidade de drenagem linfática.'},
+
+  {t:'mc',c:'40',n:21,q:'Qual lei descreve a quantidade de gás dissolvida em um líquido, em função da pressão parcial e da solubilidade?',
+   o:[{l:'A',v:'Lei de Dalton'},{l:'B',v:'Lei de Henry'},{l:'C',v:'Lei de Boyle'},{l:'D',v:'Lei de Fick'}],
+   cr:'B',ex:'A Lei de Henry (C = S × P) descreve gases dissolvidos em líquidos. A Lei de Dalton se aplica a gases em MISTURA (como o ar).'},
+  {t:'mc',c:'40',n:22,q:'Qual é o valor normal da PO₂ no ar alveolar?',
+   o:[{l:'A',v:'40 mmHg'},{l:'B',v:'95 mmHg'},{l:'C',v:'104 mmHg'},{l:'D',v:'149 mmHg'}],
+   cr:'C',ex:'A PO₂ alveolar normal é de ~104 mmHg — menor que a do ar inspirado umidificado (149 mmHg) devido à absorção contínua de O₂ pelo sangue.'},
+  {t:'tf',c:'40',n:23,q:'O CO₂ é menos solúvel que o O₂ nos líquidos corporais.',
+   cr:'F',ex:'FALSO. O CO₂ é aproximadamente 20 VEZES MAIS SOLÚVEL que o O₂ (coeficientes 0,57 vs. 0,024). Por isso o CO₂ difunde muito mais rapidamente pela membrana respiratória.'},
+  {t:'mc',c:'40',n:24,q:'Aproximadamente qual fração do ar alveolar é renovada em cada respiração normal?',
+   o:[{l:'A',v:'1/2'},{l:'B',v:'1/5'},{l:'C',v:'1/7'},{l:'D',v:'1/10'}],
+   cr:'C',ex:'Da CRF de ~2.300 mL, apenas ~350 mL de ar novo chegam por respiração (2.300/350 ≈ 1/7). Essa renovação lenta estabiliza as concentrações gasosas alveolares.'},
+  {t:'mc',c:'40',n:25,q:'Qual é a espessura média da membrana respiratória?',
+   o:[{l:'A',v:'~0,06 μm'},{l:'B',v:'~0,6 μm'},{l:'C',v:'~6 μm'},{l:'D',v:'~60 μm'}],
+   cr:'B',ex:'A membrana respiratória tem espessura média de ~0,6 μm (mínima de ~0,2 μm em alguns pontos), com área total de ~70 m² — características que favorecem a difusão gasosa rápida.'},
+  {t:'tf',c:'40',n:26,q:'A capacidade de difusão do O₂ aumenta cerca de 3 vezes durante o exercício intenso.',
+   cr:'V',ex:'VERDADEIRO. A DL de O₂ sobe de ~21 mL/min/mmHg (repouso) para ~65 mL/min/mmHg (exercício intenso), por recrutamento e distensão de capilares pulmonares.'},
+  {t:'mc',c:'40',n:27,q:'Uma relação V̇A/Q̇ = 0 em um alvéolo corresponde a qual situação?',
+   o:[{l:'A',v:'Ventilação normal, sem perfusão'},{l:'B',v:'Perfusão normal, sem ventilação (comportamento de shunt)'},{l:'C',v:'Ventilação e perfusão normais'},{l:'D',v:'Ausência total de sangue e ar no alvéolo'}],
+   cr:'B',ex:'V̇A/Q̇ = 0 significa que há perfusão mas nenhuma ventilação — o gás alveolar se equilibra com o sangue venoso (PAO₂≈40, PACO₂≈45), comportando-se como um shunt (o sangue não é oxigenado).'},
+  {t:'mc',c:'40',n:28,q:'Qual a área total aproximada da membrana respiratória disponível para troca gasosa?',
+   o:[{l:'A',v:'~7 m²'},{l:'B',v:'~35 m²'},{l:'C',v:'~70 m²'},{l:'D',v:'~140 m²'}],
+   cr:'C',ex:'A área total da membrana respiratória é de aproximadamente 70 m², distribuída pelos ~300 milhões de alvéolos dos dois pulmões.'},
+  {t:'tf',c:'40',n:29,q:'A pressão de vapor da água a 37°C é de 47 mmHg.',
+   cr:'V',ex:'VERDADEIRO. PH₂O a 37°C = 47 mmHg. Por isso o ar inspirado umidificado tem PO₂ reduzida de 159 (seco) para 149 mmHg.'},
+  {t:'ab',c:'40',n:30,q:'Explique por que um alvéolo com V̇A/Q̇ = ∞ não contribui para a troca gasosa, apesar de estar bem ventilado.',
+   ex:'Quando V̇A/Q̇ = ∞, há ventilação mas nenhuma perfusão sanguínea (Q̇ = 0). Mesmo com ar renovado chegando ao alvéolo (PAO₂≈149, PACO₂≈0, semelhante ao ar inspirado umidificado), não existe sangue circulando pelos capilares alveolares para captar o O₂ ou liberar o CO₂. Sem fluxo sanguíneo, não há troca gasosa possível — esse alvéolo funciona como espaço morto alveolar, desperdiçando parte da ventilação.'},
+
+  {t:'mc',c:'41',n:31,q:'Aproximadamente que porcentagem do O₂ transportado no sangue está ligada à hemoglobina?',
+   o:[{l:'A',v:'70%'},{l:'B',v:'85%'},{l:'C',v:'97%'},{l:'D',v:'100%'}],
+   cr:'C',ex:'~97% do O₂ é transportado ligado à hemoglobina (HbO₂); apenas ~3% permanece dissolvido no plasma e no líquido das hemácias.'},
+  {t:'mc',c:'41',n:32,q:'Qual a saturação aproximada da hemoglobina no sangue venoso normal (PO₂ 40 mmHg)?',
+   o:[{l:'A',v:'40%'},{l:'B',v:'60%'},{l:'C',v:'75%'},{l:'D',v:'97%'}],
+   cr:'C',ex:'No sangue venoso (PO₂ 40 mmHg), a saturação da Hb é de ~75%. No sangue arterial (PO₂ 95 mmHg), é de ~97%.'},
+  {t:'tf',c:'41',n:33,q:'O efeito Bohr desloca a curva de dissociação Hb-O₂ para a esquerda nos tecidos.',
+   cr:'F',ex:'FALSO. Nos tecidos, o aumento de CO₂ e H⁺ desloca a curva para a DIREITA, reduzindo a afinidade da Hb pelo O₂ e favorecendo sua liberação. O deslocamento à esquerda ocorre nos pulmões.'},
+  {t:'mc',c:'41',n:34,q:'Qual é a principal forma de transporte do CO₂ no sangue?',
+   o:[{l:'A',v:'Dissolvido no plasma'},{l:'B',v:'Ligado à albumina'},{l:'C',v:'Como bicarbonato (HCO₃⁻)'},{l:'D',v:'Ligado ao ferro do grupo heme'}],
+   cr:'C',ex:'A forma predominante é como bicarbonato (~70%), seguida de carbaminoemoglobina (~20-23%) e CO₂ dissolvido (~7%).'},
+  {t:'mc',c:'41',n:35,q:'Qual enzima acelera a reação CO₂ + H₂O ⇌ H₂CO₃ dentro da hemácia?',
+   o:[{l:'A',v:'Anidrase carbônica'},{l:'B',v:'Fosfodiesterase'},{l:'C',v:'Piruvato desidrogenase'},{l:'D',v:'Guanilato ciclase'}],
+   cr:'A',ex:'A anidrase carbônica acelera essa reação em aproximadamente 5.000 vezes, permitindo o transporte eficiente de CO₂ como bicarbonato.'},
+  {t:'tf',c:'41',n:36,q:'O efeito Haldane facilita a liberação de CO₂ nos pulmões quando a hemoglobina se oxigena.',
+   cr:'V',ex:'VERDADEIRO. Quando o O₂ se liga à Hb nos pulmões, a Hb libera CO₂ e H⁺ mais facilmente, favorecendo a eliminação de CO₂. Nos tecidos, o inverso ocorre (desoxi-Hb capta mais CO₂).'},
+  {t:'mc',c:'41',n:37,q:'Qual é a PO₂ normal do sangue arterial sistêmico (após a mistura com o shunt fisiológico)?',
+   o:[{l:'A',v:'40 mmHg'},{l:'B',v:'75 mmHg'},{l:'C',v:'95 mmHg'},{l:'D',v:'104 mmHg'}],
+   cr:'C',ex:'A PO₂ alveolar é 104 mmHg, mas cai para ~95 mmHg no sangue arterial sistêmico devido à mistura com o sangue da circulação brônquica (shunt fisiológico, ~2%).'},
+  {t:'mc',c:'41',n:38,q:'Qual o coeficiente de utilização de O₂ (extração tecidual) em repouso?',
+   o:[{l:'A',v:'~10%'},{l:'B',v:'~25%'},{l:'C',v:'~50%'},{l:'D',v:'~75%'}],
+   cr:'B',ex:'Em repouso, a saturação cai de ~97% (arterial) para ~75% (venosa), correspondendo a um coeficiente de utilização de ~25%. No exercício intenso, pode subir a 75-85%.'},
+  {t:'tf',c:'41',n:39,q:'O CO₂ se liga diretamente ao ferro do grupo heme para formar a carbaminoemoglobina.',
+   cr:'F',ex:'FALSO. O CO₂ se liga aos GRUPOS AMINO da porção proteica (globina) da hemoglobina — não ao ferro do heme, que é o sítio de ligação do O₂.'},
+  {t:'ab',c:'41',n:40,q:'Explique a diferença entre o efeito Bohr e o efeito Haldane.',
+   ex:'O efeito Bohr descreve como o CO₂ e o H⁺ afetam a LIGAÇÃO DO O₂ à hemoglobina: nos tecidos, o aumento de CO₂/H⁺ desloca a curva de dissociação para a direita, reduzindo a afinidade da Hb pelo O₂ e facilitando sua liberação. O efeito Haldane descreve o inverso — como a LIGAÇÃO DO O₂ afeta o transporte de CO₂: quando a Hb se oxigena nos pulmões, ela libera CO₂ e H⁺ mais facilmente, facilitando a eliminação pulmonar de CO₂. Juntos, os dois efeitos otimizam simultaneamente a liberação de O₂ nos tecidos e a captação/eliminação de CO₂.'},
+
+  {t:'mc',c:'42',n:41,q:'Qual grupo do centro respiratório é o principal responsável pela geração do ritmo respiratório básico?',
+   o:[{l:'A',v:'Grupo Respiratório Dorsal'},{l:'B',v:'Grupo Respiratório Ventral'},{l:'C',v:'Centro pneumotáxico'},{l:'D',v:'Núcleo ambíguo isoladamente'}],
+   cr:'A',ex:'O Grupo Respiratório Dorsal (localizado no núcleo do trato solitário, no bulbo) é o principal responsável pela inspiração e pela geração do ritmo respiratório básico.'},
+  {t:'mc',c:'42',n:42,q:'Onde está localizado o centro pneumotáxico?',
+   o:[{l:'A',v:'Bulbo dorsal'},{l:'B',v:'Bulbo ventrolateral'},{l:'C',v:'Ponte (núcleo parabraquial)'},{l:'D',v:'Mesencéfalo'}],
+   cr:'C',ex:'O centro pneumotáxico está na região dorsal superior da ponte, especialmente no núcleo parabraquial, controlando o ponto de interrupção da rampa inspiratória.'},
+  {t:'tf',c:'42',n:43,q:'O reflexo de Hering-Breuer é o principal mecanismo regulador da respiração tranquila em adultos saudáveis.',
+   cr:'F',ex:'FALSO. Em adultos, esse reflexo só se torna relevante quando o volume corrente ultrapassa ~1,5 L — funciona como mecanismo PROTETOR contra hiperinsuflação, não como regulador da respiração tranquila normal.'},
+  {t:'mc',c:'42',n:44,q:'Por qual nervo os corpos carotídeos enviam sua informação aferente ao centro respiratório?',
+   o:[{l:'A',v:'Nervo vago (X)'},{l:'B',v:'Nervo trigêmeo (V)'},{l:'C',v:'Glossofaríngeo (IX), via nervo de Hering'},{l:'D',v:'Nervo hipoglosso (XII)'}],
+   cr:'C',ex:'Corpos carotídeos → nervo de Hering → nervo glossofaríngeo (IX par) → grupo respiratório dorsal. Os corpos aórticos usam o nervo vago (X par).'},
+  {t:'mc',c:'42',n:45,q:'Qual é o principal estímulo químico central que regula a respiração no dia a dia, em pessoas saudáveis ao nível do mar?',
+   o:[{l:'A',v:'PO₂ arterial'},{l:'B',v:'CO₂ (via H⁺ formado no LCR)'},{l:'C',v:'Temperatura corporal'},{l:'D',v:'2,3-BPG eritrocitário'}],
+   cr:'B',ex:'O CO₂ é o principal controlador químico cotidiano — atravessa facilmente a barreira hematoencefálica e gera H⁺ no LCR, que estimula diretamente a área quimiossensível central.'},
+  {t:'tf',c:'42',n:46,q:'O aumento inicial da ventilação no começo do exercício físico é predominantemente neurogênico, e não químico.',
+   cr:'V',ex:'VERDADEIRO. Impulsos colaterais do córtex motor estimulam o centro respiratório simultaneamente ao comando muscular (controle antecipatório/feedforward), antes mesmo de alterações significativas em CO₂, O₂ ou pH.'},
+  {t:'mc',c:'42',n:47,q:'A resposta ventilatória à hipóxia torna-se intensa quando a PaO₂ cai abaixo de aproximadamente:',
+   o:[{l:'A',v:'90-100 mmHg'},{l:'B',v:'80-90 mmHg'},{l:'C',v:'60-70 mmHg'},{l:'D',v:'20-30 mmHg'}],
+   cr:'C',ex:'Abaixo de ~60-70 mmHg de PaO₂, a resposta dos quimiorreceptores periféricos se torna muito mais intensa, acompanhando a queda acentuada da saturação da hemoglobina nessa faixa.'},
+  {t:'mc',c:'42',n:48,q:'Qual padrão de respiração periódica se caracteriza por ciclos de hiperventilação-apneia repetidos a cada 40-60 segundos?',
+   o:[{l:'A',v:'Respiração de Kussmaul'},{l:'B',v:'Respiração de Biot'},{l:'C',v:'Respiração de Cheyne-Stokes'},{l:'D',v:'Apneia do sono obstrutiva'}],
+   cr:'C',ex:'A respiração de Cheyne-Stokes resulta do atraso na chegada das alterações de CO₂/O₂ ao centro respiratório (comum na IC grave), gerando ciclos de 40-60 segundos entre hiperventilação e apneia.'},
+  {t:'tf',c:'42',n:49,q:'Opioides como a morfina aumentam a resposta ventilatória ao CO₂, protegendo contra hipoventilação.',
+   cr:'F',ex:'FALSO. Opioides como a morfina DIMINUEM a resposta do centro respiratório ao CO₂, reduzindo a frequência e o volume corrente — podendo causar hipercapnia, hipoxemia e, em superdosagem, apneia.'},
+  {t:'ab',c:'42',n:50,q:'Explique por que a aclimatação total à altitude leva de 2 a 3 dias para se completar.',
+   ex:'Na exposição aguda à altitude, a hipóxia estimula os quimiorreceptores periféricos e aumenta a ventilação, mas essa hiperventilação também elimina CO₂ em excesso — gerando hipocapnia e alcalose, que INIBEM o centro respiratório e limitam o aumento ventilatório a ~70%. Após 2-3 dias, o centro respiratório perde cerca de 80% dessa sensibilidade inibitória à queda de CO₂ (adaptação do LCR/tamponamento), permitindo que o estímulo hipóxico atue livremente e eleve a ventilação em 400-500% acima do normal — melhorando a captação de O₂ nos alvéolos.'},
+];
+
+let QS={c:0,w:0,a:0};
+
+function renderQuiz(){
+  const ct=document.getElementById('quizContainer');
+  ct.innerHTML='';
+  const tl={mc:'Múltipla Escolha',tf:'V ou F',ab:'Aberta'};
+  const tc={mc:'tmc',tf:'ttf',ab:'tab'};
+  QD.forEach((q,i)=>{
+    const d=document.createElement('div');
+    d.className='q-card';d.id='q'+i;
+    let body='';
+    if(q.t==='mc'){body=`<div class="opts">${q.o.map(o=>`<button class="opt-btn" data-q="${i}" data-l="${o.l}" onclick="answerMC(${i},'${o.l}')"><span class="ol">${o.l})</span><span>${o.v}</span></button>`).join('')}</div>`;}
+    else if(q.t==='tf'){body=`<div class="tf-opts"><button class="tf-btn" data-q="${i}" data-v="V" onclick="answerTF(${i},'V')">✅ VERDADEIRO</button><button class="tf-btn" data-q="${i}" data-v="F" onclick="answerTF(${i},'F')">❌ FALSO</button></div>`;}
+    else{body=`<button class="open-btn" id="ob${i}" onclick="revealOpen(${i})">💡 Ver Resposta</button>`;}
+    d.innerHTML=`<div class="q-head"><span class="q-num">Questão ${q.n}</span><div style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:center"><span class="q-tbadge ${tc[q.t]}">${tl[q.t]}</span><span class="ctag">Cap. ${q.c}</span></div></div><div class="res-ind" id="ri${i}"></div><p class="q-text">${q.q}</p>${body}<div class="exp-box" id="ex${i}"><div class="et">📖 Explicação</div><p>${q.ex.replace(/\n/g,'<br>')}</p></div>`;
+    ct.appendChild(d);
+  });
+  updateScores();
+}
+
+function answerMC(i,ch){
+  const q=QD[i];const card=document.getElementById('q'+i);
+  if(card.classList.contains('ans'))return;
+  card.querySelectorAll('.opt-btn').forEach(b=>{b.disabled=true;if(b.dataset.l===q.cr)b.classList.add('ca');if(b.dataset.l===ch&&ch!==q.cr)b.classList.add('wa');});
+  const ok=ch===q.cr;card.classList.add('ans',ok?'cq':'wq');
+  const ri=document.getElementById('ri'+i);ri.className=`res-ind vis ${ok?'c':'w'}`;ri.innerHTML=ok?'✅ Correto!':`❌ Incorreto. Resposta: ${q.cr}`;
+  document.getElementById('ex'+i).classList.add('vis');
+  ok?QS.c++:QS.w++;QS.a++;updateScores();
+}
+
+function answerTF(i,ch){
+  const q=QD[i];const card=document.getElementById('q'+i);
+  if(card.classList.contains('ans'))return;
+  card.querySelectorAll('.tf-btn').forEach(b=>{b.disabled=true;if(b.dataset.v===q.cr)b.classList.add('ca');if(b.dataset.v===ch&&ch!==q.cr)b.classList.add('wa');});
+  const ok=ch===q.cr;card.classList.add('ans',ok?'cq':'wq');
+  const ri=document.getElementById('ri'+i);ri.className=`res-ind vis ${ok?'c':'w'}`;ri.innerHTML=ok?'✅ Correto!':`❌ Incorreto. Resposta: ${q.cr==='V'?'VERDADEIRO':'FALSO'}`;
+  document.getElementById('ex'+i).classList.add('vis');
+  ok?QS.c++:QS.w++;QS.a++;updateScores();
+}
+
+function revealOpen(i){
+  const card=document.getElementById('q'+i);
+  if(card.classList.contains('ans'))return;
+  card.classList.add('ans');
+  const ob=document.getElementById('ob'+i);if(ob)ob.style.display='none';
+  document.getElementById('ex'+i).classList.add('vis');
+  QS.a++;updateScores();
+}
+
+function updateScores(){
+  document.getElementById('sC').textContent=QS.c;
+  document.getElementById('sW').textContent=QS.w;
+  document.getElementById('sP').textContent=QD.length-QS.a;
+}
+function resetQuiz(){QS={c:0,w:0,a:0};renderQuiz();}
+
+renderQuiz();
+</script>
+<script src="study-timer.js"></script>
+<script src="enzo-ia.js"></script>
+</body>
+</html>
