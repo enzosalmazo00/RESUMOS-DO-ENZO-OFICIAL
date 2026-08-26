@@ -153,7 +153,10 @@
     .modal-close:hover{background:rgba(34,211,238,0.1);color:#fff;}
     .modal-email{font-size:12px;color:#7dd3e8;margin-bottom:16px;padding:8px 12px;background:rgba(34,211,238,0.06);border-radius:10px;word-break:break-all;}
     .resumos-grid-modal{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;}
-    .resumo-toggle{padding:7px 5px;border-radius:9px;border:1px solid rgba(34,211,238,0.15);background:rgba(255,255,255,0.02);text-align:center;font-size:10px;font-weight:600;color:rgba(125,211,232,0.5);cursor:pointer;transition:all .2s;user-select:none;}
+    .resumo-toggle{padding:7px 5px;border-radius:9px;border:1px solid rgba(34,211,238,0.15);background:rgba(255,255,255,0.02);text-align:center;font-size:10px;font-weight:600;color:rgba(125,211,232,0.5);cursor:pointer;transition:all .2s;user-select:none;position:relative;}
+    .presente-icon{position:absolute;top:-6px;right:-6px;width:16px;height:16px;line-height:16px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(251,191,36,0.25);font-size:9px;text-align:center;opacity:0.35;transition:all .2s;}
+    .presente-icon:hover{opacity:0.8;transform:scale(1.15);}
+    .presente-icon.on{opacity:1;background:rgba(251,191,36,0.25);border-color:#fbbf24;box-shadow:0 0 8px rgba(251,191,36,0.5);}
     .resumo-toggle.on{background:rgba(74,222,128,0.12);border-color:rgba(74,222,128,0.3);color:#4ade80;}
     .resumo-toggle:hover{border-color:rgba(34,211,238,0.35);}
 
@@ -413,7 +416,7 @@
 var SUPABASE_URL="https://chqhdmjqnjjdatowfyif.supabase.co";
 var SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNocWhkbWpxbmpqZGF0b3dmeWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDc0MDAsImV4cCI6MjA5NTgyMzQwMH0.v_7y0YD9R1LvFJkz9Vr_zJX0_CE2lo8OY5xX-KtVcFk";
 var client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-var allAlunos=[],currentAluno=null,currentToggles={};
+var allAlunos=[],currentAluno=null,currentToggles={},currentPresente=[];
 // ── CURSOS (gravam na tabela `acessos`, não em profiles) ──
 var CURSOS_COLS=[
   {key:"curso-peconhentos",label:"Curso Peçonhentos"}
@@ -454,6 +457,24 @@ var SEMESTRES = [
     {key:"genetica_p1",label:"Genética"},{key:"fisiologia_p1",label:"Fisiologia"},
     {key:"microbiologia_p1",label:"Micro"},{key:"micro_pratica_p1",label:"Micro Prát."},
     {key:"imunologia_p1",label:"Imuno"},{key:"pacote_p1",label:"📦 Pacote P1"},
+  ]},
+  { id:"s4p1", label:"4º Sem — P1", emoji:"🔬", cols:[
+    {key:"fisiologia_2_p1",label:"Fisiologia II"},{key:"bioquimica_2_p1",label:"Bioquímica II"},
+    {key:"epidemiologia_p1",label:"Epidemiologia"},{key:"nutricao_p1",label:"Nutrição"},
+    {key:"microbiologia_2_p1",label:"Micro II"},{key:"eletrocardiograma_p1",label:"ECG"},
+    {key:"pacote_s4_p1",label:"📦 Pacote P1"},
+  ]},
+  { id:"s4p2", label:"4º Sem — P2", emoji:"🔬", cols:[
+    {key:"fisiologia_2_p2",label:"Fisiologia II"},{key:"bioquimica_2_p2",label:"Bioquímica II"},
+    {key:"epidemiologia_p2",label:"Epidemiologia"},{key:"nutricao_p2",label:"Nutrição"},
+    {key:"microbiologia_2_p2",label:"Micro II"},{key:"eletrocardiograma_p2",label:"ECG"},
+    {key:"pacote_s4_p2",label:"📦 Pacote P2"},
+  ]},
+  { id:"s4final", label:"4º Sem — Final", emoji:"🎓", cols:[
+    {key:"fisiologia_2_final",label:"Fisiologia II"},{key:"bioquimica_2_final",label:"Bioquímica II"},
+    {key:"epidemiologia_final",label:"Epidemiologia"},{key:"nutricao_final",label:"Nutrição"},
+    {key:"microbiologia_2_final",label:"Micro II"},{key:"eletrocardiograma_final",label:"ECG"},
+    {key:"pacote_s4_final",label:"📦 Pacote Final"},
   ]},
 ];
 
@@ -608,6 +629,7 @@ window.openModal=function(id){
   document.getElementById("expiryInput").value=currentAluno.acesso_expira_em?currentAluno.acesso_expira_em.substring(0,10):"";
   currentToggles={};
   RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=!!currentAluno[r.key];});
+  currentPresente=(currentAluno.resumos_presente||[]).slice();
   renderModalSections();
   loadCursosDoAluno(currentAluno.id);
   document.getElementById("modalAluno").classList.add("open");
@@ -633,7 +655,10 @@ function renderModalSections(){
     html+='<div class="modal-sem-body"><div class="resumos-grid-modal">';
     sem.cols.forEach(function(c){
       var cls=currentToggles[c.key]?"resumo-toggle on":"resumo-toggle";
-      html+='<div class="'+cls+'" data-act="toggle" data-key="'+c.key+'">'+c.label+'</div>';
+      var isPacote=c.key.indexOf("pacote")===0;
+      var presenteOn=!isPacote&&currentPresente.indexOf(c.key)>=0;
+      var presenteHtml=isPacote?"":'<span class="presente-icon'+(presenteOn?" on":"")+'" data-act="presente" data-key="'+c.key+'" title="Marcar como presente/cortesia">&#127873;</span>';
+      html+='<div class="'+cls+'" data-act="toggle" data-key="'+c.key+'">'+presenteHtml+c.label+'</div>';
     });
     html+='</div></div></div>';
   });
@@ -724,10 +749,10 @@ function renderCursosGridModal(){
 window.toggleCurso=function(k){currentCursoToggles[k]=!currentCursoToggles[k];renderCursosGridModal();};
 function renderCursosGrid(){renderCursosGridModal();}
 window.toggleResumo=function(k){currentToggles[k]=!currentToggles[k];renderResumosGrid();};
-window.togglePresente=function(k){if(!currentAluno)return;var p=(currentAluno.resumos_presente||[]).slice(),i=p.indexOf(k);if(i>=0)p.splice(i,1);else p.push(k);currentAluno.resumos_presente=p;renderResumosGrid();};
+window.togglePresente=function(k){if(!currentAluno)return;var i=currentPresente.indexOf(k);if(i>=0)currentPresente.splice(i,1);else currentPresente.push(k);var el=document.querySelector('.presente-icon[data-key="'+k+'"]');if(el)el.classList.toggle("on",currentPresente.indexOf(k)>=0);};
 window.set50Days=function(){var d=new Date();d.setDate(d.getDate()+50);document.getElementById("expiryInput").value=d.toISOString().substring(0,10);};
 window.closeModal=function(){document.getElementById("modalAluno").classList.remove("open");currentAluno=null;};
-window.saveAluno=async function(){if(!currentAluno)return;var btn=document.getElementById("saveBtn");btn.disabled=true;btn.textContent="Salvando...";var u={};var ev=document.getElementById("expiryInput").value;var expiraIso=ev?new Date(ev).toISOString():null;u.acesso_expira_em=expiraIso;RESUMOS_COLS.forEach(function(r){var antes=!!currentAluno[r.key];var agora=!!currentToggles[r.key];u[r.key]=agora;if(agora&&!antes&&expiraIso){u[r.key+"_expira"]=expiraIso;}else if(!agora){u[r.key+"_expira"]=null;}});u.resumos_presente=currentAluno.resumos_presente||[];var res=await client.from("profiles").update(u).eq("id",currentAluno.id);if(res.error){showToast("Erro ao salvar!","error");btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";return;}
+window.saveAluno=async function(){if(!currentAluno)return;var btn=document.getElementById("saveBtn");btn.disabled=true;btn.textContent="Salvando...";var u={};var ev=document.getElementById("expiryInput").value;var expiraIso=ev?new Date(ev).toISOString():null;u.acesso_expira_em=expiraIso;RESUMOS_COLS.forEach(function(r){var antes=!!currentAluno[r.key];var agora=!!currentToggles[r.key];u[r.key]=agora;if(agora&&!antes&&expiraIso){u[r.key+"_expira"]=expiraIso;}else if(!agora){u[r.key+"_expira"]=null;}});u.resumos_presente=currentPresente;var res=await client.from("profiles").update(u).eq("id",currentAluno.id);if(res.error){showToast("Erro ao salvar!","error");btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";return;}
 // ── Persistir CURSOS na tabela acessos (insert/delete conforme diff) ──
 try{
   for(var ci=0;ci<CURSOS_COLS.length;ci++){
