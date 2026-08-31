@@ -404,8 +404,8 @@ em { color: var(--accent2); font-style:normal; }
 <header>
   <div class="badge">🫁 Fisiologia II · P1 · 2026</div>
   <h1>Fisiologia II — P1</h1>
-  <p class="sub">Ventilação Pulmonar · Circulação Pulmonar · Trocas Gasosas · Transporte de O₂/CO₂ · Regulação da Respiração</p>
-  <p class="by">⚡ Elaborado por Enzo Salmazo · Guyton &amp; Hall · Caps. 38–42</p>
+  <p class="sub">Fisiologia Respiratória · Organização do Sistema Nervoso · Sinapses</p>
+  <p class="by">⚡ Elaborado por Enzo Salmazo · Guyton &amp; Hall · Caps. 38–42 e 46</p>
 </header>
 
 <!-- ═══════════════════ NAV TABS ═══════════════════ -->
@@ -416,6 +416,7 @@ em { color: var(--accent2); font-style:normal; }
   <button onclick="showSection('cap40',this)">Cap. 40 — Trocas Gasosas</button>
   <button onclick="showSection('cap41',this)">Cap. 41 — Transporte de Gases</button>
   <button onclick="showSection('cap42',this)">Cap. 42 — Regulação</button>
+  <button onclick="showSection('cap46',this)">Cap. 46 — Sistema Nervoso</button>
   <button class="fc-tab" onclick="showSection('flashcards',this)">🃏 Flashcards</button>
   <button class="qz-tab" onclick="showSection('quiz',this)">📝 Simulado (<span data-question-count>78</span>)</button>
 </nav>
@@ -431,13 +432,13 @@ em { color: var(--accent2); font-style:normal; }
 <div class="info-block">
   <div class="label">Visão Geral</div>
   <h4>Sobre este material</h4>
-  <p>Este resumo cobre os Capítulos <strong>38 a 42</strong> de Guyton &amp; Hall, o bloco de <strong>fisiologia respiratória</strong>: <strong>ventilação pulmonar</strong>, <strong>circulação pulmonar e edema pulmonar</strong>, <strong>princípios físicos das trocas gasosas</strong>, <strong>transporte de O₂ e CO₂</strong> e <strong>regulação da respiração</strong>. Inclui <strong>flashcards interativos</strong> e um <strong>simulado de <span data-question-count>78</span> questões</strong>, organizado por capítulo e com correção imediata.</p>
+  <p>Este resumo cobre os Capítulos <strong>38 a 42 e 46</strong> de Guyton &amp; Hall. O primeiro bloco aborda <strong>fisiologia respiratória</strong>: ventilação pulmonar, circulação pulmonar e edema, princípios físicos das trocas gasosas, transporte de O₂ e CO₂ e regulação da respiração. O <strong>Capítulo 46</strong> inicia o bloco de <strong>neurofisiologia</strong>, com organização do sistema nervoso, neurônios, porções sensitiva e motora, integração, memória, níveis funcionais do SNC e fundamentos das sinapses. Inclui <strong>flashcards interativos</strong> e um <strong>simulado de <span data-question-count>78</span> questões</strong>, organizado por capítulo e com correção imediata.</p>
 </div>
 
 <div class="info-block warn">
   <div class="label">Em construção</div>
   <h4>Próximos capítulos da P1</h4>
-  <p>Os Capítulos <strong>43 (Insuficiência Respiratória)</strong> e os Capítulos <strong>46 a 49 (Sistema Nervoso — Organização, Receptores Sensoriais, Sensações Somáticas I e II)</strong> ainda serão adicionados a este material assim que o resumo-base for construído. Este arquivo já está pronto para receber essas seções sem quebrar o layout.</p>
+  <p>O <strong>Capítulo 46 — Organização do Sistema Nervoso, Funções Básicas das Sinapses e Neurotransmissores (Parte 1)</strong> já foi incorporado. Permanecem previstos o <strong>Capítulo 43 (Insuficiência Respiratória)</strong> e os <strong>Capítulos 47 a 49</strong>, conforme os próximos materiais da disciplina.</p>
 </div>
 
 <div class="info-block success">
@@ -447,7 +448,8 @@ em { color: var(--accent2); font-style:normal; }
     <li>Leia o Cap. 38 (mecânica ventilatória — a base de tudo o que vem depois).</li>
     <li>Avance para o Cap. 39 (circulação pulmonar, pressões, edema e derrame pleural).</li>
     <li>Estude os Caps. 40 e 41 juntos — física da difusão e transporte sanguíneo dos gases se completam.</li>
-    <li>Feche com o Cap. 42 (regulação nervosa e química da respiração).</li>
+    <li>Feche o bloco respiratório com o Cap. 42 (regulação nervosa e química da respiração).</li>
+    <li>Inicie a neurofisiologia pelo Cap. 46: organização do sistema nervoso, integração e sinapses.</li>
     <li>Faça os flashcards por capítulo ao terminar cada bloco.</li>
     <li>Realize o simulado completo ao final e revise os erros.</li>
   </ol>
@@ -491,13 +493,14 @@ em { color: var(--accent2); font-style:normal; }
 
 <div class="info-block purple">
   <div class="label">Capítulos neste material</div>
-  <h4>Panorama dos 5 capítulos</h4>
+  <h4>Panorama dos 6 capítulos</h4>
   <div class="intro-grid" style="margin-top:12px">
     <div class="intro-card" onclick="showSectionByName('cap38')"><div class="ic-icon">🌬️</div><div class="ic-name">Cap. 38</div><div class="ic-desc">Ventilação Pulmonar — mecânica, volumes, ventilação alveolar</div></div>
     <div class="intro-card" onclick="showSectionByName('cap39')"><div class="ic-icon">🫀</div><div class="ic-name">Cap. 39</div><div class="ic-desc">Circulação pulmonar, edema pulmonar, líquido pleural</div></div>
     <div class="intro-card" onclick="showSectionByName('cap40')"><div class="ic-icon">🔬</div><div class="ic-name">Cap. 40</div><div class="ic-desc">Princípios físicos das trocas gasosas — difusão</div></div>
     <div class="intro-card" onclick="showSectionByName('cap41')"><div class="ic-icon">🩸</div><div class="ic-name">Cap. 41</div><div class="ic-desc">Transporte de O₂ e CO₂ no sangue e nos tecidos</div></div>
     <div class="intro-card" onclick="showSectionByName('cap42')"><div class="ic-icon">🧠</div><div class="ic-name">Cap. 42</div><div class="ic-desc">Regulação nervosa e química da respiração</div></div>
+    <div class="intro-card" onclick="showSectionByName('cap46')"><div class="ic-icon">⚡</div><div class="ic-name">Cap. 46</div><div class="ic-desc">Organização do sistema nervoso, integração, memória e sinapses</div></div>
   </div>
 </div>
 
@@ -1381,6 +1384,243 @@ em { color: var(--accent2); font-style:normal; }
 
 </div></div>
 
+
+<!-- ════════════════════════════════════════════════
+     CAP 46 — ORGANIZAÇÃO DO SISTEMA NERVOSO E SINAPSES
+════════════════════════════════════════════════ -->
+<div id="cap46" class="section">
+<div class="container">
+
+<div class="chapter-title"><span class="chap-icon">⚡</span> Capítulo 46 — Organização do Sistema Nervoso, Funções Básicas das Sinapses e Neurotransmissores</div>
+
+<div class="info-block">
+  <div class="label">Parte 1 — roteiro da aula</div>
+  <h4>O sistema nervoso recebe, integra, decide e responde</h4>
+  <p>O ponto central deste capítulo é entender o sistema nervoso como um sistema de <strong>controle e integração</strong>. A cada minuto, milhares de informações provenientes de órgãos e estruturas sensitivas chegam ao sistema nervoso; essas informações são integradas e, a partir delas, o organismo determina a resposta apropriada.</p>
+</div>
+
+<div class="sec-divider"><h3>46.1 Desenho Geral do Sistema Nervoso — Neurônio</h3></div>
+
+<div class="info-block">
+  <h4>Neurônio como unidade de recepção, integração e saída</h4>
+  <ul>
+    <li>O <strong>SNC (sistema nervoso central)</strong> contém mais de <strong>100 bilhões de neurônios</strong>.</li>
+    <li>O número de conexões varia conforme o tipo neuronal: de <strong>centenas</strong> até aproximadamente <strong>200.000 sinapses</strong>.</li>
+    <li>A saída de um neurônio percorre um <strong>único axônio</strong>, que pode se ramificar e distribuir o sinal a diferentes regiões — organização <strong>divergente</strong>.</li>
+    <li>No contexto da aula, a transmissão é <strong>anterógrada</strong>: parte do axônio do neurônio precedente em direção ao próximo neurônio, garantindo a direção funcional do circuito.</li>
+  </ul>
+</div>
+
+<table class="compare-table">
+  <tr><th>Estrutura destacada no esquema</th><th>Como interpretar no circuito</th></tr>
+  <tr><td>Dendritos</td><td>Região de entrada das informações recebidas pela neurônio</td></tr>
+  <tr><td>Corpo celular / soma</td><td>Região central do neurônio, contendo o núcleo</td></tr>
+  <tr><td>Axônio</td><td>Via de saída pela qual o impulso segue em direção às terminações</td></tr>
+  <tr><td>Bainha de mielina e nós de Ranvier</td><td>Elementos mostrados no trajeto do axônio no esquema da aula</td></tr>
+  <tr><td>Terminal axonal / sinapse</td><td>Ponto em que a informação alcança a célula seguinte</td></tr>
+</table>
+
+<div class="formula-box">
+  <div class="formula-label">Fluxo básico mostrado nos slides</div>
+  Dendritos / soma → axônio → terminações axonais → sinapse → próximo neurônio
+</div>
+
+<div class="sec-divider"><h3>46.2 Classificação dos Neurônios</h3></div>
+
+<table class="compare-table">
+  <tr><th>Classificação funcional</th><th>Função</th></tr>
+  <tr><td>Neurônios sensoriais (aferentes)</td><td>Levam estímulos dos receptores em direção ao SNC</td></tr>
+  <tr><td>Neurônios motoras (eferentes)</td><td>Conduzem respostas do SNC aos órgãos efetores</td></tr>
+  <tr><td>Interneurônios (associativas)</td><td>Conectam neurônios sensoriais e motoras dentro do SNC</td></tr>
+</table>
+
+<div class="info-block purple">
+  <div class="label">Classificação morfológica mostrada na aula</div>
+  <h4>Forma = organização dos prolongamentos</h4>
+  <p>O slide compara cinco formas: <strong>unipolar, bipolar, pseudounipolar, multipolar e anaxônica</strong>. A ideia é reconhecer visualmente como o corpo celular, os dendritos e o axônio se organizam em cada tipo. O neurônio multipolar aparece com vários dendritos e um axônio; a bipolar apresenta dois prolongamentos principais; a pseudounipolar apresenta um prolongamento que se bifurca; e a anaxônica é apresentada sem um axônio facilmente distinguível no esquema.</p>
+</div>
+
+<div class="sec-divider"><h3>46.3 Organização Geral — SNC e SNP</h3></div>
+
+<table class="compare-table">
+  <tr><th>Divisão</th><th>Componentes / direção da informação</th></tr>
+  <tr><td>SNC</td><td>Encéfalo + medula espinal</td></tr>
+  <tr><td>SNP — sensorial / aferente</td><td>Envia informação dos receptores ao SNC por neurônios sensitivos aferentes</td></tr>
+  <tr><td>SNP — motora / eferente</td><td>Leva informação do SNC às células-alvo por neurônios eferentes</td></tr>
+</table>
+
+<div class="info-block">
+  <h4>Componentes do sistema nervoso periférico apresentados no slide</h4>
+  <p>O SNP é representado por <strong>nervos</strong> — incluindo 12 pares cranianos e 31 pares espinais —, <strong>gânglios</strong>, <strong>plexos entéricos</strong> e <strong>receptores sensitivos</strong>. Sua porção sensitiva inclui os sentidos somáticos e os sentidos especiais.</p>
+</div>
+
+<div class="info-block warn">
+  <div class="label">Porção motora / eferente</div>
+  <h4>Somático versus autônomo</h4>
+  <ul>
+    <li><strong>Sistema nervoso somático:</strong> ação voluntária sobre músculo esquelético.</li>
+    <li><strong>Sistema nervoso autônomo:</strong> ação involuntária; no esquema, subdivide-se em <strong>simpático</strong>, <strong>parassimpático</strong> e <strong>entérico</strong>.</li>
+    <li><strong>Simpático e parassimpático:</strong> atuam sobre músculo liso, músculo cardíaco e glândulas.</li>
+    <li><strong>Entérico:</strong> relacionado ao músculo liso e às glândulas do trato digestivo.</li>
+  </ul>
+</div>
+
+<div class="sec-divider"><h3>46.4 Organização do SNC e Córtex Cerebral</h3></div>
+
+<div class="info-block">
+  <h4>Organização anatômica apresentada</h4>
+  <p>O SNC é formado por <strong>encéfalo</strong> e <strong>medula espinal</strong>. No encéfalo, os slides organizam <strong>cérebro</strong>, <strong>tronco encefálico</strong> e <strong>cerebelo</strong>. O cérebro é subdividido em <strong>telencéfalo</strong> e <strong>diencéfalo</strong>. O tronco encefálico é apresentado em <strong>mesencéfalo, protuberância (ponte) e bulbo raquídeo</strong>. No diencéfalo são destacados <strong>tálamo, hipotálamo, epitálamo e subtálamo</strong>.</p>
+</div>
+
+<table class="compare-table">
+  <tr><th>Região cortical</th><th>Funções destacadas na aula</th></tr>
+  <tr><td>Lobo frontal</td><td>Funções motoras (área motora primária), planejamento e tomada de decisões, personalidade e controle de impulsos, área de Broca</td></tr>
+  <tr><td>Lobo parietal</td><td>Processamento de sensações somáticas — tato, dor, temperatura e propriocepção — na área somatossensorial primária; percepção do próprio corpo</td></tr>
+  <tr><td>Lobo temporal</td><td>Audição, memória e compreensão da linguagem — área de Wernicke</td></tr>
+  <tr><td>Lobo occipital</td><td>Processamento visual — área visual primária e áreas de associação visual</td></tr>
+  <tr><td>Ínsula</td><td>Interocepção, percepção de batimentos/respiração/sensações viscerais/fome, processamento gustativo, dimensão emocional e subjetiva da dor, emoções e consciência corporal</td></tr>
+</table>
+
+<div class="sec-divider"><h3>46.5 Porção Sensitiva — Receptores e Vias Ascendentes</h3></div>
+
+<div class="info-block">
+  <h4>A informação sensorial não termina em um único ponto</h4>
+  <p>A informação somática chega ao SNC pelos nervos periféricos e é encaminhada para <strong>múltiplas áreas sensoriais</strong>: todos os níveis da medula espinal, formação reticular do bulbo/ponte/mesencéfalo, cerebelo, tálamo e áreas do córtex cerebral.</p>
+</div>
+
+<div class="info-block purple">
+  <div class="label">Leitura do esquema medular da aula</div>
+  <h4>Ascendente = informação sensitiva sobe; descendente = comando motor desce</h4>
+  <p>A figura da medula diferencia visualmente <strong>tratos ascendentes</strong>, relacionados à condução sensitiva em direção a níveis superiores do SNC, e <strong>tratos descendentes</strong>, relacionados ao comando motor em direção aos níveis inferiores. O foco da figura é reconhecer essa organização direcional da substância branca.</p>
+</div>
+
+<div class="sec-divider"><h3>46.6 Porção Motora — Efetores</h3></div>
+
+<div class="info-block">
+  <h4>Três grandes alvos do controle motor</h4>
+  <ol>
+    <li><strong>Contração dos músculos esqueléticos</strong> apropriados em todo o corpo.</li>
+    <li><strong>Contração da musculatura lisa</strong> dos órgãos internos.</li>
+    <li><strong>Secreção de substâncias químicas</strong> por glândulas exócrinas e endócrinas.</li>
+  </ol>
+</div>
+
+<div class="info-block warn">
+  <div class="label">Eixo nervoso motor “esquelético”</div>
+  <p>O controle dos músculos esqueléticos pode envolver diferentes níveis do SNC: <strong>medula espinal</strong>, <strong>formação reticular bulbar, pontina e mesencefálica</strong>, <strong>gânglios basais</strong>, <strong>cerebelo</strong> e <strong>córtex motor</strong>. O movimento final, portanto, resulta da organização integrada entre vários níveis do sistema nervoso.</p>
+</div>
+
+<div class="sec-divider"><h3>46.7 Processamento da Informação — Função Integrativa</h3></div>
+
+<div class="info-block danger">
+  <div class="label">★ Conceito central</div>
+  <h4>Integrar é selecionar, canalizar e transformar informação em resposta</h4>
+  <p>Uma das funções mais importantes do sistema nervoso é <strong>processar a informação aferente</strong> para que sejam produzidas respostas mentais e motoras apropriadas. O sistema nervoso cataloga a informação como relevante ou irrelevante. Quando um estímulo sensorial é importante, ele é canalizado para regiões integrativas e motoras capazes de gerar a resposta desejada. A canalização e o processamento constituem as <strong>funções integrativas</strong>.</p>
+</div>
+
+<div class="formula-box">
+  <div class="formula-label">Sequência funcional</div>
+  Receptor → via aferente → processamento / integração → seleção da resposta → via eferente → efetor
+</div>
+
+<div class="sec-divider"><h3>46.8 Armazenamento da Informação — Memória e Facilitação</h3></div>
+
+<div class="info-block">
+  <p>O armazenamento de informação recebe o nome de <strong>memória</strong> e, segundo o roteiro da aula, também é uma função exercida pelas <strong>sinapses</strong>. Quando determinados tipos de sinais sensoriais passam repetidamente por uma sequência de sinapses, essas sinapses tornam-se mais capazes de transmitir o mesmo tipo de sinal no futuro. Esse processo é denominado <strong>facilitação</strong>.</p>
+</div>
+
+<div class="example-box">
+  <div class="ex-label">💡 Ideia para memorizar</div>
+  <p><strong>Uso repetido de uma sequência sináptica → maior capacidade futura de transmitir aquele padrão → facilitação → participação no armazenamento de informação.</strong></p>
+</div>
+
+<div class="sec-divider"><h3>46.9 Três Níveis Funcionais do Sistema Nervoso Central</h3></div>
+
+<table class="compare-table">
+  <tr><th>Nível</th><th>Funções destacadas</th></tr>
+  <tr><td>Medular</td><td>Movimentos rítmicos como marcha; reflexos protetores; reflexos posturais; controle vegetativo de vasos sanguíneos, digestão e excreção urinária</td></tr>
+  <tr><td>Encefálico inferior / subcortical</td><td>Grande parte das atividades subconscientes; controle de pressão arterial e respiração; reflexos alimentares; equilíbrio; diversos padrões emocionais</td></tr>
+  <tr><td>Encefálico superior / cortical</td><td>Grande região de armazenamento de memórias e participação essencial na maior parte dos processos mentais, sempre em associação com estruturas subcorticais</td></tr>
+</table>
+
+<div class="info-block">
+  <h4>Nível medular — mais do que um “fio” de condução</h4>
+  <p>A medula espinal possui circuitos próprios capazes de organizar funções. Nos slides, são citados a <strong>marcha</strong>, o <strong>reflexo de retirada</strong> diante de estímulo doloroso, reflexos posturais que sustentam o corpo contra a gravidade e controles vegetativos.</p>
+</div>
+
+<div class="info-block purple">
+  <h4>Nível encefálico inferior / subcortical</h4>
+  <p>Inclui, no roteiro da aula, <strong>bulbo, protuberância, mesencéfalo, hipotálamo, tálamo, cerebelo e gânglios basais</strong>. O controle da pressão arterial e da respiração ocorre principalmente em bulbo e protuberância. O equilíbrio depende da ação combinada de porções antigas do cerebelo, núcleos vestibulares e substância reticular do tronco encefálico. Padrões como ira, excitação, respostas sexuais e reações ao prazer e à dor podem persistir mesmo após grande perda cortical.</p>
+</div>
+
+<div class="info-block warn">
+  <h4>Nível cortical — importante, mas não isolado</h4>
+  <p>O córtex cerebral é essencial para a maior parte dos processos mentais e constitui uma grande região de armazenamento de memórias, porém <strong>não trabalha sozinha</strong>. A aula enfatiza a associação contínua com estruturas subcorticais; são essas estruturas que iniciam o estado de vigília cortical e tornam o “banco” de memórias acessível à maquinaria do pensamento.</p>
+</div>
+
+<div class="info-block success">
+  <div class="label">Integração entre níveis</div>
+  <p>Os níveis <strong>medular, subcortical e cortical</strong> não funcionam isoladamente. Eles se conectam por vias ascendentes e descendentes. Cada nível superior <strong>refina e torna mais preciso</strong> o trabalho do nível inferior, sem substituir suas funções básicas.</p>
+</div>
+
+<div class="sec-divider"><h3>46.10 O Sistema Nervoso como Processador de Informação</h3></div>
+
+<div class="info-block">
+  <p>A comparação com um computador serve para destacar um ponto: quando um sinal sensitivo chega de um receptor periférico, ele pode se distribuir por vários níveis do SNC e gerar diferentes respostas. Embora um sistema nervoso não seja literalmente um computador, a analogia ajuda a compreender que ele <strong>não apenas transmite sinais: ele processa informação</strong>.</p>
+</div>
+
+<div class="sec-divider"><h3>46.11 Sinapses — Pontos de Comunicação entre Neurônios</h3></div>
+
+<div class="info-block danger">
+  <div class="label">★ Definição</div>
+  <h4>Sinapse = ponto de comunicação entre um neurônio e a próxima</h4>
+  <p>No SNC, a informação é transmitida principalmente por <strong>potenciais de ação</strong>, também chamados de impulsos nervosos, ao longo de uma sucessão de neurônios. Na sinapse, o impulso passa da <strong>neurônio pré-sináptico</strong> para a <strong>neurônio pós-sináptico</strong>.</p>
+</div>
+
+<table class="compare-table">
+  <tr><th>O que pode acontecer com um impulso ao chegar à sinapse?</th><th>Resultado</th></tr>
+  <tr><td>Ser bloqueado</td><td>O sinal não é transmitido ao neurônio seguinte</td></tr>
+  <tr><td>Ser transformado</td><td>Um impulso único pode originar impulsos repetitivos</td></tr>
+  <tr><td>Ser integrado</td><td>Combina-se com impulsos de outras neurônios, gerando padrões complexos</td></tr>
+</table>
+
+<div class="info-block">
+  <p>Na maioria das sinapses mostradas no roteiro, a comunicação não ocorre por contato elétrico direto entre as membranas. Ela é realizada por uma substância química chamada <strong>neurotransmissor</strong>.</p>
+</div>
+
+<div class="sec-divider"><h3>46.12 Sinapse Química versus Sinapse Elétrica</h3></div>
+
+<table class="compare-table">
+  <tr><th>Característica</th><th>Sinapse química</th><th>Sinapse elétrica</th></tr>
+  <tr><td>Meio de transmissão</td><td>Neurotransmissor liberado pela neurônio pré-sináptico</td><td>Corrente elétrica passa diretamente entre células</td></tr>
+  <tr><td>Estrutura principal</td><td>Neurotransmissor atua em proteínas receptoras da membrana pós-sináptica</td><td>Junções comunicantes — gap junctions — formando canais abertos entre as células</td></tr>
+  <tr><td>Efeito</td><td>Pode excitar, inibir ou modificar a sensibilidade do neurônio seguinte</td><td>Transmissão elétrica direta de uma célula à próxima</td></tr>
+  <tr><td>Frequência no SNC humano</td><td>Predominante — quase todas as sinapses de transmissão de sinais</td><td>Muito menos frequente</td></tr>
+</table>
+
+<div class="info-block purple">
+  <div class="label">Leitura da figura da sinapse química</div>
+  <h4>Do potencial de ação à resposta pós-sináptica</h4>
+  <p>O esquema da aula mostra o potencial de ação chegando ao terminal pré-sináptico, a participação de <strong>Ca²⁺ (íon cálcio)</strong>, vesículas sinápticas contendo neurotransmissor e receptores pós-sinápticos. São representados receptores <strong>ionotrópicos</strong>, associados diretamente ao fluxo de íons, e receptores <strong>metabotrópicos</strong>, associados a segundos mensageiros. A resposta celular pode envolver alteração do potencial de membrana, cascatas bioquímicas ou regulação da expressão gênica.</p>
+</div>
+
+<div class="formula-box">
+  <div class="formula-label">Sequência visual da sinapse química</div>
+  Potencial de ação pré-sináptico → entrada de Ca²⁺ → liberação do neurotransmissor → receptor pós-sináptico → resposta celular
+</div>
+
+<div class="info-block warn">
+  <div class="label">Sinapse elétrica</div>
+  <p>Na sinapse elétrica, as <strong>gap junctions</strong> formam canais que conectam diretamente as células e permitem a condução elétrica de uma para a outra. A aula ressalta que elas são <strong>muito menos frequentes no SNC</strong> e que, no sistema nervoso humano, a transmissão sináptica é majoritariamente química.</p>
+</div>
+
+<div class="info-block success">
+  <div class="label">Síntese do Capítulo 46 — Parte 1</div>
+  <p><strong>Entrada:</strong> receptores e neurônios aferentes levam informação ao SNC. <strong>Integração:</strong> circuitos medulares, subcorticais e corticais processam e selecionam a informação. <strong>Armazenamento:</strong> mudanças funcionais nas sinapses participam da memória por facilitação. <strong>Saída:</strong> vias eferentes controlam músculos e glândulas. <strong>Comunicação:</strong> as sinapses conectam neurônios e podem bloquear, repetir ou integrar impulsos; no SNC humano, predominam sinapses químicas.</p>
+</div>
+
+</div></div>
+
 <!-- ════════════════════════════════════════════════
      FLASHCARDS
 ════════════════════════════════════════════════ -->
@@ -1388,7 +1628,7 @@ em { color: var(--accent2); font-style:normal; }
 <div class="container">
 
 <div class="chapter-title"><span class="chap-icon">🃏</span> Flashcards — Revisão Ativa</div>
-<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Clique em cada cartão para virá-lo e revelar a resposta. Cobrindo os Caps. 38–42.</p>
+<p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Clique em cada cartão para virá-lo e revelar a resposta. Cobrindo os Caps. 38–42 e 46.</p>
 
 <div class="flashcard-grid" id="flashcard-grid"></div>
 
@@ -1406,7 +1646,7 @@ em { color: var(--accent2); font-style:normal; }
 <div class="q-stats">
   <div class="sbox c"><div class="sv" id="sC">0</div><div class="sl">Corretas</div></div>
   <div class="sbox w"><div class="sv" id="sW">0</div><div class="sl">Incorretas</div></div>
-  <div class="sbox p"><div class="sv" id="sP">78</div><div class="sl">Pendentes</div></div>
+  <div class="sbox p"><div class="sv" id="sP">98</div><div class="sl">Pendentes</div></div>
 </div>
 
 <div id="quizContainer"></div>
@@ -1511,6 +1751,24 @@ const FC=[
   {c:'Cap 42',q:'Onde estão localizados os quimiorreceptores periféricos e quais suas vias?',a:'Corpos carotídeos: bifurcação das carótidas; aferência pelo nervo de Hering e glossofaríngeo, IX par, até o grupo respiratório dorsal. São os principais sensores da hipóxia arterial.\n\nCorpos aórticos: arco da aorta; aferência pelo nervo vago, X par.\n\nRespondem à queda da PaO₂ e também ao aumento de PaCO₂ e H⁺. A resposta é rápida.'},
   {c:'Cap 42',q:'Por que o aumento da ventilação no início do exercício é considerado neurogênico?',a:'O córtex motor envia, ao mesmo tempo, o comando aos músculos esqueléticos e impulsos colaterais aos centros respiratórios. Assim, a ventilação aumenta antes de haver mudança relevante de PaCO₂, PaO₂ ou pH.\n\nEsse controle antecipatório chama-se feedforward. Depois, aferências de músculos e articulações e o controle químico realizam o ajuste fino.'},
   {c:'Cap 42',q:'Qual o mecanismo da respiração de Cheyne-Stokes?',a:'Há atraso entre a alteração dos gases no pulmão e sua detecção pelo cérebro. A hiperventilação reduz CO₂, mas o sinal inibitório chega tarde e causa apneia; durante a apneia o CO₂ sobe, e o estímulo também chega tarde, provocando nova hiperventilação.\n\nO ciclo dura cerca de 40–60 segundos. É favorecido por insuficiência cardíaca grave, que prolonga a circulação, ou por controle respiratório excessivamente sensível.'},
+  {"c": "Cap 46", "q": "Qual é a ideia central do sistema nervoso apresentada no início do capítulo?", "a": "O sistema nervoso recebe grande quantidade de informações sensoriais, integra essas informações e determina a resposta do organismo. Portanto, não funciona apenas como uma rede de transmissão: sua função essencial é controlar, selecionar e processar informação."},
+  {"c": "Cap 46", "q": "Quantos neurônios e quantas sinapses podem existir segundo o roteiro da aula?", "a": "O SNC contém mais de 100 bilhões de neurônios. O número de conexões por neurônio varia muito: de algumas centenas até aproximadamente 200.000 sinapses, dependendo do tipo neuronal."},
+  {"c": "Cap 46", "q": "O que significa organização divergente da saída de um neurônio?", "a": "A saída percorre um único axônio, mas esse axônio pode se ramificar em múltiplas fibras e distribuir o sinal para diferentes regiões. Um único neurônio, portanto, pode influenciar vários alvos."},
+  {"c": "Cap 46", "q": "Qual a diferença entre neurônio aferente, eferente e interneurônio?", "a": "Aferente ou sensorial: leva estímulos dos receptores ao SNC. Eferente ou motor: leva respostas do SNC aos efetores. Interneurônio ou associativo: conecta neurônios dentro do SNC e participa do processamento entre entrada e saída."},
+  {"c": "Cap 46", "q": "Quais formas de neurônios são mostradas no slide?", "a": "Unipolar, bipolar, pseudounipolar, multipolar e anaxônica. A classificação é morfológica: compara a organização do corpo celular, dendritos e axônio."},
+  {"c": "Cap 46", "q": "Como se organiza o sistema nervoso em SNC e SNP?", "a": "SNC: encéfalo e medula espinal. SNP: nervos, gânglios, plexos entéricos e receptores sensitivos. Funcionalmente, o SNP possui uma porção sensitiva/aferente que leva informação ao SNC e uma porção motora/eferente que leva comandos às células-alvo."},
+  {"c": "Cap 46", "q": "Como a porção motora eferente se subdivide?", "a": "Em sistema nervoso somático, de ação voluntária sobre músculo esquelético, e sistema nervoso autônomo, de ação involuntária. No esquema da aula, o autônomo inclui simpático, parassimpático e entérico."},
+  {"c": "Cap 46", "q": "Quais funções corticais foram atribuídas ao lobo frontal, parietal, temporal, occipital e à ínsula?", "a": "Frontal: motricidade, planejamento, decisões, personalidade, controle de impulsos e área de Broca. Parietal: sensações somáticas e percepção corporal. Temporal: audição, memória e compreensão da linguagem, área de Wernicke. Occipital: visão. Ínsula: interocepção, gosto, componente emocional da dor, emoções e consciência corporal."},
+  {"c": "Cap 46", "q": "Para quais níveis do SNC a informação sensorial pode ser conduzida?", "a": "Para todos os níveis da medula espinal, formação reticular do bulbo/ponte/mesencéfalo, cerebelo, tálamo e áreas do córtex cerebral. O ponto é que a informação sensorial se distribui por múltiplos níveis."},
+  {"c": "Cap 46", "q": "Quais são os três grandes alvos da porção motora do sistema nervoso?", "a": "1) Contração de músculos esqueléticos. 2) Contração da musculatura lisa dos órgãos internos. 3) Secreção por glândulas exócrinas e endócrinas."},
+  {"c": "Cap 46", "q": "O que é função integrativa do sistema nervoso?", "a": "É o processamento e a canalização da informação aferente para gerar respostas mentais e motoras apropriadas. O sistema nervoso seleciona o que é relevante e direciona a informação importante para regiões integrativas e motoras."},
+  {"c": "Cap 46", "q": "O que é facilitação no contexto da memória?", "a": "Quando sinais passam repetidamente por determinada sequência de sinapses, essas sinapses tornam-se mais capazes de transmitir o mesmo tipo de sinal no futuro. A aula chama esse aumento de capacidade de transmissão de facilitação e o relaciona ao armazenamento de informação."},
+  {"c": "Cap 46", "q": "Quais são os três níveis funcionais do SNC?", "a": "1) Nível medular. 2) Nível encefálico inferior ou subcortical. 3) Nível encefálico superior ou cortical. Eles atuam de forma integrada por vias ascendentes e descendentes."},
+  {"c": "Cap 46", "q": "Quais funções o nível medular pode executar?", "a": "Movimentos rítmicos como marcha, reflexos protetores, reflexos posturais e controle vegetativo de vasos sanguíneos, digestão e excreção urinária. A medula não é apenas um conduto passivo."},
+  {"c": "Cap 46", "q": "Qual é a relação funcional entre córtex e estruturas subcorticais?", "a": "O córtex é essencial para grande parte dos processos mentais e armazena muitas memórias, mas não trabalha sozinha. As estruturas subcorticais participam da vigília cortical e cooperam continuamente com o córtex."},
+  {"c": "Cap 46", "q": "O que pode acontecer com um impulso nervoso ao chegar a uma sinapse?", "a": "Ele pode ser bloqueado, transformado de um impulso único em impulsos repetitivos ou integrado com impulsos de outras neurônios para gerar padrões complexos."},
+  {"c": "Cap 46", "q": "Qual a diferença essencial entre sinapse química e elétrica?", "a": "Na química, um neurônio libera neurotransmissor que atua em receptores do neurônio seguinte, podendo excitar, inibir ou modificar sua sensibilidade. Na elétrica, gap junctions permitem passagem direta da corrente elétrica entre células."},
+  {"c": "Cap 46", "q": "Quais elementos aparecem no esquema da sinapse química do slide?", "a": "Potencial de ação no terminal pré-sináptico, Ca²⁺, vesículas sinápticas, neurotransmissor, receptores ionotrópicos e metabotrópicos, íons e segundos mensageiros. O esquema mostra que a resposta pode alterar potencial de membrana, cascatas bioquímicas ou expressão gênica."}
 ];
 
 const fcGrid = document.getElementById('flashcard-grid');
@@ -1744,6 +2002,26 @@ const QD=[
    ex:'Na apneia obstrutiva, existe comando respiratório e esforço dos músculos, mas a via aérea superior colapsa: há tentativa de inspirar sem fluxo adequado. Na apneia central, o problema é a interrupção transitória do comando do sistema nervoso central: durante o episódio, faltam fluxo e esforço respiratório.\n\nUma imagem mental útil: na obstrutiva, a “bomba” tenta funcionar, mas o tubo está fechado; na central, o tubo pode estar aberto, mas a bomba não recebe comando. Algumas pessoas apresentam eventos mistos, com componentes dos dois mecanismos.'},
   {t:'ab',c:'42',n:78,q:'Por que os quimiorreceptores periféricos são importantes no início do exercício, embora o controle central do dióxido de carbono seja mais potente?',
    ex:'Os corpos carotídeos e aórticos recebem sangue arterial e respondem rapidamente a pequenas alterações de oxigênio, dióxido de carbono e pH. Essa velocidade ajuda a detectar e corrigir os primeiros desvios enquanto a produção metabólica muda de forma abrupta.\n\nOs quimiorreceptores centrais exercem grande influência sustentada sobre a ventilação, mas dependem da passagem do dióxido de carbono para o líquido cefalorraquidiano e da alteração local do pH. No exercício, os sensores periféricos complementam o comando neurogênico e ajudam no ajuste fino precoce.'},
+  {"t": "mc", "c": "46", "n": 1, "q": "Qual sequência representa melhor o fluxo funcional básico descrito para o sistema nervoso?", "o": [{"l": "A", "v": "Efetor → eferente → integração → aferente → receptor"}, {"l": "B", "v": "Receptor → aferente → integração → eferente → efetor"}, {"l": "C", "v": "Córtex → receptor → medula → sinapse → aferente"}, {"l": "D", "v": "Aferente → receptor → efetor → córtex → eferente"}], "cr": "B", "ex": "O roteiro organiza o sistema nervoso em entrada sensorial, processamento e resposta. O receptor detecta a informação; a via aferente leva o sinal ao SNC; circuitos integrativos processam o estímulo; a via eferente leva o comando ao efetor."},
+  {"t": "mc", "c": "46", "n": 2, "q": "Segundo a aula, o SNC contém mais de aproximadamente:", "o": [{"l": "A", "v": "1 milhão de neurônios"}, {"l": "B", "v": "100 milhões de neurônios"}, {"l": "C", "v": "100 bilhões de neurônios"}, {"l": "D", "v": "10 trilhões de neurônios"}], "cr": "C", "ex": "O slide informa que o SNC contém mais de 100 bilhões de neurônios. Também destaca que o número de conexões pode variar de algumas centenas até cerca de 200.000 sinapses por neurônio, conforme o tipo."},
+  {"t": "tf", "c": "46", "n": 3, "q": "Uma neurônio pode ter um único axônio que se ramifica e envia sinais para diferentes regiões.", "cr": "V", "ex": "VERDADEIRO. O slide chama essa organização de divergente: a saída percorre um axônio, mas o axônio pode se ramificar em múltiplas fibras e distribuir o sinal para vários alvos."},
+  {"t": "mc", "c": "46", "n": 4, "q": "Qual alternativa associa corretamente o tipo funcional de neurônio à sua direção principal?", "o": [{"l": "A", "v": "Aferente: SNC → efetor"}, {"l": "B", "v": "Eferente: receptor → SNC"}, {"l": "C", "v": "Interneurônio: conecta circuitos dentro do SNC"}, {"l": "D", "v": "Interneurônio: conduz exclusivamente sensações especiais"}], "cr": "C", "ex": "Interneurônios conectam neurônios dentro do SNC e participam do processamento. Aferentes levam sinais dos receptores ao SNC; eferentes levam respostas do SNC aos efetores."},
+  {"t": "mc", "c": "46", "n": 5, "q": "Qual conjunto contém apenas formas neuronais apresentadas no slide?", "o": [{"l": "A", "v": "Unipolar, bipolar, pseudounipolar, multipolar e anaxônica"}, {"l": "B", "v": "Piramidal, estrelada, fusiforme, colunar e glomerular"}, {"l": "C", "v": "Aferente, eferente, somática, autônoma e entérica"}, {"l": "D", "v": "Cortical, medular, bulbar, pontina e talâmica"}], "cr": "A", "ex": "A classificação morfológica da aula mostra unipolar, bipolar, pseudounipolar, multipolar e anaxônica."},
+  {"t": "tf", "c": "46", "n": 6, "q": "O SNP é formado apenas por nervos cranianos e espinais.", "cr": "F", "ex": "FALSO. O esquema do SNP inclui nervos, gânglios, plexos entéricos e receptores sensitivos. Os nervos são parte importante, mas não são os únicos componentes."},
+  {"t": "mc", "c": "46", "n": 7, "q": "No esquema da porção motora eferente, qual divisão está relacionada à ação voluntária sobre músculo esquelético?", "o": [{"l": "A", "v": "Sistema nervoso somático"}, {"l": "B", "v": "Sistema nervoso simpático"}, {"l": "C", "v": "Sistema nervoso parassimpático"}, {"l": "D", "v": "Sistema nervoso entérico"}], "cr": "A", "ex": "O sistema nervoso somático é mostrado como voluntário e relacionado ao músculo esquelético. O sistema nervoso autônomo é involuntário e inclui simpático, parassimpático e entérico no esquema."},
+  {"t": "mc", "c": "46", "n": 8, "q": "Qual lobo cortical é associado no slide à área de Broca?", "o": [{"l": "A", "v": "Frontal"}, {"l": "B", "v": "Parietal"}, {"l": "C", "v": "Temporal"}, {"l": "D", "v": "Occipital"}], "cr": "A", "ex": "O lobo frontal é associado a funções motoras, planejamento, tomada de decisões, personalidade, controle de impulsos e área de Broca."},
+  {"t": "mc", "c": "46", "n": 9, "q": "Qual estrutura cortical é destacada por interocepção, gosto e dimensão emocional/subjetiva da dor?", "o": [{"l": "A", "v": "Lobo occipital"}, {"l": "B", "v": "Ínsula"}, {"l": "C", "v": "Lobo parietal"}, {"l": "D", "v": "Cerebelo"}], "cr": "B", "ex": "A ínsula é apresentada com funções de interocepção, processamento gustativo, percepção visceral, componente emocional da dor, emoções e consciência corporal."},
+  {"t": "tf", "c": "46", "n": 10, "q": "A informação sensorial somática é conduzida exclusivamente ao córtex cerebral.", "cr": "F", "ex": "FALSO. A aula enfatiza que ela alcança múltiplos níveis: medula espinal, formação reticular de bulbo/ponte/mesencéfalo, cerebelo, tálamo e áreas corticais."},
+  {"t": "mc", "c": "46", "n": 11, "q": "Qual NÃO é um dos três alvos gerais citados para a porção motora do sistema nervoso?", "o": [{"l": "A", "v": "Contração de músculos esqueléticos"}, {"l": "B", "v": "Contração de musculatura lisa"}, {"l": "C", "v": "Secreção por glândulas"}, {"l": "D", "v": "Formação de receptores sensoriais periféricos"}], "cr": "D", "ex": "Os três alvos citados são músculos esqueléticos, musculatura lisa e glândulas exócrinas/endócrinas. Formação de receptores não aparece como um desses alvos motores."},
+  {"t": "mc", "c": "46", "n": 12, "q": "O que a aula denomina função integrativa do sistema nervoso?", "o": [{"l": "A", "v": "Apenas geração de potenciais de ação no axônio"}, {"l": "B", "v": "Canalização e processamento de informação para produzir respostas apropriadas"}, {"l": "C", "v": "Somente armazenamento de memórias no córtex"}, {"l": "D", "v": "Apenas condução motora pela medula"}], "cr": "B", "ex": "Função integrativa é o processamento da informação aferente, sua seleção como relevante ou irrelevante e sua canalização para regiões capazes de produzir respostas mentais e motoras apropriadas."},
+  {"t": "tf", "c": "46", "n": 13, "q": "No contexto do capítulo, facilitação significa que certas sinapses tornam-se mais capazes de transmitir um mesmo tipo de sinal após passagens prévias por aquela sequência.", "cr": "V", "ex": "VERDADEIRO. Essa é a definição apresentada no slide de memória: a passagem repetida por uma sequência de sinapses aumenta a capacidade de transmissão futura do mesmo tipo de sinal."},
+  {"t": "mc", "c": "46", "n": 14, "q": "Qual alternativa reúne corretamente os três níveis funcionais do SNC?", "o": [{"l": "A", "v": "Periférico, medular e autonômico"}, {"l": "B", "v": "Medular, encefálico inferior/subcortical e encefálico superior/cortical"}, {"l": "C", "v": "Somático, simpático e parassimpático"}, {"l": "D", "v": "Telencefálico, diencefálico e periférico"}], "cr": "B", "ex": "O roteiro divide as funções do SNC em nível medular, nível encefálico inferior ou subcortical e nível encefálico superior ou cortical."},
+  {"t": "mc", "c": "46", "n": 15, "q": "Qual função é destacada como exemplo do nível medular?", "o": [{"l": "A", "v": "Compreensão da linguagem"}, {"l": "B", "v": "Processamento visual primário"}, {"l": "C", "v": "Reflexo de retirada diante de estímulo doloroso"}, {"l": "D", "v": "Planejamento e tomada de decisões"}], "cr": "C", "ex": "O nível medular possui circuitos próprios. Entre os exemplos citados estão marcha, reflexos protetores como retirada, reflexos posturais e controles vegetativos."},
+  {"t": "tf", "c": "46", "n": 16, "q": "Os níveis medular, subcortical e cortical funcionam isoladamente e um nível superior substitui as funções básicas do inferior.", "cr": "F", "ex": "FALSO. A aula afirma o oposto: os níveis são conectados por vias ascendentes e descendentes. O nível superior refina e torna mais preciso o trabalho do inferior, sem substituir suas funções básicas."},
+  {"t": "mc", "c": "46", "n": 17, "q": "Ao chegar a uma sinapse, um impulso nervoso pode:", "o": [{"l": "A", "v": "Somente atravessar sem modificação"}, {"l": "B", "v": "Ser bloqueado, transformado em impulsos repetitivos ou integrado a outros impulsos"}, {"l": "C", "v": "Somente ser convertido em hormônio"}, {"l": "D", "v": "Somente retornar ao receptor periférico"}], "cr": "B", "ex": "O slide apresenta três possibilidades: bloqueio da transmissão, transformação de um impulso único em impulsos repetitivos e integração com outros impulsos para formar padrões complexos."},
+  {"t": "mc", "c": "46", "n": 18, "q": "Na sinapse química, o neurotransmissor atua principalmente sobre:", "o": [{"l": "A", "v": "Proteínas receptoras da membrana do neurônio seguinte"}, {"l": "B", "v": "DNA do neurônio pré-sináptico antes de ser liberado"}, {"l": "C", "v": "A mielina da mesma neurônio"}, {"l": "D", "v": "Somente gap junctions"}], "cr": "A", "ex": "Na sinapse química, a neurônio pré-sináptico libera um neurotransmissor que age em proteínas receptoras da membrana do neurônio pós-sináptico, podendo excitar, inibir ou modificar sua sensibilidade."},
+  {"t": "mc", "c": "46", "n": 19, "q": "Qual estrutura caracteriza a sinapse elétrica no slide?", "o": [{"l": "A", "v": "Vesículas secretoras sem contato entre células"}, {"l": "B", "v": "Gap junctions que formam canais entre células"}, {"l": "C", "v": "Somente receptores metabotrópicos"}, {"l": "D", "v": "Somente receptores ionotrópicos"}], "cr": "B", "ex": "Sinapses elétricas são caracterizadas por canais em junções comunicantes, ou gap junctions, que conduzem eletricidade diretamente de uma célula à seguinte."},
+  {"t": "tf", "c": "46", "n": 20, "q": "No SNC humano, quase todas as sinapses usadas para transmissão de sinais são químicas.", "cr": "V", "ex": "VERDADEIRO. O material ressalta que sinapses elétricas são muito menos frequentes no SNC e que a grande maioria das sinapses de transmissão de sinais é química."}
 ];
 
 // Mantém as questões agrupadas por capítulo e calcula a numeração real automaticamente.
