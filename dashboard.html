@@ -1549,29 +1549,41 @@ function colKey(materia, tipo) {
 
 function hasAccess(materia, tipo) {
   if (!profile) return false;
+  if (profile.is_admin) return true;
+
   var col = colKey(materia, tipo);
   var pacoteKey = MATERIAS_S4.indexOf(materia) !== -1 ? "pacote_s4_" + tipo : "pacote_" + tipo;
-  
-  // ── [M2] DUAL-MODE: Tenta acessos PRIMEIRO ────────────────────────────────
-  // Verifica se tem registro em acessos cache
-  var chaveAcesso = col;  // ex: "bioquimica_p2"
-  var acesso = acessosCache[chaveAcesso];
-  
+
+  // Nova tabela acessos: se existir registro válido, é fonte confiável.
+  var acesso = acessosCache[col];
   if (acesso) {
-    // Encontrou em acessos — verifica expiração
-    if (!acesso.expira_em) return true;  // Sem expiração = acesso permanente
-    return new Date(acesso.expira_em) > new Date();  // Tem expiração — verifica
+    if (!acesso.expira_em) return true;
+    if (new Date(acesso.expira_em) > new Date()) return true;
   }
-  
-  // ── Fallback: Sistema antigo (profiles) ────────────────────────────────────
-  if (!profile[col] && !profile[pacoteKey]) return false;
-  
-  // Verifica expiração individual do resumo (profiles)
-  var expiraCol = col + "_expira";
-  var expiraPacote = pacoteKey + "_expira";
-  var expira = profile[expiraCol] || profile[expiraPacote] || profile.acesso_expira_em;
-  if (!expira) return true;
-  return new Date(expira) > new Date();
+  var acessoPacote = acessosCache[pacoteKey];
+  if (acessoPacote) {
+    if (!acessoPacote.expira_em) return true;
+    if (new Date(acessoPacote.expira_em) > new Date()) return true;
+  }
+
+  function presente(k) {
+    var arr = Array.isArray(profile.resumos_presente) ? profile.resumos_presente : [];
+    return arr.indexOf(k) >= 0;
+  }
+  function validoNoProfile(k) {
+    if (!k || !profile[k]) return false;
+    var exp = profile[k + "_expira"];
+    if (exp) return new Date(exp) > new Date();
+
+    // Só aceita ausência de _expira quando for cortesia explicitamente marcada.
+    if (presente(k)) {
+      if (profile.acesso_expira_em) return new Date(profile.acesso_expira_em) > new Date();
+      return true;
+    }
+    return false;
+  }
+
+  return validoNoProfile(col) || validoNoProfile(pacoteKey);
 }
 
 function daysLeftForResumo(materia, tipo) {
@@ -1591,7 +1603,12 @@ function daysLeftForResumo(materia, tipo) {
   // ── Fallback: Sistema antigo (profiles) ────────────────────────────────────
   var expiraCol = col + "_expira";
   var expiraPacote = pacoteKey + "_expira";
-  var expira = profile[expiraCol] || profile[expiraPacote] || profile.acesso_expira_em;
+  var expira = profile[expiraCol] || profile[expiraPacote];
+  if (!expira) {
+    var arr = Array.isArray(profile.resumos_presente) ? profile.resumos_presente : [];
+    var cortesia = arr.indexOf(col) >= 0 || arr.indexOf(pacoteKey) >= 0;
+    if (cortesia) expira = profile.acesso_expira_em || null;
+  }
   if (!expira) return null;
   var diff = new Date(expira) - new Date();
   return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
@@ -1622,7 +1639,7 @@ function daysLeft() {
     "eletrocardiograma_p1","eletrocardiograma_p2","eletrocardiograma_final"];
   COLS.forEach(function(col) {
     if (!profile[col]) return;
-    var expira = profile[col + "_expira"] || profile.acesso_expira_em;
+    var expira = profile[col + "_expira"];
     if (!expira) return;
     var diff = new Date(expira) - new Date();
     var days = Math.max(0, Math.ceil(diff / (1000*60*60*24)));
@@ -2241,7 +2258,7 @@ function hasAccessS1(materia) {
   }
   // Fallback: profiles
   if (!profile[col]) return false;
-  var expira = profile[col + "_expira"] || profile.acesso_expira_em;
+  var expira = profile[col + "_expira"];
   if (!expira) return true;
   return new Date(expira) > new Date();
 }
@@ -2254,7 +2271,7 @@ function daysLeftForResumoS1(materia) {
     var diff = new Date(acesso.expira_em) - new Date();
     return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
   }
-  var expira = profile[col + "_expira"] || profile.acesso_expira_em;
+  var expira = profile[col + "_expira"];
   if (!expira) return null;
   var diff = new Date(expira) - new Date();
   return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
@@ -2588,7 +2605,7 @@ function hasAccessS2(materia) {
     return new Date(acesso.expira_em) > new Date();
   }
   if (!profile[col]) return false;
-  var expira = profile[col + "_expira"] || profile.acesso_expira_em;
+  var expira = profile[col + "_expira"];
   if (!expira) return true;
   return new Date(expira) > new Date();
 }
@@ -2601,7 +2618,7 @@ function daysLeftForResumoS2(materia) {
     var diff = new Date(acesso.expira_em) - new Date();
     return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
   }
-  var expira = profile[col + "_expira"] || profile.acesso_expira_em;
+  var expira = profile[col + "_expira"];
   if (!expira) return null;
   var diff = new Date(expira) - new Date();
   return Math.max(0, Math.ceil(diff / (1000*60*60*24)));

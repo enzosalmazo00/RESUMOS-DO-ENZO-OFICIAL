@@ -135,6 +135,35 @@
     .price-prefix{font-size:12px;color:rgba(125,211,232,0.5);font-weight:600;}
     .empty-state{text-align:center;padding:24px;color:rgba(125,211,232,0.3);font-size:13px;}
 
+
+    /* ── ANALYTICS / VENDAS ── */
+    .sales-filter-card{padding:18px;border-radius:16px;border:1px solid var(--card-border);background:linear-gradient(145deg,rgba(34,211,238,.05),rgba(255,255,255,.015));margin-bottom:16px;}
+    .sales-filter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end;}
+    .sales-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:14px 0 22px;}
+    .sales-kpi{padding:15px 16px;border-radius:14px;border:1px solid rgba(34,211,238,.13);background:rgba(34,211,238,.035);}
+    .sales-kpi.highlight{border-color:rgba(74,222,128,.24);background:rgba(74,222,128,.055);}
+    .sales-kpi .k-label{font-size:9px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:rgba(125,211,232,.48);margin-bottom:5px;}
+    .sales-kpi .k-value{font-size:22px;font-weight:700;color:#e2f8fc;letter-spacing:-.7px;}
+    .sales-kpi .k-sub{font-size:9px;color:rgba(125,211,232,.35);margin-top:2px;}
+    .sales-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;}
+    .break-card{border:1px solid var(--card-border);border-radius:15px;background:var(--card);overflow:hidden;}
+    .break-head{padding:12px 14px;border-bottom:1px solid rgba(34,211,238,.08);font-size:11px;font-weight:700;color:#d8f6fb;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .break-list{max-height:370px;overflow:auto;}
+    .break-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid rgba(34,211,238,.05);}
+    .break-row:first-child{border-top:0;}
+    .break-name{font-size:11px;color:#c9eef5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .break-count{font-size:10px;color:rgba(125,211,232,.55);}
+    .break-value{font-size:11px;font-weight:700;color:#4ade80;white-space:nowrap;}
+    .sales-note{font-size:10px;color:rgba(125,211,232,.4);line-height:1.55;margin-top:7px;}
+    .filter-reset{padding:10px 13px;border-radius:10px;border:1px solid rgba(248,113,113,.25);background:rgba(248,113,113,.06);color:#fca5a5;font-family:Poppins,sans-serif;font-size:11px;font-weight:600;cursor:pointer;}
+    .filter-reset:hover{background:rgba(248,113,113,.12);}
+    .period-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+    .period-chip{padding:6px 10px;border-radius:999px;border:1px solid rgba(34,211,238,.14);background:rgba(34,211,238,.035);color:rgba(125,211,232,.65);font:600 10px Poppins,sans-serif;cursor:pointer;}
+    .period-chip.active{border-color:#22d3ee;background:rgba(34,211,238,.14);color:#fff;}
+    .hidden-filter{display:none!important;}
+    @media(max-width:800px){.sales-breakdown{grid-template-columns:1fr}.sales-filter-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){.sales-filter-grid{grid-template-columns:1fr}.sales-kpis{grid-template-columns:1fr 1fr}.break-row{grid-template-columns:minmax(0,1fr) auto}}
+
     /* ── OVERVIEW: Recent Activity ── */
     .activity-list{display:flex;flex-direction:column;gap:6px;}
     .activity-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:var(--card);border:1px solid rgba(34,211,238,0.06);font-size:12px;color:#c0f0f8;}
@@ -298,16 +327,98 @@
 
   <!-- ═══ TAB: PAGAMENTOS ═══ -->
   <div class="tab-panel" id="panel-pagamentos">
-    <div class="section-title">&#9989; Pagamentos Aprovados</div>
+    <div class="section-title">&#128202; Análise de Vendas</div>
+
+    <div class="sales-filter-card">
+      <div class="period-chips">
+        <button class="period-chip active" data-sales-period="all" onclick="setSalesPeriod('all',this)">Tudo</button>
+        <button class="period-chip" data-sales-period="today" onclick="setSalesPeriod('today',this)">Hoje</button>
+        <button class="period-chip" data-sales-period="7d" onclick="setSalesPeriod('7d',this)">7 dias</button>
+        <button class="period-chip" data-sales-period="month" onclick="setSalesPeriod('month',this)">Este mês</button>
+        <button class="period-chip" data-sales-period="prevmonth" onclick="setSalesPeriod('prevmonth',this)">Mês passado</button>
+      </div>
+      <div class="sales-filter-grid">
+        <div class="form-group">
+          <div class="form-label">Mês específico</div>
+          <input class="form-input" type="month" id="salesMonth" onchange="setSalesMonthFilter()">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Semestre vendido</div>
+          <select class="form-input" id="salesSemester" onchange="renderSalesAnalytics()">
+            <option value="">Todos os semestres</option>
+            <option value="s4">4º semestre</option>
+            <option value="s3">3º semestre</option>
+            <option value="s2">2º semestre</option>
+            <option value="s1">1º semestre</option>
+            <option value="curso">Cursos</option>
+            <option value="outro">Outros</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Prova / etapa</div>
+          <select class="form-input" id="salesExam" onchange="renderSalesAnalytics()">
+            <option value="">P1 + P2 + Final</option>
+            <option value="p1">P1</option>
+            <option value="p2">P2</option>
+            <option value="final">Final</option>
+            <option value="unico">Resumo único / curso</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Matéria / produto</div>
+          <select class="form-input" id="salesSubject" onchange="renderSalesAnalytics()">
+            <option value="">Todas as matérias</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Buscar aluno</div>
+          <input class="form-input" id="salesSearch" placeholder="Email..." oninput="renderSalesAnalytics()">
+        </div>
+        <div style="display:flex;align-items:flex-end;">
+          <button class="filter-reset" onclick="resetSalesFilters()">Limpar filtros</button>
+        </div>
+      </div>
+      <div class="sales-note">Os indicadores abaixo consideram somente pagamentos <b>aprovados</b>. Em combos, o faturamento por matéria é rateado igualmente entre os itens do pedido para evitar somar o mesmo valor várias vezes.</div>
+    </div>
+
+    <div class="sales-kpis">
+      <div class="sales-kpi highlight"><div class="k-label">Receita filtrada</div><div class="k-value" id="salesRevenue">R$ 0,00</div><div class="k-sub" id="salesPeriodLabel">período selecionado</div></div>
+      <div class="sales-kpi"><div class="k-label">Vendas aprovadas</div><div class="k-value" id="salesApprovedCount">0</div><div class="k-sub">pedidos aprovados</div></div>
+      <div class="sales-kpi"><div class="k-label">Hoje</div><div class="k-value" id="salesToday">R$ 0,00</div><div class="k-sub" id="salesTodayCount">0 vendas</div></div>
+      <div class="sales-kpi"><div class="k-label">Este mês</div><div class="k-value" id="salesThisMonth">R$ 0,00</div><div class="k-sub" id="salesThisMonthCount">0 vendas</div></div>
+      <div class="sales-kpi"><div class="k-label">Ticket médio</div><div class="k-value" id="salesTicket">R$ 0,00</div><div class="k-sub">média por pedido</div></div>
+      <div class="sales-kpi"><div class="k-label">Itens vendidos</div><div class="k-value" id="salesItems">0</div><div class="k-sub">matérias incluídas nos pedidos</div></div>
+    </div>
+
+    <div class="sales-breakdown">
+      <div class="break-card">
+        <div class="break-head"><span>📚 Vendas por matéria</span><span id="subjectBreakTotal"></span></div>
+        <div class="break-list" id="subjectBreakdown"><div class="loading">Carregando...</div></div>
+      </div>
+      <div class="break-card">
+        <div class="break-head"><span>🎓 Vendas por semestre</span><span id="semesterBreakTotal"></span></div>
+        <div class="break-list" id="semesterBreakdown"><div class="loading">Carregando...</div></div>
+      </div>
+      <div class="break-card">
+        <div class="break-head"><span>🗓️ Vendas por dia</span><span>últimos dias do filtro</span></div>
+        <div class="break-list" id="dayBreakdown"><div class="loading">Carregando...</div></div>
+      </div>
+      <div class="break-card">
+        <div class="break-head"><span>🧪 P1 · P2 · Final</span><span id="examBreakTotal"></span></div>
+        <div class="break-list" id="examBreakdown"><div class="loading">Carregando...</div></div>
+      </div>
+    </div>
+
+    <div class="section-title">&#9989; Pagamentos aprovados — filtro atual</div>
     <div class="table-wrap desktop-only">
-      <table><thead><tr><th>Email</th><th>Produto</th><th>Valor</th><th>Data</th></tr></thead>
-      <tbody id="pagamentosBody"><tr><td colspan="4" class="loading"><span class="spinner-inline"></span> Carregando...</td></tr></tbody></table>
+      <table><thead><tr><th>Email</th><th>Sem.</th><th>Produto</th><th>Valor</th><th>Data</th></tr></thead>
+      <tbody id="pagamentosBody"><tr><td colspan="5" class="loading"><span class="spinner-inline"></span> Carregando...</td></tr></tbody></table>
     </div>
     <div class="cards-wrap" id="pagamentosCards">
       <div class="order-card"><div class="loading"><span class="spinner-inline"></span> Carregando...</div></div>
     </div>
 
-    <div class="section-title" style="margin-top:24px;">&#128203; Todos os Pedidos</div>
+    <div class="section-title" style="margin-top:24px;">&#128203; Todos os pedidos recentes</div>
     <div class="table-wrap desktop-only">
       <table><thead><tr><th>Email</th><th>Produto</th><th>Valor</th><th>Status</th><th>Data</th></tr></thead>
       <tbody id="ordersBody"><tr><td colspan="5" class="loading"><span class="spinner-inline"></span> Carregando...</td></tr></tbody></table>
@@ -416,7 +527,8 @@
 var SUPABASE_URL="https://chqhdmjqnjjdatowfyif.supabase.co";
 var SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNocWhkbWpxbmpqZGF0b3dmeWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDc0MDAsImV4cCI6MjA5NTgyMzQwMH0.v_7y0YD9R1LvFJkz9Vr_zJX0_CE2lo8OY5xX-KtVcFk";
 var client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-var allAlunos=[],currentAluno=null,currentToggles={},currentPresente=[];
+var allAlunos=[],allOrders=[],currentAluno=null,currentToggles={},currentPresente=[];
+var salesPeriod='all';
 // ── CURSOS (gravam na tabela `acessos`, não em profiles) ──
 var CURSOS_COLS=[
   {key:"curso-peconhentos",label:"Curso Peçonhentos"}
@@ -480,7 +592,27 @@ var SEMESTRES = [
 
 // Flat list para compatibilidade (stats, filtros, etc.)
 var RESUMOS_COLS = [];
+
 SEMESTRES.forEach(function(s){ s.cols.forEach(function(c){ RESUMOS_COLS.push(c); }); });
+
+// Acesso ativo no Admin: flags de P1/P2/Final/pacotes só contam com _expira válido.
+// Isso evita exibir como ativo um acesso antigo apenas porque o booleano ficou true.
+function resumoAtivo(a,key){
+  if(!a || !a[key]) return false;
+  var isProva=/(?:_p1|_p2|_final)$/.test(key) || key.indexOf("pacote_")===0;
+  if(!isProva) return true;
+  var exp=a[key+"_expira"];
+  if(exp) return new Date(exp)>new Date();
+
+  // Sem _expira só conta se for cortesia explicitamente marcada.
+  var presentes=Array.isArray(a.resumos_presente)?a.resumos_presente:[];
+  if(presentes.indexOf(key)>=0){
+    if(a.acesso_expira_em) return new Date(a.acesso_expira_em)>new Date();
+    return true;
+  }
+  return false;
+}
+
 
 // ── TAB NAVIGATION ──
 window.switchAdminTab=function(tab){
@@ -536,7 +668,7 @@ async function loadAlunos(){
   renderStats();renderAlunos(allAlunos);
 }
 function renderStats(){
-  var ativos=allAlunos.filter(function(a){return RESUMOS_COLS.some(function(r){return a[r.key];});}).length;
+  var ativos=allAlunos.filter(function(a){return RESUMOS_COLS.some(function(r){return resumoAtivo(a,r.key);});}).length;
   var exp=allAlunos.filter(function(a){if(!a.acesso_expira_em)return false;var d=new Date(a.acesso_expira_em)-new Date();return d>0&&d<7*24*60*60*1000;}).length;
   document.getElementById("statAlunos").textContent=allAlunos.length;
   document.getElementById("statAtivos").textContent=ativos;
@@ -556,7 +688,7 @@ function renderAlunos(list){
     tbody.innerHTML="<tr><td colspan='5' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum aluno</td></tr>";cards.innerHTML=em;return;}
   var rows="",cds="";
   list.forEach(function(a){
-    var cnt=RESUMOS_COLS.filter(function(r){return a[r.key];}).length;
+    var cnt=RESUMOS_COLS.filter(function(r){return resumoAtivo(a,r.key);}).length;
     var ei=expInfo(a);var ll=a.last_login?new Date(a.last_login).toLocaleDateString("pt-BR"):"\u2014";
     var adm=a.is_admin?"<span class='badge badge-yellow' style='font-size:9px;margin-left:4px;'>Admin</span>":"";
     var bdg="<span class='badge "+(cnt>0?"badge-green":"badge-red")+"'>"+(cnt>0?cnt+" resumo"+(cnt>1?"s":""):"Nenhum")+"</span>";
@@ -569,8 +701,8 @@ window.filterAlunos=function(){
   var s=document.getElementById("searchInput").value.toLowerCase();
   var f=document.getElementById("filterSelect").value;
   var r=allAlunos.filter(function(a){if(s&&!(a.email||"").toLowerCase().includes(s))return false;
-    if(f==="active")return RESUMOS_COLS.some(function(r){return a[r.key];});
-    if(f==="noAccess")return!RESUMOS_COLS.some(function(r){return a[r.key];});
+    if(f==="active")return RESUMOS_COLS.some(function(r){return resumoAtivo(a,r.key);});
+    if(f==="noAccess")return!RESUMOS_COLS.some(function(r){return resumoAtivo(a,r.key);});
     if(f==="expiring"){if(!a.acesso_expira_em)return false;var d=new Date(a.acesso_expira_em)-new Date();return d>0&&d<7*24*60*60*1000;}
     return true;});
   renderAlunos(r);
@@ -578,27 +710,271 @@ window.filterAlunos=function(){
 
 // ── LOAD ORDERS ──
 async function loadOrders(){
-  var r=await client.from("orders").select("*, profiles(email)").order("criado_em",{ascending:false}).limit(50);
+  var data=[],from=0,pageSize=1000;
+  while(true){
+    var r=await client.from("orders")
+      .select("*, profiles(email)")
+      .order("criado_em",{ascending:false})
+      .range(from,from+pageSize-1);
+    if(r.error){console.error("orders:",r.error);break;}
+    var chunk=r.data||[];
+    data=data.concat(chunk);
+    if(chunk.length<pageSize)break;
+    from+=pageSize;
+  }
+  allOrders=data;
+  populateSalesSubjects();
+  renderSalesAnalytics();
+  renderAllOrders();
+}
+
+function money(v){
+  var n=parseFloat(v||0);
+  return "R$ "+n.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function localDate(o){return new Date(o.criado_em);}
+function orderEmail(o){return o.profiles&&o.profiles.email?o.profiles.email:"—";}
+function productKeys(o){return String(o.produto_key||"").split(",").map(function(x){return x.trim();}).filter(Boolean);}
+function productNames(o){
+  var names=String(o.produto_nome||"").split(",").map(function(x){return x.trim();}).filter(Boolean);
+  var keys=productKeys(o);
+  if(names.length===keys.length&&names.length)return names;
+  return keys.map(prettyProduct);
+}
+function prettyProduct(k){
+  var map={
+    fisiologia_2:"Fisiologia II",bioquimica_2:"Bioquímica II",epidemiologia:"Epidemiologia",
+    nutricao:"Nutrição",microbiologia_2:"Microbiologia II",micro_pratica_2:"Micro Prática II",
+    eletrocardiograma:"Eletrocardiograma",bioquimica:"Bioquímica",biofisica:"Biofísica",
+    genetica:"Genética",fisiologia:"Fisiologia",microbiologia:"Microbiologia",
+    micro_pratica:"Micro Prática",imunologia:"Imunologia",curso_peconhentos:"Curso Peçonhentos",
+    "curso-peconhentos":"Curso Peçonhentos"
+  };
+  var base=k.replace(/_(p1|p2|final)$/,"");
+  var etapa=/_p1$/.test(k)?" — P1":/_p2$/.test(k)?" — P2":/_final$/.test(k)?" — Final":"";
+  return (map[base]||base.replace(/_/g," "))+etapa;
+}
+function semesterOfKey(k){
+  if(!k)return"outro";
+  if(k.indexOf("curso-")===0||k.indexOf("curso_")===0)return"curso";
+  if(/^(fisiologia_2|bioquimica_2|epidemiologia|nutricao|microbiologia_2|micro_pratica_2|eletrocardiograma)_(p1|p2|final)$/.test(k)||/^pacote_s4_/.test(k))return"s4";
+  if(/^(bioquimica|biofisica|genetica|fisiologia|microbiologia|micro_pratica|imunologia)_(p1|p2|final)$/.test(k)||/^pacote_(p1|p2|final)$/.test(k))return"s3";
+  if(/^(psicologia_salud|medicina_comunitaria|histologia_2|guarani|anatomia_2|bioestatistica)$/.test(k))return"s2";
+  if(/^(biologia_celular|embriologia|histologia_1|anatomia_1)$/.test(k))return"s1";
+  return"outro";
+}
+function semesterLabel(s){return s==="s4"?"4º semestre":s==="s3"?"3º semestre":s==="s2"?"2º semestre":s==="s1"?"1º semestre":s==="curso"?"Cursos":"Outros";}
+function orderSemesters(o){
+  var set={};
+  productKeys(o).forEach(function(k){set[semesterOfKey(k)]=1;});
+  return Object.keys(set);
+}
+function examOfKey(k){
+  if(/_p1$/.test(k)||k==="pacote_s4_p1"||k==="pacote_p1")return"p1";
+  if(/_p2$/.test(k)||k==="pacote_s4_p2"||k==="pacote_p2")return"p2";
+  if(/_final$/.test(k)||k==="pacote_s4_final"||k==="pacote_final")return"final";
+  return"unico";
+}
+function orderExams(o){
+  var set={};productKeys(o).forEach(function(k){set[examOfKey(k)]=1;});return Object.keys(set);
+}
+function baseSubjectFromKey(k){
+  if(/^pacote_/.test(k))return null;
+  return k.replace(/_(p1|p2|final)$/,"");
+}
+function subjectLabel(base){
+  return prettyProduct(base).replace(/ — (P1|P2|Final)$/,"");
+}
+function sameLocalDay(a,b){
+  return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
+}
+function isThisMonth(d,ref){
+  return d.getFullYear()===ref.getFullYear()&&d.getMonth()===ref.getMonth();
+}
+function periodMatches(d){
+  var now=new Date();
+  if(salesPeriod==="all")return true;
+  if(salesPeriod==="today")return sameLocalDay(d,now);
+  if(salesPeriod==="7d"){var min=new Date(now);min.setDate(min.getDate()-6);min.setHours(0,0,0,0);return d>=min&&d<=now;}
+  if(salesPeriod==="month")return isThisMonth(d,now);
+  if(salesPeriod==="prevmonth"){
+    var y=now.getFullYear(),m=now.getMonth()-1;if(m<0){m=11;y--;}
+    return d.getFullYear()===y&&d.getMonth()===m;
+  }
+  if(salesPeriod==="specific"){
+    var val=document.getElementById("salesMonth").value;
+    if(!val)return true;
+    var parts=val.split("-");return d.getFullYear()===+parts[0]&&d.getMonth()===+parts[1]-1;
+  }
+  return true;
+}
+function filteredApprovedOrders(){
+  var sem=document.getElementById("salesSemester").value;
+  var exam=document.getElementById("salesExam").value;
+  var subj=document.getElementById("salesSubject").value;
+  var search=document.getElementById("salesSearch").value.trim().toLowerCase();
+
+  return allOrders.filter(function(o){
+    if(o.status!=="approved")return false;
+    if(!periodMatches(localDate(o)))return false;
+    if(sem&&orderSemesters(o).indexOf(sem)<0)return false;
+    if(exam&&orderExams(o).indexOf(exam)<0)return false;
+    if(subj){
+      var hit=productKeys(o).some(function(k){return baseSubjectFromKey(k)===subj;});
+      if(!hit)return false;
+    }
+    if(search&&orderEmail(o).toLowerCase().indexOf(search)<0)return false;
+    return true;
+  });
+}
+function populateSalesSubjects(){
+  var sel=document.getElementById("salesSubject");if(!sel)return;
+  var current=sel.value,set={};
+  allOrders.filter(function(o){return o.status==="approved";}).forEach(function(o){
+    productKeys(o).forEach(function(k){var b=baseSubjectFromKey(k);if(b)set[b]=subjectLabel(b);});
+  });
+  var arr=Object.keys(set).sort(function(a,b){return set[a].localeCompare(set[b],"pt-BR");});
+  sel.innerHTML='<option value="">Todas as matérias</option>'+arr.map(function(k){return'<option value="'+k+'">'+set[k]+'</option>';}).join("");
+  if(set[current])sel.value=current;
+}
+window.setSalesPeriod=function(period,btn){
+  salesPeriod=period;
+  document.querySelectorAll(".period-chip").forEach(function(b){b.classList.remove("active");});
+  if(btn)btn.classList.add("active");
+  if(period!=="specific")document.getElementById("salesMonth").value="";
+  renderSalesAnalytics();
+};
+window.setSalesMonthFilter=function(){
+  salesPeriod=document.getElementById("salesMonth").value?"specific":"all";
+  document.querySelectorAll(".period-chip").forEach(function(b){b.classList.remove("active");});
+  renderSalesAnalytics();
+};
+window.resetSalesFilters=function(){
+  salesPeriod="all";
+  document.getElementById("salesMonth").value="";
+  document.getElementById("salesSemester").value="";
+  document.getElementById("salesExam").value="";
+  document.getElementById("salesSubject").value="";
+  document.getElementById("salesSearch").value="";
+  document.querySelectorAll(".period-chip").forEach(function(b){b.classList.toggle("active",b.dataset.salesPeriod==="all");});
+  renderSalesAnalytics();
+};
+function periodText(){
+  if(salesPeriod==="today")return"hoje";
+  if(salesPeriod==="7d")return"últimos 7 dias";
+  if(salesPeriod==="month")return"este mês";
+  if(salesPeriod==="prevmonth")return"mês passado";
+  if(salesPeriod==="specific"){
+    var v=document.getElementById("salesMonth").value;if(!v)return"período selecionado";
+    var p=v.split("-");return new Date(+p[0],+p[1]-1,1).toLocaleDateString("pt-BR",{month:"long",year:"numeric"});
+  }
+  return"histórico aprovado";
+}
+function allocatedItems(o){
+  var keys=productKeys(o).filter(function(k){return !/^pacote_/.test(k);});
+  if(!keys.length)keys=productKeys(o);
+  var n=Math.max(1,keys.length),share=parseFloat(o.valor||0)/n;
+  return keys.map(function(k){return{key:k,base:baseSubjectFromKey(k)||k,label:subjectLabel(baseSubjectFromKey(k)||k),share:share,sem:semesterOfKey(k),exam:examOfKey(k)};});
+}
+function addBreak(map,key,label,count,value){
+  if(!map[key])map[key]={label:label,count:0,value:0};
+  map[key].count+=count;map[key].value+=value;
+}
+function renderBreakdown(elId,map,sortMode){
+  var el=document.getElementById(elId);
+  var arr=Object.keys(map).map(function(k){return map[k];});
+  arr.sort(function(a,b){return sortMode==="date"?b.sort-a.sort:(b.value-a.value||b.count-a.count);});
+  if(!arr.length){el.innerHTML='<div class="empty-state">Nenhuma venda no filtro atual</div>';return;}
+  el.innerHTML=arr.map(function(x){
+    return '<div class="break-row"><div class="break-name" title="'+x.label+'">'+x.label+'</div><div class="break-count">'+x.count+' '+(x.count===1?"venda":"vendas")+'</div><div class="break-value">'+money(x.value)+'</div></div>';
+  }).join("");
+}
+function renderSalesAnalytics(){
+  if(!document.getElementById("salesRevenue"))return;
+  var approved=filteredApprovedOrders();
+  var revenue=approved.reduce(function(s,o){return s+parseFloat(o.valor||0);},0);
+  var itemCount=approved.reduce(function(s,o){return s+allocatedItems(o).length;},0);
+
+  var now=new Date();
+  var todayAll=allOrders.filter(function(o){return o.status==="approved"&&sameLocalDay(localDate(o),now);});
+  var monthAll=allOrders.filter(function(o){return o.status==="approved"&&isThisMonth(localDate(o),now);});
+  var todayRevenue=todayAll.reduce(function(s,o){return s+parseFloat(o.valor||0);},0);
+  var monthRevenue=monthAll.reduce(function(s,o){return s+parseFloat(o.valor||0);},0);
+
+  document.getElementById("salesRevenue").textContent=money(revenue);
+  document.getElementById("salesApprovedCount").textContent=approved.length;
+  document.getElementById("salesToday").textContent=money(todayRevenue);
+  document.getElementById("salesTodayCount").textContent=todayAll.length+" "+(todayAll.length===1?"venda":"vendas");
+  document.getElementById("salesThisMonth").textContent=money(monthRevenue);
+  document.getElementById("salesThisMonthCount").textContent=monthAll.length+" "+(monthAll.length===1?"venda":"vendas");
+  document.getElementById("salesTicket").textContent=money(approved.length?revenue/approved.length:0);
+  document.getElementById("salesItems").textContent=itemCount;
+  document.getElementById("salesPeriodLabel").textContent=periodText();
+
+  var subjects={},semesters={},days={},exams={};
+  approved.forEach(function(o){
+    var items=allocatedItems(o);
+    items.forEach(function(it){
+      addBreak(subjects,it.base,it.label,1,it.share);
+    });
+
+    var sems=orderSemesters(o),semShare=parseFloat(o.valor||0)/Math.max(1,sems.length);
+    sems.forEach(function(s){addBreak(semesters,s,semesterLabel(s),1,semShare);});
+
+    var exs=orderExams(o),exShare=parseFloat(o.valor||0)/Math.max(1,exs.length);
+    exs.forEach(function(e){
+      var lab=e==="p1"?"P1":e==="p2"?"P2":e==="final"?"Final":"Resumo único / curso";
+      addBreak(exams,e,lab,1,exShare);
+    });
+
+    var d=localDate(o),key=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    if(!days[key])days[key]={label:d.toLocaleDateString("pt-BR"),count:0,value:0,sort:new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime()};
+    days[key].count++;days[key].value+=parseFloat(o.valor||0);
+  });
+  renderBreakdown("subjectBreakdown",subjects);
+  renderBreakdown("semesterBreakdown",semesters);
+  renderBreakdown("examBreakdown",exams);
+  renderBreakdown("dayBreakdown",days,"date");
+  document.getElementById("subjectBreakTotal").textContent=Object.keys(subjects).length+" matérias";
+  document.getElementById("semesterBreakTotal").textContent=Object.keys(semesters).length+" grupos";
+  document.getElementById("examBreakTotal").textContent=approved.length+" pedidos";
+
+  // Overview global reflects ALL approved historical orders, not the active filter.
+  var approvedAll=allOrders.filter(function(o){return o.status==="approved";});
+  var totalAll=approvedAll.reduce(function(s,o){return s+parseFloat(o.valor||0);},0);
+  document.getElementById("statPagamentos").textContent=approvedAll.length;
+  document.getElementById("statReceita").textContent=money(totalAll);
+
+  renderApprovedFiltered(approved);
+}
+function renderApprovedFiltered(approved){
   var pagTb=document.getElementById("pagamentosBody"),pagC=document.getElementById("pagamentosCards");
+  if(!approved.length){
+    pagTb.innerHTML="<tr><td colspan='5' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhuma venda aprovada neste filtro</td></tr>";
+    pagC.innerHTML="<div class='empty-state'>Nenhuma venda aprovada neste filtro</div>";return;
+  }
+  var pr="",pc="";
+  approved.forEach(function(o){
+    var em=orderEmail(o),pd=o.produto_nome||o.produto_key||"—",vl=money(o.valor),dt=localDate(o).toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short"});
+    var sems=orderSemesters(o).map(semesterLabel).join(" / ");
+    pr+="<tr><td class='email-cell'>"+em+"</td><td><span class='badge badge-cyan'>"+sems+"</span></td><td style='font-size:11px;'>"+pd+"</td><td style='color:#4ade80;font-weight:700;'>"+vl+"</td><td class='date-cell'>"+dt+"</td></tr>";
+    pc+="<div class='order-card'><div class='oc-top'><div class='oc-email'>"+em+"</div><span class='badge badge-green'>&#9989;</span></div><div class='oc-row2'>"+sems+" · "+pd+"</div><div class='oc-bottom'><span style='color:#4ade80;font-weight:700;font-size:14px;'>"+vl+"</span><span style='font-size:10px;color:rgba(125,211,232,0.4);'>"+dt+"</span></div></div>";
+  });
+  pagTb.innerHTML=pr;pagC.innerHTML=pc;
+}
+function renderAllOrders(){
   var allTb=document.getElementById("ordersBody"),allC=document.getElementById("ordersCards");
-  if(r.error||!r.data||!r.data.length){
-    var nd="<div style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);font-size:13px;'>Nenhum registro</div>";
-    pagTb.innerHTML="<tr><td colspan='4' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum registro</td></tr>";pagC.innerHTML=nd;
-    allTb.innerHTML="<tr><td colspan='5' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum registro</td></tr>";allC.innerHTML=nd;
-    document.getElementById("statPagamentos").textContent="0";document.getElementById("statReceita").textContent="R$ 0";return;}
-  var data=r.data;var approved=data.filter(function(o){return o.status==="approved";});
-  var total=approved.reduce(function(s,o){return s+parseFloat(o.valor||0);},0);
-  document.getElementById("statPagamentos").textContent=approved.length;
-  document.getElementById("statReceita").textContent="R$ "+total.toFixed(2).replace(".",",");
-  function sbadge(o){return o.status==="approved"?"<span class='badge badge-green'>&#9989; Aprovado</span>":o.status==="pending"?"<span class='badge badge-yellow'>&#9203; Pendente</span>":"<span class='badge badge-red'>&#10060; "+o.status+"</span>";}
-  if(!approved.length){pagTb.innerHTML="<tr><td colspan='4' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum aprovado</td></tr>";pagC.innerHTML="<div style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);font-size:13px;'>Nenhum aprovado</div>";}
-  else{var pr="",pc="";approved.forEach(function(o){var em=o.profiles&&o.profiles.email?o.profiles.email:"\u2014";var pd=o.produto_nome||o.produto_key||"\u2014";var vl="R$ "+parseFloat(o.valor).toFixed(2).replace(".",",");var dt=new Date(o.criado_em).toLocaleDateString("pt-BR");
-    pr+="<tr><td class='email-cell'>"+em+"</td><td style='font-size:11px;'>"+pd+"</td><td style='color:#22d3ee;font-weight:600;'>"+vl+"</td><td class='date-cell'>"+dt+"</td></tr>";
-    pc+="<div class='order-card'><div class='oc-top'><div class='oc-email'>"+em+"</div><span class='badge badge-green'>&#9989;</span></div><div class='oc-row2'>"+pd+"</div><div class='oc-bottom'><span style='color:#22d3ee;font-weight:700;font-size:14px;'>"+vl+"</span><span style='font-size:10px;color:rgba(125,211,232,0.4);'>"+dt+"</span></div></div>";});
-    pagTb.innerHTML=pr;pagC.innerHTML=pc;}
-  var ar="",ac="";data.forEach(function(o){var em=o.profiles&&o.profiles.email?o.profiles.email:"\u2014";var pd=o.produto_nome||o.produto_key||"\u2014";var vl="R$ "+parseFloat(o.valor).toFixed(2).replace(".",",");var dt=new Date(o.criado_em).toLocaleDateString("pt-BR");var sb=sbadge(o);
+  if(!allOrders.length){
+    allTb.innerHTML="<tr><td colspan='5' class='empty-state'>Nenhum registro</td></tr>";
+    allC.innerHTML="<div class='empty-state'>Nenhum registro</div>";return;
+  }
+  function sbadge(o){return o.status==="approved"?"<span class='badge badge-green'>&#9989; Aprovado</span>":o.status==="pending"?"<span class='badge badge-yellow'>&#9203; Pendente</span>":"<span class='badge badge-red'>&#10060; "+(o.status||"—")+"</span>";}
+  var show=allOrders.slice(0,150),ar="",ac="";
+  show.forEach(function(o){
+    var em=orderEmail(o),pd=o.produto_nome||o.produto_key||"—",vl=money(o.valor),dt=localDate(o).toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short"}),sb=sbadge(o);
     ar+="<tr><td class='email-cell'>"+em+"</td><td style='font-size:11px;'>"+pd+"</td><td style='color:#22d3ee;font-weight:600;'>"+vl+"</td><td>"+sb+"</td><td class='date-cell'>"+dt+"</td></tr>";
-    ac+="<div class='order-card'><div class='oc-top'><div class='oc-email'>"+em+"</div>"+sb+"</div><div class='oc-row2'>"+pd+"</div><div class='oc-bottom'><span style='color:#22d3ee;font-weight:700;font-size:14px;'>"+vl+"</span><span style='font-size:10px;color:rgba(125,211,232,0.4);'>"+dt+"</span></div></div>";});
+    ac+="<div class='order-card'><div class='oc-top'><div class='oc-email'>"+em+"</div>"+sb+"</div><div class='oc-row2'>"+pd+"</div><div class='oc-bottom'><span style='color:#22d3ee;font-weight:700;font-size:14px;'>"+vl+"</span><span style='font-size:10px;color:rgba(125,211,232,0.4);'>"+dt+"</span></div></div>";
+  });
   allTb.innerHTML=ar;allC.innerHTML=ac;
 }
 
@@ -610,8 +986,8 @@ function renderActivity(){
   var recentOrders=allAlunos.length?[]:[]; // placeholder
   // Build from alunos data
   var expiring=allAlunos.filter(function(a){if(!a.acesso_expira_em)return false;var d=new Date(a.acesso_expira_em)-new Date();return d>0&&d<7*24*60*60*1000;});
-  var noAccess=allAlunos.filter(function(a){return!RESUMOS_COLS.some(function(r){return a[r.key];});});
-  var ativos=allAlunos.filter(function(a){return RESUMOS_COLS.some(function(r){return a[r.key];});});
+  var noAccess=allAlunos.filter(function(a){return!RESUMOS_COLS.some(function(r){return resumoAtivo(a,r.key);});});
+  var ativos=allAlunos.filter(function(a){return RESUMOS_COLS.some(function(r){return resumoAtivo(a,r.key);});});
 
   if(expiring.length>0)items.push({icon:"&#9888;&#65039;",text:"<strong>"+expiring.length+" aluno"+(expiring.length>1?"s":"")+"</strong> com acesso expirando em 7 dias",color:"#fbbf24"});
   if(noAccess.length>0)items.push({icon:"&#128274;",text:"<strong>"+noAccess.length+" aluno"+(noAccess.length>1?"s":"")+"</strong> cadastrado"+(noAccess.length>1?"s":"")+" sem nenhum acesso",color:"rgba(248,113,113,0.7)"});
@@ -772,7 +1148,19 @@ try{
 {showToast("&#9989; Salvo!","success");closeModal();await loadAlunos();renderActivity();}btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";};
 window.revokeAll=async function(){if(!currentAluno)return;if(!confirm("Revogar TODOS os acessos de "+currentAluno.email+"?"))return;RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=false;});document.getElementById("expiryInput").value="";renderResumosGrid();showToast("Clique em Salvar para confirmar","success");};
 window.quickRevoke=async function(id,emailEnc){var email=decodeURIComponent(emailEnc);if(!confirm("Revogar todos de "+email+"?"))return;var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=false;u[r.key+"_expira"]=null;});u.acesso_expira_em=null;var res=await client.from("profiles").update(u).eq("id",id);if(res.error)showToast("Erro!","error");else{showToast("&#9989; Revogado!","success");await loadAlunos();renderActivity();}};
-window.quickGrantAll=async function(id,emailEnc){var email=decodeURIComponent(emailEnc);if(!confirm("Liberar TODOS para "+email+"?"))return;var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=true;});u.acesso_expira_em=null;var res=await client.from("profiles").update(u).eq("id",id);if(res.error)showToast("Erro!","error");else{showToast("&#9989; Liberado!","success");await loadAlunos();renderActivity();}};
+window.quickGrantAll=async function(id,emailEnc){
+  var email=decodeURIComponent(emailEnc);
+  if(!confirm("Liberar TODOS os resumos por 50 dias para "+email+"?"))return;
+  var d=new Date(); d.setDate(d.getDate()+50); var exp=d.toISOString();
+  var u={acesso_expira_em:exp,resumos_presente:RESUMOS_COLS.map(function(r){return r.key;})};
+  RESUMOS_COLS.forEach(function(r){
+    u[r.key]=true;
+    if(/(?:_p1|_p2|_final)$/.test(r.key) || r.key.indexOf("pacote_")===0) u[r.key+"_expira"]=exp;
+  });
+  var res=await client.from("profiles").update(u).eq("id",id);
+  if(res.error)showToast("Erro!","error");
+  else{showToast("&#9989; Todos liberados por 50 dias!","success");await loadAlunos();renderActivity();}
+};
 
 function showToast(msg,type){var t=document.createElement("div");t.className="toast "+type;t.innerHTML=msg;document.body.appendChild(t);setTimeout(function(){t.remove();},3000);}
 window.goToDashboard=function(){window.location.href="dashboard.html";};

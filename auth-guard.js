@@ -1,5 +1,5 @@
 /**
- * auth-guard.js — v3 (DUAL-MODE: acessos + profiles fallback)
+ * auth-guard.js — v4 (expiração individual obrigatória para resumos de prova)
  *
  * MUDANÇAS V2 → V3:
  *  [M1] Adicionada função checkAccessInAcessos() que:
@@ -140,11 +140,17 @@
     // como coluna no select de profiles (evita erro 400) e validar via acessos.
     var isCurso = !!(pageKey && pageKey.indexOf("curso-") === 0);
 
+    function isS4PageKey(k) {
+      if (!k) return false;
+      return /^(fisiologia_2|bioquimica_2|epidemiologia|nutricao|microbiologia_2|micro_pratica_2|eletrocardiograma)_(p1|p2|final)$/.test(k);
+    }
+
     var pacoteKey = null;
     if (pageKey && !isCurso) {
-      if (pageKey.endsWith("_p1"))    pacoteKey = "pacote_p1";
-      if (pageKey.endsWith("_p2"))    pacoteKey = "pacote_p2";
-      if (pageKey.endsWith("_final")) pacoteKey = "pacote_final";
+      var pacotePrefix = isS4PageKey(pageKey) ? "pacote_s4_" : "pacote_";
+      if (pageKey.endsWith("_p1"))    pacoteKey = pacotePrefix + "p1";
+      if (pageKey.endsWith("_p2"))    pacoteKey = pacotePrefix + "p2";
+      if (pageKey.endsWith("_final")) pacoteKey = pacotePrefix + "final";
     }
 
     var extraFields = "";
@@ -153,7 +159,7 @@
     if (pageKey && !isCurso)  extraFields += ", " + pageKey + "_expira";
     if (pacoteKey)            extraFields += ", " + pacoteKey + "_expira";
 
-    var fields = "is_approved, active_session, device_id" + extraFields;
+    var fields = "is_approved, is_admin, active_session, device_id, acesso_expira_em, resumos_presente" + extraFields;
 
     var profile = null;
     try {
@@ -201,38 +207,48 @@
         ? await checkAccessInAcessos(client, session.user.id, pacoteKey)
         : false;
       
-      // Fallback pro sistema antigo (profiles)
-      var temAcessoAntigo = !!profile[pageKey] || !!(pacoteKey && profile[pacoteKey]);
+      // Fallback para profiles, agora SEM usar acesso_expira_em global.
+      // Um resumo de prova só é válido se sua própria expiração (ou a do pacote correto)
+      // estiver válida. Isso impede que uma compra nova "ressuscite" flags antigas.
+      var agora = new Date();
 
-      // Tem se tá em QUALQUER um dos sistemas
-      var temAcesso = temAcessoNovo || temAcessoPacote || temAcessoAntigo;
-
-      if (!temAcesso) {
-        alert("Acesso não liberado para este conteúdo. Faça o pagamento para liberar.");
-        window.location.replace(DASHBOARD_PAGE);
-        return;
+      function ehPresente(flagKey) {
+        var arr = Array.isArray(profile.resumos_presente) ? profile.resumos_presente : [];
+        return arr.indexOf(flagKey) >= 0;
       }
 
-      // Verifica expiração — só bloqueia se tiver data E ela já passou
-      // Tenta expiration da nova tabela primeiro, depois fallback
-      var expiraData = null;
+      function profileAccessValido(flagKey) {
+        if (!flagKey || !profile[flagKey]) return false;
 
-      if (temAcessoNovo) {
-        // Se veio de acessos, já verificou expiração na função (retorna true se válido)
-        // Não precisa verificar de novo aqui
-      } else if (temAcessoPacote) {
-        // Idem
-      } else {
-        // Veio de profiles — precisa verificar expiração das colunas antigas
-        var expiraCol  = pageKey + "_expira";
-        var expiraPack = pacoteKey ? pacoteKey + "_expira" : null;
-        expiraData = profile[expiraCol] || (expiraPack ? profile[expiraPack] : null);
+        // Expiração individual é a regra principal.
+        var exp = profile[flagKey + "_expira"];
+        if (exp) return new Date(exp) > agora;
 
-        if (expiraData && new Date(expiraData) < new Date()) {
-          alert("Seu acesso a este resumo expirou. Renove para continuar.");
-          window.location.replace(DASHBOARD_PAGE);
-          return;
+        // Compatibilidade SOMENTE para cortesia explicitamente marcada no Admin.
+        // Uma flag antiga sem _expira e sem marcação de presente NÃO libera mais acesso.
+        if (ehPresente(flagKey)) {
+          if (profile.acesso_expira_em) return new Date(profile.acesso_expira_em) > agora;
+          return true; // cortesia permanente explicitamente marcada
         }
+
+        return false;
+      }
+
+      var temAcessoAntigoDireto = profileAccessValido(pageKey);
+      var temAcessoAntigoPacote = pacoteKey ? profileAccessValido(pacoteKey) : false;
+
+      // Administrador autenticado mantém acesso para manutenção/testes.
+      var temAcesso = !!profile.is_admin || temAcessoNovo || temAcessoPacote || temAcessoAntigoDireto || temAcessoAntigoPacote;
+
+      if (!temAcesso) {
+        var tinhaFlag = !!profile[pageKey] || !!(pacoteKey && profile[pacoteKey]);
+        if (tinhaFlag) {
+          alert("Seu acesso a este resumo está expirado ou sem validade individual. Renove para continuar.");
+        } else {
+          alert("Acesso não liberado para este conteúdo. Faça o pagamento para liberar.");
+        }
+        window.location.replace(DASHBOARD_PAGE);
+        return;
       }
     }
 
