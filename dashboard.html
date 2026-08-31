@@ -1175,7 +1175,7 @@
               <span class="sem-card-emoji">🔬</span>
               <div>
                 <div class="sem-card-title">4º Semestre</div>
-                <div class="sem-card-sub">Fisiologia II, Bioquímica II, Epidemiologia, Nutrição, Microbiologia II, Eletrocardiograma</div>
+                <div class="sem-card-sub">Fisiologia II, Bioquímica II, Epidemiologia, Nutrição, Microbiologia II, Micro Prática II, Eletrocardiograma</div>
               </div>
             </div>
             <div class="sem-card-right">
@@ -1457,6 +1457,7 @@ var MATERIAS_S4 = [
   { key:"epidemiologia",     label:"Epidemiologia",     emoji:"📊", desc:"Métodos epidemiológicos e saúde coletiva.",       file_p1:"epidemiologia_p1.html",    file_p2:"epidemiologia_p2.html",     file_final:"epidemiologia_final.html",     p1Ready:true, p2Ready:false, finalReady:false },
   { key:"nutricao",          label:"Nutrição",          emoji:"🥗", desc:"Nutrição clínica e metabolismo nutricional.",     file_p1:"nutricao_p1.html",         file_p2:"nutricao_p2.html",          file_final:"nutricao_final.html",          p1Ready:true, p2Ready:false, finalReady:false },
   { key:"microbiologia_2",   label:"Microbiologia II",  emoji:"🦠", desc:"Virologia, micologia e microbiologia avançada.",  file_p1:"microbiologia_2_p1.html",  file_p2:"microbiologia_2_p2.html",   file_final:"microbiologia_2_final.html",   p1Ready:true, p2Ready:false, finalReady:false },
+  { key:"micro_pratica_2",   label:"Micro Prática II",  emoji:"🧫", desc:"Casos clínicos, diagnóstico e virologia prática.", file_p1:"micro_pratica_2_p1.html",  file_p2:"micro_pratica_2_p2.html",   file_final:"micro_pratica_2_final.html",   p1Ready:true, p2Ready:false, finalReady:false },
   { key:"eletrocardiograma", label:"Eletrocardiograma", emoji:"🫀", desc:"Interpretação de ECG na prática clínica.",        file_p1:"eletrocardiograma_p1.html", file_p2:"eletrocardiograma_p2.html", file_final:"eletrocardiograma_final.html", p1Ready:true, p2Ready:false, finalReady:false },
 ];
 
@@ -1617,6 +1618,7 @@ function daysLeft() {
     "epidemiologia_p1","epidemiologia_p2","epidemiologia_final",
     "nutricao_p1","nutricao_p2","nutricao_final",
     "microbiologia_2_p1","microbiologia_2_p2","microbiologia_2_final",
+    "micro_pratica_2_p1","micro_pratica_2_p2","micro_pratica_2_final",
     "eletrocardiograma_p1","eletrocardiograma_p2","eletrocardiograma_final"];
   COLS.forEach(function(col) {
     if (!profile[col]) return;
@@ -1989,7 +1991,7 @@ function renderPastas() {
         '<span class="semestre-icon">🔬</span>' +
         '<div>' +
           '<div class="semestre-title">4º Semestre</div>' +
-          '<div class="semestre-subtitle">Fisiologia II · Bioquímica II · Epidemiologia · Nutrição · Microbiologia II · ECG</div>' +
+          '<div class="semestre-subtitle">Fisiologia II · Bioquímica II · Epidemiologia · Nutrição · Microbiologia II · Micro Prática II · ECG</div>' +
         '</div>' +
       '</div>' +
       '<div class="semestre-meta">' +
