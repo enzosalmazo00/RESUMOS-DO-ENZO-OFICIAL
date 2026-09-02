@@ -231,6 +231,51 @@ nav.tabs button.qz-tab.active { background: var(--accent4); color: #fff; border-
 }
 .example-box p { color:var(--text); font-size:13px; }
 
+/* ── DIDACTIC LESSON LAYER ── */
+.lesson-roadmap {
+  margin: 0 0 28px; padding:22px;
+  background:linear-gradient(145deg,rgba(79,156,249,.12),rgba(56,232,192,.06));
+  border:1px solid rgba(79,156,249,.3); border-radius:18px;
+}
+.lesson-roadmap .roadmap-kicker {
+  color:var(--accent2); font:700 10px var(--font-mono);
+  letter-spacing:2px; text-transform:uppercase; margin-bottom:7px;
+}
+.lesson-roadmap h3 { font:700 18px var(--font-display); color:#fff; margin-bottom:8px; }
+.lesson-roadmap > p { color:var(--muted); margin-bottom:16px; }
+.roadmap-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:10px; }
+.roadmap-step { position:relative; padding:14px 14px 14px 48px; background:rgba(10,13,20,.55); border:1px solid var(--border); border-radius:13px; min-height:92px; }
+.roadmap-step b { position:absolute; left:13px; top:13px; display:grid; place-items:center; width:25px; height:25px; border-radius:50%; background:var(--accent); color:var(--bg); font:800 12px var(--font-display); }
+.roadmap-step strong { display:block; color:#fff; margin-bottom:3px; }
+.roadmap-step span { color:var(--muted); font-size:12px; line-height:1.45; }
+.teacher-note { margin:18px 0 22px; padding:18px 20px; background:linear-gradient(135deg,rgba(184,79,249,.11),rgba(249,120,79,.06)); border:1px solid rgba(184,79,249,.28); border-radius:15px; }
+.teacher-note .teacher-label { color:#d7a4ff; font:700 10px var(--font-mono); letter-spacing:2px; text-transform:uppercase; margin-bottom:7px; }
+.teacher-note h4 { color:#fff; font:700 15px var(--font-display); margin-bottom:6px; }
+.teacher-note p { font-size:13.5px; line-height:1.72; }
+.concept-flow { display:flex; align-items:stretch; justify-content:center; gap:8px; flex-wrap:wrap; margin:18px 0 24px; }
+.flow-node { flex:1 1 130px; min-width:120px; max-width:190px; padding:13px 11px; background:var(--card); border:1px solid rgba(56,232,192,.26); border-radius:12px; text-align:center; }
+.flow-node strong { display:block; color:var(--accent2); font-size:13px; margin-bottom:3px; }
+.flow-node span { display:block; color:var(--muted); font-size:11px; line-height:1.35; }
+.flow-arrow { display:grid; place-items:center; color:var(--accent3); font-size:20px; font-weight:900; }
+.visual-lesson { margin:20px 0 28px; padding:16px; border:1px solid rgba(79,156,249,.25); border-radius:17px; background:rgba(26,33,56,.72); }
+.visual-lesson h4 { color:#fff; font:700 16px var(--font-display); margin:0 0 7px; }
+.visual-lesson > p { color:var(--text); margin-bottom:13px; }
+.slide-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.slide-figure { margin:0; overflow:hidden; border:1px solid var(--border); border-radius:13px; background:#fff; }
+.slide-figure img { display:block; width:100%; height:auto; cursor:zoom-in; }
+.slide-figure figcaption { padding:12px 14px 14px; background:var(--card2); color:var(--text); font-size:12.5px; line-height:1.55; }
+.slide-figure figcaption strong { display:block; color:var(--accent2); margin-bottom:4px; }
+.slide-figure figcaption small { display:block; color:var(--muted); margin-top:5px; }
+.memory-map { margin:20px 0 25px; padding:20px; border-radius:17px; background:linear-gradient(145deg,rgba(56,232,192,.1),rgba(79,156,249,.09)); border:1px solid rgba(56,232,192,.28); }
+.memory-map .map-title { color:var(--accent2); font:700 11px var(--font-mono); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:12px; }
+.memory-map .concept-flow { margin:0; }
+.checkpoint { margin:24px 0; padding:16px 18px; border-radius:14px; background:rgba(249,201,79,.07); border:1px dashed rgba(249,201,79,.45); }
+.checkpoint h4 { color:var(--gold); font:700 14px var(--font-display); margin-bottom:7px; }
+.checkpoint ul { padding-left:19px; }.checkpoint li { margin:4px 0; }
+.image-lightbox { position:fixed; inset:0; z-index:10000; display:none; align-items:center; justify-content:center; padding:24px; background:rgba(2,6,16,.92); backdrop-filter:blur(8px); }
+.image-lightbox.open { display:flex; }.image-lightbox img { max-width:min(1200px,96vw); max-height:88vh; border-radius:12px; box-shadow:0 24px 80px rgba(0,0,0,.65); }
+.image-lightbox button { position:absolute; top:18px; right:18px; width:42px; height:42px; border:1px solid rgba(255,255,255,.35); border-radius:50%; background:rgba(15,23,42,.85); color:#fff; font-size:24px; cursor:pointer; }
+
 /* ── FLASHCARD GRID ── */
 .flashcard-grid {
   display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
@@ -393,6 +438,9 @@ em { color: var(--accent2); font-style:normal; }
   .flashcard-grid { grid-template-columns:1fr; }
   .compare-table { font-size:12px; }
   .compare-table th, .compare-table td { padding:8px 10px; }
+  .slide-grid { grid-template-columns:1fr; }
+  .flow-arrow { flex-basis:100%; height:12px; transform:rotate(90deg); }
+  .lesson-roadmap { padding:16px; }
 }
 </style>
 </head>
@@ -455,6 +503,20 @@ em { color: var(--accent2); font-style:normal; }
   </ol>
 </div>
 
+<div class="lesson-roadmap">
+  <div class="roadmap-kicker">Mapa da disciplina · do ar ao comando nervoso</div>
+  <h3>A sequência que conecta os capítulos</h3>
+  <p>Leia da esquerda para a direita. Cada capítulo responde à pergunta que o anterior deixa aberta.</p>
+  <div class="concept-flow" aria-label="Mapa integrado dos capítulos 38 a 42 e 46">
+    <div class="flow-node"><strong>Cap. 38</strong><span>Como o ar chega aos alvéolos?</span></div><span class="flow-arrow">→</span>
+    <div class="flow-node"><strong>Cap. 39</strong><span>Como o sangue chega aos capilares?</span></div><span class="flow-arrow">→</span>
+    <div class="flow-node"><strong>Cap. 40</strong><span>Como os gases atravessam a membrana?</span></div><span class="flow-arrow">→</span>
+    <div class="flow-node"><strong>Cap. 41</strong><span>Como O₂ e CO₂ são transportados?</span></div><span class="flow-arrow">→</span>
+    <div class="flow-node"><strong>Cap. 42</strong><span>Como a respiração é regulada?</span></div><span class="flow-arrow">→</span>
+    <div class="flow-node"><strong>Cap. 46</strong><span>Como o sistema nervoso recebe, integra e responde?</span></div>
+  </div>
+</div>
+
 <div class="info-block purple">
   <div class="label">Como ler a linguagem da fisiologia</div>
   <h4>Siglas, símbolos, setas e unidades</h4>
@@ -513,6 +575,25 @@ em { color: var(--accent2); font-style:normal; }
 <div class="container">
 
 <div class="chapter-title"><span class="chap-icon">🌬️</span> Capítulo 38 — Ventilação Pulmonar</div>
+
+<div class="lesson-roadmap">
+  <div class="roadmap-kicker">Aula guiada · visão antes dos detalhes</div>
+  <h3>Como pensar a ventilação sem decorar listas</h3>
+  <p>Este capítulo responde a uma pergunta: <strong>como o movimento da caixa torácica vira fluxo de ar até os alvéolos?</strong> Siga a cadeia causal abaixo; cada tópico seguinte apenas acrescenta uma peça.</p>
+  <div class="roadmap-grid">
+    <div class="roadmap-step"><b>1</b><strong>Músculos</strong><span>Diafragma e intercostais mudam o volume do tórax.</span></div>
+    <div class="roadmap-step"><b>2</b><strong>Pressões</strong><span>A mudança de volume altera as pressões pleural e alveolar.</span></div>
+    <div class="roadmap-step"><b>3</b><strong>Fluxo</strong><span>O ar entra ou sai conforme o gradiente em relação à atmosfera.</span></div>
+    <div class="roadmap-step"><b>4</b><strong>Alvéolos</strong><span>Surfactante e complacência determinam o esforço para expandi-los.</span></div>
+    <div class="roadmap-step"><b>5</b><strong>Eficiência</strong><span>Só o ar que ultrapassa o espaço morto participa das trocas.</span></div>
+  </div>
+</div>
+
+<div class="teacher-note">
+  <div class="teacher-label">Professor explica</div>
+  <h4>Pense no pulmão como uma estrutura puxada de fora</h4>
+  <p>O pulmão não possui um músculo que o “infle”. Quem aumenta o tórax é principalmente o diafragma. A pressão pleural fica mais negativa, a pressão transpulmonar aumenta e os alvéolos se expandem. Só depois a pressão alveolar cai e o ar entra. Em uma inspiração profunda antes de mergulhar, você percebe essa sequência: esforço muscular primeiro, expansão torácica depois e fluxo de ar como consequência.</p>
+</div>
 
 <div class="info-block">
   <div class="label">Conceito fundamental</div>
@@ -708,6 +789,11 @@ em { color: var(--accent2); font-style:normal; }
   </ul>
 </div>
 
+<div class="checkpoint">
+  <h4>✅ Fechamento do Capítulo 38 — explique em voz alta</h4>
+  <ul><li>Por que a contração do diafragma faz o ar entrar?</li><li>Qual a diferença entre pressão pleural, alveolar e transpulmonar?</li><li>Como o surfactante estabiliza alvéolos pequenos?</li><li>Por que duas pessoas com a mesma ventilação-minuto podem ter ventilação alveolar diferente?</li></ul>
+</div>
+
 </div></div>
 
 <!-- ════════════════════════════════════════════════
@@ -717,6 +803,25 @@ em { color: var(--accent2); font-style:normal; }
 <div class="container">
 
 <div class="chapter-title"><span class="chap-icon">🫀</span> Capítulo 39 — Circulação Pulmonar, Edema Pulmonar e Líquido Pleural</div>
+
+<div class="lesson-roadmap">
+  <div class="roadmap-kicker">Aula guiada · organize o raciocínio</div>
+  <h3>O pulmão precisa receber sangue sem encharcar os alvéolos</h3>
+  <p>O capítulo conecta <strong>fluxo, baixa pressão, gravidade e equilíbrio de líquidos</strong>. O mesmo circuito que favorece a hematose precisa impedir que o plasma invada o espaço alveolar.</p>
+  <div class="roadmap-grid">
+    <div class="roadmap-step"><b>1</b><strong>Dois circuitos</strong><span>Pulmonar para hematose; brônquico para nutrição dos tecidos.</span></div>
+    <div class="roadmap-step"><b>2</b><strong>Baixa pressão</strong><span>Todo o débito cardíaco atravessa uma circulação muito complacente.</span></div>
+    <div class="roadmap-step"><b>3</b><strong>Gravidade</strong><span>As zonas pulmonares explicam onde o fluxo é contínuo ou limitado.</span></div>
+    <div class="roadmap-step"><b>4</b><strong>Exercício</strong><span>Recrutamento e distensão acomodam mais sangue com pouco aumento pressórico.</span></div>
+    <div class="roadmap-step"><b>5</b><strong>Líquidos</strong><span>Forças capilares e drenagem linfática separam o normal do edema.</span></div>
+  </div>
+</div>
+
+<div class="teacher-note">
+  <div class="teacher-label">Exemplo funcional</div>
+  <h4>Em pé, o ápice e a base não recebem o mesmo fluxo</h4>
+  <p>A gravidade aumenta a pressão vascular em direção às bases. Por isso, os capilares basais permanecem mais distendidos e recebem mais sangue. Durante o exercício, vasos antes pouco perfundidos são recrutados e os já abertos se distendem. Se a pressão capilar subir além da capacidade de drenagem — como pode ocorrer na insuficiência do coração esquerdo — líquido passa ao interstício e, nos casos mais intensos, aos alvéolos.</p>
+</div>
 
 <div class="sec-divider"><h3>39.1 Anatomia Fisiológica — Dupla Circulação</h3></div>
 
@@ -875,6 +980,11 @@ em { color: var(--accent2); font-style:normal; }
   <p>É essencialmente um "edema da cavidade pleural" — acúmulo anormal de líquido livre. Causas: obstrução da drenagem linfática, insuficiência cardíaca, diminuição da pressão coloidosmótica ou oncótica plasmática, como na desnutrição, e inflamação pleural com aumento da permeabilidade capilar.</p>
 </div>
 
+<div class="checkpoint">
+  <h4>✅ Fechamento do Capítulo 39 — conecte pressão e fluxo</h4>
+  <ul><li>Por que a circulação pulmonar consegue receber todo o débito cardíaco com baixa pressão?</li><li>Como a gravidade cria as zonas 1, 2 e 3?</li><li>Quais mecanismos acomodam o aumento do fluxo durante o exercício?</li><li>Como diferenciar o mecanismo do edema pulmonar do acúmulo de líquido pleural?</li></ul>
+</div>
+
 </div></div>
 
 <!-- ════════════════════════════════════════════════
@@ -884,6 +994,25 @@ em { color: var(--accent2); font-style:normal; }
 <div class="container">
 
 <div class="chapter-title"><span class="chap-icon">🔬</span> Capítulo 40 — Princípios Físicos das Trocas Gasosas</div>
+
+<div class="lesson-roadmap">
+  <div class="roadmap-kicker">Aula guiada · quatro perguntas</div>
+  <h3>Para entender qualquer troca gasosa, localize o gradiente e a barreira</h3>
+  <p>Antes de calcular, pergunte: <strong>qual gás, qual pressão parcial em cada lado, qual área disponível e qual espessura da membrana?</strong></p>
+  <div class="roadmap-grid">
+    <div class="roadmap-step"><b>1</b><strong>Pressão parcial</strong><span>Determina para onde cada gás tende a se difundir.</span></div>
+    <div class="roadmap-step"><b>2</b><strong>Solubilidade</strong><span>Explica por que CO₂ atravessa a membrana com grande facilidade.</span></div>
+    <div class="roadmap-step"><b>3</b><strong>Membrana</strong><span>Área maior e espessura menor aceleram a transferência.</span></div>
+    <div class="roadmap-step"><b>4</b><strong>Ar alveolar</strong><span>Umidificação e renovação lenta estabilizam O₂ e CO₂.</span></div>
+    <div class="roadmap-step"><b>5</b><strong>V̇A/Q̇</strong><span>A troca só funciona quando ar e sangue chegam ao mesmo alvéolo.</span></div>
+  </div>
+</div>
+
+<div class="teacher-note">
+  <div class="teacher-label">Professor explica</div>
+  <h4>Gradiente é a “inclinação” que move o gás</h4>
+  <p>Imagine duas salas separadas por uma porta. Se há muito mais pessoas em uma sala, a abertura da porta produz fluxo para a outra até reduzir a diferença. Nos pulmões, a “quantidade que empurra” não é a concentração total, mas a pressão parcial. Na fibrose, a porta fica espessa; no enfisema, faltam áreas de porta; na embolia, existe ar, mas não chega sangue para receber o O₂.</p>
+</div>
 
 <div class="info-block">
   <div class="label">Conceito fundamental</div>
@@ -1054,6 +1183,11 @@ em { color: var(--accent2); font-style:normal; }
   <p style="margin-top:8px">Quanto maior o shunt fisiológico, menor a oxigenação final do sangue arterial e maior o comprometimento da eficiência pulmonar.</p>
 </div>
 
+<div class="checkpoint">
+  <h4>✅ Fechamento do Capítulo 40 — identifique o mecanismo</h4>
+  <ul><li>Qual variável determina a direção da difusão de um gás?</li><li>O que muda na lei de Fick quando há enfisema, edema ou fibrose?</li><li>Por que o ar alveolar difere do ar atmosférico?</li><li>Como obstrução brônquica e embolia pulmonar produzem extremos opostos de V̇A/Q̇?</li></ul>
+</div>
+
 </div></div>
 
 <!-- ════════════════════════════════════════════════
@@ -1063,6 +1197,25 @@ em { color: var(--accent2); font-style:normal; }
 <div class="container">
 
 <div class="chapter-title"><span class="chap-icon">🩸</span> Capítulo 41 — Transporte de Oxigênio e Dióxido de Carbono no Sangue e nos Tecidos</div>
+
+<div class="lesson-roadmap">
+  <div class="roadmap-kicker">Aula guiada · siga a viagem dos gases</div>
+  <h3>Difundir é entrar no sangue; transportar é chegar ao tecido</h3>
+  <p>O capítulo acompanha o O₂ do alvéolo à mitocôndria e o CO₂ no caminho inverso. A hemoglobina permite transportar muito mais O₂ do que caberia apenas dissolvido no plasma.</p>
+  <div class="roadmap-grid">
+    <div class="roadmap-step"><b>1</b><strong>Gradientes</strong><span>O₂ desce de 104 mmHg no alvéolo até valores menores nos tecidos.</span></div>
+    <div class="roadmap-step"><b>2</b><strong>Hemoglobina</strong><span>Carrega a maior parte do O₂ sem eliminar sua pressão parcial.</span></div>
+    <div class="roadmap-step"><b>3</b><strong>Curva O₂-Hb</strong><span>Platô protege o carregamento; trecho íngreme facilita a liberação.</span></div>
+    <div class="roadmap-step"><b>4</b><strong>Efeito Bohr</strong><span>Tecido ativo favorece a entrega de O₂.</span></div>
+    <div class="roadmap-step"><b>5</b><strong>CO₂ e Haldane</strong><span>Bicarbonato domina o transporte; oxigenação pulmonar favorece a eliminação.</span></div>
+  </div>
+</div>
+
+<div class="teacher-note">
+  <div class="teacher-label">Analogia funcional</div>
+  <h4>A hemoglobina é o veículo; a pressão parcial é o sinal de trânsito</h4>
+  <p>O O₂ dissolvido determina a PO₂ e orienta a difusão, mas representa uma fração pequena da carga total. A hemoglobina funciona como um transporte de alta capacidade. No músculo em exercício, CO₂, H⁺ e temperatura aumentam: a curva se desloca para a direita e a hemoglobina libera O₂ com maior facilidade justamente onde o consumo é maior.</p>
+</div>
 
 <div class="sec-divider"><h3>41.1 Transporte de Oxigênio — Trajeto e Gradientes</h3></div>
 
@@ -1212,6 +1365,11 @@ em { color: var(--accent2); font-style:normal; }
   <p>Em repouso, ~4 mL de CO₂ são transportados dos tecidos aos pulmões por 100 mL de sangue (concentração total ~50 vol%; ~52 vol% pós-tecidos, ~48 vol% pós-pulmões).</p>
 </div>
 
+<div class="checkpoint">
+  <h4>✅ Fechamento do Capítulo 41 — siga os gases</h4>
+  <ul><li>Por que a PO₂ e o conteúdo total de O₂ não significam a mesma coisa?</li><li>Como o formato sigmoide da curva protege os pulmões e favorece os tecidos?</li><li>Quais condições deslocam a curva para a direita?</li><li>Como os efeitos Bohr e Haldane trabalham em sentidos complementares?</li></ul>
+</div>
+
 </div></div>
 
 <!-- ════════════════════════════════════════════════
@@ -1221,6 +1379,25 @@ em { color: var(--accent2); font-style:normal; }
 <div class="container">
 
 <div class="chapter-title"><span class="chap-icon">🧠</span> Capítulo 42 — Regulação da Respiração</div>
+
+<div class="lesson-roadmap">
+  <div class="roadmap-kicker">Aula guiada · sistema de controle</div>
+  <h3>O centro respiratório compara necessidades e ajusta a ventilação</h3>
+  <p>Respirar não é apenas gerar ritmo. O sistema recebe aferências químicas e mecânicas, integra essas informações no tronco encefálico e modifica frequência e profundidade.</p>
+  <div class="roadmap-grid">
+    <div class="roadmap-step"><b>1</b><strong>Ritmo</strong><span>GRD e circuitos bulbares organizam a descarga inspiratória em rampa.</span></div>
+    <div class="roadmap-step"><b>2</b><strong>Modulação</strong><span>Grupo pontino ajusta o término da inspiração e a frequência.</span></div>
+    <div class="roadmap-step"><b>3</b><strong>Aferências</strong><span>Vago e glossofaríngeo levam sinais pulmonares e periféricos.</span></div>
+    <div class="roadmap-step"><b>4</b><strong>Química</strong><span>CO₂/H⁺ dominam o controle habitual; O₂ ganha força na hipóxia.</span></div>
+    <div class="roadmap-step"><b>5</b><strong>Adaptação</strong><span>Exercício e altitude combinam antecipação neural e correção química.</span></div>
+  </div>
+</div>
+
+<div class="teacher-note">
+  <div class="teacher-label">Exemplo funcional</div>
+  <h4>Subir uma escada mostra o controle em duas etapas</h4>
+  <p>Ao começar o movimento, comandos do córtex motor elevam rapidamente a ventilação antes de alterações importantes nos gases arteriais: é o componente antecipatório. Em seguida, aferências de músculos e articulações e os quimiorreceptores refinam a resposta. Se o CO₂ aumentar, o H⁺ no líquido ao redor dos centros respiratórios aumenta e intensifica a ventilação.</p>
+</div>
 
 <div class="info-block">
   <div class="label">Objetivo do sistema</div>
@@ -1382,6 +1559,11 @@ em { color: var(--accent2); font-style:normal; }
   <p>O córtex pode gerar apneia, hiper/hipoventilação voluntárias (fala, canto, sopro) — mas é limitado, pois o acúmulo de CO₂, H⁺ e, depois, a queda de O₂, retomam o impulso automático de respirar.</p>
 </div>
 
+<div class="checkpoint">
+  <h4>✅ Fechamento do Capítulo 42 — monte o circuito de controle</h4>
+  <ul><li>Onde ficam GRD, GRV e grupo respiratório pontino e o que cada um faz?</li><li>Como o sinal em rampa produz uma inspiração suave?</li><li>Por que CO₂/H⁺ controlam a ventilação habitual e O₂ se torna decisivo na hipóxia?</li><li>Como exercício, altitude e Cheyne-Stokes modificam esse sistema?</li></ul>
+</div>
+
 </div></div>
 
 
@@ -1393,10 +1575,41 @@ em { color: var(--accent2); font-style:normal; }
 
 <div class="chapter-title"><span class="chap-icon">⚡</span> Capítulo 46 — Organização do Sistema Nervoso, Funções Básicas das Sinapses e Neurotransmissores</div>
 
+<div class="lesson-roadmap">
+  <div class="roadmap-kicker">Aula guiada · do estímulo à decisão</div>
+  <h3>Estude o sistema nervoso como um circuito, não como uma coleção de nomes</h3>
+  <p>Todo o capítulo pode ser lido em uma sequência única: <strong>receber → conduzir → integrar → armazenar → decidir → responder</strong>. A sinapse é o ponto em que o circuito seleciona, facilita, bloqueia ou transforma a informação.</p>
+  <div class="roadmap-grid">
+    <div class="roadmap-step"><b>1</b><strong>Entrada</strong><span>Receptores transformam mudanças do meio em sinais aferentes.</span></div>
+    <div class="roadmap-step"><b>2</b><strong>Organização</strong><span>SNC e SNP distribuem a informação por níveis e circuitos.</span></div>
+    <div class="roadmap-step"><b>3</b><strong>Integração</strong><span>Interneurônios e sinapses selecionam o que é relevante.</span></div>
+    <div class="roadmap-step"><b>4</b><strong>Comunicação</strong><span>Sinapses químicas convertem eletricidade em mensagem química e novamente elétrica.</span></div>
+    <div class="roadmap-step"><b>5</b><strong>Saída</strong><span>Vias eferentes acionam músculos e glândulas.</span></div>
+  </div>
+</div>
+
+<div class="memory-map">
+  <div class="map-title">Mapa mental principal · do estímulo à resposta</div>
+  <div class="concept-flow">
+    <div class="flow-node"><strong>Receptor</strong><span>Detecta a mudança</span></div><div class="flow-arrow">→</div>
+    <div class="flow-node"><strong>Aferência</strong><span>Leva o sinal ao SNC</span></div><div class="flow-arrow">→</div>
+    <div class="flow-node"><strong>Integração</strong><span>Seleciona e organiza</span></div><div class="flow-arrow">→</div>
+    <div class="flow-node"><strong>Eferência</strong><span>Transporta a decisão</span></div><div class="flow-arrow">→</div>
+    <div class="flow-node"><strong>Efetor</strong><span>Produz a resposta</span></div>
+  </div>
+</div>
+
+<div class="teacher-note">
+  <div class="teacher-label">Exemplo funcional</div>
+  <h4>Retirar a mão de uma superfície quente</h4>
+  <p>Receptores nociceptivos detectam o calor, a via aferente leva a informação à medula e interneurônios organizam rapidamente o reflexo de retirada. Neurônios eferentes ativam músculos flexores antes mesmo da percepção consciente completa. Ao mesmo tempo, vias ascendentes levam a informação ao encéfalo, permitindo localizar a dor, registrar a experiência e modificar comportamentos futuros.</p>
+</div>
+
 <div class="info-block">
   <div class="label">Capítulo completo — aula da Dra. Michele Reis</div>
   <h4>O sistema nervoso recebe, integra, decide e responde</h4>
   <p>O ponto central deste capítulo é entender o sistema nervoso como um sistema de <strong>controle e integração</strong>. A cada minuto, milhares de informações provenientes de órgãos e estruturas sensitivas chegam ao sistema nervoso; essas informações são integradas e, a partir delas, o organismo determina a resposta apropriada.</p>
+  <p><strong>Como usar as figuras:</strong> as imagens e os mapas mentais foram posicionados junto ao conceito que explicam. Primeiro leia a legenda em português, depois acompanhe na imagem a direção das setas e, por fim, repita o processo com suas próprias palavras. Todas podem ser ampliadas com um clique.</p>
 </div>
 
 <div class="sec-divider"><h3>46.1 Desenho Geral do Sistema Nervoso — Neurônio</h3></div>
@@ -1413,7 +1626,7 @@ em { color: var(--accent2); font-style:normal; }
 
 <table class="compare-table">
   <tr><th>Estrutura destacada no esquema</th><th>Como interpretar no circuito</th></tr>
-  <tr><td>Dendritos</td><td>Região de entrada das informações recebidas pela neurônio</td></tr>
+  <tr><td>Dendritos</td><td>Região de entrada das informações recebidas pelo neurônio</td></tr>
   <tr><td>Corpo celular / soma</td><td>Região central do neurônio, contendo o núcleo</td></tr>
   <tr><td>Axônio</td><td>Via de saída pela qual o impulso segue em direção às terminações</td></tr>
   <tr><td>Bainha de mielina e nós de Ranvier</td><td>Elementos mostrados no trajeto do axônio no esquema da aula</td></tr>
@@ -1425,19 +1638,35 @@ em { color: var(--accent2); font-style:normal; }
   Dendritos / soma → axônio → terminações axonais → sinapse → próximo neurônio
 </div>
 
+<div class="visual-lesson">
+  <h4>🖼️ Leitura orientada — por onde a informação atravessa o neurônio?</h4>
+  <p>Observe primeiro a região receptora e depois siga o axônio até as terminações. A imagem deve ser lida da entrada para a saída: muitos sinais chegam aos dendritos e ao soma, são integrados e, se o limiar for atingido, um potencial de ação percorre o axônio. As ramificações terminais permitem que uma única saída influencie diferentes células.</p>
+  <div class="slide-grid">
+    <figure class="slide-figure"><img src="fisiologia2-assets/neuronio-fluxo.webp" alt="Slide da professora mostrando dendritos, soma, axônio, mielina, nós de Ranvier e terminações do neurônio" loading="lazy"><figcaption><strong>Figura 46.1 — Organização funcional do neurônio</strong>Comece pelos dendritos, identifique o soma e acompanhe o axônio até seus terminais. A mielina reveste segmentos do axônio; os intervalos são os nós de Ranvier. A transmissão funcional segue em direção anterógrada.<small>Clique na imagem para ampliar.</small></figcaption></figure>
+  </div>
+</div>
+
 <div class="sec-divider"><h3>46.2 Classificação dos Neurônios</h3></div>
 
 <table class="compare-table">
   <tr><th>Classificação funcional</th><th>Função</th></tr>
   <tr><td>Neurônios sensoriais (aferentes)</td><td>Levam estímulos dos receptores em direção ao SNC</td></tr>
-  <tr><td>Neurônios motoras (eferentes)</td><td>Conduzem respostas do SNC aos órgãos efetores</td></tr>
-  <tr><td>Interneurônios (associativas)</td><td>Conectam neurônios sensoriais e motoras dentro do SNC</td></tr>
+  <tr><td>Neurônios motores (eferentes)</td><td>Conduzem respostas do SNC aos órgãos efetores</td></tr>
+  <tr><td>Interneurônios (associativos)</td><td>Conectam neurônios sensoriais e motores dentro do SNC</td></tr>
 </table>
 
 <div class="info-block purple">
   <div class="label">Classificação morfológica mostrada na aula</div>
   <h4>Forma = organização dos prolongamentos</h4>
   <p>O slide compara cinco formas: <strong>unipolar, bipolar, pseudounipolar, multipolar e anaxônica</strong>. A ideia é reconhecer visualmente como o corpo celular, os dendritos e o axônio se organizam em cada tipo. O neurônio multipolar aparece com vários dendritos e um axônio; a bipolar apresenta dois prolongamentos principais; a pseudounipolar apresenta um prolongamento que se bifurca; e a anaxônica é apresentada sem um axônio facilmente distinguível no esquema.</p>
+</div>
+
+<div class="visual-lesson">
+  <h4>🧩 Compare as formas sem confundir função e morfologia</h4>
+  <p>A classificação <strong>aferente, eferente ou interneurônio</strong> descreve o que a célula faz. A classificação <strong>unipolar, bipolar, pseudounipolar, multipolar ou anaxônica</strong> descreve sua forma. Uma mesma questão pode cobrar os dois critérios separadamente.</p>
+  <div class="slide-grid">
+    <figure class="slide-figure"><img src="fisiologia2-assets/classificacao-neuronios.webp" alt="Slide da professora comparando neurônios unipolar, bipolar, pseudounipolar, multipolar e anaxônico" loading="lazy"><figcaption><strong>Figura 46.2 — Classificação morfológica</strong>Conte os prolongamentos que emergem do soma e observe onde o corpo celular fica em relação ao trajeto do sinal. O multipolar possui muitos dendritos; o pseudounipolar tem um prolongamento que se bifurca.<small>Clique na imagem para ampliar.</small></figcaption></figure>
+  </div>
 </div>
 
 <div class="sec-divider"><h3>46.3 Organização Geral — SNC e SNP</h3></div>
@@ -1465,6 +1694,16 @@ em { color: var(--accent2); font-style:normal; }
   </ul>
 </div>
 
+<div class="visual-lesson">
+  <h4>🧠 Três mapas para não misturar as divisões do sistema nervoso</h4>
+  <p>Leia em camadas. Primeiro separe <strong>SNC de SNP</strong>. Depois, dentro do SNP, diferencie a entrada <strong>sensitiva/aferente</strong> da saída <strong>motora/eferente</strong>. Por fim, divida a saída motora em <strong>somática</strong> e <strong>autônoma</strong>.</p>
+  <div class="slide-grid">
+    <figure class="slide-figure"><img src="fisiologia2-assets/snc-snp.webp" alt="Mapa do slide dividindo o sistema nervoso em central e periférico" loading="lazy"><figcaption><strong>Figura 46.3A — Divisão anatômica</strong>SNC: encéfalo e medula espinal. SNP: estruturas que conectam receptores e efetores ao SNC. A fotografia ajuda a visualizar a continuidade entre encéfalo, medula e nervos periféricos.<small>Clique para ampliar.</small></figcaption></figure>
+    <figure class="slide-figure"><img src="fisiologia2-assets/snp-aferente-eferente.webp" alt="Mapa mental do sistema nervoso periférico com divisão sensitiva aferente e motora eferente" loading="lazy"><figcaption><strong>Figura 46.3B — Direção funcional no SNP</strong>Aferente aproxima a informação do SNC; eferente leva a resposta para fora do SNC. Pense: <em>aferência avisa</em>, <em>eferência executa</em>.<small>Clique para ampliar.</small></figcaption></figure>
+    <figure class="slide-figure"><img src="fisiologia2-assets/somatico-autonomo.webp" alt="Mapa mental do sistema motor somático e sistema nervoso autônomo" loading="lazy"><figcaption><strong>Figura 46.3C — Destino da resposta motora</strong>Somático controla músculo esquelético. Autônomo regula músculo liso, músculo cardíaco e glândulas e se organiza em simpático, parassimpático e entérico.<small>Clique para ampliar.</small></figcaption></figure>
+  </div>
+</div>
+
 <div class="sec-divider"><h3>46.4 Organização do SNC e Córtex Cerebral</h3></div>
 
 <div class="info-block">
@@ -1481,6 +1720,14 @@ em { color: var(--accent2); font-style:normal; }
   <tr><td>Ínsula</td><td>Interocepção, percepção de batimentos/respiração/sensações viscerais/fome, processamento gustativo, dimensão emocional e subjetiva da dor, emoções e consciência corporal</td></tr>
 </table>
 
+<div class="visual-lesson">
+  <h4>🏛️ Organização do SNC — vá do maior para o menor</h4>
+  <p>O mapa evita decorar estruturas soltas. O <strong>encéfalo</strong> inclui cérebro, tronco encefálico e cerebelo. O cérebro se organiza em telencéfalo e diencéfalo; o tronco encefálico em mesencéfalo, ponte e bulbo. Essa hierarquia anatômica serve como endereço para as funções apresentadas nas próximas seções.</p>
+  <div class="slide-grid">
+    <figure class="slide-figure"><img src="fisiologia2-assets/organizacao-snc.webp" alt="Mapa hierárquico do SNC, encéfalo, cérebro, tronco encefálico, cerebelo e medula" loading="lazy"><figcaption><strong>Figura 46.4 — Mapa anatômico do sistema nervoso central</strong>Siga os ramos da esquerda para a direita. Medula e encéfalo formam o SNC; dentro do encéfalo, cada subdivisão recebe funções específicas, mas continua integrada às demais.<small>Clique para ampliar.</small></figcaption></figure>
+  </div>
+</div>
+
 <div class="sec-divider"><h3>46.5 Porção Sensitiva — Receptores e Vias Ascendentes</h3></div>
 
 <div class="info-block">
@@ -1492,6 +1739,14 @@ em { color: var(--accent2); font-style:normal; }
   <div class="label">Leitura do esquema medular da aula</div>
   <h4>Ascendente = informação sensitiva sobe; descendente = comando motor desce</h4>
   <p>A figura da medula diferencia visualmente <strong>tratos ascendentes</strong>, relacionados à condução sensitiva em direção a níveis superiores do SNC, e <strong>tratos descendentes</strong>, relacionados ao comando motor em direção aos níveis inferiores. O foco da figura é reconhecer essa organização direcional da substância branca.</p>
+</div>
+
+<div class="visual-lesson">
+  <h4>📥 A informação sensitiva se distribui por vários níveis</h4>
+  <p>Um estímulo não precisa alcançar o córtex para produzir toda resposta. A medula pode organizar reflexos; o tronco encefálico pode participar de respostas automáticas; o cerebelo usa aferências para coordenação; o tálamo distribui grande parte das informações; e o córtex permite percepção e interpretação mais elaboradas.</p>
+  <div class="slide-grid">
+    <figure class="slide-figure"><img src="fisiologia2-assets/vias-sensitivas.webp" alt="Slide da professora mostrando os níveis do sistema nervoso que recebem informação sensitiva" loading="lazy"><figcaption><strong>Figura 46.5 — Destinos da aferência sensitiva</strong>Use a imagem como mapa de destinos: medula, formação reticular do tronco, cerebelo, tálamo e córtex. O processamento ocorre em paralelo e em diferentes graus de complexidade.<small>Clique para ampliar.</small></figcaption></figure>
+  </div>
 </div>
 
 <div class="sec-divider"><h3>46.6 Porção Motora — Efetores</h3></div>
@@ -1508,6 +1763,14 @@ em { color: var(--accent2); font-style:normal; }
 <div class="info-block warn">
   <div class="label">Eixo nervoso motor “esquelético”</div>
   <p>O controle dos músculos esqueléticos pode envolver diferentes níveis do SNC: <strong>medula espinal</strong>, <strong>formação reticular bulbar, pontina e mesencefálica</strong>, <strong>gânglios basais</strong>, <strong>cerebelo</strong> e <strong>córtex motor</strong>. O movimento final, portanto, resulta da organização integrada entre vários níveis do sistema nervoso.</p>
+</div>
+
+<div class="visual-lesson">
+  <h4>📤 O comando motor é construído em níveis</h4>
+  <p>O córtex participa do planejamento e da execução voluntária; gânglios basais ajudam a selecionar programas motores; cerebelo compara intenção e desempenho; tronco encefálico organiza postura e padrões automáticos; medula contém circuitos e motoneurônios que finalmente alcançam o músculo.</p>
+  <div class="slide-grid">
+    <figure class="slide-figure"><img src="fisiologia2-assets/eixo-motor.webp" alt="Slide da professora mostrando córtex motor, gânglios basais, cerebelo, tronco e medula no controle do músculo esquelético" loading="lazy"><figcaption><strong>Figura 46.6 — Eixo nervoso motor esquelético</strong>Leia de cima para baixo, mas lembre-se das vias de retorno: o movimento resulta de comunicação contínua entre córtex, núcleos subcorticais, tronco, cerebelo e medula.<small>Clique para ampliar.</small></figcaption></figure>
+  </div>
 </div>
 
 <div class="sec-divider"><h3>46.7 Processamento da Informação — Função Integrativa</h3></div>
@@ -1574,14 +1837,14 @@ em { color: var(--accent2); font-style:normal; }
 <div class="info-block danger">
   <div class="label">★ Definição</div>
   <h4>Sinapse = ponto de comunicação entre um neurônio e a próxima</h4>
-  <p>No SNC, a informação é transmitida principalmente por <strong>potenciais de ação</strong>, também chamados de impulsos nervosos, ao longo de uma sucessão de neurônios. Na sinapse, o impulso passa da <strong>neurônio pré-sináptico</strong> para a <strong>neurônio pós-sináptico</strong>.</p>
+  <p>No SNC, a informação é transmitida principalmente por <strong>potenciais de ação</strong>, também chamados de impulsos nervosos, ao longo de uma sucessão de neurônios. Na sinapse, o impulso passa do <strong>neurônio pré-sináptico</strong> para o <strong>neurônio pós-sináptico</strong>.</p>
 </div>
 
 <table class="compare-table">
   <tr><th>O que pode acontecer com um impulso ao chegar à sinapse?</th><th>Resultado</th></tr>
   <tr><td>Ser bloqueado</td><td>O sinal não é transmitido ao neurônio seguinte</td></tr>
   <tr><td>Ser transformado</td><td>Um impulso único pode originar impulsos repetitivos</td></tr>
-  <tr><td>Ser integrado</td><td>Combina-se com impulsos de outras neurônios, gerando padrões complexos</td></tr>
+  <tr><td>Ser integrado</td><td>Combina-se com impulsos de outros neurônios, gerando padrões complexos</td></tr>
 </table>
 
 <div class="info-block">
@@ -1592,7 +1855,7 @@ em { color: var(--accent2); font-style:normal; }
 
 <table class="compare-table">
   <tr><th>Característica</th><th>Sinapse química</th><th>Sinapse elétrica</th></tr>
-  <tr><td>Meio de transmissão</td><td>Neurotransmissor liberado pela neurônio pré-sináptico</td><td>Corrente elétrica passa diretamente entre células</td></tr>
+  <tr><td>Meio de transmissão</td><td>Neurotransmissor liberado pelo neurônio pré-sináptico</td><td>Corrente elétrica passa diretamente entre células</td></tr>
   <tr><td>Estrutura principal</td><td>Neurotransmissor atua em proteínas receptoras da membrana pós-sináptica</td><td>Junções comunicantes — gap junctions — formando canais abertos entre as células</td></tr>
   <tr><td>Efeito</td><td>Pode excitar, inibir ou modificar a sensibilidade do neurônio seguinte</td><td>Transmissão elétrica direta de uma célula à próxima</td></tr>
   <tr><td>Frequência no SNC humano</td><td>Predominante — quase todas as sinapses de transmissão de sinais</td><td>Muito menos frequente</td></tr>
@@ -1612,6 +1875,15 @@ em { color: var(--accent2); font-style:normal; }
 <div class="info-block warn">
   <div class="label">Sinapse elétrica</div>
   <p>Na sinapse elétrica, as <strong>gap junctions</strong> formam canais que conectam diretamente as células e permitem a condução elétrica de uma para a outra. A aula ressalta que elas são <strong>muito menos frequentes no SNC</strong> e que, no sistema nervoso humano, a transmissão sináptica é majoritariamente química.</p>
+</div>
+
+<div class="visual-lesson">
+  <h4>🔌 Compare as duas sinapses olhando o caminho do sinal</h4>
+  <p>Na sinapse química, o sinal elétrico do primeiro neurônio desencadeia liberação de uma molécula que atravessa a fenda. Na elétrica, a corrente passa diretamente por canais entre as células. Essa diferença explica a <strong>unidirecionalidade característica da química</strong> e a transmissão direta da elétrica.</p>
+  <div class="slide-grid">
+    <figure class="slide-figure"><img src="fisiologia2-assets/sinapse-quimica.webp" alt="Esquema do slide mostrando terminal pré-sináptico, vesículas, neurotransmissor e receptores pós-sinápticos" loading="lazy"><figcaption><strong>Figura 46.12A — Sinapse química</strong>Identifique o terminal pré-sináptico acima, a fenda no centro e a membrana pós-sináptica abaixo. O tipo de receptor determina se a resposta será excitatória, inibitória ou moduladora.<small>Clique para ampliar.</small></figcaption></figure>
+    <figure class="slide-figure"><img src="fisiologia2-assets/sinapse-eletrica.webp" alt="Esquema do slide mostrando gap junctions na sinapse elétrica" loading="lazy"><figcaption><strong>Figura 46.12B — Sinapse elétrica</strong>As junções comunicantes alinham canais entre as duas células. Não há vesícula nem difusão de neurotransmissor pela fenda para realizar a transmissão principal.<small>Clique para ampliar.</small></figcaption></figure>
+  </div>
 </div>
 
 
@@ -1637,6 +1909,14 @@ em { color: var(--accent2); font-style:normal; }
   <p><strong>Ideia-chave:</strong> o cálcio é o elo entre a chegada elétrica do potencial de ação e a liberação química do neurotransmissor.</p>
 </div>
 
+<div class="visual-lesson">
+  <h4>⚡ Conversão eletroquímica no botão pré-sináptico</h4>
+  <p>O potencial de ação é elétrico; a liberação vesicular é química. O Ca²⁺ conecta esses dois eventos. Quanto maior a entrada de Ca²⁺ nas zonas ativas, maior a probabilidade de vesículas fundirem com a membrana e liberarem neurotransmissor por exocitose.</p>
+  <div class="slide-grid">
+    <figure class="slide-figure"><img src="fisiologia2-assets/liberacao-neurotransmissor.webp" alt="Esquema do slide mostrando canais de cálcio, vesículas e exocitose de neurotransmissor" loading="lazy"><figcaption><strong>Figura 46.14 — Mecanismo de liberação do neurotransmissor</strong>Siga a sequência: despolarização → abertura de canais de Ca²⁺ → entrada de Ca²⁺ → aproximação e fusão vesicular → liberação na fenda.<small>Clique para ampliar.</small></figcaption></figure>
+  </div>
+</div>
+
 <div class="sec-divider"><h3>46.15 Receptores Pós-sinápticos: Ionóforos e Segundos Mensageiros</h3></div>
 <div class="info-block">
   <p>O receptor pós-sináptico possui um <strong>componente de ligação</strong>, voltado para a fenda sináptica, e um componente intracelular funcional, chamado no material de <strong>ionóforo</strong>. Depois que o neurotransmissor se liga, a resposta pode ocorrer por duas grandes vias: abertura direta de <strong>canais iônicos</strong> ou ativação de um sistema de <strong>segundo mensageiro</strong>.</p>
@@ -1649,6 +1929,14 @@ em { color: var(--accent2); font-style:normal; }
 <div class="info-block success">
   <h4>Proteína G: por que o efeito pode durar mais?</h4>
   <p>Após a ativação do receptor, uma subunidade da <strong>proteína G</strong> pode abrir ou fechar canais, ativar <strong>AMPc</strong> ou <strong>GMPc</strong>, estimular enzimas intracelulares e até modificar a <strong>transcrição gênica</strong>. Por isso, a ação metabotrópica não se limita a alterar rapidamente a voltagem da membrana: ela pode modificar o funcionamento da própria célula por períodos prolongados.</p>
+</div>
+
+<div class="visual-lesson">
+  <h4>🎛️ Um receptor, dois caminhos de resposta</h4>
+  <p>O mapa separa o componente que reconhece o neurotransmissor do mecanismo que produz a resposta. <strong>Canal iônico:</strong> altera diretamente a condutância da membrana. <strong>Segundo mensageiro:</strong> ativa uma cascata capaz de agir em canais, enzimas, receptores e genes.</p>
+  <div class="slide-grid">
+    <figure class="slide-figure"><img src="fisiologia2-assets/receptores-pos-sinapticos.webp" alt="Mapa mental do slide dividindo receptores pós-sinápticos em canais iônicos e sistemas de segundo mensageiro" loading="lazy"><figcaption><strong>Figura 46.15 — Organização dos receptores pós-sinápticos</strong>Use a velocidade como pista: canais ionotrópicos costumam responder rapidamente; receptores metabotrópicos iniciam respostas mais lentas, amplificadas e duradouras.<small>Clique para ampliar.</small></figcaption></figure>
+  </div>
 </div>
 
 <div class="sec-divider"><h3>46.16 Excitação versus Inibição</h3></div>
@@ -1680,7 +1968,15 @@ em { color: var(--accent2); font-style:normal; }
 </table>
 <div class="info-block purple">
   <h4>Neuropeptídeos: menos rápidos, porém mais duradouros</h4>
-  <p>Os neuropeptídeos podem produzir alterações prolongadas, como mudanças no <strong>número de receptores</strong>, no <strong>número ou tamanho das sinapses</strong> e na <strong>excitabilidade neuronal</strong>. O material também destaca que uma mesma neurona pode liberar transmissores de molécula pequena e neuropeptídeos, fenômeno apresentado como <strong>coliberação</strong> ou <strong>cotransmissão</strong> conforme a organização vesicular.</p>
+  <p>Os neuropeptídeos podem produzir alterações prolongadas, como mudanças no <strong>número de receptores</strong>, no <strong>número ou tamanho das sinapses</strong> e na <strong>excitabilidade neuronal</strong>. O material também destaca que um mesmo neurônio pode liberar transmissores de molécula pequena e neuropeptídeos, fenômeno apresentado como <strong>coliberação</strong> ou <strong>cotransmissão</strong> conforme a organização vesicular.</p>
+</div>
+
+<div class="visual-lesson">
+  <h4>🧪 Coliberação e cotransmissão</h4>
+  <p>Uma mesma célula pode empacotar mais de um transmissor. Quando substâncias compartilham a mesma organização vesicular, o slide apresenta a ideia de coliberação; quando ficam em vesículas diferentes e podem ser recrutadas conforme o padrão de atividade, destaca-se a cotransmissão.</p>
+  <div class="slide-grid">
+    <figure class="slide-figure"><img src="fisiologia2-assets/coliberacao-cotransmissao.webp" alt="Slide da professora comparando coliberação e cotransmissão de neurotransmissores" loading="lazy"><figcaption><strong>Figura 46.17 — Mais de um transmissor na mesma terminação</strong>Observe se os transmissores estão representados na mesma vesícula ou em populações vesiculares diferentes. Isso ajuda a diferenciar os dois arranjos mostrados.<small>Clique para ampliar.</small></figcaption></figure>
+  </div>
 </div>
 
 <div class="sec-divider"><h3>46.18 Eventos Elétricos da Excitação Neuronal</h3></div>
@@ -1693,9 +1989,18 @@ em { color: var(--accent2); font-style:normal; }
   <p>Nas sinapses inibitórias, a abertura de canais de Cl⁻ ou o aumento da permeabilidade ao K⁺ hiperpolariza a membrana. O resultado é o <strong>potencial pós-sináptico inibitório (PIPS)</strong>: o neurônio fica mais distante do limiar e, portanto, menos propenso a disparar.</p>
 </div>
 
+<div class="visual-lesson">
+  <h4>📉 PEPS e PIPS — leia sempre em relação ao limiar</h4>
+  <p>O ponto decisivo não é decorar “positivo” e “negativo”, mas perguntar se o potencial da membrana se aproxima ou se afasta do limiar. O PEPS despolariza e aumenta a chance de disparo; o PIPS hiperpolariza ou estabiliza a membrana e reduz essa chance.</p>
+  <div class="slide-grid">
+    <figure class="slide-figure"><img src="fisiologia2-assets/peps.webp" alt="Slide da professora mostrando potencial pós-sináptico excitatório e aproximação do limiar" loading="lazy"><figcaption><strong>Figura 46.18A — PEPS</strong>A entrada de Na⁺ torna o interior menos negativo. Vários PEPS podem somar-se até o segmento inicial atingir o limiar e gerar um potencial de ação.<small>Clique para ampliar.</small></figcaption></figure>
+    <figure class="slide-figure"><img src="fisiologia2-assets/pips.webp" alt="Slide da professora mostrando potencial pós-sináptico inibitório por cloro ou potássio" loading="lazy"><figcaption><strong>Figura 46.18B — PIPS</strong>Entrada de Cl⁻ ou saída de K⁺ afasta o potencial do limiar. O resultado é menor probabilidade de disparo diante dos mesmos estímulos excitatórios.<small>Clique para ampliar.</small></figcaption></figure>
+  </div>
+</div>
+
 <div class="sec-divider"><h3>46.19 Inibição Pré-sináptica</h3></div>
 <div class="info-block">
-  <p>A inibição não precisa ocorrer somente na célula pós-sináptica. Na <strong>inibição pré-sináptica</strong>, uma substância inibitória — frequentemente <strong>GABA</strong> — atua sobre terminações ou fibrilas pré-sinápticas antes que elas façam sua transmissão principal. Assim, reduz-se a quantidade de sinal que chega à próxima neurona. O material destaca esse mecanismo em diversas vias sensitivas.</p>
+  <p>A inibição não precisa ocorrer somente na célula pós-sináptica. Na <strong>inibição pré-sináptica</strong>, uma substância inibitória — frequentemente <strong>GABA</strong> — atua sobre terminações ou fibrilas pré-sinápticas antes que elas façam sua transmissão principal. Assim, reduz-se a quantidade de sinal que chega ao próximo neurônio. O material destaca esse mecanismo em diversas vias sensitivas.</p>
 </div>
 
 <div class="sec-divider"><h3>46.20 Integração dos Potenciais Pós-sinápticos</h3></div>
@@ -1706,7 +2011,7 @@ em { color: var(--accent2); font-style:normal; }
 
 <div class="sec-divider"><h3>46.21 Dendritos e Condução Eletrotônica</h3></div>
 <div class="info-block">
-  <p>Os dendritos constituem grande área receptora da neurona. Os potenciais gerados neles propagam-se em direção ao soma principalmente de forma <strong>eletrotônica</strong>. Durante esse trajeto, parte da intensidade se perde, fenômeno chamado <strong>condução decremental</strong>. Consequentemente, a localização da sinapse importa: sinais gerados mais próximos do soma tendem a exercer influência maior sobre o disparo do que sinais muito distantes.</p>
+  <p>Os dendritos constituem grande área receptora do neurônio. Os potenciais gerados neles propagam-se em direção ao soma principalmente de forma <strong>eletrotônica</strong>. Durante esse trajeto, parte da intensidade se perde, fenômeno chamado <strong>condução decremental</strong>. Consequentemente, a localização da sinapse importa: sinais gerados mais próximos do soma tendem a exercer influência maior sobre o disparo do que sinais muito distantes.</p>
 </div>
 
 <div class="sec-divider"><h3>46.22 Fadiga da Transmissão Sináptica</h3></div>
@@ -1743,6 +2048,11 @@ em { color: var(--accent2); font-style:normal; }
 <div class="info-block success">
   <div class="label">Síntese do Capítulo 46 — Completo</div>
   <p><strong>Entrada:</strong> receptores e neurônios aferentes levam informação ao SNC. <strong>Integração:</strong> circuitos medulares, subcorticais e corticais processam e selecionam a informação. <strong>Armazenamento:</strong> mudanças funcionais nas sinapses participam da memória por facilitação. <strong>Saída:</strong> vias eferentes controlam músculos e glândulas. <strong>Comunicação:</strong> as sinapses conectam neurônios e podem bloquear, repetir ou integrar impulsos; no SNC humano, predominam sinapses químicas.</p>
+</div>
+
+<div class="checkpoint">
+  <h4>✅ Fechamento do Capítulo 46 — conte a história completa</h4>
+  <ul><li>Como um estímulo percorre receptor, aferência, integração, eferência e efetor?</li><li>Qual a diferença entre divisões anatômica, funcional e morfológica?</li><li>Como Ca²⁺ converte a chegada elétrica em liberação química?</li><li>Como ionóforos e segundos mensageiros diferem?</li><li>Como PEPS, PIPS, somação e limiar determinam se o neurônio dispara?</li></ul>
 </div>
 
 </div></div>
@@ -1892,7 +2202,7 @@ const FC=[
   {"c": "Cap 46", "q": "Quais são os três níveis funcionais do SNC?", "a": "1) Nível medular. 2) Nível encefálico inferior ou subcortical. 3) Nível encefálico superior ou cortical. Eles atuam de forma integrada por vias ascendentes e descendentes."},
   {"c": "Cap 46", "q": "Quais funções o nível medular pode executar?", "a": "Movimentos rítmicos como marcha, reflexos protetores, reflexos posturais e controle vegetativo de vasos sanguíneos, digestão e excreção urinária. A medula não é apenas um conduto passivo."},
   {"c": "Cap 46", "q": "Qual é a relação funcional entre córtex e estruturas subcorticais?", "a": "O córtex é essencial para grande parte dos processos mentais e armazena muitas memórias, mas não trabalha sozinha. As estruturas subcorticais participam da vigília cortical e cooperam continuamente com o córtex."},
-  {"c": "Cap 46", "q": "O que pode acontecer com um impulso nervoso ao chegar a uma sinapse?", "a": "Ele pode ser bloqueado, transformado de um impulso único em impulsos repetitivos ou integrado com impulsos de outras neurônios para gerar padrões complexos."},
+  {"c": "Cap 46", "q": "O que pode acontecer com um impulso nervoso ao chegar a uma sinapse?", "a": "Ele pode ser bloqueado, transformado de um impulso único em impulsos repetitivos ou integrado com impulsos de outros neurônios para gerar padrões complexos."},
   {"c": "Cap 46", "q": "Qual a diferença essencial entre sinapse química e elétrica?", "a": "Na química, um neurônio libera neurotransmissor que atua em receptores do neurônio seguinte, podendo excitar, inibir ou modificar sua sensibilidade. Na elétrica, gap junctions permitem passagem direta da corrente elétrica entre células."},
   {"c": "Cap 46", "q": "Quais elementos aparecem no esquema da sinapse química do slide?", "a": "Potencial de ação no terminal pré-sináptico, Ca²⁺, vesículas sinápticas, neurotransmissor, receptores ionotrópicos e metabotrópicos, íons e segundos mensageiros. O esquema mostra que a resposta pode alterar potencial de membrana, cascatas bioquímicas ou expressão gênica."}
 ];
@@ -2130,7 +2440,7 @@ const QD=[
    ex:'Os corpos carotídeos e aórticos recebem sangue arterial e respondem rapidamente a pequenas alterações de oxigênio, dióxido de carbono e pH. Essa velocidade ajuda a detectar e corrigir os primeiros desvios enquanto a produção metabólica muda de forma abrupta.\n\nOs quimiorreceptores centrais exercem grande influência sustentada sobre a ventilação, mas dependem da passagem do dióxido de carbono para o líquido cefalorraquidiano e da alteração local do pH. No exercício, os sensores periféricos complementam o comando neurogênico e ajudam no ajuste fino precoce.'},
   {"t": "mc", "c": "46", "n": 1, "q": "Qual sequência representa melhor o fluxo funcional básico descrito para o sistema nervoso?", "o": [{"l": "A", "v": "Efetor → eferente → integração → aferente → receptor"}, {"l": "B", "v": "Receptor → aferente → integração → eferente → efetor"}, {"l": "C", "v": "Córtex → receptor → medula → sinapse → aferente"}, {"l": "D", "v": "Aferente → receptor → efetor → córtex → eferente"}], "cr": "B", "ex": "O roteiro organiza o sistema nervoso em entrada sensorial, processamento e resposta. O receptor detecta a informação; a via aferente leva o sinal ao SNC; circuitos integrativos processam o estímulo; a via eferente leva o comando ao efetor."},
   {"t": "mc", "c": "46", "n": 2, "q": "Segundo a aula, o SNC contém mais de aproximadamente:", "o": [{"l": "A", "v": "1 milhão de neurônios"}, {"l": "B", "v": "100 milhões de neurônios"}, {"l": "C", "v": "100 bilhões de neurônios"}, {"l": "D", "v": "10 trilhões de neurônios"}], "cr": "C", "ex": "O slide informa que o SNC contém mais de 100 bilhões de neurônios. Também destaca que o número de conexões pode variar de algumas centenas até cerca de 200.000 sinapses por neurônio, conforme o tipo."},
-  {"t": "tf", "c": "46", "n": 3, "q": "Uma neurônio pode ter um único axônio que se ramifica e envia sinais para diferentes regiões.", "cr": "V", "ex": "VERDADEIRO. O slide chama essa organização de divergente: a saída percorre um axônio, mas o axônio pode se ramificar em múltiplas fibras e distribuir o sinal para vários alvos."},
+  {"t": "tf", "c": "46", "n": 3, "q": "Um neurônio pode ter um único axônio que se ramifica e envia sinais para diferentes regiões.", "cr": "V", "ex": "VERDADEIRO. O slide chama essa organização de divergente: a saída percorre um axônio, mas o axônio pode se ramificar em múltiplas fibras e distribuir o sinal para vários alvos."},
   {"t": "mc", "c": "46", "n": 4, "q": "Qual alternativa associa corretamente o tipo funcional de neurônio à sua direção principal?", "o": [{"l": "A", "v": "Aferente: SNC → efetor"}, {"l": "B", "v": "Eferente: receptor → SNC"}, {"l": "C", "v": "Interneurônio: conecta circuitos dentro do SNC"}, {"l": "D", "v": "Interneurônio: conduz exclusivamente sensações especiais"}], "cr": "C", "ex": "Interneurônios conectam neurônios dentro do SNC e participam do processamento. Aferentes levam sinais dos receptores ao SNC; eferentes levam respostas do SNC aos efetores."},
   {"t": "mc", "c": "46", "n": 5, "q": "Qual conjunto contém apenas formas neuronais apresentadas no slide?", "o": [{"l": "A", "v": "Unipolar, bipolar, pseudounipolar, multipolar e anaxônica"}, {"l": "B", "v": "Piramidal, estrelada, fusiforme, colunar e glomerular"}, {"l": "C", "v": "Aferente, eferente, somática, autônoma e entérica"}, {"l": "D", "v": "Cortical, medular, bulbar, pontina e talâmica"}], "cr": "A", "ex": "A classificação morfológica da aula mostra unipolar, bipolar, pseudounipolar, multipolar e anaxônica."},
   {"t": "tf", "c": "46", "n": 6, "q": "O SNP é formado apenas por nervos cranianos e espinais.", "cr": "F", "ex": "FALSO. O esquema do SNP inclui nervos, gânglios, plexos entéricos e receptores sensitivos. Os nervos são parte importante, mas não são os únicos componentes."},
@@ -2145,7 +2455,7 @@ const QD=[
   {"t": "mc", "c": "46", "n": 15, "q": "Qual função é destacada como exemplo do nível medular?", "o": [{"l": "A", "v": "Compreensão da linguagem"}, {"l": "B", "v": "Processamento visual primário"}, {"l": "C", "v": "Reflexo de retirada diante de estímulo doloroso"}, {"l": "D", "v": "Planejamento e tomada de decisões"}], "cr": "C", "ex": "O nível medular possui circuitos próprios. Entre os exemplos citados estão marcha, reflexos protetores como retirada, reflexos posturais e controles vegetativos."},
   {"t": "tf", "c": "46", "n": 16, "q": "Os níveis medular, subcortical e cortical funcionam isoladamente e um nível superior substitui as funções básicas do inferior.", "cr": "F", "ex": "FALSO. A aula afirma o oposto: os níveis são conectados por vias ascendentes e descendentes. O nível superior refina e torna mais preciso o trabalho do inferior, sem substituir suas funções básicas."},
   {"t": "mc", "c": "46", "n": 17, "q": "Ao chegar a uma sinapse, um impulso nervoso pode:", "o": [{"l": "A", "v": "Somente atravessar sem modificação"}, {"l": "B", "v": "Ser bloqueado, transformado em impulsos repetitivos ou integrado a outros impulsos"}, {"l": "C", "v": "Somente ser convertido em hormônio"}, {"l": "D", "v": "Somente retornar ao receptor periférico"}], "cr": "B", "ex": "O slide apresenta três possibilidades: bloqueio da transmissão, transformação de um impulso único em impulsos repetitivos e integração com outros impulsos para formar padrões complexos."},
-  {"t": "mc", "c": "46", "n": 18, "q": "Na sinapse química, o neurotransmissor atua principalmente sobre:", "o": [{"l": "A", "v": "Proteínas receptoras da membrana do neurônio seguinte"}, {"l": "B", "v": "DNA do neurônio pré-sináptico antes de ser liberado"}, {"l": "C", "v": "A mielina da mesma neurônio"}, {"l": "D", "v": "Somente gap junctions"}], "cr": "A", "ex": "Na sinapse química, a neurônio pré-sináptico libera um neurotransmissor que age em proteínas receptoras da membrana do neurônio pós-sináptico, podendo excitar, inibir ou modificar sua sensibilidade."},
+  {"t": "mc", "c": "46", "n": 18, "q": "Na sinapse química, o neurotransmissor atua principalmente sobre:", "o": [{"l": "A", "v": "Proteínas receptoras da membrana do neurônio seguinte"}, {"l": "B", "v": "DNA do neurônio pré-sináptico antes de ser liberado"}, {"l": "C", "v": "A mielina do mesmo neurônio"}, {"l": "D", "v": "Somente gap junctions"}], "cr": "A", "ex": "Na sinapse química, o neurônio pré-sináptico libera um neurotransmissor que age em proteínas receptoras da membrana do neurônio pós-sináptico, podendo excitar, inibir ou modificar sua sensibilidade."},
   {"t": "mc", "c": "46", "n": 19, "q": "Qual estrutura caracteriza a sinapse elétrica no slide?", "o": [{"l": "A", "v": "Vesículas secretoras sem contato entre células"}, {"l": "B", "v": "Gap junctions que formam canais entre células"}, {"l": "C", "v": "Somente receptores metabotrópicos"}, {"l": "D", "v": "Somente receptores ionotrópicos"}], "cr": "B", "ex": "Sinapses elétricas são caracterizadas por canais em junções comunicantes, ou gap junctions, que conduzem eletricidade diretamente de uma célula à seguinte."},
   {"t": "tf", "c": "46", "n": 20, "q": "No SNC humano, quase todas as sinapses usadas para transmissão de sinais são químicas.", "cr": "V", "ex": "VERDADEIRO. O material ressalta que sinapses elétricas são muito menos frequentes no SNC e que a grande maioria das sinapses de transmissão de sinais é química."}
 ];
@@ -2190,7 +2500,7 @@ function renderQuiz(){
   const tc={mc:'tmc',tf:'ttf',ab:'tab'};
   QD.forEach((q,i)=>{
     const d=document.createElement('div');
-    d.className='q-card';d.id='q'+i;
+    d.className='q-card';d.id='q'+i;d.dataset.type=q.t;d.dataset.category='Cap '+q.c;
     let body='';
     if(q.t==='mc'){body=`<div class="opts">${q.o.map(o=>`<button class="opt-btn" data-q="${i}" data-l="${o.l}" onclick="answerMC(${i},'${o.l}')"><span class="ol">${o.l})</span><span>${o.v}</span></button>`).join('')}</div>`;}
     else if(q.t==='tf'){body=`<div class="tf-opts"><button class="tf-btn" data-q="${i}" data-v="V" onclick="answerTF(${i},'V')">✅ VERDADEIRO</button><button class="tf-btn" data-q="${i}" data-v="F" onclick="answerTF(${i},'F')">❌ FALSO</button></div>`;}
@@ -2240,6 +2550,33 @@ function resetQuiz(){QS={c:0,w:0,a:0};renderQuiz();}
 
 renderQuiz();
 document.querySelectorAll('.section').forEach(section=>annotateChemicalNames(section));
+
+// Ampliação acessível das figuras originais dos slides.
+const lessonLightbox=document.createElement('div');
+lessonLightbox.className='image-lightbox';
+lessonLightbox.setAttribute('aria-hidden','true');
+lessonLightbox.innerHTML='<button type="button" aria-label="Fechar imagem ampliada">×</button><img alt="">';
+document.body.appendChild(lessonLightbox);
+function closeLessonLightbox(){
+  lessonLightbox.classList.remove('open');
+  lessonLightbox.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+}
+document.addEventListener('click',event=>{
+  const source=event.target.closest&&event.target.closest('.slide-figure img');
+  if(!source)return;
+  const enlarged=lessonLightbox.querySelector('img');
+  enlarged.src=source.src;
+  enlarged.alt=source.alt;
+  lessonLightbox.classList.add('open');
+  lessonLightbox.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+  lessonLightbox.querySelector('button').focus();
+});
+lessonLightbox.addEventListener('click',event=>{
+  if(event.target===lessonLightbox||event.target.closest('button'))closeLessonLightbox();
+});
+document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLessonLightbox();});
 </script>
 <script src="study-timer.js"></script>
 <script src="study-progress.js"></script>
