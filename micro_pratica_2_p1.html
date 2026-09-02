@@ -344,7 +344,7 @@ nav button:hover{border-color:var(--cyan);color:#fff}nav button.active{backgroun
 
 <section id="casos" class="section"><div class="container">
 <div class="chapter-head"><div class="chapter-icon">🩺</div><div><div class="chapter-kicker">TREINO PRÁTICO · 17 VÍRUS · 170 RESPOSTAS</div><h2>Casos clínicos</h2></div></div>
-<p class="case-intro">Abra um caso, leia a apresentação clássica e responda as 10 perguntas da estação. Cada item vale 1 ponto: <b>correto e completo = 1,0</b>, <b>correto e incompleto = 0,5</b> e <b>errado = 0</b>. Após corrigir, aparece uma resposta-padrão curta.</p>
+<p class="case-intro">Abra um caso, leia a apresentação clássica e responda as 10 perguntas da estação. Cada item vale 1 ponto. <b>Respostas diretas são aceitas quando o conceito estiver correto</b>; não é necessário repetir a frase-modelo. Respostas parcialmente corretas recebem 0,5 e respostas erradas recebem 0. Após corrigir, aparece uma resposta-padrão curta apenas como referência.</p>
 <div id="caseGrid" class="case-grid"></div></div></section>
 
 <section id="flashcards" class="section"><div class="container">
@@ -452,13 +452,81 @@ function renderClinicalCases(){
 }
 const clinicalScores={};
 function toggleClinicalCase(ci){const el=document.getElementById('case-'+CLINICAL_CASES[ci].id);const was=el.classList.contains('open');document.querySelectorAll('.case-card.open').forEach(x=>x.classList.remove('open'));if(!was)el.classList.add('open');}
+function levenshteinCase(a,b){
+ const m=a.length,n=b.length;if(!m)return n;if(!n)return m;
+ const prev=Array.from({length:n+1},(_,i)=>i),cur=new Array(n+1);
+ for(let i=1;i<=m;i++){cur[0]=i;for(let j=1;j<=n;j++){const c=a[i-1]===b[j-1]?0:1;cur[j]=Math.min(cur[j-1]+1,prev[j]+1,prev[j-1]+c);}for(let j=0;j<=n;j++)prev[j]=cur[j];}
+ return prev[n];
+}
+function tokenCloseCase(a,b){
+ if(a===b)return true;
+ if(a.length<4||b.length<4)return false;
+ const d=levenshteinCase(a,b),mx=Math.max(a.length,b.length);
+ if(mx>=9)return d<=2;
+ if(mx>=6)return d<=1;
+ return d<=1;
+}
+function hasApproxCase(ans,target){
+ const A=normCaseText(ans),T=normCaseText(target);if(!A||!T)return false;
+ if(A.includes(T)||T.includes(A))return true;
+ const aw=A.split(/\s+/).filter(Boolean),tw=T.split(/\s+/).filter(Boolean);
+ return tw.every(t=>aw.some(a=>tokenCloseCase(a,t)));
+}
+function expandCaseTerms(r){
+ const generic=new Set(['virus','viral','humano','humana','familia','genero','principal','contato','doenca','infeccao','aguda','agudo','forma','caso','material','metodo','clinica','clinico','avaliacao','tratamento','prevencao','transmissao','complicacao','complicacoes','risco','fatores','exame','exames','teste','testes','sintomas','paciente','pessoa','pessoas','pode','podem','mais','menos','fase','uso','via']);
+ const terms=[];
+ for(const raw of (r.kw||[])){
+   const n=normCaseText(raw);if(!n)continue;
+   terms.push(n);
+   for(const p of n.split(/[\s/+-]+/))if(p.length>=3&&!generic.has(p))terms.push(p);
+ }
+ return [...new Set(terms)].filter(t=>t.length>=3&&!generic.has(t));
+}
 function gradeClinicalAnswer(ci,qi){
- const r=CLINICAL_CASES[ci].rows[qi], ta=document.getElementById(`ca-${ci}-${qi}`), fb=document.getElementById(`cf-${ci}-${qi}`), btn=document.getElementById(`cb-${ci}-${qi}`); const ans=normCaseText(ta.value);
+ const c=CLINICAL_CASES[ci],r=c.rows[qi],ta=document.getElementById(`ca-${ci}-${qi}`),fb=document.getElementById(`cf-${ci}-${qi}`),btn=document.getElementById(`cb-${ci}-${qi}`);
+ const raw=ta.value,ans=normCaseText(raw);
  if(ans.length<2){fb.className='case-feedback show';fb.innerHTML='<span class="grade wrong">Digite uma resposta antes de corrigir.</span>';return;}
- const kws=r.kw.map(normCaseText).filter(k=>k.length>2); const hits=kws.filter(k=>ans.includes(k)).length; const ratio=kws.length?hits/Math.min(kws.length,6):0;
- let score=0,label='Errado',cls='wrong'; if(ratio>=0.55 || hits>=4){score=1;label='Correto e completo';cls='complete';} else if(ratio>=0.22 || hits>=2 || (hits>=1&&ans.length>=28)){score=.5;label='Correto, mas incompleto';cls='partial';}
- clinicalScores[`${ci}-${qi}`]=score; ta.disabled=true;btn.disabled=true;
- fb.className='case-feedback show';fb.innerHTML=`<span class="grade ${cls}">${label} · ${score.toFixed(1).replace('.',',')}/1,0</span><div class="expected"><b>Resposta esperada:</b> ${r.std}</div>`; updateClinicalScore(ci);
+
+ // CORREÇÃO MANUAL TOLERANTE:
+ // - ignora acentos, maiúsculas/minúsculas e pontuação;
+ // - tolera pequenos erros de digitação (ex.: "adenovrius");
+ // - aceita respostas curtas quando elas identificam corretamente o conceito pedido;
+ // - NÃO exige copiar a resposta-modelo nem citar todos os detalhes para obter 1,0.
+ const q=normCaseText(r.q),terms=expandCaseTerms(r);
+ const answerTokens=ans.split(/\s+/).filter(Boolean);
+ const hits=terms.filter(t=>hasApproxCase(ans,t));
+ const uniqueHits=[...new Set(hits)];
+
+ // Termos particularmente identificadores para perguntas diretas.
+ const directQuestion=['diagnostico','agente causal','tratamento','mecanismo de transmissao','provas diagnosticas'].includes(q);
+ const caseNames=normCaseText(c.name).split(/[\s/–—-]+/).filter(x=>x.length>=3);
+ const caseNameHit=caseNames.some(n=>answerTokens.some(a=>tokenCloseCase(a,n)));
+
+ // Evita que palavras genéricas isoladas deem ponto ("vírus", "exame", "contato" etc.).
+ const weakOnly=uniqueHits.length===0;
+ let score=0,label='Errado',cls='wrong';
+
+ if(uniqueHits.length>=1 || (directQuestion && caseNameHit)){
+   // Se existe ao menos um conceito específico correto e pertinente, considera CORRETO.
+   // A completude da frase-modelo não é exigida: o objetivo é verificar se o aluno sabe a resposta.
+   score=1;label='Correto';cls='complete';
+ } else {
+   // Segunda chance para erros ortográficos em abreviações/nome do agente presentes na resposta padrão.
+   const expectedWords=normCaseText(r.std).split(/\s+/).filter(w=>w.length>=4);
+   const fuzzyExpected=expectedWords.some(w=>answerTokens.some(a=>tokenCloseCase(a,w)));
+   if(fuzzyExpected){score=1;label='Correto';cls='complete';}
+ }
+
+ // 0,5 fica reservado para respostas que demonstram alguma direção correta, mas são genéricas demais
+ // para responder ao que foi perguntado (ex.: "é um vírus" em características do agente).
+ if(score===0){
+   const broad=['dna','rna','envelopado','nao envelopado','respiratoria','fecal oral','sexual','vertical','parenteral','suporte','vacina','pcr','sorologia','igm','igg','aciclovir','reidratacao','hidratacao'];
+   const broadHit=broad.some(t=>hasApproxCase(ans,t) && normCaseText(r.full).includes(normCaseText(t)));
+   if(broadHit){score=.5;label='Parcialmente correto';cls='partial';}
+ }
+
+ clinicalScores[`${ci}-${qi}`]=score;ta.disabled=true;btn.disabled=true;
+ fb.className='case-feedback show';fb.innerHTML=`<span class="grade ${cls}">${label} · ${score.toFixed(1).replace('.',',')}/1,0</span><div class="expected"><b>Resposta esperada:</b> ${r.std}</div>`;updateClinicalScore(ci);
 }
 function updateClinicalScore(ci){let total=0,done=0;for(let q=0;q<10;q++){const k=`${ci}-${q}`;if(k in clinicalScores){total+=clinicalScores[k];done++;}}document.getElementById(`cs-${ci}`).textContent=total.toFixed(1).replace('.',',')+' / 10';document.getElementById(`cp-${ci}`).textContent=`· ${done}/10 corrigidas`;}
 function resetClinicalCase(ci){for(let q=0;q<10;q++){delete clinicalScores[`${ci}-${q}`];const ta=document.getElementById(`ca-${ci}-${q}`),b=document.getElementById(`cb-${ci}-${q}`),f=document.getElementById(`cf-${ci}-${q}`);ta.value='';ta.disabled=false;b.disabled=false;f.className='case-feedback';f.innerHTML='';}updateClinicalScore(ci);}
