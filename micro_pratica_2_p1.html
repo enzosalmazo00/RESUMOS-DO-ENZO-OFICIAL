@@ -482,51 +482,65 @@ function expandCaseTerms(r){
  }
  return [...new Set(terms)].filter(t=>t.length>=3&&!generic.has(t));
 }
-function gradeClinicalAnswer(ci,qi){
+async function gradeClinicalAnswer(ci,qi){
  const c=CLINICAL_CASES[ci],r=c.rows[qi],ta=document.getElementById(`ca-${ci}-${qi}`),fb=document.getElementById(`cf-${ci}-${qi}`),btn=document.getElementById(`cb-${ci}-${qi}`);
  const raw=ta.value,ans=normCaseText(raw);
  if(ans.length<2){fb.className='case-feedback show';fb.innerHTML='<span class="grade wrong">Digite uma resposta antes de corrigir.</span>';return;}
 
- // CORREÇÃO MANUAL TOLERANTE:
- // - ignora acentos, maiúsculas/minúsculas e pontuação;
- // - tolera pequenos erros de digitação (ex.: "adenovrius");
- // - aceita respostas curtas quando elas identificam corretamente o conceito pedido;
- // - NÃO exige copiar a resposta-modelo nem citar todos os detalhes para obter 1,0.
+ // MODO HÍBRIDO ECONÔMICO:
+ // 1) respostas muito claras e curtas são corrigidas localmente;
+ // 2) somente respostas ambíguas/complexas vão para a IA;
+ // 3) a IA recebe apenas caso + pergunta + gabarito + resposta, com saída curtíssima.
  const q=normCaseText(r.q),terms=expandCaseTerms(r);
  const answerTokens=ans.split(/\s+/).filter(Boolean);
- const hits=terms.filter(t=>hasApproxCase(ans,t));
- const uniqueHits=[...new Set(hits)];
-
- // Termos particularmente identificadores para perguntas diretas.
- const directQuestion=['diagnostico','agente causal','tratamento','mecanismo de transmissao','provas diagnosticas'].includes(q);
  const caseNames=normCaseText(c.name).split(/[\s/–—-]+/).filter(x=>x.length>=3);
  const caseNameHit=caseNames.some(n=>answerTokens.some(a=>tokenCloseCase(a,n)));
+ const hasNegation=/(^|\s)(nao|nunca|jamais|sem)(\s|$)/.test(ans);
+ const stop=new Set(['e','ou','de','da','do','das','dos','um','uma','por','para','com','em','no','na','nos','nas','o','a','os','as','via','virus','viral']);
+ const meaningful=answerTokens.filter(t=>t.length>=3&&!stop.has(t));
+ const expected=normCaseText(r.full+' '+r.std);
+ const termHit=t=>terms.some(k=>tokenCloseCase(t,k)||hasApproxCase(t,k)) || expected.split(/\s+/).some(e=>tokenCloseCase(t,e));
+ const matched=meaningful.filter(termHit);
+ const unmatched=meaningful.filter(t=>!termHit(t));
+ let localScore=null;
 
- // Evita que palavras genéricas isoladas deem ponto ("vírus", "exame", "contato" etc.).
- const weakOnly=uniqueHits.length===0;
- let score=0,label='Errado',cls='wrong';
-
- if(uniqueHits.length>=1 || (directQuestion && caseNameHit)){
-   // Se existe ao menos um conceito específico correto e pertinente, considera CORRETO.
-   // A completude da frase-modelo não é exigida: o objetivo é verificar se o aluno sabe a resposta.
-   score=1;label='Correto';cls='complete';
- } else {
-   // Segunda chance para erros ortográficos em abreviações/nome do agente presentes na resposta padrão.
-   const expectedWords=normCaseText(r.std).split(/\s+/).filter(w=>w.length>=4);
-   const fuzzyExpected=expectedWords.some(w=>answerTokens.some(a=>tokenCloseCase(a,w)));
-   if(fuzzyExpected){score=1;label='Correto';cls='complete';}
+ // Diagnóstico e agente: o nome correto da doença/agente basta, mesmo curto/abreviado.
+ if(!hasNegation && (q==='diagnostico'||q==='agente causal') && caseNameHit){
+   localScore=1;
+ }
+ // Para respostas objetivas (transmissão, tratamento, prevenção etc.), só autoaprova
+ // se forem curtas e TODOS os conceitos escritos forem compatíveis com o gabarito.
+ else if(!hasNegation && q!=='caracteristicas do agente' && meaningful.length>=1 && meaningful.length<=4 && matched.length>=1 && unmatched.length===0){
+   localScore=1;
  }
 
- // 0,5 fica reservado para respostas que demonstram alguma direção correta, mas são genéricas demais
- // para responder ao que foi perguntado (ex.: "é um vírus" em características do agente).
- if(score===0){
-   const broad=['dna','rna','envelopado','nao envelopado','respiratoria','fecal oral','sexual','vertical','parenteral','suporte','vacina','pcr','sorologia','igm','igg','aciclovir','reidratacao','hidratacao'];
-   const broadHit=broad.some(t=>hasApproxCase(ans,t) && normCaseText(r.full).includes(normCaseText(t)));
-   if(broadHit){score=.5;label='Parcialmente correto';cls='partial';}
+ if(localScore!==null){
+   clinicalScores[`${ci}-${qi}`]=localScore;ta.disabled=true;btn.disabled=true;
+   fb.className='case-feedback show';fb.innerHTML=`<span class="grade complete">Correto · 1,0/1,0</span><div class="expected"><b>Resposta esperada:</b> ${r.std}</div>`;
+   updateClinicalScore(ci);return;
  }
 
- clinicalScores[`${ci}-${qi}`]=score;ta.disabled=true;btn.disabled=true;
- fb.className='case-feedback show';fb.innerHTML=`<span class="grade ${cls}">${label} · ${score.toFixed(1).replace('.',',')}/1,0</span><div class="expected"><b>Resposta esperada:</b> ${r.std}</div>`;updateClinicalScore(ci);
+ // Resposta precisa de julgamento semântico: usa a IA APENAS aqui.
+ btn.disabled=true;btn.textContent='Revisando…';
+ fb.className='case-feedback show';fb.innerHTML='<span class="grade partial">🤖 Revisando resposta…</span>';
+ try{
+   const sb=window.authClient||window.supabaseClient||null;
+   if(!sb || !sb.functions || !sb.functions.invoke) throw new Error('cliente indisponível');
+   const {data,error}=await sb.functions.invoke('enzo-grade',{body:{caso:c.clue,pergunta:r.q,esperada:r.full,resposta:raw}});
+   if(error||!data||![0,.5,1].includes(Number(data.score))) throw new Error('falha na revisão');
+   const score=Number(data.score),label=score===1?'Correto':score===.5?'Parcialmente correto':'Errado',cls=score===1?'complete':score===.5?'partial':'wrong';
+   clinicalScores[`${ci}-${qi}`]=score;ta.disabled=true;
+   const note=data.feedback?`<div style="margin-top:6px;color:var(--muted);font-size:12px">${String(data.feedback).replace(/[<>]/g,'')}</div>`:'';
+   fb.innerHTML=`<span class="grade ${cls}">${label} · ${score.toFixed(1).replace('.',',')}/1,0</span>${note}<div class="expected"><b>Resposta esperada:</b> ${r.std}</div>`;
+   updateClinicalScore(ci);
+ }catch(e){
+   // Se a IA gratuita estiver indisponível, não damos nota errada automaticamente.
+   // O aluno pode tentar novamente depois.
+   btn.disabled=false;btn.textContent='Tentar revisão novamente';
+   fb.innerHTML='<span class="grade partial">⚠️ Não consegui revisar agora. Tente novamente em instantes.</span>';
+   return;
+ }
+ btn.textContent='Corrigido';
 }
 function updateClinicalScore(ci){let total=0,done=0;for(let q=0;q<10;q++){const k=`${ci}-${q}`;if(k in clinicalScores){total+=clinicalScores[k];done++;}}document.getElementById(`cs-${ci}`).textContent=total.toFixed(1).replace('.',',')+' / 10';document.getElementById(`cp-${ci}`).textContent=`· ${done}/10 corrigidas`;}
 function resetClinicalCase(ci){for(let q=0;q<10;q++){delete clinicalScores[`${ci}-${q}`];const ta=document.getElementById(`ca-${ci}-${q}`),b=document.getElementById(`cb-${ci}-${q}`),f=document.getElementById(`cf-${ci}-${q}`);ta.value='';ta.disabled=false;b.disabled=false;f.className='case-feedback';f.innerHTML='';}updateClinicalScore(ci);}
