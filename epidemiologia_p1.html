@@ -504,4 +504,4 @@ function revealOpen(i){const card=document.getElementById('q'+i);if(card.classLi
 function updateScores(){document.getElementById('sC').textContent=QS.c;document.getElementById('sW').textContent=QS.w;document.getElementById('sP').textContent=QD.length-QS.a;}
 function filterQuiz(){const category=qCategory.value,type=qType.value;let count=0;document.querySelectorAll('#quizContainer .q-card').forEach(card=>{const show=(!category||card.dataset.category===category)&&(!type||card.dataset.type===type);card.style.display=show?'block':'none';if(show)count++;});document.getElementById('qVisible').textContent=`${count} de ${QD.length} questões`;document.getElementById('qEmpty').style.display=count?'none':'block';}
 qCategory.addEventListener('change',filterQuiz);qType.addEventListener('change',filterQuiz);function resetQuiz(){QS={c:0,w:0,a:0};renderQuiz();}renderQuiz();
-</script><script src="study-timer.js"></script><script src="enzo-ia.js"></script></body></html>
+</script><script src="study-timer.js"></script><script src="study-progress.js"></script><script src="enzo-ia.js"></script></body></html>
