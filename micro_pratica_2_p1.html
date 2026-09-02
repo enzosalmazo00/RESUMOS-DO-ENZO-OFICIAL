@@ -526,7 +526,9 @@ async function gradeClinicalAnswer(ci,qi){
  try{
    const sb=window.authClient||window.supabaseClient||null;
    if(!sb || !sb.functions || !sb.functions.invoke) throw new Error('cliente indisponível');
-   const {data,error}=await sb.functions.invoke('enzo-grade',{body:{caso:c.clue,pergunta:r.q,esperada:r.full,resposta:raw}});
+   const invokePromise=sb.functions.invoke('enzo-grade',{body:{caso:c.clue,pergunta:r.q,esperada:r.full,resposta:raw}});
+   const timeoutPromise=new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout revisão')),10000));
+   const {data,error}=await Promise.race([invokePromise,timeoutPromise]);
    if(error||!data||![0,.5,1].includes(Number(data.score))) throw new Error('falha na revisão');
    const score=Number(data.score),label=score===1?'Correto':score===.5?'Parcialmente correto':'Errado',cls=score===1?'complete':score===.5?'partial':'wrong';
    clinicalScores[`${ci}-${qi}`]=score;ta.disabled=true;
@@ -543,7 +545,42 @@ async function gradeClinicalAnswer(ci,qi){
  btn.textContent='Corrigido';
 }
 function updateClinicalScore(ci){let total=0,done=0;for(let q=0;q<10;q++){const k=`${ci}-${q}`;if(k in clinicalScores){total+=clinicalScores[k];done++;}}document.getElementById(`cs-${ci}`).textContent=total.toFixed(1).replace('.',',')+' / 10';document.getElementById(`cp-${ci}`).textContent=`· ${done}/10 corrigidas`;}
-function resetClinicalCase(ci){for(let q=0;q<10;q++){delete clinicalScores[`${ci}-${q}`];const ta=document.getElementById(`ca-${ci}-${q}`),b=document.getElementById(`cb-${ci}-${q}`),f=document.getElementById(`cf-${ci}-${q}`);ta.value='';ta.disabled=false;b.disabled=false;f.className='case-feedback';f.innerHTML='';}updateClinicalScore(ci);}
+function resetClinicalCase(ci){for(let q=0;q<10;q++){delete clinicalScores[`${ci}-${q}`];const ta=document.getElementById(`ca-${ci}-${q}`),b=document.getElementById(`cb-${ci}-${q}`),f=document.getElementById(`cf-${ci}-${q}`);ta.value='';ta.disabled=false;b.disabled=false;b.textContent='Corrigir resposta';f.className='case-feedback';f.innerHTML='';}updateClinicalScore(ci);}
 renderClinicalCases();
 </script>
+
+<script>
+// Correção defensiva do timer somente nesta página.
+// O study-timer.js global continua carregado; aqui apenas impedimos a exibição de
+// valores absurdos causados por timestamp inicial inválido/zero.
+(function(){
+  const KEY='enzo_micro_pratica_2_p1_session_start_v2';
+  let start=Number(sessionStorage.getItem(KEY));
+  const now=Date.now();
+  if(!Number.isFinite(start) || start<=0 || start>now || (now-start)>24*60*60*1000){
+    start=now; sessionStorage.setItem(KEY,String(start));
+  }
+  function elapsedLabel(){
+    const ms=Math.max(0,Date.now()-start), totalMin=Math.floor(ms/60000);
+    const h=Math.floor(totalMin/60), m=totalMin%60;
+    return `${h}h ${String(m).padStart(2,'0')}min`;
+  }
+  function patchTimer(){
+    const label=elapsedLabel();
+    document.querySelectorAll('body *').forEach(el=>{
+      if(el.children.length) return;
+      const t=(el.textContent||'').trim();
+      // Corrige tanto o valor absurdo quanto o contador normal do widget global,
+      // sem tocar em notas, questões ou outros números da página.
+      if(/^\d{1,9}h\s+\d{1,2}min$/i.test(t) && (el.closest('[style*="fixed"]') || el.parentElement?.closest('[style*="fixed"]'))){
+        el.textContent=label;
+      }
+    });
+  }
+  setInterval(patchTimer,500);
+  setTimeout(patchTimer,250);
+  setTimeout(patchTimer,1200);
+})();
+</script>
+
 </body></html>
