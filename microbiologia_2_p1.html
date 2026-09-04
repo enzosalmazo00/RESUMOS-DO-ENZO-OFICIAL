@@ -1128,5 +1128,331 @@ function enhanceVirusIdentitySheets(){
 function bootVirusMasterLayer(){initVirusAtlas();enhanceVirusIdentitySheets();const m=document.getElementById('atlasQuickModal');if(m){m.querySelector('.atlas-modal-close').addEventListener('click',()=>m.classList.remove('open'));m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')});}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bootVirusMasterLayer);else bootVirusMasterLayer();
 </script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   MICROBIOLOGIA II · TREINO POR ABA + RAIO-X DE DESEMPENHO
+   Reutiliza exclusivamente as questões já existentes em QD.
+   ═══════════════════════════════════════════════════════════════ */
+(function(){
+  'use strict';
+  if(window.__MICRO_TAB_QUIZ__) return;
+  window.__MICRO_TAB_QUIZ__=true;
+
+  const TAB_META={
+    geral:{icon:'🧬',name:'Virologia geral',cats:['Virologia geral']},
+    parvo:{icon:'🟥',name:'Parvovírus B19',cats:['Parvovírus B19']},
+    rubeola:{icon:'🌸',name:'Rubéola',cats:['Rubéola']},
+    influenza:{icon:'🤧',name:'Influenza',cats:['Influenza']},
+    gastro:{icon:'💧',name:'Rota & Astro',cats:['Rotavírus','Gastroenterites','Astrovírus']},
+    adeno:{icon:'👁️',name:'Adenovírus',cats:['Adenovírus']},
+    corona:{icon:'👑',name:'Coronavírus',cats:['Coronavírus']},
+    arbovirus:{icon:'🦟',name:'Arbovírus',cats:['Dengue','Zika','Chikungunya','Febre amarela','Arbovírus']},
+    raiva:{icon:'🐕',name:'Raiva',cats:['Raiva']},
+    herpes:{icon:'🔥',name:'Herpesvírus',cats:['HSV','VZV','EBV','CMV','HHV-6/7','HHV-8','Herpesvírus','HSV/VZV']},
+    picorna:{icon:'🧩',name:'Picornavírus',cats:['Poliovírus','Coxsackie A','Coxsackie B','Rinovírus','Coxsackie','Picornavírus']},
+    pox:{icon:'🧱',name:'Poxvírus',cats:['Poxvírus','Mpox']},
+    hpv:{icon:'🎯',name:'HPV',cats:['HPV']},
+    hepatites:{icon:'🟡',name:'Hepatites A–E',cats:['Hepatites','Hepatite A','Hepatite B','Hepatite C','Hepatite D','Hepatite E']}
+  };
+  const TAB_ORDER=Object.keys(TAB_META);
+  const STORAGE_BASE='enzo-micro-tab-quiz:v1:';
+  const PISTA_NUMBERS=[4,8,11,14,16,21,25,27,30,34,42,46,49,51,53,55];
+  let ownerKey='local';
+  let state={answers:{},ai:{},aiBusy:{}};
+
+  function normalize(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();}
+  function esc(v){return String(v==null?'':v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+  function getUser(){return window.authSession&&window.authSession.user?window.authSession.user:null;}
+  function getOwner(){const u=getUser();return u&&u.id?'user:'+u.id:'local';}
+  function getStudentName(){
+    const u=getUser();
+    const md=u&&u.user_metadata||{};
+    const raw=md.full_name||md.name||md.nome||md.display_name||md.preferred_username||'';
+    if(raw){
+      const parts=String(raw).trim().split(/\s+/).filter(Boolean);
+      const clean=parts.filter(x=>!/^dr\.?$/i.test(x)&&!/^dra\.?$/i.test(x));
+      return (clean[0]||parts[0]||'Aluno');
+    }
+    return 'Aluno';
+  }
+  function storageKey(){return STORAGE_BASE+ownerKey;}
+  function loadState(){
+    try{
+      const raw=JSON.parse(localStorage.getItem(storageKey())||'null');
+      state=raw&&typeof raw==='object'?raw:{answers:{},ai:{},aiBusy:{}};
+      state.answers=state.answers&&typeof state.answers==='object'?state.answers:{};
+      state.ai=state.ai&&typeof state.ai==='object'?state.ai:{};
+      state.aiBusy={};
+    }catch(_){state={answers:{},ai:{},aiBusy:{}};}
+  }
+  function saveState(){try{localStorage.setItem(storageKey(),JSON.stringify({answers:state.answers,ai:state.ai,updatedAt:new Date().toISOString()}));}catch(_){} }
+
+  function questionsForTab(tabId){
+    const meta=TAB_META[tabId];
+    if(!meta||!Array.isArray(window.QD||QD))return [];
+    return QD.filter(q=>meta.cats.includes(q.c));
+  }
+  function objectiveQuestions(tabId){return questionsForTab(tabId).filter(q=>q.t!=='ab');}
+  function getAnswer(qn){return state.answers[String(qn)]||null;}
+
+  function statsForTab(tabId){
+    const qs=questionsForTab(tabId), obj=qs.filter(q=>q.t!=='ab');
+    let answered=0,correct=0,wrong=0,open=0;
+    const wrongQuestions=[];
+    const byTopic={};
+    qs.forEach(q=>{
+      const a=getAnswer(q.n);
+      if(!a)return;
+      if(q.t==='ab'){
+        if(a.status==='open')open++;
+        return;
+      }
+      answered++;
+      if(a.status==='correct')correct++;
+      if(a.status==='wrong'){
+        wrong++;
+        wrongQuestions.push(q);
+        byTopic[q.c]=(byTopic[q.c]||0)+1;
+      }
+    });
+    const rate=answered?Math.round(correct/answered*100):0;
+    const complete=answered===obj.length&&obj.length>0;
+    let priority='—',level='pending';
+    if(!answered){priority='—';level='pending';}
+    else if(wrong===0&&complete){priority='DOMINADO';level='mastered';}
+    else if(wrong>=2&&wrong/answered>=.5){priority='PRIORIDADE 1';level='p1';}
+    else if(wrong>=1&&wrong/answered>=.3){priority='PRIORIDADE 2';level='p2';}
+    else if(wrong>=1){priority='PRIORIDADE 3';level='p3';}
+    else {priority='EM ANDAMENTO';level='ok';}
+    const score=wrong*3+(100-rate)*.08+(complete?0:2);
+    return {qs,obj,answered,correct,wrong,open,rate,complete,priority,level,score,wrongQuestions,byTopic};
+  }
+
+  function globalStats(){
+    return TAB_ORDER.map(id=>({id,...statsForTab(id)}));
+  }
+
+  function injectStyles(){
+    if(document.getElementById('micro-tab-quiz-styles'))return;
+    const st=document.createElement('style');st.id='micro-tab-quiz-styles';
+    st.textContent=`
+      .micro-tab-quiz{margin:30px 0 22px;padding:0;border:1px solid rgba(79,156,249,.25);border-radius:22px;background:linear-gradient(145deg,rgba(16,24,43,.98),rgba(10,14,25,.98));box-shadow:0 18px 55px rgba(0,0,0,.24);overflow:hidden}
+      .mtq-head{padding:22px 22px 16px;background:radial-gradient(circle at 10% 0%,rgba(79,156,249,.13),transparent 42%),radial-gradient(circle at 90% 0%,rgba(56,232,192,.08),transparent 38%);border-bottom:1px solid rgba(79,156,249,.12)}
+      .mtq-kicker{display:inline-flex;padding:5px 9px;border-radius:999px;border:1px solid rgba(56,232,192,.24);background:rgba(56,232,192,.06);color:var(--accent2);font:700 10px var(--font-mono);letter-spacing:1.3px;text-transform:uppercase}
+      .mtq-head h3{margin:10px 0 5px;color:#fff;font:800 20px var(--font-display)}.mtq-head p{margin:0;color:#aeb9ce;font-size:13px;line-height:1.6}
+      .mtq-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:14px 20px}.mtq-stat{padding:11px 9px;text-align:center;border:1px solid rgba(148,163,184,.12);border-radius:12px;background:rgba(255,255,255,.025)}.mtq-stat b{display:block;color:#fff;font:800 19px var(--font-display)}.mtq-stat span{display:block;margin-top:2px;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+      .mtq-priority{margin:0 20px 12px;padding:10px 12px;border-radius:12px;border:1px solid rgba(249,201,79,.16);background:rgba(249,201,79,.045);color:#d8deeb;font-size:12px;line-height:1.55}.mtq-priority strong{color:#fff}.mtq-priority.p1{border-color:rgba(249,95,95,.45);background:rgba(249,95,95,.08)}.mtq-priority.p2{border-color:rgba(249,201,79,.36);background:rgba(249,201,79,.06)}.mtq-priority.mastered{border-color:rgba(79,249,132,.35);background:rgba(79,249,132,.07)}
+      .mtq-list{display:grid;gap:10px;padding:0 20px 16px}.mtq-question{padding:15px;border:1px solid rgba(148,163,184,.13);border-radius:15px;background:rgba(255,255,255,.018)}.mtq-question.done-correct{border-color:rgba(79,249,132,.35);background:rgba(79,249,132,.045)}.mtq-question.done-wrong{border-color:rgba(249,95,95,.4);background:rgba(249,95,95,.055)}
+      .mtq-qhead{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;flex-wrap:wrap;margin-bottom:8px}.mtq-qnum{font:700 10px var(--font-mono);color:var(--accent2);letter-spacing:.7px}.mtq-tag{padding:4px 7px;border-radius:999px;background:rgba(184,79,249,.09);border:1px solid rgba(184,79,249,.18);color:#d8b8ff;font:700 9px var(--font-mono)}.mtq-text{margin:0 0 11px;color:#eef2fb;font-size:13.5px;line-height:1.6}.mtq-opts{display:grid;grid-template-columns:1fr 1fr;gap:7px}.mtq-opt{display:flex;align-items:flex-start;gap:8px;width:100%;text-align:left;padding:9px 10px;border:1px solid rgba(148,163,184,.15);border-radius:10px;background:rgba(10,15,27,.55);color:#cbd5e7;font:600 12px var(--font-body);cursor:pointer;transition:.18s}.mtq-opt:hover{border-color:var(--accent);color:#fff}.mtq-opt:disabled{cursor:default;opacity:.95}.mtq-opt.correct{border-color:rgba(79,249,132,.65);background:rgba(79,249,132,.10);color:#effff5}.mtq-opt.wrong{border-color:rgba(249,95,95,.65);background:rgba(249,95,95,.10);color:#fff1f1}.mtq-letter{font:800 10px var(--font-mono);color:var(--accent)}
+      .mtq-tf{display:flex;gap:7px;flex-wrap:wrap}.mtq-tf button{border:1px solid rgba(148,163,184,.15);border-radius:10px;background:rgba(10,15,27,.55);color:#d6deed;padding:9px 12px;font:800 11px var(--font-body);cursor:pointer}.mtq-tf button.correct{border-color:rgba(79,249,132,.65);background:rgba(79,249,132,.10)}.mtq-tf button.wrong{border-color:rgba(249,95,95,.65);background:rgba(249,95,95,.10)}.mtq-tf button:disabled{cursor:default}
+      .mtq-result{margin-top:9px;padding:8px 10px;border-radius:9px;font-size:11px;font-weight:800}.mtq-result.good{background:rgba(79,249,132,.08);color:#9bffba}.mtq-result.bad{background:rgba(249,95,95,.08);color:#ffb1b1}.mtq-explain{display:none;margin-top:9px;padding:10px 11px;border-left:3px solid var(--accent);border-radius:0 9px 9px 0;background:rgba(79,156,249,.055);color:#bfc9dc;font-size:12px;line-height:1.55}.mtq-explain.show{display:block}.mtq-open-btn{border:1px solid rgba(79,156,249,.25);border-radius:9px;background:rgba(79,156,249,.07);color:#dceaff;padding:8px 10px;font:700 11px var(--font-body);cursor:pointer}
+      .mtq-bottom{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;padding:14px 20px 18px;border-top:1px solid rgba(148,163,184,.09)}.mtq-reset,.mtq-ai-btn,.mtq-xray-btn,.mtq-go{border:1px solid rgba(79,156,249,.25);border-radius:10px;background:rgba(79,156,249,.08);color:#dceaff;padding:9px 12px;font:800 11px var(--font-body);cursor:pointer}.mtq-ai-btn{background:linear-gradient(135deg,rgba(184,79,249,.18),rgba(79,156,249,.12));border-color:rgba(184,79,249,.34)}.mtq-reset:hover,.mtq-ai-btn:hover,.mtq-xray-btn:hover,.mtq-go:hover{border-color:var(--accent);transform:translateY(-1px)}.mtq-muted{color:var(--muted);font-size:10px}
+      .mtq-ai{margin:0 20px 16px;padding:13px 14px;border:1px solid rgba(184,79,249,.25);border-radius:13px;background:linear-gradient(135deg,rgba(184,79,249,.07),rgba(79,156,249,.045));color:#dfe5f2;font-size:12px;line-height:1.65}.mtq-ai[hidden]{display:none}.mtq-ai strong{color:#fff}.mtq-ai-loading{opacity:.72}.mtq-ai-priority{margin-top:8px;display:grid;gap:5px}.mtq-ai-priority div{padding:7px 9px;border-radius:8px;background:rgba(255,255,255,.035)}
+      .micro-xray{margin:26px 0 34px;padding:0;border:1px solid rgba(184,79,249,.25);border-radius:22px;background:linear-gradient(145deg,rgba(22,20,44,.98),rgba(10,14,25,.98));box-shadow:0 18px 60px rgba(0,0,0,.25);overflow:hidden}.mx-head{padding:22px;background:radial-gradient(circle at 10% 0%,rgba(184,79,249,.15),transparent 42%),radial-gradient(circle at 90% 0%,rgba(79,156,249,.10),transparent 40%)}.mx-kicker{color:#d9b5ff;font:700 10px var(--font-mono);letter-spacing:1.5px;text-transform:uppercase}.mx-head h2{margin:8px 0 5px;color:#fff;font:800 22px var(--font-display)}.mx-head p{margin:0;color:#b5c0d4;font-size:13px;line-height:1.6}.mx-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:16px 20px}.mx-row{display:grid;grid-template-columns:1fr auto;width:100%;text-align:left;font:inherit;cursor:pointer;gap:10px;align-items:center;padding:11px 12px;border:1px solid rgba(148,163,184,.11);border-radius:12px;background:rgba(255,255,255,.022)}.mx-row h4{margin:0;color:#fff;font-size:12px}.mx-row small{display:block;color:var(--muted);margin-top:2px;font-size:10px}.mx-badge{white-space:nowrap;padding:5px 8px;border-radius:999px;font:800 9px var(--font-mono)}.mx-badge.p1{background:rgba(249,95,95,.12);color:#ff9d9d;border:1px solid rgba(249,95,95,.35)}.mx-badge.p2{background:rgba(249,201,79,.10);color:#f8dc86;border:1px solid rgba(249,201,79,.28)}.mx-badge.p3{background:rgba(79,156,249,.10);color:#a9d0ff;border:1px solid rgba(79,156,249,.25)}.mx-badge.mastered{background:rgba(79,249,132,.09);color:#a8ffbf;border:1px solid rgba(79,249,132,.25)}.mx-badge.pending,.mx-badge.ok{background:rgba(148,163,184,.07);color:#b9c2d1;border:1px solid rgba(148,163,184,.16)}.mx-foot{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;padding:14px 20px 18px;border-top:1px solid rgba(148,163,184,.09)}.mx-priority-box{margin:0 20px 14px;padding:12px;border-left:3px solid var(--gold);border-radius:0 10px 10px 0;background:rgba(249,201,79,.05);color:#d9dfeb;font-size:12px;line-height:1.6}.mx-ai{margin:0 20px 16px;padding:13px 14px;border:1px solid rgba(184,79,249,.25);border-radius:13px;background:rgba(184,79,249,.055);color:#e4e8f2;font-size:12px;line-height:1.65}.mx-ai[hidden]{display:none}
+      @media(max-width:720px){.mtq-summary{grid-template-columns:1fr 1fr}.mtq-opts{grid-template-columns:1fr}.mx-grid{grid-template-columns:1fr}.mx-row{grid-template-columns:1fr auto}}
+      @media(prefers-reduced-motion:reduce){.mtq-reset:hover,.mtq-ai-btn:hover,.mtq-xray-btn:hover,.mtq-go:hover{transform:none}}
+    `;
+    document.head.appendChild(st);
+  }
+
+  function renderQuestion(q,tabId){
+    const card=document.createElement('article');
+    card.className='mtq-question';
+    card.dataset.qn=String(q.n);
+    const saved=getAnswer(q.n);
+    const typeLabel=q.t==='mc'?'Múltipla escolha':q.t==='tf'?'Verdadeiro/Falso':'Aberta';
+    const head=document.createElement('div');head.className='mtq-qhead';
+    head.innerHTML='<span class="mtq-qnum">QUESTÃO '+esc(q.n)+'</span><span class="mtq-tag">'+esc(q.c)+' · '+typeLabel+'</span>';
+    card.appendChild(head);
+    const text=document.createElement('p');text.className='mtq-text';text.textContent=q.q;card.appendChild(text);
+    const explain=document.createElement('div');explain.className='mtq-explain';explain.innerHTML='<strong>📖 Explicação:</strong> '+esc(q.ex).replace(/\n/g,'<br>');
+    if(q.t==='mc'){
+      const opts=document.createElement('div');opts.className='mtq-opts';
+      q.o.forEach(o=>{
+        const b=document.createElement('button');b.type='button';b.className='mtq-opt';b.innerHTML='<span class="mtq-letter">'+esc(o.l)+')</span><span>'+esc(o.v)+'</span>';
+        b.dataset.choice=o.l;
+        b.addEventListener('click',()=>answerObjective(tabId,q,o.l,card));
+        opts.appendChild(b);
+      });
+      card.appendChild(opts);
+    }else if(q.t==='tf'){
+      const tf=document.createElement('div');tf.className='mtq-tf';
+      [['V','VERDADEIRO','✅'],['F','FALSO','❌']].forEach(([v,label,icon])=>{const b=document.createElement('button');b.type='button';b.textContent=icon+' '+label;b.dataset.choice=v;b.addEventListener('click',()=>answerObjective(tabId,q,v,card));tf.appendChild(b);});
+      card.appendChild(tf);
+    }else{
+      const b=document.createElement('button');b.type='button';b.className='mtq-open-btn';b.textContent='💡 Ver resposta explicada';b.addEventListener('click',()=>{const a=getAnswer(q.n);if(a&&a.status==='open')return;state.answers[String(q.n)]={status:'open',at:Date.now()};saveState();b.disabled=true;b.textContent='✓ Resposta revelada';explain.classList.add('show');updateTabUI(tabId);});card.appendChild(b);
+    }
+    card.appendChild(explain);
+    if(saved)applySavedAnswer(card,q,saved);
+    return card;
+  }
+
+  function applySavedAnswer(card,q,saved){
+    if(q.t==='ab'){const b=card.querySelector('.mtq-open-btn');if(b)b.disabled=true;if(saved.status==='open')card.querySelector('.mtq-explain').classList.add('show');return;}
+    card.classList.add(saved.status==='correct'?'done-correct':'done-wrong');
+    card.querySelectorAll('button').forEach(b=>{b.disabled=true;const ch=b.dataset.choice;if(ch===q.cr)b.classList.add('correct');if(ch===saved.choice&&saved.choice!==q.cr)b.classList.add('wrong');});
+    const result=document.createElement('div');result.className='mtq-result '+(saved.status==='correct'?'good':'bad');result.textContent=saved.status==='correct'?'✅ Correto!':'❌ Incorreto. Resposta: '+(q.t==='tf'?(q.cr==='V'?'VERDADEIRO':'FALSO'):q.cr);
+    card.appendChild(result);card.querySelector('.mtq-explain').classList.add('show');
+  }
+
+  function answerObjective(tabId,q,choice,card){
+    if(getAnswer(q.n))return;
+    const ok=choice===q.cr;
+    state.answers[String(q.n)]={status:ok?'correct':'wrong',choice:choice,at:Date.now(),tab:tabId};
+    saveState();
+    card.classList.add(ok?'done-correct':'done-wrong');
+    card.querySelectorAll('button').forEach(b=>{b.disabled=true;const ch=b.dataset.choice;if(ch===q.cr)b.classList.add('correct');if(ch===choice&&choice!==q.cr)b.classList.add('wrong');});
+    const result=document.createElement('div');result.className='mtq-result '+(ok?'good':'bad');result.textContent=ok?'✅ Correto!':'❌ Incorreto. Resposta: '+(q.t==='tf'?(q.cr==='V'?'VERDADEIRO':'FALSO'):q.cr);card.appendChild(result);
+    card.querySelector('.mtq-explain').classList.add('show');
+    updateTabUI(tabId);
+    const s=statsForTab(tabId);
+    if(!ok && s.wrong>=2)requestTabAI(tabId,false);
+    else if(s.answered>=3 && s.wrong>0 && !state.ai[tabId])requestTabAI(tabId,false);
+    updateXray();
+  }
+
+  function updateTabUI(tabId){
+    const root=document.querySelector('.micro-tab-quiz[data-tab="'+tabId+'"]');if(!root)return;
+    const s=statsForTab(tabId);
+    root.querySelector('[data-stat="answered"]').textContent=s.answered+'/'+s.obj.length;
+    root.querySelector('[data-stat="correct"]').textContent=s.correct;
+    root.querySelector('[data-stat="wrong"]').textContent=s.wrong;
+    root.querySelector('[data-stat="rate"]').textContent=s.answered?s.rate+'%':'—';
+    const p=root.querySelector('.mtq-priority');p.className='mtq-priority '+s.level;
+    p.innerHTML=s.wrong?'<strong>'+esc(s.priority)+'</strong> · Você errou '+s.wrong+' de '+s.answered+' questões objetivas desta aba. '+(s.wrong>=2?'Vale revisar os pontos abaixo antes de avançar.':'Continue e veja se o padrão de erro se repete.'):(s.complete?'<strong>🟢 DOMINADO</strong> · Você acertou todas as questões objetivas desta aba.':'<strong>🧭 '+esc(s.priority)+'</strong> · Continue respondendo para formar seu diagnóstico de desempenho.');
+    const ai=root.querySelector('.mtq-ai');
+    if(state.ai[tabId]){ai.hidden=false;ai.innerHTML='<strong>🤖 Enzo IA — feedback desta aba</strong><div style="margin-top:5px">'+esc(state.ai[tabId])+'</div>';}
+    const reset=root.querySelector('.mtq-reset');if(reset)reset.disabled=s.answered===0&&s.open===0;
+  }
+
+  function buildTabQuiz(tabId){
+    const section=document.getElementById(tabId);if(!section||section.querySelector('.micro-tab-quiz'))return;
+    const qs=questionsForTab(tabId);if(!qs.length)return;
+    const meta=TAB_META[tabId];
+    const box=document.createElement('section');box.className='micro-tab-quiz';box.dataset.tab=tabId;
+    box.innerHTML='<div class="mtq-head"><span class="mtq-kicker">⚡ TREINO DA ABA</span><h3>'+meta.icon+' Teste seu domínio — '+esc(meta.name)+'</h3><p>Estas são <strong>as mesmas questões do simulado geral</strong>, agora colocadas no final da matéria. Seu desempenho aqui é separado por aba para descobrir exatamente onde você está errando.</p></div><div class="mtq-summary"><div class="mtq-stat"><b data-stat="answered">0/'+objectiveQuestions(tabId).length+'</b><span>Objetivas</span></div><div class="mtq-stat"><b data-stat="correct">0</b><span>Acertos</span></div><div class="mtq-stat"><b data-stat="wrong">0</b><span>Erros</span></div><div class="mtq-stat"><b data-stat="rate">—</b><span>Aproveitamento</span></div></div><div class="mtq-priority"><strong>🧭 EM ANDAMENTO</strong> · Continue respondendo para formar seu diagnóstico de desempenho.</div><div class="mtq-list"></div><div class="mtq-ai" hidden></div><div class="mtq-bottom"><span class="mtq-muted">Questões da aba: '+qs.length+' · objetivas: '+objectiveQuestions(tabId).length+' · abertas: '+qs.filter(q=>q.t==='ab').length+'</span><div style="display:flex;gap:7px;flex-wrap:wrap"><button type="button" class="mtq-ai-btn">🤖 Analisar com Enzo IA</button><button type="button" class="mtq-reset">↻ Refazer esta aba</button></div></div>';
+    const list=box.querySelector('.mtq-list');qs.forEach(q=>list.appendChild(renderQuestion(q,tabId)));
+    const anchor=section.querySelector('.ezsp-check');const host=section.querySelector('.container')||section;
+    if(anchor)host.insertBefore(box,anchor);else host.appendChild(box);
+    box.querySelector('.mtq-reset').addEventListener('click',()=>resetTab(tabId));
+    box.querySelector('.mtq-ai-btn').addEventListener('click',()=>requestTabAI(tabId,true));
+    updateTabUI(tabId);
+  }
+
+  function resetTab(tabId){
+    questionsForTab(tabId).forEach(q=>delete state.answers[String(q.n)]);
+    delete state.ai[tabId];
+    saveState();
+    const box=document.querySelector('.micro-tab-quiz[data-tab="'+tabId+'"]');if(!box)return;
+    const list=box.querySelector('.mtq-list');list.innerHTML='';questionsForTab(tabId).forEach(q=>list.appendChild(renderQuestion(q,tabId)));updateTabUI(tabId);updateXray();
+  }
+
+  async function invokeAI(prompt){
+    const client=window.authClient&&typeof window.authClient.from==='function'?window.authClient:null;
+    if(!client||!client.functions)return '';
+    try{const r=await client.functions.invoke('enzo-chat',{body:{messages:[{role:'user',content:prompt}]}});return r&&r.data?String(r.data.reply||'').trim():'';}catch(_){return '';}
+  }
+
+  function tabPrompt(tabId){
+    const s=statsForTab(tabId),name=getStudentName(),meta=TAB_META[tabId];
+    const wrong=s.wrongQuestions.slice(-7).map(q=>q.c+' — '+q.q+' | '+q.ex).join('\n');
+    const topics=Object.entries(s.byTopic).sort((a,b)=>b[1]-a[1]).map(x=>x[0]+' ('+x[1]+' erros)').join(', ');
+    return [
+      'Você é a Enzo IA dentro de uma plataforma de estudo médico.',
+      'Aluno: '+name+'. Aba: '+meta.name+'.',
+      'Resultado nesta aba: '+s.correct+' acertos, '+s.wrong+' erros, '+s.answered+' questões objetivas respondidas ('+s.rate+'%).',
+      'Temas com erros: '+(topics||'nenhum')+'.',
+      'Questões erradas e suas explicações, todas retiradas do próprio material:',wrong||'nenhuma.',
+      'Responda em português, de forma curta e direta, máximo 75 palavras.',
+      'Chame o aluno pelo nome. Se houver erros, diga explicitamente que ele errou muitas questões relacionadas aos pontos identificados e dê uma ordem: PRIORIDADE 1, 2 e 3 quando fizer sentido.',
+      'Indique exatamente quais assuntos desta aba devem ser revisados. Não acrescente conteúdo externo, não invente informação e não dê diagnóstico clínico.'
+    ].join('\n');
+  }
+
+  function fallbackTabAI(tabId){
+    const s=statsForTab(tabId),name=getStudentName(),meta=TAB_META[tabId];
+    if(!s.wrong)return name+', excelente. Até agora você não apresentou erros nas questões objetivas de '+meta.name+'.';
+    const topics=Object.entries(s.byTopic).sort((a,b)=>b[1]-a[1]).map(x=>x[0]).join(', ');
+    return name+', você errou '+s.wrong+' questão(ões) em '+meta.name+'. Prioridade 1: revisar '+topics+'. Depois, refaça as questões erradas e confirme se o mesmo padrão de erro desapareceu.';
+  }
+
+  async function requestTabAI(tabId,force){
+    const s=statsForTab(tabId);if(!s.answered||state.aiBusy[tabId])return;
+    if(state.ai[tabId]&&!force)return;
+    state.aiBusy[tabId]=true;
+    const box=document.querySelector('.micro-tab-quiz[data-tab="'+tabId+'"] .mtq-ai');
+    if(box){box.hidden=false;box.className='mtq-ai mtq-ai-loading';box.innerHTML='<strong>🤖 Enzo IA</strong><div style="margin-top:5px">Analisando seus erros desta aba…</div>';}
+    const reply=await invokeAI(tabPrompt(tabId));
+    state.ai[tabId]=reply||fallbackTabAI(tabId);
+    delete state.aiBusy[tabId];saveState();updateTabUI(tabId);updateXray();
+  }
+
+  function globalPrompt(){
+    const name=getStudentName();
+    const rows=globalStats().filter(x=>x.wrong>0).sort((a,b)=>b.score-a.score).slice(0,7);
+    const detail=rows.map((x,i)=>{
+      const q=x.wrongQuestions.slice(-3).map(q=>q.c+' — '+q.q).join(' / ');
+      return (i+1)+'. '+TAB_META[x.id].name+': '+x.wrong+' erros em '+x.answered+' ('+x.rate+'%). Questões: '+q;
+    }).join('\n');
+    return [
+      'Você é a Enzo IA. Gere um RAIO-X DE DESEMPENHO para um aluno de medicina.',
+      'Aluno: '+name+'.',
+      detail||'Nenhum erro registrado ainda.',
+      'Chame o aluno pelo nome. Seja curto, direto e motivador, máximo 110 palavras.',
+      'Comece pelo maior problema e organize claramente PRIORIDADE 1, PRIORIDADE 2 e PRIORIDADE 3.',
+      'Use a frase “Você errou muitas questões relacionadas a…” quando houver erros relevantes.',
+      'Diga quais abas e assuntos revisar primeiro e sugira refazer as questões erradas depois da revisão.',
+      'Use somente as informações fornecidas acima, que vêm das questões do próprio resumo. Não acrescente conteúdo externo.'
+    ].join('\n');
+  }
+
+  function fallbackGlobalAI(){
+    const rows=globalStats().filter(x=>x.wrong>0).sort((a,b)=>b.score-a.score);const name=getStudentName();
+    if(!rows.length)return name+', excelente: ainda não há erros registrados no Raio-X. Continue avançando e use as questões das abas para confirmar o domínio.';
+    const top=rows.slice(0,3);return name+', seu Raio-X aponta três focos. PRIORIDADE 1: '+TAB_META[top[0].id].name+' ('+top[0].wrong+' erros).'+(top[1]?' PRIORIDADE 2: '+TAB_META[top[1].id].name+' ('+top[1].wrong+' erros).':'')+(top[2]?' PRIORIDADE 3: '+TAB_META[top[2].id].name+' ('+top[2].wrong+' erros).':'')+' Revise esses pontos e refaça as questões erradas.';
+  }
+
+  async function requestGlobalAI(){
+    const btn=document.querySelector('.mx-ai-btn'),box=document.querySelector('.mx-ai');if(!btn||!box)return;
+    btn.disabled=true;btn.textContent='🤖 Analisando…';box.hidden=false;box.innerHTML='<strong>Enzo IA</strong><div style="margin-top:5px">Cruzando seus erros por aba…</div>';
+    const reply=await invokeAI(globalPrompt());
+    state.ai.global=reply||fallbackGlobalAI();saveState();
+    box.innerHTML='<strong>🤖 Enzo IA — seu Raio-X</strong><div style="margin-top:5px">'+esc(state.ai.global)+'</div>';
+    btn.disabled=false;btn.textContent='✨ Atualizar Raio-X com IA';
+  }
+
+  function updateXray(){
+    const grid=document.querySelector('.mx-grid');if(!grid)return;
+    const rows=globalStats().sort((a,b)=>b.score-a.score);
+    grid.innerHTML=rows.map(x=>{
+      const meta=TAB_META[x.id];
+      const detail=x.answered?(x.correct+'/'+x.answered+' · '+x.rate+'%'):'Ainda não respondida';
+      return '<button type="button" class="mx-row" data-open-tab="'+esc(x.id)+'"><span><h4>'+meta.icon+' '+esc(meta.name)+'</h4><small>'+detail+'</small></span><span class="mx-badge '+x.level+'">'+esc(x.priority)+'</span></button>';
+    }).join('');
+    grid.querySelectorAll('[data-open-tab]').forEach(btn=>btn.addEventListener('click',()=>{const id=btn.dataset.openTab;const tab=document.querySelector('nav.tabs button[data-section="'+id+'"]');if(typeof showSection==='function')showSection(id,tab);window.setTimeout(()=>document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'}),80);}));
+    const top=rows.filter(x=>x.wrong>0).slice(0,3),p=document.querySelector('.mx-priority-box');
+    if(p){p.innerHTML=top.length?'<strong>🎯 Ordem de revisão sugerida:</strong> '+top.map((x,i)=>(i+1)+'. '+esc(TAB_META[x.id].name)+' — '+x.wrong+' erro(s)').join(' &nbsp;→&nbsp; '):'<strong>🟢 Nenhum foco crítico ainda.</strong> Comece pelas questões das abas e o Raio-X será preenchido automaticamente.';}
+  }
+
+  function injectXray(){
+    const intro=document.getElementById('intro'),cards=document.getElementById('topicCards');if(!intro||!cards||document.getElementById('micro-xray'))return;
+    const box=document.createElement('section');box.id='micro-xray';box.className='micro-xray';box.innerHTML='<div class="mx-head"><span class="mx-kicker">🧠 RAIO-X DA PROVA</span><h2>Descubra exatamente onde você está errando</h2><p>O desempenho das questões colocadas no final de cada aba é analisado separadamente. Quanto mais você responde, mais preciso fica o seu mapa de revisão.</p></div><div class="mx-priority-box"></div><div class="mx-grid"></div><div class="mx-ai" hidden></div><div class="mx-foot"><span class="mtq-muted">Os erros ficam separados por aba neste dispositivo/conta para não misturar seu desempenho.</span><button type="button" class="mtq-xray-btn mx-ai-btn">✨ Gerar meu Raio-X com IA</button></div>';
+    cards.insertAdjacentElement('afterend',box);updateXray();
+    if(state.ai&&state.ai.global){const ai=box.querySelector('.mx-ai');ai.hidden=false;ai.innerHTML='<strong>🤖 Enzo IA — seu Raio-X</strong><div style="margin-top:5px">'+esc(state.ai.global)+'</div>';box.querySelector('.mx-ai-btn').textContent='✨ Atualizar Raio-X com IA';}
+    box.querySelector('.mx-ai-btn').addEventListener('click',requestGlobalAI);
+  }
+
+  function boot(){
+    injectStyles();
+    ownerKey=getOwner();loadState();
+    TAB_ORDER.forEach(buildTabQuiz);
+    injectXray();
+    updateXray();
+  }
+  document.addEventListener('authReady',()=>{const next=getOwner();if(next!==ownerKey){ownerKey=next;loadState();TAB_ORDER.forEach(id=>{const box=document.querySelector('.micro-tab-quiz[data-tab="'+id+'"]');if(box){const list=box.querySelector('.mtq-list');list.innerHTML='';questionsForTab(id).forEach(q=>list.appendChild(renderQuestion(q,id)));updateTabUI(id);}});updateXray();}});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
 <div id="atlasQuickModal" class="atlas-modal" role="dialog" aria-modal="true" aria-label="Resumo rápido do vírus"><div class="atlas-modal-box"><button class="atlas-modal-close" type="button" aria-label="Fechar">×</button><span class="atlas-kicker">PARAMYXOVIRALES · PISTA RÁPIDA</span><h2 class="atlas-modal-title">Sarampo</h2><div class="atlas-modal-grid"></div></div></div>
 </body></html>
