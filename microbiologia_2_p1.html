@@ -419,6 +419,64 @@ em { color: var(--accent2); font-style:normal; }
 .empty-state{display:none;text-align:center;color:var(--muted);padding:32px;border:1px dashed var(--border);border-radius:var(--radius)}
 footer{position:relative;z-index:1;text-align:center;color:var(--muted);padding:26px 16px 70px;border-top:1px solid var(--border);font-size:12px}
 @media(max-width:800px){.lesson-grid{grid-template-columns:1fr}.source-list{columns:1}.result-note{width:100%;margin-left:0}.clue-card{min-height:0}}
+
+/* ── MICROBIOLOGIA 2.0: dossiês clínicos claros, sem abandonar o tema original ── */
+body{font-size:15px;line-height:1.72}
+.container{max-width:1180px;padding-top:38px;padding-bottom:46px}
+.section-lead{font-size:16px;line-height:1.8;max-width:980px;color:#aeb7cf}
+.info-block{padding:22px 24px;margin-bottom:24px;background:linear-gradient(145deg,rgba(31,40,69,.96),rgba(24,31,54,.96))}
+.info-block h4{font-size:17px;margin-bottom:10px}
+.info-block p,.info-block li{font-size:15px;line-height:1.72}
+.info-block li+li{margin-top:7px}
+.lesson-grid{gap:22px;margin-bottom:24px}
+.sec-divider{margin-top:42px;margin-bottom:24px}
+.sec-divider h3{white-space:normal;line-height:1.35;font-size:18px}
+
+.virus-brief{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:16px;margin:0 0 24px}
+.virus-brief-card{position:relative;overflow:hidden;padding:20px 22px;border:1px solid rgba(79,156,249,.28);border-radius:16px;background:linear-gradient(145deg,rgba(79,156,249,.10),rgba(26,33,56,.95))}
+.virus-brief-card.memory{border-color:rgba(249,201,79,.35);background:linear-gradient(145deg,rgba(249,201,79,.10),rgba(26,33,56,.95))}
+.virus-brief-label{display:block;margin-bottom:7px;font:700 10px var(--font-mono);letter-spacing:2px;text-transform:uppercase;color:var(--accent2)}
+.virus-brief-card.memory .virus-brief-label{color:var(--gold)}
+.virus-brief-card p{font-size:15px;line-height:1.65;margin:0}
+.virus-brief-card strong{font-size:16px}
+.virus-brief-arrow{display:inline-block;margin:0 7px;color:var(--gold);font-weight:900}
+
+.virus-route{display:grid;grid-template-columns:repeat(5,minmax(145px,1fr));gap:8px;margin:0 0 30px;padding:10px;border:1px solid var(--border);border-radius:16px;background:rgba(17,21,32,.86)}
+.virus-route button{display:flex;align-items:center;gap:9px;min-height:56px;padding:10px 12px;border:1px solid transparent;border-radius:11px;background:transparent;color:var(--muted);font:700 12px var(--font-body);text-align:left;cursor:pointer;transition:.2s}
+.virus-route button:hover,.virus-route button:focus{color:#fff;border-color:rgba(79,156,249,.4);background:rgba(79,156,249,.10);outline:none}
+.virus-route-icon{font-size:19px;flex:0 0 auto}
+.virus-route small{display:block;color:inherit;font-weight:500;opacity:.75}
+
+.stage-card{position:relative;border-left-width:5px!important;box-shadow:0 14px 34px rgba(0,0,0,.16)}
+.stage-card .label{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--accent2)}
+.stage-card .stage-purpose{margin:-2px 0 12px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.07);color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.35px}
+
+.dossier-divider h3{color:var(--accent2)}
+.virus-sheet{position:relative!important;padding:0!important;margin:0 0 28px!important;border:1px solid rgba(56,232,192,.28)!important;border-radius:20px!important;background:linear-gradient(160deg,rgba(20,29,49,.98),rgba(12,17,29,.98))!important;box-shadow:0 18px 50px rgba(0,0,0,.24);overflow:hidden}
+.virus-sheet::before{display:none!important}
+.virus-sheet>.label{margin:0!important;padding:13px 22px;border-bottom:1px solid rgba(56,232,192,.18);background:rgba(56,232,192,.07);color:var(--accent2)!important;font-size:10px!important}
+.virus-sheet>h4{margin:0!important;padding:20px 22px 6px;font-size:21px!important;color:#fff!important}
+.virus-sheet>.sheet-guide{padding:0 22px 18px;color:var(--muted);font-size:13px;line-height:1.55}
+.virus-sheet>ul.fact-grid{list-style:none;padding:0 18px 20px!important;margin:0!important;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.virus-sheet>ul.fact-grid>li{position:relative;margin:0!important;padding:15px 16px 15px 46px!important;border:1px solid rgba(148,163,184,.13);border-radius:13px;background:rgba(255,255,255,.025);font-size:14.5px;line-height:1.62}
+.virus-sheet>ul.fact-grid>li:hover{border-color:rgba(79,156,249,.35);background:rgba(79,156,249,.055)}
+.fact-icon{position:absolute;left:15px;top:14px;font-size:19px}
+.virus-sheet>ul.fact-grid>li strong{display:block;margin-bottom:3px;color:var(--accent);font:700 12px var(--font-display);letter-spacing:.2px}
+.virus-sheet>ul.fact-grid>li.fact-complications{border-color:rgba(249,95,95,.23);background:rgba(249,95,95,.035)}
+.virus-sheet>ul.fact-grid>li.fact-vaccine,.virus-sheet>ul.fact-grid>li.fact-prevention{border-color:rgba(79,249,132,.2);background:rgba(79,249,132,.03)}
+.virus-sheet>ul.fact-grid>li.fact-differential{border-color:rgba(249,201,79,.22);background:rgba(249,201,79,.03)}
+.mastery-check{margin:38px 0 8px;padding:22px 24px;border:1px dashed rgba(184,79,249,.55);border-radius:18px;background:linear-gradient(145deg,rgba(184,79,249,.08),rgba(26,33,56,.78))}
+.mastery-check .mastery-label{font:700 10px var(--font-mono);letter-spacing:2px;text-transform:uppercase;color:#d8a4ff}
+.mastery-check h4{margin:7px 0 10px;font:700 17px var(--font-display);color:#fff}
+.mastery-check ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 28px;padding-left:22px}
+.mastery-check li{padding-left:3px;font-size:14.5px;line-height:1.55;color:#cbd3e5}
+
+.clue-card{min-height:195px;padding:21px}.clue-card>strong{font-size:16px}.clue-card p{font-size:14px;line-height:1.6}
+.compare-table th{font-size:14px;padding:15px 17px}.compare-table td{font-size:14px;line-height:1.6;padding:13px 17px}
+.intro-card .ic-name{font-size:15px}.intro-card .ic-desc{font-size:13px;line-height:1.5}
+
+@media(max-width:900px){.virus-route{display:flex;overflow-x:auto;scroll-snap-type:x mandatory}.virus-route button{min-width:185px;scroll-snap-align:start}.virus-brief{grid-template-columns:1fr}}
+@media(max-width:700px){body{font-size:14.5px}.container{padding:22px 14px 42px}.chapter-title{font-size:20px}.section-lead{font-size:15px}.info-block{padding:19px 18px}.info-block p,.info-block li{font-size:14.5px}.virus-sheet>ul.fact-grid{grid-template-columns:1fr;padding:0 12px 16px!important}.virus-sheet>h4{font-size:19px!important}.virus-brief-card{padding:17px 18px}.sec-divider h3{font-size:16px}.mastery-check ol{grid-template-columns:1fr}}
 </style></head><body>
 <canvas id="particles"></canvas>
 <header><div class="badge">🦠 Microbiologia II · P1 · 2026</div><h1>Microbiologia II — P1</h1><p class="sub">Virologia Geral · Vírus Respiratórios · Exantemáticos · Gastrointestinais · Arbovírus · Herpesvírus · Hepatites</p><p class="by">⚡ Elaborado por Enzo Salmazo · Base exclusiva nos 18 materiais da disciplina</p></header>
@@ -439,6 +497,14 @@ footer{position:relative;z-index:1;text-align:center;color:var(--muted);padding:
   <div class="intro-grid" id="topicCards"></div>
   <div class="sec-divider"><h3>🧠 Regra de ouro</h3></div>
   <div class="formula-box"><div class="formula-label">Raciocínio em cinco perguntas</div>1) Tem envelope? → 2) Qual é o genoma? → 3) Como entra? → 4) Qual célula prefere? → 5) Que pista clínica esse tropismo produz?</div>
+  <div class="sec-divider"><h3>🗺️ Como cada agente foi organizado</h3></div>
+  <div class="virus-route" aria-label="Sequência padrão de estudo dos vírus">
+    <button type="button"><span class="virus-route-icon">🧬</span><span>Identidade<small>nome, família, gênero e estrutura</small></span></button>
+    <button type="button"><span class="virus-route-icon">🔁</span><span>Transmissão<small>contaminação, entrada e tropismo</small></span></button>
+    <button type="button"><span class="virus-route-icon">🩺</span><span>Clínica<small>doenças, sintomas, idade e risco</small></span></button>
+    <button type="button"><span class="virus-route-icon">🔬</span><span>Diagnóstico<small>confirmação e diferenciais</small></span></button>
+    <button type="button"><span class="virus-route-icon">💊</span><span>Conduta<small>tratamento, vacina e prevenção</small></span></button>
+  </div>
 <details class="source-details"><summary>📚 Ver os 18 materiais-base</summary><ol class="source-list"><li>Introducción a la Virología</li><li>Orthomyxovirus — Virus de la Influenza</li><li>Papilomavirus</li><li>Parvovirus</li><li>Picornavirales</li><li>Poxvirus</li><li>Rubéola</li><li>Virosis Hepáticas</li><li>Virus de la Rabia</li><li>Zika</li><li>Rotavirus — Gastroenterites Virais</li><li>Adenovírus</li><li>Chikungunya</li><li>Coronavirus</li><li>Dengue</li><li>Fiebre Amarilla</li><li>Gastroenterites — Astrovirus</li><li>Herpesvirus</li></ol></details></div></section>
 <section id="geral" class="section"><div class="container">
   <div class="chapter-title"><span class="chap-icon">🧬</span>Virologia geral</div>
@@ -713,6 +779,118 @@ window.addEventListener('scroll',()=>{document.getElementById('scrolltop').style
 const topicCards=document.getElementById('topicCards');
 TOPICS.forEach(([id,icon,name,desc])=>{const card=document.createElement('article');card.className='intro-card';card.innerHTML=`<div class="ic-icon">${icon}</div><div class="ic-name">${name}</div><div class="ic-desc">${desc}</div>`;card.onclick=()=>showSectionByName(id);topicCards.appendChild(card);});
 
+// Converte o conteúdo integral dos slides em uma leitura clínica padronizada.
+function enhanceVirusDossiers(){
+  if(window.__MICRO_DOSSIERS_ENHANCED__)return;
+  window.__MICRO_DOSSIERS_ENHANCED__=true;
+  const studyIds=['parvo','rubeola','influenza','gastro','adeno','corona','arbovirus','raiva','herpes','picorna','pox','hpv','hepatites'];
+  const stages={
+    '1':{icon:'🧬',title:'Identidade',small:'nome, família, gênero e estrutura',purpose:'Classificação • genoma • envelope • proteínas relevantes'},
+    '2':{icon:'🔁',title:'Transmissão',small:'entrada, tropismo e patogênese',purpose:'Contaminação • porta de entrada • célula-alvo • mecanismo da doença'},
+    '3':{icon:'🩺',title:'Clínica',small:'doenças, sintomas e evolução',purpose:'Síndromes • sinais e sintomas • faixa etária • complicações'},
+    '4':{icon:'🔬',title:'Diagnóstico',small:'confirmação e diferenciais',purpose:'Amostra • exame • janela diagnóstica • interpretação'},
+    '5':{icon:'💊',title:'Conduta',small:'tratamento, vacina e prevenção',purpose:'Tratamento • vacinação • profilaxia • redução da transmissão'}
+  };
+  const factMap=[
+    {test:/tropismo/i,icon:'🎯',cls:'fact-tropism'},
+    {test:/sintomas|cl[ií]nica/i,icon:'🩺',cls:'fact-symptoms'},
+    {test:/idade/i,icon:'🧒',cls:'fact-age'},
+    {test:/popula[cç][aã]o/i,icon:'👥',cls:'fact-population'},
+    {test:/complica[cç][oõ]es/i,icon:'⚠️',cls:'fact-complications'},
+    {test:/diferencial/i,icon:'⚖️',cls:'fact-differential'},
+    {test:/vacina/i,icon:'💉',cls:'fact-vaccine'},
+    {test:/preven[cç][aã]o/i,icon:'🛡️',cls:'fact-prevention'}
+  ];
+
+  studyIds.forEach(sectionId=>{
+    const section=document.getElementById(sectionId);
+    if(!section)return;
+    const container=section.querySelector('.container');
+    const lead=section.querySelector('.section-lead');
+    const numbered={};
+    section.querySelectorAll('.info-block').forEach(block=>{
+      const label=block.querySelector(':scope > .label');
+      const match=label&&label.textContent.trim().match(/^([1-5])\s*·/);
+      if(!match||numbered[match[1]])return;
+      const key=match[1],stage=stages[key];
+      numbered[key]=block;
+      block.classList.add('stage-card','stage-'+key);
+      block.id=sectionId+'-stage-'+key;
+      const heading=block.querySelector(':scope > h4');
+      if(heading&&!block.querySelector('.stage-purpose')){
+        const purpose=document.createElement('div');
+        purpose.className='stage-purpose';
+        purpose.textContent=stage.purpose;
+        heading.insertAdjacentElement('afterend',purpose);
+      }
+      label.textContent=stage.icon+'  '+label.textContent;
+    });
+
+    if(container&&lead&&numbered['1']){
+      const identityItem=numbered['1'].querySelector('li');
+      const firstClue=section.querySelector('.clue-card');
+      const clueTrigger=firstClue&&firstClue.querySelector(':scope > strong');
+      const clueAnswer=firstClue&&firstClue.querySelector('h4');
+      const brief=document.createElement('div');
+      brief.className='virus-brief';
+      brief.innerHTML=`<article class="virus-brief-card"><span class="virus-brief-label">Identidade em uma frase</span><p>${identityItem?identityItem.innerHTML:'Classificação apresentada no bloco de identidade.'}</p></article><article class="virus-brief-card memory"><span class="virus-brief-label">Assinatura de prova</span><p><strong>${clueTrigger?clueTrigger.textContent:'Reconheça a pista principal'}</strong><span class="virus-brief-arrow">→</span>${clueAnswer?clueAnswer.textContent:'confirme pelo mecanismo'}</p></article>`;
+      lead.insertAdjacentElement('afterend',brief);
+
+      const route=document.createElement('nav');
+      route.className='virus-route';
+      route.setAttribute('aria-label','Navegação interna do dossiê');
+      Object.keys(stages).forEach(key=>{
+        if(!numbered[key])return;
+        const stage=stages[key],button=document.createElement('button');
+        button.type='button';
+        button.innerHTML=`<span class="virus-route-icon">${stage.icon}</span><span>${stage.title}<small>${stage.small}</small></span>`;
+        button.addEventListener('click',()=>numbered[key].scrollIntoView({behavior:'smooth',block:'start'}));
+        route.appendChild(button);
+      });
+      brief.insertAdjacentElement('afterend',route);
+    }
+
+    section.querySelectorAll('article.info-block.success').forEach(sheet=>{
+      const label=sheet.querySelector(':scope > .label');
+      if(!label||!/^Ficha clínica completa$/i.test(label.textContent.trim()))return;
+      sheet.classList.add('virus-sheet');
+      label.textContent='🗂️ Dossiê individual do agente';
+      const heading=sheet.querySelector(':scope > h4');
+      if(heading&&!sheet.querySelector('.sheet-guide')){
+        const guide=document.createElement('p');
+        guide.className='sheet-guide';
+        guide.textContent='Leia cada campo separadamente e termine relacionando a pista clínica ao tropismo e à forma de transmissão.';
+        heading.insertAdjacentElement('afterend',guide);
+      }
+      const list=sheet.querySelector(':scope > ul');
+      if(!list)return;
+      list.classList.add('fact-grid');
+      list.setAttribute('role','list');
+      list.querySelectorAll(':scope > li').forEach(item=>{
+        const key=(item.querySelector('strong')?.textContent||item.textContent).trim();
+        const match=factMap.find(entry=>entry.test.test(key));
+        if(match){
+          item.classList.add(match.cls);
+          const icon=document.createElement('span');
+          icon.className='fact-icon';icon.setAttribute('aria-hidden','true');icon.textContent=match.icon;
+          item.prepend(icon);
+        }
+      });
+      const previous=sheet.parentElement&&sheet.parentElement.previousElementSibling;
+      if(previous&&previous.classList.contains('sec-divider'))previous.classList.add('dossier-divider');
+    });
+
+    if(container&&!container.querySelector('.mastery-check')){
+      const topic=section.querySelector('.chapter-title')?.textContent.trim()||'este tema';
+      const mastery=document.createElement('aside');
+      mastery.className='mastery-check';
+      mastery.innerHTML=`<span class="mastery-label">Fechamento ativo da aba</span><h4>Antes de marcar ${topic} como concluído, confirme:</h4><ol><li>Consigo dizer família, gênero, genoma e presença ou ausência de envelope?</li><li>Consigo explicar a transmissão e ligar o tropismo aos sintomas?</li><li>Consigo reconhecer a pista de prova e separar os principais diagnósticos diferenciais?</li><li>Consigo indicar tratamento, vacinação quando disponível, prevenção e complicações?</li></ol>`;
+      container.appendChild(mastery);
+    }
+  });
+}
+enhanceVirusDossiers();
+
 function fillSelect(select,values){select.innerHTML='<option value="">Todos os temas</option>'+values.map(v=>`<option value="${v}">${v}</option>`).join('');}
 const fcFilter=document.getElementById('fcFilter');
 const fcSearch=document.getElementById('fcSearch');
@@ -736,5 +914,5 @@ qCategory.addEventListener('change',filterQuiz);qType.addEventListener('change',
 function resetQuiz(){QS={c:0,w:0,a:0};renderQuiz();}
 renderQuiz();
 </script>
-<script src="study-timer.js"></script><script src="enzo-ia.js"></script>
+<script src="study-timer.js"></script><script src="study-progress.js"></script><script src="enzo-ia.js"></script>
 </body></html>
