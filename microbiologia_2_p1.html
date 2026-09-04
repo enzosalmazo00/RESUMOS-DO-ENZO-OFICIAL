@@ -516,7 +516,7 @@ body{font-size:15px;line-height:1.72}
 .atlas-modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(3,6,12,.78);backdrop-filter:blur(10px)}.atlas-modal.open{display:flex}.atlas-modal-box{position:relative;width:min(680px,100%);padding:28px;border:1px solid rgba(79,156,249,.35);border-radius:22px;background:linear-gradient(150deg,#17223b,#0d1422);box-shadow:0 30px 90px rgba(0,0,0,.45)}.atlas-modal-title{margin:10px 0 18px;color:#fff;font:800 28px var(--font-display)}.atlas-modal-close{position:absolute;right:14px;top:10px;border:0;background:transparent;color:#9aa8bf;font-size:30px;cursor:pointer}.atlas-modal-close:hover{color:#fff}.atlas-modal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.atlas-modal-grid div{padding:12px;border:1px solid rgba(148,163,184,.12);border-radius:12px;background:rgba(255,255,255,.025)}.atlas-modal-grid small{display:block;color:var(--muted);font:700 9px var(--font-mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}.atlas-modal-grid strong{display:block;color:#eaf0fb;font-size:13px;line-height:1.5}@media(max-width:600px){.atlas-modal-grid{grid-template-columns:1fr}.atlas-modal-box{padding:22px}}
 </style></head><body>
 <canvas id="particles"></canvas>
-<header><div class="badge">🦠 Microbiologia II · P1 · 2026</div><h1>Microbiologia II — P1</h1><p class="sub">Virologia Geral · Vírus Respiratórios · Exantemáticos · Gastrointestinais · Arbovírus · Herpesvírus · Hepatites</p><p class="by">⚡ Elaborado por Enzo Salmazo · Base exclusiva nos 18 materiais da disciplina</p><div style="margin-top:8px;font:600 10px JetBrains Mono,monospace;letter-spacing:1px;color:var(--muted)">ATLAS MESTRE · 154 FLASHCARDS · 154 QUESTÕES</div></header>
+<header><div class="badge">🦠 Microbiologia II · P1 · 2026</div><h1>Microbiologia II — P1</h1><p class="sub">Virologia Geral · Vírus Respiratórios · Exantemáticos · Gastrointestinais · Arbovírus · Herpesvírus · Hepatites</p><p class="by">⚡ Elaborado por Enzo Salmazo · Base exclusiva nos 18 materiais da disciplina</p><div style="margin-top:8px;font:600 10px JetBrains Mono,monospace;letter-spacing:1px;color:var(--muted)">ATLAS MESTRE · 154 FLASHCARDS · 154 QUESTÕES · NOME PERSONALIZADO</div></header>
 <nav class="tabs"><button class="active" data-section="intro" onclick="showSection('intro',this)">📖 Início</button><button data-section="geral" onclick="showSection('geral',this)">🧬 Virologia geral</button><button data-section="parvo" onclick="showSection('parvo',this)">🟥 Parvovírus B19</button><button data-section="rubeola" onclick="showSection('rubeola',this)">🌸 Rubéola</button><button data-section="influenza" onclick="showSection('influenza',this)">🤧 Influenza</button><button data-section="gastro" onclick="showSection('gastro',this)">💧 Rota & Astro</button><button data-section="adeno" onclick="showSection('adeno',this)">👁️ Adenovírus</button><button data-section="corona" onclick="showSection('corona',this)">👑 Coronavírus</button><button data-section="arbovirus" onclick="showSection('arbovirus',this)">🦟 Arbovírus</button><button data-section="raiva" onclick="showSection('raiva',this)">🐕 Raiva</button><button data-section="herpes" onclick="showSection('herpes',this)">🔥 Herpesvírus</button><button data-section="picorna" onclick="showSection('picorna',this)">🧩 Picornavírus</button><button data-section="pox" onclick="showSection('pox',this)">🧱 Poxvírus</button><button data-section="hpv" onclick="showSection('hpv',this)">🎯 HPV</button><button data-section="hepatites" onclick="showSection('hepatites',this)">🟡 Hepatites</button><button data-section="pistas" onclick="showSection('pistas',this)">🔑 Pistas de prova</button><button class="fc-tab" data-section="flashcards" onclick="showSection('flashcards',this)">🃏 Flashcards (<span data-flashcard-count>0</span>)</button><button class="qz-tab" data-section="quiz" onclick="showSection('quiz',this)">📝 Simulado (<span data-question-count>0</span>)</button></nav>
 
 <section id="intro" class="section active"><div class="container">
@@ -1159,22 +1159,60 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   const STORAGE_BASE='enzo-micro-tab-quiz:v1:';
   const PISTA_NUMBERS=[4,8,11,14,16,21,25,27,30,34,42,46,49,51,53,55];
   let ownerKey='local';
-  let state={answers:{},ai:{},aiBusy:{}};
+  let state={answers:{},ai:{},aiMeta:{},aiBusy:{}};
+  let studentNameCache='';
 
   function normalize(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();}
-  function esc(v){return String(v==null?'':v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+  function esc(v){return String(v==null?'':v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;',"":'&quot;'}[c]));}
   function getUser(){return window.authSession&&window.authSession.user?window.authSession.user:null;}
   function getOwner(){const u=getUser();return u&&u.id?'user:'+u.id:'local';}
+
+  // Mesma fonte de nome usada pelo Enzo IA principal:
+  // profiles.nome_preferido -> authProfile -> localStorage -> metadata.
+  // É o nome que o aluno escolheu para ser chamado.
+  function cleanStudentName(raw){
+    if(!raw)return '';
+    const parts=String(raw).trim().split(/\s+/).filter(Boolean);
+    const clean=parts.filter(x=>!/^dr\.?$/i.test(x)&&!/^dra\.?$/i.test(x));
+    return String(clean[0]||parts[0]||'').trim();
+  }
   function getStudentName(){
-    const u=getUser();
-    const md=u&&u.user_metadata||{};
-    const raw=md.full_name||md.name||md.nome||md.display_name||md.preferred_username||'';
-    if(raw){
-      const parts=String(raw).trim().split(/\s+/).filter(Boolean);
-      const clean=parts.filter(x=>!/^dr\.?$/i.test(x)&&!/^dra\.?$/i.test(x));
-      return (clean[0]||parts[0]||'Aluno');
+    const direct=[
+      studentNameCache,
+      window.profile&&window.profile.nome_preferido,
+      window.authProfile&&window.authProfile.nome_preferido,
+      localStorage.getItem('ez-nome-aluno')
+    ];
+    for(const value of direct){
+      const name=cleanStudentName(value);
+      if(name)return name;
     }
-    return 'Aluno';
+    const u=getUser(),md=u&&u.user_metadata||{};
+    return cleanStudentName(md.nome_preferido||md.preferred_name||md.full_name||md.name||md.nome||md.display_name||md.preferred_username||'');
+  }
+
+  // Nas páginas de resumo o auth-guard não expõe o perfil completo.
+  // Se o nome ainda não estiver no cache, busca somente nome_preferido
+  // no perfil do próprio usuário e salva no mesmo cache do Enzo IA.
+  async function syncStudentName(){
+    const existing=getStudentName();
+    if(existing){
+      studentNameCache=existing;
+      try{localStorage.setItem('ez-nome-aluno',existing);}catch(_){}
+      return existing;
+    }
+    const u=getUser(),client=window.authClient;
+    if(!u||!u.id||!client||typeof client.from!=='function')return '';
+    try{
+      const r=await client.from('profiles').select('nome_preferido').eq('id',u.id).single();
+      const name=cleanStudentName(r&&r.data&&r.data.nome_preferido);
+      if(name){
+        studentNameCache=name;
+        try{localStorage.setItem('ez-nome-aluno',name);}catch(_){}
+        return name;
+      }
+    }catch(_){}
+    return '';
   }
   function storageKey(){return STORAGE_BASE+ownerKey;}
   function loadState(){
@@ -1183,10 +1221,11 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       state=raw&&typeof raw==='object'?raw:{answers:{},ai:{},aiBusy:{}};
       state.answers=state.answers&&typeof state.answers==='object'?state.answers:{};
       state.ai=state.ai&&typeof state.ai==='object'?state.ai:{};
+      state.aiMeta=state.aiMeta&&typeof state.aiMeta==='object'?state.aiMeta:{};
       state.aiBusy={};
-    }catch(_){state={answers:{},ai:{},aiBusy:{}};}
+    }catch(_){state={answers:{},ai:{},aiMeta:{},aiBusy:{}};}
   }
-  function saveState(){try{localStorage.setItem(storageKey(),JSON.stringify({answers:state.answers,ai:state.ai,updatedAt:new Date().toISOString()}));}catch(_){} }
+  function saveState(){try{localStorage.setItem(storageKey(),JSON.stringify({answers:state.answers,ai:state.ai,aiMeta:state.aiMeta||{},updatedAt:new Date().toISOString()}));}catch(_){} }
 
   function questionsForTab(tabId){
     const meta=TAB_META[tabId];
@@ -1248,7 +1287,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       .mtq-tf{display:flex;gap:7px;flex-wrap:wrap}.mtq-tf button{border:1px solid rgba(148,163,184,.15);border-radius:10px;background:rgba(10,15,27,.55);color:#d6deed;padding:9px 12px;font:800 11px var(--font-body);cursor:pointer}.mtq-tf button.correct{border-color:rgba(79,249,132,.65);background:rgba(79,249,132,.10)}.mtq-tf button.wrong{border-color:rgba(249,95,95,.65);background:rgba(249,95,95,.10)}.mtq-tf button:disabled{cursor:default}
       .mtq-result{margin-top:9px;padding:8px 10px;border-radius:9px;font-size:11px;font-weight:800}.mtq-result.good{background:rgba(79,249,132,.08);color:#9bffba}.mtq-result.bad{background:rgba(249,95,95,.08);color:#ffb1b1}.mtq-explain{display:none;margin-top:9px;padding:10px 11px;border-left:3px solid var(--accent);border-radius:0 9px 9px 0;background:rgba(79,156,249,.055);color:#bfc9dc;font-size:12px;line-height:1.55}.mtq-explain.show{display:block}.mtq-open-btn{border:1px solid rgba(79,156,249,.25);border-radius:9px;background:rgba(79,156,249,.07);color:#dceaff;padding:8px 10px;font:700 11px var(--font-body);cursor:pointer}
       .mtq-bottom{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;padding:14px 20px 18px;border-top:1px solid rgba(148,163,184,.09)}.mtq-reset,.mtq-ai-btn,.mtq-xray-btn,.mtq-go{border:1px solid rgba(79,156,249,.25);border-radius:10px;background:rgba(79,156,249,.08);color:#dceaff;padding:9px 12px;font:800 11px var(--font-body);cursor:pointer}.mtq-ai-btn{background:linear-gradient(135deg,rgba(184,79,249,.18),rgba(79,156,249,.12));border-color:rgba(184,79,249,.34)}.mtq-reset:hover,.mtq-ai-btn:hover,.mtq-xray-btn:hover,.mtq-go:hover{border-color:var(--accent);transform:translateY(-1px)}.mtq-muted{color:var(--muted);font-size:10px}
-      .mtq-ai{margin:0 20px 16px;padding:13px 14px;border:1px solid rgba(184,79,249,.25);border-radius:13px;background:linear-gradient(135deg,rgba(184,79,249,.07),rgba(79,156,249,.045));color:#dfe5f2;font-size:12px;line-height:1.65}.mtq-ai[hidden]{display:none}.mtq-ai strong{color:#fff}.mtq-ai-loading{opacity:.72}.mtq-ai-priority{margin-top:8px;display:grid;gap:5px}.mtq-ai-priority div{padding:7px 9px;border-radius:8px;background:rgba(255,255,255,.035)}
+      .mtq-ai{margin:0 20px 16px;padding:15px 16px;border:1px solid rgba(184,79,249,.25);border-radius:13px;background:linear-gradient(135deg,rgba(184,79,249,.07),rgba(79,156,249,.045));color:#dfe5f2;font-size:12px;line-height:1.72}.mtq-ai[hidden]{display:none}.mtq-ai strong{color:#fff}.mtq-ai-loading{opacity:.72}.mtq-ai-body{white-space:pre-wrap}.mtq-ai-title{font:800 13px var(--font-display);color:#fff;margin-bottom:7px}.mtq-ai-plan{margin-top:11px;padding:10px 11px;border-radius:10px;border:1px solid rgba(56,232,192,.16);background:rgba(56,232,192,.035)}.mtq-ai-priority{margin-top:8px;display:grid;gap:5px}.mtq-ai-priority div{padding:7px 9px;border-radius:8px;background:rgba(255,255,255,.035)}
       .micro-xray{margin:26px 0 34px;padding:0;border:1px solid rgba(184,79,249,.25);border-radius:22px;background:linear-gradient(145deg,rgba(22,20,44,.98),rgba(10,14,25,.98));box-shadow:0 18px 60px rgba(0,0,0,.25);overflow:hidden}.mx-head{padding:22px;background:radial-gradient(circle at 10% 0%,rgba(184,79,249,.15),transparent 42%),radial-gradient(circle at 90% 0%,rgba(79,156,249,.10),transparent 40%)}.mx-kicker{color:#d9b5ff;font:700 10px var(--font-mono);letter-spacing:1.5px;text-transform:uppercase}.mx-head h2{margin:8px 0 5px;color:#fff;font:800 22px var(--font-display)}.mx-head p{margin:0;color:#b5c0d4;font-size:13px;line-height:1.6}.mx-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:16px 20px}.mx-row{display:grid;grid-template-columns:1fr auto;width:100%;text-align:left;font:inherit;cursor:pointer;gap:10px;align-items:center;padding:11px 12px;border:1px solid rgba(148,163,184,.11);border-radius:12px;background:rgba(255,255,255,.022)}.mx-row h4{margin:0;color:#fff;font-size:12px}.mx-row small{display:block;color:var(--muted);margin-top:2px;font-size:10px}.mx-badge{white-space:nowrap;padding:5px 8px;border-radius:999px;font:800 9px var(--font-mono)}.mx-badge.p1{background:rgba(249,95,95,.12);color:#ff9d9d;border:1px solid rgba(249,95,95,.35)}.mx-badge.p2{background:rgba(249,201,79,.10);color:#f8dc86;border:1px solid rgba(249,201,79,.28)}.mx-badge.p3{background:rgba(79,156,249,.10);color:#a9d0ff;border:1px solid rgba(79,156,249,.25)}.mx-badge.mastered{background:rgba(79,249,132,.09);color:#a8ffbf;border:1px solid rgba(79,249,132,.25)}.mx-badge.pending,.mx-badge.ok{background:rgba(148,163,184,.07);color:#b9c2d1;border:1px solid rgba(148,163,184,.16)}.mx-foot{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;padding:14px 20px 18px;border-top:1px solid rgba(148,163,184,.09)}.mx-priority-box{margin:0 20px 14px;padding:12px;border-left:3px solid var(--gold);border-radius:0 10px 10px 0;background:rgba(249,201,79,.05);color:#d9dfeb;font-size:12px;line-height:1.6}.mx-ai{margin:0 20px 16px;padding:13px 14px;border:1px solid rgba(184,79,249,.25);border-radius:13px;background:rgba(184,79,249,.055);color:#e4e8f2;font-size:12px;line-height:1.65}.mx-ai[hidden]{display:none}
       @media(max-width:720px){.mtq-summary{grid-template-columns:1fr 1fr}.mtq-opts{grid-template-columns:1fr}.mx-grid{grid-template-columns:1fr}.mx-row{grid-template-columns:1fr auto}}
       @media(prefers-reduced-motion:reduce){.mtq-reset:hover,.mtq-ai-btn:hover,.mtq-xray-btn:hover,.mtq-go:hover{transform:none}}
@@ -1307,7 +1346,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     card.querySelector('.mtq-explain').classList.add('show');
     updateTabUI(tabId);
     const s=statsForTab(tabId);
-    if(!ok && s.wrong>=2)requestTabAI(tabId,false);
+    const lastAIWrong=state.aiMeta&&state.aiMeta[tabId]?Number(state.aiMeta[tabId].wrongCount||0):0;
+    if(!ok && s.wrong>=2 && (s.wrong===2 || s.wrong-lastAIWrong>=2))requestTabAI(tabId,false);
     else if(s.answered>=3 && s.wrong>0 && !state.ai[tabId])requestTabAI(tabId,false);
     updateXray();
   }
@@ -1322,7 +1362,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     const p=root.querySelector('.mtq-priority');p.className='mtq-priority '+s.level;
     p.innerHTML=s.wrong?'<strong>'+esc(s.priority)+'</strong> · Você errou '+s.wrong+' de '+s.answered+' questões objetivas desta aba. '+(s.wrong>=2?'Vale revisar os pontos abaixo antes de avançar.':'Continue e veja se o padrão de erro se repete.'):(s.complete?'<strong>🟢 DOMINADO</strong> · Você acertou todas as questões objetivas desta aba.':'<strong>🧭 '+esc(s.priority)+'</strong> · Continue respondendo para formar seu diagnóstico de desempenho.');
     const ai=root.querySelector('.mtq-ai');
-    if(state.ai[tabId]){ai.hidden=false;ai.innerHTML='<strong>🤖 Enzo IA — feedback desta aba</strong><div style="margin-top:5px">'+esc(state.ai[tabId])+'</div>';}
+    if(state.ai[tabId]){ai.hidden=false;ai.innerHTML='<div class="mtq-ai-title">🤖 Enzo IA — feedback desta aba</div><div class="mtq-ai-body">'+formatAIText(state.ai[tabId])+'</div>'; }
     const reset=root.querySelector('.mtq-reset');if(reset)reset.disabled=s.answered===0&&s.open===0;
   }
 
@@ -1342,7 +1382,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
   function resetTab(tabId){
     questionsForTab(tabId).forEach(q=>delete state.answers[String(q.n)]);
-    delete state.ai[tabId];
+    delete state.ai[tabId];delete state.aiMeta[tabId];
     saveState();
     const box=document.querySelector('.micro-tab-quiz[data-tab="'+tabId+'"]');if(!box)return;
     const list=box.querySelector('.mtq-list');list.innerHTML='';questionsForTab(tabId).forEach(q=>list.appendChild(renderQuestion(q,tabId)));updateTabUI(tabId);updateXray();
@@ -1354,37 +1394,76 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     try{const r=await client.functions.invoke('enzo-chat',{body:{messages:[{role:'user',content:prompt}]}});return r&&r.data?String(r.data.reply||'').trim():'';}catch(_){return '';}
   }
 
+  function choiceText(q,choice){
+    if(q.t==='tf')return choice==='V'?'VERDADEIRO':'FALSO';
+    const opt=Array.isArray(q.o)?q.o.find(o=>o.l===choice):null;
+    return opt?opt.l+') '+opt.v:choice||'não informado';
+  }
+
+  function topicRows(s){
+    return Object.entries(s.byTopic).sort((a,b)=>b[1]-a[1]).map(x=>x[0]+' ('+x[1]+' erro'+(x[1]===1?'':'s')+')');
+  }
+
+  function formatAIText(text){
+    return esc(text||'').replace(/\r?\n/g,'<br>');
+  }
+
   function tabPrompt(tabId){
     const s=statsForTab(tabId),name=getStudentName(),meta=TAB_META[tabId];
-    const wrong=s.wrongQuestions.slice(-7).map(q=>q.c+' — '+q.q+' | '+q.ex).join('\n');
-    const topics=Object.entries(s.byTopic).sort((a,b)=>b[1]-a[1]).map(x=>x[0]+' ('+x[1]+' erros)').join(', ');
+    const wrong=s.wrongQuestions.slice(-12).map(q=>{
+      const a=getAnswer(q.n)||{};
+      return 'Questão '+q.n+' | Tema: '+q.c+' | Aluno marcou: '+choiceText(q,a.choice)+' | Correta: '+choiceText(q,q.cr)+' | Pergunta: '+q.q+' | Explicação do material: '+q.ex;
+    }).join('\n');
+    const topics=topicRows(s).join(', ');
     return [
       'Você é a Enzo IA dentro de uma plataforma de estudo médico.',
-      'Aluno: '+name+'. Aba: '+meta.name+'.',
-      'Resultado nesta aba: '+s.correct+' acertos, '+s.wrong+' erros, '+s.answered+' questões objetivas respondidas ('+s.rate+'%).',
-      'Temas com erros: '+(topics||'nenhum')+'.',
-      'Questões erradas e suas explicações, todas retiradas do próprio material:',wrong||'nenhuma.',
-      'Responda em português, de forma curta e direta, máximo 75 palavras.',
-      'Chame o aluno pelo nome. Se houver erros, diga explicitamente que ele errou muitas questões relacionadas aos pontos identificados e dê uma ordem: PRIORIDADE 1, 2 e 3 quando fizer sentido.',
-      'Indique exatamente quais assuntos desta aba devem ser revisados. Não acrescente conteúdo externo, não invente informação e não dê diagnóstico clínico.'
+      'Nome para ser chamado: '+(name||'não informado')+'.',
+      'Aba analisada: '+meta.name+'.',
+      'Resultado: '+s.correct+' acertos, '+s.wrong+' erros, '+s.answered+' questões objetivas respondidas ('+s.rate+'%).',
+      'Assuntos com erros, do maior para o menor: '+(topics||'nenhum')+'.',
+      'Dados das questões erradas (base exclusiva do resumo):',wrong||'nenhuma.',
+      '',
+      'OBJETIVO: não faça apenas um comentário sobre a nota. Faça uma devolutiva pedagógica completa e prática, usando os erros para ensinar o aluno COMO estudar.',
+      'Se houver 2 ou mais erros, diga claramente: “[nome], você errou muitas questões relacionadas a...” e complete com os temas reais encontrados. Se houver apenas 1 erro, adapte a frase sem dizer “muitas”.',
+      'Organize obrigatoriamente nesta ordem:',
+      '1. O QUE SEU RESULTADO MOSTRA — explique o padrão de erro em linguagem simples.',
+      '2. 🔴 PRIORIDADE 1 — assunto mais importante; explique por que ele merece prioridade, o que exatamente revisar no resumo e como estudar esse ponto.',
+      '3. 🟠 PRIORIDADE 2 — mesma lógica, somente se houver segundo foco relevante.',
+      '4. 🟡 PRIORIDADE 3 — mesma lógica, somente se houver terceiro foco relevante.',
+      '5. 📚 COMO ESTUDAR AGORA — monte um roteiro em passos: releitura direcionada, comparação/associação, flashcards e refazer questões erradas. Diga a ordem e o que o aluno deve procurar.',
+      '6. 🔁 COMO SABER SE APRENDEU — estabeleça um critério simples: refazer as questões erradas sem olhar a explicação e verificar se o mesmo erro desapareceu.',
+      '7. 🎯 PRÓXIMO PASSO — diga exatamente o que o aluno deve fazer agora.',
+      '',
+      'Não invente assuntos, não acrescente conteúdo externo ao material e não dê diagnóstico clínico. Baseie a orientação nos temas, perguntas e explicações fornecidos. Seja detalhado o suficiente para realmente orientar o estudo, mas sem texto desnecessário. Máximo aproximado: 260 palavras.'
     ].join('\n');
   }
 
   function fallbackTabAI(tabId){
     const s=statsForTab(tabId),name=getStudentName(),meta=TAB_META[tabId];
-    if(!s.wrong)return name+', excelente. Até agora você não apresentou erros nas questões objetivas de '+meta.name+'.';
-    const topics=Object.entries(s.byTopic).sort((a,b)=>b[1]-a[1]).map(x=>x[0]).join(', ');
-    return name+', você errou '+s.wrong+' questão(ões) em '+meta.name+'. Prioridade 1: revisar '+topics+'. Depois, refaça as questões erradas e confirme se o mesmo padrão de erro desapareceu.';
+    if(!s.wrong)return (name?name+', excelente!':'Excelente!')+' Você ainda não apresentou erros nas questões objetivas de '+meta.name+'. Continue respondendo para confirmar o domínio.';
+    const topics=Object.entries(s.byTopic).sort((a,b)=>b[1]-a[1]);
+    const n=name||'Você';
+    let out=n+', seu resultado mostra '+s.wrong+' erro'+(s.wrong===1?'':'s')+' em '+s.answered+' questões objetivas ('+s.rate+'% de aproveitamento).';
+    if(s.wrong>=2)out+='\nVocê errou muitas questões relacionadas a '+topics.slice(0,3).map(x=>x[0]).join(', ')+'.';
+    else out+='\nVocê teve um erro relacionado a '+topics[0][0]+'.';
+    if(topics[0])out+='\n\n🔴 PRIORIDADE 1 — '+topics[0][0]+'\nRevise diretamente esse assunto no resumo. Releia a explicação das questões que você errou e tente explicar o ponto com suas próprias palavras antes de olhar novamente a resposta.';
+    if(topics[1])out+='\n\n🟠 PRIORIDADE 2 — '+topics[1][0]+'\nFaça uma revisão direcionada e procure diferenciar esse assunto dos pontos que você já acertou.';
+    if(topics[2])out+='\n\n🟡 PRIORIDADE 3 — '+topics[2][0]+'\nFaça uma revisão rápida e confirme a associação principal cobrada nas questões.';
+    out+='\n\n📚 COMO ESTUDAR AGORA\n1) Revise a prioridade 1.\n2) Leia as explicações das questões erradas.\n3) Transforme cada erro em uma associação curta.\n4) Refaça somente as questões erradas sem consultar a resposta.\n5) Depois, faça uma nova rodada para verificar se o erro desapareceu.\n\n🎯 PRÓXIMO PASSO\nComece pela prioridade 1 e só avance quando conseguir explicar o ponto sem consultar o resumo.';
+    return out;
   }
 
   async function requestTabAI(tabId,force){
     const s=statsForTab(tabId);if(!s.answered||state.aiBusy[tabId])return;
-    if(state.ai[tabId]&&!force)return;
+    const oldCount=state.aiMeta&&state.aiMeta[tabId]?Number(state.aiMeta[tabId].wrongCount||0):0;
+    if(state.ai[tabId]&&!force&&s.wrong<=oldCount)return;
     state.aiBusy[tabId]=true;
     const box=document.querySelector('.micro-tab-quiz[data-tab="'+tabId+'"] .mtq-ai');
-    if(box){box.hidden=false;box.className='mtq-ai mtq-ai-loading';box.innerHTML='<strong>🤖 Enzo IA</strong><div style="margin-top:5px">Analisando seus erros desta aba…</div>';}
+    if(box){box.hidden=false;box.className='mtq-ai mtq-ai-loading';box.innerHTML='<div class="mtq-ai-title">🤖 Enzo IA — preparando seu plano de estudo</div><div class="mtq-ai-body">Analisando seus erros, identificando os assuntos prioritários e montando uma estratégia de revisão…</div>';}
     const reply=await invokeAI(tabPrompt(tabId));
     state.ai[tabId]=reply||fallbackTabAI(tabId);
+    state.aiMeta=state.aiMeta||{};
+    state.aiMeta[tabId]={wrongCount:s.wrong,generatedAt:Date.now()};
     delete state.aiBusy[tabId];saveState();updateTabUI(tabId);updateXray();
   }
 
@@ -1392,33 +1471,57 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     const name=getStudentName();
     const rows=globalStats().filter(x=>x.wrong>0).sort((a,b)=>b.score-a.score).slice(0,7);
     const detail=rows.map((x,i)=>{
-      const q=x.wrongQuestions.slice(-3).map(q=>q.c+' — '+q.q).join(' / ');
-      return (i+1)+'. '+TAB_META[x.id].name+': '+x.wrong+' erros em '+x.answered+' ('+x.rate+'%). Questões: '+q;
+      const q=x.wrongQuestions.slice(-5).map(q=>{
+        const a=getAnswer(q.n)||{};
+        return 'Q'+q.n+' ['+q.c+'] aluno marcou '+choiceText(q,a.choice)+'; correta '+choiceText(q,q.cr)+'; '+q.q+'; explicação: '+q.ex;
+      }).join(' / ');
+      const topics=topicRows(x).join(', ');
+      return (i+1)+'. '+TAB_META[x.id].name+': '+x.wrong+' erros em '+x.answered+' ('+x.rate+'%). Assuntos: '+topics+'. Questões: '+q;
     }).join('\n');
     return [
-      'Você é a Enzo IA. Gere um RAIO-X DE DESEMPENHO para um aluno de medicina.',
-      'Aluno: '+name+'.',
-      detail||'Nenhum erro registrado ainda.',
-      'Chame o aluno pelo nome. Seja curto, direto e motivador, máximo 110 palavras.',
-      'Comece pelo maior problema e organize claramente PRIORIDADE 1, PRIORIDADE 2 e PRIORIDADE 3.',
-      'Use a frase “Você errou muitas questões relacionadas a…” quando houver erros relevantes.',
-      'Diga quais abas e assuntos revisar primeiro e sugira refazer as questões erradas depois da revisão.',
-      'Use somente as informações fornecidas acima, que vêm das questões do próprio resumo. Não acrescente conteúdo externo.'
+      'Você é a Enzo IA responsável pelo RAIO-X DE DESEMPENHO de um aluno de medicina.',
+      'Nome para ser chamado: '+(name||'não informado')+'.',
+      'Dados por aba:',detail||'Nenhum erro registrado ainda.',
+      '',
+      'Faça uma devolutiva pedagógica completa baseada exclusivamente nesses erros.',
+      'Se houver pelo menos 2 erros, use explicitamente a frase “[nome], você errou muitas questões relacionadas a...” e liste os assuntos que realmente aparecem nos dados.',
+      'Organize em:',
+      '🧠 O QUE O RAIO-X MOSTRA — explique o padrão geral.',
+      '🔴 PRIORIDADE 1 — aba + assunto + por que priorizar + o que revisar + como estudar.',
+      '🟠 PRIORIDADE 2 — mesma estrutura, se houver.',
+      '🟡 PRIORIDADE 3 — mesma estrutura, se houver.',
+      '📚 PLANO DE ESTUDO — sequência prática de revisão, incluindo leitura direcionada, associações, flashcards e refazer erros.',
+      '🔁 TESTE DE RETENÇÃO — explique como o aluno deve verificar se realmente corrigiu a dificuldade.',
+      '🎯 AGORA — uma ação objetiva para começar imediatamente.',
+      'Não invente conteúdo ou assuntos. Não use informação externa. Máximo aproximado: 320 palavras. Chame o aluno pelo nome.'
     ].join('\n');
   }
 
   function fallbackGlobalAI(){
-    const rows=globalStats().filter(x=>x.wrong>0).sort((a,b)=>b.score-a.score);const name=getStudentName();
-    if(!rows.length)return name+', excelente: ainda não há erros registrados no Raio-X. Continue avançando e use as questões das abas para confirmar o domínio.';
-    const top=rows.slice(0,3);return name+', seu Raio-X aponta três focos. PRIORIDADE 1: '+TAB_META[top[0].id].name+' ('+top[0].wrong+' erros).'+(top[1]?' PRIORIDADE 2: '+TAB_META[top[1].id].name+' ('+top[1].wrong+' erros).':'')+(top[2]?' PRIORIDADE 3: '+TAB_META[top[2].id].name+' ('+top[2].wrong+' erros).':'')+' Revise esses pontos e refaça as questões erradas.';
+    const rows=globalStats().filter(x=>x.wrong>0).sort((a,b)=>b.score-a.score),name=getStudentName();
+    if(!rows.length)return (name?name+', excelente!':'Excelente!')+' ainda não há erros registrados no Raio-X. Continue fazendo as questões das abas para que o sistema consiga identificar suas dificuldades.';
+    const top=rows.slice(0,3),n=name||'Você';
+    let out=n+', seu Raio-X mostra onde sua revisão precisa ser mais eficiente.';
+    if(rows.reduce((a,x)=>a+x.wrong,0)>=2)out+='\nVocê errou muitas questões relacionadas aos assuntos destacados abaixo.';
+    top.forEach((x,i)=>{
+      const topics=Object.entries(x.byTopic).sort((a,b)=>b[1]-a[1]);
+      const emoji=['🔴','🟠','🟡'][i]||'🟡';
+      out+='\n\n'+emoji+' PRIORIDADE '+(i+1)+' — '+TAB_META[x.id].name;
+      if(topics.length)out+='\nAssuntos: '+topics.map(t=>t[0]+' ('+t[1]+' erro'+(t[1]===1?'':'s')+')').join(', ')+'.';
+      out+='\nComo estudar: volte ao trecho desses assuntos no resumo, leia as explicações das questões erradas, faça os flashcards relacionados e depois refaça as questões sem consultar a resposta.';
+    });
+    out+='\n\n📚 PLANO DE ESTUDO\n1) Prioridade 1.\n2) Prioridade 2.\n3) Prioridade 3.\n4) Refazer todas as questões erradas.\n5) Repetir somente os pontos que continuarem errados.\n\n🎯 AGORA\nComece pela Prioridade 1 e só passe para a próxima depois de conseguir explicar o ponto sem consultar o resumo.';
+    return out;
   }
 
   async function requestGlobalAI(){
     const btn=document.querySelector('.mx-ai-btn'),box=document.querySelector('.mx-ai');if(!btn||!box)return;
-    btn.disabled=true;btn.textContent='🤖 Analisando…';box.hidden=false;box.innerHTML='<strong>Enzo IA</strong><div style="margin-top:5px">Cruzando seus erros por aba…</div>';
+    btn.disabled=true;btn.textContent='🤖 Analisando…';box.hidden=false;box.innerHTML='<div class="mtq-ai-title">🤖 Enzo IA — seu Raio-X</div><div class="mtq-ai-body">Cruzando seus erros por aba, identificando padrões e montando sua ordem de revisão…</div>';
     const reply=await invokeAI(globalPrompt());
-    state.ai.global=reply||fallbackGlobalAI();saveState();
-    box.innerHTML='<strong>🤖 Enzo IA — seu Raio-X</strong><div style="margin-top:5px">'+esc(state.ai.global)+'</div>';
+    state.ai.global=reply||fallbackGlobalAI();
+    state.aiMeta=state.aiMeta||{};state.aiMeta.global={generatedAt:Date.now()};
+    saveState();
+    box.innerHTML='<div class="mtq-ai-title">🤖 Enzo IA — seu plano personalizado</div><div class="mtq-ai-body">'+formatAIText(state.ai.global)+'</div>';
     btn.disabled=false;btn.textContent='✨ Atualizar Raio-X com IA';
   }
 
@@ -1439,18 +1542,35 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     const intro=document.getElementById('intro'),cards=document.getElementById('topicCards');if(!intro||!cards||document.getElementById('micro-xray'))return;
     const box=document.createElement('section');box.id='micro-xray';box.className='micro-xray';box.innerHTML='<div class="mx-head"><span class="mx-kicker">🧠 RAIO-X DA PROVA</span><h2>Descubra exatamente onde você está errando</h2><p>O desempenho das questões colocadas no final de cada aba é analisado separadamente. Quanto mais você responde, mais preciso fica o seu mapa de revisão.</p></div><div class="mx-priority-box"></div><div class="mx-grid"></div><div class="mx-ai" hidden></div><div class="mx-foot"><span class="mtq-muted">Os erros ficam separados por aba neste dispositivo/conta para não misturar seu desempenho.</span><button type="button" class="mtq-xray-btn mx-ai-btn">✨ Gerar meu Raio-X com IA</button></div>';
     cards.insertAdjacentElement('afterend',box);updateXray();
-    if(state.ai&&state.ai.global){const ai=box.querySelector('.mx-ai');ai.hidden=false;ai.innerHTML='<strong>🤖 Enzo IA — seu Raio-X</strong><div style="margin-top:5px">'+esc(state.ai.global)+'</div>';box.querySelector('.mx-ai-btn').textContent='✨ Atualizar Raio-X com IA';}
+    if(state.ai&&state.ai.global){const ai=box.querySelector('.mx-ai');ai.hidden=false;ai.innerHTML='<div class="mtq-ai-title">🤖 Enzo IA — seu plano personalizado</div><div class="mtq-ai-body">'+formatAIText(state.ai.global)+'</div>';box.querySelector('.mx-ai-btn').textContent='✨ Atualizar Raio-X com IA';}
     box.querySelector('.mx-ai-btn').addEventListener('click',requestGlobalAI);
   }
 
   function boot(){
     injectStyles();
     ownerKey=getOwner();loadState();
+    syncStudentName().then(()=>updateXray());
     TAB_ORDER.forEach(buildTabQuiz);
     injectXray();
     updateXray();
   }
-  document.addEventListener('authReady',()=>{const next=getOwner();if(next!==ownerKey){ownerKey=next;loadState();TAB_ORDER.forEach(id=>{const box=document.querySelector('.micro-tab-quiz[data-tab="'+id+'"]');if(box){const list=box.querySelector('.mtq-list');list.innerHTML='';questionsForTab(id).forEach(q=>list.appendChild(renderQuestion(q,id)));updateTabUI(id);}});updateXray();}});
+  document.addEventListener('authReady',async()=>{
+    await syncStudentName();
+    const next=getOwner();
+    if(next!==ownerKey){
+      ownerKey=next;loadState();
+      TAB_ORDER.forEach(id=>{
+        const box=document.querySelector('.micro-tab-quiz[data-tab="'+id+'"]');
+        if(box){
+          const list=box.querySelector('.mtq-list');
+          list.innerHTML='';
+          questionsForTab(id).forEach(q=>list.appendChild(renderQuestion(q,id)));
+          updateTabUI(id);
+        }
+      });
+    }
+    updateXray();
+  });
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
