@@ -482,7 +482,7 @@ body.enzo-eraser-mode mark.enzo-highlight{cursor:crosshair;outline:1px dashed rg
 .enzo-hl-color.active{border-color:#fff;box-shadow:0 0 0 2px var(--accent)}
 .enzo-hl-divider{width:1px;height:24px;background:var(--border)}
 .enzo-hl-toast{
-  position:fixed;left:24px;right:auto;bottom:138px;z-index:10021;max-width:min(360px,calc(100vw - 32px));
+  position:fixed;left:24px;right:auto;bottom:200px;z-index:10021;max-width:min(360px,calc(100vw - 32px));
   padding:9px 13px;border-radius:10px;background:#111827;color:#fff;border:1px solid var(--border);
   box-shadow:0 8px 28px rgba(0,0,0,.45);font:600 12px var(--font-body);
   opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s
@@ -493,7 +493,74 @@ body.enzo-eraser-mode mark.enzo-highlight{cursor:crosshair;outline:1px dashed rg
   .enzo-hl-panel{border-radius:18px;display:none;max-width:calc(100vw - 24px);flex-wrap:wrap;justify-content:center}
   #enzo-highlighter.open .enzo-hl-panel{display:flex}
   .enzo-hl-toggle{min-height:42px;padding:9px 13px}
-  .enzo-hl-toast{left:12px;right:auto;bottom:136px}
+  .enzo-hl-toast{left:12px;right:auto;bottom:200px}
+}
+
+/* ── ANOTAÇÕES INDIVIDUAIS SINCRONIZADAS ── */
+#enzo-notes-toggle{
+  position:fixed;left:24px;bottom:138px;z-index:10025;width:48px;height:48px;
+  display:grid;place-items:center;border-radius:14px;border:1px solid rgba(56,232,192,.55);
+  background:rgba(17,21,32,.97);color:#fff;cursor:pointer;font-size:22px;
+  box-shadow:0 7px 28px rgba(0,0,0,.48);backdrop-filter:blur(16px);transition:.2s
+}
+#enzo-notes-toggle:hover,#enzo-notes-toggle.active{transform:translateY(-2px);border-color:var(--accent2);background:rgba(56,232,192,.14)}
+#enzo-notes-toggle .note-count{
+  position:absolute;right:-7px;top:-7px;min-width:20px;height:20px;padding:0 5px;
+  display:none;align-items:center;justify-content:center;border-radius:999px;
+  background:var(--accent2);color:#07110f;font:800 10px var(--font-mono)
+}
+#enzo-notes-toggle .note-count.visible{display:flex}
+#enzo-note-composer{
+  position:fixed;left:84px;bottom:138px;z-index:10026;width:min(340px,calc(100vw - 108px));
+  display:none;padding:14px;background:rgba(10,13,20,.98);border:1px solid rgba(56,232,192,.4);
+  border-radius:16px;box-shadow:0 12px 44px rgba(0,0,0,.58);backdrop-filter:blur(18px)
+}
+#enzo-note-composer.open{display:block}
+.enzo-note-form-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;color:#fff;font:700 14px var(--font-display)}
+.enzo-note-close{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer}
+.enzo-note-fields{display:grid;gap:9px}
+.enzo-note-fields label{font:700 9px var(--font-mono);letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+.enzo-note-fields select,.enzo-note-fields textarea{
+  width:100%;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);
+  padding:9px 10px;font:500 13px var(--font-body);outline:none
+}
+.enzo-note-fields textarea{min-height:104px;max-height:240px;resize:vertical;line-height:1.5}
+.enzo-note-fields select:focus,.enzo-note-fields textarea:focus{border-color:var(--accent2);box-shadow:0 0 0 2px rgba(56,232,192,.12)}
+.enzo-note-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:10px}
+.enzo-note-actions button{border-radius:9px;padding:8px 12px;font:700 11px var(--font-body);cursor:pointer}
+.enzo-note-cancel{border:1px solid var(--border);background:transparent;color:var(--muted)}
+.enzo-note-save{border:1px solid var(--accent2);background:var(--accent2);color:#07110f}
+.enzo-note-save:disabled{opacity:.55;cursor:wait}
+.enzo-note-status{min-height:18px;margin-top:7px;color:var(--muted);font-size:11px}
+.enzo-note-status.error{color:var(--red)}
+
+.enzo-study-note{
+  position:absolute;z-index:35;width:232px;min-height:132px;border-radius:13px;
+  border:1px solid rgba(255,255,255,.24);box-shadow:0 12px 30px rgba(0,0,0,.42);
+  color:#111827;overflow:hidden;transform:rotate(-.25deg);transition:box-shadow .18s,transform .18s
+}
+.enzo-study-note:hover{z-index:44;box-shadow:0 16px 38px rgba(0,0,0,.54);transform:rotate(0)}
+.enzo-study-note.dragging{z-index:60;box-shadow:0 20px 48px rgba(0,0,0,.65);transform:rotate(1deg) scale(1.02);transition:none}
+.enzo-study-note[data-label="nota"]{background:#a9d7ff;border-color:#65b4f5}
+.enzo-study-note[data-label="importante"]{background:#ffe589;border-color:#f3c742}
+.enzo-study-note[data-label="prova"]{background:#d9b4ff;border-color:#b16ee9}
+.enzo-study-note[data-label="atencao"]{background:#ffaaa5;border-color:#ee6f68}
+.enzo-note-head{
+  min-height:38px;display:flex;align-items:center;gap:7px;padding:7px 8px 7px 10px;
+  background:rgba(255,255,255,.24);border-bottom:1px solid rgba(17,24,39,.13);
+  cursor:grab;touch-action:none
+}
+.enzo-note-head:active{cursor:grabbing}
+.enzo-note-tag{flex:1;font:900 10px var(--font-mono);letter-spacing:.8px;text-transform:uppercase;color:#172033}
+.enzo-note-mini{width:25px;height:25px;border:0;border-radius:7px;background:rgba(255,255,255,.38);color:#172033;cursor:pointer;font-size:13px}
+.enzo-note-mini:hover{background:rgba(255,255,255,.72)}
+.enzo-note-body{padding:12px 13px 15px;white-space:pre-wrap;overflow-wrap:anywhere;font:600 13px/1.5 var(--font-body);color:#172033}
+.enzo-note-sync{position:absolute;right:8px;bottom:5px;font:800 8px var(--font-mono);letter-spacing:.5px;color:rgba(17,32,51,.58);text-transform:uppercase}
+.enzo-note-sync.error{color:#8d1414}
+@media(max-width:700px){
+  #enzo-notes-toggle{left:12px;bottom:138px;width:46px;height:46px}
+  #enzo-note-composer{left:12px;right:12px;bottom:194px;width:auto}
+  .enzo-study-note{width:min(218px,calc(100vw - 42px));min-height:124px}
 }
 </style></head><body><canvas id="particles"></canvas>
 <header><div class="badge">📊 Epidemiologia · P1 · 2026</div><h1>Epidemiologia e Saúde Pública — P1</h1><p class="sub">Serviço de saúde · Planejamento · APS · Sistema do Paraguai · Indicadores e equidade · Epidemiologia · Desenhos epidemiológicos · Relação com ciências</p><p class="by">⚡ Elaborado por Enzo Salmazo · Conteúdo exclusivo dos slides da disciplina</p></header>
@@ -939,6 +1006,273 @@ qCategory.addEventListener('change',filterQuiz);qType.addEventListener('change',
 
   observer=new MutationObserver(()=>{clearTimeout(observer._timer);observer._timer=setTimeout(renderMissing,40)});
   assignKeys();renderAll();observeDynamicAreas();updateToolbar();
+})();
+</script>
+<script>
+/* Post-its privados por aluno — persistência no Supabase com RLS. */
+(()=>{
+  'use strict';
+  const TABLE='resumo_anotacoes';
+  const PAGE=window.PAGE_KEY||location.pathname.split('/').pop()?.replace(/\.html?$/i,'')||'resumo';
+  const LABELS={
+    nota:{name:'Nota',icon:'📝'},
+    importante:{name:'Importante',icon:'⭐'},
+    prova:{name:'Prova',icon:'🎯'},
+    atencao:{name:'Atenção',icon:'⚠️'}
+  };
+  const ANCHOR_SELECTOR=[
+    'p','li','td','th','h1','h2','h3','h4','h5','h6',
+    'blockquote','.fc-q','.fc-back-text'
+  ].join(',');
+  let client=null,user=null,notes=[],initialized=false,editingId=null,topZ=70;
+
+  const toggle=document.createElement('button');
+  toggle.id='enzo-notes-toggle';toggle.type='button';toggle.title='Criar uma anotação';
+  toggle.setAttribute('aria-label','Criar uma anotação');
+  toggle.innerHTML='<span aria-hidden="true">🗒️</span><span class="note-count" aria-label="Quantidade de anotações">0</span>';
+
+  const composer=document.createElement('form');
+  composer.id='enzo-note-composer';
+  composer.innerHTML=`
+    <div class="enzo-note-form-title"><span>🗒️ <b class="enzo-note-title-text">Nova anotação</b></span><button class="enzo-note-close" type="button" aria-label="Fechar">×</button></div>
+    <div class="enzo-note-fields">
+      <label for="enzo-note-label">Marcação</label>
+      <select id="enzo-note-label">
+        <option value="nota">📝 Nota</option>
+        <option value="importante">⭐ Importante</option>
+        <option value="prova">🎯 Prova</option>
+        <option value="atencao">⚠️ Atenção</option>
+      </select>
+      <label for="enzo-note-text">Anotação</label>
+      <textarea id="enzo-note-text" maxlength="3000" required placeholder="Escreva o que você compreendeu, uma observação ou algo que pode cair na prova..."></textarea>
+    </div>
+    <div class="enzo-note-actions"><button class="enzo-note-cancel" type="button">Cancelar</button><button class="enzo-note-save" type="submit">Salvar anotação</button></div>
+    <div class="enzo-note-status" role="status" aria-live="polite"></div>`;
+  document.body.append(toggle,composer);
+
+  const count=toggle.querySelector('.note-count');
+  const titleText=composer.querySelector('.enzo-note-title-text');
+  const labelField=composer.querySelector('#enzo-note-label');
+  const textField=composer.querySelector('#enzo-note-text');
+  const saveButton=composer.querySelector('.enzo-note-save');
+  const status=composer.querySelector('.enzo-note-status');
+
+  function getClient(){return window.authClient||window.supabaseClient||window._sb||null}
+  function cleanText(value){return String(value||'').replace(/\s+/g,' ').trim()}
+  function hashText(text){
+    let h=2166136261;
+    for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619)}
+    return (h>>>0).toString(36);
+  }
+  function setStatus(message,error=false){status.textContent=message||'';status.classList.toggle('error',error)}
+  function updateCount(){count.textContent=notes.length;count.classList.toggle('visible',notes.length>0)}
+  function currentSection(){return document.querySelector('.section.active')||document.querySelector('.section')}
+  function sectionContainer(section){return section?.querySelector('.container')||null}
+  function anchorElements(section){
+    if(!section)return[];
+    assignAnchors(section);
+    return [...section.querySelectorAll('[data-enzo-note-anchor]')].filter(el=>cleanText(el.textContent)&&!el.closest('.enzo-study-note,#enzo-note-composer,.study-tools,.q-stats'));
+  }
+  function assignAnchors(section=document){
+    const seen=new Map();
+    section.querySelectorAll(ANCHOR_SELECTOR).forEach(el=>{
+      if(!el.closest('.section'))return;
+      if(el.closest('.enzo-study-note,#enzo-note-composer,.study-tools,.q-stats,nav,footer'))return;
+      const text=cleanText(el.textContent);if(!text)return;
+      const sectionId=el.closest('.section')?.id||'page';
+      const base=`${sectionId}:${hashText(text)}`;
+      const occurrence=seen.get(base)||0;seen.set(base,occurrence+1);
+      el.dataset.enzoNoteAnchor=el.dataset.enzoHlKey||`${base}:${occurrence}`;
+    });
+  }
+  function findAnchor(note,section){
+    const anchors=anchorElements(section);
+    let found=anchors.find(el=>el.dataset.enzoNoteAnchor===note.anchor_key);
+    if(!found&&note.anchor_excerpt){
+      const needle=cleanText(note.anchor_excerpt).slice(0,100);
+      found=anchors.find(el=>cleanText(el.textContent).includes(needle));
+    }
+    return found||null;
+  }
+  function relativeTop(el,container){
+    const er=el.getBoundingClientRect(),cr=container.getBoundingClientRect();
+    return er.top-cr.top+container.scrollTop;
+  }
+  function clamp(value,min,max){return Math.max(min,Math.min(max,value))}
+  function normalizeNote(note){
+    return {...note,x_pct:Number(note.x_pct)||0,y_offset:Number(note.y_offset)||0};
+  }
+  function noteElement(id){return document.querySelector(`.enzo-study-note[data-note-id="${id}"]`)}
+  function setSync(el,message,error=false){
+    const sync=el?.querySelector('.enzo-note-sync');if(!sync)return;
+    sync.textContent=message;sync.classList.toggle('error',error);
+  }
+  function positionNote(el,note){
+    const section=document.getElementById(note.section_id),container=sectionContainer(section);
+    if(!section||!container||!el||container.clientWidth===0)return;
+    const maxLeft=Math.max(0,container.clientWidth-el.offsetWidth);
+    const left=clamp((Number(note.x_pct)||0)*maxLeft,0,maxLeft);
+    const anchor=findAnchor(note,section);
+    const baseTop=anchor?relativeTop(anchor,container):0;
+    const maxTop=Math.max(8,container.scrollHeight-el.offsetHeight-8);
+    const top=clamp(baseTop+(Number(note.y_offset)||0),8,maxTop);
+    el.style.left=`${left}px`;el.style.top=`${top}px`;el.style.visibility='visible';
+  }
+  function layoutNotes(){notes.forEach(note=>positionNote(noteElement(note.id),note))}
+  function createNoteElement(note){
+    const meta=LABELS[note.label]||LABELS.nota;
+    const el=document.createElement('article');
+    el.className='enzo-study-note';el.dataset.noteId=note.id;el.dataset.label=note.label;el.style.visibility='hidden';
+    const head=document.createElement('div');head.className='enzo-note-head';
+    const tag=document.createElement('span');tag.className='enzo-note-tag';tag.textContent=`${meta.icon} ${meta.name}`;
+    const edit=document.createElement('button');edit.className='enzo-note-mini';edit.type='button';edit.title='Editar';edit.setAttribute('aria-label','Editar anotação');edit.textContent='✎';
+    const remove=document.createElement('button');remove.className='enzo-note-mini';remove.type='button';remove.title='Excluir';remove.setAttribute('aria-label','Excluir anotação');remove.textContent='×';
+    head.append(tag,edit,remove);
+    const body=document.createElement('div');body.className='enzo-note-body';body.textContent=note.content;
+    const sync=document.createElement('span');sync.className='enzo-note-sync';sync.textContent='salva';
+    el.append(head,body,sync);
+    edit.addEventListener('pointerdown',event=>event.stopPropagation());
+    remove.addEventListener('pointerdown',event=>event.stopPropagation());
+    edit.addEventListener('click',()=>openComposer(note));
+    remove.addEventListener('click',()=>deleteNote(note));
+    el.addEventListener('pointerdown',()=>{el.style.zIndex=String(++topZ)});
+    enableDrag(el,head,note);
+    return el;
+  }
+  function renderNotes(){
+    document.querySelectorAll('.enzo-study-note').forEach(el=>el.remove());
+    notes.forEach(note=>{
+      const section=document.getElementById(note.section_id),container=sectionContainer(section);
+      if(!container)return;
+      const el=createNoteElement(note);container.appendChild(el);positionNote(el,note);
+    });
+    updateCount();requestAnimationFrame(layoutNotes);
+  }
+  function defaultPlacement(){
+    const section=currentSection(),container=sectionContainer(section);
+    if(!section||!container)return null;
+    const anchors=anchorElements(section);
+    const containerRect=container.getBoundingClientRect();
+    const desiredViewportY=clamp(window.innerHeight*.44,150,window.innerHeight-180);
+    let anchor=anchors.filter(el=>{
+      const r=el.getBoundingClientRect();return r.bottom>100&&r.top<window.innerHeight-70;
+    }).sort((a,b)=>Math.abs(a.getBoundingClientRect().top-desiredViewportY)-Math.abs(b.getBoundingClientRect().top-desiredViewportY))[0]||anchors[0]||null;
+    const desiredTop=clamp(desiredViewportY-containerRect.top,8,Math.max(8,container.scrollHeight-150));
+    const baseTop=anchor?relativeTop(anchor,container):0;
+    return {
+      section_id:section.id||'intro',
+      anchor_key:anchor?.dataset.enzoNoteAnchor||null,
+      anchor_excerpt:anchor?cleanText(anchor.textContent).slice(0,240):null,
+      x_pct:.78,
+      y_offset:Math.round(desiredTop-baseTop)
+    };
+  }
+  function nearestAnchorForPosition(section,container,top){
+    const anchors=anchorElements(section);if(!anchors.length)return null;
+    return anchors.sort((a,b)=>Math.abs(relativeTop(a,container)-top)-Math.abs(relativeTop(b,container)-top))[0];
+  }
+  function enableDrag(el,handle,note){
+    let drag=null;
+    handle.addEventListener('pointerdown',event=>{
+      if(event.target.closest('button'))return;
+      event.preventDefault();handle.setPointerCapture?.(event.pointerId);
+      drag={id:event.pointerId,x:event.clientX,y:event.clientY,left:el.offsetLeft,top:el.offsetTop};
+      el.classList.add('dragging');el.style.zIndex=String(++topZ);
+    });
+    handle.addEventListener('pointermove',event=>{
+      if(!drag||event.pointerId!==drag.id)return;
+      event.preventDefault();
+      const section=document.getElementById(note.section_id),container=sectionContainer(section);if(!container)return;
+      const maxLeft=Math.max(0,container.clientWidth-el.offsetWidth),maxTop=Math.max(8,container.scrollHeight-el.offsetHeight-8);
+      el.style.left=`${clamp(drag.left+event.clientX-drag.x,0,maxLeft)}px`;
+      el.style.top=`${clamp(drag.top+event.clientY-drag.y,8,maxTop)}px`;
+    });
+    const finish=async event=>{
+      if(!drag||event.pointerId!==drag.id)return;
+      handle.releasePointerCapture?.(event.pointerId);drag=null;el.classList.remove('dragging');
+      const section=document.getElementById(note.section_id),container=sectionContainer(section);if(!container)return;
+      const maxLeft=Math.max(1,container.clientWidth-el.offsetWidth);
+      const left=parseFloat(el.style.left)||0,top=parseFloat(el.style.top)||0;
+      const anchor=nearestAnchorForPosition(section,container,top+20);
+      note.x_pct=clamp(left/maxLeft,0,1);
+      note.anchor_key=anchor?.dataset.enzoNoteAnchor||null;
+      note.anchor_excerpt=anchor?cleanText(anchor.textContent).slice(0,240):null;
+      note.y_offset=Math.round(top-(anchor?relativeTop(anchor,container):0));
+      setSync(el,'salvando…');
+      const {error}=await client.from(TABLE).update({
+        anchor_key:note.anchor_key,anchor_excerpt:note.anchor_excerpt,x_pct:note.x_pct,
+        y_offset:note.y_offset,updated_at:new Date().toISOString()
+      }).eq('id',note.id).eq('user_id',user.id);
+      setSync(el,error?'erro ao salvar':'salva',!!error);
+      if(error)console.error('Falha ao posicionar anotação:',error.message);
+    };
+    handle.addEventListener('pointerup',finish);handle.addEventListener('pointercancel',finish);
+  }
+  function openComposer(note=null){
+    editingId=note?.id||null;titleText.textContent=note?'Editar anotação':'Nova anotação';
+    labelField.value=note?.label||'nota';textField.value=note?.content||'';
+    setStatus(user?'':'Conectando ao seu perfil…');composer.classList.add('open');toggle.classList.add('active');
+    setTimeout(()=>textField.focus(),40);
+  }
+  function closeComposer(){composer.classList.remove('open');toggle.classList.remove('active');editingId=null;setStatus('');textField.value=''}
+  async function saveNote(event){
+    event.preventDefault();
+    if(!client||!user){setStatus('Não foi possível identificar o aluno conectado.',true);return}
+    const content=textField.value.trim(),label=labelField.value;
+    if(!content){setStatus('Digite sua anotação.',true);return}
+    saveButton.disabled=true;setStatus('Salvando no seu perfil…');
+    if(editingId){
+      const {data,error}=await client.from(TABLE).update({label,content,updated_at:new Date().toISOString()})
+        .eq('id',editingId).eq('user_id',user.id).select().single();
+      saveButton.disabled=false;
+      if(error){setStatus(`Erro: ${error.message}`,true);return}
+      const index=notes.findIndex(n=>n.id===editingId);if(index>=0)notes[index]=normalizeNote(data);
+      renderNotes();closeComposer();return;
+    }
+    const placement=defaultPlacement();
+    if(!placement){saveButton.disabled=false;setStatus('Abra uma aba do resumo para posicionar a anotação.',true);return}
+    const payload={user_id:user.id,resumo_key:PAGE,label,content,...placement};
+    const {data,error}=await client.from(TABLE).insert(payload).select().single();
+    saveButton.disabled=false;
+    if(error){setStatus(`Erro: ${error.message}`,true);return}
+    notes.push(normalizeNote(data));renderNotes();closeComposer();
+  }
+  async function deleteNote(note){
+    if(!confirm('Excluir esta anotação?'))return;
+    const el=noteElement(note.id);setSync(el,'excluindo…');
+    const {error}=await client.from(TABLE).delete().eq('id',note.id).eq('user_id',user.id);
+    if(error){setSync(el,'erro ao excluir',true);alert(`Não foi possível excluir: ${error.message}`);return}
+    notes=notes.filter(item=>item.id!==note.id);el?.remove();updateCount();
+  }
+  async function initialize(){
+    if(initialized)return;
+    client=getClient();if(!client){setStatus('Aguardando conexão com o perfil…');return}
+    user=window.authSession?.user||null;
+    if(!user){
+      const {data,error}=await client.auth.getUser();
+      if(error||!data?.user){setStatus('Entre na sua conta para usar anotações.',true);return}
+      user=data.user;
+    }
+    initialized=true;assignAnchors(document);
+    const {data,error}=await client.from(TABLE)
+      .select('id,user_id,resumo_key,section_id,anchor_key,anchor_excerpt,x_pct,y_offset,label,content,created_at,updated_at')
+      .eq('user_id',user.id).eq('resumo_key',PAGE).order('created_at',{ascending:true});
+    if(error){setStatus(`Anotações indisponíveis: ${error.message}`,true);console.error(error);return}
+    notes=(data||[]).map(normalizeNote);renderNotes();setStatus('');
+  }
+
+  toggle.addEventListener('click',()=>composer.classList.contains('open')?closeComposer():openComposer());
+  composer.querySelector('.enzo-note-close').addEventListener('click',closeComposer);
+  composer.querySelector('.enzo-note-cancel').addEventListener('click',closeComposer);
+  composer.addEventListener('submit',saveNote);
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&composer.classList.contains('open'))closeComposer()});
+  window.addEventListener('resize',()=>requestAnimationFrame(layoutNotes));
+  const sectionObserver=new MutationObserver(mutations=>{
+    if(mutations.some(m=>m.target.classList?.contains('active')))requestAnimationFrame(layoutNotes);
+  });
+  document.querySelectorAll('.section').forEach(section=>sectionObserver.observe(section,{attributes:true,attributeFilter:['class']}));
+  document.addEventListener('authReady',initialize,{once:true});
+  if(window.authSession?.user)setTimeout(initialize,0);else setTimeout(initialize,1200);
 })();
 </script>
 <script src="study-timer.js"></script><script src="study-progress.js"></script><script src="enzo-ia.js"></script></body></html>
