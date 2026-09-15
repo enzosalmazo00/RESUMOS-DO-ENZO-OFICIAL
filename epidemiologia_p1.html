@@ -429,6 +429,72 @@ footer{position:relative;z-index:1;text-align:center;color:var(--muted);padding:
 .closed-source{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(56,232,192,.08);border:1px solid rgba(56,232,192,.25);color:var(--accent2);font:700 10px var(--font-mono);letter-spacing:.8px;margin-bottom:16px}
 footer{position:relative;z-index:1;text-align:center;color:var(--muted);padding:26px 16px 70px;border-top:1px solid var(--border);font-size:12px}
 @media(max-width:850px){.result-note{width:100%;margin-left:0}.path-node{min-width:132px}}
+
+/* ── MARCA-TEXTO DO ALUNO ── */
+mark.enzo-highlight{
+  color:#10131b!important;
+  border-radius:.18em;
+  padding:.02em 0;
+  box-decoration-break:clone;
+  -webkit-box-decoration-break:clone;
+  text-shadow:none;
+}
+mark.enzo-highlight[data-color="yellow"]{background:#ffe066}
+mark.enzo-highlight[data-color="green"]{background:#78e89b}
+mark.enzo-highlight[data-color="red"]{background:#ff8585}
+body.enzo-highlight-mode .section.active p,
+body.enzo-highlight-mode .section.active li,
+body.enzo-highlight-mode .section.active td,
+body.enzo-highlight-mode .section.active th{cursor:text}
+body.enzo-eraser-mode mark.enzo-highlight{cursor:crosshair;outline:1px dashed rgba(255,255,255,.7)}
+
+#enzo-highlighter{
+  position:fixed;right:76px;bottom:20px;z-index:10020;
+  display:flex;align-items:center;gap:8px;
+  font-family:var(--font-body);user-select:none;-webkit-user-select:none;
+}
+#enzo-highlighter button{font:700 12px var(--font-body);cursor:pointer}
+.enzo-hl-toggle{
+  display:flex;align-items:center;gap:8px;min-height:44px;padding:10px 15px;
+  color:#fff;background:rgba(17,21,32,.96);border:1px solid rgba(249,201,79,.55);
+  border-radius:999px;box-shadow:0 6px 28px rgba(0,0,0,.45);backdrop-filter:blur(16px)
+}
+.enzo-hl-toggle:hover,.enzo-hl-toggle[aria-expanded="true"]{border-color:#ffe066;background:#20263a}
+.enzo-hl-count{display:none;min-width:20px;height:20px;padding:0 6px;align-items:center;justify-content:center;border-radius:999px;background:var(--accent);color:#07101c;font:800 10px var(--font-mono)}
+.enzo-hl-count.visible{display:inline-flex}
+.enzo-hl-panel{
+  display:none;align-items:center;gap:7px;padding:7px;
+  background:rgba(10,13,20,.97);border:1px solid var(--border);border-radius:999px;
+  box-shadow:0 8px 34px rgba(0,0,0,.55);backdrop-filter:blur(18px)
+}
+#enzo-highlighter.open .enzo-hl-panel{display:flex}
+.enzo-hl-tool,.enzo-hl-color{
+  width:36px;height:36px;display:grid;place-items:center;border-radius:50%;
+  border:1px solid rgba(255,255,255,.15);background:var(--card);color:#fff
+}
+.enzo-hl-tool:hover,.enzo-hl-tool.active{border-color:var(--accent);background:rgba(79,156,249,.18)}
+.enzo-hl-tool:disabled{opacity:.35;cursor:not-allowed}
+.enzo-hl-color{position:relative;color:transparent}
+.enzo-hl-color::after{content:"";width:19px;height:19px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.enzo-hl-color[data-color="yellow"]::after{background:#ffe066}
+.enzo-hl-color[data-color="green"]::after{background:#78e89b}
+.enzo-hl-color[data-color="red"]::after{background:#ff8585}
+.enzo-hl-color.active{border-color:#fff;box-shadow:0 0 0 2px var(--accent)}
+.enzo-hl-divider{width:1px;height:24px;background:var(--border)}
+.enzo-hl-toast{
+  position:fixed;right:24px;bottom:78px;z-index:10021;max-width:min(360px,calc(100vw - 32px));
+  padding:9px 13px;border-radius:10px;background:#111827;color:#fff;border:1px solid var(--border);
+  box-shadow:0 8px 28px rgba(0,0,0,.45);font:600 12px var(--font-body);
+  opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s
+}
+.enzo-hl-toast.visible{opacity:1;transform:translateY(0)}
+@media(max-width:700px){
+  #enzo-highlighter{right:12px;bottom:74px;align-items:flex-end;flex-direction:column-reverse}
+  .enzo-hl-panel{border-radius:18px;display:none;max-width:calc(100vw - 24px);flex-wrap:wrap;justify-content:center}
+  #enzo-highlighter.open .enzo-hl-panel{display:flex}
+  .enzo-hl-toggle{min-height:42px;padding:9px 13px}
+  .enzo-hl-toast{right:12px;bottom:128px}
+}
 </style></head><body><canvas id="particles"></canvas>
 <header><div class="badge">📊 Epidemiologia · P1 · 2026</div><h1>Epidemiologia e Saúde Pública — P1</h1><p class="sub">Serviço de saúde · Planejamento · APS · Sistema do Paraguai · Indicadores e equidade · Epidemiologia · Desenhos epidemiológicos · Relação com ciências</p><p class="by">⚡ Elaborado por Enzo Salmazo · Conteúdo exclusivo dos slides da disciplina</p></header>
 <nav class="tabs"><button class="active" data-section="intro" onclick="showSection('intro',this)">📖 Início</button><button data-section="fundamentos" onclick="showSection('fundamentos',this)">🔎 1. Epidemiologia</button><button data-section="programa" onclick="showSection('programa',this)">🗂️ 1. Programa</button><button data-section="servico" onclick="showSection('servico',this)">🏥 2. Serviço de saúde</button><button data-section="planejamento" onclick="showSection('planejamento',this)">🧭 2. Planejamento</button><button data-section="ciclo" onclick="showSection('ciclo',this)">🔄 2. Ciclo do planejamento</button><button data-section="aps" onclick="showSection('aps',this)">🩺 2. Atenção Primária</button><button data-section="assistencia" onclick="showSection('assistencia',this)">🏨 2. Assistência sanitária</button><button data-section="componentes" onclick="showSection('componentes',this)">🛡️ 2. Componentes da APS</button><button data-section="paraguai" onclick="showSection('paraguai',this)">🇵🇾 2. Sistema do Paraguai</button><button data-section="regulacao" onclick="showSection('regulacao',this)">⚖️ 2. Regulação</button><button data-section="participacao" onclick="showSection('participacao',this)">🤝 2. Participação social</button><button data-section="medico" onclick="showSection('medico',this)">👨‍⚕️ 2. Médico generalista</button><button data-section="habilidades" onclick="showSection('habilidades',this)">🧠 2. Habilidades</button><button data-section="indicadores" onclick="showSection('indicadores',this)">📊 3. Indicadores hospitalares</button><button data-section="equidade" onclick="showSection('equidade',this)">⚖️ 3. Equidade e desafios</button><button data-section="epi_conceito" onclick="showSection('epi_conceito',this)">🔬 4. O que é Epidemiologia</button><button data-section="epi_classificacao" onclick="showSection('epi_classificacao',this)">🧩 4. Classificação e objetivos</button><button data-section="epi_principios" onclick="showSection('epi_principios',this)">📐 4. Princípios e usos</button><button data-section="epi_metodo" onclick="showSection('epi_metodo',this)">🧪 4. Método epidemiológico</button><button data-section="desenho_geral" onclick="showSection('desenho_geral',this)">🗂️ 5. Desenho epidemiológico</button><button data-section="desenho_descritivo" onclick="showSection('desenho_descritivo',this)">📋 5. Desenhos descritivos</button><button data-section="desenho_analitico" onclick="showSection('desenho_analitico',this)">🔍 5. Desenhos analíticos</button><button data-section="desenho_experimental" onclick="showSection('desenho_experimental',this)">🧫 5. Desenhos experimentais</button><button data-section="relacao_ciencias" onclick="showSection('relacao_ciencias',this)">🔗 6. Relação com outras ciências</button><button class="fc-tab" data-section="flashcards" onclick="showSection('flashcards',this)">🃏 Flashcards (<span data-flashcard-count>30</span>)</button><button class="qz-tab" data-section="quiz" onclick="showSection('quiz',this)">📝 Simulado (<span data-question-count>204</span>)</button></nav><section id="intro" class="section active"><div class="container">
@@ -601,4 +667,278 @@ function revealOpen(i){const card=document.getElementById('q'+i);if(card.classLi
 function updateScores(){document.getElementById('sC').textContent=QS.c;document.getElementById('sW').textContent=QS.w;document.getElementById('sP').textContent=QD.length-QS.a;}
 function filterQuiz(){const category=qCategory.value,type=qType.value;let count=0;document.querySelectorAll('#quizContainer .q-card').forEach(card=>{const show=(!category||card.dataset.category===category)&&(!type||card.dataset.type===type);card.style.display=show?'block':'none';if(show)count++;});document.getElementById('qVisible').textContent=`${count} de ${QD.length} questões`;document.getElementById('qEmpty').style.display=count?'none':'block';}
 qCategory.addEventListener('change',filterQuiz);qType.addEventListener('change',filterQuiz);function resetQuiz(){QS={c:0,w:0,a:0};renderQuiz();}renderQuiz();
-</script><script src="study-timer.js"></script><script src="study-progress.js"></script><script src="enzo-ia.js"></script></body></html>
+</script>
+<script>
+/* Marca-texto persistente — módulo reutilizável dos Resumos do Enzo. */
+(()=>{
+  'use strict';
+  const TARGET_SELECTOR=[
+    '.section p','.section li','.section td','.section th',
+    '.section h1','.section h2','.section h3','.section h4','.section h5','.section h6',
+    '.section blockquote','.section .fc-q','.section .fc-back-text'
+  ].join(',');
+  const STORAGE_KEY=`enzo-highlights:v1:${window.PAGE_KEY||location.pathname||document.title}`;
+  const COLORS=['yellow','green','red'];
+  let records=loadRecords();
+  let history=[];
+  let mode=null;
+  let color='yellow';
+  let erasing=false;
+  let eraseSnapshot=null;
+  let eraseChanged=false;
+  let observer=null;
+  let toastTimer=null;
+
+  const toolbar=document.createElement('aside');
+  toolbar.id='enzo-highlighter';
+  toolbar.setAttribute('aria-label','Ferramenta de marca-texto');
+  toolbar.innerHTML=`
+    <button class="enzo-hl-toggle" type="button" aria-expanded="false" title="Abrir marca-texto">
+      <span aria-hidden="true">🖍️</span><span>Grifar</span><span class="enzo-hl-count" aria-label="Trechos grifados">0</span>
+    </button>
+    <div class="enzo-hl-panel" role="toolbar" aria-label="Cores e ferramentas">
+      <button class="enzo-hl-color active" type="button" data-color="yellow" aria-label="Grifar em amarelo" title="Amarelo">Amarelo</button>
+      <button class="enzo-hl-color" type="button" data-color="green" aria-label="Grifar em verde" title="Verde">Verde</button>
+      <button class="enzo-hl-color" type="button" data-color="red" aria-label="Grifar em vermelho" title="Vermelho">Vermelho</button>
+      <span class="enzo-hl-divider" aria-hidden="true"></span>
+      <button class="enzo-hl-tool enzo-hl-eraser" type="button" aria-label="Ativar borracha" title="Borracha: arraste sobre as palavras">🧽</button>
+      <button class="enzo-hl-tool enzo-hl-undo" type="button" aria-label="Desfazer última ação" title="Desfazer" disabled>↶</button>
+    </div>`;
+  const toast=document.createElement('div');
+  toast.className='enzo-hl-toast';
+  toast.setAttribute('role','status');
+  toast.setAttribute('aria-live','polite');
+  document.body.append(toolbar,toast);
+
+  const toggle=toolbar.querySelector('.enzo-hl-toggle');
+  const countBadge=toolbar.querySelector('.enzo-hl-count');
+  const undoButton=toolbar.querySelector('.enzo-hl-undo');
+  const eraserButton=toolbar.querySelector('.enzo-hl-eraser');
+  const colorButtons=[...toolbar.querySelectorAll('.enzo-hl-color')];
+
+  function loadRecords(){
+    try{
+      const parsed=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+      return Array.isArray(parsed)?parsed.filter(r=>r&&r.id&&r.key&&Number.isFinite(r.start)&&Number.isFinite(r.end)&&COLORS.includes(r.color)):[];
+    }catch(_){return[]}
+  }
+  function saveRecords(){
+    try{localStorage.setItem(STORAGE_KEY,JSON.stringify(records))}catch(_){showToast('Não foi possível salvar os grifos neste navegador.')}
+  }
+  function snapshot(){return records.map(r=>({...r}))}
+  function pushHistory(state=snapshot()){
+    history.push(state);
+    if(history.length>40)history.shift();
+    updateToolbar();
+  }
+  function makeId(){return `${Date.now().toString(36)}${Math.random().toString(36).slice(2,9)}`}
+  function hashText(text){
+    let h=2166136261;
+    for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619)}
+    return (h>>>0).toString(36);
+  }
+  function normalizedText(el){return (el.textContent||'').replace(/\s+/g,' ').trim()}
+  function isAllowedTarget(el){
+    return !!(el&&normalizedText(el)&&!el.closest('#enzo-highlighter,.study-tools,.q-stats,nav,footer')&&!el.matches('button,input,select,textarea'));
+  }
+  function assignKeys(){
+    const occurrences=new Map();
+    document.querySelectorAll(TARGET_SELECTOR).forEach(el=>{
+      if(!isAllowedTarget(el)||el.dataset.enzoHlKey)return;
+      const section=el.closest('.section')?.id||'page';
+      const base=`${section}:${hashText(normalizedText(el))}`;
+      const occurrence=occurrences.get(base)||0;
+      occurrences.set(base,occurrence+1);
+      el.dataset.enzoHlKey=`${base}:${occurrence}`;
+    });
+  }
+  function textNodes(root){
+    const nodes=[];
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(node){
+      return node.nodeValue&&node.nodeValue.length?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;
+    }});
+    while(walker.nextNode())nodes.push(walker.currentNode);
+    return nodes;
+  }
+  function boundaryOffset(root,node,offset){
+    let total=0;
+    for(const text of textNodes(root)){
+      if(text===node)return total+Math.max(0,Math.min(offset,text.nodeValue.length));
+      total+=text.nodeValue.length;
+    }
+    try{
+      const probe=document.createRange();
+      probe.selectNodeContents(root);probe.setEnd(node,offset);
+      return probe.toString().length;
+    }catch(_){return total}
+  }
+  function withObserverPaused(fn){
+    if(observer)observer.disconnect();
+    try{return fn()}finally{if(observer)observeDynamicAreas()}
+  }
+  function wrapRecord(rec){
+    const root=document.querySelector(`[data-enzo-hl-key="${rec.key}"]`);
+    if(!root)return false;
+    const full=root.textContent||'';
+    if(rec.start<0||rec.end>full.length||rec.start>=rec.end)return false;
+    if(rec.text&&full.slice(rec.start,rec.end)!==rec.text)return false;
+    const nodes=textNodes(root);
+    const segments=[];
+    let cursor=0;
+    for(const node of nodes){
+      const next=cursor+node.nodeValue.length;
+      const start=Math.max(rec.start,cursor),end=Math.min(rec.end,next);
+      if(start<end)segments.push({node,start:start-cursor,end:end-cursor});
+      cursor=next;
+    }
+    for(let i=segments.length-1;i>=0;i--){
+      const seg=segments[i];
+      const range=document.createRange();
+      range.setStart(seg.node,seg.start);range.setEnd(seg.node,seg.end);
+      const mark=document.createElement('mark');
+      mark.className='enzo-highlight';mark.dataset.color=rec.color;mark.dataset.highlightId=rec.id;
+      mark.appendChild(range.extractContents());range.insertNode(mark);
+    }
+    return segments.length>0;
+  }
+  function clearRenderedMarks(){
+    document.querySelectorAll('mark.enzo-highlight').forEach(mark=>{
+      const parent=mark.parentNode;if(!parent)return;
+      parent.replaceChild(document.createTextNode(mark.textContent||''),mark);parent.normalize();
+    });
+  }
+  function renderAll(){
+    withObserverPaused(()=>{
+      clearRenderedMarks();assignKeys();records.forEach(wrapRecord);
+    });
+    updateToolbar();
+  }
+  function renderMissing(){
+    withObserverPaused(()=>{
+      assignKeys();
+      const rendered=new Set([...document.querySelectorAll('mark.enzo-highlight')].map(m=>m.dataset.highlightId));
+      records.forEach(rec=>{if(!rendered.has(rec.id))wrapRecord(rec)});
+    });
+    updateToolbar();
+  }
+  function selectionParts(range){
+    assignKeys();
+    const parts=[];
+    document.querySelectorAll('[data-enzo-hl-key]').forEach(root=>{
+      if(!isAllowedTarget(root))return;
+      let intersects=false;try{intersects=range.intersectsNode(root)}catch(_){return}
+      if(!intersects)return;
+      const full=root.textContent||'';
+      let start=root.contains(range.startContainer)?boundaryOffset(root,range.startContainer,range.startOffset):0;
+      let end=root.contains(range.endContainer)?boundaryOffset(root,range.endContainer,range.endOffset):full.length;
+      start=Math.max(0,Math.min(start,full.length));end=Math.max(start,Math.min(end,full.length));
+      if(full.slice(start,end).trim())parts.push({root,key:root.dataset.enzoHlKey,full,start,end});
+    });
+    return parts;
+  }
+  function applySelection(){
+    if(mode!=='highlight')return;
+    const selection=window.getSelection();
+    if(!selection||selection.isCollapsed||!selection.rangeCount)return;
+    if(toolbar.contains(selection.anchorNode)||toolbar.contains(selection.focusNode))return;
+    const parts=selectionParts(selection.getRangeAt(0));
+    if(!parts.length)return;
+    const before=snapshot();
+    const additions=[];
+    const removeIds=new Set();
+    parts.forEach(part=>{
+      records.forEach(rec=>{if(rec.key===part.key&&rec.start<part.end&&rec.end>part.start)removeIds.add(rec.id)});
+      const selected=part.full.slice(part.start,part.end);
+      const token=/\S+\s*/g;let match;
+      while((match=token.exec(selected))){
+        const start=part.start+match.index,end=start+match[0].length;
+        additions.push({id:makeId(),key:part.key,start,end,color,text:part.full.slice(start,end)});
+      }
+    });
+    if(!additions.length)return;
+    pushHistory(before);
+    records=records.filter(rec=>!removeIds.has(rec.id));
+    records.push(...additions);
+    saveRecords();renderAll();selection.removeAllRanges();
+    showToast(`${additions.length} ${additions.length===1?'palavra grifada':'palavras grifadas'} em ${colorLabel(color)}.`);
+  }
+  function removeRecordMarks(id){
+    document.querySelectorAll(`mark.enzo-highlight[data-highlight-id="${id}"]`).forEach(mark=>{
+      const parent=mark.parentNode;if(!parent)return;
+      parent.replaceChild(document.createTextNode(mark.textContent||''),mark);parent.normalize();
+    });
+  }
+  function eraseAtPoint(x,y){
+    const mark=document.elementFromPoint(x,y)?.closest?.('mark.enzo-highlight');
+    if(!mark)return;
+    const id=mark.dataset.highlightId;
+    if(!id||!records.some(r=>r.id===id))return;
+    if(!eraseChanged){pushHistory(eraseSnapshot||snapshot());eraseChanged=true}
+    records=records.filter(r=>r.id!==id);
+    withObserverPaused(()=>removeRecordMarks(id));
+    saveRecords();updateToolbar();
+  }
+  function undo(){
+    if(!history.length)return;
+    records=history.pop();saveRecords();renderAll();showToast('Última ação desfeita.');
+  }
+  function setMode(next){
+    mode=next;
+    document.body.classList.toggle('enzo-highlight-mode',mode==='highlight');
+    document.body.classList.toggle('enzo-eraser-mode',mode==='erase');
+    eraserButton.classList.toggle('active',mode==='erase');
+    colorButtons.forEach(btn=>btn.classList.toggle('active',mode==='highlight'&&btn.dataset.color===color));
+  }
+  function colorLabel(value){return value==='yellow'?'amarelo':value==='green'?'verde':'vermelho'}
+  function updateToolbar(){
+    countBadge.textContent=records.length;countBadge.classList.toggle('visible',records.length>0);
+    undoButton.disabled=history.length===0;
+  }
+  function showToast(message){
+    toast.textContent=message;toast.classList.add('visible');clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>toast.classList.remove('visible'),2300);
+  }
+  function observeDynamicAreas(){
+    const targets=[document.getElementById('quizContainer'),document.getElementById('flashcard-grid')].filter(Boolean);
+    targets.forEach(target=>observer.observe(target,{childList:true,subtree:true}));
+  }
+
+  toggle.addEventListener('click',()=>{
+    const willOpen=!toolbar.classList.contains('open');
+    toolbar.classList.toggle('open',willOpen);toggle.setAttribute('aria-expanded',String(willOpen));
+    setMode(willOpen?'highlight':null);
+    if(willOpen)showToast('Escolha a cor e selecione o texto.');
+  });
+  colorButtons.forEach(btn=>btn.addEventListener('click',()=>{
+    color=btn.dataset.color;setMode('highlight');showToast(`Marca-texto ${colorLabel(color)} ativado.`);
+  }));
+  eraserButton.addEventListener('click',()=>{
+    setMode('erase');showToast('Borracha ativa: clique ou arraste sobre as palavras grifadas.');
+  });
+  undoButton.addEventListener('click',undo);
+  toolbar.addEventListener('pointerdown',event=>event.stopPropagation());
+
+  document.addEventListener('pointerdown',event=>{
+    if(mode!=='erase'||toolbar.contains(event.target))return;
+    erasing=true;eraseSnapshot=snapshot();eraseChanged=false;eraseAtPoint(event.clientX,event.clientY);
+  });
+  document.addEventListener('pointermove',event=>{
+    if(!erasing||mode!=='erase')return;
+    event.preventDefault();eraseAtPoint(event.clientX,event.clientY);
+  },{passive:false});
+  document.addEventListener('pointerup',event=>{
+    if(erasing){erasing=false;if(eraseChanged)showToast('Trecho apagado.');eraseSnapshot=null;return}
+    if(mode==='highlight'&&!toolbar.contains(event.target))setTimeout(applySelection,0);
+  });
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape'&&toolbar.classList.contains('open')){toolbar.classList.remove('open');toggle.setAttribute('aria-expanded','false');setMode(null)}
+    if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='z'&&!/INPUT|TEXTAREA/.test(document.activeElement?.tagName||'')){
+      if(history.length){event.preventDefault();undo()}
+    }
+  });
+
+  observer=new MutationObserver(()=>{clearTimeout(observer._timer);observer._timer=setTimeout(renderMissing,40)});
+  assignKeys();renderAll();observeDynamicAreas();updateToolbar();
+})();
+</script>
+<script src="study-timer.js"></script><script src="study-progress.js"></script><script src="enzo-ia.js"></script></body></html>
