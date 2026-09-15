@@ -449,7 +449,7 @@ body.enzo-highlight-mode .section.active th{cursor:text}
 body.enzo-eraser-mode mark.enzo-highlight{cursor:crosshair;outline:1px dashed rgba(255,255,255,.7)}
 
 #enzo-highlighter{
-  position:fixed;right:76px;bottom:20px;z-index:10020;
+  position:fixed;left:24px;right:auto;bottom:82px;z-index:10020;
   display:flex;align-items:center;gap:8px;
   font-family:var(--font-body);user-select:none;-webkit-user-select:none;
 }
@@ -482,18 +482,18 @@ body.enzo-eraser-mode mark.enzo-highlight{cursor:crosshair;outline:1px dashed rg
 .enzo-hl-color.active{border-color:#fff;box-shadow:0 0 0 2px var(--accent)}
 .enzo-hl-divider{width:1px;height:24px;background:var(--border)}
 .enzo-hl-toast{
-  position:fixed;right:24px;bottom:78px;z-index:10021;max-width:min(360px,calc(100vw - 32px));
+  position:fixed;left:24px;right:auto;bottom:138px;z-index:10021;max-width:min(360px,calc(100vw - 32px));
   padding:9px 13px;border-radius:10px;background:#111827;color:#fff;border:1px solid var(--border);
   box-shadow:0 8px 28px rgba(0,0,0,.45);font:600 12px var(--font-body);
   opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s
 }
 .enzo-hl-toast.visible{opacity:1;transform:translateY(0)}
 @media(max-width:700px){
-  #enzo-highlighter{right:12px;bottom:74px;align-items:flex-end;flex-direction:column-reverse}
+  #enzo-highlighter{left:12px;right:auto;bottom:82px;align-items:flex-start;flex-direction:column-reverse}
   .enzo-hl-panel{border-radius:18px;display:none;max-width:calc(100vw - 24px);flex-wrap:wrap;justify-content:center}
   #enzo-highlighter.open .enzo-hl-panel{display:flex}
   .enzo-hl-toggle{min-height:42px;padding:9px 13px}
-  .enzo-hl-toast{right:12px;bottom:128px}
+  .enzo-hl-toast{left:12px;right:auto;bottom:136px}
 }
 </style></head><body><canvas id="particles"></canvas>
 <header><div class="badge">📊 Epidemiologia · P1 · 2026</div><h1>Epidemiologia e Saúde Pública — P1</h1><p class="sub">Serviço de saúde · Planejamento · APS · Sistema do Paraguai · Indicadores e equidade · Epidemiologia · Desenhos epidemiológicos · Relação com ciências</p><p class="by">⚡ Elaborado por Enzo Salmazo · Conteúdo exclusivo dos slides da disciplina</p></header>
