@@ -270,12 +270,14 @@ nav.tabs button.qz-tab.active { background: var(--accent4); color: #fff; border-
 .sbox.c .sv { color:var(--green); } .sbox.w .sv { color:var(--red); } .sbox.p .sv { color:var(--accent); }
 
 .q-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:1.8rem; margin-bottom:1.5rem; transition:border-color .3s; }
+.q-card.old-exam { border-color:rgba(249,201,79,.48); box-shadow:inset 4px 0 0 rgba(249,201,79,.72); }
 .q-card.ans.cq { border-color:var(--green); } .q-card.ans.wq { border-color:var(--red); }
 .q-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:.9rem; gap:.5rem; flex-wrap:wrap; }
 .q-num { font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:2px; }
 .q-tbadge { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:1px; padding:.2rem .55rem; border-radius:20px; }
 .tmc { background:rgba(79,156,249,0.15); color:var(--accent); } .ttf { background:rgba(184,79,249,0.15); color:var(--accent4); } .tab { background:rgba(249,201,79,0.15); color:var(--gold); }
 .ctag { font-size:10px; font-weight:700; background:rgba(255,255,255,.06); color:var(--muted); padding:.2rem .55rem; border-radius:20px; }
+.old-exam-tag { font-size:10px; font-weight:900; background:rgba(249,201,79,.17); color:var(--gold); border:1px solid rgba(249,201,79,.42); padding:.25rem .62rem; border-radius:20px; letter-spacing:.35px; }
 .q-text { font-size:15px; font-weight:700; color:#fff; margin-bottom:1.1rem; line-height:1.6; }
 .opts { display:flex; flex-direction:column; gap:.5rem; margin-bottom:.9rem; }
 .opt-btn { background:var(--card2); border:1px solid var(--border); color:var(--text); padding:.7rem 1rem; border-radius:10px; cursor:pointer; font-family:var(--font-body); font-size:14px; text-align:left; transition:all .2s; display:flex; gap:.7rem; align-items:flex-start; width:100%; }
@@ -482,7 +484,7 @@ body.enzo-eraser-mode mark.enzo-highlight{cursor:crosshair;outline:1px dashed rg
 .enzo-hl-color.active{border-color:#fff;box-shadow:0 0 0 2px var(--accent)}
 .enzo-hl-divider{width:1px;height:24px;background:var(--border)}
 .enzo-hl-toast{
-  position:fixed;left:24px;right:auto;bottom:138px;z-index:10021;max-width:min(360px,calc(100vw - 32px));
+  position:fixed;left:24px;right:auto;bottom:200px;z-index:10021;max-width:min(360px,calc(100vw - 32px));
   padding:9px 13px;border-radius:10px;background:#111827;color:#fff;border:1px solid var(--border);
   box-shadow:0 8px 28px rgba(0,0,0,.45);font:600 12px var(--font-body);
   opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s
@@ -493,17 +495,88 @@ body.enzo-eraser-mode mark.enzo-highlight{cursor:crosshair;outline:1px dashed rg
   .enzo-hl-panel{border-radius:18px;display:none;max-width:calc(100vw - 24px);flex-wrap:wrap;justify-content:center}
   #enzo-highlighter.open .enzo-hl-panel{display:flex}
   .enzo-hl-toggle{min-height:42px;padding:9px 13px}
-  .enzo-hl-toast{left:12px;right:auto;bottom:136px}
+  .enzo-hl-toast{left:12px;right:auto;bottom:200px}
+}
+
+/* ── ANOTAÇÕES INDIVIDUAIS SINCRONIZADAS ── */
+#enzo-notes-toggle{
+  position:fixed;left:24px;bottom:138px;z-index:10025;width:48px;height:48px;
+  display:grid;place-items:center;border-radius:14px;border:1px solid rgba(56,232,192,.55);
+  background:rgba(17,21,32,.97);color:#fff;cursor:pointer;font-size:22px;
+  box-shadow:0 7px 28px rgba(0,0,0,.48);backdrop-filter:blur(16px);transition:.2s
+}
+#enzo-notes-toggle:hover,#enzo-notes-toggle.active{transform:translateY(-2px);border-color:var(--accent2);background:rgba(56,232,192,.14)}
+#enzo-notes-toggle .note-count{
+  position:absolute;right:-7px;top:-7px;min-width:20px;height:20px;padding:0 5px;
+  display:none;align-items:center;justify-content:center;border-radius:999px;
+  background:var(--accent2);color:#07110f;font:800 10px var(--font-mono)
+}
+#enzo-notes-toggle .note-count.visible{display:flex}
+#enzo-note-composer{
+  position:fixed;left:84px;bottom:138px;z-index:10026;width:min(340px,calc(100vw - 108px));
+  display:none;padding:14px;background:rgba(10,13,20,.98);border:1px solid rgba(56,232,192,.4);
+  border-radius:16px;box-shadow:0 12px 44px rgba(0,0,0,.58);backdrop-filter:blur(18px)
+}
+#enzo-note-composer.open{display:block}
+.enzo-note-form-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:-5px -5px 7px;padding:5px;color:#fff;font:700 14px var(--font-display);cursor:move;touch-action:none;user-select:none}
+.enzo-note-close{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer}
+.enzo-note-drag-hint{margin:0 0 10px;color:var(--accent2);font:700 10px/1.35 var(--font-mono);letter-spacing:.25px}
+.enzo-note-fields{display:grid;gap:9px}
+.enzo-note-fields label{font:700 9px var(--font-mono);letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+.enzo-note-fields select,.enzo-note-fields textarea{
+  width:100%;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);
+  padding:9px 10px;font:500 13px var(--font-body);outline:none
+}
+.enzo-note-fields textarea{min-height:104px;max-height:240px;resize:vertical;line-height:1.5}
+.enzo-note-fields select:focus,.enzo-note-fields textarea:focus{border-color:var(--accent2);box-shadow:0 0 0 2px rgba(56,232,192,.12)}
+.enzo-note-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:10px}
+.enzo-note-actions button{border-radius:9px;padding:8px 12px;font:700 11px var(--font-body);cursor:pointer}
+.enzo-note-cancel{border:1px solid var(--border);background:transparent;color:var(--muted)}
+.enzo-note-save{border:1px solid var(--accent2);background:var(--accent2);color:#07110f}
+.enzo-note-save:disabled{opacity:.55;cursor:wait}
+.enzo-note-status{min-height:18px;margin-top:7px;color:var(--muted);font-size:11px}
+.enzo-note-status.error{color:var(--red)}
+
+.enzo-study-note{
+  position:absolute;z-index:35;width:232px;height:132px;min-width:160px;min-height:110px;max-width:calc(100% - 8px);max-height:700px;border-radius:13px;
+  border:1px solid rgba(255,255,255,.24);box-shadow:0 12px 30px rgba(0,0,0,.42);
+  color:#111827;overflow:hidden;display:flex;flex-direction:column;transform:rotate(-.25deg);transition:box-shadow .18s,transform .18s
+}
+.enzo-study-note:hover{z-index:44;box-shadow:0 16px 38px rgba(0,0,0,.54);transform:rotate(0)}
+.enzo-study-note.dragging{z-index:60;box-shadow:0 20px 48px rgba(0,0,0,.65);transform:rotate(1deg) scale(1.02);transition:none}
+.enzo-study-note.resizing{z-index:61;box-shadow:0 20px 48px rgba(0,0,0,.65);transform:none;transition:none}
+.enzo-study-note[data-label="nota"]{background:#a9d7ff;border-color:#65b4f5}
+.enzo-study-note[data-label="importante"]{background:#ffe589;border-color:#f3c742}
+.enzo-study-note[data-label="prova"]{background:#d9b4ff;border-color:#b16ee9}
+.enzo-study-note[data-label="atencao"]{background:#ffaaa5;border-color:#ee6f68}
+.enzo-note-head{
+  min-height:38px;display:flex;align-items:center;gap:7px;padding:7px 8px 7px 10px;
+  background:rgba(255,255,255,.24);border-bottom:1px solid rgba(17,24,39,.13);
+  cursor:grab;touch-action:none
+}
+.enzo-note-head:active{cursor:grabbing}
+.enzo-note-tag{flex:1;font:900 10px var(--font-mono);letter-spacing:.8px;text-transform:uppercase;color:#172033}
+.enzo-note-mini{width:25px;height:25px;border:0;border-radius:7px;background:rgba(255,255,255,.38);color:#172033;cursor:pointer;font-size:13px}
+.enzo-note-mini:hover{background:rgba(255,255,255,.72)}
+.enzo-note-body{flex:1;min-height:0;padding:12px 13px 20px;white-space:pre-wrap;overflow:auto;overflow-wrap:anywhere;font:600 13px/1.5 var(--font-body);color:#172033}
+.enzo-note-sync{position:absolute;right:28px;bottom:5px;font:800 8px var(--font-mono);letter-spacing:.5px;color:rgba(17,32,51,.58);text-transform:uppercase}
+.enzo-note-sync.error{color:#8d1414}
+.enzo-note-resize{position:absolute;right:2px;bottom:2px;width:23px;height:23px;display:grid;place-items:center;border:0;background:transparent;color:rgba(17,32,51,.72);cursor:nwse-resize;touch-action:none;font:900 17px/1 sans-serif;z-index:3}
+.enzo-note-resize:hover{color:#111827;background:rgba(255,255,255,.28);border-radius:7px}
+@media(max-width:700px){
+  #enzo-notes-toggle{left:12px;bottom:138px;width:46px;height:46px}
+  #enzo-note-composer{left:12px;right:12px;bottom:194px;width:auto}
+  .enzo-study-note{min-width:150px;max-width:calc(100% - 8px);min-height:110px}
 }
 </style></head><body><canvas id="particles"></canvas>
 <header><div class="badge">📊 Epidemiologia · P1 · 2026</div><h1>Epidemiologia e Saúde Pública — P1</h1><p class="sub">Serviço de saúde · Planejamento · APS · Sistema do Paraguai · Indicadores e equidade · Epidemiologia · Desenhos epidemiológicos · Relação com ciências</p><p class="by">⚡ Elaborado por Enzo Salmazo · Conteúdo exclusivo dos slides da disciplina</p></header>
-<nav class="tabs"><button class="active" data-section="intro" onclick="showSection('intro',this)">📖 Início</button><button data-section="fundamentos" onclick="showSection('fundamentos',this)">🔎 1. Epidemiologia</button><button data-section="programa" onclick="showSection('programa',this)">🗂️ 1. Programa</button><button data-section="servico" onclick="showSection('servico',this)">🏥 2. Serviço de saúde</button><button data-section="planejamento" onclick="showSection('planejamento',this)">🧭 2. Planejamento</button><button data-section="ciclo" onclick="showSection('ciclo',this)">🔄 2. Ciclo do planejamento</button><button data-section="aps" onclick="showSection('aps',this)">🩺 2. Atenção Primária</button><button data-section="assistencia" onclick="showSection('assistencia',this)">🏨 2. Assistência sanitária</button><button data-section="componentes" onclick="showSection('componentes',this)">🛡️ 2. Componentes da APS</button><button data-section="paraguai" onclick="showSection('paraguai',this)">🇵🇾 2. Sistema do Paraguai</button><button data-section="regulacao" onclick="showSection('regulacao',this)">⚖️ 2. Regulação</button><button data-section="participacao" onclick="showSection('participacao',this)">🤝 2. Participação social</button><button data-section="medico" onclick="showSection('medico',this)">👨‍⚕️ 2. Médico generalista</button><button data-section="habilidades" onclick="showSection('habilidades',this)">🧠 2. Habilidades</button><button data-section="indicadores" onclick="showSection('indicadores',this)">📊 3. Indicadores hospitalares</button><button data-section="equidade" onclick="showSection('equidade',this)">⚖️ 3. Equidade e desafios</button><button data-section="epi_conceito" onclick="showSection('epi_conceito',this)">🔬 4. O que é Epidemiologia</button><button data-section="epi_classificacao" onclick="showSection('epi_classificacao',this)">🧩 4. Classificação e objetivos</button><button data-section="epi_principios" onclick="showSection('epi_principios',this)">📐 4. Princípios e usos</button><button data-section="epi_metodo" onclick="showSection('epi_metodo',this)">🧪 4. Método epidemiológico</button><button data-section="desenho_geral" onclick="showSection('desenho_geral',this)">🗂️ 5. Desenho epidemiológico</button><button data-section="desenho_descritivo" onclick="showSection('desenho_descritivo',this)">📋 5. Desenhos descritivos</button><button data-section="desenho_analitico" onclick="showSection('desenho_analitico',this)">🔍 5. Desenhos analíticos</button><button data-section="desenho_experimental" onclick="showSection('desenho_experimental',this)">🧫 5. Desenhos experimentais</button><button data-section="relacao_ciencias" onclick="showSection('relacao_ciencias',this)">🔗 6. Relação com outras ciências</button><button class="fc-tab" data-section="flashcards" onclick="showSection('flashcards',this)">🃏 Flashcards (<span data-flashcard-count>30</span>)</button><button class="qz-tab" data-section="quiz" onclick="showSection('quiz',this)">📝 Simulado (<span data-question-count>204</span>)</button></nav><section id="intro" class="section active"><div class="container">
+<nav class="tabs"><button class="active" data-section="intro" onclick="showSection('intro',this)">📖 Início</button><button data-section="fundamentos" onclick="showSection('fundamentos',this)">🔎 1. Epidemiologia</button><button data-section="programa" onclick="showSection('programa',this)">🗂️ 1. Programa</button><button data-section="servico" onclick="showSection('servico',this)">🏥 2. Serviço de saúde</button><button data-section="planejamento" onclick="showSection('planejamento',this)">🧭 2. Planejamento</button><button data-section="ciclo" onclick="showSection('ciclo',this)">🔄 2. Ciclo do planejamento</button><button data-section="aps" onclick="showSection('aps',this)">🩺 2. Atenção Primária</button><button data-section="assistencia" onclick="showSection('assistencia',this)">🏨 2. Assistência sanitária</button><button data-section="componentes" onclick="showSection('componentes',this)">🛡️ 2. Componentes da APS</button><button data-section="paraguai" onclick="showSection('paraguai',this)">🇵🇾 2. Sistema do Paraguai</button><button data-section="regulacao" onclick="showSection('regulacao',this)">⚖️ 2. Regulação</button><button data-section="participacao" onclick="showSection('participacao',this)">🤝 2. Participação social</button><button data-section="medico" onclick="showSection('medico',this)">👨‍⚕️ 2. Médico generalista</button><button data-section="habilidades" onclick="showSection('habilidades',this)">🧠 2. Habilidades</button><button data-section="indicadores" onclick="showSection('indicadores',this)">📊 3. Indicadores hospitalares</button><button data-section="equidade" onclick="showSection('equidade',this)">⚖️ 3. Equidade e desafios</button><button data-section="epi_conceito" onclick="showSection('epi_conceito',this)">🔬 4. O que é Epidemiologia</button><button data-section="epi_classificacao" onclick="showSection('epi_classificacao',this)">🧩 4. Classificação e objetivos</button><button data-section="epi_principios" onclick="showSection('epi_principios',this)">📐 4. Princípios e usos</button><button data-section="epi_metodo" onclick="showSection('epi_metodo',this)">🧪 4. Método epidemiológico</button><button data-section="desenho_geral" onclick="showSection('desenho_geral',this)">🗂️ 5. Desenho epidemiológico</button><button data-section="desenho_descritivo" onclick="showSection('desenho_descritivo',this)">📋 5. Desenhos descritivos</button><button data-section="desenho_analitico" onclick="showSection('desenho_analitico',this)">🔍 5. Desenhos analíticos</button><button data-section="desenho_experimental" onclick="showSection('desenho_experimental',this)">🧫 5. Desenhos experimentais</button><button data-section="relacao_ciencias" onclick="showSection('relacao_ciencias',this)">🔗 6. Relação com outras ciências</button><button class="fc-tab" data-section="flashcards" onclick="showSection('flashcards',this)">🃏 Flashcards (<span data-flashcard-count>30</span>)</button><button class="qz-tab" data-section="quiz" onclick="showSection('quiz',this)">📝 Simulado (<span data-question-count>233</span>)</button></nav><section id="intro" class="section active"><div class="container">
 <div class="closed-source">FONTE FECHADA · 111 SLIDES + QUESTIONÁRIO + QUADRO · NENHUM CONTEÚDO EXTERNO</div>
 <div class="chapter-title"><span class="chap-icon">📊</span>Epidemiologia e Saúde Pública — P1</div>
 <p class="section-lead">O conteúdo acompanha todos os arquivos fornecidos, na ordem das aulas: primeiro a introdução à disciplina, depois a Unidade I completa (Serviço de Atenção à Saúde, partes 1 e 2) e, por fim, a Unidade II completa (Introdução à Epidemiologia, Objetivos, Princípios, Usos, Método, Desenhos Epidemiológicos e Relação com outras Ciências).</p>
 <div class="info-block success"><div class="label">Como estudar</div><h4>Aprenda por relações</h4><p>Comece pela definição de Epidemiologia. Em seguida, conecte <strong>necessidade → prioridade → objetivo → recursos/atividades → avaliação</strong>. Termine relacionando APS, estrutura do sistema paraguaio e papel do médico de família.</p></div>
 <div id="topicCards" class="intro-grid"></div>
-<div class="info-block purple"><div class="label">Escopo atual</div><h4>Material completo — Unidades I e II</h4><p>Esta versão possui <strong>60 flashcards</strong> e <strong>204 questões</strong>: as 120 questões anteriores mais as <strong>84 questões integrais das duas provas de Epidemiologia</strong> (42 de cada prova). A <strong>Unidade III (Componentes demográficos)</strong> ainda não foi fornecida — quando os slides chegarem, o resumo será ampliado mantendo a mesma estrutura.</p></div>
+<div class="info-block purple"><div class="label">Escopo atual</div><h4>Material completo — Unidades I e II</h4><p>Esta versão possui <strong>60 flashcards</strong> e <strong>233 questões</strong>: as 204 questões anteriores mais <strong>29 questões transcritas das fotos de provas de semestres passados</strong>. A <strong>Unidade III (Componentes demográficos)</strong> ainda não foi fornecida — quando os slides chegarem, o resumo será ampliado mantendo a mesma estrutura.</p></div>
 <details class="source-details"><summary>Fontes utilizadas — somente material fornecido pela disciplina</summary><ol>
 <li><em>Epidemiología y Salud Pública — Introducción, primer día 2026-2</em>, 15 slides.</li>
 <li><em>Epidemiología y Salud Pública — Unidad I: Servicios de Atención a la Salud 2026-2</em>, 31 slides.</li>
@@ -533,13 +606,13 @@ body.enzo-eraser-mode mark.enzo-highlight{cursor:crosshair;outline:1px dashed rg
 <div id="flashcard-grid" class="flashcard-grid"></div><div id="fcEmpty" class="empty-state">Nenhum flashcard corresponde ao filtro.</div>
 </div></section><section id="quiz" class="section"><div class="container">
 <div class="chapter-title"><span class="chap-icon">📝</span>Simulado de Epidemiologia</div>
-<div class="info-block purple"><div class="label">204 questões</div><h4>Correção imediata baseada nos slides, no questionário e nas duas provas</h4><p>São 84 questões de múltipla escolha, 58 de verdadeiro/falso e 62 abertas. As 84 novas questões preservam o enunciado em espanhol e incluem as questões de completar, citar e os casos epidemiológicos das duas provas, com seus respectivos gabaritos.</p></div>
-<div class="q-stats"><div class="sbox c"><div class="sv" id="sC">0</div><div class="sl">Corretas</div></div><div class="sbox w"><div class="sv" id="sW">0</div><div class="sl">Incorretas</div></div><div class="sbox p"><div class="sv" id="sP">204</div><div class="sl">Pendentes</div></div></div>
+<div class="info-block purple"><div class="label">233 questões</div><h4>Correção imediata baseada nos slides, no questionário e nas provas</h4><p>São 89 questões de múltipla escolha, 69 de verdadeiro/falso e 75 abertas. As primeiras 29 foram transcritas das fotos de provas de semestres passados e aparecem com uma marcação especial.</p></div>
+<div class="q-stats"><div class="sbox c"><div class="sv" id="sC">0</div><div class="sl">Corretas</div></div><div class="sbox w"><div class="sv" id="sW">0</div><div class="sl">Incorretas</div></div><div class="sbox p"><div class="sv" id="sP">233</div><div class="sl">Pendentes</div></div></div>
 <div class="study-tools"><label for="qCategory">Tema</label><select id="qCategory"></select><label for="qType">Tipo</label><select id="qType"><option value="">Todos</option><option value="mc">Múltipla escolha</option><option value="tf">Verdadeiro/Falso</option><option value="ab">Aberta</option></select><span class="result-note" id="qVisible"></span></div>
 <div id="quizContainer"></div><div id="qEmpty" class="empty-state">Nenhuma questão corresponde ao filtro.</div><button class="reset-btn" onclick="resetQuiz()">🔄 Reiniciar Simulado</button>
 </div></section>
 <button id="scrolltop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao topo">↑</button><a class="back-btn" href="dashboard.html">← Voltar</a>
-<footer>Epidemiologia — P1 · Material educacional · 111 slides + questionário + quadro da aula + 2 provas · 60 flashcards · 204 questões</footer>
+<footer>Epidemiologia — P1 · Material educacional · 111 slides + questionário + quadro da aula + provas anteriores · 60 flashcards · 233 questões</footer>
 <script>
 const TOPICS=[["fundamentos", "🔎", "1. Epidemiologia", "Definição, função e metodologia"], ["programa", "🗂️", "1. Programa", "Unidades e avaliação"], ["servico", "🏥", "2. Serviço de saúde", "Ações, recursos e programas"], ["planejamento", "🧭", "2. Planejamento", "Categorias e aplicações"], ["ciclo", "🔄", "2. Ciclo do planejamento", "Da necessidade à avaliação"], ["aps", "🩺", "2. Atenção Primária", "Conceito e finalidade"], ["assistencia", "🏨", "2. Assistência sanitária", "Primária e especializada"], ["componentes", "🛡️", "2. Componentes da APS", "Ações essenciais"], ["paraguai", "🇵🇾", "2. Sistema do Paraguai", "Setores e instituições"], ["regulacao", "⚖️", "2. Regulação", "Rectoria e controle"], ["participacao", "🤝", "2. Participação social", "Conselhos locais"], ["medico", "👨‍⚕️", "2. Médico generalista", "Funções, princípios e perfil"], ["habilidades", "🧠", "2. Habilidades", "Competências e locais de atuação"], ["indicadores", "📊", "3. Indicadores hospitalares", "Relação população-hospital e atividade"], ["equidade", "⚖️", "3. Equidade e desafios", "Saúde-equidade, desafios e avanços no Paraguai"], ["epi_conceito", "🔬", "4. O que é Epidemiologia", "Definição, variáveis clássicas e importância"], ["epi_classificacao", "🧩", "4. Classificação e objetivos", "Descritiva x analítica, quatro objetivos"], ["epi_principios", "📐", "4. Princípios e usos", "Sete princípios, oito usos, cinco aplicações"], ["epi_metodo", "🧪", "4. Método epidemiológico", "Passos do método e características-chave"], ["desenho_geral", "🗂️", "5. Desenho epidemiológico", "Classificação geral — intervenção e comparação"], ["desenho_descritivo", "📋", "5. Desenhos descritivos", "Caso, série de casos, ecológico, transversal"], ["desenho_analitico", "🔍", "5. Desenhos analíticos", "Casos e controles, coorte"], ["desenho_experimental", "🧫", "5. Desenhos experimentais", "Ensaio clínico aleatorizado, ensaio de campo"], ["relacao_ciencias", "🔗", "6. Relação com outras ciências", "Estatística, sociologia, demografia, economia, ecologia"]];
 let FC=[{"c": "Introdução", "q": "Como os slides definem Epidemiologia?", "a": "Ciência que estuda a frequência e a distribuição dos problemas de saúde na população e os determinantes dessa distribuição."}, {"c": "Introdução", "q": "Por que a Epidemiologia é fundamental para a Saúde Pública?", "a": "Porque oferece fundamentos científicos para estratégias de prevenção e promoção da saúde."}, {"c": "Introdução", "q": "Qual é o nexo metodológico fundamental da Saúde Pública?", "a": "A Epidemiologia."}, {"c": "Introdução", "q": "O que a metodologia epidemiológica permite medir?", "a": "Os problemas de saúde comunitários."}, {"c": "Introdução", "q": "O que o conhecimento da metodologia epidemiológica deve desenvolver?", "a": "Atitude crítica para avaliar os fundamentos científicos das informações."}, {"c": "Serviços e planejamento", "q": "O que é Serviço de Atenção à Saúde?", "a": "Conjunto de ações, recursos e programas organizados pela sociedade e pelo Estado para prevenir, curar, reabilitar e melhorar o bem-estar."}, {"c": "Serviços e planejamento", "q": "Como os slides definem planejamento?", "a": "Processo contínuo de previsão de recursos e atividades necessários para alcançar objetivos, segundo prioridades e considerando dificuldades."}, {"c": "Serviços e planejamento", "q": "O que define o planejamento normativo?", "a": "As metas e os grandes objetivos do sistema sanitário."}, {"c": "Serviços e planejamento", "q": "O que expressa o planejamento estratégico?", "a": "Como atuar."}, {"c": "Serviços e planejamento", "q": "O que responde o planejamento operativo?", "a": "Quando e onde desenvolver as diferentes ações."}, {"c": "Serviços e planejamento", "q": "Qual é a primeira etapa do ciclo de planejamento?", "a": "Análise de necessidades: identificar com precisão os problemas da população antes de agir."}, {"c": "Serviços e planejamento", "q": "Quais são os dois critérios principais de prioridade?", "a": "Importância dos danos e suas repercussões; existência de ações efetivas para solucionar o problema."}, {"c": "Serviços e planejamento", "q": "Quais características um objetivo deve possuir?", "a": "Pertinência em relação ao problema e factibilidade de obtenção."}, {"c": "Serviços e planejamento", "q": "Qual é a finalidade da avaliação?", "a": "Julgar necessidade do programa, adequação de atividades/recursos e resultados para melhorá-lo."}, {"c": "APS e assistência", "q": "Como os slides definem Atenção Primária à Saúde?", "a": "Assistência sanitária essencial, acessível a todos os indivíduos e famílias por meios aceitáveis para eles."}, {"c": "APS e assistência", "q": "A quais problemas a APS se orienta?", "a": "Aos principais problemas sanitários da comunidade."}, {"c": "APS e assistência", "q": "Quais serviços a APS oferece?", "a": "Preventivos, curativos, de reabilitação e de fomento da saúde."}, {"c": "APS e assistência", "q": "Qual é a função da assistência especializada?", "a": "Oferecer atenção de maior complexidade que não pôde ser fornecida pela atenção primária."}, {"c": "APS e assistência", "q": "Quais são os seis componentes básicos da APS?", "a": "Educação sanitária; cuidado materno-infantil/reprodutivo; imunização; controle de endemias; tratamento habitual/traumas; medicamentos essenciais."}, {"c": "Sistema do Paraguai", "q": "Quais subsetores compõem o Sistema de Saúde do Paraguai?", "a": "Público, privado e misto."}, {"c": "Sistema do Paraguai", "q": "Como os slides caracterizam o sistema paraguaio?", "a": "Segmentado e fragmentado, sem separação de funções e com coberturas territoriais desiguais."}, {"c": "Sistema do Paraguai", "q": "Quem exerce a rectoria do sistema?", "a": "O Ministério de Saúde Pública e Bem-Estar Social — MSPyBS."}, {"c": "Sistema do Paraguai", "q": "Quais instituições representam o subsetor público?", "a": "MSPyBS, IPS, Sanidade Militar, Sanidade Policial, UNA e serviços de Itaipu e Yacyretá."}, {"c": "Sistema do Paraguai", "q": "Qual instituição representa o subsetor misto?", "a": "Cruz Vermelha."}, {"c": "Sistema do Paraguai", "q": "O que faz a Superintendência de Saúde?", "a": "Supervisão, auditoria e controle técnico das entidades prestadoras, apoiando o Conselho Nacional de Saúde."}, {"c": "Sistema do Paraguai", "q": "Qual é a finalidade dos Conselhos Locais de Saúde?", "a": "Promover participação comunitária e melhorar o funcionamento dos serviços."}, {"c": "Médico de família", "q": "Qual é o papel do médico da USF?", "a": "Trabalhar diretamente com prevenção e promoção, aproximando o cuidado da comunidade."}, {"c": "Médico de família", "q": "Quais são os cinco princípios da Medicina Geral Familiar?", "a": "Paciente, contexto, educação/prevenção, compatibilidade de valores e uso racional de recursos."}, {"c": "Médico de família", "q": "Quais são as quatro habilidades básicas do médico de família?", "a": "Problemas indiferenciados, prevenção, terapêutica e gestão de recursos."}, {"c": "Médico de família", "q": "Onde o médico generalista exerce suas ações?", "a": "Consultório, domicílios, policlínico/centro de saúde, hospital e comunidade."}, {"c": "Indicadores hospitalares", "q": "Como o material define um indicador de atividade hospitalar?", "a": "Uma medida, geralmente quantitativa, usada como guia para controlar e avaliar a qualidade das atividades."}, {"c": "Indicadores hospitalares", "q": "De que depende a eleição dos indicadores de atividade?", "a": "Em primeiro lugar, do objetivo; em segundo lugar, da possibilidade de obter informação de qualidade suficiente para construí-los."}, {"c": "Indicadores hospitalares", "q": "O que mede a frequentação hospitalar?", "a": "O número de ingressos em um hospital — informa quantos dos cidadãos atribuídos ao centro hospitalar ingressam nele."}, {"c": "Indicadores hospitalares", "q": "O que mede a pressão hospitalar?", "a": "O número de pacientes pendentes de ingresso em um hospital."}, {"c": "Indicadores hospitalares", "q": "Por que o total de ingressos hospitalares não equivale ao total de pacientes atendidos?", "a": "Porque um mesmo paciente pode ingressar várias vezes no mesmo período — cada ingresso é um episódio de hospitalização."}, {"c": "Equidade e desafios", "q": "Quais são os três objetivos subjacentes à saúde e equidade?", "a": "Melhorar, manter e proteger a saúde da população por meio de políticas públicas e privadas."}, {"c": "Equidade e desafios", "q": "Cite três desafios contemporâneos do sistema de saúde do Paraguai.", "a": "Desigualdade no acesso urbano-rural, financiamento insuficiente e problemas de infraestrutura (também: baixo índice de recursos humanos e doenças crônicas)."}, {"c": "Equidade e desafios", "q": "O que é o SISNA?", "a": "Sistema Nacional de Salud — busca unificar os subsistemas sob princípios de universalidade; afiliou 1,2 milhão de pessoas em situação de pobreza."}, {"c": "Equidade e desafios", "q": "O que é o programa 'Doctor Close' citado nos slides?", "a": "Um programa de telemedicina que oferece atenção por WhatsApp, atendendo cerca de 5.000 consultas por mês."}, {"c": "Equidade e desafios", "q": "O que combina o programa 'Tekoporã'?", "a": "Saúde com transferências monetárias, dentro das estratégias comunitárias do sistema paraguaio."}, {"c": "Epidemiologia", "q": "Como o material define Epidemiologia?", "a": "O estudo de como se distribuem as doenças nas populações e os fatores que determinam ou influenciam essa distribuição."}, {"c": "Epidemiologia", "q": "Quais são as três variáveis clássicas da Epidemiologia?", "a": "Tempo, lugar e pessoa — respondendo quando, onde e em quem."}, {"c": "Epidemiologia", "q": "Que aspectos da variável 'pessoa' interessam à epidemiologia?", "a": "Idade, gênero, estado nutricional, hábitos e condutas (ocupação, estilo de vida) e condição social (renda, estado civil, religião)."}, {"c": "Epidemiologia", "q": "Além de doenças, o que mais a epidemiologia estuda?", "a": "A causa de morte, hábitos de vida, uso de serviços de saúde e qualidade de vida relacionada à saúde."}, {"c": "Classificação", "q": "Qual a diferença entre epidemiologia descritiva e analítica?", "a": "A descritiva descreve a distribuição das doenças em tempo, espaço e pessoa sem analisar causas; a analítica busca as causas e associações estatísticas."}, {"c": "Classificação", "q": "Cite os quatro objetivos da epidemiologia para investigar uma doença.", "a": "1) Identificar etiologia e fatores de risco; 2) determinar extensão na comunidade; 3) estudar história natural e prognóstico; 4) avaliar assistência sanitária e medidas terapêuticas/preventivas."}, {"c": "Princípios e usos", "q": "Cite três princípios epidemiológicos.", "a": "Todos os problemas de saúde são multicausais; têm dimensão coletiva; o controle deve ser etiológico e preventivo (entre outros)."}, {"c": "Princípios e usos", "q": "Cite três aplicações comuns da epidemiologia.", "a": "Vigilância de doenças, busca das causas e avaliação da eficácia de tratamentos (também: avaliação de provas diagnósticas e do desempenho dos serviços)."}, {"c": "Método epidemiológico", "q": "Quais são os cinco passos do método epidemiológico?", "a": "Observação do fenômeno, formulação de hipóteses, verificação, intervenção (quando possível) e inferência causal."}, {"c": "Método epidemiológico", "q": "O que avalia a característica-chave 'determinantes de saúde' na análise epidemiológica?", "a": "Os fatores de risco e causas biológicas, sociais e ambientais que aumentam a probabilidade de doença."}, {"c": "Desenho geral", "q": "Quais duas perguntas organizam a classificação dos desenhos epidemiológicos, segundo o quadro da aula?", "a": "Tem ou não intervenção (observacional x experimental) e tem ou não grupo de comparação (descritivo x analítico)."}, {"c": "Desenhos descritivos", "q": "O que é a 'comunicação de um caso'?", "a": "Descreve a característica de um único paciente, frequentemente uma doença rara ou nova; é suscetível a vieses."}, {"c": "Desenhos descritivos", "q": "O que caracteriza a 'série de casos'?", "a": "Pesquisa de prevalência em grupo de pacientes com doença determinada, em um único momento; identifica com frequência o início de uma epidemia."}, {"c": "Desenhos descritivos", "q": "O que são estudos ecológicos?", "a": "Descrevem a frequência de uma doença em uma ou mais populações e sua correlação com variáveis de exposição medidas de forma agregada, sem dados individuais."}, {"c": "Desenhos analíticos", "q": "Como funciona o estudo de casos e controles?", "a": "É retrospectivo: seleciona sujeitos pela presença ou ausência da doença e observa para trás a exposição a um possível fator de risco."}, {"c": "Desenhos analíticos", "q": "Qual a diferença entre coorte prospectivo e retrospectivo?", "a": "No prospectivo, o fator de risco já se apresentou mas o efeito ainda não; no retrospectivo, ambos já se apresentaram no início do estudo."}, {"c": "Desenhos experimentais", "q": "Qual é o elemento essencial do ensaio clínico aleatorizado?", "a": "A existência de um grupo de comparação ou controle, que permite provar se a nova intervenção é melhor que as existentes."}, {"c": "Desenhos experimentais", "q": "O que é um ensaio de campo?", "a": "Estudo realizado sobre o terreno, em sujeitos da população livres de doença, para avaliar se uma intervenção reduz o risco de desenvolvê-la."}, {"c": "Relação com ciências", "q": "Qual a relação entre epidemiologia e estatística?", "a": "A estatística ajuda a reconhecer possíveis explicações da etiologia de um surto e a obter prognóstico da evolução da patologia."}, {"c": "Relação com ciências", "q": "Qual a relação entre epidemiologia e economia?", "a": "A economia permite conhecer o custo de programas de prevenção."}];
@@ -639,7 +712,40 @@ const EXAM_QD=[
   {t:"ab",c:"Prova 2 — Casos",q:"[Caso] Se administra una nueva vacuna contra VSR a 1.500 lactantes sanos y placebo a otros 1.500, con seguimiento durante el invierno. Identifique el diseño.",ex:"Estudio experimental: ensayo de campo.",n:203},
   {t:"ab",c:"Prova 2 — Casos",q:"[Caso] Se comparan 80 pacientes con insuficiencia renal crónica y 80 controles, revisando la exposición a analgésicos durante los 10 años previos. Identifique el diseño.",ex:"Estudio observacional analítico de casos y controles.",n:204}
 ];
+const OLD_EXAM_QD=[
+  {t:"ab",c:"Sistema de Saúde",old:true,q:"Cita las tres funciones principales de un Sistema de Salud indicadas en la prueba.",ex:"Ofrecer garantía financiera en salud; generación de recursos; sostenibilidad del sistema."},
+  {t:"mc",c:"Sistema de Saúde",old:true,q:"Forman parte del Subsector público de salud, EXCEPTO:",o:[{l:"A",v:"Hospitales Regionales del MSP y BS."},{l:"B",v:"Instituciones de salud de la Sanidad Militar."},{l:"C",v:"Instituciones prestadoras mixtas."}],cr:"C",ex:"Las instituciones prestadoras mixtas pertenecen al subsector mixto, no al subsector público."},
+  {t:"ab",c:"Saúde Pública",old:true,q:"[Completa] La __________ es considerada uno de los pilares fundamentales de la Salud Pública.",ex:"Prevención de enfermedades."},
+  {t:"ab",c:"Sistema de Saúde",old:true,q:"[Completa] La __________ es la función del Sistema de Salud que consiste en la producción de insumos, recursos humanos y físicos para la prestación de servicios.",ex:"Generación de recursos."},
+  {t:"ab",c:"APS",old:true,q:"[Completa] El __________ está conformado por profesionales sanitarios y no sanitarios, incluidos los agentes comunitarios.",ex:"Equipo básico de APS."},
+  {t:"ab",c:"APS",old:true,q:"[Completa] La __________ es la asistencia sanitaria esencial, basada en métodos y tecnologías prácticas, puesta al servicio de toda la comunidad.",ex:"Atención Primaria de Salud."},
+  {t:"ab",c:"Regulação",old:true,q:"[Completa] La __________ se ocupa de promover la asignación y utilización efectiva de los recursos y servicios destinados a la atención de la salud.",ex:"Superintendencia de Salud."},
+  {t:"ab",c:"Determinantes da saúde",old:true,q:"[Completa] Los __________ son las circunstancias en que nacen, viven, crecen y mueren las personas, e incluyen también el Sistema de Salud.",ex:"Determinantes sociales de la salud."},
+  {t:"tf",c:"Vigilância em saúde",old:true,q:"Son considerados eventos bajo vigilancia aquellos factores positivos para la salud, como la lactancia materna.",cr:"V",ex:"Verdadero. La vigilancia puede incluir eventos y factores protectores o positivos para la salud."},
+  {t:"tf",c:"APS",old:true,q:"En la Atención Primaria se puede manejar el 100% de los problemas de salud de la comunidad.",cr:"F",ex:"Falso. La prueba señala una capacidad aproximada del 80%; los problemas de mayor complejidad requieren otros niveles de atención."},
+  {t:"tf",c:"Epidemiologia",old:true,q:"La caracterización epidemiológica de las enfermedades permite conocer la naturaleza y el comportamiento de dichas patologías.",cr:"V",ex:"Verdadero. La caracterización epidemiológica permite describir la distribución y el comportamiento de los eventos de salud."},
+  {t:"tf",c:"Saúde Pública",old:true,q:"Los gobiernos tienen la responsabilidad de garantizar la salud de sus pueblos, la cual solo puede ser cumplida mediante la adopción de medidas sanitarias y sociales adecuadas.",cr:"V",ex:"Verdadero. Corresponde al principio de responsabilidad gubernamental sobre la salud de la población."},
+  {t:"tf",c:"Equidade",old:true,q:"El acceso no equitativo a los recursos sanitarios básicos y al sistema de salud aumenta el riesgo de enfermedades y de exposición a factores perjudiciales.",cr:"V",ex:"Verdadero. Las desigualdades de acceso aumentan la vulnerabilidad y los riesgos para la salud."},
+  {t:"tf",c:"Cadeia epidemiológica",old:true,q:"Establecer el grado de patogenicidad del agente muestra solamente la gravedad del daño que este puede generar en el organismo del huésped.",cr:"F",ex:"Falso. La patogenicidad expresa la capacidad de producir enfermedad entre los infectados; la gravedad del daño corresponde a la virulencia."},
+  {t:"tf",c:"Saúde Pública",old:true,q:"Constituyen actividades de la Salud Pública la protección de la salud, la promoción de la salud y la prevención de enfermedades.",cr:"V",ex:"Verdadero. Protección, promoción y prevención forman parte de las actividades esenciales de la Salud Pública."},
+  {t:"tf",c:"APS",old:true,q:"La Atención Primaria de Salud busca ofrecer asistencia exclusivamente a poblaciones periféricas, vulnerables y pobres.",cr:"F",ex:"Falso. La APS tiene vocación universal y debe estar al alcance de todos los individuos y familias de la comunidad."},
+  {t:"ab",c:"APS",old:true,q:"[Completa] La __________ es la asistencia esencial, basada en métodos y tecnologías prácticas, puesta al alcance de todos los individuos y familias mediante su plena participación y a un costo soportable.",ex:"Atención Primaria de Salud."},
+  {t:"ab",c:"APS",old:true,q:"[Completa] El __________ es la estructura organizada y funcional constituida por profesionales sanitarios y no sanitarios que desarrollan de forma coordinada las actividades de la APS en una comunidad.",ex:"Equipo básico de trabajo."},
+  {t:"ab",c:"Níveis de atenção",old:true,q:"[Completa] La __________ es la atención de mayor complejidad que se realiza en hospitales y sus dependencias.",ex:"Asistencia especializada."},
+  {t:"ab",c:"Cadeia epidemiológica",old:true,q:"[Completa] El __________ es el organismo que aloja al agente causal y permite su desarrollo de acuerdo con las condiciones que presenta.",ex:"Reservorio."},
+  {t:"ab",c:"Cadeia epidemiológica",old:true,q:"[Completa] La __________ es el modelo explicativo de la causalidad de las enfermedades transmisibles.",ex:"Cadena epidemiológica."},
+  {t:"ab",c:"Determinantes da saúde",old:true,q:"[Completa] Los __________ constituyen un factor que posibilita la aparición de enfermedades infecciosas transmisibles, emergentes o reemergentes.",ex:"Cambios ambientales."},
+  {t:"tf",c:"Sistema de Saúde",old:true,q:"La prestación de los servicios de salud que ofrece el Sistema de Salud del país puede ser de tipo personal o colectivo.",cr:"V",ex:"Verdadero. La prestación puede dirigirse a individuos o a colectivos y poblaciones."},
+  {t:"tf",c:"APS",old:true,q:"La asistencia multidisciplinaria que se ofrece al paciente es una característica de la Atención Primaria de Salud.",cr:"V",ex:"Verdadero. La APS se apoya en un equipo multidisciplinario para brindar atención integral."},
+  {t:"tf",c:"APS",old:true,q:"La intersectorialidad en APS se refiere únicamente a la participación de la comunidad para gestionar recursos disponibles y satisfacer sus propias necesidades de salud.",cr:"F",ex:"Falso. Esa descripción corresponde a participación comunitaria; la intersectorialidad implica coordinación entre el sector salud y otros sectores."},
+  {t:"mc",c:"Níveis de atenção",old:true,q:"Es la organización de la atención en distintos niveles de complejidad, con el objetivo de conjugar eficientemente la máxima cobertura y la mayor calidad posible:",o:[{l:"A",v:"Niveles de Prevención."},{l:"B",v:"Niveles de Atención."},{l:"C",v:"Atención Primaria de Salud."}],cr:"B",ex:"Los niveles de atención organizan los servicios por complejidad, cobertura y capacidad resolutiva."},
+  {t:"mc",c:"Níveis de atenção",old:true,q:"Nivel de atención en el cual se presta asistencia ambulatoria a pacientes con patologías específicas, no contacta directamente con la comunidad y tiene menor cobertura:",o:[{l:"A",v:"Nivel secundario."},{l:"B",v:"Nivel terciario."},{l:"C",v:"Último nivel."}],cr:"A",ex:"El nivel secundario brinda atención especializada ambulatoria y recibe pacientes derivados desde el primer nivel."},
+  {t:"mc",c:"APS",old:true,q:"Cuando las actividades desarrolladas en Atención Primaria tienen en cuenta el enfoque biopsicosocial del individuo, se dice que la atención es:",o:[{l:"A",v:"Integral."},{l:"B",v:"Completa."},{l:"C",v:"Integrada."}],cr:"A",ex:"Integral significa considerar conjuntamente las dimensiones biológica, psicológica y social de la persona."},
+  {t:"mc",c:"APS",old:true,q:"Constituye un principio de la Atención Primaria de Salud:",o:[{l:"A",v:"Universalidad."},{l:"B",v:"Intersectorialidad."},{l:"C",v:"Atención equitativa."}],cr:"B",ex:"La intersectorialidad es un principio de la APS: exige coordinación del sector salud con educación, saneamiento, vivienda y otros sectores."}
+];
+QD.unshift(...OLD_EXAM_QD);
 QD.push(...EXAM_QD);
+QD.forEach((question,index)=>{question.n=index+1});
 
 document.querySelectorAll('[data-flashcard-count]').forEach(el=>el.textContent=FC.length);
 document.querySelectorAll('[data-question-count]').forEach(el=>el.textContent=QD.length);
@@ -660,7 +766,7 @@ function renderFlashcards(){const grid=document.getElementById('flashcard-grid')
 fcFilter.addEventListener('change',renderFlashcards);fcSearch.addEventListener('input',renderFlashcards);function shuffleFlashcards(){for(let i=FC.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[FC[i],FC[j]]=[FC[j],FC[i]];}renderFlashcards();}renderFlashcards();
 
 let QS={c:0,w:0,a:0};const qCategory=document.getElementById('qCategory'),qType=document.getElementById('qType');fillSelect(qCategory,[...new Set(QD.map(x=>x.c))]);
-function renderQuiz(){const ct=document.getElementById('quizContainer');ct.innerHTML='';const tl={mc:'Múltipla Escolha',tf:'V ou F',ab:'Aberta'},tc={mc:'tmc',tf:'ttf',ab:'tab'};QD.forEach((q,i)=>{const d=document.createElement('article');d.className='q-card';d.id='q'+i;d.dataset.category=q.c;d.dataset.type=q.t;let body='';if(q.t==='mc')body=`<div class="opts">${q.o.map(o=>`<button class="opt-btn" data-l="${o.l}" onclick="answerMC(${i},'${o.l}')"><span class="ol">${o.l})</span><span>${o.v}</span></button>`).join('')}</div>`;else if(q.t==='tf')body=`<div class="tf-opts"><button class="tf-btn" data-v="V" onclick="answerTF(${i},'V')">✅ VERDADEIRO</button><button class="tf-btn" data-v="F" onclick="answerTF(${i},'F')">❌ FALSO</button></div>`;else body=`<button class="open-btn" id="ob${i}" onclick="revealOpen(${i})">💡 Ver resposta baseada nos slides</button>`;d.innerHTML=`<div class="q-head"><span class="q-num">Questão ${q.n}</span><div style="display:flex;gap:.4rem;flex-wrap:wrap"><span class="q-tbadge ${tc[q.t]}">${tl[q.t]}</span><span class="ctag">${q.c}</span></div></div><div class="res-ind" id="ri${i}"></div><p class="q-text">${q.q}</p>${body}<div class="exp-box" id="ex${i}"><div class="et">📖 Explicação</div><p>${q.ex.replace(/\n/g,'<br>')}</p></div>`;ct.appendChild(d);});updateScores();filterQuiz();}
+function renderQuiz(){const ct=document.getElementById('quizContainer');ct.innerHTML='';const tl={mc:'Múltipla Escolha',tf:'V ou F',ab:'Aberta'},tc={mc:'tmc',tf:'ttf',ab:'tab'};QD.forEach((q,i)=>{const d=document.createElement('article');d.className=`q-card${q.old?' old-exam':''}`;d.id='q'+i;d.dataset.category=q.c;d.dataset.type=q.t;let body='';if(q.t==='mc')body=`<div class="opts">${q.o.map(o=>`<button class="opt-btn" data-l="${o.l}" onclick="answerMC(${i},'${o.l}')"><span class="ol">${o.l})</span><span>${o.v}</span></button>`).join('')}</div>`;else if(q.t==='tf')body=`<div class="tf-opts"><button class="tf-btn" data-v="V" onclick="answerTF(${i},'V')">✅ VERDADEIRO</button><button class="tf-btn" data-v="F" onclick="answerTF(${i},'F')">❌ FALSO</button></div>`;else body=`<button class="open-btn" id="ob${i}" onclick="revealOpen(${i})">💡 Ver resposta baseada nos slides</button>`;const oldTag=q.old?'<span class="old-exam-tag">⭐ Questões de provas semestre passado</span>':'';d.innerHTML=`<div class="q-head"><span class="q-num">Questão ${q.n}</span><div style="display:flex;gap:.4rem;flex-wrap:wrap">${oldTag}<span class="q-tbadge ${tc[q.t]}">${tl[q.t]}</span><span class="ctag">${q.c}</span></div></div><div class="res-ind" id="ri${i}"></div><p class="q-text">${q.q}</p>${body}<div class="exp-box" id="ex${i}"><div class="et">📖 Explicação</div><p>${q.ex.replace(/\n/g,'<br>')}</p></div>`;ct.appendChild(d);});updateScores();filterQuiz();}
 function answerMC(i,ch){const q=QD[i],card=document.getElementById('q'+i);if(card.classList.contains('ans'))return;card.querySelectorAll('.opt-btn').forEach(b=>{b.disabled=true;if(b.dataset.l===q.cr)b.classList.add('ca');if(b.dataset.l===ch&&ch!==q.cr)b.classList.add('wa')});const ok=ch===q.cr;card.classList.add('ans',ok?'cq':'wq');const ri=document.getElementById('ri'+i);ri.className=`res-ind vis ${ok?'c':'w'}`;ri.innerHTML=ok?'✅ Correto!':`❌ Incorreto. Resposta: ${q.cr}`;document.getElementById('ex'+i).classList.add('vis');ok?QS.c++:QS.w++;QS.a++;updateScores();}
 function answerTF(i,ch){const q=QD[i],card=document.getElementById('q'+i);if(card.classList.contains('ans'))return;card.querySelectorAll('.tf-btn').forEach(b=>{b.disabled=true;if(b.dataset.v===q.cr)b.classList.add('ca');if(b.dataset.v===ch&&ch!==q.cr)b.classList.add('wa')});const ok=ch===q.cr;card.classList.add('ans',ok?'cq':'wq');const ri=document.getElementById('ri'+i);ri.className=`res-ind vis ${ok?'c':'w'}`;ri.innerHTML=ok?'✅ Correto!':`❌ Incorreto. Resposta: ${q.cr==='V'?'VERDADEIRO':'FALSO'}`;document.getElementById('ex'+i).classList.add('vis');ok?QS.c++:QS.w++;QS.a++;updateScores();}
 function revealOpen(i){const card=document.getElementById('q'+i);if(card.classList.contains('ans'))return;card.classList.add('ans');document.getElementById('ob'+i).style.display='none';document.getElementById('ex'+i).classList.add('vis');QS.a++;updateScores();}
@@ -939,6 +1045,376 @@ qCategory.addEventListener('change',filterQuiz);qType.addEventListener('change',
 
   observer=new MutationObserver(()=>{clearTimeout(observer._timer);observer._timer=setTimeout(renderMissing,40)});
   assignKeys();renderAll();observeDynamicAreas();updateToolbar();
+})();
+</script>
+<script>
+/* Post-its privados por aluno — persistência no Supabase com RLS. */
+(()=>{
+  'use strict';
+  const TABLE='resumo_anotacoes';
+  const PAGE=window.PAGE_KEY||location.pathname.split('/').pop()?.replace(/\.html?$/i,'')||'resumo';
+  const LABELS={
+    nota:{name:'Nota',icon:'📝'},
+    importante:{name:'Importante',icon:'⭐'},
+    prova:{name:'Prova',icon:'🎯'},
+    atencao:{name:'Atenção',icon:'⚠️'}
+  };
+  const ANCHOR_SELECTOR=[
+    'p','li','td','th','h1','h2','h3','h4','h5','h6',
+    'blockquote','.fc-q','.fc-back-text'
+  ].join(',');
+  let client=null,user=null,notes=[],initialized=false,editingId=null,topZ=70;
+
+  const toggle=document.createElement('button');
+  toggle.id='enzo-notes-toggle';toggle.type='button';toggle.title='Criar uma anotação';
+  toggle.setAttribute('aria-label','Criar uma anotação');
+  toggle.innerHTML='<span aria-hidden="true">🗒️</span><span class="note-count" aria-label="Quantidade de anotações">0</span>';
+
+  const composer=document.createElement('form');
+  composer.id='enzo-note-composer';
+  composer.innerHTML=`
+    <div class="enzo-note-form-title"><span>🗒️ <b class="enzo-note-title-text">Nova anotação</b></span><button class="enzo-note-close" type="button" aria-label="Fechar">×</button></div>
+    <p class="enzo-note-drag-hint">↕ Arraste esta caixa pelo cabeçalho até o ponto onde deseja deixar o post-it.</p>
+    <div class="enzo-note-fields">
+      <label for="enzo-note-label">Marcação</label>
+      <select id="enzo-note-label">
+        <option value="nota">📝 Nota</option>
+        <option value="importante">⭐ Importante</option>
+        <option value="prova">🎯 Prova</option>
+        <option value="atencao">⚠️ Atenção</option>
+      </select>
+      <label for="enzo-note-text">Anotação</label>
+      <textarea id="enzo-note-text" maxlength="3000" required placeholder="Escreva o que você compreendeu, uma observação ou algo que pode cair na prova..."></textarea>
+    </div>
+    <div class="enzo-note-actions"><button class="enzo-note-cancel" type="button">Cancelar</button><button class="enzo-note-save" type="submit">Salvar anotação</button></div>
+    <div class="enzo-note-status" role="status" aria-live="polite"></div>`;
+  document.body.append(toggle,composer);
+
+  const count=toggle.querySelector('.note-count');
+  const titleText=composer.querySelector('.enzo-note-title-text');
+  const labelField=composer.querySelector('#enzo-note-label');
+  const textField=composer.querySelector('#enzo-note-text');
+  const saveButton=composer.querySelector('.enzo-note-save');
+  const status=composer.querySelector('.enzo-note-status');
+
+  function getClient(){return window.authClient||window.supabaseClient||window._sb||null}
+  function cleanText(value){return String(value||'').replace(/\s+/g,' ').trim()}
+  function hashText(text){
+    let h=2166136261;
+    for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619)}
+    return (h>>>0).toString(36);
+  }
+  function setStatus(message,error=false){status.textContent=message||'';status.classList.toggle('error',error)}
+  function updateCount(){count.textContent=notes.length;count.classList.toggle('visible',notes.length>0)}
+  function currentSection(){return document.querySelector('.section.active')||document.querySelector('.section')}
+  function sectionContainer(section){return section?.querySelector('.container')||null}
+  function anchorElements(section){
+    if(!section)return[];
+    assignAnchors(section);
+    return [...section.querySelectorAll('[data-enzo-note-anchor]')].filter(el=>cleanText(el.textContent)&&!el.closest('.enzo-study-note,#enzo-note-composer,.study-tools,.q-stats'));
+  }
+  function assignAnchors(section=document){
+    const seen=new Map();
+    section.querySelectorAll(ANCHOR_SELECTOR).forEach(el=>{
+      if(!el.closest('.section'))return;
+      if(el.closest('.enzo-study-note,#enzo-note-composer,.study-tools,.q-stats,nav,footer'))return;
+      const text=cleanText(el.textContent);if(!text)return;
+      const sectionId=el.closest('.section')?.id||'page';
+      const base=`${sectionId}:${hashText(text)}`;
+      const occurrence=seen.get(base)||0;seen.set(base,occurrence+1);
+      el.dataset.enzoNoteAnchor=el.dataset.enzoHlKey||`${base}:${occurrence}`;
+    });
+  }
+  function findAnchor(note,section){
+    const anchors=anchorElements(section);
+    let found=anchors.find(el=>el.dataset.enzoNoteAnchor===note.anchor_key);
+    if(!found&&note.anchor_excerpt){
+      const needle=cleanText(note.anchor_excerpt).slice(0,100);
+      found=anchors.find(el=>cleanText(el.textContent).includes(needle));
+    }
+    return found||null;
+  }
+  function relativeTop(el,container){
+    const er=el.getBoundingClientRect(),cr=container.getBoundingClientRect();
+    return er.top-cr.top+container.scrollTop;
+  }
+  function clamp(value,min,max){return Math.max(min,Math.min(max,value))}
+  const SIZE_META=/^\[\[enzo-size:(\d+)x(\d+)\]\]\s*/;
+  function unpackExcerpt(value){
+    const raw=String(value||''),match=raw.match(SIZE_META);
+    return {text:raw.replace(SIZE_META,''),width:match?Number(match[1]):232,height:match?Number(match[2]):132};
+  }
+  function packExcerpt(text,width=232,height=132){
+    const safeWidth=clamp(Math.round(Number(width)||232),160,600);
+    const safeHeight=clamp(Math.round(Number(height)||132),110,700);
+    return `[[enzo-size:${safeWidth}x${safeHeight}]] ${cleanText(text).slice(0,240)}`.trim();
+  }
+  function normalizeNote(note){
+    const packed=unpackExcerpt(note.anchor_excerpt);
+    return {...note,anchor_excerpt:packed.text,x_pct:Number(note.x_pct)||0,y_offset:Number(note.y_offset)||0,width_px:packed.width,height_px:packed.height};
+  }
+  function noteElement(id){return document.querySelector(`.enzo-study-note[data-note-id="${id}"]`)}
+  function setSync(el,message,error=false){
+    const sync=el?.querySelector('.enzo-note-sync');if(!sync)return;
+    sync.textContent=message;sync.classList.toggle('error',error);
+  }
+  function positionNote(el,note){
+    const section=document.getElementById(note.section_id),container=sectionContainer(section);
+    if(!section||!container||!el||container.clientWidth===0)return;
+    const maxWidth=Math.max(150,Math.min(600,container.clientWidth-8));
+    el.style.width=`${clamp(Number(note.width_px)||232,Math.min(160,maxWidth),maxWidth)}px`;
+    el.style.height=`${clamp(Number(note.height_px)||132,110,700)}px`;
+    const maxLeft=Math.max(0,container.clientWidth-el.offsetWidth);
+    const left=clamp((Number(note.x_pct)||0)*maxLeft,0,maxLeft);
+    const anchor=findAnchor(note,section);
+    const baseTop=anchor?relativeTop(anchor,container):0;
+    const maxTop=Math.max(8,container.scrollHeight-el.offsetHeight-8);
+    const top=clamp(baseTop+(Number(note.y_offset)||0),8,maxTop);
+    el.style.left=`${left}px`;el.style.top=`${top}px`;el.style.visibility='visible';
+  }
+  function layoutNotes(){notes.forEach(note=>positionNote(noteElement(note.id),note))}
+  function createNoteElement(note){
+    const meta=LABELS[note.label]||LABELS.nota;
+    const el=document.createElement('article');
+    el.className='enzo-study-note';el.dataset.noteId=note.id;el.dataset.label=note.label;el.style.visibility='hidden';
+    const head=document.createElement('div');head.className='enzo-note-head';
+    const tag=document.createElement('span');tag.className='enzo-note-tag';tag.textContent=`${meta.icon} ${meta.name}`;
+    const edit=document.createElement('button');edit.className='enzo-note-mini';edit.type='button';edit.title='Editar';edit.setAttribute('aria-label','Editar anotação');edit.textContent='✎';
+    const remove=document.createElement('button');remove.className='enzo-note-mini';remove.type='button';remove.title='Excluir';remove.setAttribute('aria-label','Excluir anotação');remove.textContent='×';
+    head.append(tag,edit,remove);
+    const body=document.createElement('div');body.className='enzo-note-body';body.textContent=note.content;
+    const sync=document.createElement('span');sync.className='enzo-note-sync';sync.textContent='salva';
+    const resize=document.createElement('button');resize.className='enzo-note-resize';resize.type='button';resize.title='Arraste para ajustar o tamanho';resize.setAttribute('aria-label','Ajustar tamanho da anotação');resize.textContent='⌟';
+    el.append(head,body,sync,resize);
+    edit.addEventListener('pointerdown',event=>event.stopPropagation());
+    remove.addEventListener('pointerdown',event=>event.stopPropagation());
+    edit.addEventListener('click',()=>openComposer(note));
+    remove.addEventListener('click',()=>deleteNote(note));
+    el.addEventListener('pointerdown',()=>{el.style.zIndex=String(++topZ)});
+    enableDrag(el,head,note);
+    enableResize(el,resize,note);
+    return el;
+  }
+  function renderNotes(){
+    document.querySelectorAll('.enzo-study-note').forEach(el=>el.remove());
+    notes.forEach(note=>{
+      const section=document.getElementById(note.section_id),container=sectionContainer(section);
+      if(!container)return;
+      const el=createNoteElement(note);container.appendChild(el);positionNote(el,note);
+    });
+    updateCount();requestAnimationFrame(layoutNotes);
+  }
+  function defaultPlacement(){
+    const section=currentSection(),container=sectionContainer(section);
+    if(!section||!container)return null;
+    const anchors=anchorElements(section);
+    const containerRect=container.getBoundingClientRect();
+    const desiredViewportY=clamp(window.innerHeight*.44,150,window.innerHeight-180);
+    let anchor=anchors.filter(el=>{
+      const r=el.getBoundingClientRect();return r.bottom>100&&r.top<window.innerHeight-70;
+    }).sort((a,b)=>Math.abs(a.getBoundingClientRect().top-desiredViewportY)-Math.abs(b.getBoundingClientRect().top-desiredViewportY))[0]||anchors[0]||null;
+    const desiredTop=clamp(desiredViewportY-containerRect.top,8,Math.max(8,container.scrollHeight-150));
+    const baseTop=anchor?relativeTop(anchor,container):0;
+    return {
+      section_id:section.id||'intro',
+      anchor_key:anchor?.dataset.enzoNoteAnchor||null,
+      anchor_excerpt:anchor?cleanText(anchor.textContent).slice(0,240):null,
+      x_pct:.78,
+      y_offset:Math.round(desiredTop-baseTop)
+    };
+  }
+  function composerPlacement(){
+    const section=currentSection(),container=sectionContainer(section);
+    if(!section||!container||!composer.classList.contains('open'))return defaultPlacement();
+    const rect=composer.getBoundingClientRect(),containerRect=container.getBoundingClientRect();
+    const noteWidth=232,noteHeight=132;
+    const maxLeft=Math.max(1,container.clientWidth-noteWidth);
+    const left=clamp(rect.left-containerRect.left,0,maxLeft);
+    const top=clamp(rect.top-containerRect.top+container.scrollTop,8,Math.max(8,container.scrollHeight-noteHeight-8));
+    const anchor=nearestAnchorForPosition(section,container,top+20);
+    return {
+      section_id:section.id||'intro',
+      anchor_key:anchor?.dataset.enzoNoteAnchor||null,
+      anchor_excerpt:anchor?cleanText(anchor.textContent).slice(0,240):null,
+      x_pct:clamp(left/maxLeft,0,1),
+      y_offset:Math.round(top-(anchor?relativeTop(anchor,container):0)),
+      width_px:noteWidth,
+      height_px:noteHeight
+    };
+  }
+  function nearestAnchorForPosition(section,container,top){
+    const anchors=anchorElements(section);if(!anchors.length)return null;
+    return anchors.sort((a,b)=>Math.abs(relativeTop(a,container)-top)-Math.abs(relativeTop(b,container)-top))[0];
+  }
+  function enableDrag(el,handle,note){
+    let drag=null;
+    handle.addEventListener('pointerdown',event=>{
+      if(event.target.closest('button'))return;
+      event.preventDefault();handle.setPointerCapture?.(event.pointerId);
+      drag={id:event.pointerId,x:event.clientX,y:event.clientY,left:el.offsetLeft,top:el.offsetTop};
+      el.classList.add('dragging');el.style.zIndex=String(++topZ);
+    });
+    handle.addEventListener('pointermove',event=>{
+      if(!drag||event.pointerId!==drag.id)return;
+      event.preventDefault();
+      const section=document.getElementById(note.section_id),container=sectionContainer(section);if(!container)return;
+      const maxLeft=Math.max(0,container.clientWidth-el.offsetWidth),maxTop=Math.max(8,container.scrollHeight-el.offsetHeight-8);
+      el.style.left=`${clamp(drag.left+event.clientX-drag.x,0,maxLeft)}px`;
+      el.style.top=`${clamp(drag.top+event.clientY-drag.y,8,maxTop)}px`;
+    });
+    const finish=async event=>{
+      if(!drag||event.pointerId!==drag.id)return;
+      handle.releasePointerCapture?.(event.pointerId);drag=null;el.classList.remove('dragging');
+      const section=document.getElementById(note.section_id),container=sectionContainer(section);if(!container)return;
+      const maxLeft=Math.max(1,container.clientWidth-el.offsetWidth);
+      const left=parseFloat(el.style.left)||0,top=parseFloat(el.style.top)||0;
+      const anchor=nearestAnchorForPosition(section,container,top+20);
+      note.x_pct=clamp(left/maxLeft,0,1);
+      note.anchor_key=anchor?.dataset.enzoNoteAnchor||null;
+      note.anchor_excerpt=anchor?cleanText(anchor.textContent).slice(0,240):null;
+      note.y_offset=Math.round(top-(anchor?relativeTop(anchor,container):0));
+      setSync(el,'salvando…');
+      const {error}=await client.from(TABLE).update({
+        anchor_key:note.anchor_key,anchor_excerpt:packExcerpt(note.anchor_excerpt,note.width_px,note.height_px),x_pct:note.x_pct,
+        y_offset:note.y_offset,updated_at:new Date().toISOString()
+      }).eq('id',note.id).eq('user_id',user.id);
+      setSync(el,error?'erro ao salvar':'salva',!!error);
+      if(error)console.error('Falha ao posicionar anotação:',error.message);
+    };
+    handle.addEventListener('pointerup',finish);handle.addEventListener('pointercancel',finish);
+  }
+  function enableResize(el,handle,note){
+    let resizing=null;
+    handle.addEventListener('pointerdown',event=>{
+      event.preventDefault();event.stopPropagation();handle.setPointerCapture?.(event.pointerId);
+      resizing={id:event.pointerId,x:event.clientX,y:event.clientY,width:el.offsetWidth,height:el.offsetHeight};
+      el.classList.add('resizing');el.style.zIndex=String(++topZ);
+    });
+    handle.addEventListener('pointermove',event=>{
+      if(!resizing||event.pointerId!==resizing.id)return;
+      event.preventDefault();
+      const section=document.getElementById(note.section_id),container=sectionContainer(section);if(!container)return;
+      const maxWidth=Math.max(160,Math.min(600,container.clientWidth-el.offsetLeft-4));
+      const width=clamp(resizing.width+event.clientX-resizing.x,160,maxWidth);
+      const height=clamp(resizing.height+event.clientY-resizing.y,110,700);
+      el.style.width=`${Math.round(width)}px`;el.style.height=`${Math.round(height)}px`;
+    });
+    const finish=async event=>{
+      if(!resizing||event.pointerId!==resizing.id)return;
+      handle.releasePointerCapture?.(event.pointerId);resizing=null;el.classList.remove('resizing');
+      const section=document.getElementById(note.section_id),container=sectionContainer(section);if(!container)return;
+      note.width_px=clamp(Math.round(el.offsetWidth),160,600);
+      note.height_px=clamp(Math.round(el.offsetHeight),110,700);
+      const maxLeft=Math.max(1,container.clientWidth-el.offsetWidth),left=parseFloat(el.style.left)||0;
+      note.x_pct=clamp(left/maxLeft,0,1);
+      setSync(el,'salvando…');
+      const {error}=await client.from(TABLE).update({
+        anchor_excerpt:packExcerpt(note.anchor_excerpt,note.width_px,note.height_px),
+        x_pct:note.x_pct,updated_at:new Date().toISOString()
+      }).eq('id',note.id).eq('user_id',user.id);
+      setSync(el,error?'erro ao salvar':'salva',!!error);
+      if(error)console.error('Falha ao salvar o tamanho da anotação:',error.message);
+    };
+    handle.addEventListener('pointerup',finish);handle.addEventListener('pointercancel',finish);
+  }
+  function keepComposerOnScreen(){
+    if(!composer.classList.contains('open'))return;
+    const rect=composer.getBoundingClientRect();
+    if(!composer.style.top&&!composer.style.left)return;
+    composer.style.left=`${clamp(rect.left,8,Math.max(8,window.innerWidth-rect.width-8))}px`;
+    composer.style.top=`${clamp(rect.top,8,Math.max(8,window.innerHeight-rect.height-8))}px`;
+  }
+  function enableComposerDrag(){
+    const handle=composer.querySelector('.enzo-note-form-title');let drag=null;
+    handle.addEventListener('pointerdown',event=>{
+      if(event.target.closest('button'))return;
+      event.preventDefault();
+      const rect=composer.getBoundingClientRect();
+      composer.style.left=`${rect.left}px`;composer.style.top=`${rect.top}px`;composer.style.right='auto';composer.style.bottom='auto';
+      handle.setPointerCapture?.(event.pointerId);
+      drag={id:event.pointerId,x:event.clientX,y:event.clientY,left:rect.left,top:rect.top};
+    });
+    handle.addEventListener('pointermove',event=>{
+      if(!drag||event.pointerId!==drag.id)return;
+      event.preventDefault();
+      const left=clamp(drag.left+event.clientX-drag.x,8,Math.max(8,window.innerWidth-composer.offsetWidth-8));
+      const top=clamp(drag.top+event.clientY-drag.y,8,Math.max(8,window.innerHeight-composer.offsetHeight-8));
+      composer.style.left=`${left}px`;composer.style.top=`${top}px`;
+    });
+    const finish=event=>{
+      if(!drag||event.pointerId!==drag.id)return;
+      handle.releasePointerCapture?.(event.pointerId);drag=null;
+    };
+    handle.addEventListener('pointerup',finish);handle.addEventListener('pointercancel',finish);
+  }
+  function openComposer(note=null){
+    editingId=note?.id||null;titleText.textContent=note?'Editar anotação':'Nova anotação';
+    labelField.value=note?.label||'nota';textField.value=note?.content||'';
+    setStatus(user?'':'Conectando ao seu perfil…');composer.classList.add('open');toggle.classList.add('active');
+    setTimeout(()=>textField.focus(),40);
+  }
+  function closeComposer(){composer.classList.remove('open');toggle.classList.remove('active');editingId=null;setStatus('');textField.value=''}
+  async function saveNote(event){
+    event.preventDefault();
+    if(!client||!user){setStatus('Não foi possível identificar o aluno conectado.',true);return}
+    const content=textField.value.trim(),label=labelField.value;
+    if(!content){setStatus('Digite sua anotação.',true);return}
+    saveButton.disabled=true;setStatus('Salvando no seu perfil…');
+    if(editingId){
+      const {data,error}=await client.from(TABLE).update({label,content,updated_at:new Date().toISOString()})
+        .eq('id',editingId).eq('user_id',user.id).select().single();
+      saveButton.disabled=false;
+      if(error){setStatus(`Erro: ${error.message}`,true);return}
+      const index=notes.findIndex(n=>n.id===editingId);if(index>=0)notes[index]=normalizeNote(data);
+      renderNotes();closeComposer();return;
+    }
+    const placement=composerPlacement();
+    if(!placement){saveButton.disabled=false;setStatus('Abra uma aba do resumo para posicionar a anotação.',true);return}
+    const {width_px,height_px,...dbPlacement}=placement;
+    dbPlacement.anchor_excerpt=packExcerpt(dbPlacement.anchor_excerpt,width_px,height_px);
+    const payload={user_id:user.id,resumo_key:PAGE,label,content,...dbPlacement};
+    const {data,error}=await client.from(TABLE).insert(payload).select().single();
+    saveButton.disabled=false;
+    if(error){setStatus(`Erro: ${error.message}`,true);return}
+    notes.push(normalizeNote(data));renderNotes();closeComposer();
+  }
+  async function deleteNote(note){
+    if(!confirm('Excluir esta anotação?'))return;
+    const el=noteElement(note.id);setSync(el,'excluindo…');
+    const {error}=await client.from(TABLE).delete().eq('id',note.id).eq('user_id',user.id);
+    if(error){setSync(el,'erro ao excluir',true);alert(`Não foi possível excluir: ${error.message}`);return}
+    notes=notes.filter(item=>item.id!==note.id);el?.remove();updateCount();
+  }
+  async function initialize(){
+    if(initialized)return;
+    client=getClient();if(!client){setStatus('Aguardando conexão com o perfil…');return}
+    user=window.authSession?.user||null;
+    if(!user){
+      const {data,error}=await client.auth.getUser();
+      if(error||!data?.user){setStatus('Entre na sua conta para usar anotações.',true);return}
+      user=data.user;
+    }
+    initialized=true;assignAnchors(document);
+    const {data,error}=await client.from(TABLE)
+      .select('id,user_id,resumo_key,section_id,anchor_key,anchor_excerpt,x_pct,y_offset,label,content,created_at,updated_at')
+      .eq('user_id',user.id).eq('resumo_key',PAGE).order('created_at',{ascending:true});
+    if(error){setStatus(`Anotações indisponíveis: ${error.message}`,true);console.error(error);return}
+    notes=(data||[]).map(normalizeNote);renderNotes();setStatus('');
+  }
+
+  toggle.addEventListener('click',()=>composer.classList.contains('open')?closeComposer():openComposer());
+  enableComposerDrag();
+  composer.querySelector('.enzo-note-close').addEventListener('click',closeComposer);
+  composer.querySelector('.enzo-note-cancel').addEventListener('click',closeComposer);
+  composer.addEventListener('submit',saveNote);
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&composer.classList.contains('open'))closeComposer()});
+  window.addEventListener('resize',()=>requestAnimationFrame(()=>{layoutNotes();keepComposerOnScreen()}));
+  const sectionObserver=new MutationObserver(mutations=>{
+    if(mutations.some(m=>m.target.classList?.contains('active')))requestAnimationFrame(layoutNotes);
+  });
+  document.querySelectorAll('.section').forEach(section=>sectionObserver.observe(section,{attributes:true,attributeFilter:['class']}));
+  document.addEventListener('authReady',initialize,{once:true});
+  if(window.authSession?.user)setTimeout(initialize,0);else setTimeout(initialize,1200);
 })();
 </script>
 <script src="study-timer.js"></script><script src="study-progress.js"></script><script src="enzo-ia.js"></script></body></html>
