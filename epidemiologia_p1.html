@@ -568,6 +568,47 @@ body.enzo-eraser-mode mark.enzo-highlight{cursor:crosshair;outline:1px dashed rg
   #enzo-note-composer{left:12px;right:12px;bottom:194px;width:auto}
   .enzo-study-note{min-width:150px;max-width:calc(100% - 8px);min-height:110px}
 }
+
+
+/* ── CENTRAL “MINHAS ANOTAÇÕES” ── */
+#enzo-annotations-index-toggle{
+  position:fixed;left:24px;bottom:198px;z-index:10027;min-height:44px;
+  display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(184,79,249,.55);background:rgba(17,21,32,.97);color:#fff;
+  font:700 12px var(--font-body);cursor:pointer;box-shadow:0 7px 28px rgba(0,0,0,.48);
+  backdrop-filter:blur(16px);transition:.2s
+}
+#enzo-annotations-index-toggle:hover,#enzo-annotations-index-toggle.active{transform:translateY(-2px);border-color:var(--accent4);background:rgba(184,79,249,.14)}
+#enzo-annotations-index-toggle .enzo-index-count{min-width:20px;height:20px;padding:0 6px;display:none;align-items:center;justify-content:center;border-radius:999px;background:var(--accent4);color:#fff;font:800 10px var(--font-mono)}
+#enzo-annotations-index-toggle .enzo-index-count.visible{display:inline-flex}
+#enzo-annotations-index{
+  position:fixed;left:24px;bottom:252px;z-index:10028;width:min(430px,calc(100vw - 48px));max-height:min(68vh,620px);
+  display:none;overflow:hidden;background:rgba(10,13,20,.985);border:1px solid rgba(184,79,249,.38);border-radius:18px;
+  box-shadow:0 18px 56px rgba(0,0,0,.66);backdrop-filter:blur(20px)
+}
+#enzo-annotations-index.open{display:flex;flex-direction:column}
+.enzo-index-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 15px;border-bottom:1px solid var(--border);background:rgba(184,79,249,.07)}
+.enzo-index-title{font:800 15px var(--font-display);color:#fff}.enzo-index-sub{font:500 10px var(--font-mono);color:var(--muted);margin-top:2px}
+.enzo-index-close{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:18px}
+.enzo-index-tabs{display:flex;gap:7px;padding:10px 12px;border-bottom:1px solid var(--border)}
+.enzo-index-filter{flex:1;border:1px solid var(--border);background:var(--card);color:var(--muted);border-radius:10px;padding:8px 9px;font:700 10px var(--font-body);cursor:pointer}
+.enzo-index-filter.active{color:#fff;border-color:var(--accent4);background:rgba(184,79,249,.14)}
+.enzo-index-list{overflow:auto;padding:10px;display:grid;gap:8px}
+.enzo-index-empty{padding:28px 16px;text-align:center;color:var(--muted);font-size:12px;line-height:1.55}
+.enzo-index-item{width:100%;display:block;text-align:left;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:12px;padding:10px 11px;cursor:pointer;transition:.18s}
+.enzo-index-item:hover{border-color:var(--accent);transform:translateY(-1px);background:var(--card2)}
+.enzo-index-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;color:var(--muted);font:700 9px var(--font-mono);text-transform:uppercase;letter-spacing:.55px}
+.enzo-index-text{font:600 12px/1.45 var(--font-body);color:#fff;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.enzo-index-item[data-kind="highlight"] .enzo-index-text{border-left:4px solid #ffe066;padding-left:8px}
+.enzo-index-item[data-color="green"] .enzo-index-text{border-left-color:#78e89b}
+.enzo-index-item[data-color="red"] .enzo-index-text{border-left-color:#ff8585}
+.enzo-index-flash{animation:enzoIndexFlash 1.25s ease}
+@keyframes enzoIndexFlash{0%,100%{box-shadow:0 0 0 0 rgba(184,79,249,0)}35%{box-shadow:0 0 0 7px rgba(184,79,249,.35)}}
+@media(max-width:700px){
+  #enzo-annotations-index-toggle{left:12px;bottom:194px;min-height:42px;padding:9px 12px}
+  #enzo-annotations-index{left:12px;right:12px;bottom:246px;width:auto;max-height:62vh}
+}
+
 </style></head><body><canvas id="particles"></canvas>
 <header><div class="badge">📊 Epidemiologia · P1 · 2026</div><h1>Epidemiologia e Saúde Pública — P1</h1><p class="sub">Serviço de saúde · Planejamento · APS · Sistema do Paraguai · Indicadores e equidade · Epidemiologia · Desenhos epidemiológicos · Relação com ciências</p><p class="by">⚡ Elaborado por Enzo Salmazo · Conteúdo exclusivo dos slides da disciplina</p></header>
 <nav class="tabs"><button class="active" data-section="intro" onclick="showSection('intro',this)">📖 Início</button><button data-section="fundamentos" onclick="showSection('fundamentos',this)">🔎 1. Epidemiologia</button><button data-section="programa" onclick="showSection('programa',this)">🗂️ 1. Programa</button><button data-section="servico" onclick="showSection('servico',this)">🏥 2. Serviço de saúde</button><button data-section="planejamento" onclick="showSection('planejamento',this)">🧭 2. Planejamento</button><button data-section="ciclo" onclick="showSection('ciclo',this)">🔄 2. Ciclo do planejamento</button><button data-section="aps" onclick="showSection('aps',this)">🩺 2. Atenção Primária</button><button data-section="assistencia" onclick="showSection('assistencia',this)">🏨 2. Assistência sanitária</button><button data-section="componentes" onclick="showSection('componentes',this)">🛡️ 2. Componentes da APS</button><button data-section="paraguai" onclick="showSection('paraguai',this)">🇵🇾 2. Sistema do Paraguai</button><button data-section="regulacao" onclick="showSection('regulacao',this)">⚖️ 2. Regulação</button><button data-section="participacao" onclick="showSection('participacao',this)">🤝 2. Participação social</button><button data-section="medico" onclick="showSection('medico',this)">👨‍⚕️ 2. Médico generalista</button><button data-section="habilidades" onclick="showSection('habilidades',this)">🧠 2. Habilidades</button><button data-section="indicadores" onclick="showSection('indicadores',this)">📊 3. Indicadores hospitalares</button><button data-section="equidade" onclick="showSection('equidade',this)">⚖️ 3. Equidade e desafios</button><button data-section="epi_conceito" onclick="showSection('epi_conceito',this)">🔬 4. O que é Epidemiologia</button><button data-section="epi_classificacao" onclick="showSection('epi_classificacao',this)">🧩 4. Classificação e objetivos</button><button data-section="epi_principios" onclick="showSection('epi_principios',this)">📐 4. Princípios e usos</button><button data-section="epi_metodo" onclick="showSection('epi_metodo',this)">🧪 4. Método epidemiológico</button><button data-section="desenho_geral" onclick="showSection('desenho_geral',this)">🗂️ 5. Desenho epidemiológico</button><button data-section="desenho_descritivo" onclick="showSection('desenho_descritivo',this)">📋 5. Desenhos descritivos</button><button data-section="desenho_analitico" onclick="showSection('desenho_analitico',this)">🔍 5. Desenhos analíticos</button><button data-section="desenho_experimental" onclick="showSection('desenho_experimental',this)">🧫 5. Desenhos experimentais</button><button data-section="relacao_ciencias" onclick="showSection('relacao_ciencias',this)">🔗 6. Relação com outras ciências</button><button class="fc-tab" data-section="flashcards" onclick="showSection('flashcards',this)">🃏 Flashcards (<span data-flashcard-count>30</span>)</button><button class="qz-tab" data-section="quiz" onclick="showSection('quiz',this)">📝 Simulado (<span data-question-count>233</span>)</button></nav><section id="intro" class="section active"><div class="container">
@@ -1415,6 +1456,99 @@ qCategory.addEventListener('change',filterQuiz);qType.addEventListener('change',
   document.querySelectorAll('.section').forEach(section=>sectionObserver.observe(section,{attributes:true,attributeFilter:['class']}));
   document.addEventListener('authReady',initialize,{once:true});
   if(window.authSession?.user)setTimeout(initialize,0);else setTimeout(initialize,1200);
+})();
+</script>
+<script>
+/* Central de anotações — índice navegável de post-its e grifos. */
+(()=>{
+  'use strict';
+  const PAGE=window.PAGE_KEY||location.pathname||document.title;
+  const STORAGE_KEY=`enzo-highlights:v1:${PAGE}`;
+  let filter='all',refreshTimer=null;
+
+  const toggle=document.createElement('button');
+  toggle.id='enzo-annotations-index-toggle';toggle.type='button';toggle.title='Abrir minhas anotações';
+  toggle.innerHTML='<span aria-hidden="true">📚</span><span>Minhas anotações</span><span class="enzo-index-count">0</span>';
+  const panel=document.createElement('aside');panel.id='enzo-annotations-index';panel.setAttribute('aria-label','Minhas anotações');
+  panel.innerHTML=`
+    <div class="enzo-index-head"><div><div class="enzo-index-title">📚 Minhas anotações</div><div class="enzo-index-sub">Clique em um item para voltar ao ponto salvo</div></div><button class="enzo-index-close" type="button" aria-label="Fechar">×</button></div>
+    <div class="enzo-index-tabs"><button class="enzo-index-filter active" type="button" data-filter="all">Tudo</button><button class="enzo-index-filter" type="button" data-filter="note">Post-its</button><button class="enzo-index-filter" type="button" data-filter="highlight">Grifos</button></div>
+    <div class="enzo-index-list"></div>`;
+  document.body.append(toggle,panel);
+  const count=toggle.querySelector('.enzo-index-count'),list=panel.querySelector('.enzo-index-list');
+
+  function sectionName(id){
+    const btn=document.querySelector(`nav.tabs button[data-section="${CSS.escape(id||'')}"]`);
+    return (btn?.textContent||id||'Página').replace(/\s+/g,' ').trim();
+  }
+  function loadHighlightRecords(){
+    try{const r=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');return Array.isArray(r)?r:[]}catch(_){return[]}
+  }
+  function groupedHighlights(){
+    const records=loadHighlightRecords().filter(r=>r&&r.id&&r.key&&Number.isFinite(r.start)&&Number.isFinite(r.end));
+    records.sort((a,b)=>String(a.key).localeCompare(String(b.key))||a.start-b.start||a.end-b.end);
+    const groups=[];
+    for(const rec of records){
+      const section=(String(rec.key).split(':')[0]||'page');
+      const prev=groups[groups.length-1];
+      if(prev&&prev.key===rec.key&&prev.color===rec.color&&rec.start<=prev.end+1){
+        prev.ids.push(rec.id);prev.end=Math.max(prev.end,rec.end);prev.text=(prev.text+(rec.text||'')).replace(/\s+/g,' ').trim();
+      }else groups.push({kind:'highlight',key:rec.key,section,color:rec.color||'yellow',ids:[rec.id],start:rec.start,end:rec.end,text:String(rec.text||'').replace(/\s+/g,' ').trim()});
+    }
+    return groups;
+  }
+  function noteItems(){
+    return [...document.querySelectorAll('.enzo-study-note')].map(el=>({
+      kind:'note',id:el.dataset.noteId,section:el.closest('.section')?.id||'page',label:el.dataset.label||'nota',text:(el.querySelector('.enzo-note-body')?.textContent||'').trim(),el
+    }));
+  }
+  function items(){return [...noteItems(),...groupedHighlights()]}
+  function refresh(){
+    const all=items(),shown=filter==='all'?all:all.filter(x=>x.kind===filter);
+    count.textContent=all.length;count.classList.toggle('visible',all.length>0);
+    list.innerHTML='';
+    if(!shown.length){list.innerHTML='<div class="enzo-index-empty">Nenhuma anotação nesta categoria ainda.<br>Crie um post-it ou grife um trecho do resumo.</div>';return}
+    shown.forEach(item=>{
+      const b=document.createElement('button');b.type='button';b.className='enzo-index-item';b.dataset.kind=item.kind;
+      if(item.color)b.dataset.color=item.color;
+      const label=item.kind==='note'?({nota:'📝 Nota',importante:'⭐ Importante',prova:'🎯 Prova',atencao:'⚠️ Atenção'}[item.label]||'📝 Nota'):`🖍️ Grifo ${item.color==='green'?'verde':item.color==='red'?'vermelho':'amarelo'}`;
+      b.innerHTML=`<div class="enzo-index-meta"><span>${label}</span><span>${sectionName(item.section)}</span></div><div class="enzo-index-text"></div>`;
+      b.querySelector('.enzo-index-text').textContent=item.text||'(sem texto)';
+      b.addEventListener('click',()=>goTo(item));list.appendChild(b);
+    });
+  }
+  function activateSection(section){
+    if(!section||section==='page')return;
+    const btn=document.querySelector(`nav.tabs button[data-section="${CSS.escape(section)}"]`);
+    if(typeof window.showSectionByName==='function')window.showSectionByName(section);
+    else if(typeof window.showSection==='function')window.showSection(section,btn);
+    else{
+      document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===section));
+      document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.section===section));
+    }
+  }
+  function flash(el){if(!el)return;el.classList.remove('enzo-index-flash');void el.offsetWidth;el.classList.add('enzo-index-flash');setTimeout(()=>el.classList.remove('enzo-index-flash'),1400)}
+  function goTo(item){
+    activateSection(item.section);panel.classList.remove('open');toggle.classList.remove('active');
+    setTimeout(()=>{
+      let target=null;
+      if(item.kind==='note')target=document.querySelector(`.enzo-study-note[data-note-id="${CSS.escape(String(item.id))}"]`);
+      else{
+        for(const id of item.ids||[]){target=document.querySelector(`mark.enzo-highlight[data-highlight-id="${CSS.escape(String(id))}"]`);if(target)break}
+        if(!target&&item.key)target=document.querySelector(`[data-enzo-hl-key="${CSS.escape(String(item.key))}"]`);
+      }
+      if(!target)return;
+      target.scrollIntoView({behavior:'smooth',block:'center',inline:'nearest'});flash(target);
+    },180);
+  }
+  function scheduleRefresh(){clearTimeout(refreshTimer);refreshTimer=setTimeout(refresh,80)}
+  toggle.addEventListener('click',()=>{const open=!panel.classList.contains('open');panel.classList.toggle('open',open);toggle.classList.toggle('active',open);if(open)refresh()});
+  panel.querySelector('.enzo-index-close').addEventListener('click',()=>{panel.classList.remove('open');toggle.classList.remove('active')});
+  panel.querySelectorAll('.enzo-index-filter').forEach(btn=>btn.addEventListener('click',()=>{filter=btn.dataset.filter;panel.querySelectorAll('.enzo-index-filter').forEach(x=>x.classList.toggle('active',x===btn));refresh()}));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('open')){panel.classList.remove('open');toggle.classList.remove('active')}});
+  window.addEventListener('storage',e=>{if(e.key===STORAGE_KEY)scheduleRefresh()});
+  new MutationObserver(m=>{if(m.some(x=>[...x.addedNodes,...x.removedNodes].some(n=>n.nodeType===1&&(n.matches?.('.enzo-study-note,mark.enzo-highlight')||n.querySelector?.('.enzo-study-note,mark.enzo-highlight')))))scheduleRefresh()}).observe(document.body,{childList:true,subtree:true});
+  setTimeout(refresh,1200);
 })();
 </script>
 <script src="study-timer.js"></script><script src="study-progress.js"></script><script src="enzo-ia.js"></script></body></html>
