@@ -169,6 +169,26 @@
     .grade-total { text-align:right; font-size:10px; color:rgba(125,211,232,.48); }
     .grade-total strong { display:block; margin-top:2px; font-size:14px; color:#e6fbff; }
     .grade-distribution-warning { margin-top:8px; padding:7px 9px; border-radius:9px; background:rgba(251,191,36,.07); border:1px solid rgba(251,191,36,.15); color:rgba(253,230,138,.75); font-size:9.5px; line-height:1.45; }
+    .grade-result { margin-top:11px; padding:13px 12px; border-radius:12px; text-align:center; border:1px solid rgba(125,211,232,.13); background:rgba(255,255,255,.025); }
+    .grade-result-title { font-size:15px; font-weight:800; letter-spacing:.08em; }
+    .grade-result-sub { margin-top:3px; font-size:9.5px; line-height:1.45; }
+    .grade-result.pending .grade-result-title { color:rgba(165,243,252,.55); font-size:11px; font-weight:600; letter-spacing:.02em; }
+    .grade-result.pending .grade-result-sub { color:rgba(125,211,232,.38); }
+    .grade-result.approved { border-color:rgba(250,204,21,.42); background:linear-gradient(135deg,rgba(250,204,21,.16),rgba(217,119,6,.07)); box-shadow:0 0 22px rgba(250,204,21,.09); }
+    .grade-result.approved .grade-result-title { color:#facc15; font-size:19px; text-shadow:0 0 16px rgba(250,204,21,.35); }
+    .grade-result.approved .grade-result-sub { color:rgba(254,240,138,.72); }
+    .grade-result.recovery { border-color:rgba(248,113,113,.28); background:rgba(248,113,113,.06); }
+    .grade-result.recovery .grade-result-title { color:#fca5a5; font-size:13px; }
+    .grade-result.recovery .grade-result-sub { color:rgba(254,202,202,.62); }
+    .recovery-box { display:none; margin-top:9px; padding:12px; border-radius:12px; border:1px solid rgba(251,191,36,.20); background:rgba(251,191,36,.045); }
+    .recovery-box.visible { display:block; }
+    .recovery-title { font-size:11px; font-weight:750; color:#fde68a; margin-bottom:3px; }
+    .recovery-help { font-size:9px; line-height:1.45; color:rgba(253,230,138,.50); margin-bottom:9px; }
+    .recovery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+    .recovery-field { display:flex; flex-direction:column; gap:4px; }
+    .recovery-field label { font-size:8.5px; text-transform:uppercase; letter-spacing:.05em; color:rgba(253,230,138,.55); }
+    .recovery-input { width:100%; height:36px; padding:7px 8px; border-radius:9px; border:1px solid rgba(251,191,36,.19); background:rgba(2,13,26,.72); color:#fef3c7; font-family:'Poppins',sans-serif; font-size:11px; text-align:center; outline:none; }
+    .recovery-input:focus { border-color:rgba(250,204,21,.55); box-shadow:0 0 0 3px rgba(250,204,21,.07); }
 
     @media (max-width: 800px) {
       .student-controls { grid-template-columns:1fr 1fr; }
@@ -185,6 +205,7 @@
       .grade-card-body { padding:11px 10px 13px; }
       .grade-table-head, .grade-row, .grade-global-row { grid-template-columns:minmax(105px,1fr) 62px 62px 28px; gap:5px; }
       .grade-name, .grade-score, .grade-max { padding:6px; font-size:10px; }
+      .recovery-grid { grid-template-columns:1fr; }
       .tabs { display:grid; grid-template-columns:1fr 1fr; }
     }
 
@@ -1002,12 +1023,12 @@
             </select>
           </div>
           <div class="student-field">
-            <label for="studentTriviaScore">Trivia — mesma nota em todas as matérias</label>
+            <label for="studentTriviaScore">Trivia — nota obtida pelo aluno (máximo 5)</label>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;">
-              <input class="student-input" id="studentTriviaScore" type="number" min="0" step="0.01" placeholder="Nota" oninput="updateGlobalTrivia('score',this.value)">
-              <input class="student-input" id="studentTriviaMax" type="number" min="0" step="0.01" placeholder="Máximo" oninput="updateGlobalTrivia('max',this.value)">
+              <input class="student-input" id="studentTriviaScore" type="number" min="0" max="5" step="0.01" placeholder="Digite de 0 a 5" aria-label="Nota obtida na Trivia" oninput="updateGlobalTrivia('score',this.value)">
+              <input class="student-input" id="studentTriviaMax" type="number" value="5" readonly tabindex="-1" aria-label="Nota máxima da Trivia">
             </div>
-            <div class="trivia-note">Ao alterar aqui, a Trivia muda automaticamente em todas as matérias.</div>
+            <div class="trivia-note">O campo começa vazio. O número 5 é somente o valor máximo; o aluno informa quanto obteve.</div>
           </div>
         </div>
 
@@ -1679,7 +1700,7 @@ window.switchTab = function(tab) {
 
 
 // ── Área do Aluno / Calculadora de notas ─────────────────────────────────────
-var studentGradebook = { version:2, currentSemester:null, semesters:{} };
+var studentGradebook = { version:5, currentSemester:null, semesters:{} };
 var studentGradebookLoaded = false;
 var studentSaveTimer = null;
 
@@ -1722,27 +1743,28 @@ function gradeId(prefix) {
 
 function defaultGradeItems(practical) {
   var examItems = practical ? [
-    { name:"P1 Teórica", max:20 },
-    { name:"P2 Teórica", max:20 },
-    { name:"Final Teórica", max:30 },
+    { name:"P1 Teórica", max:20, recoveryKey:"p1" },
+    { name:"P2 Teórica", max:20, recoveryKey:"p2" },
+    { name:"Final Teórica", max:30, recoveryKey:"final" },
     { name:"P1 Prática", max:5 },
     { name:"P2 Prática", max:5 },
     { name:"Final Prática", max:10 }
   ] : [
-    { name:"P1", max:20 },
-    { name:"P2", max:20 },
-    { name:"Final", max:40 }
+    { name:"P1", max:20, recoveryKey:"p1" },
+    { name:"P2", max:20, recoveryKey:"p2" },
+    { name:"Final", max:40, recoveryKey:"final" }
   ];
   var processItems = practical ? [
     { name:"Presença", max:2 },
     { name:"Exame em linha", max:0 },
     { name:"Trabalho em classe", max:0 }
   ] : [
+    { name:"Presença", max:2 },
     { name:"Exame em linha", max:5 },
-    { name:"Trabalho em classe", max:10 }
+    { name:"Trabalho em classe", max:8 }
   ];
   return examItems.concat(processItems).map(function(item) {
-    return { id:gradeId("item"), name:item.name, score:"", max:item.max };
+    return { id:gradeId("item"), name:item.name, score:"", max:item.max, recoveryKey:item.recoveryKey || null };
   });
 }
 
@@ -1754,21 +1776,23 @@ function createSemesterBook(semester) {
       name:subject.name,
       emoji:subject.emoji,
       practical:!!subject.practical,
-      items:defaultGradeItems(!!subject.practical)
+      items:defaultGradeItems(!!subject.practical),
+      recovery:{ p1:"", p2:"", final:"" }
     };
   });
   return { trivia:{ score:"", max:5 }, subjects:subjects };
 }
 
 function upgradeStudentGradebookData() {
-  if (Number(studentGradebook.version || 1) >= 2) return false;
-  var changed = false;
+  var sourceVersion = Number(studentGradebook.version || 1);
+  if (sourceVersion >= 5) return false;
+  var changed = true;
   var oldPracticalNames = [
     "P1 Teórica", "P2 Teórica", "Final Teórica",
     "P1 Prática", "P2 Prática", "Final Prática",
     "Exame em linha", "Trabalho em classe"
   ];
-  Object.keys(studentGradebook.semesters || {}).forEach(function(key) {
+  if (sourceVersion < 2) Object.keys(studentGradebook.semesters || {}).forEach(function(key) {
     var book = studentGradebook.semesters[key];
     (book && Array.isArray(book.subjects) ? book.subjects : []).forEach(function(subject) {
       if (!subject.practical || !Array.isArray(subject.items) || subject.items.length !== oldPracticalNames.length) return;
@@ -1789,7 +1813,44 @@ function upgradeStudentGradebookData() {
       changed = true;
     });
   });
-  studentGradebook.version = 2;
+  Object.keys(studentGradebook.semesters || {}).forEach(function(key) {
+    var book = studentGradebook.semesters[key];
+    if (!book) return;
+    if (!book.trivia) book.trivia = { score:"", max:5 };
+    book.trivia.max = 5;
+    if (gradeNumber(book.trivia.score) > 5) book.trivia.score = 5;
+
+    if (sourceVersion < 4) (Array.isArray(book.subjects) ? book.subjects : []).forEach(function(subject) {
+      if (subject.practical || !Array.isArray(subject.items)) return;
+      var p1 = subject.items.find(function(item){ return item.name === "P1"; });
+      var p2 = subject.items.find(function(item){ return item.name === "P2"; });
+      var finalExam = subject.items.find(function(item){ return item.name === "Final"; });
+      var onlineExam = subject.items.find(function(item){ return item.name === "Exame em linha"; });
+      var classWork = subject.items.find(function(item){ return item.name === "Trabalho em classe"; });
+      var wasOldDefault = p1 && p2 && finalExam && onlineExam && classWork &&
+        gradeNumber(p1.max) === 20 && gradeNumber(p2.max) === 20 && gradeNumber(finalExam.max) === 40 &&
+        gradeNumber(onlineExam.max) === 5 && gradeNumber(classWork.max) === 10;
+      if (!subject.items.some(function(item){ return item.name === "Presença"; })) {
+        var processIndex = subject.items.findIndex(function(item){ return item.name === "Exame em linha"; });
+        subject.items.splice(processIndex >= 0 ? processIndex : subject.items.length, 0,
+          { id:gradeId("item"), name:"Presença", score:"", max:2 });
+      }
+      if (wasOldDefault) classWork.max = 8;
+    });
+    (Array.isArray(book.subjects) ? book.subjects : []).forEach(function(subject) {
+      if (!subject.recovery || typeof subject.recovery !== "object") {
+        subject.recovery = { p1:"", p2:"", final:"" };
+      }
+      (subject.items || []).forEach(function(item) {
+        if (!item.recoveryKey) {
+          if (item.name === "P1" || item.name === "P1 Teórica") item.recoveryKey = "p1";
+          if (item.name === "P2" || item.name === "P2 Teórica") item.recoveryKey = "p2";
+          if (item.name === "Final" || item.name === "Final Teórica") item.recoveryKey = "final";
+        }
+      });
+    });
+  });
+  studentGradebook.version = 5;
   return changed;
 }
 
@@ -1820,14 +1881,41 @@ function escapeGradeHtml(value) {
     .replace(/\"/g,"&quot;").replace(/'/g,"&#039;");
 }
 
+function recoveryKeyForItem(item) {
+  if (item.recoveryKey) return item.recoveryKey;
+  if (item.name === "P1" || item.name === "P1 Teórica") return "p1";
+  if (item.name === "P2" || item.name === "P2 Teórica") return "p2";
+  if (item.name === "Final" || item.name === "Final Teórica") return "final";
+  return null;
+}
+
+function recoveryMaximum(subject, key) {
+  var target = (subject.items || []).find(function(item) { return recoveryKeyForItem(item) === key; });
+  return target ? gradeNumber(target.max) : 0;
+}
+
 function studentSubjectStats(subject, book) {
-  var score = gradeNumber(book.trivia && book.trivia.score);
-  var max = gradeNumber(book.trivia && book.trivia.max);
+  var triviaScore = book.trivia && book.trivia.score;
+  var triviaMax = gradeNumber(book.trivia && book.trivia.max);
+  var score = triviaMax > 0 ? Math.min(gradeNumber(triviaScore), triviaMax) : 0;
+  var max = triviaMax;
+  var completed = triviaMax <= 0 || triviaScore !== "";
+  var recovery = subject.recovery || { p1:"", p2:"", final:"" };
+  var hasRecovery = ["p1","p2","final"].some(function(key){ return recovery[key] !== "" && recovery[key] !== null && typeof recovery[key] !== "undefined"; });
   (subject.items || []).forEach(function(item) {
-    score += gradeNumber(item.score);
-    max += gradeNumber(item.max);
+    var itemMax = gradeNumber(item.max);
+    var itemScore = item.score;
+    if (itemMax > 0 && itemScore === "") completed = false;
+    var effectiveScore = itemMax > 0 ? Math.min(gradeNumber(itemScore), itemMax) : gradeNumber(itemScore);
+    var recoveryKey = recoveryKeyForItem(item);
+    if (recoveryKey && recovery[recoveryKey] !== "" && itemMax > 0) {
+      effectiveScore = Math.max(effectiveScore, Math.min(gradeNumber(recovery[recoveryKey]), itemMax));
+    }
+    score += effectiveScore;
+    max += itemMax;
   });
-  return { score:score, max:max, percent:max > 0 ? (score / max) * 100 : 0 };
+  score = Math.round(score * 100) / 100;
+  return { score:score, max:max, percent:max > 0 ? (score / max) * 100 : 0, completed:completed, hasRecovery:hasRecovery };
 }
 
 function setStudentSaveState(type, text) {
@@ -1916,10 +2004,13 @@ window.updateGlobalTrivia = function(field, value) {
   var book = currentSemesterBook();
   if (!book) return;
   if (!book.trivia) book.trivia = { score:"", max:5 };
-  book.trivia[field] = safeGradeNumber(value);
+  book.trivia.max = 5;
+  var score = safeGradeNumber(value);
+  book.trivia.score = score === "" ? "" : Math.min(5, score);
+  document.getElementById("studentTriviaScore").value = book.trivia.score;
   refreshStudentTotals();
-  document.querySelectorAll('[data-global-trivia="' + field + '"]').forEach(function(input) {
-    input.value = book.trivia[field];
+  document.querySelectorAll('[data-global-trivia="score"]').forEach(function(input) {
+    input.value = book.trivia.score;
   });
   scheduleStudentSave();
 };
@@ -1932,6 +2023,21 @@ window.updateGradeItem = function(subjectId, itemId, field, value) {
   var item = subject.items.find(function(entry){ return entry.id === itemId; });
   if (!item) return;
   item[field] = field === "name" ? String(value).slice(0,80) : safeGradeNumber(value);
+  refreshStudentTotals();
+  scheduleStudentSave();
+};
+
+window.updateRecoveryGrade = function(subjectId, recoveryKey, value) {
+  var book = currentSemesterBook();
+  if (!book) return;
+  var subject = book.subjects.find(function(entry){ return entry.id === subjectId; });
+  if (!subject || ["p1","p2","final"].indexOf(recoveryKey) < 0) return;
+  if (!subject.recovery) subject.recovery = { p1:"", p2:"", final:"" };
+  var maximum = recoveryMaximum(subject, recoveryKey);
+  var score = safeGradeNumber(value);
+  subject.recovery[recoveryKey] = score === "" ? "" : Math.min(maximum, score);
+  var input = document.querySelector('.grade-card[data-subject-id="' + subjectId + '"] [data-recovery="' + recoveryKey + '"]');
+  if (input) input.value = subject.recovery[recoveryKey];
   refreshStudentTotals();
   scheduleStudentSave();
 };
@@ -1956,6 +2062,47 @@ window.removeGradeRow = function(subjectId, itemId) {
   scheduleStudentSave();
 };
 
+function gradeOutcomeClass(stats) {
+  if (!stats.completed) return "pending";
+  return stats.score >= 60 ? "approved" : "recovery";
+}
+
+function gradeOutcomeContent(stats) {
+  var percent = Math.round(stats.percent * 10) / 10;
+  if (!stats.completed) {
+    return '<div class="grade-result-title">Preencha todas as notas</div>' +
+      '<div class="grade-result-sub">A situação final aparecerá quando todos os campos com valor máximo maior que zero estiverem preenchidos.</div>';
+  }
+  if (stats.score >= 60) {
+    return '<div class="grade-result-title">🏆 APROVADO!</div>' +
+      '<div class="grade-result-sub">Total final: ' + gradeDisplay(stats.score) + ' pontos (' + percent + '%) · mínimo exigido: 60 pontos</div>';
+  }
+  return '<div class="grade-result-title">RECUPERATÓRIA NECESSÁRIA</div>' +
+    '<div class="grade-result-sub">Total atual: ' + gradeDisplay(stats.score) + ' pontos (' + percent + '%). Informe abaixo a recuperatória correspondente.</div>';
+}
+
+function recoveryBoxMarkup(subject, stats) {
+  if (!subject.recovery) subject.recovery = { p1:"", p2:"", final:"" };
+  var visible = stats.completed && (stats.score < 60 || stats.hasRecovery);
+  var subjectId = escapeGradeHtml(subject.id);
+  var fields = [
+    { key:"p1", label:"Recuperatória P1" },
+    { key:"p2", label:"Recuperatória P2" },
+    { key:"final", label:"Recuperatória Final" }
+  ].map(function(field) {
+    var maximum = recoveryMaximum(subject, field.key);
+    return '<div class="recovery-field">' +
+      '<label>' + field.label + ' · máx. ' + gradeDisplay(maximum) + '</label>' +
+      '<input class="recovery-input" data-recovery="' + field.key + '" type="number" min="0" max="' + maximum + '" step="0.01" value="' + escapeGradeHtml(subject.recovery[field.key]) + '" placeholder="0 a ' + gradeDisplay(maximum) + '" oninput="updateRecoveryGrade(\'' + subjectId + '\',\'' + field.key + '\',this.value)">' +
+    '</div>';
+  }).join("");
+  return '<div class="recovery-box' + (visible ? ' visible' : '') + '" data-role="recovery-box">' +
+    '<div class="recovery-title">📝 Recuperatória</div>' +
+    '<div class="recovery-help">Preencha somente a prova realizada. A maior nota entre a original e a recuperatória será usada no cálculo.</div>' +
+    '<div class="recovery-grid">' + fields + '</div>' +
+  '</div>';
+}
+
 function renderStudentArea() {
   var grid = document.getElementById("studentGradesGrid");
   var empty = document.getElementById("studentEmpty");
@@ -1977,11 +2124,12 @@ function renderStudentArea() {
     summary.style.display = "none";
     grid.innerHTML = "";
     document.getElementById("studentTriviaScore").value = "";
-    document.getElementById("studentTriviaMax").value = "";
+    document.getElementById("studentTriviaMax").value = 5;
     return;
   }
 
   if (!book.trivia) book.trivia = { score:"", max:5 };
+  book.trivia.max = 5;
   if (!Array.isArray(book.subjects)) book.subjects = [];
   document.getElementById("studentTriviaScore").value = book.trivia.score;
   document.getElementById("studentTriviaMax").value = book.trivia.max;
@@ -2018,6 +2166,8 @@ function renderStudentArea() {
           '<div class="grade-total">Total registrado<strong data-role="points">' + gradeDisplay(stats.score) + ' / ' + gradeDisplay(stats.max) + '</strong></div>' +
         '</div>' +
         '<div class="grade-distribution-warning" data-role="warning" style="' + (Math.abs(stats.max - 100) < .001 ? 'display:none;' : '') + '">⚠️ A distribuição desta matéria soma <span data-role="distribution">' + gradeDisplay(stats.max) + '</span> pontos. Ajuste os valores máximos para fechar em 100.</div>' +
+        '<div class="grade-result ' + gradeOutcomeClass(stats) + '" data-role="outcome">' + gradeOutcomeContent(stats) + '</div>' +
+        recoveryBoxMarkup(subject, stats) +
       '</div>' +
     '</section>';
   }).join("");
@@ -2039,10 +2189,17 @@ function refreshStudentTotals() {
     var points = card.querySelector('[data-role="points"]');
     var warning = card.querySelector('[data-role="warning"]');
     var distribution = card.querySelector('[data-role="distribution"]');
+    var outcome = card.querySelector('[data-role="outcome"]');
+    var recoveryBox = card.querySelector('[data-role="recovery-box"]');
     if (percent) percent.textContent = (Math.round(stats.percent * 10) / 10) + "%";
     if (points) points.textContent = gradeDisplay(stats.score) + " / " + gradeDisplay(stats.max);
     if (warning) warning.style.display = Math.abs(stats.max - 100) < .001 ? "none" : "block";
     if (distribution) distribution.textContent = gradeDisplay(stats.max);
+    if (outcome) {
+      outcome.className = "grade-result " + gradeOutcomeClass(stats);
+      outcome.innerHTML = gradeOutcomeContent(stats);
+    }
+    if (recoveryBox) recoveryBox.classList.toggle("visible", stats.completed && (stats.score < 60 || stats.hasRecovery));
   });
   var count = (book.subjects || []).length;
   document.getElementById("studentSubjectCount").textContent = count;
