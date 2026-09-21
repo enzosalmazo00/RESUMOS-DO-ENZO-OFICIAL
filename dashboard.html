@@ -112,6 +112,82 @@
     .tab-panel { display:none; }
     .tab-panel.active { display:block; }
 
+    /* ── ÁREA DO ALUNO / CALCULADORA DE NOTAS ── */
+    .student-area { display:flex; flex-direction:column; gap:18px; }
+    .student-hero {
+      display:flex; justify-content:space-between; align-items:flex-start; gap:18px;
+      padding:24px; border:1px solid rgba(34,211,238,0.22); border-radius:20px;
+      background:linear-gradient(135deg,rgba(34,211,238,0.10),rgba(6,182,212,0.035));
+    }
+    .student-eyebrow { font-size:10px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:rgba(34,211,238,.65); margin-bottom:7px; }
+    .student-title { font-size:22px; font-weight:700; letter-spacing:-.5px; color:#f0fdff; }
+    .student-subtitle { margin-top:6px; font-size:12.5px; line-height:1.65; color:rgba(165,243,252,.65); max-width:680px; }
+    .student-save-state { flex-shrink:0; display:inline-flex; align-items:center; gap:7px; padding:7px 11px; border-radius:20px; border:1px solid rgba(74,222,128,.22); background:rgba(74,222,128,.07); color:rgba(134,239,172,.85); font-size:10.5px; font-weight:600; }
+    .student-save-state.saving { border-color:rgba(251,191,36,.25); background:rgba(251,191,36,.07); color:#fde68a; }
+    .student-save-state.error { border-color:rgba(248,113,113,.30); background:rgba(248,113,113,.08); color:#fca5a5; }
+    .student-controls {
+      display:grid; grid-template-columns:minmax(180px,1fr) minmax(220px,1.2fr) minmax(220px,1.2fr); gap:12px;
+      padding:18px; border:1px solid rgba(34,211,238,.14); border-radius:17px; background:rgba(255,255,255,.025);
+    }
+    .student-field { display:flex; flex-direction:column; gap:7px; }
+    .student-field label { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(125,211,232,.55); }
+    .student-input, .student-select, .grade-name, .grade-score, .grade-max {
+      width:100%; border:1px solid rgba(34,211,238,.17); background:rgba(2,13,26,.72); color:#e6fbff;
+      border-radius:10px; outline:none; font-family:'Poppins',sans-serif; transition:border-color .2s,box-shadow .2s;
+    }
+    .student-input, .student-select { min-height:43px; padding:10px 12px; font-size:13px; }
+    .student-input:focus, .student-select:focus, .grade-name:focus, .grade-score:focus, .grade-max:focus { border-color:rgba(34,211,238,.55); box-shadow:0 0 0 3px rgba(34,211,238,.07); }
+    .student-input[readonly] { color:rgba(226,248,252,.72); cursor:default; }
+    .trivia-note { font-size:10px; line-height:1.45; color:rgba(125,211,232,.42); }
+    .student-summary-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .student-summary-card { padding:16px 18px; border-radius:15px; border:1px solid rgba(34,211,238,.13); background:rgba(34,211,238,.035); }
+    .student-summary-label { font-size:10px; text-transform:uppercase; letter-spacing:.09em; color:rgba(125,211,232,.48); }
+    .student-summary-value { margin-top:5px; font-size:20px; font-weight:700; color:#dffbff; }
+    .student-summary-value.cyan { color:#22d3ee; }
+    .student-empty { padding:36px 22px; text-align:center; border:1px dashed rgba(34,211,238,.18); border-radius:18px; color:rgba(125,211,232,.55); font-size:13px; }
+    .grades-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+    .grade-card { border:1px solid rgba(34,211,238,.15); border-radius:18px; overflow:hidden; background:rgba(2,13,26,.72); box-shadow:0 12px 30px rgba(0,0,0,.12); }
+    .grade-card-head { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:17px 18px; border-bottom:1px solid rgba(34,211,238,.11); background:rgba(34,211,238,.045); }
+    .grade-card-title { display:flex; align-items:center; gap:10px; min-width:0; }
+    .grade-card-emoji { font-size:23px; }
+    .grade-card-name { font-size:14px; font-weight:650; color:#ecfeff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .grade-card-kind { margin-top:2px; font-size:9px; text-transform:uppercase; letter-spacing:.08em; color:rgba(125,211,232,.42); }
+    .grade-percent { min-width:58px; text-align:center; padding:6px 9px; border-radius:20px; border:1px solid rgba(34,211,238,.25); background:rgba(34,211,238,.08); color:#67e8f9; font-size:12px; font-weight:700; }
+    .grade-card-body { padding:13px 14px 15px; }
+    .grade-table-head, .grade-row { display:grid; grid-template-columns:minmax(130px,1fr) 72px 72px 30px; gap:7px; align-items:center; }
+    .grade-table-head { padding:0 3px 7px; font-size:9px; text-transform:uppercase; letter-spacing:.06em; color:rgba(125,211,232,.38); }
+    .grade-row { padding:5px 0; }
+    .grade-name, .grade-score, .grade-max { height:36px; padding:7px 9px; font-size:11px; }
+    .grade-score, .grade-max { text-align:center; font-variant-numeric:tabular-nums; }
+    .grade-remove { width:30px; height:30px; border-radius:8px; border:1px solid rgba(248,113,113,.16); background:rgba(248,113,113,.05); color:rgba(252,165,165,.58); cursor:pointer; transition:all .2s; }
+    .grade-remove:hover { color:#fecaca; border-color:rgba(248,113,113,.38); background:rgba(248,113,113,.12); }
+    .grade-global-row { display:grid; grid-template-columns:minmax(130px,1fr) 72px 72px 30px; gap:7px; align-items:center; padding:6px 0; }
+    .grade-global-label { height:36px; display:flex; align-items:center; padding:7px 9px; border-radius:10px; border:1px dashed rgba(167,139,250,.25); background:rgba(139,92,246,.07); color:#ddd6fe; font-size:11px; }
+    .grade-global-lock { text-align:center; opacity:.36; font-size:12px; }
+    .grade-card-footer { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:10px; padding-top:12px; border-top:1px solid rgba(34,211,238,.09); }
+    .grade-add { padding:7px 10px; border-radius:9px; border:1px solid rgba(34,211,238,.20); background:rgba(34,211,238,.07); color:#67e8f9; font-family:'Poppins',sans-serif; font-size:10px; font-weight:600; cursor:pointer; }
+    .grade-total { text-align:right; font-size:10px; color:rgba(125,211,232,.48); }
+    .grade-total strong { display:block; margin-top:2px; font-size:14px; color:#e6fbff; }
+    .grade-distribution-warning { margin-top:8px; padding:7px 9px; border-radius:9px; background:rgba(251,191,36,.07); border:1px solid rgba(251,191,36,.15); color:rgba(253,230,138,.75); font-size:9.5px; line-height:1.45; }
+
+    @media (max-width: 800px) {
+      .student-controls { grid-template-columns:1fr 1fr; }
+      .student-field.student-name-field { grid-column:1/-1; }
+      .grades-grid { grid-template-columns:1fr; }
+    }
+    @media (max-width: 600px) {
+      .student-hero { padding:18px; flex-direction:column; }
+      .student-title { font-size:19px; }
+      .student-controls { grid-template-columns:1fr; }
+      .student-field.student-name-field { grid-column:auto; }
+      .student-summary-grid { grid-template-columns:1fr; }
+      .grade-card-head { padding:14px; }
+      .grade-card-body { padding:11px 10px 13px; }
+      .grade-table-head, .grade-row, .grade-global-row { grid-template-columns:minmax(105px,1fr) 62px 62px 28px; gap:5px; }
+      .grade-name, .grade-score, .grade-max { padding:6px; font-size:10px; }
+      .tabs { display:grid; grid-template-columns:1fr 1fr; }
+    }
+
     /* ── SECTION LABEL ── */
     .section-label {
       display:flex; align-items:center; gap:14px;
@@ -761,7 +837,7 @@
 
     /* Telas minúsculas (≤ 320px) */
     @media (max-width: 320px) {
-      .tabs { flex-direction:column; }
+      .tabs { display:flex; flex-direction:column; }
       .tab-btn { width:100%; text-align:center; }
     }
 
@@ -847,6 +923,7 @@
     <!-- TABS -->
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('resumos')">📚 Meus Resumos</button>
+      <button class="tab-btn" onclick="switchTab('aluno')">👤 Área do Aluno</button>
       <button class="tab-btn" onclick="switchTab('cursos')">🎓 Cursos</button>
       <button class="tab-btn" onclick="switchTab('loja')">🛒 Loja</button>
     </div>
@@ -895,6 +972,63 @@
         <div class="resumos-grid" id="materiaCardsGrid"></div>
       </div>
 
+    </div>
+
+    <!-- TAB: ÁREA DO ALUNO -->
+    <div class="tab-panel" id="tab-aluno">
+      <div class="student-area">
+        <div class="student-hero">
+          <div>
+            <div class="student-eyebrow">Meu perfil acadêmico</div>
+            <h2 class="student-title">Olá, <span id="studentAreaName">aluno(a)</span>! 👋</h2>
+            <p class="student-subtitle">Registre suas notas ao longo do semestre. Os dados ficam vinculados à sua conta e são salvos automaticamente.</p>
+          </div>
+          <div class="student-save-state" id="studentSaveState">● Dados salvos</div>
+        </div>
+
+        <div class="student-controls">
+          <div class="student-field student-name-field">
+            <label for="studentProfileName">Nome</label>
+            <input class="student-input" id="studentProfileName" type="text" readonly value="—">
+          </div>
+          <div class="student-field">
+            <label for="studentSemester">Semestre atual</label>
+            <select class="student-select" id="studentSemester" onchange="changeStudentSemester(this.value)">
+              <option value="">Selecione...</option>
+              <option value="1">1º semestre</option>
+              <option value="2">2º semestre</option>
+              <option value="3">3º semestre</option>
+              <option value="4">4º semestre</option>
+            </select>
+          </div>
+          <div class="student-field">
+            <label for="studentTriviaScore">Trivia — mesma nota em todas as matérias</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;">
+              <input class="student-input" id="studentTriviaScore" type="number" min="0" step="0.01" placeholder="Nota" oninput="updateGlobalTrivia('score',this.value)">
+              <input class="student-input" id="studentTriviaMax" type="number" min="0" step="0.01" placeholder="Máximo" oninput="updateGlobalTrivia('max',this.value)">
+            </div>
+            <div class="trivia-note">Ao alterar aqui, a Trivia muda automaticamente em todas as matérias.</div>
+          </div>
+        </div>
+
+        <div class="student-summary-grid" id="studentSummaryGrid" style="display:none;">
+          <div class="student-summary-card">
+            <div class="student-summary-label">Matérias</div>
+            <div class="student-summary-value" id="studentSubjectCount">0</div>
+          </div>
+          <div class="student-summary-card">
+            <div class="student-summary-label">Média geral</div>
+            <div class="student-summary-value cyan" id="studentAverage">0%</div>
+          </div>
+          <div class="student-summary-card">
+            <div class="student-summary-label">Pontos registrados</div>
+            <div class="student-summary-value" id="studentPoints">0</div>
+          </div>
+        </div>
+
+        <div class="student-empty" id="studentEmpty">Selecione o semestre para carregar suas matérias e começar a registrar as notas.</div>
+        <div class="grades-grid" id="studentGradesGrid"></div>
+      </div>
     </div>
 
     <!-- TAB: CURSOS -->
@@ -1527,8 +1661,9 @@ window.switchTab = function(tab) {
   document.querySelectorAll(".tab-btn").forEach(function(b,i){
     b.classList.toggle("active",
       (tab==="resumos"&&i===0)||
-      (tab==="cursos"&&i===1)||
-      (tab==="loja"&&i===2)
+      (tab==="aluno"&&i===1)||
+      (tab==="cursos"&&i===2)||
+      (tab==="loja"&&i===3)
     );
   });
   document.querySelectorAll(".tab-panel").forEach(function(p){
@@ -1539,7 +1674,381 @@ window.switchTab = function(tab) {
     if (ezPanel && ezPanel.classList.contains("open") && typeof ezToggle === "function") ezToggle();
   }
   document.body.classList.toggle("loja-ativa", tab === "loja");
+  if (tab === "aluno") renderStudentArea();
 };
+
+
+// ── Área do Aluno / Calculadora de notas ─────────────────────────────────────
+var studentGradebook = { version:2, currentSemester:null, semesters:{} };
+var studentGradebookLoaded = false;
+var studentSaveTimer = null;
+
+var STUDENT_SUBJECTS = {
+  1: [
+    { key:"biologia_celular", name:"Biologia Celular", emoji:"🧬" },
+    { key:"embriologia", name:"Embriologia", emoji:"🧫" },
+    { key:"histologia_1", name:"Histologia I", emoji:"🔬" },
+    { key:"anatomia_1", name:"Anatomia I", emoji:"🦴" }
+  ],
+  2: [
+    { key:"psicologia_salud", name:"Psicología en Salud", emoji:"🧠" },
+    { key:"medicina_comunitaria", name:"Medicina Comunitária", emoji:"🏥" },
+    { key:"histologia_2", name:"Histologia II", emoji:"🔬" },
+    { key:"guarani", name:"Guaraní", emoji:"🗣️" },
+    { key:"anatomia_2", name:"Anatomia II", emoji:"🦴" },
+    { key:"bioestatistica", name:"Bioestatística", emoji:"📊" }
+  ],
+  3: [
+    { key:"bioquimica", name:"Bioquímica", emoji:"📚" },
+    { key:"biofisica", name:"Biofísica", emoji:"⚡" },
+    { key:"genetica", name:"Genética", emoji:"🧬" },
+    { key:"fisiologia", name:"Fisiologia", emoji:"❤️" },
+    { key:"microbiologia", name:"Microbiologia", emoji:"🦠", practical:true },
+    { key:"imunologia", name:"Imunologia", emoji:"🛡️" }
+  ],
+  4: [
+    { key:"fisiologia_2", name:"Fisiologia II", emoji:"❤️" },
+    { key:"bioquimica_2", name:"Bioquímica II", emoji:"🧪" },
+    { key:"epidemiologia", name:"Epidemiologia", emoji:"📊" },
+    { key:"nutricao", name:"Nutrição", emoji:"🥗" },
+    { key:"microbiologia_2", name:"Microbiologia II", emoji:"🦠", practical:true },
+    { key:"eletrocardiograma", name:"Eletrocardiograma", emoji:"🫀" }
+  ]
+};
+
+function gradeId(prefix) {
+  return prefix + "_" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+}
+
+function defaultGradeItems(practical) {
+  var examItems = practical ? [
+    { name:"P1 Teórica", max:20 },
+    { name:"P2 Teórica", max:20 },
+    { name:"Final Teórica", max:30 },
+    { name:"P1 Prática", max:5 },
+    { name:"P2 Prática", max:5 },
+    { name:"Final Prática", max:10 }
+  ] : [
+    { name:"P1", max:20 },
+    { name:"P2", max:20 },
+    { name:"Final", max:40 }
+  ];
+  var processItems = practical ? [
+    { name:"Presença", max:2 },
+    { name:"Exame em linha", max:0 },
+    { name:"Trabalho em classe", max:0 }
+  ] : [
+    { name:"Exame em linha", max:5 },
+    { name:"Trabalho em classe", max:10 }
+  ];
+  return examItems.concat(processItems).map(function(item) {
+    return { id:gradeId("item"), name:item.name, score:"", max:item.max };
+  });
+}
+
+function createSemesterBook(semester) {
+  var subjects = (STUDENT_SUBJECTS[semester] || []).map(function(subject) {
+    return {
+      id:subject.key,
+      key:subject.key,
+      name:subject.name,
+      emoji:subject.emoji,
+      practical:!!subject.practical,
+      items:defaultGradeItems(!!subject.practical)
+    };
+  });
+  return { trivia:{ score:"", max:5 }, subjects:subjects };
+}
+
+function upgradeStudentGradebookData() {
+  if (Number(studentGradebook.version || 1) >= 2) return false;
+  var changed = false;
+  var oldPracticalNames = [
+    "P1 Teórica", "P2 Teórica", "Final Teórica",
+    "P1 Prática", "P2 Prática", "Final Prática",
+    "Exame em linha", "Trabalho em classe"
+  ];
+  Object.keys(studentGradebook.semesters || {}).forEach(function(key) {
+    var book = studentGradebook.semesters[key];
+    (book && Array.isArray(book.subjects) ? book.subjects : []).forEach(function(subject) {
+      if (!subject.practical || !Array.isArray(subject.items) || subject.items.length !== oldPracticalNames.length) return;
+      var isOldDefault = subject.items.every(function(item,index) { return item.name === oldPracticalNames[index]; });
+      if (!isOldDefault) return;
+      var old = subject.items;
+      subject.items = [
+        { id:old[0].id, name:"P1 Teórica", score:old[0].score, max:20 },
+        { id:old[1].id, name:"P2 Teórica", score:old[1].score, max:20 },
+        { id:old[2].id, name:"Final Teórica", score:old[2].score, max:30 },
+        { id:old[3].id, name:"P1 Prática", score:old[3].score, max:5 },
+        { id:old[4].id, name:"P2 Prática", score:old[4].score, max:5 },
+        { id:old[5].id, name:"Final Prática", score:old[5].score, max:10 },
+        { id:gradeId("item"), name:"Presença", score:"", max:2 },
+        { id:old[6].id, name:"Exame em linha", score:old[6].score, max:0 },
+        { id:old[7].id, name:"Trabalho em classe", score:old[7].score, max:0 }
+      ];
+      changed = true;
+    });
+  });
+  studentGradebook.version = 2;
+  return changed;
+}
+
+function currentSemesterBook() {
+  var semester = String(studentGradebook.currentSemester || "");
+  return semester ? studentGradebook.semesters[semester] : null;
+}
+
+function safeGradeNumber(value) {
+  if (value === "" || value === null || typeof value === "undefined") return "";
+  var number = Number(String(value).replace(",","."));
+  return Number.isFinite(number) ? Math.max(0, Math.round(number * 100) / 100) : "";
+}
+
+function gradeNumber(value) {
+  var number = Number(value);
+  return Number.isFinite(number) ? number : 0;
+}
+
+function gradeDisplay(value) {
+  var number = gradeNumber(value);
+  return number.toLocaleString("pt-BR", { maximumFractionDigits:2 });
+}
+
+function escapeGradeHtml(value) {
+  return String(value == null ? "" : value)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/\"/g,"&quot;").replace(/'/g,"&#039;");
+}
+
+function studentSubjectStats(subject, book) {
+  var score = gradeNumber(book.trivia && book.trivia.score);
+  var max = gradeNumber(book.trivia && book.trivia.max);
+  (subject.items || []).forEach(function(item) {
+    score += gradeNumber(item.score);
+    max += gradeNumber(item.max);
+  });
+  return { score:score, max:max, percent:max > 0 ? (score / max) * 100 : 0 };
+}
+
+function setStudentSaveState(type, text) {
+  var state = document.getElementById("studentSaveState");
+  if (!state) return;
+  state.className = "student-save-state" + (type ? " " + type : "");
+  state.textContent = text;
+}
+
+function scheduleStudentSave() {
+  if (!studentGradebookLoaded || !studentGradebook.currentSemester) return;
+  setStudentSaveState("saving", "● Salvando...");
+  if (studentSaveTimer) clearTimeout(studentSaveTimer);
+  studentSaveTimer = setTimeout(saveStudentGradebook, 650);
+}
+
+async function saveStudentGradebook() {
+  var session = window.authSession;
+  if (!session || !window.authClient || !studentGradebook.currentSemester) return;
+  studentSaveTimer = null;
+  try {
+    var result = await window.authClient
+      .from("student_gradebooks")
+      .upsert({
+        user_id:session.user.id,
+        semester:Number(studentGradebook.currentSemester),
+        data:studentGradebook,
+        updated_at:new Date().toISOString()
+      }, { onConflict:"user_id" });
+    if (result.error) throw result.error;
+    setStudentSaveState("", "● Dados salvos");
+  } catch(error) {
+    console.error("[area-aluno] Erro ao salvar notas:", error);
+    setStudentSaveState("error", "● Erro ao salvar");
+  }
+}
+
+async function loadStudentGradebook() {
+  var session = window.authSession;
+  if (!session || !window.authClient) return;
+  setStudentSaveState("saving", "● Carregando...");
+  var upgraded = false;
+  try {
+    var result = await window.authClient
+      .from("student_gradebooks")
+      .select("semester,data")
+      .eq("user_id", session.user.id)
+      .maybeSingle();
+    if (result.error) throw result.error;
+    if (result.data && result.data.data && typeof result.data.data === "object") {
+      var saved = result.data.data;
+      if (saved.semesters && typeof saved.semesters === "object") {
+        studentGradebook = saved;
+        studentGradebook.version = Number(saved.version || 1);
+        studentGradebook.currentSemester = Number(saved.currentSemester || result.data.semester || 0) || null;
+        upgraded = upgradeStudentGradebookData();
+      }
+    }
+    studentGradebookLoaded = true;
+    setStudentSaveState("", "● Dados salvos");
+  } catch(error) {
+    console.error("[area-aluno] Erro ao carregar notas:", error);
+    studentGradebookLoaded = true;
+    setStudentSaveState("error", "● Não foi possível carregar");
+  }
+  renderStudentArea();
+  if (upgraded) scheduleStudentSave();
+}
+
+window.changeStudentSemester = function(value) {
+  var semester = Number(value);
+  if (!STUDENT_SUBJECTS[semester]) {
+    studentGradebook.currentSemester = null;
+    renderStudentArea();
+    return;
+  }
+  studentGradebook.currentSemester = semester;
+  if (!studentGradebook.semesters[String(semester)]) {
+    studentGradebook.semesters[String(semester)] = createSemesterBook(semester);
+  }
+  renderStudentArea();
+  scheduleStudentSave();
+};
+
+window.updateGlobalTrivia = function(field, value) {
+  var book = currentSemesterBook();
+  if (!book) return;
+  if (!book.trivia) book.trivia = { score:"", max:5 };
+  book.trivia[field] = safeGradeNumber(value);
+  refreshStudentTotals();
+  document.querySelectorAll('[data-global-trivia="' + field + '"]').forEach(function(input) {
+    input.value = book.trivia[field];
+  });
+  scheduleStudentSave();
+};
+
+window.updateGradeItem = function(subjectId, itemId, field, value) {
+  var book = currentSemesterBook();
+  if (!book) return;
+  var subject = book.subjects.find(function(entry){ return entry.id === subjectId; });
+  if (!subject) return;
+  var item = subject.items.find(function(entry){ return entry.id === itemId; });
+  if (!item) return;
+  item[field] = field === "name" ? String(value).slice(0,80) : safeGradeNumber(value);
+  refreshStudentTotals();
+  scheduleStudentSave();
+};
+
+window.addGradeRow = function(subjectId) {
+  var book = currentSemesterBook();
+  if (!book) return;
+  var subject = book.subjects.find(function(entry){ return entry.id === subjectId; });
+  if (!subject) return;
+  subject.items.push({ id:gradeId("item"), name:"Novo item", score:"", max:0 });
+  renderStudentArea();
+  scheduleStudentSave();
+};
+
+window.removeGradeRow = function(subjectId, itemId) {
+  var book = currentSemesterBook();
+  if (!book) return;
+  var subject = book.subjects.find(function(entry){ return entry.id === subjectId; });
+  if (!subject) return;
+  subject.items = subject.items.filter(function(entry){ return entry.id !== itemId; });
+  renderStudentArea();
+  scheduleStudentSave();
+};
+
+function renderStudentArea() {
+  var grid = document.getElementById("studentGradesGrid");
+  var empty = document.getElementById("studentEmpty");
+  var summary = document.getElementById("studentSummaryGrid");
+  var semesterSelect = document.getElementById("studentSemester");
+  if (!grid || !empty || !summary || !semesterSelect) return;
+
+  var session = window.authSession;
+  var preferredName = (profile && profile.nome_preferido) || "";
+  var fallbackName = session && session.user && session.user.email ? session.user.email.split("@")[0] : "aluno(a)";
+  var displayName = preferredName || fallbackName;
+  document.getElementById("studentAreaName").textContent = displayName;
+  document.getElementById("studentProfileName").value = displayName;
+
+  semesterSelect.value = studentGradebook.currentSemester ? String(studentGradebook.currentSemester) : "";
+  var book = currentSemesterBook();
+  if (!book) {
+    empty.style.display = "block";
+    summary.style.display = "none";
+    grid.innerHTML = "";
+    document.getElementById("studentTriviaScore").value = "";
+    document.getElementById("studentTriviaMax").value = "";
+    return;
+  }
+
+  if (!book.trivia) book.trivia = { score:"", max:5 };
+  if (!Array.isArray(book.subjects)) book.subjects = [];
+  document.getElementById("studentTriviaScore").value = book.trivia.score;
+  document.getElementById("studentTriviaMax").value = book.trivia.max;
+  empty.style.display = "none";
+  summary.style.display = "grid";
+  grid.innerHTML = book.subjects.map(function(subject) {
+    var stats = studentSubjectStats(subject, book);
+    var rows = (subject.items || []).map(function(item) {
+      var subjectId = escapeGradeHtml(subject.id);
+      var itemId = escapeGradeHtml(item.id);
+      return '<div class="grade-row">' +
+        '<input class="grade-name" type="text" maxlength="80" value="' + escapeGradeHtml(item.name) + '" aria-label="Nome do item" oninput="updateGradeItem(\'' + subjectId + '\',\'' + itemId + '\',\'name\',this.value)">' +
+        '<input class="grade-score" type="number" min="0" step="0.01" value="' + escapeGradeHtml(item.score) + '" aria-label="Nota obtida" oninput="updateGradeItem(\'' + subjectId + '\',\'' + itemId + '\',\'score\',this.value)">' +
+        '<input class="grade-max" type="number" min="0" step="0.01" value="' + escapeGradeHtml(item.max) + '" aria-label="Valor máximo" oninput="updateGradeItem(\'' + subjectId + '\',\'' + itemId + '\',\'max\',this.value)">' +
+        '<button class="grade-remove" type="button" title="Remover item" aria-label="Remover item" onclick="removeGradeRow(\'' + subjectId + '\',\'' + itemId + '\')">×</button>' +
+      '</div>';
+    }).join("");
+    return '<section class="grade-card" data-subject-id="' + escapeGradeHtml(subject.id) + '">' +
+      '<div class="grade-card-head">' +
+        '<div class="grade-card-title"><span class="grade-card-emoji">' + escapeGradeHtml(subject.emoji) + '</span><div><div class="grade-card-name">' + escapeGradeHtml(subject.name) + '</div><div class="grade-card-kind">' + (subject.practical ? 'Uma matéria · teórica 70% + prática 30%' : 'Avaliação regular') + '</div></div></div>' +
+        '<div class="grade-percent" data-role="percent">' + Math.round(stats.percent * 10) / 10 + '%</div>' +
+      '</div>' +
+      '<div class="grade-card-body">' +
+        '<div class="grade-table-head"><span>Componente</span><span>Nota</span><span>Máximo</span><span></span></div>' +
+        rows +
+        '<div class="grade-global-row">' +
+          '<div class="grade-global-label">🔄 Trivia (global)</div>' +
+          '<input class="grade-score" data-global-trivia="score" value="' + escapeGradeHtml(book.trivia.score) + '" readonly tabindex="-1" aria-label="Nota global da Trivia">' +
+          '<input class="grade-max" data-global-trivia="max" value="' + escapeGradeHtml(book.trivia.max) + '" readonly tabindex="-1" aria-label="Valor máximo global da Trivia">' +
+          '<div class="grade-global-lock">🔒</div>' +
+        '</div>' +
+        '<div class="grade-card-footer">' +
+          '<button class="grade-add" type="button" onclick="addGradeRow(\'' + escapeGradeHtml(subject.id) + '\')">＋ Adicionar linha</button>' +
+          '<div class="grade-total">Total registrado<strong data-role="points">' + gradeDisplay(stats.score) + ' / ' + gradeDisplay(stats.max) + '</strong></div>' +
+        '</div>' +
+        '<div class="grade-distribution-warning" data-role="warning" style="' + (Math.abs(stats.max - 100) < .001 ? 'display:none;' : '') + '">⚠️ A distribuição desta matéria soma <span data-role="distribution">' + gradeDisplay(stats.max) + '</span> pontos. Ajuste os valores máximos para fechar em 100.</div>' +
+      '</div>' +
+    '</section>';
+  }).join("");
+  refreshStudentTotals();
+}
+
+function refreshStudentTotals() {
+  var book = currentSemesterBook();
+  if (!book) return;
+  var totalScore = 0;
+  var totalPercent = 0;
+  (book.subjects || []).forEach(function(subject) {
+    var stats = studentSubjectStats(subject, book);
+    totalScore += stats.score;
+    totalPercent += stats.percent;
+    var card = document.querySelector('.grade-card[data-subject-id="' + subject.id + '"]');
+    if (!card) return;
+    var percent = card.querySelector('[data-role="percent"]');
+    var points = card.querySelector('[data-role="points"]');
+    var warning = card.querySelector('[data-role="warning"]');
+    var distribution = card.querySelector('[data-role="distribution"]');
+    if (percent) percent.textContent = (Math.round(stats.percent * 10) / 10) + "%";
+    if (points) points.textContent = gradeDisplay(stats.score) + " / " + gradeDisplay(stats.max);
+    if (warning) warning.style.display = Math.abs(stats.max - 100) < .001 ? "none" : "block";
+    if (distribution) distribution.textContent = gradeDisplay(stats.max);
+  });
+  var count = (book.subjects || []).length;
+  document.getElementById("studentSubjectCount").textContent = count;
+  document.getElementById("studentAverage").textContent = (count ? Math.round((totalPercent / count) * 10) / 10 : 0) + "%";
+  document.getElementById("studentPoints").textContent = gradeDisplay(totalScore);
+}
 
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -1725,6 +2234,7 @@ window.salvarNome = async function() {
     profile.nome_preferido = nome;
     localStorage.setItem('ez-nome-aluno', nome);
     renderWelcome();
+    renderStudentArea();
   }
 };
 function renderResumosGrid() {
@@ -3766,6 +4276,7 @@ document.addEventListener("authReady", async function(e) {
   renderResumosGrid();
   renderCursosGrid();
   renderStore();
+  await loadStudentGradebook();
 });
 
 })();
