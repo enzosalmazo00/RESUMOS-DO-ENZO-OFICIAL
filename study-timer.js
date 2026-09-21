@@ -15,6 +15,7 @@ var startTime      = null;       // timestamp do início da sessão de estudo
 var elapsedAtStart = 0;          // segundos já estudados hoje (NESTA matéria) antes desta sessão
 var timerInterval  = null;
 var saveInterval   = null;
+var studyTimerBooted = false;    // evita que o relógio seja iniciado 2x (ex: authReady disparando de novo)
 
 // Modo regressivo — SESSÃO INDEPENDENTE do tempo acumulado de estudo
 // Quando aluno programa um pomodoro de 25min, conta os 25min DESSA SESSÃO,
@@ -227,6 +228,7 @@ document.head.appendChild(styleEl);
 
 // ── Build widget ──────────────────────────────────────────────────────────────
 function buildWidget() {
+  if (document.getElementById("stWidget")) return; // já existe: não duplica o relógio
   var wrap = document.createElement("div");
   wrap.className = "st-widget";
   wrap.id = "stWidget";
@@ -251,6 +253,7 @@ function buildWidget() {
 
 // ── Modal de configuração ─────────────────────────────────────────────────────
 function buildModal() {
+  if (document.getElementById("stModal")) return; // já existe: não duplica o modal
   var m = document.createElement("div");
   m.className = "st-modal";
   m.id = "stModal";
@@ -479,9 +482,16 @@ function processQueue() {
 // ── Persistência no Supabase ──────────────────────────────────────────────────
 function todayStr() { return new Date().toISOString().slice(0,10); }
 
-// Detecta a matéria atual pela URL (ex: imunologia_p2.html → "imunologia_p2")
+// Detecta a matéria atual. Prioriza window.PAGE_KEY (mesma chave usada pelo
+// marca-texto, post-its e progresso do resumo) para que o tempo estudado
+// fique salvo sob a MESMA matéria em todos os módulos da página. Se a página
+// não definir PAGE_KEY, cai para o nome do arquivo na URL como antes.
 function getCurrentMateria() {
   try {
+    if (window.PAGE_KEY) {
+      var key = String(window.PAGE_KEY).trim();
+      if (key) return key;
+    }
     var path = window.location.pathname;
     var fname = path.substring(path.lastIndexOf("/")+1).replace(".html","");
     if (fname && fname !== "dashboard" && fname !== "login" && fname !== "admin" && fname !== "index" && fname !== "") {
@@ -567,11 +577,19 @@ async function saveToSupabase() {
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 document.addEventListener("authReady", async function() {
+  // Se o authReady disparar mais de uma vez (ex: renovação de token em segundo
+  // plano), não inicia um segundo cronômetro por cima do primeiro — isso é o
+  // que fazia o relógio "piscar" com números trocados a cada segundo.
+  if (studyTimerBooted) return;
+  studyTimerBooted = true;
+
   buildWidget();
   cleanOldNotifs();  // Remove marcos de notificação de dias anteriores
   // Carrega minutos já estudados hoje (não zera ao recarregar a página)
   elapsedAtStart = (await loadTodayMinutes()) * 60;
   startTime = Date.now();
+  if (timerInterval) clearInterval(timerInterval);
+  if (saveInterval) clearInterval(saveInterval);
   timerInterval = setInterval(tick, 1000);
   tick();
 
