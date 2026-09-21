@@ -650,6 +650,7 @@ body.enzo-tools-collapsed .enzo-hl-toast{opacity:0!important;pointer-events:none
   #enzo-tools-retractor{top:50%;bottom:auto;width:29px;height:56px;border-radius:0 12px 12px 0;font-size:18px}
   #enzo-tools-retractor:hover{width:32px}
 }
+
 </style>
 </head>
 <body>
@@ -666,15 +667,15 @@ body.enzo-tools-collapsed .enzo-hl-toast{opacity:0!important;pointer-events:none
 
 <!-- ═══════════════════ NAV TABS ═══════════════════ -->
 <nav class="tabs">
-  <button class="active"  data-section="intro" onclick="showSection('intro',this)">📖 Intro</button>
-  <button  data-section="cap38" onclick="showSection('cap38',this)">Cap. 38 — Ventilação</button>
-  <button  data-section="cap39" onclick="showSection('cap39',this)">Cap. 39 — Circulação Pulmonar</button>
-  <button  data-section="cap40" onclick="showSection('cap40',this)">Cap. 40 — Trocas Gasosas</button>
-  <button  data-section="cap41" onclick="showSection('cap41',this)">Cap. 41 — Transporte de Gases</button>
-  <button  data-section="cap42" onclick="showSection('cap42',this)">Cap. 42 — Regulação</button>
-  <button  data-section="cap46" onclick="showSection('cap46',this)">Cap. 46 — Sistema Nervoso</button>
-  <button class="fc-tab"  data-section="flashcards" onclick="showSection('flashcards',this)">🃏 Flashcards</button>
-  <button class="qz-tab"  data-section="quiz" onclick="showSection('quiz',this)">📝 Simulado (<span data-question-count>78</span>)</button>
+  <button class="active" data-section="intro" onclick="showSection('intro',this)">📖 Intro</button>
+  <button data-section="cap38" onclick="showSection('cap38',this)">Cap. 38 — Ventilação</button>
+  <button data-section="cap39" onclick="showSection('cap39',this)">Cap. 39 — Circulação Pulmonar</button>
+  <button data-section="cap40" onclick="showSection('cap40',this)">Cap. 40 — Trocas Gasosas</button>
+  <button data-section="cap41" onclick="showSection('cap41',this)">Cap. 41 — Transporte de Gases</button>
+  <button data-section="cap42" onclick="showSection('cap42',this)">Cap. 42 — Regulação</button>
+  <button data-section="cap46" onclick="showSection('cap46',this)">Cap. 46 — Sistema Nervoso</button>
+  <button class="fc-tab" data-section="flashcards" onclick="showSection('flashcards',this)">🃏 Flashcards</button>
+  <button class="qz-tab" data-section="quiz" onclick="showSection('quiz',this)">📝 Simulado (<span data-question-count>78</span>)</button>
 </nav>
 
 <!-- ════════════════════════════════════════════════
@@ -2786,8 +2787,50 @@ lessonLightbox.addEventListener('click',event=>{
 });
 document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLessonLightbox();});
 </script>
+<script src="study-timer.js"></script>
+<script src="study-progress.js"></script>
+<script src="enzo-ia.js"></script>
+
+<!-- ENZO_FISIO_TOOLS_BUILD_20260920_V5_STATIC -->
+<aside id="enzo-highlighter" aria-label="Ferramenta de marca-texto">
+  <button class="enzo-hl-toggle" type="button" aria-expanded="false" title="Abrir marca-texto">
+    <span aria-hidden="true">🖍️</span><span>Grifar</span><span class="enzo-hl-count" aria-label="Trechos grifados">0</span>
+  </button>
+  <div class="enzo-hl-panel" role="toolbar" aria-label="Cores e ferramentas">
+    <button class="enzo-hl-color active" type="button" data-color="yellow" aria-label="Grifar em amarelo" title="Amarelo">Amarelo</button>
+    <button class="enzo-hl-color" type="button" data-color="green" aria-label="Grifar em verde" title="Verde">Verde</button>
+    <button class="enzo-hl-color" type="button" data-color="red" aria-label="Grifar em vermelho" title="Vermelho">Vermelho</button>
+    <span class="enzo-hl-divider" aria-hidden="true"></span>
+    <button class="enzo-hl-tool enzo-hl-eraser" type="button" aria-label="Ativar borracha" title="Borracha: arraste sobre as palavras">🧽</button>
+    <button class="enzo-hl-tool enzo-hl-undo" type="button" aria-label="Desfazer última ação" title="Desfazer" disabled>↶</button>
+  </div>
+</aside>
+<div id="enzo-hl-toast" class="enzo-hl-toast" role="status" aria-live="polite"></div>
+
+<button id="enzo-notes-toggle" type="button" title="Criar uma anotação" aria-label="Criar uma anotação"><span aria-hidden="true">🗒️</span><span class="note-count" aria-label="Quantidade de anotações">0</span></button>
+<form id="enzo-note-composer">
+  <div class="enzo-note-form-title"><span>🗒️ <b class="enzo-note-title-text">Nova anotação</b></span><button class="enzo-note-close" type="button" aria-label="Fechar">×</button></div>
+  <p class="enzo-note-drag-hint">↕ Arraste esta caixa pelo cabeçalho até o ponto onde deseja deixar o post-it.</p>
+  <div class="enzo-note-fields">
+    <label for="enzo-note-label">Marcação</label>
+    <select id="enzo-note-label"><option value="nota">📝 Nota</option><option value="importante">⭐ Importante</option><option value="prova">🎯 Prova</option><option value="atencao">⚠️ Atenção</option></select>
+    <label for="enzo-note-text">Anotação</label>
+    <textarea id="enzo-note-text" maxlength="3000" required placeholder="Escreva o que você compreendeu, uma observação ou algo que pode cair na prova..."></textarea>
+  </div>
+  <div class="enzo-note-actions"><button class="enzo-note-cancel" type="button">Cancelar</button><button class="enzo-note-save" type="submit">Salvar anotação</button></div>
+  <div class="enzo-note-status" role="status" aria-live="polite"></div>
+</form>
+
+<button id="enzo-annotations-index-toggle" type="button" title="Abrir minhas anotações"><span aria-hidden="true">📚</span><span>Minhas anotações</span><span class="enzo-index-count">0</span></button>
+<aside id="enzo-annotations-index" aria-label="Minhas anotações">
+  <div class="enzo-index-head"><div><div class="enzo-index-title">📚 Minhas anotações</div><div class="enzo-index-sub">Clique em um item para voltar ao ponto salvo</div></div><button class="enzo-index-close" type="button" aria-label="Fechar">×</button></div>
+  <div class="enzo-index-tabs"><button class="enzo-index-filter active" type="button" data-filter="all">Tudo</button><button class="enzo-index-filter" type="button" data-filter="note">Post-its</button><button class="enzo-index-filter" type="button" data-filter="highlight">Grifos</button></div>
+  <div class="enzo-index-list"></div>
+</aside>
+<button id="enzo-tools-retractor" type="button" aria-expanded="true" aria-label="Recolher painel de utilidades" title="Recolher utilidades de estudo"><span class="enzo-tools-arrow" aria-hidden="true">‹</span></button>
 
 <script>
+
 /* Marca-texto persistente — módulo reutilizável dos Resumos do Enzo. */
 (()=>{
   'use strict';
@@ -2807,27 +2850,9 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLessonL
   let eraseChanged=false;
   let observer=null;
   let toastTimer=null;
-
-  const toolbar=document.createElement('aside');
-  toolbar.id='enzo-highlighter';
-  toolbar.setAttribute('aria-label','Ferramenta de marca-texto');
-  toolbar.innerHTML=`
-    <button class="enzo-hl-toggle" type="button" aria-expanded="false" title="Abrir marca-texto">
-      <span aria-hidden="true">🖍️</span><span>Grifar</span><span class="enzo-hl-count" aria-label="Trechos grifados">0</span>
-    </button>
-    <div class="enzo-hl-panel" role="toolbar" aria-label="Cores e ferramentas">
-      <button class="enzo-hl-color active" type="button" data-color="yellow" aria-label="Grifar em amarelo" title="Amarelo">Amarelo</button>
-      <button class="enzo-hl-color" type="button" data-color="green" aria-label="Grifar em verde" title="Verde">Verde</button>
-      <button class="enzo-hl-color" type="button" data-color="red" aria-label="Grifar em vermelho" title="Vermelho">Vermelho</button>
-      <span class="enzo-hl-divider" aria-hidden="true"></span>
-      <button class="enzo-hl-tool enzo-hl-eraser" type="button" aria-label="Ativar borracha" title="Borracha: arraste sobre as palavras">🧽</button>
-      <button class="enzo-hl-tool enzo-hl-undo" type="button" aria-label="Desfazer última ação" title="Desfazer" disabled>↶</button>
-    </div>`;
-  const toast=document.createElement('div');
-  toast.className='enzo-hl-toast';
-  toast.setAttribute('role','status');
-  toast.setAttribute('aria-live','polite');
-  document.body.append(toolbar,toast);
+  const toolbar=document.getElementById('enzo-highlighter');
+  const toast=document.getElementById('enzo-hl-toast');
+  if(!toolbar||!toast)return;
 
   const toggle=toolbar.querySelector('.enzo-hl-toggle');
   const countBadge=toolbar.querySelector('.enzo-hl-count');
@@ -2858,7 +2883,7 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLessonL
   }
   function normalizedText(el){return (el.textContent||'').replace(/\s+/g,' ').trim()}
   function isAllowedTarget(el){
-    return !!(el&&normalizedText(el)&&!el.closest('#enzo-highlighter,.study-tools,.q-stats,nav,footer')&&!el.matches('button,input,select,textarea'));
+    return !!(el&&normalizedText(el)&&!el.closest('#enzo-highlighter,#enzo-notes-toggle,#enzo-note-composer,#enzo-annotations-index,#enzo-annotations-index-toggle,#enzo-tools-retractor,.study-tools,.q-stats,nav,footer,#study-timer,.study-timer,[id*="timer"],[class*="timer"],[id*="clock"],[class*="clock"]')&&!el.matches('button,input,select,textarea'));
   }
   function assignKeys(){
     const occurrences=new Map();
@@ -3059,8 +3084,10 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLessonL
   observer=new MutationObserver(()=>{clearTimeout(observer._timer);observer._timer=setTimeout(renderMissing,40)});
   assignKeys();renderAll();observeDynamicAreas();updateToolbar();
 })();
+
 </script>
 <script>
+
 /* Post-its privados por aluno — persistência no Supabase com RLS. */
 (()=>{
   'use strict';
@@ -3077,31 +3104,9 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLessonL
     'blockquote','.fc-q','.fc-back-text'
   ].join(',');
   let client=null,user=null,notes=[],initialized=false,editingId=null,topZ=70;
-
-  const toggle=document.createElement('button');
-  toggle.id='enzo-notes-toggle';toggle.type='button';toggle.title='Criar uma anotação';
-  toggle.setAttribute('aria-label','Criar uma anotação');
-  toggle.innerHTML='<span aria-hidden="true">🗒️</span><span class="note-count" aria-label="Quantidade de anotações">0</span>';
-
-  const composer=document.createElement('form');
-  composer.id='enzo-note-composer';
-  composer.innerHTML=`
-    <div class="enzo-note-form-title"><span>🗒️ <b class="enzo-note-title-text">Nova anotação</b></span><button class="enzo-note-close" type="button" aria-label="Fechar">×</button></div>
-    <p class="enzo-note-drag-hint">↕ Arraste esta caixa pelo cabeçalho até o ponto onde deseja deixar o post-it.</p>
-    <div class="enzo-note-fields">
-      <label for="enzo-note-label">Marcação</label>
-      <select id="enzo-note-label">
-        <option value="nota">📝 Nota</option>
-        <option value="importante">⭐ Importante</option>
-        <option value="prova">🎯 Prova</option>
-        <option value="atencao">⚠️ Atenção</option>
-      </select>
-      <label for="enzo-note-text">Anotação</label>
-      <textarea id="enzo-note-text" maxlength="3000" required placeholder="Escreva o que você compreendeu, uma observação ou algo que pode cair na prova..."></textarea>
-    </div>
-    <div class="enzo-note-actions"><button class="enzo-note-cancel" type="button">Cancelar</button><button class="enzo-note-save" type="submit">Salvar anotação</button></div>
-    <div class="enzo-note-status" role="status" aria-live="polite"></div>`;
-  document.body.append(toggle,composer);
+  const toggle=document.getElementById('enzo-notes-toggle');
+  const composer=document.getElementById('enzo-note-composer');
+  if(!toggle||!composer)return;
 
   const count=toggle.querySelector('.note-count');
   const titleText=composer.querySelector('.enzo-note-title-text');
@@ -3124,13 +3129,13 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLessonL
   function anchorElements(section){
     if(!section)return[];
     assignAnchors(section);
-    return [...section.querySelectorAll('[data-enzo-note-anchor]')].filter(el=>cleanText(el.textContent)&&!el.closest('.enzo-study-note,#enzo-note-composer,.study-tools,.q-stats'));
+    return [...section.querySelectorAll('[data-enzo-note-anchor]')].filter(el=>cleanText(el.textContent)&&!el.closest('.enzo-study-note,#enzo-note-composer,.study-tools,.q-stats,#study-timer,.study-timer,[id*="timer"],[class*="timer"],[id*="clock"],[class*="clock"]'));
   }
   function assignAnchors(section=document){
     const seen=new Map();
     section.querySelectorAll(ANCHOR_SELECTOR).forEach(el=>{
       if(!el.closest('.section'))return;
-      if(el.closest('.enzo-study-note,#enzo-note-composer,.study-tools,.q-stats,nav,footer'))return;
+      if(el.closest('.enzo-study-note,#enzo-note-composer,.study-tools,.q-stats,nav,footer,#study-timer,.study-timer,[id*="timer"],[class*="timer"],[id*="clock"],[class*="clock"]'))return;
       const text=cleanText(el.textContent);if(!text)return;
       const sectionId=el.closest('.section')?.id||'page';
       const base=`${sectionId}:${hashText(text)}`;
@@ -3429,24 +3434,19 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLessonL
   document.addEventListener('authReady',initialize,{once:true});
   if(window.authSession?.user)setTimeout(initialize,0);else setTimeout(initialize,1200);
 })();
+
 </script>
 <script>
+
 /* Central de anotações — índice navegável de post-its e grifos. */
 (()=>{
   'use strict';
   const PAGE=window.PAGE_KEY||location.pathname||document.title;
   const STORAGE_KEY=`enzo-highlights:v1:${PAGE}`;
   let filter='all',refreshTimer=null;
-
-  const toggle=document.createElement('button');
-  toggle.id='enzo-annotations-index-toggle';toggle.type='button';toggle.title='Abrir minhas anotações';
-  toggle.innerHTML='<span aria-hidden="true">📚</span><span>Minhas anotações</span><span class="enzo-index-count">0</span>';
-  const panel=document.createElement('aside');panel.id='enzo-annotations-index';panel.setAttribute('aria-label','Minhas anotações');
-  panel.innerHTML=`
-    <div class="enzo-index-head"><div><div class="enzo-index-title">📚 Minhas anotações</div><div class="enzo-index-sub">Clique em um item para voltar ao ponto salvo</div></div><button class="enzo-index-close" type="button" aria-label="Fechar">×</button></div>
-    <div class="enzo-index-tabs"><button class="enzo-index-filter active" type="button" data-filter="all">Tudo</button><button class="enzo-index-filter" type="button" data-filter="note">Post-its</button><button class="enzo-index-filter" type="button" data-filter="highlight">Grifos</button></div>
-    <div class="enzo-index-list"></div>`;
-  document.body.append(toggle,panel);
+  const toggle=document.getElementById('enzo-annotations-index-toggle');
+  const panel=document.getElementById('enzo-annotations-index');
+  if(!toggle||!panel)return;
   const count=toggle.querySelector('.enzo-index-count'),list=panel.querySelector('.enzo-index-list');
 
   function sectionName(id){
@@ -3522,18 +3522,17 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLessonL
   new MutationObserver(m=>{if(m.some(x=>[...x.addedNodes,...x.removedNodes].some(n=>n.nodeType===1&&(n.matches?.('.enzo-study-note,mark.enzo-highlight')||n.querySelector?.('.enzo-study-note,mark.enzo-highlight')))))scheduleRefresh()}).observe(document.body,{childList:true,subtree:true});
   setTimeout(refresh,1200);
 })();
+
 </script>
 <script>
+
 /* Controle mestre: recolhe as utilidades para liberar a área de leitura. */
 (()=>{
   'use strict';
   const PAGE=window.PAGE_KEY||location.pathname||document.title;
-  const KEY=`enzo-tools-collapsed:v3:${PAGE}`;
-  const btn=document.createElement('button');
-  btn.id='enzo-tools-retractor';
-  btn.type='button';
-  btn.innerHTML='<span class="enzo-tools-arrow" aria-hidden="true">‹</span>';
-  document.body.appendChild(btn);
+  const KEY=`enzo-tools-collapsed:v1:${PAGE}`;
+  const btn=document.getElementById('enzo-tools-retractor');
+  if(!btn)return;
 
   function closeChildren(){
     const highlighter=document.getElementById('enzo-highlighter');
@@ -3562,25 +3561,11 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLessonL
     if(persist){try{localStorage.setItem(KEY,collapsed?'1':'0')}catch(_){}}
   }
   let initial=false;
-  try{initial=localStorage.getItem(KEY)==='1'}catch(_){}
-  apply(initial,false);
+  apply(false,false);
   btn.addEventListener('click',()=>apply(!document.body.classList.contains('enzo-tools-collapsed')));
   window.addEventListener('storage',e=>{if(e.key===KEY)apply(e.newValue==='1',false)});
 })();
-</script>
-<script>
-/* Failsafe visual: guarantees the study tools are not hidden by stale state. */
-(()=>{
-  try{ document.body.classList.remove('enzo-tools-collapsed'); }catch(_){}
-  setTimeout(()=>{
-    const r=document.getElementById('enzo-tools-retractor');
-    if(r){r.setAttribute('aria-expanded','true');}
-  },0);
-})();
-</script>
 
-<script src="study-timer.js"></script>
-<script src="study-progress.js"></script>
-<script src="enzo-ia.js"></script>
+</script>
 </body>
 </html>
