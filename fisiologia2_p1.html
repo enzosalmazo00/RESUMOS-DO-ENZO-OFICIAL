@@ -443,6 +443,7 @@ em { color: var(--accent2); font-style:normal; }
   .lesson-roadmap { padding:16px; }
 }
 
+
 /* ── MARCA-TEXTO DO ALUNO ── */
 mark.enzo-highlight{
   color:#10131b!important;
@@ -649,8 +650,6 @@ body.enzo-tools-collapsed .enzo-hl-toast{opacity:0!important;pointer-events:none
   #enzo-tools-retractor{top:50%;bottom:auto;width:29px;height:56px;border-radius:0 12px 12px 0;font-size:18px}
   #enzo-tools-retractor:hover{width:32px}
 }
-
-
 </style>
 </head>
 <body>
@@ -667,15 +666,15 @@ body.enzo-tools-collapsed .enzo-hl-toast{opacity:0!important;pointer-events:none
 
 <!-- ═══════════════════ NAV TABS ═══════════════════ -->
 <nav class="tabs">
-  <button class="active"  data-section="intro"onclick="showSection('intro',this)">📖 Intro</button>
-  <button  data-section="cap38"onclick="showSection('cap38',this)">Cap. 38 — Ventilação</button>
-  <button  data-section="cap39"onclick="showSection('cap39',this)">Cap. 39 — Circulação Pulmonar</button>
-  <button  data-section="cap40"onclick="showSection('cap40',this)">Cap. 40 — Trocas Gasosas</button>
-  <button  data-section="cap41"onclick="showSection('cap41',this)">Cap. 41 — Transporte de Gases</button>
-  <button  data-section="cap42"onclick="showSection('cap42',this)">Cap. 42 — Regulação</button>
-  <button  data-section="cap46"onclick="showSection('cap46',this)">Cap. 46 — Sistema Nervoso</button>
-  <button class="fc-tab"  data-section="flashcards"onclick="showSection('flashcards',this)">🃏 Flashcards</button>
-  <button class="qz-tab"  data-section="quiz"onclick="showSection('quiz',this)">📝 Simulado (<span data-question-count>78</span>)</button>
+  <button class="active"  data-section="intro" onclick="showSection('intro',this)">📖 Intro</button>
+  <button  data-section="cap38" onclick="showSection('cap38',this)">Cap. 38 — Ventilação</button>
+  <button  data-section="cap39" onclick="showSection('cap39',this)">Cap. 39 — Circulação Pulmonar</button>
+  <button  data-section="cap40" onclick="showSection('cap40',this)">Cap. 40 — Trocas Gasosas</button>
+  <button  data-section="cap41" onclick="showSection('cap41',this)">Cap. 41 — Transporte de Gases</button>
+  <button  data-section="cap42" onclick="showSection('cap42',this)">Cap. 42 — Regulação</button>
+  <button  data-section="cap46" onclick="showSection('cap46',this)">Cap. 46 — Sistema Nervoso</button>
+  <button class="fc-tab"  data-section="flashcards" onclick="showSection('flashcards',this)">🃏 Flashcards</button>
+  <button class="qz-tab"  data-section="quiz" onclick="showSection('quiz',this)">📝 Simulado (<span data-question-count>78</span>)</button>
 </nav>
 
 <!-- ════════════════════════════════════════════════
@@ -2787,9 +2786,6 @@ lessonLightbox.addEventListener('click',event=>{
 });
 document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLessonLightbox();});
 </script>
-<script src="study-timer.js"></script>
-<script src="study-progress.js"></script>
-<script src="enzo-ia.js"></script>
 
 <script>
 /* Marca-texto persistente — módulo reutilizável dos Resumos do Enzo. */
@@ -3532,7 +3528,7 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLessonL
 (()=>{
   'use strict';
   const PAGE=window.PAGE_KEY||location.pathname||document.title;
-  const KEY=`enzo-tools-collapsed:v2:${PAGE}`;
+  const KEY=`enzo-tools-collapsed:v3:${PAGE}`;
   const btn=document.createElement('button');
   btn.id='enzo-tools-retractor';
   btn.type='button';
@@ -3572,7 +3568,19 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLessonL
   window.addEventListener('storage',e=>{if(e.key===KEY)apply(e.newValue==='1',false)});
 })();
 </script>
+<script>
+/* Failsafe visual: guarantees the study tools are not hidden by stale state. */
+(()=>{
+  try{ document.body.classList.remove('enzo-tools-collapsed'); }catch(_){}
+  setTimeout(()=>{
+    const r=document.getElementById('enzo-tools-retractor');
+    if(r){r.setAttribute('aria-expanded','true');}
+  },0);
+})();
+</script>
 
-
+<script src="study-timer.js"></script>
+<script src="study-progress.js"></script>
+<script src="enzo-ia.js"></script>
 </body>
 </html>
