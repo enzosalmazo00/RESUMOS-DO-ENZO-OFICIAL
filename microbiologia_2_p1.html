@@ -437,6 +437,11 @@ body.enzo-highlight-mode .section.active li,
 body.enzo-highlight-mode .section.active td,
 body.enzo-highlight-mode .section.active th{cursor:text}
 body.enzo-eraser-mode mark.enzo-highlight{cursor:crosshair;outline:1px dashed rgba(255,255,255,.7)}
+body.enzo-remove-selection-mode .section.active p,
+body.enzo-remove-selection-mode .section.active li,
+body.enzo-remove-selection-mode .section.active td,
+body.enzo-remove-selection-mode .section.active th{cursor:text}
+body.enzo-remove-selection-mode mark.enzo-highlight{outline:1px dashed rgba(255,133,133,.95)}
 
 #enzo-highlighter{
   position:fixed;left:24px;right:auto;bottom:82px;z-index:10020;
@@ -1036,6 +1041,7 @@ renderQuiz();
       <button class="enzo-hl-color" type="button" data-color="red" aria-label="Grifar em vermelho" title="Vermelho">Vermelho</button>
       <span class="enzo-hl-divider" aria-hidden="true"></span>
       <button class="enzo-hl-tool enzo-hl-eraser" type="button" aria-label="Ativar borracha" title="Borracha: arraste sobre as palavras">🧽</button>
+      <button class="enzo-hl-tool enzo-hl-remove-selection" type="button" aria-label="Remover grifos da seleção" title="Remover todos os grifos do texto selecionado">✂️</button>
       <button class="enzo-hl-tool enzo-hl-undo" type="button" aria-label="Desfazer última ação" title="Desfazer" disabled>↶</button>
     </div>`;
   const toast=document.createElement('div');
@@ -1048,6 +1054,7 @@ renderQuiz();
   const countBadge=toolbar.querySelector('.enzo-hl-count');
   const undoButton=toolbar.querySelector('.enzo-hl-undo');
   const eraserButton=toolbar.querySelector('.enzo-hl-eraser');
+  const removeSelectionButton=toolbar.querySelector('.enzo-hl-remove-selection');
   const colorButtons=[...toolbar.querySelectorAll('.enzo-hl-color')];
 
   function loadRecords(){
@@ -1196,6 +1203,33 @@ renderQuiz();
     saveRecords();renderAll();selection.removeAllRanges();
     showToast(`${additions.length} ${additions.length===1?'palavra grifada':'palavras grifadas'} em ${colorLabel(color)}.`);
   }
+  function removeHighlightsFromSelection(){
+    const selection=window.getSelection();
+    if(!selection||selection.isCollapsed||!selection.rangeCount){
+      setMode('remove-selection');
+      showToast('Selecione o trecho ou a página onde deseja remover os grifos.');
+      return false;
+    }
+    if(toolbar.contains(selection.anchorNode)||toolbar.contains(selection.focusNode))return false;
+    const parts=selectionParts(selection.getRangeAt(0));
+    if(!parts.length){showToast('A seleção não contém um texto válido.');return false}
+    const removeIds=new Set();
+    parts.forEach(part=>{
+      records.forEach(rec=>{
+        if(rec.key===part.key&&rec.start<part.end&&rec.end>part.start)removeIds.add(rec.id);
+      });
+    });
+    if(!removeIds.size){
+      selection.removeAllRanges();
+      showToast('Não há grifos no trecho selecionado.');
+      return false;
+    }
+    pushHistory(snapshot());
+    records=records.filter(rec=>!removeIds.has(rec.id));
+    saveRecords();renderAll();selection.removeAllRanges();
+    showToast(`${removeIds.size} ${removeIds.size===1?'grifo removido':'grifos removidos'} da seleção.`);
+    return true;
+  }
   function removeRecordMarks(id){
     document.querySelectorAll(`mark.enzo-highlight[data-highlight-id="${id}"]`).forEach(mark=>{
       const parent=mark.parentNode;if(!parent)return;
@@ -1220,7 +1254,9 @@ renderQuiz();
     mode=next;
     document.body.classList.toggle('enzo-highlight-mode',mode==='highlight');
     document.body.classList.toggle('enzo-eraser-mode',mode==='erase');
+    document.body.classList.toggle('enzo-remove-selection-mode',mode==='remove-selection');
     eraserButton.classList.toggle('active',mode==='erase');
+    removeSelectionButton.classList.toggle('active',mode==='remove-selection');
     colorButtons.forEach(btn=>btn.classList.toggle('active',mode==='highlight'&&btn.dataset.color===color));
   }
   function colorLabel(value){return value==='yellow'?'amarelo':value==='green'?'verde':'vermelho'}
@@ -1249,6 +1285,12 @@ renderQuiz();
   eraserButton.addEventListener('click',()=>{
     setMode('erase');showToast('Borracha ativa: clique ou arraste sobre as palavras grifadas.');
   });
+  removeSelectionButton.addEventListener('pointerdown',event=>{
+    event.preventDefault();event.stopPropagation();
+  });
+  removeSelectionButton.addEventListener('click',()=>{
+    removeHighlightsFromSelection();
+  });
   undoButton.addEventListener('click',undo);
   toolbar.addEventListener('pointerdown',event=>event.stopPropagation());
 
@@ -1263,6 +1305,7 @@ renderQuiz();
   document.addEventListener('pointerup',event=>{
     if(erasing){erasing=false;if(eraseChanged)showToast('Trecho apagado.');eraseSnapshot=null;return}
     if(mode==='highlight'&&!toolbar.contains(event.target))setTimeout(applySelection,0);
+    if(mode==='remove-selection'&&!toolbar.contains(event.target))setTimeout(removeHighlightsFromSelection,0);
   });
   document.addEventListener('keydown',event=>{
     if(event.key==='Escape'&&toolbar.classList.contains('open')){toolbar.classList.remove('open');toggle.setAttribute('aria-expanded','false');setMode(null)}
