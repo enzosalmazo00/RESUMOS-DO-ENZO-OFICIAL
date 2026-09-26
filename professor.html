@@ -51,6 +51,7 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
 .signature-status.show{display:block}
 .signature-preview-saved{display:none;margin-top:10px;max-width:360px;width:100%;height:120px;object-fit:contain;border-radius:10px;background:#fff;border:1px solid rgba(255,255,255,.1)}
 .terms-required{padding:11px 13px;border-radius:11px;border:1px solid rgba(251,191,36,.20);background:rgba(251,191,36,.055);color:#fde68a;font-size:9.5px;line-height:1.55;margin-top:10px}
+.mp-status-card{grid-column:1/-1;padding:14px;border-radius:13px;border:1px solid rgba(34,211,238,.17);background:linear-gradient(135deg,rgba(34,211,238,.04),rgba(168,85,247,.035));display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.mp-status-main{font-size:10.5px;font-weight:750;color:#ecfeff}.mp-status-sub{font-size:9px;line-height:1.55;color:rgba(165,243,252,.48);margin-top:3px}.mp-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;background:#facc15}.mp-dot.ok{background:#4ade80}.mp-dot.err{background:#f87171}.category-lock{font-size:8.5px;color:rgba(196,181,253,.58);line-height:1.45}
 
 
 .tutorial-hero{padding:22px;border:1px solid rgba(34,211,238,.20);border-radius:18px;background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(168,85,247,.055));margin-bottom:14px}
@@ -104,7 +105,7 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
     <div class="eyebrow">Sua área de conteúdo</div>
     <h1 id="heroTitle">Bem-vindo(a), Dr(a).</h1>
     <p>Crie, organize e distribua seus próprios aulões de maneira simples e segura. Você produz o conteúdo, escolhe o valor e divide o aulão em quantas partes precisar. A plataforma cuida da vitrine, acesso dos alunos, pagamentos via PIX e cartão, infraestrutura de hospedagem do player e recursos de apoio ao aluno.</p>
-    <div class="share-box"><div><div class="share-main">💰 De cada venda, 2/3 são seus.</div><div class="share-sub">Exemplo: aulão de R$ 15,00 → R$ 10,00 para você. A parcela da plataforma mantém pagamentos, tecnologia, segurança, IA e operação do serviço.</div></div></div>
+    <div class="share-box"><div><div class="share-main">💳 Split exclusivo para Aulas em Vídeo de colaboradores.</div><div class="share-sub">Produtos próprios da plataforma continuam no checkout normal. Somente suas Aulas em Vídeo, quando publicadas como conteúdo de colaborador, usam a divisão automática do Mercado Pago conforme sua categoria.</div></div></div>
   </section>
 
   <div class="tabs">
@@ -121,14 +122,14 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
       <div class="stat"><div class="stat-label">Meus aulões</div><div class="stat-value" id="statAuloes">0</div></div>
       <div class="stat"><div class="stat-label">Aprovados</div><div class="stat-value" id="statApproved">0</div></div>
       <div class="stat"><div class="stat-label">Vendas confirmadas</div><div class="stat-value" id="statSales">0</div></div>
-      <div class="stat"><div class="stat-label">Saldo a receber</div><div class="stat-value green" id="statBalance">R$ 0,00</div></div>
+      <div class="stat"><div class="stat-label">Valor do produtor</div><div class="stat-value green" id="statBalance">R$ 0,00</div></div>
     </div>
     <div class="card">
       <div class="card-head"><div><h2>Fluxo simples</h2><div class="hint">Seu conteúdo só entra no ar depois da revisão administrativa.</div></div></div>
       <div class="grid">
-        <div class="notice">1️⃣ Complete seu perfil, matérias, semestres, celular e chave PIX.</div>
-        <div class="notice">2️⃣ Crie o aulão, defina preço e adicione quantas partes em vídeo quiser.</div>
-        <div class="notice">3️⃣ Envie para aprovação. Enquanto estiver pendente ele não aparece na loja.</div>
+        <div class="notice">1️⃣ Complete seu perfil, informe sua categoria de produtor, matérias, semestres e celular.</div>
+        <div class="notice">2️⃣ Vincule sua conta Mercado Pago para receber as vendas por divisão automática.</div>
+        <div class="notice">3️⃣ Crie o aulão, defina preço, adicione os vídeos e envie para aprovação.</div>
         <div class="notice">4️⃣ Após aprovação, o aulão entra na plataforma e as vendas passam a aparecer aqui.</div>
       </div>
     </div>
@@ -140,11 +141,13 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
       <div class="card-head"><div><h2>Meu perfil de professor</h2><div class="hint">Essas informações organizam seu perfil público e limitam as opções disponíveis ao criar aulões.</div></div></div>
       <form id="profileForm">
         <div class="grid">
-          <div class="field"><label>Como gostaria de ser chamado(a)?</label><input class="input" id="displayName" required placeholder="Ex.: Dr. xxxxxxxxxxxxxxxxxx"></div>
+          <div class="field"><label>Como gostaria de ser chamado(a)?</label><input class="input" id="displayName" required placeholder="Ex.: Enzo Salmazo"></div>
           <div class="field"><label>Celular / WhatsApp</label><input class="input" id="phone" required placeholder="+595... ou +55..."></div>
+          <div class="field"><label>Categoria do produtor</label><select class="select" id="producerCategory" required><option value="">Selecione sua categoria</option><option value="aluno">🎓 Aluno / estudante produzindo conteúdo</option><option value="medico_docente">🩺 Médico / docente produzindo conteúdo</option></select><div class="category-lock" id="categoryLockHint">A categoria define automaticamente a comissão prevista nos Termos. Depois de registrada, alterações dependem do administrador.</div></div>
+          <div class="field"><label>Recebimento das vendas</label><div class="hint">Os recebimentos de conteúdos de colaboradores são estruturados para divisão automática pelo Mercado Pago, sem repasse manual por chave PIX.</div></div>
           <div class="field full"><label>Matérias que você ministra</label><input class="input" id="subjects" required placeholder="Ex.: Microbiologia 1, Microbiologia 2, Imunologia"><div class="hint">Separe as matérias por vírgula. Elas aparecerão como opções ao criar seus aulões.</div></div>
           <div class="field full"><label>Semestres em que ministra aula</label><div class="sem-checks" id="semesterChecks"></div></div>
-          <div class="field"><label>Chave PIX para futuros repasses</label><input class="input" id="pixKey" placeholder="CPF, e-mail, celular ou chave aleatória"></div>
+          <div class="mp-status-card" id="mpStatusCard"><div><div class="mp-status-main"><span class="mp-dot" id="mpStatusDot"></span><span id="mpStatusTitle">Mercado Pago não conectado</span></div><div class="mp-status-sub" id="mpStatusSub">Conecte sua conta para habilitar o envio de aulões para aprovação e receber sua parte diretamente pelo fluxo de marketplace.</div></div><button class="btn green" type="button" id="connectMpBtn">Conectar Mercado Pago</button></div>
           <div class="field">
             <label>Foto do perfil</label>
             <input type="hidden" id="photoUrl">
@@ -188,19 +191,19 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
   <section class="panel" id="panel-vendas">
     <div class="stats">
       <div class="stat"><div class="stat-label">Vendas confirmadas</div><div class="stat-value" id="salesCount">0</div></div>
-      <div class="stat"><div class="stat-label">Valor gerado para você</div><div class="stat-value green" id="salesGenerated">R$ 0,00</div></div>
-      <div class="stat"><div class="stat-label">Já repassado</div><div class="stat-value" id="salesPaid">R$ 0,00</div></div>
-      <div class="stat"><div class="stat-label">A receber</div><div class="stat-value green" id="salesPending">R$ 0,00</div></div>
+      <div class="stat"><div class="stat-label">Valor bruto vendido</div><div class="stat-value" id="salesGross">R$ 0,00</div></div>
+      <div class="stat"><div class="stat-label">Comissão da plataforma</div><div class="stat-value" id="salesPlatformFee">R$ 0,00</div></div>
+      <div class="stat"><div class="stat-label">Valor do produtor</div><div class="stat-value green" id="salesProducer">R$ 0,00</div></div>
     </div>
     <div class="card">
-      <div class="notice">💳 Nesta fase, o painel registra automaticamente as vendas aprovadas e calcula sua participação em cada venda. A forma operacional de repasse (PIX ou integração futura com Mercado Pago) será ativada separadamente.</div>
-      <div style="overflow:auto"><table class="sales-table"><thead><tr><th>Aulão</th><th>Preço</th><th>Vendas</th><th>Seu valor gerado</th></tr></thead><tbody id="salesBody"></tbody></table></div>
+      <div class="notice">💳 Nas vendas de colaboradores com Mercado Pago vinculado, a divisão é processada pelo próprio Mercado Pago no fluxo de marketplace. A plataforma não recebe o valor integral para depois fazer um repasse manual. Tarifas próprias do Mercado Pago podem incidir separadamente, conforme as regras do provedor.</div>
+      <div style="overflow:auto"><table class="sales-table"><thead><tr><th>Aulão</th><th>Preço</th><th>Vendas</th><th>Comissão plataforma</th><th>Valor do produtor</th></tr></thead><tbody id="salesBody"></tbody></table></div>
     </div>
   </section>
 
   <section class="panel" id="panel-termos">
     <div class="card">
-      <div class="card-head"><div><h2>Termos do Professor Colaborador</h2><div class="hint" id="termsVersionLabel">Versão 2026-09-26-v3</div></div></div>
+      <div class="card-head"><div><h2>Termos do Professor Colaborador</h2><div class="hint" id="termsVersionLabel">Versão 2026-09-26-v4</div></div></div>
       <div class="term-box" id="termsText"></div>
 
       <div class="signature-box">
@@ -235,8 +238,8 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
 <script>
 (function(){
 "use strict";
-var client=null,session=null,account=null,details=null,publicProfile=null,currentAcceptance=null,auloes=[],salesRows=[],whatsapp="";
-var TERMS_VERSION="2026-09-26-v3";
+var client=null,session=null,account=null,details=null,publicProfile=null,currentAcceptance=null,mpConnection=null,auloes=[],salesRows=[],whatsapp="";
+var TERMS_VERSION="2026-09-26-v6";
 var uiLang="pt-BR";
 
 function esc(v){return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
@@ -436,20 +439,22 @@ const TERMS_PT=`
 <p>Como intermediadora tecnológica, a plataforma não assume a autoria do conteúdo enviado pelo professor. Entretanto, poderá revisar, suspender, bloquear ou retirar material quando identificar risco jurídico, violação destes termos, reclamação fundamentada, violação de propriedade intelectual, determinação de autoridade competente ou outra hipótese em que a legislação aplicável exija atuação da plataforma.</p>
 <p>O professor compromete-se a cooperar prontamente na apuração de reclamações relativas ao seu conteúdo.</p>
 
-<h3>6. Preço e divisão econômica</h3>
-<p>O professor define o preço do aulão. Em cada venda efetivamente aprovada, liquidada e não estornada, <strong>2/3 do valor pago são destinados ao Professor Colaborador e 1/3 à plataforma</strong>. Para comunicação comercial, isso corresponde aproximadamente a 66,67% e 33,33%.</p>
-<p>Exemplo: em uma venda de R$ 15,00, R$ 10,00 correspondem ao professor e R$ 5,00 à plataforma. O cálculo operacional é realizado por venda e arredondado para centavos quando necessário.</p>
+<h3>6. Categoria do produtor e comissão da plataforma</h3>
+<p>No primeiro cadastro, o Professor Colaborador deverá informar sua categoria de atuação na plataforma. Para fins comerciais, são adotadas duas categorias: <strong>Aluno/Estudante produzindo conteúdo</strong> e <strong>Médico/Docente produzindo conteúdo</strong>.</p>
+<p>A comissão da plataforma, aplicada somente às vendas das Aulas em Vídeo vinculadas ao colaborador, é definida automaticamente conforme a categoria registrada: <strong>33,33% do preço da venda para Aluno/Estudante</strong> e <strong>25% do preço da venda para Médico/Docente</strong>. A categoria declarada deve corresponder à situação real do produtor e poderá ser submetida a verificação administrativa. Depois de registrada, sua alteração poderá depender de validação do administrador.</p>
+<p>A comissão é calculada automaticamente por venda, com arredondamento monetário para centavos quando necessário. O professor continua definindo o preço do conteúdo dentro das regras da plataforma.</p>
 
-<h3>7. Finalidade da parcela da plataforma</h3>
-<p>A parcela da plataforma remunera o uso da infraestrutura de distribuição, tecnologia, processamento e integração de pagamentos, manutenção, suporte, segurança, recursos de inteligência artificial, organização do catálogo e demais custos operacionais.</p>
+<h3>7. Processamento e divisão automática dos pagamentos</h3>
+<p>O modelo de marketplace com divisão automática de pagamentos (<em>split payment</em>) aplica-se <strong>exclusivamente às Aulas em Vídeo vinculadas a um Professor Colaborador</strong>. Resumos HTML, cursos próprios e demais produtos identificados como próprios da plataforma permanecem fora desse split e seguem o checkout normal da plataforma.</p>
+<p>Nas vendas das Aulas em Vídeo do colaborador, <strong>a plataforma não recebe o valor integral para depois realizar um repasse manual ao produtor</strong>. O Mercado Pago processa a venda com a conta autorizada do produtor e aplica a comissão da plataforma configurada para aquela transação.</p>
+<p>Para receber por esse modelo, o produtor deverá possuir uma conta Mercado Pago elegível, concluir a vinculação/autorização solicitada pela plataforma e manter a conexão ativa. Se a autorização expirar, for revogada ou apresentar impedimento cadastral, a plataforma poderá suspender novas vendas do conteúdo até a regularização.</p>
 
-<h3>8. Responsabilidade fiscal, tributária e profissional individual</h3>
-<p>Cada parte é responsável, na medida determinada pela legislação que lhe seja aplicável, por <strong>seus próprios tributos, declarações, inscrições, documentos fiscais, recibos, obrigações profissionais e regularidade perante as autoridades competentes</strong> relacionados à renda ou receita que lhe corresponda.</p>
-<p>O Professor Colaborador é responsável por avaliar e cumprir as obrigações fiscais decorrentes dos valores que recebe pela comercialização de seus conteúdos. A plataforma não presta consultoria contábil ou tributária individual ao professor.</p>
-<p>Essa distribuição de responsabilidades <strong>não afasta deveres legais atribuídos diretamente à plataforma</strong>. Quando a lei exigir retenção, informação, declaração, recolhimento ou fornecimento de dados a autoridade competente, a plataforma poderá cumprir a obrigação correspondente e registrar o ajuste no demonstrativo do professor.</p>
+<h3>8. Tarifas do Mercado Pago, tributos e valor líquido</h3>
+<p>As tarifas cobradas pelo Mercado Pago pelo processamento da transação são independentes da comissão do Resumos do Enzo e obedecem às condições do próprio provedor. Assim, o valor líquido disponibilizado ao produtor poderá ser inferior ao preço do produto menos apenas a comissão da plataforma.</p>
+<p>Cada parte continua responsável, na medida determinada pela legislação aplicável, por seus próprios tributos, declarações, inscrições, documentos fiscais e demais obrigações relacionadas aos valores que efetivamente lhe correspondam. Quando a lei exigir retenção, informação ou recolhimento pela plataforma ou pelo provedor de pagamento, a obrigação poderá ser cumprida na forma legalmente exigida.</p>
 
 <h3>9. Estornos, chargebacks, cancelamentos e fraude</h3>
-<p>Pagamentos cancelados, recusados, estornados, contestados, fraudulentos ou devolvidos não integram a base líquida de repasse. Se um estorno ocorrer depois de valor já repassado, a quantia correspondente poderá ser compensada em saldo futuro, com registro no painel.</p>
+<p>Pagamentos cancelados, recusados, estornados, contestados, fraudulentos ou devolvidos serão tratados conforme as regras do Mercado Pago, do meio de pagamento utilizado e da legislação aplicável. Nos pagamentos processados com split, os ajustes financeiros decorrentes de reembolso ou chargeback poderão atingir proporcionalmente as partes envolvidas, de acordo com a mecânica aplicada pelo provedor.</p>
 
 <h3>10. Aprovação antes da publicação</h3>
 <p>Todo novo aulão e toda alteração relevante de um aulão aprovado ficam sujeitos à revisão administrativa antes de voltar ao ar. A aprovação confirma apenas que o conteúdo atende aos critérios operacionais da plataforma naquele momento; ela não transfere autoria nem substitui a responsabilidade profissional do professor.</p>
@@ -492,7 +497,7 @@ const TERMS_PT=`
 <h3>21. Alterações dos termos e registro do aceite</h3>
 <p>Alterações materiais serão apresentadas para novo aceite quando necessário. A plataforma registra a versão aceita, a data e a hora do aceite para fins de transparência e prova da manifestação de vontade.</p>
 
-<p style="margin-top:18px;color:rgba(165,243,252,.42)">Versão operacional 2026-09-26-v3. Recomenda-se revisão por advogado e contador com atuação transfronteiriça Brasil–Paraguai antes da implantação definitiva de repasses automáticos e expansão comercial.</p>`;
+<p style="margin-top:18px;color:rgba(165,243,252,.42)">Versão operacional 2026-09-26-v6. Recomenda-se revisão jurídica e contábil profissional antes da expansão comercial em múltiplas jurisdições.</p>`;
 
 const TERMS_ES=`
 <p><strong>Términos del Profesor Colaborador — Resumos do Enzo</strong></p>
@@ -520,20 +525,22 @@ const TERMS_ES=`
 <p>Como intermediaria tecnológica, la plataforma no asume la autoría del contenido enviado por el profesor. Sin embargo, podrá revisar, suspender, bloquear o retirar material cuando identifique riesgo jurídico, incumplimiento de estos términos, reclamo fundado, violación de propiedad intelectual, orden de autoridad competente u otra hipótesis en la que la legislación aplicable exija actuación de la plataforma.</p>
 <p>El profesor se compromete a colaborar oportunamente en la investigación de reclamos relacionados con su contenido.</p>
 
-<h3>6. Precio y distribución económica</h3>
-<p>El profesor define el precio del curso. En cada venta efectivamente aprobada, liquidada y no revertida, <strong>2/3 del valor pagado corresponden al Profesor Colaborador y 1/3 a la plataforma</strong>. Para fines de comunicación comercial, esto equivale aproximadamente a 66,67% y 33,33%.</p>
-<p>Ejemplo: en una venta de R$ 15,00, R$ 10,00 corresponden al profesor y R$ 5,00 a la plataforma. El cálculo operativo se realiza por venta y se redondea a centavos cuando sea necesario.</p>
+<h3>6. Categoría del productor y comisión de la plataforma</h3>
+<p>En el primer registro, el Profesor Colaborador deberá informar su categoría de actuación en la plataforma. Para fines comerciales se utilizan dos categorías: <strong>Alumno/Estudiante que produce contenido</strong> y <strong>Médico/Docente que produce contenido</strong>.</p>
+<p>La comisión de la plataforma, aplicada únicamente a las ventas de Clases en Video vinculadas al colaborador, se define automáticamente según la categoría registrada: <strong>33,33% del precio de venta para Alumno/Estudiante</strong> y <strong>25% del precio de venta para Médico/Docente</strong>. La categoría declarada debe corresponder a la situación real del productor y podrá ser sometida a verificación administrativa. Después de registrada, su modificación podrá depender de la validación del administrador.</p>
+<p>La comisión se calcula automáticamente por venta, con redondeo monetario a centavos cuando corresponda. El profesor continúa definiendo el precio del contenido dentro de las reglas de la plataforma.</p>
 
-<h3>7. Finalidad de la participación de la plataforma</h3>
-<p>La parte correspondiente a la plataforma remunera el uso de la infraestructura de distribución, tecnología, procesamiento e integración de pagos, mantenimiento, soporte, seguridad, recursos de inteligencia artificial, organización del catálogo y demás costos operativos.</p>
+<h3>7. Procesamiento y división automática de los pagos</h3>
+<p>El modelo de marketplace con división automática de pagos (<em>split payment</em>) se aplica <strong>exclusivamente a las Clases en Video vinculadas a un Profesor Colaborador</strong>. Los resúmenes HTML, cursos propios y demás productos identificados como propios de la plataforma permanecen fuera del split y siguen el checkout normal.</p>
+<p>En las ventas de Clases en Video del colaborador, <strong>la plataforma no recibe el importe total para transferirlo manualmente después</strong>. Mercado Pago procesa la venta con la cuenta autorizada del productor y aplica la comisión configurada para esa transacción.</p>
+<p>Para recibir mediante este modelo, el productor deberá poseer una cuenta Mercado Pago elegible, completar la vinculación/autorización solicitada por la plataforma y mantener la conexión activa. Si la autorización vence, es revocada o presenta un impedimento registral, la plataforma podrá suspender nuevas ventas del contenido hasta su regularización.</p>
 
-<h3>8. Responsabilidad fiscal, tributaria y profesional individual</h3>
-<p>Cada parte es responsable, en la medida determinada por la legislación que le resulte aplicable, de <strong>sus propios impuestos, declaraciones, inscripciones, documentos fiscales, recibos, obligaciones profesionales y regularidad ante las autoridades competentes</strong> relacionados con los ingresos o valores que le correspondan.</p>
-<p>El Profesor Colaborador es responsable de evaluar y cumplir las obligaciones fiscales derivadas de los valores que recibe por la comercialización de sus contenidos. La plataforma no presta asesoría contable o tributaria individual al profesor.</p>
-<p>Esta distribución de responsabilidades <strong>no excluye deberes legales atribuidos directamente a la plataforma</strong>. Cuando la ley exija retención, información, declaración, pago o suministro de datos a una autoridad competente, la plataforma podrá cumplir la obligación correspondiente y registrar el ajuste en el estado de cuenta del profesor.</p>
+<h3>8. Tarifas de Mercado Pago, impuestos y valor neto</h3>
+<p>Las tarifas cobradas por Mercado Pago por el procesamiento de la transacción son independientes de la comisión de Resumos do Enzo y se rigen por las condiciones del propio proveedor. Por lo tanto, el importe neto disponible para el productor puede ser inferior al precio del producto menos únicamente la comisión de la plataforma.</p>
+<p>Cada parte continúa siendo responsable, en la medida determinada por la legislación aplicable, de sus propios impuestos, declaraciones, inscripciones, documentos fiscales y demás obligaciones relacionadas con los valores que efectivamente le correspondan. Cuando la ley exija retención, información o pago por parte de la plataforma o del proveedor de pagos, la obligación podrá cumplirse en la forma legalmente exigida.</p>
 
 <h3>9. Reversiones, contracargos, cancelaciones y fraude</h3>
-<p>Los pagos cancelados, rechazados, revertidos, impugnados, fraudulentos o devueltos no integran la base líquida de pago al profesor. Si una reversión ocurre después de un valor ya transferido, la suma correspondiente podrá compensarse con saldos futuros, con registro en el panel.</p>
+<p>Los pagos cancelados, rechazados, revertidos, impugnados, fraudulentos o devueltos se tratarán conforme a las reglas de Mercado Pago, del medio de pago utilizado y de la legislación aplicable. En los pagos procesados con split, los ajustes financieros derivados de reembolsos o contracargos podrán afectar proporcionalmente a las partes involucradas, de acuerdo con la mecánica aplicada por el proveedor.</p>
 
 <h3>10. Aprobación previa a la publicación</h3>
 <p>Todo nuevo curso y toda modificación relevante de un curso aprobado quedan sujetos a revisión administrativa antes de volver a estar disponibles. La aprobación confirma únicamente que el contenido cumple los criterios operativos de la plataforma en ese momento; no transfiere la autoría ni sustituye la responsabilidad profesional del profesor.</p>
@@ -576,7 +583,7 @@ const TERMS_ES=`
 <h3>21. Cambios de los términos y registro de aceptación</h3>
 <p>Las modificaciones sustanciales serán presentadas para una nueva aceptación cuando sea necesario. La plataforma registra la versión aceptada, la fecha y la hora de aceptación para fines de transparencia y prueba de la manifestación de voluntad.</p>
 
-<p style="margin-top:18px;color:rgba(165,243,252,.42)">Versión operativa 2026-09-26-v3. Se recomienda revisión por abogado y contador con actuación transfronteriza Brasil–Paraguay antes de implementar transferencias automáticas y ampliar la operación comercial.</p>`;
+<p style="margin-top:18px;color:rgba(165,243,252,.42)">Versión operativa 2026-09-26-v6. Se recomienda revisión jurídica y contable profesional antes de ampliar la operación comercial en múltiples jurisdicciones.</p>`;
 
 const ES_MAP={
 "Professor colaborador":"Profesor colaborador",
@@ -584,20 +591,20 @@ const ES_MAP={
 "Área do aluno":"Área del alumno","Sair":"Salir",
 "Sua área de conteúdo":"Tu área de contenido",
 "Crie, organize e distribua seus próprios aulões de maneira simples e segura. Você produz o conteúdo, escolhe o valor e divide o aulão em quantas partes precisar. A plataforma cuida da vitrine, acesso dos alunos, pagamentos via PIX e cartão, infraestrutura de hospedagem do player e recursos de apoio ao aluno.":"Cree, organice y distribuya sus propios cursos de forma simple y segura. Usted produce el contenido, elige el precio y divide el curso en tantas partes como necesite. La plataforma se ocupa de la vitrina, el acceso de los alumnos, los pagos por PIX y tarjeta, la infraestructura del reproductor y los recursos de apoyo al alumno.",
-"💰 De cada venda, 2/3 são seus.":"💰 De cada venta, 2/3 son para usted.",
-"Exemplo: aulão de R$ 15,00 → R$ 10,00 para você. A parcela da plataforma mantém pagamentos, tecnologia, segurança, IA e operação do serviço.":"Ejemplo: curso de R$ 15,00 → R$ 10,00 para usted. La parte de la plataforma mantiene pagos, tecnología, seguridad, IA y operación del servicio.",
+"💳 Split exclusivo para Aulas em Vídeo de colaboradores.":"💳 Split exclusivo para Clases en Video de colaboradores.",
+"Produtos próprios da plataforma continuam no checkout normal. Somente suas Aulas em Vídeo, quando publicadas como conteúdo de colaborador, usam a divisão automática do Mercado Pago conforme sua categoria.":"Los productos propios de la plataforma continúan con el checkout normal. Solo sus Clases en Video, cuando se publican como contenido de colaborador, utilizan la división automática de Mercado Pago según su categoría.",
 "Visão geral":"Vista general","Meu perfil":"Mi perfil","Meus aulões":"Mis cursos","Tutorial de publicação":"Tutorial de publicación","Minhas vendas":"Mis ventas","Termos":"Términos",
-"Aprovados":"Aprobados","Vendas confirmadas":"Ventas confirmadas","Saldo a receber":"Saldo por cobrar",
+"Aprovados":"Aprobados","Vendas confirmadas":"Ventas confirmadas","Valor do produtor":"Valor del productor","Valor bruto vendido":"Valor bruto vendido","Comissão da plataforma":"Comisión de la plataforma",
 "Fluxo simples":"Flujo simple","Seu conteúdo só entra no ar depois da revisão administrativa.":"Su contenido solo se publica después de la revisión administrativa.",
-"1️⃣ Complete seu perfil, matérias, semestres, celular e chave PIX.":"1️⃣ Complete su perfil, materias, semestres, celular y clave PIX.",
-"2️⃣ Crie o aulão, defina preço e adicione quantas partes em vídeo quiser.":"2️⃣ Cree el curso, defina el precio y agregue tantas partes en video como desee.",
-"3️⃣ Envie para aprovação. Enquanto estiver pendente ele não aparece na loja.":"3️⃣ Envíelo para aprobación. Mientras esté pendiente no aparecerá en la tienda.",
+"1️⃣ Complete seu perfil, informe sua categoria de produtor, matérias, semestres e celular.":"1️⃣ Complete su perfil, informe su categoría de productor, materias, semestres y celular.",
+"2️⃣ Vincule sua conta Mercado Pago para receber as vendas por divisão automática.":"2️⃣ Vincule su cuenta Mercado Pago para recibir las ventas mediante división automática.",
+"3️⃣ Crie o aulão, defina preço, adicione os vídeos e envie para aprovação.":"3️⃣ Envíelo para aprobación. Mientras esté pendiente no aparecerá en la tienda.",
 "4️⃣ Após aprovação, o aulão entra na plataforma e as vendas passam a aparecer aqui.":"4️⃣ Después de la aprobación, el curso entra en la plataforma y las ventas comienzan a aparecer aquí.",
 "Meu perfil de professor":"Mi perfil de profesor",
 "Essas informações organizam seu perfil público e limitam as opções disponíveis ao criar aulões.":"Esta información organiza su perfil público y limita las opciones disponibles al crear cursos.",
 "Como gostaria de ser chamado(a)?":"¿Cómo desea ser llamado(a)?","Celular / WhatsApp":"Celular / WhatsApp",
 "Matérias que você ministra":"Materias que imparte","Separe as matérias por vírgula. Elas aparecerão como opções ao criar seus aulões.":"Separe las materias con comas. Aparecerán como opciones al crear sus cursos.",
-"Semestres em que ministra aula":"Semestres en los que imparte clases","Chave PIX para futuros repasses":"Clave PIX para futuras transferencias",
+"Semestres em que ministra aula":"Semestres en los que imparte clases","Categoria do produtor":"Categoría del productor","Recebimento das vendas":"Recepción de las ventas",
 "Foto do perfil":"Foto de perfil","📷 Escolher foto do dispositivo":"📷 Elegir foto del dispositivo","Apresentação curta":"Presentación breve",
 "Salvar meu perfil":"Guardar mi perfil",
 "Criar novo aulão":"Crear nuevo curso","O código interno é criado automaticamente. Você só precisa preencher o conteúdo.":"El código interno se crea automáticamente. Solo necesita completar el contenido.",
@@ -607,9 +614,8 @@ const ES_MAP={
 "Partes do aulão":"Partes del curso","Cole links do YouTube. Você pode dividir o conteúdo em quantas partes quiser.":"Pegue enlaces de YouTube. Puede dividir el contenido en tantas partes como necesite.",
 "+ Adicionar parte":"+ Agregar parte","Salvar rascunho":"Guardar borrador","Enviar para aprovação":"Enviar para aprobación",
 "Aprovados entram automaticamente na área de Aulões e na loja.":"Los aprobados entran automáticamente en el área de cursos y en la tienda.",
-"Valor gerado para você":"Valor generado para usted","Já repassado":"Ya transferido","A receber":"Por cobrar",
-"💳 Nesta fase, o painel registra automaticamente as vendas aprovadas e calcula sua participação em cada venda. A forma operacional de repasse (PIX ou integração futura com Mercado Pago) será ativada separadamente.":"💳 En esta etapa, el panel registra automáticamente las ventas aprobadas y calcula su participación en cada venta. La forma operativa de transferencia (PIX o futura integración con Mercado Pago) se activará por separado.",
-"Seu valor gerado":"Su valor generado","Aulão":"Curso",
+"💳 Nas vendas de colaboradores com Mercado Pago vinculado, a divisão é processada pelo próprio Mercado Pago no fluxo de marketplace. A plataforma não recebe o valor integral para depois fazer um repasse manual. Tarifas próprias do Mercado Pago podem incidir separadamente, conforme as regras do provedor.":"💳 En las ventas de colaboradores con Mercado Pago vinculado, la división es procesada por el propio Mercado Pago dentro del flujo de marketplace. La plataforma no recibe el valor total para realizar luego una transferencia manual. Las tarifas propias de Mercado Pago pueden aplicarse por separado según las reglas del proveedor.",
+"Comissão plataforma":"Comisión plataforma","Aulão":"Curso",
 "Termos do Professor Colaborador":"Términos del Profesor Colaborador",
 "Rascunho":"Borrador","Aguardando aprovação":"Esperando aprobación","Aprovado":"Aprobado","Ajustes solicitados":"Ajustes solicitados",
 "Editar":"Editar","Editar / criar nova revisão":"Editar / crear nueva revisión","Abrir aulão":"Abrir curso",
@@ -886,7 +892,7 @@ async function signCurrentTerms(){
     var up=await client.storage.from("professor-documentos").upload(path,blob,{contentType:"image/png",cacheControl:"3600",upsert:false});
     if(up.error)throw up.error;
     var termsText=(document.getElementById("termsText").innerText||"").trim();
-    var r=await client.rpc("accept_professor_terms",{
+    var r=await client.rpc("accept_professor_terms_v2",{
       p_full_name:fullName,
       p_document_type:type,
       p_document_number:num,
@@ -953,41 +959,77 @@ function addPart(data){var box=document.getElementById("parts");var i=box.childr
 function renumberParts(){Array.from(document.getElementById("parts").children).forEach((r,i)=>r.querySelector(".part-order").textContent="Parte "+String(i+1).padStart(2,"0"))}
 function resetAulaoForm(){document.getElementById("aulaoForm").reset();document.getElementById("aulaoId").value="";document.getElementById("coverUrl").value="";setExistingPreview("coverPreview","");document.getElementById("coverFile").value="";document.getElementById("parts").innerHTML="";addPart();fillAulaoSelects();document.getElementById("aulaoLanguage").value=uiLang==="es"?"es":"pt-BR";document.getElementById("aulaoFormTitle").textContent="Criar novo aulão";translateDom();document.getElementById("submitReviewBtn").disabled=false;document.getElementById("saveDraftBtn").disabled=false}
 async function loadAll(){
-  var [ar,dr,pr,aa,ss,sb,cfg,ta]=await Promise.all([
+  var [ar,dr,pr,aa,ss,sb,cfg,ta,mc]=await Promise.all([
     client.from("professor_accounts").select("*").eq("user_id",session.user.id).maybeSingle(),
     client.from("professor_dados").select("*").eq("user_id",session.user.id).maybeSingle(),
     client.from("aulao_professores").select("*").eq("user_id",session.user.id).maybeSingle(),
     client.from("auloes").select("*").eq("owner_user_id",session.user.id).order("created_at",{ascending:false}),
-    client.rpc("professor_sales_summary"),
-    client.rpc("professor_sales_by_aulao"),
+    client.rpc("professor_sales_summary_v2"),
+    client.rpc("professor_sales_by_aulao_v2"),
     client.from("config").select("valor").eq("chave","professor_whatsapp").maybeSingle(),
-    client.from("professor_term_acceptances").select("*").eq("professor_user_id",session.user.id).eq("terms_version",TERMS_VERSION).maybeSingle()
+    client.from("professor_term_acceptances").select("*").eq("professor_user_id",session.user.id).eq("terms_version",TERMS_VERSION).maybeSingle(),
+    client.from("professor_mp_connections").select("*").eq("professor_user_id",session.user.id).maybeSingle()
   ]);
   if(ar.error)throw ar.error;account=ar.data;if(!account||account.status!=="active")throw new Error("Sua conta não está habilitada como Professor Colaborador.");
-  details=dr.data||null;publicProfile=pr.data||null;auloes=aa.data||[];salesRows=sb.data||[];whatsapp=(cfg.data&&cfg.data.valor)||"";currentAcceptance=(ta&&ta.data)||null;
+  details=dr.data||null;publicProfile=pr.data||null;auloes=aa.data||[];salesRows=sb.data||[];whatsapp=(cfg.data&&cfg.data.valor)||"";currentAcceptance=(ta&&ta.data)||null;mpConnection=(mc&&mc.data)||null;
+  try{var ms=await client.functions.invoke("mp-seller-oauth",{body:{action:"status"}});if(!ms.error&&ms.data&&ms.data.connection)mpConnection=ms.data.connection;}catch(_e){console.warn("Status MP:",_e)}
   uiLang=(details&&details.idioma_interface)||localStorage.getItem("professor_ui_lang")||"pt-BR";translateDom();
-  var s=(ss.data&&ss.data[0])||{total_vendas:0,valor_gerado:0,valor_pago:0,saldo_a_receber:0};window.__lastSalesSummary=s;
+  var s=(ss.data&&ss.data[0])||{total_vendas:0,valor_bruto:0,comissao_plataforma:0,valor_produtor:0};window.__lastSalesSummary=s;
   renderProfile();renderAuloes();renderSales(s);renderOverview(s);
 }
 function renderProfile(){
   document.getElementById("displayName").value=(details&&details.nome_exibicao)||(publicProfile&&publicProfile.nome)||"";
   document.getElementById("phone").value=(details&&details.telefone)||"";
-  document.getElementById("pixKey").value=(details&&details.pix_chave)||"";
+  var categoryEl=document.getElementById("producerCategory");
+  categoryEl.value=(details&&details.categoria_produtor)||"";
+  categoryEl.disabled=!!(details&&details.categoria_produtor);
+  document.getElementById("categoryLockHint").textContent=(details&&details.categoria_produtor)?(uiLang==="es"?"Categoría registrada. Los cambios posteriores requieren validación administrativa.":"Categoria registrada. Alterações posteriores dependem de validação administrativa."):(uiLang==="es"?"La categoría define automáticamente la comisión prevista en los Términos. Después de registrarla, los cambios dependen del administrador.":"A categoria define automaticamente a comissão prevista nos Termos. Depois de registrada, alterações dependem do administrador.");
   document.getElementById("subjects").value=((details&&details.materias)||[]).join(", ");
   document.getElementById("bio").value=(publicProfile&&publicProfile.descricao)||"";
   document.getElementById("photoUrl").value=(publicProfile&&publicProfile.foto_url)||"";
   setExistingPreview("photoPreview",(publicProfile&&publicProfile.foto_url)||"");
-  fillSemesterChecks();fillAulaoSelects();
+  fillSemesterChecks();fillAulaoSelects();renderMpConnection();
   var notice=document.getElementById("termsProfileNotice");
-  if(notice)notice.innerHTML=currentAcceptance?(uiLang==="es"?"✅ Términos firmados electrónicamente. Puede crear y enviar cursos para aprobación.":"✅ Termos assinados eletronicamente. Você já pode criar e enviar aulões para aprovação."):(uiLang==="es"?"📄 Guarde su perfil y firme electrónicamente los Términos del Profesor Colaborador en la pestaña <strong>Términos</strong>. La firma es obligatoria antes de enviar un curso.":"📄 Salve seu perfil e assine eletronicamente os Termos do Professor Colaborador na aba <strong>Termos</strong>. A assinatura é obrigatória antes de enviar um aulão.");
+  if(notice)notice.innerHTML=currentAcceptance?(uiLang==="es"?"✅ Términos firmados electrónicamente. Para enviar cursos a aprobación, mantenga también su cuenta Mercado Pago conectada.":"✅ Termos assinados eletronicamente. Para enviar aulões para aprovação, mantenha também sua conta Mercado Pago conectada."):(uiLang==="es"?"📄 Guarde su perfil y firme electrónicamente los Términos del Profesor Colaborador en la pestaña <strong>Términos</strong>. La firma es obligatoria antes de enviar un curso.":"📄 Salve seu perfil e assine eletronicamente os Termos do Professor Colaborador na aba <strong>Termos</strong>. A assinatura é obrigatória antes de enviar um aulão.");
   renderTermsAcceptance();
-  var nm=(details&&details.nome_exibicao)||(publicProfile&&publicProfile.nome)||"Dr(a).";document.getElementById("heroTitle").textContent=(uiLang==="es"?"Bienvenido(a), ":"Bem-vindo(a), ")+nm;translateDom();
+  var nm=(details&&details.nome_exibicao)||(publicProfile&&publicProfile.nome)||"Professor(a)";document.getElementById("heroTitle").textContent=(uiLang==="es"?"Bienvenido(a), ":"Bem-vindo(a), ")+nm;translateDom();
+}
+function renderMpConnection(){
+  var dot=document.getElementById("mpStatusDot"),title=document.getElementById("mpStatusTitle"),sub=document.getElementById("mpStatusSub"),btn=document.getElementById("connectMpBtn");
+  if(!dot||!title||!sub||!btn)return;
+  var now=Date.now(),exp=mpConnection&&mpConnection.expires_at?new Date(mpConnection.expires_at).getTime():0,days=exp?Math.ceil((exp-now)/86400000):null;
+  var connected=!!(mpConnection&&mpConnection.status==="connected"&&(!exp||exp>now));
+  dot.className="mp-dot"+(connected?" ok":(mpConnection&&["error","expired"].includes(mpConnection.status)?" err":""));
+  if(connected){
+    title.textContent=uiLang==="es"?"Mercado Pago conectado":"Mercado Pago conectado";
+    var expiry=exp?new Date(exp).toLocaleDateString(uiLang==="es"?"es-PY":"pt-BR"):"";
+    var base=uiLang==="es"?"Esta autorización se usa únicamente para el split de sus Clases en Video.":"Esta autorização é usada somente no split das suas Aulas em Vídeo.";
+    var renew=uiLang==="es"?" Renovación automática habilitada mediante refresh token.":" Renovação automática habilitada via refresh token.";
+    var warn=(mpConnection.last_error?((uiLang==="es"?" ⚠️ La última renovación automática falló. Reautorice la cuenta antes del vencimiento.":" ⚠️ A última renovação automática falhou. Reautorize a conta antes do vencimento.")):"");
+    sub.textContent=base+(expiry?(uiLang==="es"?" Vigencia actual hasta ":" Vigência atual até ")+expiry+(days!=null?" ("+days+" dias).":"."):".")+renew+warn;
+    btn.textContent=mpConnection.last_error?(uiLang==="es"?"Reautorizar ahora":"Reautorizar agora"):(uiLang==="es"?"Gestionar conexión":"Gerenciar conexão");
+  }else{
+    title.textContent=mpConnection&&mpConnection.status==="expired"?(uiLang==="es"?"Autorización vencida":"Autorização vencida"):(uiLang==="es"?"Mercado Pago no conectado":"Mercado Pago não conectado");
+    sub.textContent=(mpConnection&&mpConnection.last_error)?(uiLang==="es"?"Último estado: ":"Último status: ")+mpConnection.last_error:(uiLang==="es"?"Conecte su cuenta en un toque para habilitar el split automático de sus Clases en Video.":"Conecte sua conta em um toque para habilitar o split automático das suas Aulas em Vídeo.");
+    btn.textContent=uiLang==="es"?"Conectar / Autorizar Mercado Pago":"Conectar / Autorizar Mercado Pago";
+  }
+}
+async function connectMercadoPago(){
+  if(!(details&&details.categoria_produtor)){toast(uiLang==="es"?"Guarde primero su categoría de productor.":"Salve primeiro sua categoria de produtor.");setTab("perfil");return}
+  var btn=document.getElementById("connectMpBtn");btn.disabled=true;var old=btn.textContent;btn.textContent=uiLang==="es"?"Abriendo Mercado Pago…":"Abrindo Mercado Pago…";
+  try{
+    var r=await client.functions.invoke("mp-seller-oauth",{body:{action:"start"}});
+    if(r.error)throw r.error;
+    if(!r.data||!r.data.authorization_url)throw new Error((r.data&&r.data.error)||"Integração Mercado Pago indisponível");
+    location.href=r.data.authorization_url;
+  }catch(err){console.error(err);toast((uiLang==="es"?"No fue posible conectar Mercado Pago: ":"Não foi possível conectar o Mercado Pago: ")+(err.message||err))}
+  finally{btn.disabled=false;btn.textContent=old}
 }
 function renderOverview(s){
   document.getElementById("statAuloes").textContent=auloes.length;
   document.getElementById("statApproved").textContent=auloes.filter(a=>a.status_aprovacao==="aprovado").length;
   document.getElementById("statSales").textContent=s.total_vendas||0;
-  document.getElementById("statBalance").textContent=money(s.saldo_a_receber||0);
+  document.getElementById("statBalance").textContent=money(s.valor_produtor||0);
   var pending=auloes.filter(a=>a.status_aprovacao==="pendente").length;document.getElementById("pendingNotice").innerHTML=pending?'<div class="notice">⏳ Você tem <strong>'+pending+'</strong> aulão(ões) aguardando aprovação do administrador. <button class="smallbtn whats" type="button" onclick="window.openWhats()">Avisar pelo WhatsApp</button></div>':"";
 }
 function renderAuloes(){
@@ -998,12 +1040,12 @@ function renderAuloes(){
   el.querySelectorAll("[data-send]").forEach(b=>b.onclick=()=>submitExisting(b.dataset.send));translateDom();
 }
 function renderSales(s){
-  document.getElementById("salesCount").textContent=s.total_vendas||0;document.getElementById("salesGenerated").textContent=money(s.valor_gerado||0);document.getElementById("salesPaid").textContent=money(s.valor_pago||0);document.getElementById("salesPending").textContent=money(s.saldo_a_receber||0);
-  document.getElementById("salesBody").innerHTML=salesRows.length?salesRows.map(x=>'<tr><td>'+esc(x.aulao_nome)+'</td><td>'+money(x.preco)+'</td><td>'+Number(x.vendas||0)+'</td><td class="money">'+money(x.valor_professor||0)+'</td></tr>').join(""):'<tr><td colspan="4" style="text-align:center;color:rgba(165,243,252,.4)">Nenhuma venda confirmada ainda.</td></tr>';translateDom();
+  document.getElementById("salesCount").textContent=s.total_vendas||0;document.getElementById("salesGross").textContent=money(s.valor_bruto||0);document.getElementById("salesPlatformFee").textContent=money(s.comissao_plataforma||0);document.getElementById("salesProducer").textContent=money(s.valor_produtor||0);
+  document.getElementById("salesBody").innerHTML=salesRows.length?salesRows.map(x=>'<tr><td>'+esc(x.aulao_nome)+'</td><td>'+money(x.preco)+'</td><td>'+Number(x.vendas||0)+'</td><td>'+money(x.comissao_plataforma||0)+'</td><td class="money">'+money(x.valor_produtor||0)+'</td></tr>').join(""):'<tr><td colspan="5" style="text-align:center;color:rgba(165,243,252,.4)">Nenhuma venda confirmada ainda.</td></tr>';translateDom();
 }
 async function saveProfile(ev){
-  ev.preventDefault();var btn=document.getElementById("saveProfileBtn"),name=document.getElementById("displayName").value.trim(),phone=document.getElementById("phone").value.trim(),mats=parseList(document.getElementById("subjects").value),sems=semestersSelected();
-  if(!name||!phone||!mats.length||!sems.length){toast("Preencha nome, celular, matérias e pelo menos um semestre.");return}
+  ev.preventDefault();var btn=document.getElementById("saveProfileBtn"),name=document.getElementById("displayName").value.trim(),phone=document.getElementById("phone").value.trim(),mats=parseList(document.getElementById("subjects").value),sems=semestersSelected(),category=(details&&details.categoria_produtor)||document.getElementById("producerCategory").value;
+  if(!name||!phone||!category||!mats.length||!sems.length){toast("Preencha nome, celular, categoria de produtor, matérias e pelo menos um semestre.");return}
   btn.disabled=true;btn.textContent="Salvando…";
   try{
     var photo=await uploadImage(document.getElementById("photoFile"),document.getElementById("photoUrl").value,"perfil");
@@ -1012,7 +1054,7 @@ async function saveProfile(ev){
     if(publicProfile)pubRes=await client.from("aulao_professores").update(pubPayload).eq("id",publicProfile.id).select().single();
     else pubRes=await client.from("aulao_professores").insert({...pubPayload,ordem:100}).select().single();
     if(pubRes.error)throw pubRes.error;publicProfile=pubRes.data;
-    var payload={user_id:session.user.id,professor_id:publicProfile.id,nome_exibicao:name,telefone:phone,pix_chave:document.getElementById("pixKey").value.trim()||null,materias:mats,semestres:sems,idioma_interface:uiLang,onboarding_completo:true,updated_at:new Date().toISOString()};
+    var payload={user_id:session.user.id,professor_id:publicProfile.id,nome_exibicao:name,telefone:phone,categoria_produtor:category,materias:mats,semestres:sems,idioma_interface:uiLang,onboarding_completo:true,updated_at:new Date().toISOString()};
     var d=await client.from("professor_dados").upsert(payload,{onConflict:"user_id"}).select().single();if(d.error)throw d.error;details=d.data;
     toast("Perfil salvo com sucesso.");renderProfile();setTab("overview");await loadAll()
   }catch(err){console.error(err);toast("Erro ao salvar perfil: "+(err.message||err))}finally{btn.disabled=false;btn.textContent="Salvar meu perfil"}
@@ -1026,14 +1068,14 @@ async function saveAulao(sendAfter){
   var btn=document.getElementById("saveDraftBtn");btn.disabled=true;document.getElementById("submitReviewBtn").disabled=true;btn.textContent="Salvando…";
   try{
     var cover=await uploadImage(document.getElementById("coverFile"),document.getElementById("coverUrl").value,"capas");
-    var payload={origem:"professor",professor_id:publicProfile.id,owner_user_id:session.user.id,nome:name,materia:subject,avaliacao:exam,semestre:semester,descricao:document.getElementById("aulaoDescription").value.trim()||null,preco:price,idioma_conteudo:document.getElementById("aulaoLanguage").value||"pt-BR",dias_acesso:document.getElementById("aulaoDays").value?Number(document.getElementById("aulaoDays").value):null,capa_url:cover,publicado:false,exibir_loja:false,status_aprovacao:"rascunho",updated_at:new Date().toISOString()};
+    var payload={origem:"professor",payment_model:"marketplace_split",professor_id:publicProfile.id,owner_user_id:session.user.id,nome:name,materia:subject,avaliacao:exam,semestre:semester,descricao:document.getElementById("aulaoDescription").value.trim()||null,preco:price,idioma_conteudo:document.getElementById("aulaoLanguage").value||"pt-BR",dias_acesso:document.getElementById("aulaoDays").value?Number(document.getElementById("aulaoDays").value):null,capa_url:cover,publicado:false,exibir_loja:false,status_aprovacao:"rascunho",updated_at:new Date().toISOString()};
     var res;
     if(id)res=await client.from("auloes").update(payload).eq("id",id).select().single();
     else{payload.chave="aulao-"+slug(name)+"-"+session.user.id.slice(0,5)+"-"+Date.now().toString(36).slice(-5);res=await client.from("auloes").insert(payload).select().single()}
     if(res.error)throw res.error;id=res.data.id;document.getElementById("aulaoId").value=id;
     var del=await client.from("aulao_videos").delete().eq("aulao_id",id);if(del.error)throw del.error;
     if(parts.length){var ins=await client.from("aulao_videos").insert(parts.map((x,i)=>({aulao_id:id,aulao_turma_id:null,titulo:x.titulo,youtube_url:x.url,youtube_id:x.id,ordem:i+1,publicado:true})));if(ins.error)throw ins.error}
-    toast("Rascunho salvo.");await loadAll();if(sendAfter){if(!currentAcceptance){toast(uiLang==="es"?"Firme los términos antes de enviar el curso.":"Assine os termos antes de enviar o aulão.");setTab("termos");return id}var sr=await client.rpc("professor_submit_aulao",{p_aulao_id:id});if(sr.error)throw sr.error;toast("Aulão enviado para aprovação.");await loadAll()}resetAulaoForm();setTab("auloes");return id
+    toast("Rascunho salvo.");await loadAll();if(sendAfter){if(!currentAcceptance){toast(uiLang==="es"?"Firme los términos antes de enviar el curso.":"Assine os termos antes de enviar o aulão.");setTab("termos");return id}var sr=await client.rpc("professor_submit_aulao_v2",{p_aulao_id:id});if(sr.error)throw sr.error;toast("Aulão enviado para aprovação.");await loadAll()}resetAulaoForm();setTab("auloes");return id
   }catch(err){console.error(err);toast("Erro: "+(err.message||err));return null}finally{btn.disabled=false;document.getElementById("submitReviewBtn").disabled=false;btn.textContent="Salvar rascunho"}
 }
 async function editAulao(id){
@@ -1042,25 +1084,25 @@ async function editAulao(id){
   document.getElementById("aulaoId").value=a.id;document.getElementById("aulaoName").value=a.nome;document.getElementById("aulaoPrice").value=a.preco;fillAulaoSelects();document.getElementById("aulaoSubject").value=a.materia;document.getElementById("aulaoSemester").value=a.semestre;document.getElementById("aulaoExam").value=a.avaliacao||"P1";document.getElementById("aulaoLanguage").value=a.idioma_conteudo||"pt-BR";document.getElementById("aulaoDays").value=a.dias_acesso||"";document.getElementById("aulaoDescription").value=a.descricao||"";document.getElementById("coverUrl").value=a.capa_url||"";setExistingPreview("coverPreview",a.capa_url||"");document.getElementById("coverFile").value="";document.getElementById("parts").innerHTML="";(vr.data||[]).forEach(addPart);if(!(vr.data||[]).length)addPart();document.getElementById("aulaoFormTitle").textContent="Editar aulão";document.querySelector(".card").scrollIntoView({behavior:"smooth"})
 }
 async function startRevision(id){if(!confirm("Ao editar um aulão aprovado ele sai temporariamente da loja e volta para aprovação após suas alterações. Continuar?"))return;var r=await client.rpc("professor_start_revision",{p_aulao_id:id});if(r.error){toast("Erro: "+r.error.message);return}await loadAll();await editAulao(id)}
-async function submitExisting(id){if(!currentAcceptance){toast(uiLang==="es"?"Firme los términos antes de enviar el curso.":"Assine os termos antes de enviar o aulão.");setTab("termos");return}var r=await client.rpc("professor_submit_aulao",{p_aulao_id:id});if(r.error){toast("Não foi possível enviar: "+r.error.message);return}toast("Aulão enviado para aprovação.");await loadAll()}
+async function submitExisting(id){if(!currentAcceptance){toast(uiLang==="es"?"Firme los términos antes de enviar el curso.":"Assine os termos antes de enviar o aulão.");setTab("termos");return}var r=await client.rpc("professor_submit_aulao_v2",{p_aulao_id:id});if(r.error){toast("Não foi possível enviar: "+r.error.message);return}toast("Aulão enviado para aprovação.");await loadAll()}
 window.openWhats=function(){if(!whatsapp){toast("O WhatsApp do administrador ainda não foi configurado.");return}var pending=auloes.filter(a=>a.status_aprovacao==="pendente").length;var name=(details&&details.nome_exibicao)||"Professor(a)";var rawName=(details&&details.nome_exibicao)||(publicProfile&&publicProfile.nome)||"";
 var cleanName=String(rawName||"").trim();
-var honorific=/^(dr\.?|dra\.?|dr\(a\)\.?)/i.test(cleanName)?"":"Dr(a). ";
 var msg=uiLang==="es"
-  ? "Hola, soy "+honorific+cleanName+". Me gustaría hablar sobre mis clases."
-  : "Olá, eu sou "+honorific+cleanName+". Eu gostaria de falar sobre minhas aulas!";
+  ? "Hola, soy "+cleanName+". Me gustaría hablar sobre mis clases."
+  : "Olá, eu sou "+cleanName+". Eu gostaria de falar sobre minhas aulas!";
 window.open("https://wa.me/"+String(whatsapp).replace(/\D/g,"")+"?text="+encodeURIComponent(msg),"_blank")}
 async function init(e){
   client=window.authClient;session=e.detail.session;document.getElementById("teacherEmail").textContent=session.user.email||"";
+  var mpReturn=new URLSearchParams(location.search).get("mp");if(mpReturn==="connected")setTimeout(function(){toast("Mercado Pago conectado com sucesso.")},300);else if(mpReturn==="error")setTimeout(function(){toast("Não foi possível concluir a conexão com o Mercado Pago.")},300);
   try{var ar=await client.from("professor_accounts").select("*").eq("user_id",session.user.id).maybeSingle();if(ar.error||!ar.data||ar.data.status!=="active"){deny("Sua conta ainda não foi habilitada pelo administrador como Professor Colaborador.");return}account=ar.data;await loadAll();fillSemesterChecks();fillAulaoSelects();resetAulaoForm();document.getElementById("gate").style.display="none";document.getElementById("content").style.display="block";translateDom();document.documentElement.style.visibility="visible";setupSignaturePad();renderTermsAcceptance();if(!(details&&details.onboarding_completo)){setTab("perfil");toast("Complete seu cadastro para começar a criar aulões.")}}
   catch(err){console.error(err);deny(err.message||"Não foi possível carregar sua área.")}
 }
 document.getElementById("languageBtn").onclick=function(ev){ev.stopPropagation();document.getElementById("languageMenu").classList.toggle("open")};
-document.querySelectorAll("[data-ui-lang]").forEach(function(b){b.onclick=function(){setInterfaceLanguage(b.dataset.uiLang);renderProfile();renderAuloes();renderSales((window.__lastSalesSummary)||{total_vendas:0,valor_gerado:0,valor_pago:0,saldo_a_receber:0});renderOverview((window.__lastSalesSummary)||{total_vendas:0,saldo_a_receber:0})}});
+document.querySelectorAll("[data-ui-lang]").forEach(function(b){b.onclick=function(){setInterfaceLanguage(b.dataset.uiLang);renderProfile();renderAuloes();renderSales((window.__lastSalesSummary)||{total_vendas:0,valor_bruto:0,comissao_plataforma:0,valor_produtor:0});renderOverview((window.__lastSalesSummary)||{total_vendas:0,valor_produtor:0})}});
 document.addEventListener("click",function(ev){var wrap=document.querySelector(".lang-wrap");if(wrap&&!wrap.contains(ev.target))document.getElementById("languageMenu").classList.remove("open")});
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
 document.getElementById("profileForm").onsubmit=saveProfile;
-document.getElementById("goTermsBtn").onclick=function(){setTab("termos");setTimeout(function(){if(!signatureCanvas)setupSignaturePad()},50)};
+document.getElementById("goTermsBtn").onclick=function(){setTab("termos");setTimeout(function(){if(!signatureCanvas)setupSignaturePad()},50)};document.getElementById("connectMpBtn").onclick=connectMercadoPago;
 document.getElementById("clearSignatureBtn").onclick=clearSignature;
 document.getElementById("signTermsBtn").onclick=signCurrentTerms;
 document.getElementById("downloadTermsBtn").onclick=downloadSignedTermsPdf;document.getElementById("photoFile").onchange=function(){previewFile(this,document.getElementById("photoPreview"))};document.getElementById("coverFile").onchange=function(){previewFile(this,document.getElementById("coverPreview"))};document.getElementById("addPartBtn").onclick=()=>addPart();document.getElementById("newAulaoBtn").onclick=resetAulaoForm;document.getElementById("aulaoForm").onsubmit=function(ev){ev.preventDefault();saveAulao(false)};document.getElementById("submitReviewBtn").onclick=()=>saveAulao(true);document.getElementById("whatsBtn").onclick=()=>window.openWhats();document.getElementById("logoutBtn").onclick=async()=>{try{await client.auth.signOut()}catch(e){}location.replace("login.html")};document.addEventListener("authReady",init);
