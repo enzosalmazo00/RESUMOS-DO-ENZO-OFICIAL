@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Área do Professor — Resumos do Enzo</title>
+<script>window.PAGE_KEY=null;</script>
+<script>document.documentElement.style.visibility="hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--cyan:#22d3ee;--violet:#a855f7;--green:#4ade80;--yellow:#facc15;--red:#f87171;--bg:#020810;--panel:#06111f;--border:rgba(34,211,238,.16)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Poppins,sans-serif;background:radial-gradient(circle at 10% 0%,rgba(168,85,247,.10),transparent 34%),radial-gradient(circle at 90% 15%,rgba(34,211,238,.08),transparent 36%),linear-gradient(160deg,#020d1a,#010812);color:#fff}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(34,211,238,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,.025) 1px,transparent 1px);background-size:60px 60px}
+button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index:1;max-width:1180px;margin:auto;padding:28px 18px 70px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:24px}.brand{font-size:20px;font-weight:800}.brand span{color:var(--cyan)}.top-right{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.badge{padding:6px 10px;border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}.badge.prof{color:#ddd6fe;border:1px solid rgba(168,85,247,.3);background:rgba(168,85,247,.09)}.smallbtn{padding:9px 12px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.025);color:#cdeff5;font-size:10px;font-weight:600;cursor:pointer;text-decoration:none}.smallbtn:hover{border-color:var(--cyan);color:#fff}.smallbtn.whats{border-color:rgba(74,222,128,.28);color:#86efac;background:rgba(74,222,128,.06)}
+.hero{padding:28px;border:1px solid rgba(168,85,247,.22);border-radius:22px;background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(34,211,238,.04));margin-bottom:18px}.eyebrow{font-size:10px;color:#c4b5fd;font-weight:800;letter-spacing:.16em;text-transform:uppercase}.hero h1{font-size:clamp(25px,4vw,38px);margin:7px 0 8px}.hero p{max-width:840px;font-size:12.5px;line-height:1.75;color:rgba(226,232,240,.68);margin:0}.share-box{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:18px;padding:14px 16px;border:1px solid rgba(74,222,128,.18);border-radius:14px;background:rgba(74,222,128,.045)}.share-main{font-size:13px;font-weight:700;color:#dcfce7}.share-sub{font-size:10px;color:rgba(187,247,208,.58)}
+.tabs{display:flex;gap:5px;padding:5px;border:1px solid var(--border);border-radius:15px;background:rgba(255,255,255,.025);margin-bottom:18px;overflow:auto}.tab{flex:1;min-width:125px;padding:10px 12px;border:0;border-radius:11px;background:transparent;color:rgba(165,243,252,.55);font-size:11px;font-weight:650;cursor:pointer;white-space:nowrap}.tab.active{color:#fff;background:linear-gradient(135deg,rgba(34,211,238,.14),rgba(168,85,247,.09));border:1px solid rgba(34,211,238,.2)}.panel{display:none}.panel.active{display:block}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.stat{padding:17px;border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,.022)}.stat-label{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:rgba(165,243,252,.45)}.stat-value{margin-top:5px;font-size:22px;font-weight:800;color:#ecfeff}.stat-value.green{color:#86efac}
+.card{border:1px solid var(--border);background:rgba(2,13,26,.72);border-radius:18px;padding:20px;margin-bottom:15px}.card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:15px}.card h2{font-size:17px;margin:0}.hint{font-size:10px;color:rgba(165,243,252,.45);line-height:1.55}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:9px;font-weight:750;text-transform:uppercase;letter-spacing:.07em;color:#c4b5fd}.input,.select,.textarea{width:100%;padding:11px 12px;border-radius:10px;border:1px solid rgba(34,211,238,.16);background:#07101d;color:#fff;outline:none;font-size:11px}.textarea{min-height:92px;resize:vertical}.input:focus,.select:focus,.textarea:focus{border-color:rgba(34,211,238,.55);box-shadow:0 0 0 3px rgba(34,211,238,.05)}
+.sem-checks{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}.sem-check{display:flex;gap:6px;align-items:center;padding:8px;border:1px solid rgba(34,211,238,.12);border-radius:9px;background:rgba(255,255,255,.018);font-size:10px;color:#cffafe}.upload{position:relative;min-height:82px;border:1px dashed rgba(34,211,238,.25);border-radius:12px;display:flex;align-items:center;gap:12px;padding:10px;background:rgba(34,211,238,.025)}.upload input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.upload-preview{width:88px;height:58px;object-fit:cover;border-radius:9px;border:1px solid rgba(255,255,255,.08);display:none}.upload-preview.avatar{width:58px;height:58px;border-radius:50%}.upload strong{font-size:10px}.upload small{display:block;font-size:8.5px;color:rgba(255,255,255,.4);margin-top:3px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.btn{border:0;border-radius:10px;padding:10px 14px;font-size:10px;font-weight:750;cursor:pointer}.btn.primary{background:linear-gradient(135deg,#22d3ee,#0891b2);color:#001018}.btn.violet{background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff}.btn.green{background:linear-gradient(135deg,#4ade80,#16a34a);color:#03120a}.btn.ghost{background:rgba(255,255,255,.03);border:1px solid var(--border);color:#cdeff5}.btn.red{background:rgba(248,113,113,.09);border:1px solid rgba(248,113,113,.22);color:#fca5a5}.btn:disabled{opacity:.45;cursor:not-allowed}
+.status{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:8.5px;font-weight:750;text-transform:uppercase;letter-spacing:.06em}.status.rascunho{color:#cbd5e1;background:rgba(148,163,184,.08);border:1px solid rgba(148,163,184,.18)}.status.pendente{color:#fde68a;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2)}.status.aprovado{color:#86efac;background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.2)}.status.rejeitado{color:#fca5a5;background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.2)}
+.aulao-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.aulao{border:1px solid rgba(168,85,247,.16);border-radius:16px;overflow:hidden;background:rgba(255,255,255,.02)}.aulao-cover{width:100%;aspect-ratio:16/9;object-fit:cover;background:#000;display:block}.aulao-fallback{width:100%;aspect-ratio:16/9;display:grid;place-items:center;font-size:35px;background:linear-gradient(135deg,rgba(168,85,247,.14),rgba(34,211,238,.05))}.aulao-body{padding:14px}.aulao h3{font-size:13px;margin:7px 0 4px}.meta{font-size:9px;color:rgba(196,181,253,.55)}.rejection{margin-top:8px;padding:8px;border-radius:9px;background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.16);font-size:9px;color:#fecaca}
+.parts{display:flex;flex-direction:column;gap:8px;margin-top:8px}.part-row{display:grid;grid-template-columns:48px minmax(140px,.7fr) minmax(220px,1.4fr) 34px;gap:7px;align-items:center}.part-order{font-size:9px;text-align:center;color:#c4b5fd}.part-remove{height:36px;border-radius:8px;border:1px solid rgba(248,113,113,.18);background:rgba(248,113,113,.05);color:#fca5a5;cursor:pointer}
+.sales-table{width:100%;border-collapse:collapse}.sales-table th,.sales-table td{text-align:left;padding:11px 9px;border-bottom:1px solid rgba(34,211,238,.09);font-size:10px}.sales-table th{color:rgba(165,243,252,.46);text-transform:uppercase;font-size:8.5px;letter-spacing:.06em}.money{font-weight:700;color:#86efac}
+.term-box{font-size:10.5px;line-height:1.7;color:rgba(226,232,240,.67)}.term-box h3{font-size:12px;color:#f8fafc;margin:16px 0 5px}.term-box strong{color:#fff}.accept{margin-top:15px;padding:13px;border:1px solid rgba(168,85,247,.18);border-radius:12px;background:rgba(168,85,247,.045);display:flex;gap:9px;align-items:flex-start;font-size:10px;line-height:1.5;color:#ddd6fe}
+.notice{padding:12px 14px;border-radius:12px;border:1px solid rgba(251,191,36,.18);background:rgba(251,191,36,.045);font-size:10px;line-height:1.6;color:#fde68a;margin-bottom:14px}.empty{padding:30px;border:1px dashed rgba(34,211,238,.17);border-radius:14px;text-align:center;color:rgba(165,243,252,.45);font-size:11px}.toast{position:fixed;z-index:99999;right:18px;bottom:18px;max-width:360px;padding:11px 14px;border-radius:11px;background:#06111f;border:1px solid var(--border);box-shadow:0 12px 40px rgba(0,0,0,.45);font-size:10px}.gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#020810;padding:20px}.gatebox{max-width:450px;text-align:center;padding:28px;border:1px solid rgba(168,85,247,.22);border-radius:20px;background:#06111f}.gatebox p{font-size:11px;line-height:1.6;color:rgba(226,232,240,.55)}
+
+.lang-wrap{position:relative}
+.lang-menu{display:none;position:absolute;right:0;top:calc(100% + 7px);z-index:50;min-width:210px;padding:7px;border:1px solid rgba(34,211,238,.18);border-radius:12px;background:#06111f;box-shadow:0 14px 38px rgba(0,0,0,.45)}
+.lang-menu.open{display:flex;flex-direction:column;gap:5px}
+.lang-option{width:100%;padding:9px 10px;border:1px solid rgba(255,255,255,.07);border-radius:9px;background:rgba(255,255,255,.025);color:#e6fbff;text-align:left;font-size:10px;font-weight:600;cursor:pointer}
+.lang-option:hover,.lang-option.active{border-color:rgba(34,211,238,.38);background:rgba(34,211,238,.08)}
+.lang-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;font-size:8px;font-weight:700;border:1px solid rgba(34,211,238,.18);color:#a5f3fc;background:rgba(34,211,238,.045);margin-left:6px}
+
+@media(max-width:850px){.stats{grid-template-columns:1fr 1fr}.grid,.aulao-list{grid-template-columns:1fr}.part-row{grid-template-columns:40px 1fr 34px}.part-row .part-url{grid-column:2/3}.sem-checks{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:520px){.wrap{padding:18px 12px 55px}.hero{padding:20px}.stats{grid-template-columns:1fr 1fr}.stat-value{font-size:18px}.sem-checks{grid-template-columns:repeat(3,1fr)}.part-row{grid-template-columns:34px 1fr 30px}.tabs{margin-left:-2px;margin-right:-2px}}
+</style>
+</head>
+<body>
+<div class="gate" id="gate"><div class="gatebox"><div style="font-size:34px">🎓</div><h2>Carregando sua área de professor…</h2><p>Validando sua conta de colaborador.</p></div></div>
+
+<main class="wrap" id="content" style="display:none">
+  <div class="top">
+    <div><div class="brand">RESUMOS DO <span>ENZO</span></div><div id="teacherEmail" style="font-size:9px;color:rgba(165,243,252,.38);margin-top:2px"></div></div>
+    <div class="top-right">
+      <span class="badge prof">Professor colaborador</span>
+      <div class="lang-wrap">
+        <button class="smallbtn" id="languageBtn" type="button">🌐 Selecionar idioma: Português</button>
+        <div class="lang-menu" id="languageMenu">
+          <button class="lang-option" type="button" data-ui-lang="pt-BR">🇧🇷 Português (PT-BR)</button>
+          <button class="lang-option" type="button" data-ui-lang="es">🇵🇾 Español</button>
+        </div>
+      </div>
+      <button class="smallbtn whats" id="whatsBtn">💬 Falar com administrador</button>
+      <a class="smallbtn" href="dashboard.html?modo=aluno">Área do aluno</a>
+      <button class="smallbtn" id="logoutBtn">Sair</button>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="eyebrow">Sua área de conteúdo</div>
+    <h1 id="heroTitle">Bem-vindo(a), Dr(a).</h1>
+    <p>Crie, organize e distribua seus próprios aulões de maneira simples e segura. Você produz o conteúdo, escolhe o valor e divide o aulão em quantas partes precisar. A plataforma cuida da vitrine, acesso dos alunos, pagamentos via PIX e cartão, infraestrutura de hospedagem do player e recursos de apoio ao aluno.</p>
+    <div class="share-box"><div><div class="share-main">💰 De cada venda, 2/3 são seus.</div><div class="share-sub">Exemplo: aulão de R$ 15,00 → R$ 10,00 para você. A parcela da plataforma mantém pagamentos, tecnologia, segurança, IA e operação do serviço.</div></div></div>
+  </section>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="overview">Visão geral</button>
+    <button class="tab" data-tab="perfil">Meu perfil</button>
+    <button class="tab" data-tab="auloes">Meus aulões</button>
+    <button class="tab" data-tab="vendas">Minhas vendas</button>
+    <button class="tab" data-tab="termos">Termos</button>
+  </div>
+
+  <section class="panel active" id="panel-overview">
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Meus aulões</div><div class="stat-value" id="statAuloes">0</div></div>
+      <div class="stat"><div class="stat-label">Aprovados</div><div class="stat-value" id="statApproved">0</div></div>
+      <div class="stat"><div class="stat-label">Vendas confirmadas</div><div class="stat-value" id="statSales">0</div></div>
+      <div class="stat"><div class="stat-label">Saldo a receber</div><div class="stat-value green" id="statBalance">R$ 0,00</div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><h2>Fluxo simples</h2><div class="hint">Seu conteúdo só entra no ar depois da revisão administrativa.</div></div></div>
+      <div class="grid">
+        <div class="notice">1️⃣ Complete seu perfil, matérias, semestres, celular e chave PIX.</div>
+        <div class="notice">2️⃣ Crie o aulão, defina preço e adicione quantas partes em vídeo quiser.</div>
+        <div class="notice">3️⃣ Envie para aprovação. Enquanto estiver pendente ele não aparece na loja.</div>
+        <div class="notice">4️⃣ Após aprovação, o aulão entra na plataforma e as vendas passam a aparecer aqui.</div>
+      </div>
+    </div>
+    <div id="pendingNotice"></div>
+  </section>
+
+  <section class="panel" id="panel-perfil">
+    <div class="card">
+      <div class="card-head"><div><h2>Meu perfil de professor</h2><div class="hint">Essas informações organizam seu perfil público e limitam as opções disponíveis ao criar aulões.</div></div></div>
+      <form id="profileForm">
+        <div class="grid">
+          <div class="field"><label>Como gostaria de ser chamado(a)?</label><input class="input" id="displayName" required placeholder="Ex.: Dr. Marcos Rigonatto"></div>
+          <div class="field"><label>Celular / WhatsApp</label><input class="input" id="phone" required placeholder="+595... ou +55..."></div>
+          <div class="field full"><label>Matérias que você ministra</label><input class="input" id="subjects" required placeholder="Ex.: Microbiologia 1, Microbiologia 2, Imunologia"><div class="hint">Separe as matérias por vírgula. Elas aparecerão como opções ao criar seus aulões.</div></div>
+          <div class="field full"><label>Semestres em que ministra aula</label><div class="sem-checks" id="semesterChecks"></div></div>
+          <div class="field"><label>Chave PIX para futuros repasses</label><input class="input" id="pixKey" placeholder="CPF, e-mail, celular ou chave aleatória"></div>
+          <div class="field">
+            <label>Foto do perfil</label>
+            <input type="hidden" id="photoUrl">
+            <div class="upload"><input id="photoFile" type="file" accept="image/jpeg,image/png,image/webp"><img id="photoPreview" class="upload-preview avatar" alt=""><div><strong>📷 Escolher foto do dispositivo</strong><small>JPG, PNG ou WEBP · até 5 MB.</small></div></div>
+          </div>
+          <div class="field full"><label>Apresentação curta</label><textarea class="textarea" id="bio" placeholder="Ex.: Professor de Microbiologia, aulas focadas em revisão para provas..."></textarea></div>
+        </div>
+        <label class="accept" id="acceptWrap"><input type="checkbox" id="acceptTerms"><span>Li e concordo com os <strong>Termos do Professor Colaborador</strong>, incluindo a divisão de 2/3 do valor da venda para o professor e 1/3 para manutenção e operação da plataforma.</span></label>
+        <div class="actions"><button class="btn primary" type="submit" id="saveProfileBtn">Salvar meu perfil</button></div>
+      </form>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-auloes">
+    <div class="card">
+      <div class="card-head"><div><h2 id="aulaoFormTitle">Criar novo aulão</h2><div class="hint">O código interno é criado automaticamente. Você só precisa preencher o conteúdo.</div></div><button class="btn ghost" id="newAulaoBtn" type="button">+ Novo</button></div>
+      <form id="aulaoForm">
+        <input type="hidden" id="aulaoId"><input type="hidden" id="coverUrl">
+        <div class="grid">
+          <div class="field"><label>Nome do aulão</label><input class="input" id="aulaoName" required placeholder="Ex.: Microbiologia 2 — P1"></div>
+          <div class="field"><label>Preço (R$)</label><input class="input" id="aulaoPrice" required type="number" min="1" step="0.01" placeholder="15,00"></div>
+          <div class="field"><label>Matéria</label><select class="select" id="aulaoSubject" required></select></div>
+          <div class="field"><label>Semestre</label><select class="select" id="aulaoSemester" required></select></div>
+          <div class="field"><label>Avaliação</label><select class="select" id="aulaoExam"><option>P1</option><option>P2</option><option>Final</option></select></div>
+          <div class="field"><label>Idioma do conteúdo</label><select class="select" id="aulaoLanguage"><option value="pt-BR">🇧🇷 Português (PT-BR)</option><option value="es">🇵🇾 Español</option></select><div class="hint">O aluno verá claramente o idioma antes de comprar ou assistir.</div></div>
+          <div class="field"><label>Dias de acesso</label><input class="input" id="aulaoDays" type="number" min="1" placeholder="Ex.: 30 (vazio = permanente)"></div>
+          <div class="field full"><label>Descrição</label><textarea class="textarea" id="aulaoDescription" placeholder="Explique brevemente o que será revisado neste aulão."></textarea></div>
+          <div class="field full"><label>Capa do aulão</label><div class="upload"><input id="coverFile" type="file" accept="image/jpeg,image/png,image/webp"><img id="coverPreview" class="upload-preview" alt=""><div><strong>🖼️ Escolher capa do dispositivo</strong><small>JPG, PNG ou WEBP · até 5 MB.</small></div></div></div>
+          <div class="field full"><label>Partes do aulão</label><div class="hint">Cole links do YouTube. Você pode dividir o conteúdo em quantas partes quiser.</div><div class="parts" id="parts"></div><div class="actions"><button class="btn ghost" id="addPartBtn" type="button">+ Adicionar parte</button></div></div>
+        </div>
+        <div class="actions"><button class="btn primary" type="submit" id="saveDraftBtn">Salvar rascunho</button><button class="btn violet" type="button" id="submitReviewBtn">Enviar para aprovação</button></div>
+      </form>
+    </div>
+    <div class="card"><div class="card-head"><div><h2>Meus aulões</h2><div class="hint">Aprovados entram automaticamente na área de Aulões e na loja.</div></div></div><div class="aulao-list" id="aulaoList"></div></div>
+  </section>
+
+  <section class="panel" id="panel-vendas">
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Vendas confirmadas</div><div class="stat-value" id="salesCount">0</div></div>
+      <div class="stat"><div class="stat-label">Valor gerado para você</div><div class="stat-value green" id="salesGenerated">R$ 0,00</div></div>
+      <div class="stat"><div class="stat-label">Já repassado</div><div class="stat-value" id="salesPaid">R$ 0,00</div></div>
+      <div class="stat"><div class="stat-label">A receber</div><div class="stat-value green" id="salesPending">R$ 0,00</div></div>
+    </div>
+    <div class="card">
+      <div class="notice">💳 Nesta fase, o painel registra automaticamente as vendas aprovadas e calcula sua participação em cada venda. A forma operacional de repasse (PIX ou integração futura com Mercado Pago) será ativada separadamente.</div>
+      <div style="overflow:auto"><table class="sales-table"><thead><tr><th>Aulão</th><th>Preço</th><th>Vendas</th><th>Seu valor gerado</th></tr></thead><tbody id="salesBody"></tbody></table></div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-termos">
+    <div class="card">
+      <div class="card-head"><div><h2>Termos do Professor Colaborador</h2><div class="hint" id="termsVersionLabel">Versão 2026-09-26-v2</div></div></div>
+      <div class="term-box" id="termsText"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+"use strict";
+var client=null,session=null,account=null,details=null,publicProfile=null,auloes=[],salesRows=[],whatsapp="";
+var TERMS_VERSION="2026-09-26-v2";
+var uiLang="pt-BR";
+
+function esc(v){return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function money(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+
+function L(pt,es){return uiLang==="es"?es:pt}
+function contentLanguageLabel(code){return code==="es"?"Contenido en español":"Conteúdo em Português"}
+const TERMS_PT=`
+<p><strong>Termos do Professor Colaborador — Resumos do Enzo</strong></p>
+<p>Ao utilizar uma conta de Professor Colaborador, você adere voluntariamente a estes termos para utilizar a infraestrutura tecnológica da plataforma para disponibilizar e distribuir conteúdo educacional próprio.</p>
+
+<h3>1. Natureza da relação e função da plataforma</h3>
+<p>O Resumos do Enzo atua como <strong>plataforma tecnológica de intermediação e distribuição digital</strong>. A plataforma disponibiliza ferramentas de cadastro, organização de catálogo, controle de acesso, processamento ou integração de pagamentos, player, recursos de segurança, suporte operacional e funcionalidades digitais para aproximar o Professor Colaborador dos alunos interessados em adquirir seu conteúdo.</p>
+<p>A plataforma <strong>não contrata o professor para produzir aulas</strong>, não compra antecipadamente seu conteúdo e não exige carga horária, jornada, frequência, exclusividade, quantidade mínima de aulões ou prestação contínua de serviços.</p>
+
+<h3>2. Autonomia do Professor Colaborador e ausência de vínculo</h3>
+<p>O professor atua de forma independente e voluntária, escolhendo se deseja produzir conteúdo, quais assuntos abordará, quando produzirá, quantos aulões oferecerá e qual preço deseja atribuir a cada produto dentro das regras técnicas da plataforma.</p>
+<p>A adesão a estes termos <strong>não cria, por si só, vínculo empregatício, sociedade, associação, joint venture, franquia, mandato, representação comercial, agência, parceria societária ou relação de subordinação</strong> entre o professor e o Resumos do Enzo. A remuneração decorrente das vendas representa participação contratual pela distribuição do produto digital e não salário.</p>
+<p>A revisão administrativa antes da publicação tem finalidade técnica, comercial, jurídica e de segurança da plataforma e não representa direção pedagógica, controle de jornada ou comando sobre a atividade profissional do professor.</p>
+<p><strong>Importante:</strong> a qualificação jurídica de qualquer relação depende também da realidade concreta e das normas obrigatórias aplicáveis. Estes termos não pretendem afastar direitos trabalhistas ou outras proteções legais que sejam inderrogáveis caso os requisitos previstos em lei efetivamente estejam presentes.</p>
+
+<h3>3. Referências jurídicas Brasil e Paraguai</h3>
+<p>Estes termos foram estruturados considerando, entre outras normas aplicáveis conforme o caso: no Brasil, os princípios contratuais de liberdade contratual, alocação de riscos e boa-fé do Código Civil (arts. 421, 421-A e 422), os critérios legais de relação de emprego da CLT (arts. 2º e 3º), a LGPD e o Marco Civil da Internet conforme sua interpretação jurisprudencial vigente; no Paraguai, os princípios de boa-fé e força obrigatória dos contratos do Código Civil (arts. 714 e 715), o Código del Trabajo quanto à dependência e subordinação reais, a Ley Nº 4868/2013 de Comercio Electrónico e a Ley Nº 7593/2025 de Protección de Datos Personales.</p>
+<p>A aplicação concreta de uma norma brasileira ou paraguaia dependerá dos elementos de conexão de cada relação, inclusive localização das partes, consumidores envolvidos e normas imperativas.</p>
+
+<h3>4. Conteúdo, autoria e responsabilidade acadêmica</h3>
+<p>O professor mantém a autoria e a responsabilidade pelo conteúdo que produz. Ao enviar um aulão, concede à plataforma licença não exclusiva, limitada ao necessário para hospedar, organizar, divulgar, comercializar e disponibilizar o conteúdo aos alunos durante os períodos de acesso contratados.</p>
+<p>O professor declara possuir os direitos e autorizações necessários sobre materiais, imagens, slides, marcas, textos e demais elementos utilizados e compromete-se a não incluir dados de pacientes, informações sigilosas ou conteúdo cuja divulgação seja ilícita.</p>
+
+<h3>5. Intermediação, conteúdo de terceiros e medidas de remoção</h3>
+<p>Como intermediadora tecnológica, a plataforma não assume a autoria do conteúdo enviado pelo professor. Entretanto, poderá revisar, suspender, bloquear ou retirar material quando identificar risco jurídico, violação destes termos, reclamação fundamentada, violação de propriedade intelectual, determinação de autoridade competente ou outra hipótese em que a legislação aplicável exija atuação da plataforma.</p>
+<p>O professor compromete-se a cooperar prontamente na apuração de reclamações relativas ao seu conteúdo.</p>
+
+<h3>6. Preço e divisão econômica</h3>
+<p>O professor define o preço do aulão. Em cada venda efetivamente aprovada, liquidada e não estornada, <strong>2/3 do valor pago são destinados ao Professor Colaborador e 1/3 à plataforma</strong>. Para comunicação comercial, isso corresponde aproximadamente a 66,67% e 33,33%.</p>
+<p>Exemplo: em uma venda de R$ 15,00, R$ 10,00 correspondem ao professor e R$ 5,00 à plataforma. O cálculo operacional é realizado por venda e arredondado para centavos quando necessário.</p>
+
+<h3>7. Finalidade da parcela da plataforma</h3>
+<p>A parcela da plataforma remunera o uso da infraestrutura de distribuição, tecnologia, processamento e integração de pagamentos, manutenção, suporte, segurança, recursos de inteligência artificial, organização do catálogo e demais custos operacionais.</p>
+
+<h3>8. Responsabilidade fiscal, tributária e profissional individual</h3>
+<p>Cada parte é responsável, na medida determinada pela legislação que lhe seja aplicável, por <strong>seus próprios tributos, declarações, inscrições, documentos fiscais, recibos, obrigações profissionais e regularidade perante as autoridades competentes</strong> relacionados à renda ou receita que lhe corresponda.</p>
+<p>O Professor Colaborador é responsável por avaliar e cumprir as obrigações fiscais decorrentes dos valores que recebe pela comercialização de seus conteúdos. A plataforma não presta consultoria contábil ou tributária individual ao professor.</p>
+<p>Essa distribuição de responsabilidades <strong>não afasta deveres legais atribuídos diretamente à plataforma</strong>. Quando a lei exigir retenção, informação, declaração, recolhimento ou fornecimento de dados a autoridade competente, a plataforma poderá cumprir a obrigação correspondente e registrar o ajuste no demonstrativo do professor.</p>
+
+<h3>9. Estornos, chargebacks, cancelamentos e fraude</h3>
+<p>Pagamentos cancelados, recusados, estornados, contestados, fraudulentos ou devolvidos não integram a base líquida de repasse. Se um estorno ocorrer depois de valor já repassado, a quantia correspondente poderá ser compensada em saldo futuro, com registro no painel.</p>
+
+<h3>10. Aprovação antes da publicação</h3>
+<p>Todo novo aulão e toda alteração relevante de um aulão aprovado ficam sujeitos à revisão administrativa antes de voltar ao ar. A aprovação confirma apenas que o conteúdo atende aos critérios operacionais da plataforma naquele momento; ela não transfere autoria nem substitui a responsabilidade profissional do professor.</p>
+
+<h3>11. Compras já realizadas</h3>
+<p>Quando um aluno compra um aulão, o conteúdo deve permanecer disponível pelo período de acesso informado. Professor e plataforma devem cooperar para preservar direitos de alunos que já realizaram compras, inclusive quando houver correção, substituição ou encerramento futuro do conteúdo.</p>
+
+<h3>12. Segurança, cópia e vazamento</h3>
+<p>A plataforma utiliza controles de autenticação, acesso individual, identificação do usuário, marcações no player e outras medidas técnicas destinadas a dificultar gravação, cópia e compartilhamento indevido. <strong>Nenhuma tecnologia consegue garantir impossibilidade absoluta de captura, gravação ou vazamento praticado por terceiros.</strong></p>
+<p>A plataforma responderá pelos deveres que a lei lhe atribuir, mas não assume responsabilidade automática por ato ilícito praticado por terceiro quando tiver adotado medidas razoáveis de segurança e resposta, sem prejuízo das obrigações de remoção, cooperação ou reparação que sejam legalmente aplicáveis ao caso concreto.</p>
+
+<h3>13. Dados pessoais e privacidade</h3>
+<p>A plataforma busca limitar a coleta aos dados necessários para identificação do professor, organização acadêmica, contato, segurança e repasses. O tratamento deve observar as normas de proteção de dados aplicáveis, incluindo a LGPD brasileira e, quando aplicável, a Ley Nº 7593/2025 do Paraguai, com medidas proporcionais de segurança, transparência e finalidade.</p>
+
+<h3>14. Conta, credenciais e conduta</h3>
+<p>A conta de professor é pessoal. O titular deve proteger suas credenciais e comunicar suspeitas de acesso indevido. A plataforma pode suspender preventivamente conta, conteúdo ou pagamento quando houver indício razoável de fraude, risco de segurança, violação de direito de terceiros ou descumprimento destes termos.</p>
+
+<h3>15. Independência profissional e ausência de garantia de resultado</h3>
+<p>Os aulões são materiais educacionais de apoio. A plataforma não garante nota, aprovação, desempenho acadêmico, reconhecimento institucional ou resultado profissional específico. O professor permanece responsável pela qualidade e precisão do conteúdo que apresenta.</p>
+
+<h3>16. Encerramento da colaboração</h3>
+<p>O professor pode solicitar o encerramento de sua participação. A plataforma também pode suspender ou encerrar a colaboração por violação dos termos, fraude, risco legal, inatividade operacional relevante ou uso indevido. A existência de acessos já vendidos será considerada para preservar as obrigações assumidas perante alunos.</p>
+
+<h3>17. Normas obrigatórias e direitos de terceiros</h3>
+<p>Nenhuma disposição destes termos deve ser interpretada como renúncia a direito indisponível, exclusão de responsabilidade que a lei proíba excluir ou afastamento de normas obrigatórias de proteção ao consumidor, trabalho, tributação, propriedade intelectual, privacidade ou proteção de dados.</p>
+
+<h3>18. Alterações dos termos e registro do aceite</h3>
+<p>Alterações materiais serão apresentadas para novo aceite quando necessário. A plataforma registra a versão aceita, a data e a hora do aceite para fins de transparência e prova da manifestação de vontade.</p>
+
+<p style="margin-top:18px;color:rgba(165,243,252,.42)">Versão operacional 2026-09-26-v2. Recomenda-se revisão por advogado e contador com atuação transfronteiriça Brasil–Paraguai antes da implantação definitiva de repasses automáticos e expansão comercial.</p>`;
+
+const TERMS_ES=`
+<p><strong>Términos del Profesor Colaborador — Resumos do Enzo</strong></p>
+<p>Al utilizar una cuenta de Profesor Colaborador, usted se adhiere voluntariamente a estos términos para utilizar la infraestructura tecnológica de la plataforma con el fin de poner a disposición y distribuir contenido educativo propio.</p>
+
+<h3>1. Naturaleza de la relación y función de la plataforma</h3>
+<p>Resumos do Enzo actúa como <strong>plataforma tecnológica de intermediación y distribución digital</strong>. La plataforma ofrece herramientas de registro, organización de catálogo, control de acceso, procesamiento o integración de pagos, reproductor, recursos de seguridad, soporte operativo y funcionalidades digitales para acercar al Profesor Colaborador a los alumnos interesados en adquirir su contenido.</p>
+<p>La plataforma <strong>no contrata al profesor para producir clases</strong>, no compra anticipadamente su contenido y no exige carga horaria, jornada, frecuencia, exclusividad, cantidad mínima de clases intensivas ni prestación continua de servicios.</p>
+
+<h3>2. Autonomía del Profesor Colaborador y ausencia de vínculo laboral</h3>
+<p>El profesor actúa de manera independiente y voluntaria, eligiendo si desea producir contenido, qué temas abordará, cuándo lo producirá, cuántos cursos ofrecerá y qué precio asignará a cada producto dentro de las reglas técnicas de la plataforma.</p>
+<p>La adhesión a estos términos <strong>no crea por sí sola relación laboral, sociedad, asociación, joint venture, franquicia, mandato, representación comercial, agencia, vínculo societario ni relación de subordinación</strong> entre el profesor y Resumos do Enzo. La participación en las ventas representa una contraprestación contractual por la distribución del producto digital y no un salario.</p>
+<p>La revisión administrativa previa a la publicación tiene una finalidad técnica, comercial, jurídica y de seguridad y no representa dirección pedagógica, control de jornada ni mando sobre la actividad profesional del profesor.</p>
+<p><strong>Importante:</strong> la calificación jurídica de cualquier relación depende también de la realidad concreta y de las normas imperativas aplicables. Estos términos no pretenden excluir derechos laborales u otras protecciones legales inderogables cuando los requisitos previstos por la ley estén realmente presentes.</p>
+
+<h3>3. Referencias jurídicas Brasil y Paraguay</h3>
+<p>Estos términos fueron estructurados considerando, entre otras normas aplicables según el caso: en Brasil, los principios de libertad contractual, asignación de riesgos y buena fe del Código Civil (arts. 421, 421-A y 422), los criterios legales de relación laboral de la CLT (arts. 2 y 3), la LGPD y el Marco Civil de Internet conforme a su interpretación jurisprudencial vigente; en Paraguay, los principios de buena fe y fuerza obligatoria de los contratos del Código Civil (arts. 714 y 715), el Código del Trabajo respecto de la dependencia y subordinación reales, la Ley Nº 4868/2013 de Comercio Electrónico y la Ley Nº 7593/2025 de Protección de Datos Personales.</p>
+<p>La aplicación concreta de una norma brasileña o paraguaya dependerá de los elementos de conexión de cada relación, incluida la ubicación de las partes, los consumidores involucrados y las normas imperativas.</p>
+
+<h3>4. Contenido, autoría y responsabilidad académica</h3>
+<p>El profesor mantiene la autoría y la responsabilidad por el contenido que produce. Al enviar un curso, concede a la plataforma una licencia no exclusiva, limitada a lo necesario para alojar, organizar, divulgar, comercializar y poner el contenido a disposición de los alumnos durante los períodos de acceso contratados.</p>
+<p>El profesor declara poseer los derechos y autorizaciones necesarios sobre materiales, imágenes, diapositivas, marcas, textos y demás elementos utilizados y se compromete a no incluir datos de pacientes, información confidencial o contenido cuya divulgación sea ilícita.</p>
+
+<h3>5. Intermediación, contenido de terceros y medidas de retiro</h3>
+<p>Como intermediaria tecnológica, la plataforma no asume la autoría del contenido enviado por el profesor. Sin embargo, podrá revisar, suspender, bloquear o retirar material cuando identifique riesgo jurídico, incumplimiento de estos términos, reclamo fundado, violación de propiedad intelectual, orden de autoridad competente u otra hipótesis en la que la legislación aplicable exija actuación de la plataforma.</p>
+<p>El profesor se compromete a colaborar oportunamente en la investigación de reclamos relacionados con su contenido.</p>
+
+<h3>6. Precio y distribución económica</h3>
+<p>El profesor define el precio del curso. En cada venta efectivamente aprobada, liquidada y no revertida, <strong>2/3 del valor pagado corresponden al Profesor Colaborador y 1/3 a la plataforma</strong>. Para fines de comunicación comercial, esto equivale aproximadamente a 66,67% y 33,33%.</p>
+<p>Ejemplo: en una venta de R$ 15,00, R$ 10,00 corresponden al profesor y R$ 5,00 a la plataforma. El cálculo operativo se realiza por venta y se redondea a centavos cuando sea necesario.</p>
+
+<h3>7. Finalidad de la participación de la plataforma</h3>
+<p>La parte correspondiente a la plataforma remunera el uso de la infraestructura de distribución, tecnología, procesamiento e integración de pagos, mantenimiento, soporte, seguridad, recursos de inteligencia artificial, organización del catálogo y demás costos operativos.</p>
+
+<h3>8. Responsabilidad fiscal, tributaria y profesional individual</h3>
+<p>Cada parte es responsable, en la medida determinada por la legislación que le resulte aplicable, de <strong>sus propios impuestos, declaraciones, inscripciones, documentos fiscales, recibos, obligaciones profesionales y regularidad ante las autoridades competentes</strong> relacionados con los ingresos o valores que le correspondan.</p>
+<p>El Profesor Colaborador es responsable de evaluar y cumplir las obligaciones fiscales derivadas de los valores que recibe por la comercialización de sus contenidos. La plataforma no presta asesoría contable o tributaria individual al profesor.</p>
+<p>Esta distribución de responsabilidades <strong>no excluye deberes legales atribuidos directamente a la plataforma</strong>. Cuando la ley exija retención, información, declaración, pago o suministro de datos a una autoridad competente, la plataforma podrá cumplir la obligación correspondiente y registrar el ajuste en el estado de cuenta del profesor.</p>
+
+<h3>9. Reversiones, contracargos, cancelaciones y fraude</h3>
+<p>Los pagos cancelados, rechazados, revertidos, impugnados, fraudulentos o devueltos no integran la base líquida de pago al profesor. Si una reversión ocurre después de un valor ya transferido, la suma correspondiente podrá compensarse con saldos futuros, con registro en el panel.</p>
+
+<h3>10. Aprobación previa a la publicación</h3>
+<p>Todo nuevo curso y toda modificación relevante de un curso aprobado quedan sujetos a revisión administrativa antes de volver a estar disponibles. La aprobación confirma únicamente que el contenido cumple los criterios operativos de la plataforma en ese momento; no transfiere la autoría ni sustituye la responsabilidad profesional del profesor.</p>
+
+<h3>11. Compras ya realizadas</h3>
+<p>Cuando un alumno compra un curso, el contenido debe permanecer disponible durante el período de acceso informado. Profesor y plataforma deben cooperar para preservar los derechos de los alumnos que ya realizaron compras, incluso cuando exista corrección, sustitución o cierre futuro del contenido.</p>
+
+<h3>12. Seguridad, copia y filtraciones</h3>
+<p>La plataforma utiliza controles de autenticación, acceso individual, identificación del usuario, marcas en el reproductor y otras medidas técnicas destinadas a dificultar grabación, copia y distribución indebida. <strong>Ninguna tecnología puede garantizar la imposibilidad absoluta de captura, grabación o filtración realizada por terceros.</strong></p>
+<p>La plataforma responderá por los deberes que la ley le imponga, pero no asume responsabilidad automática por actos ilícitos de terceros cuando haya adoptado medidas razonables de seguridad y respuesta, sin perjuicio de las obligaciones de retiro, cooperación o reparación legalmente aplicables al caso concreto.</p>
+
+<h3>13. Datos personales y privacidad</h3>
+<p>La plataforma procura limitar la recopilación a los datos necesarios para identificación del profesor, organización académica, contacto, seguridad y pagos. El tratamiento debe observar las normas de protección de datos aplicables, incluida la LGPD brasileña y, cuando corresponda, la Ley Nº 7593/2025 de Paraguay, con medidas proporcionales de seguridad, transparencia y finalidad.</p>
+
+<h3>14. Cuenta, credenciales y conducta</h3>
+<p>La cuenta del profesor es personal. El titular debe proteger sus credenciales y comunicar cualquier sospecha de acceso indebido. La plataforma puede suspender preventivamente la cuenta, el contenido o un pago cuando exista indicio razonable de fraude, riesgo de seguridad, violación de derechos de terceros o incumplimiento de estos términos.</p>
+
+<h3>15. Independencia profesional y ausencia de garantía de resultados</h3>
+<p>Los cursos son materiales educativos de apoyo. La plataforma no garantiza calificaciones, aprobación, desempeño académico, reconocimiento institucional ni resultado profesional específico. El profesor mantiene la responsabilidad por la calidad y exactitud del contenido presentado.</p>
+
+<h3>16. Finalización de la colaboración</h3>
+<p>El profesor puede solicitar la finalización de su participación. La plataforma también puede suspender o finalizar la colaboración por incumplimiento de los términos, fraude, riesgo legal, inactividad operativa relevante o uso indebido. La existencia de accesos ya vendidos será considerada para preservar las obligaciones asumidas frente a los alumnos.</p>
+
+<h3>17. Normas imperativas y derechos de terceros</h3>
+<p>Ninguna disposición de estos términos debe interpretarse como renuncia a un derecho indisponible, exclusión de responsabilidad que la ley prohíba excluir o apartamiento de normas imperativas de protección al consumidor, trabajo, tributación, propiedad intelectual, privacidad o protección de datos.</p>
+
+<h3>18. Cambios de los términos y registro de aceptación</h3>
+<p>Las modificaciones sustanciales serán presentadas para una nueva aceptación cuando sea necesario. La plataforma registra la versión aceptada, la fecha y la hora de aceptación para fines de transparencia y prueba de la manifestación de voluntad.</p>
+
+<p style="margin-top:18px;color:rgba(165,243,252,.42)">Versión operativa 2026-09-26-v2. Se recomienda revisión por abogado y contador con actuación transfronteriza Brasil–Paraguay antes de implementar transferencias automáticas y ampliar la operación comercial.</p>`;
+
+const ES_MAP={
+"Professor colaborador":"Profesor colaborador",
+"Falar com administrador":"Hablar con el administrador",
+"Área do aluno":"Área del alumno","Sair":"Salir",
+"Sua área de conteúdo":"Tu área de contenido",
+"Crie, organize e distribua seus próprios aulões de maneira simples e segura. Você produz o conteúdo, escolhe o valor e divide o aulão em quantas partes precisar. A plataforma cuida da vitrine, acesso dos alunos, pagamentos via PIX e cartão, infraestrutura de hospedagem do player e recursos de apoio ao aluno.":"Cree, organice y distribuya sus propios cursos de forma simple y segura. Usted produce el contenido, elige el precio y divide el curso en tantas partes como necesite. La plataforma se ocupa de la vitrina, el acceso de los alumnos, los pagos por PIX y tarjeta, la infraestructura del reproductor y los recursos de apoyo al alumno.",
+"💰 De cada venda, 2/3 são seus.":"💰 De cada venta, 2/3 son para usted.",
+"Exemplo: aulão de R$ 15,00 → R$ 10,00 para você. A parcela da plataforma mantém pagamentos, tecnologia, segurança, IA e operação do serviço.":"Ejemplo: curso de R$ 15,00 → R$ 10,00 para usted. La parte de la plataforma mantiene pagos, tecnología, seguridad, IA y operación del servicio.",
+"Visão geral":"Vista general","Meu perfil":"Mi perfil","Meus aulões":"Mis cursos","Minhas vendas":"Mis ventas","Termos":"Términos",
+"Aprovados":"Aprobados","Vendas confirmadas":"Ventas confirmadas","Saldo a receber":"Saldo por cobrar",
+"Fluxo simples":"Flujo simple","Seu conteúdo só entra no ar depois da revisão administrativa.":"Su contenido solo se publica después de la revisión administrativa.",
+"1️⃣ Complete seu perfil, matérias, semestres, celular e chave PIX.":"1️⃣ Complete su perfil, materias, semestres, celular y clave PIX.",
+"2️⃣ Crie o aulão, defina preço e adicione quantas partes em vídeo quiser.":"2️⃣ Cree el curso, defina el precio y agregue tantas partes en video como desee.",
+"3️⃣ Envie para aprovação. Enquanto estiver pendente ele não aparece na loja.":"3️⃣ Envíelo para aprobación. Mientras esté pendiente no aparecerá en la tienda.",
+"4️⃣ Após aprovação, o aulão entra na plataforma e as vendas passam a aparecer aqui.":"4️⃣ Después de la aprobación, el curso entra en la plataforma y las ventas comienzan a aparecer aquí.",
+"Meu perfil de professor":"Mi perfil de profesor",
+"Essas informações organizam seu perfil público e limitam as opções disponíveis ao criar aulões.":"Esta información organiza su perfil público y limita las opciones disponibles al crear cursos.",
+"Como gostaria de ser chamado(a)?":"¿Cómo desea ser llamado(a)?","Celular / WhatsApp":"Celular / WhatsApp",
+"Matérias que você ministra":"Materias que imparte","Separe as matérias por vírgula. Elas aparecerão como opções ao criar seus aulões.":"Separe las materias con comas. Aparecerán como opciones al crear sus cursos.",
+"Semestres em que ministra aula":"Semestres en los que imparte clases","Chave PIX para futuros repasses":"Clave PIX para futuras transferencias",
+"Foto do perfil":"Foto de perfil","📷 Escolher foto do dispositivo":"📷 Elegir foto del dispositivo","Apresentação curta":"Presentación breve",
+"Salvar meu perfil":"Guardar mi perfil",
+"Criar novo aulão":"Crear nuevo curso","O código interno é criado automaticamente. Você só precisa preencher o conteúdo.":"El código interno se crea automáticamente. Solo necesita completar el contenido.",
+"+ Novo":"+ Nuevo","Nome do aulão":"Nombre del curso","Preço (R$)":"Precio (R$)","Matéria":"Materia","Semestre":"Semestre","Avaliação":"Evaluación",
+"Idioma do conteúdo":"Idioma del contenido","O aluno verá claramente o idioma antes de comprar ou assistir.":"El alumno verá claramente el idioma antes de comprar o mirar.",
+"Dias de acesso":"Días de acceso","Descrição":"Descripción","Capa do aulão":"Portada del curso","🖼️ Escolher capa do dispositivo":"🖼️ Elegir portada del dispositivo",
+"Partes do aulão":"Partes del curso","Cole links do YouTube. Você pode dividir o conteúdo em quantas partes quiser.":"Pegue enlaces de YouTube. Puede dividir el contenido en tantas partes como necesite.",
+"+ Adicionar parte":"+ Agregar parte","Salvar rascunho":"Guardar borrador","Enviar para aprovação":"Enviar para aprobación",
+"Aprovados entram automaticamente na área de Aulões e na loja.":"Los aprobados entran automáticamente en el área de cursos y en la tienda.",
+"Valor gerado para você":"Valor generado para usted","Já repassado":"Ya transferido","A receber":"Por cobrar",
+"💳 Nesta fase, o painel registra automaticamente as vendas aprovadas e calcula sua participação em cada venda. A forma operacional de repasse (PIX ou integração futura com Mercado Pago) será ativada separadamente.":"💳 En esta etapa, el panel registra automáticamente las ventas aprobadas y calcula su participación en cada venta. La forma operativa de transferencia (PIX o futura integración con Mercado Pago) se activará por separado.",
+"Seu valor gerado":"Su valor generado","Aulão":"Curso",
+"Termos do Professor Colaborador":"Términos del Profesor Colaborador",
+"Rascunho":"Borrador","Aguardando aprovação":"Esperando aprobación","Aprovado":"Aprobado","Ajustes solicitados":"Ajustes solicitados",
+"Editar":"Editar","Editar / criar nova revisão":"Editar / crear nueva revisión","Abrir aulão":"Abrir curso",
+"Você ainda não cadastrou nenhum aulão.":"Aún no ha registrado ningún curso.","Nenhuma venda confirmada ainda.":"Aún no hay ventas confirmadas.",
+"Ajuste solicitado:":"Ajuste solicitado:","venda(s)":"venta(s)",
+"Título da parte":"Título de la parte","Link do YouTube":"Enlace de YouTube",
+"Cadastre suas matérias no perfil":"Registre sus materias en el perfil","Cadastre seus semestres no perfil":"Registre sus semestres en el perfil",
+"Selecionar idioma: Português":"Seleccionar idioma: Portugués","Selecionar idioma: Español":"Seleccionar idioma: Español"
+};
+const ORIGINAL_TEXT=new WeakMap(),ORIGINAL_PLACEHOLDER=new WeakMap();
+function translateText(s){
+  if(uiLang!=="es")return s;
+  var lead=(s.match(/^\s*/)||[""])[0],trail=(s.match(/\s*$/)||[""])[0],core=s.trim();
+  if(!core)return s;
+  var out=ES_MAP[core];
+  if(!out){
+    out=core
+      .replace(/^Bem-vindo\(a\), /,"Bienvenido(a), ")
+      .replace(/^Você tem (\d+) aulão\(ões\) aguardando aprovação do administrador\.$/,"Tiene $1 curso(s) esperando aprobación del administrador.")
+      .replace(/^Parte (\d+)/,"Parte $1")
+      .replace(/^(\d+)º semestre$/,"$1º semestre");
+  }
+  return lead+(out||core)+trail;
+}
+function translateDom(){
+  var walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+  var node;
+  while((node=walker.nextNode())){
+    if(node.parentElement&&(node.parentElement.closest("script,style,#termsText")))continue;
+    if(!ORIGINAL_TEXT.has(node))ORIGINAL_TEXT.set(node,node.nodeValue);
+    var orig=ORIGINAL_TEXT.get(node),target=uiLang==="es"?translateText(orig):orig;
+    if(node.nodeValue!==target)node.nodeValue=target;
+  }
+  document.querySelectorAll("input[placeholder],textarea[placeholder]").forEach(function(el){
+    if(!ORIGINAL_PLACEHOLDER.has(el))ORIGINAL_PLACEHOLDER.set(el,el.getAttribute("placeholder")||"");
+    var orig=ORIGINAL_PLACEHOLDER.get(el),target=uiLang==="es"?translateText(orig):orig;
+    if(el.getAttribute("placeholder")!==target)el.setAttribute("placeholder",target);
+  });
+  var btn=document.getElementById("languageBtn");
+  if(btn)btn.textContent=uiLang==="es"?"🌐 Seleccionar idioma: Español":"🌐 Selecionar idioma: Português";
+  document.querySelectorAll("[data-ui-lang]").forEach(function(b){b.classList.toggle("active",b.dataset.uiLang===uiLang)});
+  document.documentElement.lang=uiLang==="es"?"es":"pt-BR";
+  var terms=document.getElementById("termsText");if(terms)terms.innerHTML=uiLang==="es"?TERMS_ES:TERMS_PT;
+  var ver=document.getElementById("termsVersionLabel");if(ver)ver.textContent=(uiLang==="es"?"Versión ":"Versão ")+TERMS_VERSION;
+}
+async function setInterfaceLanguage(lang){
+  if(!["pt-BR","es"].includes(lang))return;
+  uiLang=lang;localStorage.setItem("professor_ui_lang",lang);translateDom();
+  var menu=document.getElementById("languageMenu");if(menu)menu.classList.remove("open");
+  if(client&&session){
+    try{
+      var r=await client.from("professor_dados").upsert({user_id:session.user.id,idioma_interface:lang,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+      if(r.error)console.warn("idioma_interface:",r.error);
+      if(details)details.idioma_interface=lang;
+    }catch(e){console.warn("idioma_interface:",e)}
+  }
+}
+
+function toast(msg){var t=document.createElement("div");t.className="toast";t.textContent=msg;document.body.appendChild(t);setTimeout(function(){t.remove()},3200)}
+function deny(msg){document.getElementById("gate").innerHTML='<div class="gatebox"><div style="font-size:34px">🔒</div><h2>Área exclusiva para professores</h2><p>'+esc(msg)+'</p><a class="smallbtn" href="dashboard.html" style="display:inline-block;margin-top:10px">Voltar</a></div>';document.documentElement.style.visibility="visible"}
+function parseList(v){return String(v||"").split(",").map(x=>x.trim()).filter(Boolean).filter((x,i,a)=>a.findIndex(y=>y.toLowerCase()===x.toLowerCase())===i)}
+function slug(v){return String(v||"aulão").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60)||"aulao"}
+function ytId(url){var s=String(url||"").trim();var m=s.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/))([A-Za-z0-9_-]{6,})/);if(m)return m[1];if(/^[A-Za-z0-9_-]{6,}$/.test(s))return s;return ""}
+function safeImage(file){if(!file)return true;if(!["image/jpeg","image/png","image/webp"].includes(file.type)){toast("Use JPG, PNG ou WEBP.");return false}if(file.size>5*1024*1024){toast("A imagem deve ter no máximo 5 MB.");return false}return true}
+function ext(file){return {"image/jpeg":"jpg","image/png":"png","image/webp":"webp"}[file.type]||"jpg"}
+function previewFile(input,preview){var f=input.files&&input.files[0];if(!f||!safeImage(f))return;preview.src=URL.createObjectURL(f);preview.style.display="block"}
+async function uploadImage(input,current,folder){var f=input.files&&input.files[0];if(!f)return current||null;if(!safeImage(f))throw new Error("Imagem inválida");var path="professores/"+session.user.id+"/"+folder+"/"+Date.now()+"-"+Math.random().toString(36).slice(2,9)+"."+ext(f);var r=await client.storage.from("auloes-capas").upload(path,f,{contentType:f.type,cacheControl:"3600",upsert:false});if(r.error)throw r.error;var p=client.storage.from("auloes-capas").getPublicUrl(r.data.path);return p.data.publicUrl}
+function setTab(tab){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id==="panel-"+tab))}
+function semestersSelected(){return Array.from(document.querySelectorAll("[data-sem]:checked")).map(x=>Number(x.dataset.sem))}
+function fillSemesterChecks(){var selected=(details&&details.semestres)||[];document.getElementById("semesterChecks").innerHTML=Array.from({length:12},(_,i)=>{var n=i+1;return '<label class="sem-check"><input type="checkbox" data-sem="'+n+'" '+(selected.includes(n)?"checked":"")+'> '+n+'º</label>'}).join("")}
+function fillAulaoSelects(){var mats=(details&&details.materias)||[];var sems=(details&&details.semestres)||[];document.getElementById("aulaoSubject").innerHTML=mats.length?mats.map(x=>'<option>'+esc(x)+'</option>').join(""):'<option value="">Cadastre suas matérias no perfil</option>';document.getElementById("aulaoSemester").innerHTML=sems.length?sems.map(x=>'<option value="'+x+'">'+x+'º semestre</option>').join(""):'<option value="">Cadastre seus semestres no perfil</option>'}
+function setExistingPreview(id,url){var p=document.getElementById(id);if(url){p.src=url;p.style.display="block"}else{p.removeAttribute("src");p.style.display="none"}}
+function statusLabel(s){var pt={rascunho:"Rascunho",pendente:"Aguardando aprovação",aprovado:"Aprovado",rejeitado:"Ajustes solicitados"},es={rascunho:"Borrador",pendente:"Esperando aprobación",aprovado:"Aprobado",rejeitado:"Ajustes solicitados"};return (uiLang==="es"?es:pt)[s]||s}
+function addPart(data){var box=document.getElementById("parts");var i=box.children.length+1;var row=document.createElement("div");row.className="part-row";row.innerHTML='<div class="part-order">Parte '+String(i).padStart(2,"0")+'</div><input class="input part-title" placeholder="Título da parte" value="'+esc(data&&data.titulo||("Parte "+i))+'"><input class="input part-url" placeholder="Link do YouTube" value="'+esc(data&&data.youtube_url||"")+'"><button class="part-remove" type="button">×</button>';row.querySelector(".part-remove").onclick=function(){row.remove();renumberParts()};box.appendChild(row)}
+function renumberParts(){Array.from(document.getElementById("parts").children).forEach((r,i)=>r.querySelector(".part-order").textContent="Parte "+String(i+1).padStart(2,"0"))}
+function resetAulaoForm(){document.getElementById("aulaoForm").reset();document.getElementById("aulaoId").value="";document.getElementById("coverUrl").value="";setExistingPreview("coverPreview","");document.getElementById("coverFile").value="";document.getElementById("parts").innerHTML="";addPart();fillAulaoSelects();document.getElementById("aulaoLanguage").value=uiLang==="es"?"es":"pt-BR";document.getElementById("aulaoFormTitle").textContent="Criar novo aulão";translateDom();document.getElementById("submitReviewBtn").disabled=false;document.getElementById("saveDraftBtn").disabled=false}
+async function loadAll(){
+  var [ar,dr,pr,aa,ss,sb,cfg]=await Promise.all([
+    client.from("professor_accounts").select("*").eq("user_id",session.user.id).maybeSingle(),
+    client.from("professor_dados").select("*").eq("user_id",session.user.id).maybeSingle(),
+    client.from("aulao_professores").select("*").eq("user_id",session.user.id).maybeSingle(),
+    client.from("auloes").select("*").eq("owner_user_id",session.user.id).order("created_at",{ascending:false}),
+    client.rpc("professor_sales_summary"),
+    client.rpc("professor_sales_by_aulao"),
+    client.from("config").select("valor").eq("chave","professor_whatsapp").maybeSingle()
+  ]);
+  if(ar.error)throw ar.error;account=ar.data;if(!account||account.status!=="active")throw new Error("Sua conta não está habilitada como Professor Colaborador.");
+  details=dr.data||null;publicProfile=pr.data||null;auloes=aa.data||[];salesRows=sb.data||[];whatsapp=(cfg.data&&cfg.data.valor)||"";
+  uiLang=(details&&details.idioma_interface)||localStorage.getItem("professor_ui_lang")||"pt-BR";translateDom();
+  var s=(ss.data&&ss.data[0])||{total_vendas:0,valor_gerado:0,valor_pago:0,saldo_a_receber:0};window.__lastSalesSummary=s;
+  renderProfile();renderAuloes();renderSales(s);renderOverview(s);
+}
+function renderProfile(){
+  document.getElementById("displayName").value=(details&&details.nome_exibicao)||(publicProfile&&publicProfile.nome)||"";
+  document.getElementById("phone").value=(details&&details.telefone)||"";
+  document.getElementById("pixKey").value=(details&&details.pix_chave)||"";
+  document.getElementById("subjects").value=((details&&details.materias)||[]).join(", ");
+  document.getElementById("bio").value=(publicProfile&&publicProfile.descricao)||"";
+  document.getElementById("photoUrl").value=(publicProfile&&publicProfile.foto_url)||"";
+  setExistingPreview("photoPreview",(publicProfile&&publicProfile.foto_url)||"");
+  fillSemesterChecks();fillAulaoSelects();
+  var accepted=!!(details&&details.termos_aceitos_em&&details.termos_versao===TERMS_VERSION);document.getElementById("acceptTerms").checked=accepted;document.getElementById("acceptTerms").disabled=accepted;
+  if(accepted)document.getElementById("acceptWrap").querySelector("span").innerHTML=(uiLang==="es"?"✅ Términos aceptados el ":"✅ Termos aceitos em ")+new Date(details.termos_aceitos_em).toLocaleString(uiLang==="es"?"es-PY":"pt-BR")+(uiLang==="es"?" · versión ":" · versão ")+esc(details.termos_versao||TERMS_VERSION);
+  else document.getElementById("acceptWrap").querySelector("span").innerHTML=uiLang==="es"?'Leí y acepto los <strong>Términos del Profesor Colaborador</strong>, incluida la distribución de 2/3 del valor de la venta para el profesor y 1/3 para mantenimiento y operación de la plataforma.':'Li e concordo com os <strong>Termos do Professor Colaborador</strong>, incluindo a divisão de 2/3 do valor da venda para o professor e 1/3 para manutenção e operação da plataforma.';
+  var nm=(details&&details.nome_exibicao)||(publicProfile&&publicProfile.nome)||"Dr(a).";document.getElementById("heroTitle").textContent=(uiLang==="es"?"Bienvenido(a), ":"Bem-vindo(a), ")+nm;translateDom();
+}
+function renderOverview(s){
+  document.getElementById("statAuloes").textContent=auloes.length;
+  document.getElementById("statApproved").textContent=auloes.filter(a=>a.status_aprovacao==="aprovado").length;
+  document.getElementById("statSales").textContent=s.total_vendas||0;
+  document.getElementById("statBalance").textContent=money(s.saldo_a_receber||0);
+  var pending=auloes.filter(a=>a.status_aprovacao==="pendente").length;document.getElementById("pendingNotice").innerHTML=pending?'<div class="notice">⏳ Você tem <strong>'+pending+'</strong> aulão(ões) aguardando aprovação do administrador. <button class="smallbtn whats" type="button" onclick="window.openWhats()">Avisar pelo WhatsApp</button></div>':"";
+}
+function renderAuloes(){
+  var el=document.getElementById("aulaoList");if(!auloes.length){el.innerHTML='<div class="empty" style="grid-column:1/-1">Você ainda não cadastrou nenhum aulão.</div>';return}
+  el.innerHTML=auloes.map(a=>{var row=salesRows.find(x=>x.aulao_id===a.id)||{};return '<article class="aulao">'+(a.capa_url?'<img class="aulao-cover" src="'+esc(a.capa_url)+'" alt="">':'<div class="aulao-fallback">🎥</div>')+'<div class="aulao-body"><div class="meta">'+esc(a.materia)+' · '+esc(a.semestre)+'º · '+esc(a.avaliacao||"")+'</div><h3>'+esc(a.nome)+'</h3><span class="status '+esc(a.status_aprovacao)+'">'+esc(statusLabel(a.status_aprovacao))+'</span><span class="lang-badge">'+esc(contentLanguageLabel(a.idioma_conteudo||"pt-BR"))+'</span><div class="meta" style="margin-top:8px">'+money(a.preco)+' · '+Number(row.vendas||0)+' venda(s)</div>'+(a.rejection_reason?'<div class="rejection"><strong>Ajuste solicitado:</strong> '+esc(a.rejection_reason)+'</div>':'')+'<div class="actions">'+(a.status_aprovacao==="aprovado"?'<button class="btn ghost" data-revise="'+a.id+'">Editar / criar nova revisão</button>':'<button class="btn ghost" data-edit="'+a.id+'">Editar</button>')+(a.status_aprovacao!=="aprovado"?'<button class="btn violet" data-send="'+a.id+'">Enviar para aprovação</button>':'<a class="btn green" href="aulao.html?key='+encodeURIComponent(a.chave)+'" style="text-decoration:none">Abrir aulão</a>')+'</div></div></article>'}).join("");
+  el.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>editAulao(b.dataset.edit));
+  el.querySelectorAll("[data-revise]").forEach(b=>b.onclick=()=>startRevision(b.dataset.revise));
+  el.querySelectorAll("[data-send]").forEach(b=>b.onclick=()=>submitExisting(b.dataset.send));translateDom();
+}
+function renderSales(s){
+  document.getElementById("salesCount").textContent=s.total_vendas||0;document.getElementById("salesGenerated").textContent=money(s.valor_gerado||0);document.getElementById("salesPaid").textContent=money(s.valor_pago||0);document.getElementById("salesPending").textContent=money(s.saldo_a_receber||0);
+  document.getElementById("salesBody").innerHTML=salesRows.length?salesRows.map(x=>'<tr><td>'+esc(x.aulao_nome)+'</td><td>'+money(x.preco)+'</td><td>'+Number(x.vendas||0)+'</td><td class="money">'+money(x.valor_professor||0)+'</td></tr>').join(""):'<tr><td colspan="4" style="text-align:center;color:rgba(165,243,252,.4)">Nenhuma venda confirmada ainda.</td></tr>';translateDom();
+}
+async function saveProfile(ev){
+  ev.preventDefault();var btn=document.getElementById("saveProfileBtn"),name=document.getElementById("displayName").value.trim(),phone=document.getElementById("phone").value.trim(),mats=parseList(document.getElementById("subjects").value),sems=semestersSelected(),accepted=!!(details&&details.termos_aceitos_em&&details.termos_versao===TERMS_VERSION)||document.getElementById("acceptTerms").checked;
+  if(!name||!phone||!mats.length||!sems.length){toast("Preencha nome, celular, matérias e pelo menos um semestre.");return}
+  if(!accepted){toast("É necessário aceitar os Termos do Professor Colaborador.");return}
+  btn.disabled=true;btn.textContent="Salvando…";
+  try{
+    var photo=await uploadImage(document.getElementById("photoFile"),document.getElementById("photoUrl").value,"perfil");
+    var pubPayload={user_id:session.user.id,nome:name,foto_url:photo,descricao:document.getElementById("bio").value.trim()||null,ativo:true,updated_at:new Date().toISOString()};
+    var pubRes;
+    if(publicProfile)pubRes=await client.from("aulao_professores").update(pubPayload).eq("id",publicProfile.id).select().single();
+    else pubRes=await client.from("aulao_professores").insert({...pubPayload,ordem:100}).select().single();
+    if(pubRes.error)throw pubRes.error;publicProfile=pubRes.data;
+    var payload={user_id:session.user.id,professor_id:publicProfile.id,nome_exibicao:name,telefone:phone,pix_chave:document.getElementById("pixKey").value.trim()||null,materias:mats,semestres:sems,idioma_interface:uiLang,onboarding_completo:true,updated_at:new Date().toISOString()};
+    if(!(details&&details.termos_aceitos_em&&details.termos_versao===TERMS_VERSION)){payload.termos_versao=TERMS_VERSION;payload.termos_aceitos_em=new Date().toISOString()}
+    var d=await client.from("professor_dados").upsert(payload,{onConflict:"user_id"}).select().single();if(d.error)throw d.error;details=d.data;
+    toast("Perfil salvo com sucesso.");renderProfile();setTab("overview");await loadAll()
+  }catch(err){console.error(err);toast("Erro ao salvar perfil: "+(err.message||err))}finally{btn.disabled=false;btn.textContent="Salvar meu perfil"}
+}
+async function saveAulao(sendAfter){
+  if(!(details&&details.onboarding_completo)){toast("Complete seu perfil antes de criar aulões.");setTab("perfil");return null}
+  var id=document.getElementById("aulaoId").value,name=document.getElementById("aulaoName").value.trim(),price=Number(document.getElementById("aulaoPrice").value),subject=document.getElementById("aulaoSubject").value,semester=Number(document.getElementById("aulaoSemester").value),exam=document.getElementById("aulaoExam").value;
+  if(!name||!price||!subject||!semester){toast("Preencha nome, preço, matéria e semestre.");return null}
+  var parts=Array.from(document.querySelectorAll(".part-row")).map((r,i)=>({titulo:r.querySelector(".part-title").value.trim()||("Parte "+(i+1)),url:r.querySelector(".part-url").value.trim(),id:ytId(r.querySelector(".part-url").value)})).filter(x=>x.url);
+  for(var p of parts){if(!p.id){toast("Há um link do YouTube inválido.");return null}}
+  var btn=document.getElementById("saveDraftBtn");btn.disabled=true;document.getElementById("submitReviewBtn").disabled=true;btn.textContent="Salvando…";
+  try{
+    var cover=await uploadImage(document.getElementById("coverFile"),document.getElementById("coverUrl").value,"capas");
+    var payload={origem:"professor",professor_id:publicProfile.id,owner_user_id:session.user.id,nome:name,materia:subject,avaliacao:exam,semestre:semester,descricao:document.getElementById("aulaoDescription").value.trim()||null,preco:price,idioma_conteudo:document.getElementById("aulaoLanguage").value||"pt-BR",dias_acesso:document.getElementById("aulaoDays").value?Number(document.getElementById("aulaoDays").value):null,capa_url:cover,publicado:false,exibir_loja:false,status_aprovacao:"rascunho",updated_at:new Date().toISOString()};
+    var res;
+    if(id)res=await client.from("auloes").update(payload).eq("id",id).select().single();
+    else{payload.chave="aulao-"+slug(name)+"-"+session.user.id.slice(0,5)+"-"+Date.now().toString(36).slice(-5);res=await client.from("auloes").insert(payload).select().single()}
+    if(res.error)throw res.error;id=res.data.id;document.getElementById("aulaoId").value=id;
+    var del=await client.from("aulao_videos").delete().eq("aulao_id",id);if(del.error)throw del.error;
+    if(parts.length){var ins=await client.from("aulao_videos").insert(parts.map((x,i)=>({aulao_id:id,aulao_turma_id:null,titulo:x.titulo,youtube_url:x.url,youtube_id:x.id,ordem:i+1,publicado:true})));if(ins.error)throw ins.error}
+    toast("Rascunho salvo.");await loadAll();if(sendAfter){var sr=await client.rpc("professor_submit_aulao",{p_aulao_id:id});if(sr.error)throw sr.error;toast("Aulão enviado para aprovação.");await loadAll()}resetAulaoForm();setTab("auloes");return id
+  }catch(err){console.error(err);toast("Erro: "+(err.message||err));return null}finally{btn.disabled=false;document.getElementById("submitReviewBtn").disabled=false;btn.textContent="Salvar rascunho"}
+}
+async function editAulao(id){
+  var a=auloes.find(x=>x.id===id);if(!a)return;if(a.status_aprovacao==="aprovado"){toast("Reabra o aulão para edição primeiro.");return}
+  var vr=await client.from("aulao_videos").select("*").eq("aulao_id",id).order("ordem");if(vr.error){toast("Erro ao carregar partes.");return}
+  document.getElementById("aulaoId").value=a.id;document.getElementById("aulaoName").value=a.nome;document.getElementById("aulaoPrice").value=a.preco;fillAulaoSelects();document.getElementById("aulaoSubject").value=a.materia;document.getElementById("aulaoSemester").value=a.semestre;document.getElementById("aulaoExam").value=a.avaliacao||"P1";document.getElementById("aulaoLanguage").value=a.idioma_conteudo||"pt-BR";document.getElementById("aulaoDays").value=a.dias_acesso||"";document.getElementById("aulaoDescription").value=a.descricao||"";document.getElementById("coverUrl").value=a.capa_url||"";setExistingPreview("coverPreview",a.capa_url||"");document.getElementById("coverFile").value="";document.getElementById("parts").innerHTML="";(vr.data||[]).forEach(addPart);if(!(vr.data||[]).length)addPart();document.getElementById("aulaoFormTitle").textContent="Editar aulão";document.querySelector(".card").scrollIntoView({behavior:"smooth"})
+}
+async function startRevision(id){if(!confirm("Ao editar um aulão aprovado ele sai temporariamente da loja e volta para aprovação após suas alterações. Continuar?"))return;var r=await client.rpc("professor_start_revision",{p_aulao_id:id});if(r.error){toast("Erro: "+r.error.message);return}await loadAll();await editAulao(id)}
+async function submitExisting(id){var r=await client.rpc("professor_submit_aulao",{p_aulao_id:id});if(r.error){toast("Não foi possível enviar: "+r.error.message);return}toast("Aulão enviado para aprovação.");await loadAll()}
+window.openWhats=function(){if(!whatsapp){toast("O WhatsApp do administrador ainda não foi configurado.");return}var pending=auloes.filter(a=>a.status_aprovacao==="pendente").length;var name=(details&&details.nome_exibicao)||"Professor(a)";var msg=uiLang==="es"?(pending?"¡Hola! Soy "+name+", profesor(a) colaborador(a) de Resumos do Enzo. Tengo "+pending+" curso(s) disponible(s) esperando aprobación del administrador del sitio.":"¡Hola! Soy "+name+", profesor(a) colaborador(a) de Resumos do Enzo y quisiera hablar sobre mis cursos."):(pending?"Olá! Sou "+name+", professor(a) colaborador(a) do Resumos do Enzo. Tenho "+pending+" aulão(ões) disponível(is) aguardando aprovação do administrador do site.":"Olá! Sou "+name+", professor(a) colaborador(a) do Resumos do Enzo e gostaria de falar sobre meus aulões.");window.open("https://wa.me/"+String(whatsapp).replace(/\D/g,"")+"?text="+encodeURIComponent(msg),"_blank")}
+async function init(e){
+  client=window.authClient;session=e.detail.session;document.getElementById("teacherEmail").textContent=session.user.email||"";
+  try{var ar=await client.from("professor_accounts").select("*").eq("user_id",session.user.id).maybeSingle();if(ar.error||!ar.data||ar.data.status!=="active"){deny("Sua conta ainda não foi habilitada pelo administrador como Professor Colaborador.");return}account=ar.data;await loadAll();fillSemesterChecks();fillAulaoSelects();resetAulaoForm();document.getElementById("gate").style.display="none";document.getElementById("content").style.display="block";translateDom();document.documentElement.style.visibility="visible";if(!(details&&details.onboarding_completo)){setTab("perfil");toast("Complete seu cadastro para começar a criar aulões.")}}
+  catch(err){console.error(err);deny(err.message||"Não foi possível carregar sua área.")}
+}
+document.getElementById("languageBtn").onclick=function(ev){ev.stopPropagation();document.getElementById("languageMenu").classList.toggle("open")};
+document.querySelectorAll("[data-ui-lang]").forEach(function(b){b.onclick=function(){setInterfaceLanguage(b.dataset.uiLang);renderProfile();renderAuloes();renderSales((window.__lastSalesSummary)||{total_vendas:0,valor_gerado:0,valor_pago:0,saldo_a_receber:0});renderOverview((window.__lastSalesSummary)||{total_vendas:0,saldo_a_receber:0})}});
+document.addEventListener("click",function(ev){var wrap=document.querySelector(".lang-wrap");if(wrap&&!wrap.contains(ev.target))document.getElementById("languageMenu").classList.remove("open")});
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));document.getElementById("profileForm").onsubmit=saveProfile;document.getElementById("photoFile").onchange=function(){previewFile(this,document.getElementById("photoPreview"))};document.getElementById("coverFile").onchange=function(){previewFile(this,document.getElementById("coverPreview"))};document.getElementById("addPartBtn").onclick=()=>addPart();document.getElementById("newAulaoBtn").onclick=resetAulaoForm;document.getElementById("aulaoForm").onsubmit=function(ev){ev.preventDefault();saveAulao(false)};document.getElementById("submitReviewBtn").onclick=()=>saveAulao(true);document.getElementById("whatsBtn").onclick=()=>window.openWhats();document.getElementById("logoutBtn").onclick=async()=>{try{await client.auth.signOut()}catch(e){}location.replace("login.html")};document.addEventListener("authReady",init);
+})();
+</script>
+</body>
+</html>
