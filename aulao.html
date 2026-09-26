@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Aulão — Resumos do Enzo</title>
+<script>window.PAGE_KEY=null;</script>
+<script>document.documentElement.style.visibility="hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--cyan:#22d3ee;--violet:#a855f7;--bg:#020810}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 12% 10%,rgba(168,85,247,.10),transparent 35%),linear-gradient(160deg,#020d1a,#010812);color:#fff;font-family:Poppins,sans-serif}
+.wrap{max-width:1100px;margin:auto;padding:26px 18px 60px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:24px}.brand{font-weight:800}.brand span{color:#22d3ee}.back{color:#c4b5fd;text-decoration:none;border:1px solid rgba(168,85,247,.2);padding:9px 12px;border-radius:10px;font-size:11px}
+.hero{padding:25px;border:1px solid rgba(168,85,247,.2);border-radius:20px;background:linear-gradient(135deg,rgba(168,85,247,.11),rgba(34,211,238,.03));margin-bottom:18px;overflow:hidden;position:relative}.hero-cover{width:100%;max-height:320px;object-fit:cover;border-radius:15px;margin-bottom:17px}.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:#c4b5fd;font-weight:700}h1{font-size:clamp(24px,5vw,38px);margin:6px 0 8px}.desc{font-size:12px;line-height:1.7;color:rgba(221,214,254,.62)}.access{display:inline-flex;margin-top:12px;font-size:10px;color:#86efac;border:1px solid rgba(74,222,128,.22);background:rgba(74,222,128,.06);padding:5px 10px;border-radius:999px}
+.selector{padding:16px;border:1px solid rgba(168,85,247,.16);border-radius:15px;margin-bottom:18px;background:rgba(168,85,247,.03)}.selector label{display:block;font-size:10px;color:#c4b5fd;font-weight:700;margin-bottom:7px;text-transform:uppercase;letter-spacing:.08em}.selector select{width:100%;padding:11px;border-radius:10px;border:1px solid rgba(168,85,247,.22);background:#07101d;color:#fff;font-family:Poppins}
+.lessons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.lesson{padding:17px;border:1px solid rgba(168,85,247,.14);border-radius:16px;background:rgba(255,255,255,.022)}.lnum{font-size:9px;color:rgba(196,181,253,.5);text-transform:uppercase;letter-spacing:.1em}.ltitle{font-size:14px;font-weight:700;margin:4px 0 10px}.video{aspect-ratio:16/9;border-radius:13px;overflow:hidden;background:#000}.video iframe{width:100%;height:100%;border:0}.empty{padding:30px;text-align:center;border:1px dashed rgba(168,85,247,.2);border-radius:15px;color:rgba(196,181,253,.5)}
+.gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(2,8,16,.97);padding:20px}.gatebox{max-width:430px;padding:27px;border-radius:19px;border:1px solid rgba(168,85,247,.25);background:#020d1a;text-align:center}.gatebox h2{margin:8px 0}.gatebox p{font-size:11px;line-height:1.6;color:rgba(221,214,254,.55)}.gatebtn{display:inline-block;margin-top:15px;padding:10px 16px;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;text-decoration:none;border-radius:10px;font-size:11px;font-weight:700}
+@media(max-width:720px){.lessons{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="gate" id="gate"><div class="gatebox"><div style="font-size:34px">🔐</div><h2>Validando acesso…</h2><p>Aguarde enquanto confirmamos sua conta e o aulão.</p></div></div>
+<main class="wrap" id="content" style="display:none">
+  <div class="top"><div class="brand">RESUMOS DO <span>ENZO</span></div><a class="back" href="dashboard.html">← Dashboard</a></div>
+  <section class="hero" id="hero"></section>
+  <div class="selector" id="turmaSelector" style="display:none"><label>Escolha sua turma / professor</label><select id="turmaSelect"></select></div>
+  <section class="lessons" id="lessons"></section>
+</main>
+<script>
+function esc(v){return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function deny(msg){var g=document.getElementById("gate");g.innerHTML='<div class="gatebox"><div style="font-size:34px">🔒</div><h2>Acesso não liberado</h2><p>'+esc(msg)+'</p><a class="gatebtn" href="dashboard.html">Voltar ao dashboard</a></div>';document.documentElement.style.visibility="visible"}
+document.addEventListener("authReady",async function(e){
+  var key=new URLSearchParams(location.search).get("key");
+  if(!key){deny("Aulão não informado.");return}
+  var client=window.authClient, session=e.detail.session;
+  try{
+    var ar=await client.from("auloes").select("*").eq("chave",key).single();
+    if(ar.error||!ar.data){deny("Este aulão não existe ou não está disponível.");return}
+    var a=ar.data;
+    var pr=await client.from("profiles").select("is_admin").eq("id",session.user.id).single();
+    var admin=!!(pr.data&&pr.data.is_admin), ok=admin;
+    if(!ok){
+      var ac=await client.from("acessos").select("expira_em").eq("user_id",session.user.id).eq("resumo",key);
+      ok=!!(ac.data&&ac.data.some(function(x){return !x.expira_em||new Date(x.expira_em)>new Date()}));
+    }
+    if(!ok){deny("Este aulão é vendido separadamente. Adquira o acesso pela loja.");return}
+
+    document.title=a.nome+" — Resumos do Enzo";
+    document.getElementById("hero").innerHTML=
+      (a.capa_url?'<img class="hero-cover" src="'+esc(a.capa_url)+'" alt="">':'')+
+      '<div class="eyebrow">'+a.semestre+'º semestre'+(a.avaliacao?' · '+esc(a.avaliacao):'')+'</div>'+
+      '<h1>🎥 '+esc(a.nome)+'</h1><div class="desc">'+esc(a.descricao||"Aulão gravado")+'</div>'+
+      '<div class="access">● Acesso autorizado</div>';
+
+    var turmas=[];
+    if(a.usar_turmas){
+      var tr=await client.from("aulao_turmas").select("*").eq("aulao_id",a.id).eq("ativo",true).order("ordem");
+      turmas=tr.data||[];
+      var box=document.getElementById("turmaSelector"),sel=document.getElementById("turmaSelect");
+      box.style.display="block";
+      sel.innerHTML='<option value="">Selecione sua turma / professor</option>'+turmas.map(function(t){return '<option value="'+t.id+'">'+esc(t.turma)+' — '+esc(t.professor)+'</option>'}).join("");
+      sel.addEventListener("change",function(){loadVideos(sel.value)});
+    }
+
+    async function loadVideos(turmaId){
+      var q=client.from("aulao_videos").select("*").eq("aulao_id",a.id).eq("publicado",true).order("ordem");
+      if(a.usar_turmas){
+        if(!turmaId){document.getElementById("lessons").innerHTML='<div class="empty" style="grid-column:1/-1">Escolha sua turma/professor para ver os vídeos.</div>';return}
+        q=q.eq("aulao_turma_id",turmaId);
+      }else{
+        q=q.is("aulao_turma_id",null);
+      }
+      var vr=await q;
+      var vids=vr.data||[], c=document.getElementById("lessons");
+      if(!vids.length){c.innerHTML='<div class="empty" style="grid-column:1/-1">Nenhum vídeo publicado para esta opção ainda.</div>';return}
+      c.innerHTML=vids.map(function(v,i){return '<article class="lesson"><div class="lnum">Parte '+String(v.ordem||i+1).padStart(2,"0")+'</div><div class="ltitle">'+esc(v.titulo)+'</div><div class="video"><iframe src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(v.youtube_id)+'?rel=0" title="'+esc(v.titulo)+'" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></article>'}).join("");
+    }
+    if(!a.usar_turmas)await loadVideos(null);else document.getElementById("lessons").innerHTML='<div class="empty" style="grid-column:1/-1">Escolha sua turma/professor acima.</div>';
+
+    document.getElementById("gate").style.display="none";document.getElementById("content").style.display="block";document.documentElement.style.visibility="visible";
+  }catch(err){console.error(err);deny("Erro ao validar o aulão. Recarregue a página.")}
+});
+</script>
+</body></html>

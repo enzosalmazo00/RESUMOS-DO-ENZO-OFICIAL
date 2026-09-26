@@ -912,7 +912,15 @@
       .tab-btn { width:100%; text-align:center; }
     }
 
-  </style>
+  
+    .aulao-sem-section{margin-bottom:18px;border:1px solid rgba(168,85,247,.12);border-radius:17px;background:rgba(168,85,247,.02);overflow:hidden;}
+    .aulao-sem-head{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(168,85,247,.045);}
+    .aulao-sem-title{font-size:13px;font-weight:700;color:#ede9fe;}
+    .aulao-sem-count{font-size:9px;color:rgba(196,181,253,.48);}
+    .aulao-sem-body{padding:14px;}
+    .aulao-cover-img{width:100%;aspect-ratio:16/8;object-fit:cover;border-radius:12px;margin-bottom:12px;border:1px solid rgba(168,85,247,.14);}
+
+</style>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
@@ -1135,6 +1143,13 @@
       <div class="store-intro">
         <h2>🛍️ Loja — Cursos e Resumos</h2>
         <p>Escolha o semestre, adicione ao carrinho e pague com PIX ou Cartão. Acesso liberado automaticamente.</p>
+      </div>
+
+
+      <!-- AULÕES DINÂMICOS -->
+      <div class="store-section" id="storeAuloesSection" style="display:none;">
+        <div class="store-section-title" style="color:#c4b5fd;">🎥 Aulões Gravados</div>
+        <div class="store-grid" id="store-grid-auloes"></div>
       </div>
 
       <!-- ★★★ CURSO — DESTAQUE PRINCIPAL ★★★ -->
@@ -1700,21 +1715,8 @@ var currentPaymentId = null;
 // Estrutura: { "resumo_name": { expira_em: "2026-07-23", ... } }
 var acessosCache = {};
 
-// ── Aulões gravados ──────────────────────────────────────────────────────────
-// ETAPA 1: infraestrutura pronta. O primeiro item é um piloto visual/funcional.
-// Quando você definir matéria, preço e links, basta atualizar este catálogo.
-var AULOES = [
-  {
-    key: "aulao-piloto",
-    title: "Aulão Piloto",
-    emoji: "🎥",
-    desc: "Estrutura inicial pronta para receber o primeiro aulão gravado.",
-    aulas: 4,
-    duracao: "Vídeos por módulos",
-    page: "aulao-piloto.html",
-    status: "setup"
-  }
-];
+// ── Aulões gravados (carregados do Supabase) ─────────────────────────────
+var AULOES = [];
 
 // ── Carrinho ──────────────────────────────────────────────────────────────────
 var cart = []; // [{key, label, emoji, preco, tipo}]
@@ -1795,57 +1797,108 @@ function hasAulaoAccess(key) {
   return new Date(acesso.expira_em) > new Date();
 }
 
+async function loadAuloes() {
+  try {
+    var r = await window.authClient.from("auloes").select("*").order("semestre").order("created_at");
+    if (r.error) throw r.error;
+    AULOES = r.data || [];
+  } catch (e) {
+    console.warn("[dashboard] Erro ao carregar aulões:", e);
+    AULOES = [];
+  }
+}
+
 function renderAuloesGrid() {
   var grid = document.getElementById("auloesGrid");
   if (!grid) return;
   grid.innerHTML = "";
 
-  if (!AULOES.length) {
+  var publicados = AULOES.filter(function(a){ return a.publicado || (profile && profile.is_admin); });
+  if (!publicados.length) {
     grid.innerHTML = '<div class="aulao-empty">Nenhum aulão disponível no momento.</div>';
     return;
   }
 
-  AULOES.forEach(function(a) {
-    var unlocked = hasAulaoAccess(a.key);
-    var ready = a.status === "ready";
-    var card = document.createElement("div");
-    card.className = "aulao-card " + (unlocked ? "unlocked" : "locked");
+  var porSemestre = {};
+  publicados.forEach(function(a){
+    var s = Number(a.semestre || 0);
+    if (!porSemestre[s]) porSemestre[s] = [];
+    porSemestre[s].push(a);
+  });
 
-    var statusLabel = unlocked
-      ? '<span class="aulao-status ready">✓ Acesso liberado</span>'
-      : ready
-        ? '<span class="aulao-status setup">🔒 Acesso individual</span>'
-        : '<span class="aulao-status setup">⚙ Em configuração</span>';
+  Object.keys(porSemestre).sort(function(a,b){return Number(a)-Number(b);}).forEach(function(sem){
+    var wrap=document.createElement("div");
+    wrap.className="aulao-sem-section";
+    var itens=porSemestre[sem];
+    wrap.innerHTML='<div class="aulao-sem-head"><div class="aulao-sem-title">📚 '+sem+'º Semestre</div><div class="aulao-sem-count">'+itens.length+' aulão'+(itens.length===1?'':'ões')+'</div></div><div class="aulao-sem-body"><div class="auloes-grid"></div></div>';
+    var inner=wrap.querySelector(".auloes-grid");
 
-    var buttonLabel = unlocked
-      ? "▶ Abrir aulão"
-      : ready
-        ? "🛒 Comprar acesso"
-        : "Primeiro aulão sendo configurado";
+    itens.forEach(function(a) {
+      var unlocked = hasAulaoAccess(a.chave);
+      var sellable = !!a.exibir_loja && Number(a.preco||0)>0;
+      var card = document.createElement("div");
+      card.className = "aulao-card " + (unlocked ? "unlocked" : "locked");
 
-    card.innerHTML =
-      '<div class="aulao-top"><div class="aulao-icon">'+a.emoji+'</div>'+statusLabel+'</div>'+
-      '<div class="aulao-title">'+a.title+'</div>'+
-      '<div class="aulao-desc">'+a.desc+'</div>'+
-      '<div class="aulao-meta"><span>🎬 '+a.aulas+' blocos</span><span>⏱ '+a.duracao+'</span><span>🔐 Acesso individual</span></div>'+
-      '<button class="aulao-btn" '+(!unlocked && !ready ? "disabled" : "")+'>'+buttonLabel+'</button>';
+      var statusLabel = unlocked
+        ? '<span class="aulao-status ready">✓ Acesso liberado</span>'
+        : sellable
+          ? '<span class="aulao-status setup">🔒 Acesso individual</span>'
+          : '<span class="aulao-status setup">🎬 Em produção</span>';
 
-    var btn = card.querySelector(".aulao-btn");
-    if (unlocked) {
-      btn.addEventListener("click", function(ev) {
-        ev.stopPropagation();
-        window.location.href = a.page;
-      });
-      card.addEventListener("click", function(){ window.location.href = a.page; });
-    } else if (ready) {
-      btn.addEventListener("click", function(ev) {
-        ev.stopPropagation();
-        alert("Produto pronto para venda. Defina o preço deste aulão para ativarmos PIX e cartão.");
-      });
-    }
+      var buttonLabel = unlocked ? "▶ Assistir agora" : sellable ? "🛒 Comprar acesso" : "Venda em breve";
+      var capa = a.capa_url ? '<img class="aulao-cover-img" src="'+a.capa_url+'" alt="">' : '';
+
+      card.innerHTML =
+        capa+
+        '<div class="aulao-top"><div class="aulao-icon">🎥</div>'+statusLabel+'</div>'+
+        '<div class="aulao-title">'+a.nome+'</div>'+
+        '<div class="aulao-desc">'+(a.descricao||"Aulão gravado")+'</div>'+
+        '<div class="aulao-meta"><span>📚 '+a.semestre+'º semestre</span><span>📅 '+(a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+'</span>'+(a.usar_turmas?'<span>👨‍🏫 Escolha por turma/professor</span>':'')+'</div>'+
+        '<button class="aulao-btn" '+(!unlocked && !sellable ? "disabled" : "")+'>'+buttonLabel+'</button>';
+
+      var btn = card.querySelector(".aulao-btn");
+      if (unlocked) {
+        btn.addEventListener("click", function(ev){ev.stopPropagation();window.location.href="aulao.html?key="+encodeURIComponent(a.chave);});
+        card.addEventListener("click", function(){window.location.href="aulao.html?key="+encodeURIComponent(a.chave);});
+      } else if (sellable) {
+        btn.addEventListener("click", function(ev){ev.stopPropagation();switchTab("loja");setTimeout(function(){var el=document.querySelector('[data-aulao-store="'+a.chave+'"]');if(el)el.scrollIntoView({behavior:"smooth",block:"center"});},100);});
+      }
+      inner.appendChild(card);
+    });
+    grid.appendChild(wrap);
+  });
+}
+
+function renderAulaoStore(){
+  var section=document.getElementById("storeAuloesSection");
+  var grid=document.getElementById("store-grid-auloes");
+  if(!section||!grid)return;
+  var itens=AULOES.filter(function(a){return a.publicado&&a.exibir_loja&&Number(a.preco||0)>0;});
+  section.style.display=itens.length?"block":"none";
+  grid.innerHTML="";
+  itens.forEach(function(a){
+    var owned=hasAulaoAccess(a.chave);
+    var card=document.createElement("div");
+    card.className="produto-card"+(owned?" owned":"");
+    card.setAttribute("data-aulao-store",a.chave);
+    card.innerHTML=
+      (a.destaque?'<span class="tag-popular">Destaque</span>':'')+
+      '<span class="produto-emoji">🎥</span>'+
+      '<div class="produto-nome">'+a.nome+'</div>'+
+      '<div class="produto-sub">'+a.semestre+'º Semestre · '+(a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+(a.usar_turmas?' · por turma/professor':'')+'</div>'+
+      '<div class="produto-preco">R$ '+Number(a.preco).toFixed(2).replace(".",",")+'</div>'+
+      '<button class="add-btn '+(owned?'owned':'')+'" '+(owned?'disabled':'onclick="addAulaoToCart(\''+a.chave+'\')"')+'>'+(owned?'✅ Já adquirido':'🛒 Comprar')+'</button>';
     grid.appendChild(card);
   });
 }
+window.addAulaoToCart=function(key){
+  var a=AULOES.find(function(x){return x.chave===key;}); if(!a)return;
+  if(cart.length && !(cart.length===1 && cart[0].key===key)){
+    if(!confirm("Aulões são comprados separadamente dos outros produtos. Substituir o carrinho atual por este aulão?"))return;
+  }
+  cart=[{key:a.chave,label:a.nome,emoji:"🎥",preco:Number(a.preco),tipo:"aulao"}];
+  updateCartUI();openCart();renderAulaoStore();
+};
 
 // ── Área do Aluno / Calculadora de notas ─────────────────────────────────────
 var studentGradebook = { version:5, currentSemester:null, semesters:{} };
@@ -3766,6 +3819,7 @@ function calcCartTotal() {
   var s4p2Items = cart.filter(function(c){ return c.tipo === "s4_p2"; });
   var s4finalItems = cart.filter(function(c){ return c.tipo === "s4_final"; });
   var cursoItems = cart.filter(function(c){ return c.tipo === "curso"; });
+  var aulaoItems = cart.filter(function(c){ return c.tipo === "aulao"; });
 
   var subtotalP2 = p2Items.length * PRECO_UNIT;
   var subtotalFinal = finalItems.length * (PROMO_FINAL_ATIVA ? PRECO_FINAL_DE : PRECO_FINAL);
@@ -3775,7 +3829,8 @@ function calcCartTotal() {
   var subtotalS4P2 = s4p2Items.length * PRECO_S4_P2_UNIT;
   var subtotalS4Final = s4finalItems.length * PRECO_S4_FINAL_UNIT;
   var subtotalCurso = cursoItems.reduce(function(acc,c){ return acc + c.preco; }, 0);
-  var subtotal = subtotalP2 + subtotalFinal + subtotalS1 + subtotalS2 + subtotalS4P1 + subtotalS4P2 + subtotalS4Final + subtotalCurso;
+  var subtotalAulao = aulaoItems.reduce(function(acc,c){ return acc + Number(c.preco||0); }, 0);
+  var subtotal = subtotalP2 + subtotalFinal + subtotalS1 + subtotalS2 + subtotalS4P1 + subtotalS4P2 + subtotalS4Final + subtotalCurso + subtotalAulao;
 
   var totalP2 = subtotalP2;
   var totalFinal = subtotalFinal;
@@ -3785,6 +3840,7 @@ function calcCartTotal() {
   var totalS4P2 = subtotalS4P2;
   var totalS4Final = subtotalS4Final;
   var totalCurso = subtotalCurso;
+  var totalAulao = subtotalAulao;
   var descLabel = "";
 
   // Desconto P2: pacote completo ou 3+
@@ -3859,7 +3915,7 @@ function calcCartTotal() {
   // Expor flag para o cupom saber se tem pacote completo
   calcCartTotal._temPacoteCompleto = temPacoteCompleto;
 
-  var total = totalP2 + totalFinal + totalS1 + totalS2 + totalS4P1 + totalS4P2 + totalS4Final + totalCurso;
+  var total = totalP2 + totalFinal + totalS1 + totalS2 + totalS4P1 + totalS4P2 + totalS4Final + totalCurso + totalAulao;
   var desconto = subtotal - total;
 
   return { subtotal: subtotal, desconto: desconto, total: total, descLabel: descLabel };
@@ -3963,7 +4019,7 @@ function updateCartUI() {
     var precoOriginal = (c.tipo === "final" && !c.isPacoteCompleto && PROMO_FINAL_ATIVA && PRECO_FINAL < PRECO_FINAL_DE)
       ? '<span style="text-decoration:line-through;color:rgba(125,211,232,0.3);font-size:11px;margin-right:4px;">' + formatPrice(PRECO_FINAL_DE) + '</span>'
       : '';
-    var subLabel = c.isPacoteCompleto ? "Pacote Completo · 50 dias" : (c.tipo === "curso" ? "Curso · 90 dias de acesso" : (c.tipo === "s1" ? "1º Semestre · 50 dias de acesso" : (c.tipo === "s2" ? "2º Semestre · 50 dias de acesso" : ((c.tipo === "s4_p1" || c.tipo === "s4_p2" || c.tipo === "s4_final") ? "4º Semestre · 50 dias de acesso" : "3º Semestre · 50 dias de acesso"))));
+    var subLabel = c.tipo === "aulao" ? "Aulão gravado · acesso individual" : (c.isPacoteCompleto ? "Pacote Completo · 50 dias" : (c.tipo === "curso" ? "Curso · 90 dias de acesso" : (c.tipo === "s1" ? "1º Semestre · 50 dias de acesso" : (c.tipo === "s2" ? "2º Semestre · 50 dias de acesso" : ((c.tipo === "s4_p1" || c.tipo === "s4_p2" || c.tipo === "s4_final") ? "4º Semestre · 50 dias de acesso" : "3º Semestre · 50 dias de acesso")))));
     return '<div class="cart-item">' +
       '<span class="cart-item-emoji">' + c.emoji + '</span>' +
       '<div class="cart-item-info">' +
@@ -4063,6 +4119,11 @@ function updateCartUI() {
 
 window.checkoutCart = function(metodo) {
   if (cart.length === 0) return;
+  var temAulao = cart.some(function(c){ return c.tipo === "aulao"; });
+  if (temAulao && cart.length !== 1) {
+    alert("Aulões devem ser comprados separadamente dos outros produtos.");
+    return;
+  }
   metodo = metodo || "pix";
   var calc = calcCartTotal();
   var nomes = cart.map(function(c){ return c.label; }).join(", ");
@@ -4071,7 +4132,7 @@ window.checkoutCart = function(metodo) {
   // Aplica cupom ao total — somente sobre itens individuais (não pacote completo)
   var finalTotal = calc.total;
   var temPacoteCheckout = cart.some(function(c){ return c.isPacoteCompleto; });
-  if (cupomAtivo && finalTotal > 0) {
+  if (!temAulao && cupomAtivo && finalTotal > 0) {
     if (temPacoteCheckout) {
       var p2Only = cart.filter(function(c){ return c.tipo !== "final"; });
       if (p2Only.length > 0) {
@@ -4214,6 +4275,7 @@ window.initPaymentMultiple = async function(productKeys, productName, totalPrice
 
 // ── Renderiza loja ────────────────────────────────────────────────────────────
 function renderStore() {
+  renderAulaoStore();
   renderStoreGridS1();
   renderStoreGridS2();
   renderStoreGridS4();
@@ -4588,6 +4650,8 @@ document.addEventListener("authReady", async function(e) {
     var adminBtn = document.getElementById("adminBtn");
     if (adminBtn) adminBtn.classList.add("visible");
   }
+
+  await loadAuloes();
 
   statusArea.style.display = "none";
   mainContent.style.display = "block";

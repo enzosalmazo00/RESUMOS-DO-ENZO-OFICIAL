@@ -262,7 +262,39 @@
       .search-bar{flex-direction:column;}
       .filter-select,.search-input{width:100%;min-width:0;}
     }
-  </style>
+  
+    /* ── AULÕES ADMIN ── */
+    .aulao-admin-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+    .aulao-admin-head h2{font-size:18px;color:#e2f8fc;}
+    .aulao-admin-sub{font-size:11px;color:rgba(125,211,232,.48);margin-top:3px;line-height:1.5;}
+    .aulao-admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;}
+    .aulao-admin-card{border:1px solid rgba(168,85,247,.18);border-radius:16px;background:rgba(168,85,247,.035);overflow:hidden;}
+    .aulao-admin-cover{height:120px;background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(34,211,238,.08));background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;font-size:36px;}
+    .aulao-admin-body{padding:14px;}
+    .aulao-admin-title{font-size:13px;font-weight:700;color:#f5f3ff;}
+    .aulao-admin-meta{font-size:10px;color:rgba(196,181,253,.52);margin-top:5px;line-height:1.5;}
+    .aulao-admin-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px;}
+    .aulao-admin-badge{font-size:9px;padding:3px 8px;border-radius:999px;border:1px solid rgba(168,85,247,.18);color:#c4b5fd;background:rgba(168,85,247,.06);}
+    .aulao-admin-actions{display:flex;gap:6px;margin-top:12px;}
+    .aulao-admin-actions button{flex:1;padding:8px;border-radius:9px;border:1px solid rgba(168,85,247,.22);background:rgba(168,85,247,.08);color:#ddd6fe;font:600 10px Poppins;cursor:pointer;}
+    .aulao-admin-actions button:hover{background:rgba(168,85,247,.16);}
+    .aulao-editor{display:none;margin-top:18px;border:1px solid rgba(168,85,247,.20);border-radius:18px;padding:18px;background:rgba(168,85,247,.025);}
+    .aulao-editor.open{display:block;}
+    .aulao-editor-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+    .aulao-editor-grid .wide{grid-column:1/-1;}
+    .aulao-checks{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0;}
+    .aulao-checks label{font-size:11px;color:rgba(221,214,254,.72);display:flex;align-items:center;gap:6px;}
+    .aulao-subbox{margin-top:14px;padding:14px;border:1px solid rgba(168,85,247,.13);border-radius:14px;background:rgba(255,255,255,.018);}
+    .aulao-subbox-title{font-size:11px;font-weight:700;color:#c4b5fd;margin-bottom:10px;text-transform:uppercase;letter-spacing:.08em;}
+    .aulao-row{display:grid;grid-template-columns:1fr 1fr auto;gap:7px;margin-bottom:7px;align-items:center;}
+    .aulao-video-row{display:grid;grid-template-columns:80px 1fr 1.5fr 1fr auto;gap:7px;margin-bottom:7px;align-items:center;}
+    .aulao-mini-btn{padding:7px 10px;border-radius:8px;border:1px solid rgba(168,85,247,.22);background:rgba(168,85,247,.08);color:#ddd6fe;font:600 10px Poppins;cursor:pointer;}
+    .aulao-danger{border-color:rgba(248,113,113,.2)!important;color:#fca5a5!important;background:rgba(248,113,113,.05)!important;}
+    .aulao-cover-preview{width:100%;max-width:260px;aspect-ratio:16/9;border:1px dashed rgba(168,85,247,.25);border-radius:12px;background:#020617 center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:rgba(196,181,253,.35);font-size:11px;margin-top:7px;}
+    @media(max-width:800px){.aulao-editor-grid{grid-template-columns:1fr 1fr}.aulao-video-row{grid-template-columns:60px 1fr}.aulao-video-row>*:nth-child(n+3){grid-column:1/-1}.aulao-row{grid-template-columns:1fr}}
+    @media(max-width:520px){.aulao-editor-grid{grid-template-columns:1fr}}
+
+</style>
 </head>
 <body>
 <div id="loadingOverlay" style="position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#020d1a 0%,#010812 50%,#020d1a 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;">
@@ -291,6 +323,7 @@
     <button class="admin-tab active" onclick="switchAdminTab('overview')"><span class="tab-icon">&#128202;</span><span class="tab-text">Visão Geral</span></button>
     <button class="admin-tab" onclick="switchAdminTab('alunos')"><span class="tab-icon">&#128101;</span><span class="tab-text">Alunos</span><span class="tab-badge" id="tabBadgeAlunos">0</span></button>
     <button class="admin-tab" onclick="switchAdminTab('pagamentos')"><span class="tab-icon">&#128176;</span><span class="tab-text">Pagamentos</span></button>
+    <button class="admin-tab" onclick="switchAdminTab('auloes')"><span class="tab-icon">🎥</span><span class="tab-text">Aulões</span></button>
     <button class="admin-tab" onclick="switchAdminTab('promos')"><span class="tab-icon">&#127915;</span><span class="tab-text">Promoções</span></button>
   </div>
 
@@ -440,6 +473,81 @@
     </div>
     <div class="cards-wrap" id="ordersCards">
       <div class="order-card"><div class="loading"><span class="spinner-inline"></span> Carregando...</div></div>
+    </div>
+  </div>
+
+
+  <!-- ═══ TAB: AULÕES ═══ -->
+  <div class="tab-panel" id="panel-auloes">
+    <div class="aulao-admin-head">
+      <div>
+        <h2>🎥 Gerenciar Aulões</h2>
+        <div class="aulao-admin-sub">Crie aulões, envie capa, organize por semestre, habilite turmas/professores, adicione vídeos do YouTube e publique na loja.</div>
+      </div>
+      <button class="btn-create" onclick="novoAulao()">+ Criar aulão</button>
+    </div>
+
+    <div class="aulao-admin-grid" id="adminAuloesGrid">
+      <div class="loading"><span class="spinner-inline"></span> Carregando...</div>
+    </div>
+
+    <div class="aulao-editor" id="aulaoEditor">
+      <div class="form-card-title">✏️ <span id="aulaoEditorTitle">Novo aulão</span></div>
+      <input type="hidden" id="aulaoId">
+
+      <div class="aulao-editor-grid">
+        <div class="form-group"><div class="form-label">Nome do aulão</div><input class="form-input" id="aulaoNome" placeholder="Aulão de Bioquímica 2 — P1"></div>
+        <div class="form-group"><div class="form-label">Matéria</div><input class="form-input" id="aulaoMateria" placeholder="Bioquímica 2"></div>
+        <div class="form-group"><div class="form-label">Prova / etapa</div><input class="form-input" id="aulaoAvaliacao" placeholder="P1"></div>
+
+        <div class="form-group">
+          <div class="form-label">Semestre</div>
+          <select class="form-input" id="aulaoSemestre">
+            <option value="1">1º semestre</option><option value="2">2º semestre</option>
+            <option value="3">3º semestre</option><option value="4" selected>4º semestre</option>
+            <option value="5">5º semestre</option><option value="6">6º semestre</option>
+            <option value="7">7º semestre</option><option value="8">8º semestre</option>
+            <option value="9">9º semestre</option><option value="10">10º semestre</option>
+            <option value="11">11º semestre</option><option value="12">12º semestre</option>
+          </select>
+        </div>
+        <div class="form-group"><div class="form-label">Preço (R$)</div><input class="form-input" type="number" min="0" step="0.01" id="aulaoPreco" value="0"></div>
+        <div class="form-group"><div class="form-label">Dias de acesso</div><input class="form-input" type="number" min="1" id="aulaoDias" value="50"></div>
+
+        <div class="form-group wide"><div class="form-label">Descrição</div><textarea class="form-input" id="aulaoDescricao" rows="3" placeholder="Resumo do que será abordado no aulão"></textarea></div>
+
+        <div class="form-group wide">
+          <div class="form-label">Imagem de capa</div>
+          <input class="form-input" type="file" id="aulaoCapa" accept="image/jpeg,image/png,image/webp" onchange="previewAulaoCapa()">
+          <div class="aulao-cover-preview" id="aulaoCapaPreview">Sem imagem</div>
+        </div>
+      </div>
+
+      <div class="aulao-checks">
+        <label><input type="checkbox" id="aulaoPublicado"> Publicado</label>
+        <label><input type="checkbox" id="aulaoLoja"> Exibir na loja</label>
+        <label><input type="checkbox" id="aulaoDestaque"> Destaque</label>
+        <label><input type="checkbox" id="aulaoUsarTurmas" onchange="toggleTurmasEditor()"> Usar turmas/professores</label>
+      </div>
+
+      <div class="aulao-subbox" id="turmasBox" style="display:none;">
+        <div class="aulao-subbox-title">Turmas e professores</div>
+        <div id="turmasRows"></div>
+        <button class="aulao-mini-btn" onclick="addTurmaRow()">+ Adicionar turma/professor</button>
+      </div>
+
+      <div class="aulao-subbox">
+        <div class="aulao-subbox-title">Vídeos do YouTube</div>
+        <div style="font-size:10px;color:rgba(125,211,232,.45);margin-bottom:9px;">Cole o link do YouTube. O ID do vídeo é extraído automaticamente.</div>
+        <div id="videosRows"></div>
+        <button class="aulao-mini-btn" onclick="addVideoRow()">+ Adicionar vídeo</button>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
+        <button class="btn-create" id="saveAulaoBtn" onclick="salvarAulao()">💾 Salvar aulão</button>
+        <button class="btn-outline" onclick="fecharEditorAulao()">Cancelar</button>
+        <button class="btn-outline" id="deleteAulaoBtn" style="display:none;border-color:rgba(248,113,113,.3);color:#fca5a5;" onclick="excluirAulao()">Excluir aulão</button>
+      </div>
     </div>
   </div>
 
@@ -632,7 +740,7 @@ function resumoAtivo(a,key){
 // ── TAB NAVIGATION ──
 window.switchAdminTab=function(tab){
   document.querySelectorAll(".admin-tab").forEach(function(b,i){
-    var tabs=["overview","alunos","pagamentos","promos"];
+    var tabs=["overview","alunos","pagamentos","auloes","promos"];
     b.classList.toggle("active",tabs[i]===tab);
   });
   document.querySelectorAll(".tab-panel").forEach(function(p){p.classList.remove("active");});
@@ -647,6 +755,7 @@ window.refreshAll=async function(){
   try{await Promise.all([loadAlunos(),loadOrders()]);}catch(e){}
   try{await loadCupons();}catch(e){}
   try{await loadPrecos();}catch(e){}
+  try{await loadAuloesAdmin();}catch(e){}
   btn.classList.remove("spinning");
   showToast("&#9989; Dados atualizados!","success");
 };
@@ -666,6 +775,7 @@ async function init(){
     await Promise.all([loadAlunos(),loadOrders()]);
     try{await loadCupons();}catch(e){console.warn("cupons:",e);}
     try{await loadPrecos();}catch(e){console.warn("precos:",e);}
+    try{await loadAuloesAdmin();}catch(e){console.warn("auloes:",e);}
     try{setupOnlineCounter();}catch(e){console.warn("online:",e);}
     renderActivity();
   }catch(err){
@@ -1268,6 +1378,238 @@ function setupOnlineCounter(){
     if (stat) stat.textContent = "—";
   }
 }
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// AULÕES — GERENCIAMENTO DINÂMICO
+// ═══════════════════════════════════════════════════════════════════════════════
+var adminAuloes = [];
+var editorTurmas = [];
+var editorVideos = [];
+var editorCapaUrl = "";
+
+function escapeAulao(v){
+  return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function slugAulao(v){
+  return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()
+    .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,80);
+}
+function youtubeId(url){
+  var s=String(url||"").trim();
+  var m=s.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{6,})/i);
+  if(m)return m[1];
+  if(/^[A-Za-z0-9_-]{6,}$/.test(s))return s;
+  return "";
+}
+async function loadAuloesAdmin(){
+  var r=await client.from("auloes").select("*").order("semestre").order("created_at",{ascending:false});
+  if(r.error){console.error("auloes:",r.error);return;}
+  adminAuloes=r.data||[];
+  renderAuloesAdmin();
+}
+function renderAuloesAdmin(){
+  var g=document.getElementById("adminAuloesGrid"); if(!g)return;
+  if(!adminAuloes.length){g.innerHTML='<div class="loading">Nenhum aulão cadastrado.</div>';return;}
+  g.innerHTML=adminAuloes.map(function(a){
+    var bg=a.capa_url?'style="background-image:url(\''+escapeAulao(a.capa_url)+'\')"':'';
+    return '<div class="aulao-admin-card">'+
+      '<div class="aulao-admin-cover" '+bg+'>'+(a.capa_url?'':'🎥')+'</div>'+
+      '<div class="aulao-admin-body">'+
+        '<div class="aulao-admin-title">'+escapeAulao(a.nome)+'</div>'+
+        '<div class="aulao-admin-meta">'+a.semestre+'º semestre · '+escapeAulao(a.materia||'')+(a.avaliacao?' · '+escapeAulao(a.avaliacao):'')+'<br>R$ '+Number(a.preco||0).toFixed(2).replace(".",",")+' · '+(a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+'</div>'+
+        '<div class="aulao-admin-badges">'+
+          '<span class="aulao-admin-badge">'+(a.publicado?'Publicado':'Rascunho')+'</span>'+
+          '<span class="aulao-admin-badge">'+(a.exibir_loja?'Na loja':'Fora da loja')+'</span>'+
+          (a.usar_turmas?'<span class="aulao-admin-badge">Turmas ativas</span>':'')+
+        '</div>'+
+        '<div class="aulao-admin-actions"><button onclick="editarAulao(\''+a.id+'\')">Editar</button><button onclick="abrirAulaoAdmin(\''+escapeAulao(a.chave)+'\')">Abrir</button></div>'+
+      '</div></div>';
+  }).join("");
+}
+window.novoAulao=function(){
+  document.getElementById("aulaoEditor").classList.add("open");
+  document.getElementById("aulaoEditorTitle").textContent="Novo aulão";
+  document.getElementById("aulaoId").value="";
+  document.getElementById("aulaoNome").value="";
+  document.getElementById("aulaoMateria").value="";
+  document.getElementById("aulaoAvaliacao").value="";
+  document.getElementById("aulaoSemestre").value="4";
+  document.getElementById("aulaoPreco").value="0";
+  document.getElementById("aulaoDias").value="50";
+  document.getElementById("aulaoDescricao").value="";
+  document.getElementById("aulaoPublicado").checked=false;
+  document.getElementById("aulaoLoja").checked=false;
+  document.getElementById("aulaoDestaque").checked=false;
+  document.getElementById("aulaoUsarTurmas").checked=false;
+  document.getElementById("deleteAulaoBtn").style.display="none";
+  editorTurmas=[];editorVideos=[];editorCapaUrl="";
+  document.getElementById("aulaoCapa").value="";
+  renderCapaPreview();renderTurmasRows();renderVideosRows();toggleTurmasEditor();
+  document.getElementById("aulaoEditor").scrollIntoView({behavior:"smooth",block:"start"});
+};
+window.fecharEditorAulao=function(){document.getElementById("aulaoEditor").classList.remove("open");};
+window.previewAulaoCapa=function(){
+  var f=document.getElementById("aulaoCapa").files[0]; if(!f){renderCapaPreview();return;}
+  var rd=new FileReader(); rd.onload=function(e){var p=document.getElementById("aulaoCapaPreview");p.style.backgroundImage="url('"+e.target.result+"')";p.textContent="";};rd.readAsDataURL(f);
+};
+function renderCapaPreview(){var p=document.getElementById("aulaoCapaPreview");p.style.backgroundImage=editorCapaUrl?"url('"+editorCapaUrl+"')":"";p.textContent=editorCapaUrl?"":"Sem imagem";}
+window.toggleTurmasEditor=function(){document.getElementById("turmasBox").style.display=document.getElementById("aulaoUsarTurmas").checked?"block":"none";renderVideosRows();};
+window.addTurmaRow=function(){editorTurmas.push({id:null,turma:"",professor:"",ativo:true,ordem:editorTurmas.length+1});renderTurmasRows();renderVideosRows();};
+window.removeTurmaRow=function(i){editorTurmas.splice(i,1);renderTurmasRows();renderVideosRows();};
+function syncTurmaInput(i,field,val){if(editorTurmas[i])editorTurmas[i][field]=val;}
+function renderTurmasRows(){
+  var c=document.getElementById("turmasRows"); if(!c)return;
+  if(!editorTurmas.length){c.innerHTML='<div style="font-size:10px;color:rgba(125,211,232,.4);margin-bottom:8px;">Nenhuma turma cadastrada.</div>';return;}
+  c.innerHTML=editorTurmas.map(function(t,i){
+    return '<div class="aulao-row">'+
+      '<input class="form-input" placeholder="Turma (ex.: A)" value="'+escapeAulao(t.turma)+'" oninput="syncTurmaInput('+i+',\'turma\',this.value)">'+
+      '<input class="form-input" placeholder="Professor" value="'+escapeAulao(t.professor)+'" oninput="syncTurmaInput('+i+',\'professor\',this.value)">'+
+      '<button class="aulao-mini-btn aulao-danger" onclick="removeTurmaRow('+i+')">Remover</button></div>';
+  }).join("");
+}
+window.addVideoRow=function(){editorVideos.push({id:null,titulo:"Parte "+(editorVideos.length+1),youtube_url:"",youtube_id:"",ordem:editorVideos.length+1,publicado:true,turma_ref:""});renderVideosRows();};
+window.removeVideoRow=function(i){editorVideos.splice(i,1);editorVideos.forEach(function(v,n){v.ordem=n+1;});renderVideosRows();};
+function syncVideoInput(i,field,val){if(editorVideos[i]){editorVideos[i][field]=val;if(field==="youtube_url")editorVideos[i].youtube_id=youtubeId(val);}}
+function renderVideosRows(){
+  var c=document.getElementById("videosRows"); if(!c)return;
+  if(!editorVideos.length){c.innerHTML='<div style="font-size:10px;color:rgba(125,211,232,.4);margin-bottom:8px;">Nenhum vídeo. Clique em “Adicionar vídeo”.</div>';return;}
+  var usar=document.getElementById("aulaoUsarTurmas").checked;
+  c.innerHTML=editorVideos.map(function(v,i){
+    var turmaSelect='';
+    if(usar){
+      turmaSelect='<select class="form-input" onchange="syncVideoInput('+i+',\'turma_ref\',this.value)"><option value="">Selecione a turma</option>'+
+        editorTurmas.map(function(t,n){var ref=t.id||("new-"+n);return '<option value="'+ref+'" '+(v.turma_ref===ref?'selected':'')+'>'+escapeAulao(t.turma||("Turma "+(n+1)))+' — '+escapeAulao(t.professor||"Professor")+'</option>';}).join("")+'</select>';
+    }else{
+      turmaSelect='<input class="form-input" value="Geral" disabled>';
+    }
+    return '<div class="aulao-video-row">'+
+      '<input class="form-input" type="number" min="1" value="'+(v.ordem||i+1)+'" oninput="syncVideoInput('+i+',\'ordem\',Number(this.value))">'+
+      '<input class="form-input" placeholder="Título" value="'+escapeAulao(v.titulo)+'" oninput="syncVideoInput('+i+',\'titulo\',this.value)">'+
+      '<input class="form-input" placeholder="Link do YouTube" value="'+escapeAulao(v.youtube_url)+'" oninput="syncVideoInput('+i+',\'youtube_url\',this.value)">'+
+      turmaSelect+
+      '<button class="aulao-mini-btn aulao-danger" onclick="removeVideoRow('+i+')">×</button></div>';
+  }).join("");
+}
+window.editarAulao=async function(id){
+  var a=adminAuloes.find(function(x){return x.id===id;}); if(!a)return;
+  document.getElementById("aulaoEditor").classList.add("open");
+  document.getElementById("aulaoEditorTitle").textContent="Editar aulão";
+  document.getElementById("aulaoId").value=a.id;
+  document.getElementById("aulaoNome").value=a.nome||"";
+  document.getElementById("aulaoMateria").value=a.materia||"";
+  document.getElementById("aulaoAvaliacao").value=a.avaliacao||"";
+  document.getElementById("aulaoSemestre").value=String(a.semestre||4);
+  document.getElementById("aulaoPreco").value=Number(a.preco||0);
+  document.getElementById("aulaoDias").value=a.dias_acesso||"";
+  document.getElementById("aulaoDescricao").value=a.descricao||"";
+  document.getElementById("aulaoPublicado").checked=!!a.publicado;
+  document.getElementById("aulaoLoja").checked=!!a.exibir_loja;
+  document.getElementById("aulaoDestaque").checked=!!a.destaque;
+  document.getElementById("aulaoUsarTurmas").checked=!!a.usar_turmas;
+  document.getElementById("deleteAulaoBtn").style.display="inline-block";
+  editorCapaUrl=a.capa_url||"";document.getElementById("aulaoCapa").value="";renderCapaPreview();
+
+  var tr=await client.from("aulao_turmas").select("*").eq("aulao_id",id).order("ordem");
+  editorTurmas=tr.data||[];
+  var vr=await client.from("aulao_videos").select("*").eq("aulao_id",id).order("ordem");
+  editorVideos=(vr.data||[]).map(function(v){
+    var idx=editorTurmas.findIndex(function(t){return t.id===v.aulao_turma_id;});
+    return Object.assign({},v,{turma_ref:v.aulao_turma_id||"",_turma_index:idx});
+  });
+  renderTurmasRows();renderVideosRows();toggleTurmasEditor();
+  document.getElementById("aulaoEditor").scrollIntoView({behavior:"smooth",block:"start"});
+};
+async function uploadCapaAulao(chave){
+  var f=document.getElementById("aulaoCapa").files[0]; if(!f)return editorCapaUrl||null;
+  var ext=(f.name.split(".").pop()||"jpg").toLowerCase();
+  var path=chave+"/capa."+ext;
+  var up=await client.storage.from("auloes-capas").upload(path,f,{upsert:true,contentType:f.type});
+  if(up.error)throw up.error;
+  var pub=client.storage.from("auloes-capas").getPublicUrl(path);
+  return pub.data.publicUrl+"?v="+Date.now();
+}
+window.salvarAulao=async function(){
+  var btn=document.getElementById("saveAulaoBtn");btn.disabled=true;btn.textContent="Salvando...";
+  try{
+    var id=document.getElementById("aulaoId").value||null;
+    var nome=document.getElementById("aulaoNome").value.trim();
+    var materia=document.getElementById("aulaoMateria").value.trim();
+    if(!nome||!materia)throw new Error("Preencha nome e matéria.");
+    var antigo=id?adminAuloes.find(function(a){return a.id===id;}):null;
+    var chave=antigo?antigo.chave:("aulao-"+slugAulao(nome));
+    if(!chave||chave==="aulao-")throw new Error("Nome inválido.");
+    var capa=await uploadCapaAulao(chave);
+    var data={
+      chave:chave,nome:nome,materia:materia,
+      avaliacao:document.getElementById("aulaoAvaliacao").value.trim()||null,
+      semestre:Number(document.getElementById("aulaoSemestre").value),
+      descricao:document.getElementById("aulaoDescricao").value.trim()||null,
+      preco:Number(document.getElementById("aulaoPreco").value||0),
+      dias_acesso:document.getElementById("aulaoDias").value?Number(document.getElementById("aulaoDias").value):null,
+      capa_url:capa,
+      publicado:document.getElementById("aulaoPublicado").checked,
+      exibir_loja:document.getElementById("aulaoLoja").checked,
+      destaque:document.getElementById("aulaoDestaque").checked,
+      usar_turmas:document.getElementById("aulaoUsarTurmas").checked,
+      updated_at:new Date().toISOString()
+    };
+    if(data.exibir_loja&&data.preco<=0)throw new Error("Para exibir na loja, informe um preço maior que zero.");
+
+    var saved;
+    if(id){
+      var rr=await client.from("auloes").update(data).eq("id",id).select("*").single(); if(rr.error)throw rr.error;saved=rr.data;
+    }else{
+      var rr=await client.from("auloes").insert(data).select("*").single(); if(rr.error)throw rr.error;saved=rr.data;id=saved.id;
+    }
+
+    // Regrava turmas e vídeos para manter o editor simples e consistente.
+    var delV=await client.from("aulao_videos").delete().eq("aulao_id",id); if(delV.error)throw delV.error;
+    var delT=await client.from("aulao_turmas").delete().eq("aulao_id",id); if(delT.error)throw delT.error;
+
+    var turmaIdMap={};
+    if(data.usar_turmas){
+      var turmasValidas=editorTurmas.filter(function(t){return t.turma.trim()&&t.professor.trim();});
+      if(!turmasValidas.length)throw new Error("Turmas estão ativadas: adicione ao menos uma turma/professor.");
+      for(var i=0;i<turmasValidas.length;i++){
+        var t=turmasValidas[i];
+        var tr=await client.from("aulao_turmas").insert({aulao_id:id,turma:t.turma.trim(),professor:t.professor.trim(),ativo:true,ordem:i+1}).select("*").single();
+        if(tr.error)throw tr.error;
+        turmaIdMap[t.id||("new-"+editorTurmas.indexOf(t))]=tr.data.id;
+        turmaIdMap["new-"+editorTurmas.indexOf(t)]=tr.data.id;
+      }
+    }
+
+    var videosValidos=editorVideos.filter(function(v){return v.titulo.trim()&&v.youtube_url.trim();});
+    for(var j=0;j<videosValidos.length;j++){
+      var v=videosValidos[j], yid=youtubeId(v.youtube_url);
+      if(!yid)throw new Error("Link inválido no vídeo: "+v.titulo);
+      var turmaId=null;
+      if(data.usar_turmas){
+        turmaId=turmaIdMap[v.turma_ref]||null;
+        if(!turmaId)throw new Error("Selecione a turma do vídeo: "+v.titulo);
+      }
+      var vv=await client.from("aulao_videos").insert({
+        aulao_id:id,aulao_turma_id:turmaId,titulo:v.titulo.trim(),
+        youtube_url:v.youtube_url.trim(),youtube_id:yid,ordem:Number(v.ordem||j+1),publicado:true
+      });
+      if(vv.error)throw vv.error;
+    }
+
+    showToast("✅ Aulão salvo!","success");
+    await loadAuloesAdmin();
+    fecharEditorAulao();
+  }catch(e){console.error(e);alert(e.message||"Erro ao salvar aulão.");}
+  btn.disabled=false;btn.textContent="💾 Salvar aulão";
+};
+window.excluirAulao=async function(){
+  var id=document.getElementById("aulaoId").value;if(!id)return;
+  if(!confirm("Excluir este aulão, turmas e vídeos?"))return;
+  var r=await client.from("auloes").delete().eq("id",id);
+  if(r.error){alert("Erro ao excluir.");return;}
+  fecharEditorAulao();await loadAuloesAdmin();showToast("Aulão excluído.","success");
+};
+window.abrirAulaoAdmin=function(chave){window.open("aulao.html?key="+encodeURIComponent(chave),"_blank");};
 
 init();
 })();
