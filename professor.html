@@ -7,6 +7,7 @@
 <script>window.PAGE_KEY=null;</script>
 <script>document.documentElement.style.visibility="hidden";</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="auth-guard.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,6 +37,20 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
 .lang-option{width:100%;padding:9px 10px;border:1px solid rgba(255,255,255,.07);border-radius:9px;background:rgba(255,255,255,.025);color:#e6fbff;text-align:left;font-size:10px;font-weight:600;cursor:pointer}
 .lang-option:hover,.lang-option.active{border-color:rgba(34,211,238,.38);background:rgba(34,211,238,.08)}
 .lang-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;font-size:8px;font-weight:700;border:1px solid rgba(34,211,238,.18);color:#a5f3fc;background:rgba(34,211,238,.045);margin-left:6px}
+
+
+.signature-box{margin-top:18px;padding:18px;border:1px solid rgba(168,85,247,.22);border-radius:16px;background:linear-gradient(135deg,rgba(168,85,247,.055),rgba(34,211,238,.025))}
+.signature-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.signature-title{font-size:13px;font-weight:800;color:#f5f3ff}
+.signature-sub{font-size:9.5px;line-height:1.55;color:rgba(221,214,254,.52);margin-top:3px}
+.signature-canvas-wrap{margin-top:10px;border:1px dashed rgba(196,181,253,.30);border-radius:12px;background:#fff;overflow:hidden;position:relative}
+.signature-canvas{display:block;width:100%;height:180px;touch-action:none;cursor:crosshair}
+.signature-watermark{position:absolute;left:12px;bottom:8px;color:rgba(2,8,16,.24);font-size:9px;pointer-events:none}
+.signature-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.signature-status{margin-top:12px;padding:11px 12px;border-radius:11px;border:1px solid rgba(74,222,128,.20);background:rgba(74,222,128,.05);color:#bbf7d0;font-size:9.5px;line-height:1.55;display:none}
+.signature-status.show{display:block}
+.signature-preview-saved{display:none;margin-top:10px;max-width:360px;width:100%;height:120px;object-fit:contain;border-radius:10px;background:#fff;border:1px solid rgba(255,255,255,.1)}
+.terms-required{padding:11px 13px;border-radius:11px;border:1px solid rgba(251,191,36,.20);background:rgba(251,191,36,.055);color:#fde68a;font-size:9.5px;line-height:1.55;margin-top:10px}
 
 @media(max-width:850px){.stats{grid-template-columns:1fr 1fr}.grid,.aulao-list{grid-template-columns:1fr}.part-row{grid-template-columns:40px 1fr 34px}.part-row .part-url{grid-column:2/3}.sem-checks{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:520px){.wrap{padding:18px 12px 55px}.hero{padding:20px}.stats{grid-template-columns:1fr 1fr}.stat-value{font-size:18px}.sem-checks{grid-template-columns:repeat(3,1fr)}.part-row{grid-template-columns:34px 1fr 30px}.tabs{margin-left:-2px;margin-right:-2px}}
@@ -101,7 +116,7 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
       <div class="card-head"><div><h2>Meu perfil de professor</h2><div class="hint">Essas informações organizam seu perfil público e limitam as opções disponíveis ao criar aulões.</div></div></div>
       <form id="profileForm">
         <div class="grid">
-          <div class="field"><label>Como gostaria de ser chamado(a)?</label><input class="input" id="displayName" required placeholder="Ex.: Dr. Marcos Rigonatto"></div>
+          <div class="field"><label>Como gostaria de ser chamado(a)?</label><input class="input" id="displayName" required placeholder="Ex.: Dr. xxxxxxxxxxxxxxxxxx"></div>
           <div class="field"><label>Celular / WhatsApp</label><input class="input" id="phone" required placeholder="+595... ou +55..."></div>
           <div class="field full"><label>Matérias que você ministra</label><input class="input" id="subjects" required placeholder="Ex.: Microbiologia 1, Microbiologia 2, Imunologia"><div class="hint">Separe as matérias por vírgula. Elas aparecerão como opções ao criar seus aulões.</div></div>
           <div class="field full"><label>Semestres em que ministra aula</label><div class="sem-checks" id="semesterChecks"></div></div>
@@ -113,8 +128,8 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
           </div>
           <div class="field full"><label>Apresentação curta</label><textarea class="textarea" id="bio" placeholder="Ex.: Professor de Microbiologia, aulas focadas em revisão para provas..."></textarea></div>
         </div>
-        <label class="accept" id="acceptWrap"><input type="checkbox" id="acceptTerms"><span>Li e concordo com os <strong>Termos do Professor Colaborador</strong>, incluindo a divisão de 2/3 do valor da venda para o professor e 1/3 para manutenção e operação da plataforma.</span></label>
-        <div class="actions"><button class="btn primary" type="submit" id="saveProfileBtn">Salvar meu perfil</button></div>
+        <div class="terms-required" id="termsProfileNotice">📄 Depois de salvar seu perfil, assine eletronicamente os Termos do Professor Colaborador na aba <strong>Termos</strong>. A assinatura é obrigatória antes de enviar um aulão para aprovação.</div>
+        <div class="actions"><button class="btn primary" type="submit" id="saveProfileBtn">Salvar meu perfil</button><button class="btn ghost" type="button" id="goTermsBtn">Ir para Termos e assinatura</button></div>
       </form>
     </div>
   </section>
@@ -159,6 +174,31 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
     <div class="card">
       <div class="card-head"><div><h2>Termos do Professor Colaborador</h2><div class="hint" id="termsVersionLabel">Versão 2026-09-26-v2</div></div></div>
       <div class="term-box" id="termsText"></div>
+
+      <div class="signature-box">
+        <div class="signature-head">
+          <div>
+            <div class="signature-title" id="signatureTitle">Assinatura eletrônica do aceite</div>
+            <div class="signature-sub" id="signatureSub">Informe seu documento e assine no campo abaixo com o dedo, Apple Pencil, caneta do tablet ou mouse.</div>
+          </div>
+          <span class="status rascunho" id="signatureBadge">Não assinado</span>
+        </div>
+        <div class="grid">
+          <div class="field"><label id="docTypeLabel">Documento</label><select class="select" id="termDocType"><option value="CI">C.I.</option><option value="CPF">CPF</option></select></div>
+          <div class="field"><label id="docNumberLabel">Número do documento</label><input class="input" id="termDocNumber" autocomplete="off" placeholder="Digite somente o número ou identificação"></div>
+        </div>
+        <div class="signature-canvas-wrap" id="signatureCanvasWrap">
+          <canvas id="signatureCanvas" class="signature-canvas"></canvas>
+          <div class="signature-watermark" id="signatureWatermark">Assine aqui</div>
+        </div>
+        <img id="savedSignaturePreview" class="signature-preview-saved" alt="Assinatura salva">
+        <div class="signature-actions">
+          <button class="btn ghost" type="button" id="clearSignatureBtn">Limpar assinatura</button>
+          <button class="btn violet" type="button" id="signTermsBtn">Assinar e aceitar os termos</button>
+          <button class="btn green" type="button" id="downloadTermsBtn" style="display:none">Gerar minha cópia em PDF</button>
+        </div>
+        <div class="signature-status" id="signatureStatus"></div>
+      </div>
     </div>
   </section>
 </main>
@@ -166,7 +206,7 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
 <script>
 (function(){
 "use strict";
-var client=null,session=null,account=null,details=null,publicProfile=null,auloes=[],salesRows=[],whatsapp="";
+var client=null,session=null,account=null,details=null,publicProfile=null,currentAcceptance=null,auloes=[],salesRows=[],whatsapp="";
 var TERMS_VERSION="2026-09-26-v2";
 var uiLang="pt-BR";
 
@@ -392,6 +432,14 @@ function translateDom(){
   document.querySelectorAll("[data-ui-lang]").forEach(function(b){b.classList.toggle("active",b.dataset.uiLang===uiLang)});
   document.documentElement.lang=uiLang==="es"?"es":"pt-BR";
   var terms=document.getElementById("termsText");if(terms)terms.innerHTML=uiLang==="es"?TERMS_ES:TERMS_PT;
+
+  var st=document.getElementById("signatureTitle");if(st)st.textContent=uiLang==="es"?"Firma electrónica de aceptación":"Assinatura eletrônica do aceite";
+  var ss=document.getElementById("signatureSub");if(ss)ss.textContent=uiLang==="es"?"Ingrese su documento y firme abajo con el dedo, Apple Pencil, lápiz del tablet o mouse.":"Informe seu documento e assine no campo abaixo com o dedo, Apple Pencil, caneta do tablet ou mouse.";
+  var wl=document.getElementById("signatureWatermark");if(wl)wl.textContent=uiLang==="es"?"Firme aquí":"Assine aqui";
+  var cn=document.getElementById("clearSignatureBtn");if(cn)cn.textContent=uiLang==="es"?"Limpiar firma":"Limpar assinatura";
+  var sb=document.getElementById("signTermsBtn");if(sb&&!sb.disabled)sb.textContent=uiLang==="es"?"Firmar y aceptar los términos":"Assinar e aceitar os termos";
+  var dp=document.getElementById("downloadTermsBtn");if(dp)dp.textContent=uiLang==="es"?"Generar mi copia en PDF":"Gerar minha cópia em PDF";
+
   var ver=document.getElementById("termsVersionLabel");if(ver)ver.textContent=(uiLang==="es"?"Versión ":"Versão ")+TERMS_VERSION;
 }
 async function setInterfaceLanguage(lang){
@@ -408,6 +456,125 @@ async function setInterfaceLanguage(lang){
 }
 
 function toast(msg){var t=document.createElement("div");t.className="toast";t.textContent=msg;document.body.appendChild(t);setTimeout(function(){t.remove()},3200)}
+
+var signatureHasInk=false,signatureCtx=null,signatureCanvas=null,signatureDrawing=false,signatureLast=null,signatureObjectUrl=null;
+
+function setupSignaturePad(){
+  signatureCanvas=document.getElementById("signatureCanvas");
+  if(!signatureCanvas)return;
+  var rect=signatureCanvas.getBoundingClientRect(),ratio=Math.max(1,window.devicePixelRatio||1);
+  signatureCanvas.width=Math.max(600,Math.floor(rect.width*ratio));
+  signatureCanvas.height=Math.floor(180*ratio);
+  signatureCtx=signatureCanvas.getContext("2d");
+  signatureCtx.setTransform(ratio,0,0,ratio,0,0);
+  signatureCtx.lineWidth=2.2;signatureCtx.lineCap="round";signatureCtx.lineJoin="round";signatureCtx.strokeStyle="#07101d";
+  function point(ev){
+    var r=signatureCanvas.getBoundingClientRect();
+    var e=ev.touches&&ev.touches[0]?ev.touches[0]:ev;
+    return{x:e.clientX-r.left,y:e.clientY-r.top};
+  }
+  function start(ev){if(currentAcceptance)return;signatureDrawing=true;signatureLast=point(ev);ev.preventDefault()}
+  function move(ev){if(!signatureDrawing||currentAcceptance)return;var p=point(ev);signatureCtx.beginPath();signatureCtx.moveTo(signatureLast.x,signatureLast.y);signatureCtx.lineTo(p.x,p.y);signatureCtx.stroke();signatureLast=p;signatureHasInk=true;ev.preventDefault()}
+  function end(ev){signatureDrawing=false;signatureLast=null;if(ev)ev.preventDefault()}
+  signatureCanvas.onpointerdown=start;signatureCanvas.onpointermove=move;signatureCanvas.onpointerup=end;signatureCanvas.onpointercancel=end;signatureCanvas.onpointerleave=end;
+}
+function clearSignature(){
+  if(currentAcceptance)return;
+  if(signatureCtx&&signatureCanvas){signatureCtx.clearRect(0,0,signatureCanvas.width,signatureCanvas.height);signatureHasInk=false}
+}
+function canvasBlob(){
+  return new Promise(function(resolve,reject){
+    if(!signatureCanvas){reject(new Error("Campo de assinatura indisponível"));return}
+    signatureCanvas.toBlob(function(blob){blob?resolve(blob):reject(new Error("Não foi possível gerar a assinatura"))},"image/png",1);
+  });
+}
+async function loadSavedSignature(){
+  var img=document.getElementById("savedSignaturePreview");
+  if(signatureObjectUrl){URL.revokeObjectURL(signatureObjectUrl);signatureObjectUrl=null}
+  if(!currentAcceptance||!currentAcceptance.signature_path){img.style.display="none";return}
+  var r=await client.storage.from("professor-documentos").download(currentAcceptance.signature_path);
+  if(r.error){console.warn("assinatura:",r.error);return}
+  signatureObjectUrl=URL.createObjectURL(r.data);img.src=signatureObjectUrl;img.style.display="block";
+}
+function renderTermsAcceptance(){
+  var signed=!!currentAcceptance;
+  var badge=document.getElementById("signatureBadge"),status=document.getElementById("signatureStatus"),canvasWrap=document.getElementById("signatureCanvasWrap");
+  var docType=document.getElementById("termDocType"),docNum=document.getElementById("termDocNumber"),signBtn=document.getElementById("signTermsBtn"),clearBtn=document.getElementById("clearSignatureBtn"),pdfBtn=document.getElementById("downloadTermsBtn");
+  if(signed){
+    badge.className="status aprovado";badge.textContent=uiLang==="es"?"Firmado":"Assinado";
+    docType.value=currentAcceptance.document_type||"CI";docType.disabled=true;docNum.value=currentAcceptance.document_number||"";docNum.disabled=true;
+    signBtn.style.display="none";clearBtn.style.display="none";canvasWrap.style.display="none";pdfBtn.style.display="";
+    status.classList.add("show");
+    status.innerHTML=(uiLang==="es"?"✅ Términos firmados electrónicamente el ":"✅ Termos assinados eletronicamente em ")+new Date(currentAcceptance.signed_at).toLocaleString(uiLang==="es"?"es-PY":"pt-BR")+" · "+esc(currentAcceptance.document_type)+" "+esc(maskDocument(currentAcceptance.document_number))+" · "+esc(currentAcceptance.terms_version);
+    loadSavedSignature();
+  }else{
+    badge.className="status pendente";badge.textContent=uiLang==="es"?"Firma pendiente":"Assinatura pendente";
+    docType.disabled=false;docNum.disabled=false;docNum.value="";signBtn.style.display="";clearBtn.style.display="";canvasWrap.style.display="";pdfBtn.style.display="none";
+    status.classList.add("show");status.textContent=uiLang==="es"?"La firma es obligatoria antes de enviar un curso para aprobación.":"A assinatura é obrigatória antes de enviar um aulão para aprovação.";
+    document.getElementById("savedSignaturePreview").style.display="none";
+  }
+}
+function maskDocument(v){var s=String(v||"");if(s.length<=4)return s;return "••••••"+s.slice(-4)}
+async function signCurrentTerms(){
+  if(currentAcceptance){toast(uiLang==="es"?"Estos términos ya están firmados.":"Estes termos já estão assinados.");return}
+  var type=document.getElementById("termDocType").value,num=document.getElementById("termDocNumber").value.trim();
+  if(num.length<4){toast(uiLang==="es"?"Informe un documento válido.":"Informe um documento válido.");return}
+  if(!signatureHasInk){toast(uiLang==="es"?"Realice su firma en el campo indicado.":"Faça sua assinatura no campo indicado.");return}
+  if(!confirm(uiLang==="es"?"¿Confirma que leyó los términos y que la firma realizada es su manifestación de aceptación?":"Confirma que leu os termos e que a assinatura realizada representa sua manifestação de aceite?"))return;
+  var btn=document.getElementById("signTermsBtn");btn.disabled=true;btn.textContent=uiLang==="es"?"Guardando firma…":"Salvando assinatura…";
+  try{
+    var blob=await canvasBlob();
+    var path="signatures/"+session.user.id+"/"+TERMS_VERSION+"/"+Date.now()+".png";
+    var up=await client.storage.from("professor-documentos").upload(path,blob,{contentType:"image/png",cacheControl:"3600",upsert:false});
+    if(up.error)throw up.error;
+    var termsText=(document.getElementById("termsText").innerText||"").trim();
+    var r=await client.rpc("accept_professor_terms",{
+      p_document_type:type,
+      p_document_number:num,
+      p_signature_path:path,
+      p_terms_text:termsText,
+      p_terms_language:uiLang,
+      p_user_agent:navigator.userAgent||null
+    });
+    if(r.error)throw r.error;
+    currentAcceptance=r.data;toast(uiLang==="es"?"Términos firmados y registrados.":"Termos assinados e registrados.");await loadAll();renderTermsAcceptance();
+  }catch(err){console.error(err);toast((uiLang==="es"?"Error al firmar: ":"Erro ao assinar: ")+(err.message||err))}
+  finally{btn.disabled=false;btn.textContent=uiLang==="es"?"Firmar y aceptar los términos":"Assinar e aceitar os termos"}
+}
+function addPdfText(doc,text,x,y,maxWidth,lineHeight){
+  var lines=doc.splitTextToSize(String(text||""),maxWidth);
+  lines.forEach(function(line){
+    if(y>278){doc.addPage();y=18}
+    doc.text(line,x,y);y+=lineHeight;
+  });
+  return y;
+}
+async function downloadSignedTermsPdf(){
+  if(!currentAcceptance){toast("Nenhum termo assinado.");return}
+  try{
+    var lib=window.jspdf&&window.jspdf.jsPDF;if(!lib)throw new Error("Gerador de PDF indisponível");
+    var doc=new lib({unit:"mm",format:"a4"}),y=18;
+    doc.setFont("helvetica","bold");doc.setFontSize(16);doc.text("RESUMOS DO ENZO",15,y);y+=8;
+    doc.setFontSize(13);doc.text(uiLang==="es"?"Términos del Profesor Colaborador - Copia firmada":"Termos do Professor Colaborador - Cópia assinada",15,y);y+=9;
+    doc.setFont("helvetica","normal");doc.setFontSize(9);
+    y=addPdfText(doc,(uiLang==="es"?"Profesor: ":"Professor: ")+((details&&details.nome_exibicao)||session.user.email),15,y,180,4.6);
+    y=addPdfText(doc,"E-mail: "+(session.user.email||""),15,y,180,4.6);
+    y=addPdfText(doc,(uiLang==="es"?"Documento: ":"Documento: ")+currentAcceptance.document_type+" "+currentAcceptance.document_number,15,y,180,4.6);
+    y=addPdfText(doc,(uiLang==="es"?"Versión: ":"Versão: ")+currentAcceptance.terms_version+" | "+(uiLang==="es"?"Firmado: ":"Assinado: ")+new Date(currentAcceptance.signed_at).toLocaleString(uiLang==="es"?"es-PY":"pt-BR"),15,y,180,4.6);
+    y+=4;doc.setFont("helvetica","bold");doc.setFontSize(11);doc.text(uiLang==="es"?"Texto aceptado":"Texto aceito",15,y);y+=7;doc.setFont("helvetica","normal");doc.setFontSize(8.5);
+    y=addPdfText(doc,currentAcceptance.terms_text,15,y,180,4.1);
+    if(y>235){doc.addPage();y=18}
+    doc.setFont("helvetica","bold");doc.setFontSize(10);doc.text(uiLang==="es"?"Firma electrónica registrada":"Assinatura eletrônica registrada",15,y);y+=6;
+    var dr=await client.storage.from("professor-documentos").download(currentAcceptance.signature_path);
+    if(!dr.error){
+      var dataUrl=await new Promise(function(resolve){var fr=new FileReader();fr.onload=function(){resolve(fr.result)};fr.readAsDataURL(dr.data)});
+      doc.addImage(dataUrl,"PNG",15,y,75,28);y+=33;
+    }
+    doc.setFont("helvetica","normal");doc.setFontSize(7.5);doc.text("ID: "+currentAcceptance.id,15,y);
+    doc.save("termos-professor-"+TERMS_VERSION+".pdf");
+  }catch(err){console.error(err);toast("Erro ao gerar PDF: "+(err.message||err))}
+}
+
 function deny(msg){document.getElementById("gate").innerHTML='<div class="gatebox"><div style="font-size:34px">🔒</div><h2>Área exclusiva para professores</h2><p>'+esc(msg)+'</p><a class="smallbtn" href="dashboard.html" style="display:inline-block;margin-top:10px">Voltar</a></div>';document.documentElement.style.visibility="visible"}
 function parseList(v){return String(v||"").split(",").map(x=>x.trim()).filter(Boolean).filter((x,i,a)=>a.findIndex(y=>y.toLowerCase()===x.toLowerCase())===i)}
 function slug(v){return String(v||"aulão").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60)||"aulao"}
@@ -426,17 +593,18 @@ function addPart(data){var box=document.getElementById("parts");var i=box.childr
 function renumberParts(){Array.from(document.getElementById("parts").children).forEach((r,i)=>r.querySelector(".part-order").textContent="Parte "+String(i+1).padStart(2,"0"))}
 function resetAulaoForm(){document.getElementById("aulaoForm").reset();document.getElementById("aulaoId").value="";document.getElementById("coverUrl").value="";setExistingPreview("coverPreview","");document.getElementById("coverFile").value="";document.getElementById("parts").innerHTML="";addPart();fillAulaoSelects();document.getElementById("aulaoLanguage").value=uiLang==="es"?"es":"pt-BR";document.getElementById("aulaoFormTitle").textContent="Criar novo aulão";translateDom();document.getElementById("submitReviewBtn").disabled=false;document.getElementById("saveDraftBtn").disabled=false}
 async function loadAll(){
-  var [ar,dr,pr,aa,ss,sb,cfg]=await Promise.all([
+  var [ar,dr,pr,aa,ss,sb,cfg,ta]=await Promise.all([
     client.from("professor_accounts").select("*").eq("user_id",session.user.id).maybeSingle(),
     client.from("professor_dados").select("*").eq("user_id",session.user.id).maybeSingle(),
     client.from("aulao_professores").select("*").eq("user_id",session.user.id).maybeSingle(),
     client.from("auloes").select("*").eq("owner_user_id",session.user.id).order("created_at",{ascending:false}),
     client.rpc("professor_sales_summary"),
     client.rpc("professor_sales_by_aulao"),
-    client.from("config").select("valor").eq("chave","professor_whatsapp").maybeSingle()
+    client.from("config").select("valor").eq("chave","professor_whatsapp").maybeSingle(),
+    client.from("professor_term_acceptances").select("*").eq("professor_user_id",session.user.id).eq("terms_version",TERMS_VERSION).maybeSingle()
   ]);
   if(ar.error)throw ar.error;account=ar.data;if(!account||account.status!=="active")throw new Error("Sua conta não está habilitada como Professor Colaborador.");
-  details=dr.data||null;publicProfile=pr.data||null;auloes=aa.data||[];salesRows=sb.data||[];whatsapp=(cfg.data&&cfg.data.valor)||"";
+  details=dr.data||null;publicProfile=pr.data||null;auloes=aa.data||[];salesRows=sb.data||[];whatsapp=(cfg.data&&cfg.data.valor)||"";currentAcceptance=(ta&&ta.data)||null;
   uiLang=(details&&details.idioma_interface)||localStorage.getItem("professor_ui_lang")||"pt-BR";translateDom();
   var s=(ss.data&&ss.data[0])||{total_vendas:0,valor_gerado:0,valor_pago:0,saldo_a_receber:0};window.__lastSalesSummary=s;
   renderProfile();renderAuloes();renderSales(s);renderOverview(s);
@@ -450,9 +618,9 @@ function renderProfile(){
   document.getElementById("photoUrl").value=(publicProfile&&publicProfile.foto_url)||"";
   setExistingPreview("photoPreview",(publicProfile&&publicProfile.foto_url)||"");
   fillSemesterChecks();fillAulaoSelects();
-  var accepted=!!(details&&details.termos_aceitos_em&&details.termos_versao===TERMS_VERSION);document.getElementById("acceptTerms").checked=accepted;document.getElementById("acceptTerms").disabled=accepted;
-  if(accepted)document.getElementById("acceptWrap").querySelector("span").innerHTML=(uiLang==="es"?"✅ Términos aceptados el ":"✅ Termos aceitos em ")+new Date(details.termos_aceitos_em).toLocaleString(uiLang==="es"?"es-PY":"pt-BR")+(uiLang==="es"?" · versión ":" · versão ")+esc(details.termos_versao||TERMS_VERSION);
-  else document.getElementById("acceptWrap").querySelector("span").innerHTML=uiLang==="es"?'Leí y acepto los <strong>Términos del Profesor Colaborador</strong>, incluida la distribución de 2/3 del valor de la venta para el profesor y 1/3 para mantenimiento y operación de la plataforma.':'Li e concordo com os <strong>Termos do Professor Colaborador</strong>, incluindo a divisão de 2/3 do valor da venda para o professor e 1/3 para manutenção e operação da plataforma.';
+  var notice=document.getElementById("termsProfileNotice");
+  if(notice)notice.innerHTML=currentAcceptance?(uiLang==="es"?"✅ Términos firmados electrónicamente. Puede crear y enviar cursos para aprobación.":"✅ Termos assinados eletronicamente. Você já pode criar e enviar aulões para aprovação."):(uiLang==="es"?"📄 Guarde su perfil y firme electrónicamente los Términos del Profesor Colaborador en la pestaña <strong>Términos</strong>. La firma es obligatoria antes de enviar un curso.":"📄 Salve seu perfil e assine eletronicamente os Termos do Professor Colaborador na aba <strong>Termos</strong>. A assinatura é obrigatória antes de enviar um aulão.");
+  renderTermsAcceptance();
   var nm=(details&&details.nome_exibicao)||(publicProfile&&publicProfile.nome)||"Dr(a).";document.getElementById("heroTitle").textContent=(uiLang==="es"?"Bienvenido(a), ":"Bem-vindo(a), ")+nm;translateDom();
 }
 function renderOverview(s){
@@ -474,9 +642,8 @@ function renderSales(s){
   document.getElementById("salesBody").innerHTML=salesRows.length?salesRows.map(x=>'<tr><td>'+esc(x.aulao_nome)+'</td><td>'+money(x.preco)+'</td><td>'+Number(x.vendas||0)+'</td><td class="money">'+money(x.valor_professor||0)+'</td></tr>').join(""):'<tr><td colspan="4" style="text-align:center;color:rgba(165,243,252,.4)">Nenhuma venda confirmada ainda.</td></tr>';translateDom();
 }
 async function saveProfile(ev){
-  ev.preventDefault();var btn=document.getElementById("saveProfileBtn"),name=document.getElementById("displayName").value.trim(),phone=document.getElementById("phone").value.trim(),mats=parseList(document.getElementById("subjects").value),sems=semestersSelected(),accepted=!!(details&&details.termos_aceitos_em&&details.termos_versao===TERMS_VERSION)||document.getElementById("acceptTerms").checked;
+  ev.preventDefault();var btn=document.getElementById("saveProfileBtn"),name=document.getElementById("displayName").value.trim(),phone=document.getElementById("phone").value.trim(),mats=parseList(document.getElementById("subjects").value),sems=semestersSelected();
   if(!name||!phone||!mats.length||!sems.length){toast("Preencha nome, celular, matérias e pelo menos um semestre.");return}
-  if(!accepted){toast("É necessário aceitar os Termos do Professor Colaborador.");return}
   btn.disabled=true;btn.textContent="Salvando…";
   try{
     var photo=await uploadImage(document.getElementById("photoFile"),document.getElementById("photoUrl").value,"perfil");
@@ -486,7 +653,6 @@ async function saveProfile(ev){
     else pubRes=await client.from("aulao_professores").insert({...pubPayload,ordem:100}).select().single();
     if(pubRes.error)throw pubRes.error;publicProfile=pubRes.data;
     var payload={user_id:session.user.id,professor_id:publicProfile.id,nome_exibicao:name,telefone:phone,pix_chave:document.getElementById("pixKey").value.trim()||null,materias:mats,semestres:sems,idioma_interface:uiLang,onboarding_completo:true,updated_at:new Date().toISOString()};
-    if(!(details&&details.termos_aceitos_em&&details.termos_versao===TERMS_VERSION)){payload.termos_versao=TERMS_VERSION;payload.termos_aceitos_em=new Date().toISOString()}
     var d=await client.from("professor_dados").upsert(payload,{onConflict:"user_id"}).select().single();if(d.error)throw d.error;details=d.data;
     toast("Perfil salvo com sucesso.");renderProfile();setTab("overview");await loadAll()
   }catch(err){console.error(err);toast("Erro ao salvar perfil: "+(err.message||err))}finally{btn.disabled=false;btn.textContent="Salvar meu perfil"}
@@ -507,7 +673,7 @@ async function saveAulao(sendAfter){
     if(res.error)throw res.error;id=res.data.id;document.getElementById("aulaoId").value=id;
     var del=await client.from("aulao_videos").delete().eq("aulao_id",id);if(del.error)throw del.error;
     if(parts.length){var ins=await client.from("aulao_videos").insert(parts.map((x,i)=>({aulao_id:id,aulao_turma_id:null,titulo:x.titulo,youtube_url:x.url,youtube_id:x.id,ordem:i+1,publicado:true})));if(ins.error)throw ins.error}
-    toast("Rascunho salvo.");await loadAll();if(sendAfter){var sr=await client.rpc("professor_submit_aulao",{p_aulao_id:id});if(sr.error)throw sr.error;toast("Aulão enviado para aprovação.");await loadAll()}resetAulaoForm();setTab("auloes");return id
+    toast("Rascunho salvo.");await loadAll();if(sendAfter){if(!currentAcceptance){toast(uiLang==="es"?"Firme los términos antes de enviar el curso.":"Assine os termos antes de enviar o aulão.");setTab("termos");return id}var sr=await client.rpc("professor_submit_aulao",{p_aulao_id:id});if(sr.error)throw sr.error;toast("Aulão enviado para aprovação.");await loadAll()}resetAulaoForm();setTab("auloes");return id
   }catch(err){console.error(err);toast("Erro: "+(err.message||err));return null}finally{btn.disabled=false;document.getElementById("submitReviewBtn").disabled=false;btn.textContent="Salvar rascunho"}
 }
 async function editAulao(id){
@@ -516,17 +682,28 @@ async function editAulao(id){
   document.getElementById("aulaoId").value=a.id;document.getElementById("aulaoName").value=a.nome;document.getElementById("aulaoPrice").value=a.preco;fillAulaoSelects();document.getElementById("aulaoSubject").value=a.materia;document.getElementById("aulaoSemester").value=a.semestre;document.getElementById("aulaoExam").value=a.avaliacao||"P1";document.getElementById("aulaoLanguage").value=a.idioma_conteudo||"pt-BR";document.getElementById("aulaoDays").value=a.dias_acesso||"";document.getElementById("aulaoDescription").value=a.descricao||"";document.getElementById("coverUrl").value=a.capa_url||"";setExistingPreview("coverPreview",a.capa_url||"");document.getElementById("coverFile").value="";document.getElementById("parts").innerHTML="";(vr.data||[]).forEach(addPart);if(!(vr.data||[]).length)addPart();document.getElementById("aulaoFormTitle").textContent="Editar aulão";document.querySelector(".card").scrollIntoView({behavior:"smooth"})
 }
 async function startRevision(id){if(!confirm("Ao editar um aulão aprovado ele sai temporariamente da loja e volta para aprovação após suas alterações. Continuar?"))return;var r=await client.rpc("professor_start_revision",{p_aulao_id:id});if(r.error){toast("Erro: "+r.error.message);return}await loadAll();await editAulao(id)}
-async function submitExisting(id){var r=await client.rpc("professor_submit_aulao",{p_aulao_id:id});if(r.error){toast("Não foi possível enviar: "+r.error.message);return}toast("Aulão enviado para aprovação.");await loadAll()}
-window.openWhats=function(){if(!whatsapp){toast("O WhatsApp do administrador ainda não foi configurado.");return}var pending=auloes.filter(a=>a.status_aprovacao==="pendente").length;var name=(details&&details.nome_exibicao)||"Professor(a)";var msg=uiLang==="es"?(pending?"¡Hola! Soy "+name+", profesor(a) colaborador(a) de Resumos do Enzo. Tengo "+pending+" curso(s) disponible(s) esperando aprobación del administrador del sitio.":"¡Hola! Soy "+name+", profesor(a) colaborador(a) de Resumos do Enzo y quisiera hablar sobre mis cursos."):(pending?"Olá! Sou "+name+", professor(a) colaborador(a) do Resumos do Enzo. Tenho "+pending+" aulão(ões) disponível(is) aguardando aprovação do administrador do site.":"Olá! Sou "+name+", professor(a) colaborador(a) do Resumos do Enzo e gostaria de falar sobre meus aulões.");window.open("https://wa.me/"+String(whatsapp).replace(/\D/g,"")+"?text="+encodeURIComponent(msg),"_blank")}
+async function submitExisting(id){if(!currentAcceptance){toast(uiLang==="es"?"Firme los términos antes de enviar el curso.":"Assine os termos antes de enviar o aulão.");setTab("termos");return}var r=await client.rpc("professor_submit_aulao",{p_aulao_id:id});if(r.error){toast("Não foi possível enviar: "+r.error.message);return}toast("Aulão enviado para aprovação.");await loadAll()}
+window.openWhats=function(){if(!whatsapp){toast("O WhatsApp do administrador ainda não foi configurado.");return}var pending=auloes.filter(a=>a.status_aprovacao==="pendente").length;var name=(details&&details.nome_exibicao)||"Professor(a)";var rawName=(details&&details.nome_exibicao)||(publicProfile&&publicProfile.nome)||"";
+var cleanName=String(rawName||"").trim();
+var honorific=/^(dr\.?|dra\.?|dr\(a\)\.?)/i.test(cleanName)?"":"Dr(a). ";
+var msg=uiLang==="es"
+  ? "Hola, soy "+honorific+cleanName+". Me gustaría hablar sobre mis clases."
+  : "Olá, eu sou "+honorific+cleanName+". Eu gostaria de falar sobre minhas aulas!";
+window.open("https://wa.me/"+String(whatsapp).replace(/\D/g,"")+"?text="+encodeURIComponent(msg),"_blank")}
 async function init(e){
   client=window.authClient;session=e.detail.session;document.getElementById("teacherEmail").textContent=session.user.email||"";
-  try{var ar=await client.from("professor_accounts").select("*").eq("user_id",session.user.id).maybeSingle();if(ar.error||!ar.data||ar.data.status!=="active"){deny("Sua conta ainda não foi habilitada pelo administrador como Professor Colaborador.");return}account=ar.data;await loadAll();fillSemesterChecks();fillAulaoSelects();resetAulaoForm();document.getElementById("gate").style.display="none";document.getElementById("content").style.display="block";translateDom();document.documentElement.style.visibility="visible";if(!(details&&details.onboarding_completo)){setTab("perfil");toast("Complete seu cadastro para começar a criar aulões.")}}
+  try{var ar=await client.from("professor_accounts").select("*").eq("user_id",session.user.id).maybeSingle();if(ar.error||!ar.data||ar.data.status!=="active"){deny("Sua conta ainda não foi habilitada pelo administrador como Professor Colaborador.");return}account=ar.data;await loadAll();fillSemesterChecks();fillAulaoSelects();resetAulaoForm();document.getElementById("gate").style.display="none";document.getElementById("content").style.display="block";translateDom();document.documentElement.style.visibility="visible";setupSignaturePad();renderTermsAcceptance();if(!(details&&details.onboarding_completo)){setTab("perfil");toast("Complete seu cadastro para começar a criar aulões.")}}
   catch(err){console.error(err);deny(err.message||"Não foi possível carregar sua área.")}
 }
 document.getElementById("languageBtn").onclick=function(ev){ev.stopPropagation();document.getElementById("languageMenu").classList.toggle("open")};
 document.querySelectorAll("[data-ui-lang]").forEach(function(b){b.onclick=function(){setInterfaceLanguage(b.dataset.uiLang);renderProfile();renderAuloes();renderSales((window.__lastSalesSummary)||{total_vendas:0,valor_gerado:0,valor_pago:0,saldo_a_receber:0});renderOverview((window.__lastSalesSummary)||{total_vendas:0,saldo_a_receber:0})}});
 document.addEventListener("click",function(ev){var wrap=document.querySelector(".lang-wrap");if(wrap&&!wrap.contains(ev.target))document.getElementById("languageMenu").classList.remove("open")});
-document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));document.getElementById("profileForm").onsubmit=saveProfile;document.getElementById("photoFile").onchange=function(){previewFile(this,document.getElementById("photoPreview"))};document.getElementById("coverFile").onchange=function(){previewFile(this,document.getElementById("coverPreview"))};document.getElementById("addPartBtn").onclick=()=>addPart();document.getElementById("newAulaoBtn").onclick=resetAulaoForm;document.getElementById("aulaoForm").onsubmit=function(ev){ev.preventDefault();saveAulao(false)};document.getElementById("submitReviewBtn").onclick=()=>saveAulao(true);document.getElementById("whatsBtn").onclick=()=>window.openWhats();document.getElementById("logoutBtn").onclick=async()=>{try{await client.auth.signOut()}catch(e){}location.replace("login.html")};document.addEventListener("authReady",init);
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+document.getElementById("profileForm").onsubmit=saveProfile;
+document.getElementById("goTermsBtn").onclick=function(){setTab("termos");setTimeout(function(){if(!signatureCanvas)setupSignaturePad()},50)};
+document.getElementById("clearSignatureBtn").onclick=clearSignature;
+document.getElementById("signTermsBtn").onclick=signCurrentTerms;
+document.getElementById("downloadTermsBtn").onclick=downloadSignedTermsPdf;document.getElementById("photoFile").onchange=function(){previewFile(this,document.getElementById("photoPreview"))};document.getElementById("coverFile").onchange=function(){previewFile(this,document.getElementById("coverPreview"))};document.getElementById("addPartBtn").onclick=()=>addPart();document.getElementById("newAulaoBtn").onclick=resetAulaoForm;document.getElementById("aulaoForm").onsubmit=function(ev){ev.preventDefault();saveAulao(false)};document.getElementById("submitReviewBtn").onclick=()=>saveAulao(true);document.getElementById("whatsBtn").onclick=()=>window.openWhats();document.getElementById("logoutBtn").onclick=async()=>{try{await client.auth.signOut()}catch(e){}location.replace("login.html")};document.addEventListener("authReady",init);
 })();
 </script>
 </body>

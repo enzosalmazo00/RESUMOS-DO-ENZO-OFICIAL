@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin — Resumos do Enzo</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root{--cyan:#22d3ee;--cyan2:#06b6d4;--border:rgba(34,211,238,0.18);--red:#f87171;--green:#4ade80;--yellow:#fbbf24;--bg:#020d1a;--bg2:#010812;--card:rgba(34,211,238,0.04);--card-border:rgba(34,211,238,0.12);}
@@ -51,6 +52,13 @@
     .stat-card.revenue{border-color:rgba(34,211,238,0.25);background:rgba(34,211,238,0.06);}
     .online-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4ade80;margin-right:5px;animation:pulse-dot 1.5s infinite;}
     @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.4);}}
+    .online-panel{margin:-10px 0 24px;padding:14px 16px;border:1px solid rgba(74,222,128,.18);border-radius:14px;background:rgba(74,222,128,.035);}
+    .online-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px;}
+    .online-panel-title{font-size:11px;font-weight:700;color:#86efac;letter-spacing:.08em;text-transform:uppercase;}
+    .online-list{display:flex;gap:7px;flex-wrap:wrap;}
+    .online-user{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;border:1px solid rgba(74,222,128,.18);background:rgba(74,222,128,.06);color:#d1fae5;font-size:10.5px;}
+    .online-user::before{content:'';width:6px;height:6px;border-radius:50%;background:#4ade80;}
+    .online-empty{font-size:11px;color:rgba(167,243,208,.42);}
 
     /* ── SECTION TITLE ── */
     .section-title{font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(34,211,238,0.5);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
@@ -134,6 +142,65 @@
     .price-input:focus{outline:none;border-color:var(--cyan);}
     .price-prefix{font-size:12px;color:rgba(125,211,232,0.5);font-weight:600;}
     .empty-state{text-align:center;padding:24px;color:rgba(125,211,232,0.3);font-size:13px;}
+
+
+
+    /* ── PROFESSORES / FINANCEIRO ── */
+    .finance-origin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;margin:14px 0 18px;}
+    .finance-origin-card{padding:15px;border:1px solid rgba(34,211,238,.13);border-radius:14px;background:rgba(34,211,238,.032);}
+    .finance-origin-card.prof{border-color:rgba(168,85,247,.2);background:rgba(168,85,247,.045);}
+    .finance-origin-card.enzo{border-color:rgba(74,222,128,.18);background:rgba(74,222,128,.038);}
+    .finance-origin-card .fo-label{font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:rgba(125,211,232,.46);font-weight:700;}
+    .finance-origin-card .fo-value{font-size:20px;font-weight:700;color:#e2f8fc;margin-top:5px;}
+    .finance-origin-card .fo-sub{font-size:9px;color:rgba(125,211,232,.34);margin-top:2px;line-height:1.45;}
+    .prof-finance-table{width:100%;border-collapse:collapse;}
+    .prof-finance-table th,.prof-finance-table td{padding:10px 9px;border-bottom:1px solid rgba(34,211,238,.08);text-align:left;font-size:10px;}
+    .prof-finance-table th{font-size:8.5px;text-transform:uppercase;letter-spacing:.07em;color:rgba(125,211,232,.46);}
+    .prof-finance-table .money{font-weight:700;color:#86efac;white-space:nowrap;}
+    .prof-finance-table .due{font-weight:800;color:#fde68a;white-space:nowrap;}
+    .prof-card-extra{font-size:9px;color:rgba(125,211,232,.48);margin-top:4px;display:flex;gap:8px;flex-wrap:wrap;}
+    .legal-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 7px;border-radius:999px;border:1px solid rgba(168,85,247,.2);background:rgba(168,85,247,.06);color:#ddd6fe;font-size:8.5px;font-weight:650;}
+    .payment-history{display:grid;gap:8px;margin-top:10px;}
+    .payment-row{padding:11px 12px;border:1px solid rgba(34,211,238,.09);border-radius:11px;background:rgba(255,255,255,.018);display:grid;grid-template-columns:minmax(150px,1fr) auto auto;gap:10px;align-items:center;font-size:10px;}
+    .payment-row .ref{color:#a5f3fc;font-family:monospace;font-size:9px;}
+    .modal-lite{display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.76);backdrop-filter:blur(7px);align-items:center;justify-content:center;padding:18px;}
+    .modal-lite.open{display:flex;}
+    .modal-lite-card{width:min(720px,100%);max-height:92vh;overflow:auto;background:#06111f;border:1px solid rgba(34,211,238,.22);border-radius:18px;padding:20px;box-shadow:0 20px 70px rgba(0,0,0,.55);}
+    .modal-lite-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:14px;}
+    .modal-lite-title{font-size:17px;font-weight:700;}
+    .modal-close{width:32px;height:32px;border-radius:9px;border:1px solid rgba(248,113,113,.2);background:rgba(248,113,113,.05);color:#fca5a5;cursor:pointer;}
+    .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .readonly-value{padding:13px;border-radius:11px;border:1px solid rgba(74,222,128,.23);background:rgba(74,222,128,.055);font-size:20px;font-weight:800;color:#86efac;}
+    .contract-preview{max-width:390px;width:100%;height:130px;object-fit:contain;background:#fff;border-radius:10px;border:1px solid rgba(255,255,255,.1);margin-top:10px;}
+    @media(max-width:700px){.modal-grid{grid-template-columns:1fr}.payment-row{grid-template-columns:1fr}.prof-finance-table{min-width:720px}}
+
+    /* ── ANALYTICS / VENDAS ── */
+    .sales-filter-card{padding:18px;border-radius:16px;border:1px solid var(--card-border);background:linear-gradient(145deg,rgba(34,211,238,.05),rgba(255,255,255,.015));margin-bottom:16px;}
+    .sales-filter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end;}
+    .sales-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:14px 0 22px;}
+    .sales-kpi{padding:15px 16px;border-radius:14px;border:1px solid rgba(34,211,238,.13);background:rgba(34,211,238,.035);}
+    .sales-kpi.highlight{border-color:rgba(74,222,128,.24);background:rgba(74,222,128,.055);}
+    .sales-kpi .k-label{font-size:9px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:rgba(125,211,232,.48);margin-bottom:5px;}
+    .sales-kpi .k-value{font-size:22px;font-weight:700;color:#e2f8fc;letter-spacing:-.7px;}
+    .sales-kpi .k-sub{font-size:9px;color:rgba(125,211,232,.35);margin-top:2px;}
+    .sales-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;}
+    .break-card{border:1px solid var(--card-border);border-radius:15px;background:var(--card);overflow:hidden;}
+    .break-head{padding:12px 14px;border-bottom:1px solid rgba(34,211,238,.08);font-size:11px;font-weight:700;color:#d8f6fb;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .break-list{max-height:370px;overflow:auto;}
+    .break-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid rgba(34,211,238,.05);}
+    .break-row:first-child{border-top:0;}
+    .break-name{font-size:11px;color:#c9eef5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .break-count{font-size:10px;color:rgba(125,211,232,.55);}
+    .break-value{font-size:11px;font-weight:700;color:#4ade80;white-space:nowrap;}
+    .sales-note{font-size:10px;color:rgba(125,211,232,.4);line-height:1.55;margin-top:7px;}
+    .filter-reset{padding:10px 13px;border-radius:10px;border:1px solid rgba(248,113,113,.25);background:rgba(248,113,113,.06);color:#fca5a5;font-family:Poppins,sans-serif;font-size:11px;font-weight:600;cursor:pointer;}
+    .filter-reset:hover{background:rgba(248,113,113,.12);}
+    .period-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+    .period-chip{padding:6px 10px;border-radius:999px;border:1px solid rgba(34,211,238,.14);background:rgba(34,211,238,.035);color:rgba(125,211,232,.65);font:600 10px Poppins,sans-serif;cursor:pointer;}
+    .period-chip.active{border-color:#22d3ee;background:rgba(34,211,238,.14);color:#fff;}
+    .hidden-filter{display:none!important;}
+    @media(max-width:800px){.sales-breakdown{grid-template-columns:1fr}.sales-filter-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){.sales-filter-grid{grid-template-columns:1fr}.sales-kpis{grid-template-columns:1fr 1fr}.break-row{grid-template-columns:minmax(0,1fr) auto}}
 
     /* ── OVERVIEW: Recent Activity ── */
     .activity-list{display:flex;flex-direction:column;gap:6px;}
@@ -226,7 +293,39 @@
       .search-bar{flex-direction:column;}
       .filter-select,.search-input{width:100%;min-width:0;}
     }
-  </style>
+  
+    /* ── AULÕES ADMIN ── */
+    .aulao-admin-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+    .aulao-admin-head h2{font-size:18px;color:#e2f8fc;}
+    .aulao-admin-sub{font-size:11px;color:rgba(125,211,232,.48);margin-top:3px;line-height:1.5;}
+    .aulao-admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;}
+    .aulao-admin-card{border:1px solid rgba(168,85,247,.18);border-radius:16px;background:rgba(168,85,247,.035);overflow:hidden;}
+    .aulao-admin-cover{height:120px;background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(34,211,238,.08));background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;font-size:36px;}
+    .aulao-admin-body{padding:14px;}
+    .aulao-admin-title{font-size:13px;font-weight:700;color:#f5f3ff;}
+    .aulao-admin-meta{font-size:10px;color:rgba(196,181,253,.52);margin-top:5px;line-height:1.5;}
+    .aulao-admin-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px;}
+    .aulao-admin-badge{font-size:9px;padding:3px 8px;border-radius:999px;border:1px solid rgba(168,85,247,.18);color:#c4b5fd;background:rgba(168,85,247,.06);}
+    .aulao-admin-actions{display:flex;gap:6px;margin-top:12px;}
+    .aulao-admin-actions button{flex:1;padding:8px;border-radius:9px;border:1px solid rgba(168,85,247,.22);background:rgba(168,85,247,.08);color:#ddd6fe;font:600 10px Poppins;cursor:pointer;}
+    .aulao-admin-actions button:hover{background:rgba(168,85,247,.16);}
+    .aulao-editor{display:none;margin-top:18px;border:1px solid rgba(168,85,247,.20);border-radius:18px;padding:18px;background:rgba(168,85,247,.025);}
+    .aulao-editor.open{display:block;}
+    .aulao-editor-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+    .aulao-editor-grid .wide{grid-column:1/-1;}
+    .aulao-checks{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0;}
+    .aulao-checks label{font-size:11px;color:rgba(221,214,254,.72);display:flex;align-items:center;gap:6px;}
+    .aulao-subbox{margin-top:14px;padding:14px;border:1px solid rgba(168,85,247,.13);border-radius:14px;background:rgba(255,255,255,.018);}
+    .aulao-subbox-title{font-size:11px;font-weight:700;color:#c4b5fd;margin-bottom:10px;text-transform:uppercase;letter-spacing:.08em;}
+    .aulao-row{display:grid;grid-template-columns:1fr 1fr auto;gap:7px;margin-bottom:7px;align-items:center;}
+    .aulao-video-row{display:grid;grid-template-columns:80px 1fr 1.5fr 1fr auto;gap:7px;margin-bottom:7px;align-items:center;}
+    .aulao-mini-btn{padding:7px 10px;border-radius:8px;border:1px solid rgba(168,85,247,.22);background:rgba(168,85,247,.08);color:#ddd6fe;font:600 10px Poppins;cursor:pointer;}
+    .aulao-danger{border-color:rgba(248,113,113,.2)!important;color:#fca5a5!important;background:rgba(248,113,113,.05)!important;}
+    .aulao-cover-preview{width:100%;max-width:260px;aspect-ratio:16/9;border:1px dashed rgba(168,85,247,.25);border-radius:12px;background:#020617 center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:rgba(196,181,253,.35);font-size:11px;margin-top:7px;}
+    @media(max-width:800px){.aulao-editor-grid{grid-template-columns:1fr 1fr}.aulao-video-row{grid-template-columns:60px 1fr}.aulao-video-row>*:nth-child(n+3){grid-column:1/-1}.aulao-row{grid-template-columns:1fr}}
+    @media(max-width:520px){.aulao-editor-grid{grid-template-columns:1fr}}
+
+</style>
 </head>
 <body>
 <div id="loadingOverlay" style="position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#020d1a 0%,#010812 50%,#020d1a 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;">
@@ -255,7 +354,8 @@
     <button class="admin-tab active" onclick="switchAdminTab('overview')"><span class="tab-icon">&#128202;</span><span class="tab-text">Visão Geral</span></button>
     <button class="admin-tab" onclick="switchAdminTab('alunos')"><span class="tab-icon">&#128101;</span><span class="tab-text">Alunos</span><span class="tab-badge" id="tabBadgeAlunos">0</span></button>
     <button class="admin-tab" onclick="switchAdminTab('professores')"><span class="tab-icon">🎓</span><span class="tab-text">Professores</span><span class="tab-badge" id="tabBadgeProfessores">0</span></button>
-    <button class="admin-tab" onclick="switchAdminTab('pagamentos')"><span class="tab-icon">&#128176;</span><span class="tab-text">Pagamentos</span></button>
+    <button class="admin-tab" onclick="switchAdminTab('pagamentos')"><span class="tab-icon">&#128176;</span><span class="tab-text">Financeiro</span></button>
+    <button class="admin-tab" onclick="switchAdminTab('auloes')"><span class="tab-icon">🎥</span><span class="tab-text">Aulões</span></button>
     <button class="admin-tab" onclick="switchAdminTab('promos')"><span class="tab-icon">&#127915;</span><span class="tab-text">Promoções</span></button>
   </div>
 
@@ -267,7 +367,15 @@
       <div class="stat-card revenue"><div class="stat-label">Total Recebido</div><div class="stat-value" id="statReceita">&#8212;</div><div class="stat-sub">pagamentos aprovados</div></div>
       <div class="stat-card"><div class="stat-label">Pagtos Aprovados</div><div class="stat-value" id="statPagamentos">&#8212;</div><div class="stat-sub">pedidos confirmados</div></div>
       <div class="stat-card"><div class="stat-label">Expiram em 7 dias</div><div class="stat-value" id="statExpirando">&#8212;</div><div class="stat-sub">precisam renovar</div></div>
-      <div class="stat-card online"><div class="stat-label"><span class="online-dot"></span>Online Agora</div><div class="stat-value" id="statOnline">0</div><div class="stat-sub">usuários conectados</div></div>
+      <div class="stat-card online"><div class="stat-label"><span class="online-dot"></span>Online Agora</div><div class="stat-value" id="statOnline">0</div><div class="stat-sub">alunos conectados</div></div>
+    </div>
+
+    <div class="online-panel" id="onlinePanel">
+      <div class="online-panel-head">
+        <div class="online-panel-title"><span class="online-dot"></span> Alunos conectados agora</div>
+        <div style="font-size:10px;color:rgba(167,243,208,.45);">atualização em tempo real</div>
+      </div>
+      <div class="online-list" id="onlineUsersList"><span class="online-empty">Nenhum aluno conectado.</span></div>
     </div>
 
     <div class="section-title">&#128338; Atividade Recente</div>
@@ -301,14 +409,21 @@
   <div class="tab-panel" id="panel-professores">
     <div class="section-title">🎓 Contas de Professores Colaboradores</div>
     <div class="form-card" style="margin-bottom:18px;">
-      <div class="form-card-title">Transformar uma conta em Professor Colaborador</div>
-      <div style="font-size:11px;line-height:1.6;color:rgba(125,211,232,.5);margin-bottom:12px;">A conta continua sendo a mesma. Ao ativar o perfil de professor, o usuário passa a ter acesso ao painel próprio para cadastrar perfil, aulões e acompanhar suas vendas.</div>
-      <div class="search-bar" style="margin-bottom:10px;"><input class="search-input" id="profAccountSearch" placeholder="🔎 Buscar conta por e-mail..." oninput="renderProfessorAccounts()"></div>
+      <div class="form-card-title">Gerenciar contas de Professor Colaborador</div>
+      <div style="font-size:11px;line-height:1.6;color:rgba(125,211,232,.5);margin-bottom:12px;">Ative uma conta já cadastrada como Professor Colaborador. O professor terá área própria, cadastro, aulões, termos assinados e painel de vendas.</div>
+      <div class="search-bar" style="margin-bottom:10px;"><input class="search-input" id="profAccountSearch" placeholder="🔎 Buscar por e-mail ou nome..." oninput="renderProfessorAccounts()"></div>
       <div id="professorAccountsList"><div class="empty-state">Carregando contas…</div></div>
     </div>
 
     <div class="section-title">⏳ Aulões aguardando sua aprovação</div>
     <div id="pendingAuloesAdmin"><div class="empty-state">Carregando aulões…</div></div>
+
+    <div class="section-title" style="margin-top:26px;">📑 Termos e assinaturas</div>
+    <div class="form-card">
+      <div class="form-card-title">Aceites eletrônicos registrados</div>
+      <div style="font-size:10px;line-height:1.6;color:rgba(125,211,232,.45);margin-bottom:10px;">Cada assinatura fica vinculada ao professor e à versão dos termos. A imagem da assinatura é armazenada em área privada e o PDF pode ser emitido pelo administrador.</div>
+      <div id="professorTermsList"><div class="empty-state">Nenhum aceite carregado.</div></div>
+    </div>
 
     <div class="section-title" style="margin-top:26px;">💬 Contato dos Professores</div>
     <div class="form-card">
@@ -323,22 +438,218 @@
 
   <!-- ═══ TAB: PAGAMENTOS ═══ -->
   <div class="tab-panel" id="panel-pagamentos">
-    <div class="section-title">&#9989; Pagamentos Aprovados</div>
+    <div class="section-title">&#128202; Financeiro e Análise de Vendas</div>
+
+    <div class="finance-origin-grid">
+      <div class="finance-origin-card"><div class="fo-label">Receita total aprovada</div><div class="fo-value" id="finTotal">R$ 0,00</div><div class="fo-sub">Todos os produtos e aulões.</div></div>
+      <div class="finance-origin-card enzo"><div class="fo-label">Resumos e cursos</div><div class="fo-value" id="finResumos">R$ 0,00</div><div class="fo-sub" id="finResumosCount">0 vendas</div></div>
+      <div class="finance-origin-card enzo"><div class="fo-label">Aulões próprios — Enzo</div><div class="fo-value" id="finAuloesEnzo">R$ 0,00</div><div class="fo-sub" id="finAuloesEnzoCount">0 vendas</div></div>
+      <div class="finance-origin-card prof"><div class="fo-label">Aulões — Professores</div><div class="fo-value" id="finAuloesProf">R$ 0,00</div><div class="fo-sub" id="finAuloesProfCount">0 vendas</div></div>
+      <div class="finance-origin-card prof"><div class="fo-label">A receber pelos professores</div><div class="fo-value" id="finProfessorDue">R$ 0,00</div><div class="fo-sub">Saldo atual após repasses registrados.</div></div>
+      <div class="finance-origin-card"><div class="fo-label">Parcela plataforma — aulões prof.</div><div class="fo-value" id="finPlatformProf">R$ 0,00</div><div class="fo-sub">1/3 das vendas aprovadas dos professores.</div></div>
+    </div>
+
+    <div class="sales-filter-card">
+      <div class="period-chips">
+        <button class="period-chip active" data-sales-period="all" onclick="setSalesPeriod('all',this)">Tudo</button>
+        <button class="period-chip" data-sales-period="today" onclick="setSalesPeriod('today',this)">Hoje</button>
+        <button class="period-chip" data-sales-period="7d" onclick="setSalesPeriod('7d',this)">7 dias</button>
+        <button class="period-chip" data-sales-period="month" onclick="setSalesPeriod('month',this)">Este mês</button>
+        <button class="period-chip" data-sales-period="prevmonth" onclick="setSalesPeriod('prevmonth',this)">Mês passado</button>
+      </div>
+      <div class="sales-filter-grid">
+        <div class="form-group">
+          <div class="form-label">Origem da venda</div>
+          <select class="form-input" id="salesSource" onchange="renderSalesAnalytics()">
+            <option value="">Todas as vendas</option>
+            <option value="resumos">Resumos / Cursos</option>
+            <option value="aulao_enzo">Aulões próprios — Enzo</option>
+            <option value="aulao_professor">Aulões — Professores</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Professor colaborador</div>
+          <select class="form-input" id="salesProfessor" onchange="renderSalesAnalytics();renderProfessorAulaoDetail()">
+            <option value="">Todos os professores</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Mês específico</div>
+          <input class="form-input" type="month" id="salesMonth" onchange="setSalesMonthFilter()">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Semestre vendido</div>
+          <select class="form-input" id="salesSemester" onchange="renderSalesAnalytics()">
+            <option value="">Todos os semestres</option>
+            <option value="s4">4º semestre</option>
+            <option value="s3">3º semestre</option>
+            <option value="s2">2º semestre</option>
+            <option value="s1">1º semestre</option>
+            <option value="curso">Cursos</option>
+            <option value="outro">Outros</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Prova / etapa</div>
+          <select class="form-input" id="salesExam" onchange="renderSalesAnalytics()">
+            <option value="">P1 + P2 + Final</option>
+            <option value="p1">P1</option>
+            <option value="p2">P2</option>
+            <option value="final">Final</option>
+            <option value="unico">Resumo único / curso</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Matéria / produto</div>
+          <select class="form-input" id="salesSubject" onchange="renderSalesAnalytics()">
+            <option value="">Todas as matérias</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Buscar aluno</div>
+          <input class="form-input" id="salesSearch" placeholder="Email..." oninput="renderSalesAnalytics()">
+        </div>
+        <div style="display:flex;align-items:flex-end;">
+          <button class="filter-reset" onclick="resetSalesFilters()">Limpar filtros</button>
+        </div>
+      </div>
+      <div class="sales-note">Os indicadores abaixo consideram somente pagamentos <b>aprovados</b>. Você pode separar Resumos/Cursos, Aulões próprios e Aulões dos Professores. Em combos de resumos, o faturamento por matéria é rateado igualmente entre os itens para evitar duplicidade.</div>
+    </div>
+
+    <div class="sales-kpis">
+      <div class="sales-kpi highlight"><div class="k-label">Receita filtrada</div><div class="k-value" id="salesRevenue">R$ 0,00</div><div class="k-sub" id="salesPeriodLabel">período selecionado</div></div>
+      <div class="sales-kpi"><div class="k-label">Vendas aprovadas</div><div class="k-value" id="salesApprovedCount">0</div><div class="k-sub">pedidos aprovados</div></div>
+      <div class="sales-kpi"><div class="k-label">Hoje</div><div class="k-value" id="salesToday">R$ 0,00</div><div class="k-sub" id="salesTodayCount">0 vendas</div></div>
+      <div class="sales-kpi"><div class="k-label">Este mês</div><div class="k-value" id="salesThisMonth">R$ 0,00</div><div class="k-sub" id="salesThisMonthCount">0 vendas</div></div>
+      <div class="sales-kpi"><div class="k-label">Ticket médio</div><div class="k-value" id="salesTicket">R$ 0,00</div><div class="k-sub">média por pedido</div></div>
+      <div class="sales-kpi"><div class="k-label">Itens vendidos</div><div class="k-value" id="salesItems">0</div><div class="k-sub">matérias incluídas nos pedidos</div></div>
+    </div>
+
+    <div class="sales-breakdown">
+      <div class="break-card">
+        <div class="break-head"><span>📚 Vendas por matéria</span><span id="subjectBreakTotal"></span></div>
+        <div class="break-list" id="subjectBreakdown"><div class="loading">Carregando...</div></div>
+      </div>
+      <div class="break-card">
+        <div class="break-head"><span>🎓 Vendas por semestre</span><span id="semesterBreakTotal"></span></div>
+        <div class="break-list" id="semesterBreakdown"><div class="loading">Carregando...</div></div>
+      </div>
+      <div class="break-card">
+        <div class="break-head"><span>🗓️ Vendas por dia</span><span>últimos dias do filtro</span></div>
+        <div class="break-list" id="dayBreakdown"><div class="loading">Carregando...</div></div>
+      </div>
+      <div class="break-card">
+        <div class="break-head"><span>🧪 P1 · P2 · Final</span><span id="examBreakTotal"></span></div>
+        <div class="break-list" id="examBreakdown"><div class="loading">Carregando...</div></div>
+      </div>
+    </div>
+
+    <div class="section-title">🎓 Controle financeiro por Professor Colaborador</div>
+    <div class="form-card" style="margin-bottom:20px;">
+      <div style="font-size:10px;color:rgba(125,211,232,.45);line-height:1.55;margin-bottom:12px;">Aqui aparecem somente as vendas dos aulões pertencentes a cada professor. O valor a receber corresponde a 2/3 de cada venda aprovada, descontando repasses já registrados.</div>
+      <div style="overflow:auto;">
+        <table class="prof-finance-table">
+          <thead><tr><th>Professor</th><th>Vendas</th><th>Bruto vendido</th><th>Gerado professor</th><th>Já pago</th><th>A receber</th><th>Ações</th></tr></thead>
+          <tbody id="profFinanceBody"><tr><td colspan="7" class="loading">Carregando…</td></tr></tbody>
+        </table>
+      </div>
+      <div id="profAulaoBreakdown" style="margin-top:14px;"><div class="empty-state">Selecione “Ver vendas” em um professor para detalhar cada aulão.</div></div>
+    </div>
+
+    <div class="section-title">🧾 Histórico de repasses aos professores</div>
+    <div id="profPaymentHistory" class="payment-history"><div class="empty-state">Nenhum repasse registrado.</div></div>
+
+    <div class="section-title">&#9989; Pagamentos aprovados — filtro atual</div>
     <div class="table-wrap desktop-only">
-      <table><thead><tr><th>Email</th><th>Produto</th><th>Valor</th><th>Data</th></tr></thead>
-      <tbody id="pagamentosBody"><tr><td colspan="4" class="loading"><span class="spinner-inline"></span> Carregando...</td></tr></tbody></table>
+      <table><thead><tr><th>Email</th><th>Sem.</th><th>Produto</th><th>Valor</th><th>Data</th></tr></thead>
+      <tbody id="pagamentosBody"><tr><td colspan="5" class="loading"><span class="spinner-inline"></span> Carregando...</td></tr></tbody></table>
     </div>
     <div class="cards-wrap" id="pagamentosCards">
       <div class="order-card"><div class="loading"><span class="spinner-inline"></span> Carregando...</div></div>
     </div>
 
-    <div class="section-title" style="margin-top:24px;">&#128203; Todos os Pedidos</div>
+    <div class="section-title" style="margin-top:24px;">&#128203; Todos os pedidos recentes</div>
     <div class="table-wrap desktop-only">
       <table><thead><tr><th>Email</th><th>Produto</th><th>Valor</th><th>Status</th><th>Data</th></tr></thead>
       <tbody id="ordersBody"><tr><td colspan="5" class="loading"><span class="spinner-inline"></span> Carregando...</td></tr></tbody></table>
     </div>
     <div class="cards-wrap" id="ordersCards">
       <div class="order-card"><div class="loading"><span class="spinner-inline"></span> Carregando...</div></div>
+    </div>
+  </div>
+
+
+  <!-- ═══ TAB: AULÕES ═══ -->
+  <div class="tab-panel" id="panel-auloes">
+    <div class="aulao-admin-head">
+      <div>
+        <h2>🎥 Gerenciar Aulões</h2>
+        <div class="aulao-admin-sub">Crie aulões, envie capa, organize por semestre, habilite turmas/professores, adicione vídeos do YouTube e publique na loja.</div>
+      </div>
+      <button class="btn-create" onclick="novoAulao()">+ Criar aulão</button>
+    </div>
+
+    <div class="aulao-admin-grid" id="adminAuloesGrid">
+      <div class="loading"><span class="spinner-inline"></span> Carregando...</div>
+    </div>
+
+    <div class="aulao-editor" id="aulaoEditor">
+      <div class="form-card-title">✏️ <span id="aulaoEditorTitle">Novo aulão</span></div>
+      <input type="hidden" id="aulaoId">
+
+      <div class="aulao-editor-grid">
+        <div class="form-group"><div class="form-label">Nome do aulão</div><input class="form-input" id="aulaoNome" placeholder="Aulão de Bioquímica 2 — P1"></div>
+        <div class="form-group"><div class="form-label">Matéria</div><input class="form-input" id="aulaoMateria" placeholder="Bioquímica 2"></div>
+        <div class="form-group"><div class="form-label">Prova / etapa</div><input class="form-input" id="aulaoAvaliacao" placeholder="P1"></div>
+
+        <div class="form-group">
+          <div class="form-label">Semestre</div>
+          <select class="form-input" id="aulaoSemestre">
+            <option value="1">1º semestre</option><option value="2">2º semestre</option>
+            <option value="3">3º semestre</option><option value="4" selected>4º semestre</option>
+            <option value="5">5º semestre</option><option value="6">6º semestre</option>
+            <option value="7">7º semestre</option><option value="8">8º semestre</option>
+            <option value="9">9º semestre</option><option value="10">10º semestre</option>
+            <option value="11">11º semestre</option><option value="12">12º semestre</option>
+          </select>
+        </div>
+        <div class="form-group"><div class="form-label">Preço (R$)</div><input class="form-input" type="number" min="0" step="0.01" id="aulaoPreco" value="0"></div>
+        <div class="form-group"><div class="form-label">Dias de acesso</div><input class="form-input" type="number" min="1" id="aulaoDias" value="50"></div>
+
+        <div class="form-group wide"><div class="form-label">Descrição</div><textarea class="form-input" id="aulaoDescricao" rows="3" placeholder="Resumo do que será abordado no aulão"></textarea></div>
+
+        <div class="form-group wide">
+          <div class="form-label">Imagem de capa</div>
+          <input class="form-input" type="file" id="aulaoCapa" accept="image/jpeg,image/png,image/webp" onchange="previewAulaoCapa()">
+          <div class="aulao-cover-preview" id="aulaoCapaPreview">Sem imagem</div>
+        </div>
+      </div>
+
+      <div class="aulao-checks">
+        <label><input type="checkbox" id="aulaoPublicado"> Publicado</label>
+        <label><input type="checkbox" id="aulaoLoja"> Exibir na loja</label>
+        <label><input type="checkbox" id="aulaoDestaque"> Destaque</label>
+        <label><input type="checkbox" id="aulaoUsarTurmas" onchange="toggleTurmasEditor()"> Usar turmas/professores</label>
+      </div>
+
+      <div class="aulao-subbox" id="turmasBox" style="display:none;">
+        <div class="aulao-subbox-title">Turmas e professores</div>
+        <div id="turmasRows"></div>
+        <button class="aulao-mini-btn" onclick="addTurmaRow()">+ Adicionar turma/professor</button>
+      </div>
+
+      <div class="aulao-subbox">
+        <div class="aulao-subbox-title">Vídeos do YouTube</div>
+        <div style="font-size:10px;color:rgba(125,211,232,.45);margin-bottom:9px;">Cole o link do YouTube. O ID do vídeo é extraído automaticamente.</div>
+        <div id="videosRows"></div>
+        <button class="aulao-mini-btn" onclick="addVideoRow()">+ Adicionar vídeo</button>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
+        <button class="btn-create" id="saveAulaoBtn" onclick="salvarAulao()">💾 Salvar aulão</button>
+        <button class="btn-outline" onclick="fecharEditorAulao()">Cancelar</button>
+        <button class="btn-outline" id="deleteAulaoBtn" style="display:none;border-color:rgba(248,113,113,.3);color:#fca5a5;" onclick="excluirAulao()">Excluir aulão</button>
+      </div>
     </div>
   </div>
 
@@ -412,6 +723,33 @@
 </div>
 
 <!-- MODAL ALUNO -->
+
+<div class="modal-lite" id="paymentModal">
+  <div class="modal-lite-card">
+    <div class="modal-lite-head"><div><div class="modal-lite-title">🧾 Registrar repasse ao professor</div><div id="payProfName" style="font-size:10px;color:rgba(125,211,232,.5);margin-top:3px;"></div></div><button class="modal-close" onclick="closePaymentModal()">×</button></div>
+    <input type="hidden" id="payProfId">
+    <div class="modal-grid">
+      <div class="form-group"><div class="form-label">Data do pagamento</div><input class="form-input" id="payDate" type="datetime-local"></div>
+      <div class="form-group"><div class="form-label">Forma de pagamento</div><select class="form-input" id="payMethod"><option value="pix">PIX</option><option value="mercadopago">Mercado Pago</option><option value="outro">Outro</option></select></div>
+      <div class="form-group"><div class="form-label">Início do período (opcional)</div><input class="form-input" id="payPeriodStart" type="date"></div>
+      <div class="form-group"><div class="form-label">Fim do período (opcional)</div><input class="form-input" id="payPeriodEnd" type="date"></div>
+      <div class="form-group" style="grid-column:1/-1;"><div class="form-label">Valor a pagar — calculado automaticamente</div><div class="readonly-value" id="payAmount">R$ 0,00</div></div>
+      <div class="form-group" style="grid-column:1/-1;"><div class="form-label">Observação (opcional)</div><textarea class="form-input" id="payObservation" rows="3" placeholder="Ex.: Repasse referente às vendas apuradas até esta data."></textarea></div>
+    </div>
+    <div style="font-size:9px;color:rgba(125,211,232,.4);line-height:1.55;margin-top:12px;">Ao confirmar, o saldo integral atualmente devido será registrado como pago e será gerado um <strong>Demonstrativo de Repasse / Recibo de Pagamento</strong> em PDF. Este documento não substitui nota fiscal quando a legislação exigir documento fiscal próprio.</div>
+    <div class="form-actions" style="margin-top:14px;"><button class="btn-create" onclick="confirmProfessorPayment()">💾 Registrar pagamento e gerar PDF</button><button class="btn-cancel" onclick="closePaymentModal()">Cancelar</button></div>
+  </div>
+</div>
+
+<div class="modal-lite" id="contractModal">
+  <div class="modal-lite-card">
+    <div class="modal-lite-head"><div><div class="modal-lite-title">📑 Termo assinado do Professor</div><div id="contractProfName" style="font-size:10px;color:rgba(125,211,232,.5);margin-top:3px;"></div></div><button class="modal-close" onclick="closeContractModal()">×</button></div>
+    <div id="contractMeta" style="font-size:10px;line-height:1.7;color:rgba(226,248,252,.68);"></div>
+    <img id="contractSignature" class="contract-preview" alt="Assinatura eletrônica">
+    <div class="form-actions" style="margin-top:14px;"><button class="btn-create" onclick="downloadAdminTermsPdf()">📄 Gerar PDF assinado</button><button class="btn-cancel" onclick="closeContractModal()">Fechar</button></div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modalAluno">
   <div class="modal">
     <div class="modal-header">
@@ -441,8 +779,10 @@
 var SUPABASE_URL="https://chqhdmjqnjjdatowfyif.supabase.co";
 var SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNocWhkbWpxbmpqZGF0b3dmeWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDc0MDAsImV4cCI6MjA5NTgyMzQwMH0.v_7y0YD9R1LvFJkz9Vr_zJX0_CE2lo8OY5xX-KtVcFk";
 var client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-var allAlunos=[],currentAluno=null,currentToggles={},currentPresente=[];
-var professorAccounts=[],professorDados=[],professorAuloes=[];
+var allAlunos=[],allOrders=[],currentAluno=null,currentToggles={},currentPresente=[];
+var salesPeriod='all';
+var professorAccounts=[],professorDados=[],professorProfiles=[],professorTerms=[],professorRepasses=[];
+var currentContract=null,currentPaymentProfessor=null,currentPaymentBreakdown=[];
 // ── CURSOS (gravam na tabela `acessos`, não em profiles) ──
 var CURSOS_COLS=[
   {key:"curso-peconhentos",label:"Curso Peçonhentos"}
@@ -487,31 +827,51 @@ var SEMESTRES = [
   { id:"s4p1", label:"4º Sem — P1", emoji:"🔬", cols:[
     {key:"fisiologia_2_p1",label:"Fisiologia II"},{key:"bioquimica_2_p1",label:"Bioquímica II"},
     {key:"epidemiologia_p1",label:"Epidemiologia"},{key:"nutricao_p1",label:"Nutrição"},
-    {key:"microbiologia_2_p1",label:"Micro II"},{key:"eletrocardiograma_p1",label:"ECG"},
-    {key:"pacote_s4_p1",label:"📦 Pacote P1"},
+    {key:"microbiologia_2_p1",label:"Micro II"},{key:"micro_pratica_2_p1",label:"Micro Prática II"},
+    {key:"eletrocardiograma_p1",label:"ECG"},{key:"pacote_s4_p1",label:"📦 Pacote P1"},
   ]},
   { id:"s4p2", label:"4º Sem — P2", emoji:"🔬", cols:[
     {key:"fisiologia_2_p2",label:"Fisiologia II"},{key:"bioquimica_2_p2",label:"Bioquímica II"},
     {key:"epidemiologia_p2",label:"Epidemiologia"},{key:"nutricao_p2",label:"Nutrição"},
-    {key:"microbiologia_2_p2",label:"Micro II"},{key:"eletrocardiograma_p2",label:"ECG"},
-    {key:"pacote_s4_p2",label:"📦 Pacote P2"},
+    {key:"microbiologia_2_p2",label:"Micro II"},{key:"micro_pratica_2_p2",label:"Micro Prática II"},
+    {key:"eletrocardiograma_p2",label:"ECG"},{key:"pacote_s4_p2",label:"📦 Pacote P2"},
   ]},
   { id:"s4final", label:"4º Sem — Final", emoji:"🎓", cols:[
     {key:"fisiologia_2_final",label:"Fisiologia II"},{key:"bioquimica_2_final",label:"Bioquímica II"},
     {key:"epidemiologia_final",label:"Epidemiologia"},{key:"nutricao_final",label:"Nutrição"},
-    {key:"microbiologia_2_final",label:"Micro II"},{key:"eletrocardiograma_final",label:"ECG"},
-    {key:"pacote_s4_final",label:"📦 Pacote Final"},
+    {key:"microbiologia_2_final",label:"Micro II"},{key:"micro_pratica_2_final",label:"Micro Prática II"},
+    {key:"eletrocardiograma_final",label:"ECG"},{key:"pacote_s4_final",label:"📦 Pacote Final"},
   ]},
 ];
 
 // Flat list para compatibilidade (stats, filtros, etc.)
 var RESUMOS_COLS = [];
+
 SEMESTRES.forEach(function(s){ s.cols.forEach(function(c){ RESUMOS_COLS.push(c); }); });
+
+// Acesso ativo no Admin: flags de P1/P2/Final/pacotes só contam com _expira válido.
+// Isso evita exibir como ativo um acesso antigo apenas porque o booleano ficou true.
+function resumoAtivo(a,key){
+  if(!a || !a[key]) return false;
+  var isProva=/(?:_p1|_p2|_final)$/.test(key) || key.indexOf("pacote_")===0;
+  if(!isProva) return true;
+  var exp=a[key+"_expira"];
+  if(exp) return new Date(exp)>new Date();
+
+  // Sem _expira só conta se for cortesia explicitamente marcada.
+  var presentes=Array.isArray(a.resumos_presente)?a.resumos_presente:[];
+  if(presentes.indexOf(key)>=0){
+    if(a.acesso_expira_em) return new Date(a.acesso_expira_em)>new Date();
+    return true;
+  }
+  return false;
+}
+
 
 // ── TAB NAVIGATION ──
 window.switchAdminTab=function(tab){
   document.querySelectorAll(".admin-tab").forEach(function(b,i){
-    var tabs=["overview","alunos","professores","pagamentos","promos"];
+    var tabs=["overview","alunos","professores","pagamentos","auloes","promos"];
     b.classList.toggle("active",tabs[i]===tab);
   });
   document.querySelectorAll(".tab-panel").forEach(function(p){p.classList.remove("active");});
@@ -523,8 +883,9 @@ window.switchAdminTab=function(tab){
 window.refreshAll=async function(){
   var btn=document.getElementById("refreshBtn");
   btn.classList.add("spinning");
-  try{await Promise.all([loadAlunos(),loadOrders()]);}catch(e){}
-  try{await loadProfessoresAdmin();}catch(e){console.warn("professores:",e);}
+  try{await loadAuloesAdmin();}catch(e){console.warn("auloes:",e);}
+  try{await loadAlunos();await loadProfessoresAdmin();}catch(e){}
+  try{await loadOrders();}catch(e){console.warn("orders:",e);}
   try{await loadCupons();}catch(e){}
   try{await loadPrecos();}catch(e){}
   btn.classList.remove("spinning");
@@ -543,8 +904,10 @@ async function init(){
     if(!pr.data||!pr.data.is_admin){hideOverlay();alert("Acesso negado.");window.location.replace("dashboard.html");return;}
     hideOverlay();
     document.getElementById("adminEmail").textContent=session.user.email;
-    await Promise.all([loadAlunos(),loadOrders()]);
-    try{await loadProfessoresAdmin();}catch(e){console.warn("professores:",e);}
+    try{await loadAuloesAdmin();}catch(e){console.warn("auloes:",e);}
+    await loadAlunos();
+    await loadProfessoresAdmin();
+    await loadOrders();
     try{await loadCupons();}catch(e){console.warn("cupons:",e);}
     try{await loadPrecos();}catch(e){console.warn("precos:",e);}
     try{setupOnlineCounter();}catch(e){console.warn("online:",e);}
@@ -562,9 +925,12 @@ async function loadAlunos(){
   allAlunos=r.data||[];
   document.getElementById("tabBadgeAlunos").textContent=allAlunos.length;
   renderStats();renderAlunos(allAlunos);
+  if (onlineWatcherChannel) {
+    try { renderOnlineUsers(Object.keys(onlineWatcherChannel.presenceState() || {})); } catch(e){}
+  }
 }
 function renderStats(){
-  var ativos=allAlunos.filter(function(a){return RESUMOS_COLS.some(function(r){return a[r.key];});}).length;
+  var ativos=allAlunos.filter(function(a){return RESUMOS_COLS.some(function(r){return resumoAtivo(a,r.key);});}).length;
   var exp=allAlunos.filter(function(a){if(!a.acesso_expira_em)return false;var d=new Date(a.acesso_expira_em)-new Date();return d>0&&d<7*24*60*60*1000;}).length;
   document.getElementById("statAlunos").textContent=allAlunos.length;
   document.getElementById("statAtivos").textContent=ativos;
@@ -584,7 +950,7 @@ function renderAlunos(list){
     tbody.innerHTML="<tr><td colspan='5' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum aluno</td></tr>";cards.innerHTML=em;return;}
   var rows="",cds="";
   list.forEach(function(a){
-    var cnt=RESUMOS_COLS.filter(function(r){return a[r.key];}).length;
+    var cnt=RESUMOS_COLS.filter(function(r){return resumoAtivo(a,r.key);}).length;
     var ei=expInfo(a);var ll=a.last_login?new Date(a.last_login).toLocaleDateString("pt-BR"):"\u2014";
     var adm=a.is_admin?"<span class='badge badge-yellow' style='font-size:9px;margin-left:4px;'>Admin</span>":"";
     var bdg="<span class='badge "+(cnt>0?"badge-green":"badge-red")+"'>"+(cnt>0?cnt+" resumo"+(cnt>1?"s":""):"Nenhum")+"</span>";
@@ -597,39 +963,65 @@ window.filterAlunos=function(){
   var s=document.getElementById("searchInput").value.toLowerCase();
   var f=document.getElementById("filterSelect").value;
   var r=allAlunos.filter(function(a){if(s&&!(a.email||"").toLowerCase().includes(s))return false;
-    if(f==="active")return RESUMOS_COLS.some(function(r){return a[r.key];});
-    if(f==="noAccess")return!RESUMOS_COLS.some(function(r){return a[r.key];});
+    if(f==="active")return RESUMOS_COLS.some(function(r){return resumoAtivo(a,r.key);});
+    if(f==="noAccess")return!RESUMOS_COLS.some(function(r){return resumoAtivo(a,r.key);});
     if(f==="expiring"){if(!a.acesso_expira_em)return false;var d=new Date(a.acesso_expira_em)-new Date();return d>0&&d<7*24*60*60*1000;}
     return true;});
   renderAlunos(r);
 };
 
 
-// ═══ PROFESSORES COLABORADORES ═══
+// ═══════════════════════════════════════════════════════════════════════════════
+// PROFESSORES COLABORADORES / TERMOS / REPASSES
+// ═══════════════════════════════════════════════════════════════════════════════
+function escHtml(v){return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function professorName(userId){
+  var d=professorDados.find(function(x){return x.user_id===userId;});
+  if(d&&d.nome_exibicao)return d.nome_exibicao;
+  var pp=professorProfiles.find(function(x){return x.user_id===userId;});
+  if(pp&&pp.nome)return pp.nome;
+  var a=allAlunos.find(function(x){return x.id===userId;});
+  return a&&a.email?a.email:"Professor";
+}
+function maskDoc(v){var s=String(v||"");return s.length<=4?s:"••••••"+s.slice(-4)}
 async function loadProfessoresAdmin(){
   var rr=await Promise.all([
     client.from("professor_accounts").select("*").order("created_at",{ascending:false}),
     client.from("professor_dados").select("*"),
-    client.from("auloes").select("*").eq("origem","professor").order("created_at",{ascending:false}),
+    client.from("aulao_professores").select("*"),
+    client.from("professor_term_acceptances").select("*").order("signed_at",{ascending:false}),
+    client.from("professor_repasses").select("*").order("pago_em",{ascending:false}),
     client.from("config").select("valor").eq("chave","professor_whatsapp").maybeSingle()
   ]);
   if(rr[0].error)throw rr[0].error;
   professorAccounts=rr[0].data||[];
   professorDados=rr[1].data||[];
-  professorAuloes=rr[2].data||[];
+  professorProfiles=rr[2].data||[];
+  professorTerms=rr[3].data||[];
+  professorRepasses=rr[4].data||[];
   var badge=document.getElementById("tabBadgeProfessores");if(badge)badge.textContent=professorAccounts.filter(function(x){return x.status==="active";}).length;
-  var wa=document.getElementById("profWhatsapp");if(wa)wa.value=(rr[3].data&&rr[3].data.valor)||"";
-  renderProfessorAccounts();renderPendingAuloes();
+  var wa=document.getElementById("profWhatsapp");if(wa)wa.value=(rr[5].data&&rr[5].data.valor)||"";
+  populateProfessorSalesFilter();
+  renderProfessorAccounts();
+  renderPendingAuloes();
+  renderProfessorTermsList();
+  renderProfessorFinance();
+  renderProfessorPaymentHistory();
 }
 window.renderProfessorAccounts=function(){
   var el=document.getElementById("professorAccountsList");if(!el)return;
   var q=((document.getElementById("profAccountSearch")||{}).value||"").trim().toLowerCase();
   var accountMap={};professorAccounts.forEach(function(x){accountMap[x.user_id]=x;});
-  var list=allAlunos.filter(function(a){return !q||(a.email||"").toLowerCase().includes(q);});
+  var list=allAlunos.filter(function(a){
+    var d=professorDados.find(function(x){return x.user_id===a.id;});
+    var txt=((a.email||"")+" "+(d&&d.nome_exibicao||"")).toLowerCase();
+    return !q||txt.indexOf(q)>=0;
+  });
   if(!list.length){el.innerHTML='<div class="empty-state">Nenhuma conta encontrada.</div>';return;}
   el.innerHTML=list.map(function(a){
     var ac=accountMap[a.id],active=ac&&ac.status==="active",data=professorDados.find(function(d){return d.user_id===a.id;});
-    return '<div class="cupom-row"><div class="cupom-info"><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;"><strong style="font-size:12px;color:#e2f8fc;">'+(a.email||"—")+'</strong>'+(active?'<span class="badge badge-green" style="font-size:9px;">Professor ativo</span>':ac?'<span class="badge badge-red" style="font-size:9px;">Suspenso</span>':'<span class="badge" style="font-size:9px;">Conta comum</span>')+'</div><div class="cupom-meta">'+(data&&data.nome_exibicao?'<span>🎓 '+data.nome_exibicao+'</span>':'')+(data&&data.onboarding_completo?'<span>✅ Cadastro completo</span>':'')+'</div></div><div class="cupom-actions"><button class="btn-sm '+(active?'red':'green')+'" onclick="toggleProfessorAccount(\''+a.id+'\','+(!active)+')">'+(active?'Suspender professor':'Tornar professor')+'</button></div></div>';
+    var term=professorTerms.find(function(t){return t.professor_user_id===a.id;});
+    return '<div class="cupom-row"><div class="cupom-info"><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;"><strong style="font-size:12px;color:#e2f8fc;">'+escHtml(a.email||"—")+'</strong>'+(active?'<span class="badge badge-green" style="font-size:9px;">Professor ativo</span>':ac?'<span class="badge badge-red" style="font-size:9px;">Suspenso</span>':'<span class="badge" style="font-size:9px;">Conta comum</span>')+(term?'<span class="legal-chip">✍️ Termos assinados</span>':'')+'</div><div class="cupom-meta">'+(data&&data.nome_exibicao?'<span>🎓 '+escHtml(data.nome_exibicao)+'</span>':'')+(data&&data.onboarding_completo?'<span>✅ Cadastro completo</span>':'')+(term?'<span>📑 '+escHtml(term.terms_version)+' · '+new Date(term.signed_at).toLocaleDateString("pt-BR")+'</span>':'')+'</div></div><div class="cupom-actions">'+(term?'<button class="btn-sm" onclick="openProfessorContract(\''+a.id+'\')">Termo / PDF</button>':'')+'<button class="btn-sm '+(active?'red':'green')+'" onclick="toggleProfessorAccount(\''+a.id+'\','+(!active)+')">'+(active?'Suspender professor':'Tornar professor')+'</button></div></div>';
   }).join("");
 }
 window.toggleProfessorAccount=async function(userId,enable){
@@ -641,11 +1033,10 @@ window.toggleProfessorAccount=async function(userId,enable){
 }
 function renderPendingAuloes(){
   var el=document.getElementById("pendingAuloesAdmin");if(!el)return;
-  var list=professorAuloes.filter(function(a){return a.status_aprovacao==="pendente";});
+  var list=adminAuloes.filter(function(a){return a.origem==="professor"&&a.status_aprovacao==="pendente";});
   if(!list.length){el.innerHTML='<div class="empty-state">Nenhum aulão aguardando aprovação.</div>';return;}
   el.innerHTML=list.map(function(a){
-    var d=professorDados.find(function(x){return x.user_id===a.owner_user_id;});
-    return '<div class="cupom-row"><div class="cupom-info"><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;"><strong style="font-size:12px;color:#e2f8fc;">'+(a.nome||"Aulão")+'</strong><span class="badge badge-yellow" style="font-size:9px;">Aguardando aprovação</span></div><div class="cupom-meta"><span>🎓 '+((d&&d.nome_exibicao)||"Professor")+'</span><span>📚 '+(a.materia||"")+' · '+a.semestre+'º · '+(a.avaliacao||"")+'</span><span>🌐 '+(a.idioma_conteudo==="es"?"Español":"Português (PT-BR)")+'</span><span>💰 R$ '+Number(a.preco||0).toFixed(2).replace(".",",")+'</span></div></div><div class="cupom-actions"><a class="btn-sm" href="aulao.html?key='+encodeURIComponent(a.chave)+'" target="_blank" style="text-decoration:none;">Abrir</a><button class="btn-sm green" onclick="reviewProfessorAulao(\''+a.id+'\',true)">Aprovar</button><button class="btn-sm red" onclick="reviewProfessorAulao(\''+a.id+'\',false)">Solicitar ajuste</button></div></div>';
+    return '<div class="cupom-row"><div class="cupom-info"><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;"><strong style="font-size:12px;color:#e2f8fc;">'+escHtml(a.nome||"Aulão")+'</strong><span class="badge badge-yellow" style="font-size:9px;">Aguardando aprovação</span></div><div class="cupom-meta"><span>🎓 '+escHtml(professorName(a.owner_user_id))+'</span><span>📚 '+escHtml(a.materia||"")+' · '+a.semestre+'º · '+escHtml(a.avaliacao||"")+'</span><span>🌐 '+(a.idioma_conteudo==="es"?"Español":"Português (PT-BR)")+'</span><span>💰 '+money(a.preco||0)+'</span></div></div><div class="cupom-actions"><a class="btn-sm" href="aulao.html?key='+encodeURIComponent(a.chave)+'" target="_blank" style="text-decoration:none;">Abrir</a><button class="btn-sm green" onclick="reviewProfessorAulao(\''+a.id+'\',true)">Aprovar</button><button class="btn-sm red" onclick="reviewProfessorAulao(\''+a.id+'\',false)">Solicitar ajuste</button></div></div>';
   }).join("");
 }
 window.reviewProfessorAulao=async function(id,approve){
@@ -653,39 +1044,502 @@ window.reviewProfessorAulao=async function(id,approve){
   if(approve&&!confirm("Aprovar este aulão e colocá-lo no ar e na loja?"))return;
   var r=await client.rpc("admin_review_aulao",{p_aulao_id:id,p_approve:approve,p_reason:reason});
   if(r.error){showToast("Erro: "+r.error.message,"error");return}
-  showToast(approve?"✅ Aulão aprovado e publicado!":"Ajuste enviado ao professor.",approve?"success":"error");await loadProfessoresAdmin();
+  showToast(approve?"✅ Aulão aprovado e publicado!":"Ajuste enviado ao professor.",approve?"success":"error");
+  await loadAuloesAdmin();renderPendingAuloes();renderSalesAnalytics();
 }
 window.saveProfessorWhatsapp=async function(){
   var input=document.getElementById("profWhatsapp"),v=(input.value||"").replace(/\D/g,"");
   if(v&&v.length<10){showToast("Confira o número com DDI + DDD.","error");return}
-  var r=await client.from("config").upsert({chave:"professor_whatsapp",valor:v},{onConflict:"chave"});
+  var r=await client.from("config").upsert({chave:"professor_whatsapp",valor:v,updated_at:new Date().toISOString()},{onConflict:"chave"});
   if(r.error)showToast("Erro ao salvar WhatsApp.","error");else showToast("✅ WhatsApp dos professores salvo!","success");
 };
+function renderProfessorTermsList(){
+  var el=document.getElementById("professorTermsList");if(!el)return;
+  if(!professorTerms.length){el.innerHTML='<div class="empty-state">Nenhum termo assinado ainda.</div>';return}
+  el.innerHTML=professorTerms.map(function(t){
+    return '<div class="cupom-row"><div class="cupom-info"><strong style="font-size:12px;color:#e2f8fc;">'+escHtml(professorName(t.professor_user_id))+'</strong><div class="cupom-meta"><span>'+escHtml(t.document_type)+' '+escHtml(maskDoc(t.document_number))+'</span><span>'+escHtml(t.terms_version)+'</span><span>✍️ '+new Date(t.signed_at).toLocaleString("pt-BR")+'</span></div></div><div class="cupom-actions"><button class="btn-sm" onclick="openProfessorContract(\''+t.professor_user_id+'\')">Abrir / PDF</button></div></div>';
+  }).join("");
+}
+window.openProfessorContract=async function(userId){
+  currentContract=professorTerms.find(function(t){return t.professor_user_id===userId;})||null;
+  if(!currentContract){showToast("Este professor ainda não assinou os termos.","error");return}
+  document.getElementById("contractProfName").textContent=professorName(userId);
+  document.getElementById("contractMeta").innerHTML='<b>E-mail:</b> '+escHtml((allAlunos.find(function(a){return a.id===userId;})||{}).email||"—")+'<br><b>Documento:</b> '+escHtml(currentContract.document_type)+' '+escHtml(maskDoc(currentContract.document_number))+'<br><b>Versão:</b> '+escHtml(currentContract.terms_version)+'<br><b>Idioma:</b> '+(currentContract.terms_language==="es"?"Español":"Português")+'<br><b>Assinado em:</b> '+new Date(currentContract.signed_at).toLocaleString("pt-BR")+'<br><b>ID do aceite:</b> '+escHtml(currentContract.id);
+  var img=document.getElementById("contractSignature");img.removeAttribute("src");img.style.display="none";
+  var dr=await client.storage.from("professor-documentos").download(currentContract.signature_path);
+  if(!dr.error){img.src=URL.createObjectURL(dr.data);img.style.display="block"}
+  document.getElementById("contractModal").classList.add("open");
+}
+window.closeContractModal=function(){document.getElementById("contractModal").classList.remove("open")}
+function pdfAddText(doc,text,x,y,maxWidth,lineHeight){
+  var lines=doc.splitTextToSize(String(text||""),maxWidth);
+  lines.forEach(function(line){if(y>278){doc.addPage();y=18}doc.text(line,x,y);y+=lineHeight;});
+  return y;
+}
+window.downloadAdminTermsPdf=async function(){
+  if(!currentContract)return;
+  try{
+    var JS=window.jspdf&&window.jspdf.jsPDF;if(!JS)throw new Error("Biblioteca de PDF não carregada");
+    var doc=new JS({unit:"mm",format:"a4"}),y=17,uid=currentContract.professor_user_id;
+    doc.setFont("helvetica","bold");doc.setFontSize(16);doc.text("RESUMOS DO ENZO",15,y);y+=8;
+    doc.setFontSize(12);doc.text("Termos do Professor Colaborador - Copia assinada",15,y);y+=9;
+    doc.setFont("helvetica","normal");doc.setFontSize(9);
+    y=pdfAddText(doc,"Professor: "+professorName(uid),15,y,180,4.5);
+    y=pdfAddText(doc,"E-mail: "+((allAlunos.find(function(a){return a.id===uid;})||{}).email||"—"),15,y,180,4.5);
+    y=pdfAddText(doc,"Documento: "+currentContract.document_type+" "+currentContract.document_number,15,y,180,4.5);
+    y=pdfAddText(doc,"Versao: "+currentContract.terms_version+" | Assinado: "+new Date(currentContract.signed_at).toLocaleString("pt-BR"),15,y,180,4.5);
+    y+=4;doc.setFont("helvetica","bold");doc.setFontSize(10);doc.text("Texto aceito",15,y);y+=6;doc.setFont("helvetica","normal");doc.setFontSize(8.2);
+    y=pdfAddText(doc,currentContract.terms_text,15,y,180,4);
+    if(y>238){doc.addPage();y=18}
+    doc.setFont("helvetica","bold");doc.setFontSize(10);doc.text("Assinatura eletronica registrada",15,y);y+=6;
+    var dr=await client.storage.from("professor-documentos").download(currentContract.signature_path);
+    if(!dr.error){
+      var dataUrl=await new Promise(function(resolve){var fr=new FileReader();fr.onload=function(){resolve(fr.result)};fr.readAsDataURL(dr.data)});
+      doc.addImage(dataUrl,"PNG",15,y,78,29);y+=34;
+    }
+    doc.setFont("helvetica","normal");doc.setFontSize(7.5);doc.text("ID do aceite: "+currentContract.id,15,y);
+    doc.save("termo-professor-"+String(professorName(uid)).replace(/[^a-z0-9]+/gi,"-")+".pdf");
+  }catch(err){console.error(err);showToast("Erro ao gerar PDF: "+(err.message||err),"error")}
+}
+function populateProfessorSalesFilter(){
+  var sel=document.getElementById("salesProfessor");if(!sel)return;
+  var cur=sel.value;
+  var active=professorAccounts.filter(function(x){return x.status==="active";});
+  sel.innerHTML='<option value="">Todos os professores</option>'+active.map(function(x){return '<option value="'+x.user_id+'">'+escHtml(professorName(x.user_id))+'</option>';}).join("");
+  if(active.some(function(x){return x.user_id===cur}))sel.value=cur;
+}
+function professorApprovedOrders(userId){
+  return allOrders.filter(function(o){
+    if(o.status!=="approved")return false;
+    var a=aulaoForOrder(o);
+    return a&&a.origem==="professor"&&a.owner_user_id===userId;
+  });
+}
+function professorFinancialRow(userId){
+  var orders=professorApprovedOrders(userId),gross=0,generated=0;
+  orders.forEach(function(o){var v=Number(o.valor||0);gross+=v;generated+=Math.round((v*2/3)*100)/100;});
+  var paid=professorRepasses.filter(function(r){return r.professor_user_id===userId&&r.status==="pago";}).reduce(function(s,r){return s+Number(r.valor||0)},0);
+  return{user_id:userId,name:professorName(userId),count:orders.length,gross:gross,generated:generated,paid:paid,due:Math.round((generated-paid)*100)/100,orders:orders};
+}
+function renderProfessorFinance(){
+  var body=document.getElementById("profFinanceBody");if(!body)return;
+  var list=professorAccounts.filter(function(x){return x.status==="active";}).map(function(x){return professorFinancialRow(x.user_id)}).sort(function(a,b){return b.due-a.due||b.gross-a.gross});
+  if(!list.length){body.innerHTML='<tr><td colspan="7" class="empty-state">Nenhum professor ativo.</td></tr>';return}
+  body.innerHTML=list.map(function(x){
+    return '<tr><td><strong>'+escHtml(x.name)+'</strong><div class="prof-card-extra"><span>'+((allAlunos.find(function(a){return a.id===x.user_id;})||{}).email||"")+'</span></div></td><td>'+x.count+'</td><td>'+money(x.gross)+'</td><td class="money">'+money(x.generated)+'</td><td>'+money(x.paid)+'</td><td class="due">'+money(x.due)+'</td><td><button class="btn-sm" onclick="filterProfessorSales(\''+x.user_id+'\')">Ver vendas</button> '+(x.due>0?'<button class="btn-sm green" onclick="openPaymentModal(\''+x.user_id+'\')">Pagar / PDF</button>':'<span class="badge badge-green">Em dia</span>')+'</td></tr>';
+  }).join("");
+}
+window.filterProfessorSales=function(userId){
+  document.getElementById("salesSource").value="aulao_professor";
+  document.getElementById("salesProfessor").value=userId;
+  renderSalesAnalytics();renderProfessorAulaoDetail();
+  document.getElementById("salesRevenue").scrollIntoView({behavior:"smooth",block:"center"});
+}
+function renderProfessorPaymentHistory(){
+  var el=document.getElementById("profPaymentHistory");if(!el)return;
+  var paid=professorRepasses.filter(function(r){return r.status==="pago";});
+  if(!paid.length){el.innerHTML='<div class="empty-state">Nenhum repasse registrado.</div>';return}
+  el.innerHTML=paid.slice(0,80).map(function(r){
+    return '<div class="payment-row"><div><strong>'+escHtml(professorName(r.professor_user_id))+'</strong><div class="ref">'+escHtml(r.receipt_number||r.referencia||"")+'</div></div><div><span class="badge badge-green">'+money(r.valor)+'</span><div style="font-size:8px;color:rgba(125,211,232,.4);margin-top:3px;">'+new Date(r.pago_em||r.created_at).toLocaleString("pt-BR")+'</div></div><div><button class="btn-sm" onclick="regeneratePaymentPdf(\''+r.id+'\')">PDF</button></div></div>';
+  }).join("");
+}
+window.openPaymentModal=function(userId){
+  var row=professorFinancialRow(userId);
+  if(row.due<=0){showToast("Não há saldo positivo a pagar.","error");return}
+  currentPaymentProfessor=row;currentPaymentBreakdown=professorAulaoBreakdown(userId);
+  document.getElementById("payProfId").value=userId;document.getElementById("payProfName").textContent=row.name;
+  document.getElementById("payAmount").textContent=money(row.due);
+  var now=new Date(),tz=now.getTimezoneOffset()*60000,local=new Date(now-tz).toISOString().slice(0,16);
+  document.getElementById("payDate").value=local;document.getElementById("payMethod").value="pix";document.getElementById("payObservation").value="";
+  document.getElementById("paymentModal").classList.add("open");
+}
+window.closePaymentModal=function(){document.getElementById("paymentModal").classList.remove("open");currentPaymentProfessor=null}
+function professorAulaoBreakdown(userId){
+  var map={};
+  professorApprovedOrders(userId).forEach(function(o){
+    var a=aulaoForOrder(o);if(!a)return;
+    if(!map[a.id])map[a.id]={nome:a.nome,count:0,gross:0,professor:0};
+    var v=Number(o.valor||0);map[a.id].count++;map[a.id].gross+=v;map[a.id].professor+=Math.round((v*2/3)*100)/100;
+  });
+  return Object.keys(map).map(function(k){return map[k]});
+}
+window.renderProfessorAulaoDetail=function(){
+  var el=document.getElementById("profAulaoBreakdown");if(!el)return;
+  var uid=(document.getElementById("salesProfessor")||{}).value||"";
+  if(!uid){el.innerHTML='<div class="empty-state">Selecione “Ver vendas” em um professor para detalhar cada aulão.</div>';return}
+  var rows=professorAulaoBreakdown(uid);
+  if(!rows.length){el.innerHTML='<div class="empty-state">Este professor ainda não possui vendas aprovadas.</div>';return}
+  el.innerHTML='<div class="form-card-title" style="margin-bottom:8px;">Aulões de '+escHtml(professorName(uid))+'</div><div style="overflow:auto;"><table class="prof-finance-table"><thead><tr><th>Aulão</th><th>Vendas</th><th>Bruto</th><th>Valor do professor</th></tr></thead><tbody>'+rows.map(function(x){return '<tr><td>'+escHtml(x.nome)+'</td><td>'+x.count+'</td><td>'+money(x.gross)+'</td><td class="money">'+money(x.professor)+'</td></tr>'}).join("")+'</tbody></table></div>';
+}
+async function generatePaymentPdf(repass,row,breakdown){
+  var JS=window.jspdf&&window.jspdf.jsPDF;if(!JS)throw new Error("Biblioteca de PDF não carregada");
+  var doc=new JS({unit:"mm",format:"a4"}),y=17;
+  doc.setFont("helvetica","bold");doc.setFontSize(17);doc.text("RESUMOS DO ENZO",15,y);y+=8;
+  doc.setFontSize(13);doc.text("Demonstrativo de Repasse / Recibo de Pagamento",15,y);y+=9;
+  doc.setFont("helvetica","normal");doc.setFontSize(9);
+  y=pdfAddText(doc,"Recibo: "+(repass.receipt_number||repass.referencia||repass.id),15,y,180,4.6);
+  y=pdfAddText(doc,"Professor colaborador: "+row.name,15,y,180,4.6);
+  y=pdfAddText(doc,"E-mail: "+((allAlunos.find(function(a){return a.id===row.user_id;})||{}).email||"—"),15,y,180,4.6);
+  var d=professorDados.find(function(x){return x.user_id===row.user_id;});
+  if(d&&d.pix_chave)y=pdfAddText(doc,"Chave PIX cadastrada: "+d.pix_chave,15,y,180,4.6);
+  y=pdfAddText(doc,"Data do pagamento: "+new Date(repass.pago_em||repass.created_at).toLocaleString("pt-BR"),15,y,180,4.6);
+  y=pdfAddText(doc,"Forma de pagamento: "+String(repass.metodo||"pix").toUpperCase(),15,y,180,4.6);
+  if(repass.period_start||repass.period_end)y=pdfAddText(doc,"Periodo informado: "+(repass.period_start||"—")+" a "+(repass.period_end||"—"),15,y,180,4.6);
+  y+=5;doc.setFont("helvetica","bold");doc.setFontSize(14);doc.text("VALOR PAGO: "+money(repass.valor),15,y);y+=9;
+  doc.setFontSize(10);doc.text("Composicao das vendas",15,y);y+=6;doc.setFont("helvetica","normal");doc.setFontSize(8.5);
+  if(breakdown&&breakdown.length){
+    breakdown.forEach(function(b){
+      y=pdfAddText(doc,b.nome+" | "+b.count+" venda(s) | bruto "+money(b.gross)+" | participacao professor "+money(b.professor),15,y,180,4.2);
+    });
+  }else y=pdfAddText(doc,"Demonstrativo emitido sobre o saldo registrado no sistema no momento do pagamento.",15,y,180,4.2);
+  y+=4;
+  if(repass.observacao)y=pdfAddText(doc,"Observacao: "+repass.observacao,15,y,180,4.2);
+  y+=4;doc.setFontSize(7.5);doc.setTextColor(90);
+  y=pdfAddText(doc,"Documento operacional de demonstracao e recibo de repasse entre a plataforma e o Professor Colaborador. Nao substitui nota fiscal ou documento tributario quando exigido pela legislacao aplicavel.",15,y,180,3.8);
+  y=pdfAddText(doc,"Gerado em "+new Date().toLocaleString("pt-BR")+" | ID do repasse: "+repass.id,15,y,180,3.8);
+  doc.save("repasse-"+(repass.receipt_number||repass.id)+".pdf");
+}
+window.confirmProfessorPayment=async function(){
+  if(!currentPaymentProfessor)return;
+  var date=document.getElementById("payDate").value;
+  if(!date){showToast("Informe a data do pagamento.","error");return}
+  if(!confirm("Registrar "+money(currentPaymentProfessor.due)+" como pago para "+currentPaymentProfessor.name+"?"))return;
+  try{
+    var r=await client.rpc("admin_register_professor_payment",{
+      p_professor_user_id:currentPaymentProfessor.user_id,
+      p_paid_at:new Date(date).toISOString(),
+      p_method:document.getElementById("payMethod").value,
+      p_period_start:document.getElementById("payPeriodStart").value||null,
+      p_period_end:document.getElementById("payPeriodEnd").value||null,
+      p_observation:document.getElementById("payObservation").value.trim()||null
+    });
+    if(r.error)throw r.error;
+    var repass=r.data,row=currentPaymentProfessor,breakdown=currentPaymentBreakdown.slice();
+    closePaymentModal();showToast("✅ Repasse registrado. Gerando PDF…","success");
+    await loadProfessoresAdmin();renderSalesAnalytics();
+    await generatePaymentPdf(repass,row,breakdown);
+  }catch(err){console.error(err);showToast("Erro ao registrar repasse: "+(err.message||err),"error")}
+}
+window.regeneratePaymentPdf=async function(id){
+  var rep=professorRepasses.find(function(r){return r.id===id;});if(!rep)return;
+  var row=professorFinancialRow(rep.professor_user_id);row.name=professorName(rep.professor_user_id);
+  await generatePaymentPdf(rep,row,[]);
+}
 
 
 // ── LOAD ORDERS ──
 async function loadOrders(){
-  var r=await client.from("orders").select("*, profiles(email)").order("criado_em",{ascending:false}).limit(50);
+  var data=[],from=0,pageSize=1000;
+  while(true){
+    var r=await client.from("orders")
+      .select("*, profiles(email)")
+      .order("criado_em",{ascending:false})
+      .range(from,from+pageSize-1);
+    if(r.error){console.error("orders:",r.error);break;}
+    var chunk=r.data||[];
+    data=data.concat(chunk);
+    if(chunk.length<pageSize)break;
+    from+=pageSize;
+  }
+  allOrders=data;
+  populateSalesSubjects();
+  populateProfessorSalesFilter();
+  renderSalesAnalytics();
+  renderProfessorFinance();
+  renderProfessorPaymentHistory();
+  renderAllOrders();
+}
+
+function money(v){
+  var n=parseFloat(v||0);
+  return "R$ "+n.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function localDate(o){return new Date(o.criado_em);}
+function orderEmail(o){return o.profiles&&o.profiles.email?o.profiles.email:"—";}
+function productKeys(o){return String(o.produto_key||"").split(",").map(function(x){return x.trim();}).filter(Boolean);}
+function productNames(o){
+  var names=String(o.produto_nome||"").split(",").map(function(x){return x.trim();}).filter(Boolean);
+  var keys=productKeys(o);
+  if(names.length===keys.length&&names.length)return names;
+  return keys.map(prettyProduct);
+}
+function aulaoByKey(key){return adminAuloes.find(function(a){return a.chave===key;})||null}
+function aulaoForOrder(o){
+  var keys=productKeys(o);if(keys.length!==1)return null;
+  return aulaoByKey(keys[0]);
+}
+function orderSource(o){
+  var a=aulaoForOrder(o);
+  if(!a)return"resumos";
+  return a.origem==="professor"?"aulao_professor":"aulao_enzo";
+}
+function orderProfessorId(o){
+  var a=aulaoForOrder(o);return a&&a.origem==="professor"?a.owner_user_id||"":""; 
+}
+function prettyProduct(k){
+  var a=aulaoByKey(k);if(a)return a.nome||k;
+  var map={
+    fisiologia_2:"Fisiologia II",bioquimica_2:"Bioquímica II",epidemiologia:"Epidemiologia",
+    nutricao:"Nutrição",microbiologia_2:"Microbiologia II",micro_pratica_2:"Micro Prática II",
+    eletrocardiograma:"Eletrocardiograma",bioquimica:"Bioquímica",biofisica:"Biofísica",
+    genetica:"Genética",fisiologia:"Fisiologia",microbiologia:"Microbiologia",
+    micro_pratica:"Micro Prática",imunologia:"Imunologia",curso_peconhentos:"Curso Peçonhentos",
+    "curso-peconhentos":"Curso Peçonhentos"
+  };
+  var base=k.replace(/_(p1|p2|final)$/,"");
+  var etapa=/_p1$/.test(k)?" — P1":/_p2$/.test(k)?" — P2":/_final$/.test(k)?" — Final":"";
+  return (map[base]||base.replace(/_/g," "))+etapa;
+}
+function semesterOfKey(k){
+  if(!k)return"outro";
+  var aa=aulaoByKey(k);if(aa)return "s"+String(aa.semestre||"").replace(/\D/g,"");
+  if(k.indexOf("curso-")===0||k.indexOf("curso_")===0)return"curso";
+  if(/^(fisiologia_2|bioquimica_2|epidemiologia|nutricao|microbiologia_2|micro_pratica_2|eletrocardiograma)_(p1|p2|final)$/.test(k)||/^pacote_s4_/.test(k))return"s4";
+  if(/^(bioquimica|biofisica|genetica|fisiologia|microbiologia|micro_pratica|imunologia)_(p1|p2|final)$/.test(k)||/^pacote_(p1|p2|final)$/.test(k))return"s3";
+  if(/^(psicologia_salud|medicina_comunitaria|histologia_2|guarani|anatomia_2|bioestatistica)$/.test(k))return"s2";
+  if(/^(biologia_celular|embriologia|histologia_1|anatomia_1)$/.test(k))return"s1";
+  return"outro";
+}
+function semesterLabel(s){if(/^s\d+$/.test(s))return s.slice(1)+"º semestre";return s==="curso"?"Cursos":"Outros";}
+function orderSemesters(o){
+  var set={};
+  productKeys(o).forEach(function(k){set[semesterOfKey(k)]=1;});
+  return Object.keys(set);
+}
+function examOfKey(k){
+  var aa=aulaoByKey(k);if(aa){var av=String(aa.avaliacao||"").toLowerCase();return av==="p1"?"p1":av==="p2"?"p2":av==="final"?"final":"unico";}
+  if(/_p1$/.test(k)||k==="pacote_s4_p1"||k==="pacote_p1")return"p1";
+  if(/_p2$/.test(k)||k==="pacote_s4_p2"||k==="pacote_p2")return"p2";
+  if(/_final$/.test(k)||k==="pacote_s4_final"||k==="pacote_final")return"final";
+  return"unico";
+}
+function orderExams(o){
+  var set={};productKeys(o).forEach(function(k){set[examOfKey(k)]=1;});return Object.keys(set);
+}
+function baseSubjectFromKey(k){
+  var aa=aulaoByKey(k);if(aa)return "aulao:"+aa.id;
+  if(/^pacote_/.test(k))return null;
+  return k.replace(/_(p1|p2|final)$/,"");
+}
+function subjectLabel(base){
+  if(String(base||"").indexOf("aulao:")===0){var id=String(base).slice(6),a=adminAuloes.find(function(x){return x.id===id;});return a?(a.materia||a.nome):"Aulão";}
+  return prettyProduct(base).replace(/ — (P1|P2|Final)$/,"");
+}
+function sameLocalDay(a,b){
+  return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
+}
+function isThisMonth(d,ref){
+  return d.getFullYear()===ref.getFullYear()&&d.getMonth()===ref.getMonth();
+}
+function periodMatches(d){
+  var now=new Date();
+  if(salesPeriod==="all")return true;
+  if(salesPeriod==="today")return sameLocalDay(d,now);
+  if(salesPeriod==="7d"){var min=new Date(now);min.setDate(min.getDate()-6);min.setHours(0,0,0,0);return d>=min&&d<=now;}
+  if(salesPeriod==="month")return isThisMonth(d,now);
+  if(salesPeriod==="prevmonth"){
+    var y=now.getFullYear(),m=now.getMonth()-1;if(m<0){m=11;y--;}
+    return d.getFullYear()===y&&d.getMonth()===m;
+  }
+  if(salesPeriod==="specific"){
+    var val=document.getElementById("salesMonth").value;
+    if(!val)return true;
+    var parts=val.split("-");return d.getFullYear()===+parts[0]&&d.getMonth()===+parts[1]-1;
+  }
+  return true;
+}
+function filteredApprovedOrders(){
+  var source=(document.getElementById("salesSource")||{}).value||"";
+  var prof=(document.getElementById("salesProfessor")||{}).value||"";
+  var sem=document.getElementById("salesSemester").value;
+  var exam=document.getElementById("salesExam").value;
+  var subj=document.getElementById("salesSubject").value;
+  var search=document.getElementById("salesSearch").value.trim().toLowerCase();
+
+  return allOrders.filter(function(o){
+    if(o.status!=="approved")return false;
+    if(source&&orderSource(o)!==source)return false;
+    if(prof&&orderProfessorId(o)!==prof)return false;
+    if(!periodMatches(localDate(o)))return false;
+    if(sem&&orderSemesters(o).indexOf(sem)<0)return false;
+    if(exam&&orderExams(o).indexOf(exam)<0)return false;
+    if(subj){
+      var hit=productKeys(o).some(function(k){return baseSubjectFromKey(k)===subj;});
+      if(!hit)return false;
+    }
+    if(search&&orderEmail(o).toLowerCase().indexOf(search)<0)return false;
+    return true;
+  });
+}
+function populateSalesSubjects(){
+  var sel=document.getElementById("salesSubject");if(!sel)return;
+  var current=sel.value,set={};
+  allOrders.filter(function(o){return o.status==="approved";}).forEach(function(o){
+    productKeys(o).forEach(function(k){var b=baseSubjectFromKey(k);if(b)set[b]=subjectLabel(b);});
+  });
+  var arr=Object.keys(set).sort(function(a,b){return set[a].localeCompare(set[b],"pt-BR");});
+  sel.innerHTML='<option value="">Todas as matérias</option>'+arr.map(function(k){return'<option value="'+k+'">'+set[k]+'</option>';}).join("");
+  if(set[current])sel.value=current;
+}
+window.setSalesPeriod=function(period,btn){
+  salesPeriod=period;
+  document.querySelectorAll(".period-chip").forEach(function(b){b.classList.remove("active");});
+  if(btn)btn.classList.add("active");
+  if(period!=="specific")document.getElementById("salesMonth").value="";
+  renderSalesAnalytics();
+};
+window.setSalesMonthFilter=function(){
+  salesPeriod=document.getElementById("salesMonth").value?"specific":"all";
+  document.querySelectorAll(".period-chip").forEach(function(b){b.classList.remove("active");});
+  renderSalesAnalytics();
+};
+window.resetSalesFilters=function(){
+  salesPeriod="all";
+  document.getElementById("salesMonth").value="";
+  if(document.getElementById("salesSource"))document.getElementById("salesSource").value="";
+  if(document.getElementById("salesProfessor"))document.getElementById("salesProfessor").value="";
+  document.getElementById("salesSemester").value="";
+  document.getElementById("salesExam").value="";
+  document.getElementById("salesSubject").value="";
+  document.getElementById("salesSearch").value="";
+  document.querySelectorAll(".period-chip").forEach(function(b){b.classList.toggle("active",b.dataset.salesPeriod==="all");});
+  renderSalesAnalytics();renderProfessorAulaoDetail();
+};
+function periodText(){
+  if(salesPeriod==="today")return"hoje";
+  if(salesPeriod==="7d")return"últimos 7 dias";
+  if(salesPeriod==="month")return"este mês";
+  if(salesPeriod==="prevmonth")return"mês passado";
+  if(salesPeriod==="specific"){
+    var v=document.getElementById("salesMonth").value;if(!v)return"período selecionado";
+    var p=v.split("-");return new Date(+p[0],+p[1]-1,1).toLocaleDateString("pt-BR",{month:"long",year:"numeric"});
+  }
+  return"histórico aprovado";
+}
+function allocatedItems(o){
+  var keys=productKeys(o).filter(function(k){return !/^pacote_/.test(k);});
+  if(!keys.length)keys=productKeys(o);
+  var n=Math.max(1,keys.length),share=parseFloat(o.valor||0)/n;
+  return keys.map(function(k){return{key:k,base:baseSubjectFromKey(k)||k,label:subjectLabel(baseSubjectFromKey(k)||k),share:share,sem:semesterOfKey(k),exam:examOfKey(k)};});
+}
+function addBreak(map,key,label,count,value){
+  if(!map[key])map[key]={label:label,count:0,value:0};
+  map[key].count+=count;map[key].value+=value;
+}
+function renderBreakdown(elId,map,sortMode){
+  var el=document.getElementById(elId);
+  var arr=Object.keys(map).map(function(k){return map[k];});
+  arr.sort(function(a,b){return sortMode==="date"?b.sort-a.sort:(b.value-a.value||b.count-a.count);});
+  if(!arr.length){el.innerHTML='<div class="empty-state">Nenhuma venda no filtro atual</div>';return;}
+  el.innerHTML=arr.map(function(x){
+    return '<div class="break-row"><div class="break-name" title="'+x.label+'">'+x.label+'</div><div class="break-count">'+x.count+' '+(x.count===1?"venda":"vendas")+'</div><div class="break-value">'+money(x.value)+'</div></div>';
+  }).join("");
+}
+function renderSalesAnalytics(){
+  if(!document.getElementById("salesRevenue"))return;
+  var approved=filteredApprovedOrders();
+  var revenue=approved.reduce(function(s,o){return s+parseFloat(o.valor||0);},0);
+  var itemCount=approved.reduce(function(s,o){return s+allocatedItems(o).length;},0);
+
+  var now=new Date();
+  var todayAll=allOrders.filter(function(o){return o.status==="approved"&&sameLocalDay(localDate(o),now);});
+  var monthAll=allOrders.filter(function(o){return o.status==="approved"&&isThisMonth(localDate(o),now);});
+  var todayRevenue=todayAll.reduce(function(s,o){return s+parseFloat(o.valor||0);},0);
+  var monthRevenue=monthAll.reduce(function(s,o){return s+parseFloat(o.valor||0);},0);
+
+  document.getElementById("salesRevenue").textContent=money(revenue);
+  document.getElementById("salesApprovedCount").textContent=approved.length;
+  document.getElementById("salesToday").textContent=money(todayRevenue);
+  document.getElementById("salesTodayCount").textContent=todayAll.length+" "+(todayAll.length===1?"venda":"vendas");
+  document.getElementById("salesThisMonth").textContent=money(monthRevenue);
+  document.getElementById("salesThisMonthCount").textContent=monthAll.length+" "+(monthAll.length===1?"venda":"vendas");
+  document.getElementById("salesTicket").textContent=money(approved.length?revenue/approved.length:0);
+  document.getElementById("salesItems").textContent=itemCount;
+  document.getElementById("salesPeriodLabel").textContent=periodText();
+
+  var subjects={},semesters={},days={},exams={};
+  approved.forEach(function(o){
+    var items=allocatedItems(o);
+    items.forEach(function(it){
+      addBreak(subjects,it.base,it.label,1,it.share);
+    });
+
+    var sems=orderSemesters(o),semShare=parseFloat(o.valor||0)/Math.max(1,sems.length);
+    sems.forEach(function(s){addBreak(semesters,s,semesterLabel(s),1,semShare);});
+
+    var exs=orderExams(o),exShare=parseFloat(o.valor||0)/Math.max(1,exs.length);
+    exs.forEach(function(e){
+      var lab=e==="p1"?"P1":e==="p2"?"P2":e==="final"?"Final":"Resumo único / curso";
+      addBreak(exams,e,lab,1,exShare);
+    });
+
+    var d=localDate(o),key=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    if(!days[key])days[key]={label:d.toLocaleDateString("pt-BR"),count:0,value:0,sort:new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime()};
+    days[key].count++;days[key].value+=parseFloat(o.valor||0);
+  });
+  renderBreakdown("subjectBreakdown",subjects);
+  renderBreakdown("semesterBreakdown",semesters);
+  renderBreakdown("examBreakdown",exams);
+  renderBreakdown("dayBreakdown",days,"date");
+  document.getElementById("subjectBreakTotal").textContent=Object.keys(subjects).length+" matérias";
+  document.getElementById("semesterBreakTotal").textContent=Object.keys(semesters).length+" grupos";
+  document.getElementById("examBreakTotal").textContent=approved.length+" pedidos";
+
+  // Overview global reflects ALL approved historical orders, not the active filter.
+  var approvedAll=allOrders.filter(function(o){return o.status==="approved";});
+  var totalAll=approvedAll.reduce(function(s,o){return s+parseFloat(o.valor||0);},0);
+  document.getElementById("statPagamentos").textContent=approvedAll.length;
+  document.getElementById("statReceita").textContent=money(totalAll);
+
+  renderFinancialOrigins(approvedAll);
+  renderProfessorFinance();
+  renderProfessorPaymentHistory();
+  renderApprovedFiltered(approved);
+}
+
+function renderFinancialOrigins(approvedAll){
+  function rows(src){return approvedAll.filter(function(o){return orderSource(o)===src})}
+  function sum(list){return list.reduce(function(s,o){return s+Number(o.valor||0)},0)}
+  var res=rows("resumos"),enzo=rows("aulao_enzo"),prof=rows("aulao_professor");
+  var grossProf=sum(prof),generatedProf=prof.reduce(function(s,o){return s+Math.round((Number(o.valor||0)*2/3)*100)/100},0);
+  var paid=professorRepasses.filter(function(r){return r.status==="pago"}).reduce(function(s,r){return s+Number(r.valor||0)},0);
+  function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v}
+  set("finTotal",money(sum(approvedAll)));
+  set("finResumos",money(sum(res)));set("finResumosCount",res.length+" "+(res.length===1?"venda":"vendas"));
+  set("finAuloesEnzo",money(sum(enzo)));set("finAuloesEnzoCount",enzo.length+" "+(enzo.length===1?"venda":"vendas"));
+  set("finAuloesProf",money(grossProf));set("finAuloesProfCount",prof.length+" "+(prof.length===1?"venda":"vendas"));
+  set("finProfessorDue",money(generatedProf-paid));
+  set("finPlatformProf",money(grossProf-generatedProf));
+}
+
+function renderApprovedFiltered(approved){
   var pagTb=document.getElementById("pagamentosBody"),pagC=document.getElementById("pagamentosCards");
+  if(!approved.length){
+    pagTb.innerHTML="<tr><td colspan='5' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhuma venda aprovada neste filtro</td></tr>";
+    pagC.innerHTML="<div class='empty-state'>Nenhuma venda aprovada neste filtro</div>";return;
+  }
+  var pr="",pc="";
+  approved.forEach(function(o){
+    var em=orderEmail(o),pd=o.produto_nome||o.produto_key||"—",vl=money(o.valor),dt=localDate(o).toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short"});
+    var sems=orderSemesters(o).map(semesterLabel).join(" / ");
+    pr+="<tr><td class='email-cell'>"+em+"</td><td><span class='badge badge-cyan'>"+sems+"</span></td><td style='font-size:11px;'>"+pd+"</td><td style='color:#4ade80;font-weight:700;'>"+vl+"</td><td class='date-cell'>"+dt+"</td></tr>";
+    pc+="<div class='order-card'><div class='oc-top'><div class='oc-email'>"+em+"</div><span class='badge badge-green'>&#9989;</span></div><div class='oc-row2'>"+sems+" · "+pd+"</div><div class='oc-bottom'><span style='color:#4ade80;font-weight:700;font-size:14px;'>"+vl+"</span><span style='font-size:10px;color:rgba(125,211,232,0.4);'>"+dt+"</span></div></div>";
+  });
+  pagTb.innerHTML=pr;pagC.innerHTML=pc;
+}
+function renderAllOrders(){
   var allTb=document.getElementById("ordersBody"),allC=document.getElementById("ordersCards");
-  if(r.error||!r.data||!r.data.length){
-    var nd="<div style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);font-size:13px;'>Nenhum registro</div>";
-    pagTb.innerHTML="<tr><td colspan='4' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum registro</td></tr>";pagC.innerHTML=nd;
-    allTb.innerHTML="<tr><td colspan='5' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum registro</td></tr>";allC.innerHTML=nd;
-    document.getElementById("statPagamentos").textContent="0";document.getElementById("statReceita").textContent="R$ 0";return;}
-  var data=r.data;var approved=data.filter(function(o){return o.status==="approved";});
-  var total=approved.reduce(function(s,o){return s+parseFloat(o.valor||0);},0);
-  document.getElementById("statPagamentos").textContent=approved.length;
-  document.getElementById("statReceita").textContent="R$ "+total.toFixed(2).replace(".",",");
-  function sbadge(o){return o.status==="approved"?"<span class='badge badge-green'>&#9989; Aprovado</span>":o.status==="pending"?"<span class='badge badge-yellow'>&#9203; Pendente</span>":"<span class='badge badge-red'>&#10060; "+o.status+"</span>";}
-  if(!approved.length){pagTb.innerHTML="<tr><td colspan='4' style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);'>Nenhum aprovado</td></tr>";pagC.innerHTML="<div style='text-align:center;padding:20px;color:rgba(125,211,232,0.3);font-size:13px;'>Nenhum aprovado</div>";}
-  else{var pr="",pc="";approved.forEach(function(o){var em=o.profiles&&o.profiles.email?o.profiles.email:"\u2014";var pd=o.produto_nome||o.produto_key||"\u2014";var vl="R$ "+parseFloat(o.valor).toFixed(2).replace(".",",");var dt=new Date(o.criado_em).toLocaleDateString("pt-BR");
-    pr+="<tr><td class='email-cell'>"+em+"</td><td style='font-size:11px;'>"+pd+"</td><td style='color:#22d3ee;font-weight:600;'>"+vl+"</td><td class='date-cell'>"+dt+"</td></tr>";
-    pc+="<div class='order-card'><div class='oc-top'><div class='oc-email'>"+em+"</div><span class='badge badge-green'>&#9989;</span></div><div class='oc-row2'>"+pd+"</div><div class='oc-bottom'><span style='color:#22d3ee;font-weight:700;font-size:14px;'>"+vl+"</span><span style='font-size:10px;color:rgba(125,211,232,0.4);'>"+dt+"</span></div></div>";});
-    pagTb.innerHTML=pr;pagC.innerHTML=pc;}
-  var ar="",ac="";data.forEach(function(o){var em=o.profiles&&o.profiles.email?o.profiles.email:"\u2014";var pd=o.produto_nome||o.produto_key||"\u2014";var vl="R$ "+parseFloat(o.valor).toFixed(2).replace(".",",");var dt=new Date(o.criado_em).toLocaleDateString("pt-BR");var sb=sbadge(o);
+  if(!allOrders.length){
+    allTb.innerHTML="<tr><td colspan='5' class='empty-state'>Nenhum registro</td></tr>";
+    allC.innerHTML="<div class='empty-state'>Nenhum registro</div>";return;
+  }
+  function sbadge(o){return o.status==="approved"?"<span class='badge badge-green'>&#9989; Aprovado</span>":o.status==="pending"?"<span class='badge badge-yellow'>&#9203; Pendente</span>":"<span class='badge badge-red'>&#10060; "+(o.status||"—")+"</span>";}
+  var show=allOrders.slice(0,150),ar="",ac="";
+  show.forEach(function(o){
+    var em=orderEmail(o),pd=o.produto_nome||o.produto_key||"—",vl=money(o.valor),dt=localDate(o).toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short"}),sb=sbadge(o);
     ar+="<tr><td class='email-cell'>"+em+"</td><td style='font-size:11px;'>"+pd+"</td><td style='color:#22d3ee;font-weight:600;'>"+vl+"</td><td>"+sb+"</td><td class='date-cell'>"+dt+"</td></tr>";
-    ac+="<div class='order-card'><div class='oc-top'><div class='oc-email'>"+em+"</div>"+sb+"</div><div class='oc-row2'>"+pd+"</div><div class='oc-bottom'><span style='color:#22d3ee;font-weight:700;font-size:14px;'>"+vl+"</span><span style='font-size:10px;color:rgba(125,211,232,0.4);'>"+dt+"</span></div></div>";});
+    ac+="<div class='order-card'><div class='oc-top'><div class='oc-email'>"+em+"</div>"+sb+"</div><div class='oc-row2'>"+pd+"</div><div class='oc-bottom'><span style='color:#22d3ee;font-weight:700;font-size:14px;'>"+vl+"</span><span style='font-size:10px;color:rgba(125,211,232,0.4);'>"+dt+"</span></div></div>";
+  });
   allTb.innerHTML=ar;allC.innerHTML=ac;
 }
 
@@ -697,8 +1551,8 @@ function renderActivity(){
   var recentOrders=allAlunos.length?[]:[]; // placeholder
   // Build from alunos data
   var expiring=allAlunos.filter(function(a){if(!a.acesso_expira_em)return false;var d=new Date(a.acesso_expira_em)-new Date();return d>0&&d<7*24*60*60*1000;});
-  var noAccess=allAlunos.filter(function(a){return!RESUMOS_COLS.some(function(r){return a[r.key];});});
-  var ativos=allAlunos.filter(function(a){return RESUMOS_COLS.some(function(r){return a[r.key];});});
+  var noAccess=allAlunos.filter(function(a){return!RESUMOS_COLS.some(function(r){return resumoAtivo(a,r.key);});});
+  var ativos=allAlunos.filter(function(a){return RESUMOS_COLS.some(function(r){return resumoAtivo(a,r.key);});});
 
   if(expiring.length>0)items.push({icon:"&#9888;&#65039;",text:"<strong>"+expiring.length+" aluno"+(expiring.length>1?"s":"")+"</strong> com acesso expirando em 7 dias",color:"#fbbf24"});
   if(noAccess.length>0)items.push({icon:"&#128274;",text:"<strong>"+noAccess.length+" aluno"+(noAccess.length>1?"s":"")+"</strong> cadastrado"+(noAccess.length>1?"s":"")+" sem nenhum acesso",color:"rgba(248,113,113,0.7)"});
@@ -859,7 +1713,19 @@ try{
 {showToast("&#9989; Salvo!","success");closeModal();await loadAlunos();renderActivity();}btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";};
 window.revokeAll=async function(){if(!currentAluno)return;if(!confirm("Revogar TODOS os acessos de "+currentAluno.email+"?"))return;RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=false;});document.getElementById("expiryInput").value="";renderResumosGrid();showToast("Clique em Salvar para confirmar","success");};
 window.quickRevoke=async function(id,emailEnc){var email=decodeURIComponent(emailEnc);if(!confirm("Revogar todos de "+email+"?"))return;var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=false;u[r.key+"_expira"]=null;});u.acesso_expira_em=null;var res=await client.from("profiles").update(u).eq("id",id);if(res.error)showToast("Erro!","error");else{showToast("&#9989; Revogado!","success");await loadAlunos();renderActivity();}};
-window.quickGrantAll=async function(id,emailEnc){var email=decodeURIComponent(emailEnc);if(!confirm("Liberar TODOS para "+email+"?"))return;var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=true;});u.acesso_expira_em=null;var res=await client.from("profiles").update(u).eq("id",id);if(res.error)showToast("Erro!","error");else{showToast("&#9989; Liberado!","success");await loadAlunos();renderActivity();}};
+window.quickGrantAll=async function(id,emailEnc){
+  var email=decodeURIComponent(emailEnc);
+  if(!confirm("Liberar TODOS os resumos por 50 dias para "+email+"?"))return;
+  var d=new Date(); d.setDate(d.getDate()+50); var exp=d.toISOString();
+  var u={acesso_expira_em:exp,resumos_presente:RESUMOS_COLS.map(function(r){return r.key;})};
+  RESUMOS_COLS.forEach(function(r){
+    u[r.key]=true;
+    if(/(?:_p1|_p2|_final)$/.test(r.key) || r.key.indexOf("pacote_")===0) u[r.key+"_expira"]=exp;
+  });
+  var res=await client.from("profiles").update(u).eq("id",id);
+  if(res.error)showToast("Erro!","error");
+  else{showToast("&#9989; Todos liberados por 50 dias!","success");await loadAlunos();renderActivity();}
+};
 
 function showToast(msg,type){var t=document.createElement("div");t.className="toast "+type;t.innerHTML=msg;document.body.appendChild(t);setTimeout(function(){t.remove();},3000);}
 window.goToDashboard=function(){window.location.href="dashboard.html";};
@@ -893,8 +1759,296 @@ window.deletarCupom=async function(id,codigo){if(!confirm("Excluir cupom "+codig
 async function loadPrecos(){try{var r=await client.from("config").select("*").in("chave",["preco_unit","preco_combo3","preco_pack","preco_final_unit","preco_final_pack"]);if(r.data&&r.data.length){r.data.forEach(function(c){if(c.chave==="preco_unit")document.getElementById("precoUnit").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_combo3")document.getElementById("precoCombo").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_pack")document.getElementById("precoPack").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_final_unit")document.getElementById("precoFinalUnit").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_final_pack")document.getElementById("precoFinalPack").value=parseFloat(c.valor).toFixed(2);});document.getElementById("precoStatus").textContent="Carregado do banco";}else{document.getElementById("precoStatus").textContent="Valores padr\u00e3o";}}catch(e){document.getElementById("precoStatus").textContent="Valores padr\u00e3o";}}
 window.salvarPrecos=async function(){var unit=parseFloat(document.getElementById("precoUnit").value);var combo=parseFloat(document.getElementById("precoCombo").value);var pack=parseFloat(document.getElementById("precoPack").value);var fUnit=parseFloat(document.getElementById("precoFinalUnit").value);var fPack=parseFloat(document.getElementById("precoFinalPack").value);if(isNaN(unit)||isNaN(combo)||isNaN(pack)||unit<=0||combo<=0||pack<=0||isNaN(fUnit)||isNaN(fPack)||fUnit<=0||fPack<=0){showToast("Preencha corretamente!","error");return;}var btn=document.getElementById("btnSalvarPrecos");btn.disabled=true;btn.textContent="Salvando...";var precos=[{chave:"preco_unit",valor:unit.toString()},{chave:"preco_combo3",valor:combo.toString()},{chave:"preco_pack",valor:pack.toString()},{chave:"preco_final_unit",valor:fUnit.toString()},{chave:"preco_final_pack",valor:fPack.toString()}];var ok=true;for(var i=0;i<precos.length;i++){var p=precos[i];var r=await client.from("config").upsert({chave:p.chave,valor:p.valor},{onConflict:"chave"});if(r.error){ok=false;console.error(r.error);}}if(ok){showToast("&#9989; Preços salvos!","success");document.getElementById("precoStatus").innerHTML="<span style='color:#4ade80;'>&#9989; Salvo!</span>";}else showToast("Erro!","error");btn.disabled=false;btn.textContent="💾 Salvar preços";};
 
-// ═══ ONLINE ═══
-function setupOnlineCounter(){try{var ch=client.channel("online-users",{config:{presence:{key:"admin-watcher"}}});ch.on("presence",{event:"sync"},function(){var s=ch.presenceState();var c=0;Object.keys(s).forEach(function(k){c+=s[k].length;});document.getElementById("statOnline").textContent=c;});ch.subscribe(function(st){if(st==="SUBSCRIBED")ch.track({online_at:new Date().toISOString(),role:"admin"});});}catch(e){console.warn("Presence:",e);document.getElementById("statOnline").textContent="\u2014";}}
+// ═══ ONLINE — SUPABASE REALTIME PRESENCE ═══
+var onlineWatcherChannel = null;
+
+function escapeOnlineText(value){
+  return String(value == null ? "" : value)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+
+function renderOnlineUsers(userIds){
+  var ids = Array.isArray(userIds) ? userIds : [];
+  var stat = document.getElementById("statOnline");
+  var list = document.getElementById("onlineUsersList");
+
+  var uniqueIds = Array.from(new Set(ids));
+  var alunos = uniqueIds.map(function(id){
+    return allAlunos.find(function(a){ return a.id === id && !a.is_admin; });
+  }).filter(Boolean);
+
+  if (stat) stat.textContent = alunos.length;
+  if (!list) return;
+
+  if (!alunos.length) {
+    list.innerHTML = '<span class="online-empty">Nenhum aluno conectado.</span>';
+    return;
+  }
+
+  list.innerHTML = alunos.map(function(a){
+    var nome = (a.nome_preferido || "").trim();
+    var identificacao = nome || a.email || "Aluno";
+    var complemento = nome && a.email ? " · " + a.email : "";
+    return '<span class="online-user" title="' + escapeOnlineText(a.email || "") + '">' +
+      escapeOnlineText(identificacao + complemento) + '</span>';
+  }).join("");
+}
+
+function setupOnlineCounter(){
+  try {
+    onlineWatcherChannel = client.channel("online-users");
+
+    onlineWatcherChannel
+      .on("presence", {event:"sync"}, function(){
+        var state = onlineWatcherChannel.presenceState() || {};
+        renderOnlineUsers(Object.keys(state));
+      })
+      .subscribe(function(status){
+        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+          console.warn("Presence status:", status);
+        }
+      });
+  } catch(e) {
+    console.warn("Presence:", e);
+    var stat = document.getElementById("statOnline");
+    if (stat) stat.textContent = "—";
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// AULÕES — GERENCIAMENTO DINÂMICO
+// ═══════════════════════════════════════════════════════════════════════════════
+var adminAuloes = [];
+var editorTurmas = [];
+var editorVideos = [];
+var editorCapaUrl = "";
+
+function escapeAulao(v){
+  return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function slugAulao(v){
+  return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()
+    .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,80);
+}
+function youtubeId(url){
+  var s=String(url||"").trim();
+  var m=s.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{6,})/i);
+  if(m)return m[1];
+  if(/^[A-Za-z0-9_-]{6,}$/.test(s))return s;
+  return "";
+}
+async function loadAuloesAdmin(){
+  var r=await client.from("auloes").select("*").order("semestre").order("created_at",{ascending:false});
+  if(r.error){console.error("auloes:",r.error);return;}
+  adminAuloes=r.data||[];
+  renderAuloesAdmin();
+  if(allOrders&&allOrders.length){populateSalesSubjects();renderSalesAnalytics();}
+  renderPendingAuloes();
+}
+function renderAuloesAdmin(){
+  var g=document.getElementById("adminAuloesGrid"); if(!g)return;
+  if(!adminAuloes.length){g.innerHTML='<div class="loading">Nenhum aulão cadastrado.</div>';return;}
+  g.innerHTML=adminAuloes.map(function(a){
+    var bg=a.capa_url?'style="background-image:url(\''+escapeAulao(a.capa_url)+'\')"':'';
+    return '<div class="aulao-admin-card">'+
+      '<div class="aulao-admin-cover" '+bg+'>'+(a.capa_url?'':'🎥')+'</div>'+
+      '<div class="aulao-admin-body">'+
+        '<div class="aulao-admin-title">'+escapeAulao(a.nome)+'</div>'+
+        '<div class="aulao-admin-meta">'+a.semestre+'º semestre · '+escapeAulao(a.materia||'')+(a.avaliacao?' · '+escapeAulao(a.avaliacao):'')+'<br>R$ '+Number(a.preco||0).toFixed(2).replace(".",",")+' · '+(a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+'</div>'+
+        '<div class="aulao-admin-badges">'+
+          '<span class="aulao-admin-badge">'+(a.publicado?'Publicado':'Rascunho')+'</span>'+
+          '<span class="aulao-admin-badge">'+(a.exibir_loja?'Na loja':'Fora da loja')+'</span>'+
+          (a.usar_turmas?'<span class="aulao-admin-badge">Turmas ativas</span>':'')+
+        '</div>'+
+        '<div class="aulao-admin-actions"><button onclick="editarAulao(\''+a.id+'\')">Editar</button><button onclick="abrirAulaoAdmin(\''+escapeAulao(a.chave)+'\')">Abrir</button></div>'+
+      '</div></div>';
+  }).join("");
+}
+window.novoAulao=function(){
+  document.getElementById("aulaoEditor").classList.add("open");
+  document.getElementById("aulaoEditorTitle").textContent="Novo aulão";
+  document.getElementById("aulaoId").value="";
+  document.getElementById("aulaoNome").value="";
+  document.getElementById("aulaoMateria").value="";
+  document.getElementById("aulaoAvaliacao").value="";
+  document.getElementById("aulaoSemestre").value="4";
+  document.getElementById("aulaoPreco").value="0";
+  document.getElementById("aulaoDias").value="50";
+  document.getElementById("aulaoDescricao").value="";
+  document.getElementById("aulaoPublicado").checked=false;
+  document.getElementById("aulaoLoja").checked=false;
+  document.getElementById("aulaoDestaque").checked=false;
+  document.getElementById("aulaoUsarTurmas").checked=false;
+  document.getElementById("deleteAulaoBtn").style.display="none";
+  editorTurmas=[];editorVideos=[];editorCapaUrl="";
+  document.getElementById("aulaoCapa").value="";
+  renderCapaPreview();renderTurmasRows();renderVideosRows();toggleTurmasEditor();
+  document.getElementById("aulaoEditor").scrollIntoView({behavior:"smooth",block:"start"});
+};
+window.fecharEditorAulao=function(){document.getElementById("aulaoEditor").classList.remove("open");};
+window.previewAulaoCapa=function(){
+  var f=document.getElementById("aulaoCapa").files[0]; if(!f){renderCapaPreview();return;}
+  var rd=new FileReader(); rd.onload=function(e){var p=document.getElementById("aulaoCapaPreview");p.style.backgroundImage="url('"+e.target.result+"')";p.textContent="";};rd.readAsDataURL(f);
+};
+function renderCapaPreview(){var p=document.getElementById("aulaoCapaPreview");p.style.backgroundImage=editorCapaUrl?"url('"+editorCapaUrl+"')":"";p.textContent=editorCapaUrl?"":"Sem imagem";}
+window.toggleTurmasEditor=function(){document.getElementById("turmasBox").style.display=document.getElementById("aulaoUsarTurmas").checked?"block":"none";renderVideosRows();};
+window.addTurmaRow=function(){editorTurmas.push({id:null,turma:"",professor:"",ativo:true,ordem:editorTurmas.length+1});renderTurmasRows();renderVideosRows();};
+window.removeTurmaRow=function(i){editorTurmas.splice(i,1);renderTurmasRows();renderVideosRows();};
+function syncTurmaInput(i,field,val){if(editorTurmas[i])editorTurmas[i][field]=val;}
+function renderTurmasRows(){
+  var c=document.getElementById("turmasRows"); if(!c)return;
+  if(!editorTurmas.length){c.innerHTML='<div style="font-size:10px;color:rgba(125,211,232,.4);margin-bottom:8px;">Nenhuma turma cadastrada.</div>';return;}
+  c.innerHTML=editorTurmas.map(function(t,i){
+    return '<div class="aulao-row">'+
+      '<input class="form-input" placeholder="Turma (ex.: A)" value="'+escapeAulao(t.turma)+'" oninput="syncTurmaInput('+i+',\'turma\',this.value)">'+
+      '<input class="form-input" placeholder="Professor" value="'+escapeAulao(t.professor)+'" oninput="syncTurmaInput('+i+',\'professor\',this.value)">'+
+      '<button class="aulao-mini-btn aulao-danger" onclick="removeTurmaRow('+i+')">Remover</button></div>';
+  }).join("");
+}
+window.addVideoRow=function(){editorVideos.push({id:null,titulo:"Parte "+(editorVideos.length+1),youtube_url:"",youtube_id:"",ordem:editorVideos.length+1,publicado:true,turma_ref:""});renderVideosRows();};
+window.removeVideoRow=function(i){editorVideos.splice(i,1);editorVideos.forEach(function(v,n){v.ordem=n+1;});renderVideosRows();};
+function syncVideoInput(i,field,val){if(editorVideos[i]){editorVideos[i][field]=val;if(field==="youtube_url")editorVideos[i].youtube_id=youtubeId(val);}}
+function renderVideosRows(){
+  var c=document.getElementById("videosRows"); if(!c)return;
+  if(!editorVideos.length){c.innerHTML='<div style="font-size:10px;color:rgba(125,211,232,.4);margin-bottom:8px;">Nenhum vídeo. Clique em “Adicionar vídeo”.</div>';return;}
+  var usar=document.getElementById("aulaoUsarTurmas").checked;
+  c.innerHTML=editorVideos.map(function(v,i){
+    var turmaSelect='';
+    if(usar){
+      turmaSelect='<select class="form-input" onchange="syncVideoInput('+i+',\'turma_ref\',this.value)"><option value="">Selecione a turma</option>'+
+        editorTurmas.map(function(t,n){var ref=t.id||("new-"+n);return '<option value="'+ref+'" '+(v.turma_ref===ref?'selected':'')+'>'+escapeAulao(t.turma||("Turma "+(n+1)))+' — '+escapeAulao(t.professor||"Professor")+'</option>';}).join("")+'</select>';
+    }else{
+      turmaSelect='<input class="form-input" value="Geral" disabled>';
+    }
+    return '<div class="aulao-video-row">'+
+      '<input class="form-input" type="number" min="1" value="'+(v.ordem||i+1)+'" oninput="syncVideoInput('+i+',\'ordem\',Number(this.value))">'+
+      '<input class="form-input" placeholder="Título" value="'+escapeAulao(v.titulo)+'" oninput="syncVideoInput('+i+',\'titulo\',this.value)">'+
+      '<input class="form-input" placeholder="Link do YouTube" value="'+escapeAulao(v.youtube_url)+'" oninput="syncVideoInput('+i+',\'youtube_url\',this.value)">'+
+      turmaSelect+
+      '<button class="aulao-mini-btn aulao-danger" onclick="removeVideoRow('+i+')">×</button></div>';
+  }).join("");
+}
+window.editarAulao=async function(id){
+  var a=adminAuloes.find(function(x){return x.id===id;}); if(!a)return;
+  document.getElementById("aulaoEditor").classList.add("open");
+  document.getElementById("aulaoEditorTitle").textContent="Editar aulão";
+  document.getElementById("aulaoId").value=a.id;
+  document.getElementById("aulaoNome").value=a.nome||"";
+  document.getElementById("aulaoMateria").value=a.materia||"";
+  document.getElementById("aulaoAvaliacao").value=a.avaliacao||"";
+  document.getElementById("aulaoSemestre").value=String(a.semestre||4);
+  document.getElementById("aulaoPreco").value=Number(a.preco||0);
+  document.getElementById("aulaoDias").value=a.dias_acesso||"";
+  document.getElementById("aulaoDescricao").value=a.descricao||"";
+  document.getElementById("aulaoPublicado").checked=!!a.publicado;
+  document.getElementById("aulaoLoja").checked=!!a.exibir_loja;
+  document.getElementById("aulaoDestaque").checked=!!a.destaque;
+  document.getElementById("aulaoUsarTurmas").checked=!!a.usar_turmas;
+  document.getElementById("deleteAulaoBtn").style.display="inline-block";
+  editorCapaUrl=a.capa_url||"";document.getElementById("aulaoCapa").value="";renderCapaPreview();
+
+  var tr=await client.from("aulao_turmas").select("*").eq("aulao_id",id).order("ordem");
+  editorTurmas=tr.data||[];
+  var vr=await client.from("aulao_videos").select("*").eq("aulao_id",id).order("ordem");
+  editorVideos=(vr.data||[]).map(function(v){
+    var idx=editorTurmas.findIndex(function(t){return t.id===v.aulao_turma_id;});
+    return Object.assign({},v,{turma_ref:v.aulao_turma_id||"",_turma_index:idx});
+  });
+  renderTurmasRows();renderVideosRows();toggleTurmasEditor();
+  document.getElementById("aulaoEditor").scrollIntoView({behavior:"smooth",block:"start"});
+};
+async function uploadCapaAulao(chave){
+  var f=document.getElementById("aulaoCapa").files[0]; if(!f)return editorCapaUrl||null;
+  var ext=(f.name.split(".").pop()||"jpg").toLowerCase();
+  var path=chave+"/capa."+ext;
+  var up=await client.storage.from("auloes-capas").upload(path,f,{upsert:true,contentType:f.type});
+  if(up.error)throw up.error;
+  var pub=client.storage.from("auloes-capas").getPublicUrl(path);
+  return pub.data.publicUrl+"?v="+Date.now();
+}
+window.salvarAulao=async function(){
+  var btn=document.getElementById("saveAulaoBtn");btn.disabled=true;btn.textContent="Salvando...";
+  try{
+    var id=document.getElementById("aulaoId").value||null;
+    var nome=document.getElementById("aulaoNome").value.trim();
+    var materia=document.getElementById("aulaoMateria").value.trim();
+    if(!nome||!materia)throw new Error("Preencha nome e matéria.");
+    var antigo=id?adminAuloes.find(function(a){return a.id===id;}):null;
+    var chave=antigo?antigo.chave:("aulao-"+slugAulao(nome));
+    if(!chave||chave==="aulao-")throw new Error("Nome inválido.");
+    var capa=await uploadCapaAulao(chave);
+    var data={
+      chave:chave,nome:nome,materia:materia,
+      avaliacao:document.getElementById("aulaoAvaliacao").value.trim()||null,
+      semestre:Number(document.getElementById("aulaoSemestre").value),
+      descricao:document.getElementById("aulaoDescricao").value.trim()||null,
+      preco:Number(document.getElementById("aulaoPreco").value||0),
+      dias_acesso:document.getElementById("aulaoDias").value?Number(document.getElementById("aulaoDias").value):null,
+      capa_url:capa,
+      publicado:document.getElementById("aulaoPublicado").checked,
+      exibir_loja:document.getElementById("aulaoLoja").checked,
+      destaque:document.getElementById("aulaoDestaque").checked,
+      usar_turmas:document.getElementById("aulaoUsarTurmas").checked,
+      updated_at:new Date().toISOString()
+    };
+    if(data.exibir_loja&&data.preco<=0)throw new Error("Para exibir na loja, informe um preço maior que zero.");
+
+    var saved;
+    if(id){
+      var rr=await client.from("auloes").update(data).eq("id",id).select("*").single(); if(rr.error)throw rr.error;saved=rr.data;
+    }else{
+      var rr=await client.from("auloes").insert(data).select("*").single(); if(rr.error)throw rr.error;saved=rr.data;id=saved.id;
+    }
+
+    // Regrava turmas e vídeos para manter o editor simples e consistente.
+    var delV=await client.from("aulao_videos").delete().eq("aulao_id",id); if(delV.error)throw delV.error;
+    var delT=await client.from("aulao_turmas").delete().eq("aulao_id",id); if(delT.error)throw delT.error;
+
+    var turmaIdMap={};
+    if(data.usar_turmas){
+      var turmasValidas=editorTurmas.filter(function(t){return t.turma.trim()&&t.professor.trim();});
+      if(!turmasValidas.length)throw new Error("Turmas estão ativadas: adicione ao menos uma turma/professor.");
+      for(var i=0;i<turmasValidas.length;i++){
+        var t=turmasValidas[i];
+        var tr=await client.from("aulao_turmas").insert({aulao_id:id,turma:t.turma.trim(),professor:t.professor.trim(),ativo:true,ordem:i+1}).select("*").single();
+        if(tr.error)throw tr.error;
+        turmaIdMap[t.id||("new-"+editorTurmas.indexOf(t))]=tr.data.id;
+        turmaIdMap["new-"+editorTurmas.indexOf(t)]=tr.data.id;
+      }
+    }
+
+    var videosValidos=editorVideos.filter(function(v){return v.titulo.trim()&&v.youtube_url.trim();});
+    for(var j=0;j<videosValidos.length;j++){
+      var v=videosValidos[j], yid=youtubeId(v.youtube_url);
+      if(!yid)throw new Error("Link inválido no vídeo: "+v.titulo);
+      var turmaId=null;
+      if(data.usar_turmas){
+        turmaId=turmaIdMap[v.turma_ref]||null;
+        if(!turmaId)throw new Error("Selecione a turma do vídeo: "+v.titulo);
+      }
+      var vv=await client.from("aulao_videos").insert({
+        aulao_id:id,aulao_turma_id:turmaId,titulo:v.titulo.trim(),
+        youtube_url:v.youtube_url.trim(),youtube_id:yid,ordem:Number(v.ordem||j+1),publicado:true
+      });
+      if(vv.error)throw vv.error;
+    }
+
+    showToast("✅ Aulão salvo!","success");
+    await loadAuloesAdmin();
+    fecharEditorAulao();
+  }catch(e){console.error(e);alert(e.message||"Erro ao salvar aulão.");}
+  btn.disabled=false;btn.textContent="💾 Salvar aulão";
+};
+window.excluirAulao=async function(){
+  var id=document.getElementById("aulaoId").value;if(!id)return;
+  if(!confirm("Excluir este aulão, turmas e vídeos?"))return;
+  var r=await client.from("auloes").delete().eq("id",id);
+  if(r.error){alert("Erro ao excluir.");return;}
+  fecharEditorAulao();await loadAuloesAdmin();showToast("Aulão excluído.","success");
+};
+window.abrirAulaoAdmin=function(chave){window.open("aulao.html?key="+encodeURIComponent(chave),"_blank");};
 
 init();
 })();
