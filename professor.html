@@ -701,10 +701,13 @@ function setupSignaturePad(){
   signatureCtx.lineCap="round";
   signatureCtx.lineJoin="round";
   signatureCtx.strokeStyle="#07101d";
+  signatureCtx.fillStyle="#07101d";
+  signatureCtx.setLineDash([]);
   signatureCtx.imageSmoothingEnabled=true;
   signatureCtx.imageSmoothingQuality="high";
 
   var last=null;
+  var lastMid=null;
 
   function point(ev){
     var r=signatureCanvas.getBoundingClientRect();
@@ -717,31 +720,69 @@ function setupSignaturePad(){
   }
 
   function strokeWidth(p){
-    // Traço deliberadamente fino, parecido com assinatura de caneta.
+    // Traço fino como caneta, mas sem quebrar durante movimentos rápidos.
     if(p.pointerType==="pen"){
-      var pr=p.pressure>0?p.pressure:0.25;
-      return Math.max(0.45,Math.min(1.00,0.44+(pr*0.58)));
+      var pr=p.pressure>0?p.pressure:0.28;
+      return Math.max(0.58,Math.min(1.15,0.54+(pr*0.62)));
     }
-    if(p.pointerType==="touch")return 0.78;
-    return 0.68;
+    if(p.pointerType==="touch")return 0.92;
+    return 0.82;
   }
 
   function dot(p){
     signatureCtx.beginPath();
-    signatureCtx.fillStyle="#07101d";
-    signatureCtx.arc(p.x,p.y,Math.max(0.30,strokeWidth(p)/2),0,Math.PI*2);
+    signatureCtx.arc(p.x,p.y,Math.max(0.38,strokeWidth(p)/2),0,Math.PI*2);
     signatureCtx.fill();
   }
 
-  function segment(p){
-    if(!last){last=p;dot(p);return}
-    var mx=(last.x+p.x)/2,my=(last.y+p.y)/2;
-    signatureCtx.beginPath();
-    signatureCtx.lineWidth=(strokeWidth(last)+strokeWidth(p))/2;
-    signatureCtx.moveTo(last.x,last.y);
-    signatureCtx.quadraticCurveTo(last.x,last.y,mx,my);
-    signatureCtx.stroke();
+  function drawTo(p){
+    if(!last){
+      last=p;
+      lastMid={x:p.x,y:p.y};
+      dot(p);
+      return;
+    }
+
+    // Interpola pontos quando o dedo/caneta se move rápido.
+    // Isso impede os "pontilhados" causados por eventos muito espaçados.
+    var dx=p.x-last.x,dy=p.y-last.y;
+    var dist=Math.sqrt(dx*dx+dy*dy);
+    var steps=Math.max(1,Math.ceil(dist/1.35));
+    var from=last;
+
+    for(var i=1;i<=steps;i++){
+      var t=i/steps;
+      var q={
+        x:last.x+dx*t,
+        y:last.y+dy*t,
+        pressure:last.pressure+(p.pressure-last.pressure)*t,
+        pointerType:p.pointerType||last.pointerType
+      };
+
+      var mid={x:(from.x+q.x)/2,y:(from.y+q.y)/2};
+
+      signatureCtx.beginPath();
+      signatureCtx.setLineDash([]);
+      signatureCtx.lineWidth=(strokeWidth(from)+strokeWidth(q))/2;
+      signatureCtx.moveTo(lastMid.x,lastMid.y);
+      signatureCtx.quadraticCurveTo(from.x,from.y,mid.x,mid.y);
+      signatureCtx.stroke();
+
+      lastMid=mid;
+      from=q;
+    }
+
     last=p;
+  }
+
+  function finishTail(){
+    if(!last||!lastMid)return;
+    signatureCtx.beginPath();
+    signatureCtx.setLineDash([]);
+    signatureCtx.lineWidth=strokeWidth(last);
+    signatureCtx.moveTo(lastMid.x,lastMid.y);
+    signatureCtx.lineTo(last.x,last.y);
+    signatureCtx.stroke();
   }
 
   function begin(ev){
@@ -749,6 +790,7 @@ function setupSignaturePad(){
     signatureDrawing=true;
     try{signatureCanvas.setPointerCapture(ev.pointerId)}catch(e){}
     last=point(ev);
+    lastMid={x:last.x,y:last.y};
     dot(last);
     signatureHasInk=true;
     ev.preventDefault();
@@ -756,16 +798,27 @@ function setupSignaturePad(){
 
   function move(ev){
     if(!signatureDrawing||currentAcceptance)return;
-    var events=typeof ev.getCoalescedEvents==="function"?ev.getCoalescedEvents():[ev];
-    if(!events.length)events=[ev];
-    for(var i=0;i<events.length;i++)segment(point(events[i]));
+
+    var events=typeof ev.getCoalescedEvents==="function"
+      ? ev.getCoalescedEvents()
+      : [ev];
+
+    if(!events||!events.length)events=[ev];
+
+    for(var i=0;i<events.length;i++){
+      drawTo(point(events[i]));
+    }
+
+    signatureHasInk=true;
     ev.preventDefault();
   }
 
   function finish(ev){
     if(!signatureDrawing)return;
+    finishTail();
     signatureDrawing=false;
     last=null;
+    lastMid=null;
     try{signatureCanvas.releasePointerCapture(ev.pointerId)}catch(e){}
     ev.preventDefault();
   }
