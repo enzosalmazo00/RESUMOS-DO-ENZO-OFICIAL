@@ -15,7 +15,9 @@
 .wrap{max-width:1100px;margin:auto;padding:26px 18px 60px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:24px}.brand{font-weight:800}.brand span{color:#22d3ee}.back{color:#c4b5fd;text-decoration:none;border:1px solid rgba(168,85,247,.2);padding:9px 12px;border-radius:10px;font-size:11px}
 .hero{padding:25px;border:1px solid rgba(168,85,247,.2);border-radius:20px;background:linear-gradient(135deg,rgba(168,85,247,.11),rgba(34,211,238,.03));margin-bottom:18px;overflow:hidden;position:relative}.hero-cover{width:100%;max-height:320px;object-fit:cover;border-radius:15px;margin-bottom:17px}.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:#c4b5fd;font-weight:700}h1{font-size:clamp(24px,5vw,38px);margin:6px 0 8px}.desc{font-size:12px;line-height:1.7;color:rgba(221,214,254,.62)}.access{display:inline-flex;margin-top:12px;font-size:10px;color:#86efac;border:1px solid rgba(74,222,128,.22);background:rgba(74,222,128,.06);padding:5px 10px;border-radius:999px}
 .selector{padding:16px;border:1px solid rgba(168,85,247,.16);border-radius:15px;margin-bottom:18px;background:rgba(168,85,247,.03)}.selector label{display:block;font-size:10px;color:#c4b5fd;font-weight:700;margin-bottom:7px;text-transform:uppercase;letter-spacing:.08em}.selector select{width:100%;padding:11px;border-radius:10px;border:1px solid rgba(168,85,247,.22);background:#07101d;color:#fff;font-family:Poppins}
-.lessons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.lesson{padding:17px;border:1px solid rgba(168,85,247,.14);border-radius:16px;background:rgba(255,255,255,.022)}.lnum{font-size:9px;color:rgba(196,181,253,.5);text-transform:uppercase;letter-spacing:.1em}.ltitle{font-size:14px;font-weight:700;margin:4px 0 10px}.video{aspect-ratio:16/9;border-radius:13px;overflow:hidden;background:#000}.video iframe{width:100%;height:100%;border:0}.empty{padding:30px;text-align:center;border:1px dashed rgba(168,85,247,.2);border-radius:15px;color:rgba(196,181,253,.5)}
+.lessons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.lesson{padding:17px;border:1px solid rgba(168,85,247,.14);border-radius:16px;background:rgba(255,255,255,.022)}.lnum{font-size:9px;color:rgba(196,181,253,.5);text-transform:uppercase;letter-spacing:.1em}.ltitle{font-size:14px;font-weight:700;margin:4px 0 10px}
+.secure-video-shell{position:relative;aspect-ratio:16/9;border-radius:13px;overflow:hidden;background:#000;isolation:isolate;user-select:none;-webkit-user-select:none}.yt-stage{position:absolute;inset:0 0 48px 0;background:#000;overflow:hidden}.secure-video-shell iframe{position:absolute!important;inset:0 0 48px 0!important;width:100%!important;height:calc(100% - 48px)!important;border:0!important;pointer-events:none!important;background:#000}.video-shield{position:absolute;inset:0 0 48px 0;z-index:5;cursor:pointer;background:transparent}.video-shield:focus-visible{outline:2px solid #22d3ee;outline-offset:-3px}.video-watermark{position:absolute;z-index:6;top:10px;right:10px;max-width:72%;padding:5px 8px;border-radius:999px;background:rgba(2,8,16,.56);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(5px);font-size:8px;color:rgba(255,255,255,.72);pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.video-center-icon{position:absolute;z-index:6;left:50%;top:calc(50% - 24px);transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(2,8,16,.70);border:1px solid rgba(255,255,255,.15);font-size:23px;pointer-events:none;transition:.18s opacity,.18s transform}.video-center-icon.playing{opacity:0;transform:translate(-50%,-50%) scale(.82)}
+.custom-controls{position:absolute;z-index:8;left:0;right:0;bottom:0;height:48px;display:flex;align-items:center;gap:8px;padding:0 10px;background:linear-gradient(180deg,rgba(4,10,18,.94),#020810);border-top:1px solid rgba(255,255,255,.07)}.ctrl-btn{width:32px;height:32px;display:grid;place-items:center;border:0;border-radius:8px;background:transparent;color:#fff;cursor:pointer;font-size:15px}.ctrl-btn:hover{background:rgba(255,255,255,.08)}.ctrl-btn:focus-visible{outline:2px solid #22d3ee}.video-progress{flex:1;min-width:50px;accent-color:#a855f7;cursor:pointer}.video-time{font-size:9px;color:rgba(255,255,255,.68);white-space:nowrap;font-variant-numeric:tabular-nums}.video-lock{font-size:8px;color:rgba(134,239,172,.72);white-space:nowrap}.empty{padding:30px;text-align:center;border:1px dashed rgba(168,85,247,.2);border-radius:15px;color:rgba(196,181,253,.5)}
 .gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(2,8,16,.97);padding:20px}.gatebox{max-width:430px;padding:27px;border-radius:19px;border:1px solid rgba(168,85,247,.25);background:#020d1a;text-align:center}.gatebox h2{margin:8px 0}.gatebox p{font-size:11px;line-height:1.6;color:rgba(221,214,254,.55)}.gatebtn{display:inline-block;margin-top:15px;padding:10px 16px;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;text-decoration:none;border-radius:10px;font-size:11px;font-weight:700}
 @media(max-width:720px){.lessons{grid-template-columns:1fr}}
 </style>
@@ -31,6 +33,59 @@
 <script>
 function esc(v){return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 function deny(msg){var g=document.getElementById("gate");g.innerHTML='<div class="gatebox"><div style="font-size:34px">🔒</div><h2>Acesso não liberado</h2><p>'+esc(msg)+'</p><a class="gatebtn" href="dashboard.html">Voltar ao dashboard</a></div>';document.documentElement.style.visibility="visible"}
+
+var securePlayers={}, securePlayerQueue=[], ytApiReady=!!(window.YT&&window.YT.Player), ytApiLoading=false;
+function fmtTime(sec){sec=Math.max(0,Math.floor(Number(sec)||0));var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;return (h?h+":"+String(m).padStart(2,"0")+":":m+":")+String(s).padStart(2,"0")}
+function safePlayerKey(v,i){return String(v.id||("video_"+i)).replace(/[^a-zA-Z0-9_-]/g,"_")}
+function ensureYouTubeApi(){
+  if(ytApiReady){flushSecurePlayerQueue();return}
+  if(ytApiLoading)return;
+  ytApiLoading=true;
+  var tag=document.createElement("script");tag.src="https://www.youtube.com/iframe_api";tag.async=true;document.head.appendChild(tag);
+}
+window.onYouTubeIframeAPIReady=function(){ytApiReady=true;flushSecurePlayerQueue()};
+function flushSecurePlayerQueue(){var q=securePlayerQueue.splice(0);q.forEach(initSecurePlayer)}
+function pauseOtherPlayers(activeKey){Object.keys(securePlayers).forEach(function(k){if(k!==activeKey){try{var p=securePlayers[k];if(p&&p.getPlayerState&&p.getPlayerState()===YT.PlayerState.PLAYING)p.pauseVideo()}catch(_){}}})}
+function setPlayVisual(shell,playing){
+  var btn=shell.querySelector("[data-action=play]"),center=shell.querySelector(".video-center-icon");
+  if(btn){btn.textContent=playing?"❚❚":"▶";btn.setAttribute("aria-label",playing?"Pausar":"Reproduzir")}
+  if(center){center.textContent=playing?"❚❚":"▶";center.classList.toggle("playing",playing)}
+}
+function initSecurePlayer(cfg){
+  var shell=document.getElementById(cfg.shellId),stage=document.getElementById(cfg.stageId);if(!shell||!stage||securePlayers[cfg.key])return;
+  var player=new YT.Player(cfg.stageId,{host:"https://www.youtube-nocookie.com",videoId:cfg.videoId,width:"100%",height:"100%",playerVars:{controls:0,rel:0,modestbranding:1,disablekb:1,fs:0,iv_load_policy:3,playsinline:1,enablejsapi:1,origin:location.origin},events:{
+    onReady:function(){
+      securePlayers[cfg.key]=player;
+      var play=shell.querySelector("[data-action=play]"),shield=shell.querySelector(".video-shield"),seek=shell.querySelector(".video-progress"),mute=shell.querySelector("[data-action=mute]"),full=shell.querySelector("[data-action=fullscreen]");
+      function toggle(){try{var st=player.getPlayerState();if(st===YT.PlayerState.PLAYING)player.pauseVideo();else player.playVideo()}catch(_){}}
+      if(play)play.addEventListener("click",toggle);if(shield){shield.addEventListener("click",toggle);shield.addEventListener("dblclick",function(){enterVideoFullscreen(shell)})}
+      if(seek){seek.addEventListener("input",function(){var d=player.getDuration()||0;var t=d*(Number(seek.value)||0)/100;var lab=shell.querySelector(".video-time");if(lab)lab.textContent=fmtTime(t)+" / "+fmtTime(d)});seek.addEventListener("change",function(){var d=player.getDuration()||0;player.seekTo(d*(Number(seek.value)||0)/100,true)})}
+      if(mute)mute.addEventListener("click",function(){if(player.isMuted()){player.unMute();mute.textContent="🔊";mute.setAttribute("aria-label","Silenciar")}else{player.mute();mute.textContent="🔇";mute.setAttribute("aria-label","Ativar som")}});
+      if(full)full.addEventListener("click",function(){enterVideoFullscreen(shell)});
+      cfg.timer=setInterval(function(){try{var d=player.getDuration()||0,t=player.getCurrentTime()||0,bar=shell.querySelector(".video-progress"),lab=shell.querySelector(".video-time");if(bar&&document.activeElement!==bar)bar.value=d?(t/d*100):0;if(lab)lab.textContent=fmtTime(t)+" / "+fmtTime(d)}catch(_){}},700);
+    },
+    onStateChange:function(ev){var playing=ev.data===YT.PlayerState.PLAYING;setPlayVisual(shell,playing);if(playing)pauseOtherPlayers(cfg.key)}
+  }});
+}
+function enterVideoFullscreen(shell){var fn=shell.requestFullscreen||shell.webkitRequestFullscreen||shell.msRequestFullscreen;if(fn){try{var r=fn.call(shell);if(r&&r.catch)r.catch(function(){})}catch(_){}}}
+function securePlayerMarkup(v,i,userLabel){
+  var key=safePlayerKey(v,i),shellId="secure_"+key,stageId="yt_"+key;
+  securePlayerQueue.push({key:key,shellId:shellId,stageId:stageId,videoId:String(v.youtube_id||"")});
+  return '<div class="secure-video-shell" id="'+shellId+'" data-player="'+key+'">'+
+    '<div class="yt-stage" id="'+stageId+'"></div>'+
+    '<button class="video-shield" type="button" aria-label="Reproduzir ou pausar o vídeo"></button>'+
+    '<div class="video-watermark">🔒 '+esc(userLabel)+'</div>'+
+    '<div class="video-center-icon">▶</div>'+
+    '<div class="custom-controls">'+
+      '<button class="ctrl-btn" type="button" data-action="play" aria-label="Reproduzir">▶</button>'+
+      '<input class="video-progress" type="range" min="0" max="100" step="0.1" value="0" aria-label="Progresso do vídeo">'+
+      '<span class="video-time">0:00 / 0:00</span>'+
+      '<button class="ctrl-btn" type="button" data-action="mute" aria-label="Silenciar">🔊</button>'+
+      '<button class="ctrl-btn" type="button" data-action="fullscreen" aria-label="Tela cheia">⛶</button>'+
+    '</div></div>';
+}
+document.addEventListener("contextmenu",function(ev){if(ev.target&&ev.target.closest&&ev.target.closest(".secure-video-shell")){ev.preventDefault();ev.stopPropagation()}},true);
+document.addEventListener("dragstart",function(ev){if(ev.target&&ev.target.closest&&ev.target.closest(".secure-video-shell"))ev.preventDefault()},true);
 document.addEventListener("authReady",async function(e){
   var key=new URLSearchParams(location.search).get("key");
   if(!key){deny("Aulão não informado.");return}
@@ -75,7 +130,10 @@ document.addEventListener("authReady",async function(e){
       var vr=await q;
       var vids=vr.data||[], c=document.getElementById("lessons");
       if(!vids.length){c.innerHTML='<div class="empty" style="grid-column:1/-1">Nenhum vídeo publicado para esta opção ainda.</div>';return}
-      c.innerHTML=vids.map(function(v,i){return '<article class="lesson"><div class="lnum">Parte '+String(v.ordem||i+1).padStart(2,"0")+'</div><div class="ltitle">'+esc(v.titulo)+'</div><div class="video"><iframe src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(v.youtube_id)+'?rel=0" title="'+esc(v.titulo)+'" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></article>'}).join("");
+      securePlayerQueue.length=0;
+      var userLabel=(session.user&&session.user.email)?session.user.email:"Acesso individual";
+      c.innerHTML=vids.map(function(v,i){return '<article class="lesson"><div class="lnum">Parte '+String(v.ordem||i+1).padStart(2,"0")+'</div><div class="ltitle">'+esc(v.titulo)+'</div>'+securePlayerMarkup(v,i,userLabel)+'</article>'}).join("");
+      ensureYouTubeApi();if(ytApiReady)flushSecurePlayerQueue();
     }
     if(!a.usar_turmas)await loadVideos(null);else document.getElementById("lessons").innerHTML='<div class="empty" style="grid-column:1/-1">Escolha sua turma/professor acima.</div>';
 
