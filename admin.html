@@ -925,9 +925,8 @@ async function loadAlunos(){
   allAlunos=r.data||[];
   document.getElementById("tabBadgeAlunos").textContent=allAlunos.length;
   renderStats();renderAlunos(allAlunos);
-  if (onlineWatcherChannel) {
-    try { renderOnlineUsers(Object.keys(onlineWatcherChannel.presenceState() || {})); } catch(e){}
-  }
+  // Presença agora é privada: a lista online do ADM é carregada exclusivamente
+  // pela RPC admin_online_students(), sem canal Realtime compartilhado.
 }
 function renderStats(){
   var ativos=allAlunos.filter(function(a){return RESUMOS_COLS.some(function(r){return resumoAtivo(a,r.key);});}).length;
@@ -993,12 +992,16 @@ async function loadProfessoresAdmin(){
     client.from("professor_repasses").select("*").order("pago_em",{ascending:false}),
     client.from("config").select("valor").eq("chave","professor_whatsapp").maybeSingle()
   ]);
-  if(rr[0].error)throw rr[0].error;
-  professorAccounts=rr[0].data||[];
-  professorDados=rr[1].data||[];
-  professorProfiles=rr[2].data||[];
-  professorTerms=rr[3].data||[];
-  professorRepasses=rr[4].data||[];
+  var labels=["contas de professores","dados dos professores","perfis públicos","termos assinados","repasses","configuração do WhatsApp"];
+  rr.forEach(function(x,i){
+    if(x&&x.error)console.error("[admin] Erro ao carregar "+labels[i]+":",x.error);
+  });
+  if(rr[0]&&rr[0].error)throw rr[0].error;
+  professorAccounts=(rr[0]&&rr[0].data)||[];
+  professorDados=(rr[1]&&rr[1].data)||[];
+  professorProfiles=(rr[2]&&rr[2].data)||[];
+  professorTerms=(rr[3]&&rr[3].data)||[];
+  professorRepasses=(rr[4]&&rr[4].data)||[];
   var badge=document.getElementById("tabBadgeProfessores");if(badge)badge.textContent=professorAccounts.filter(function(x){return x.status==="active";}).length;
   var wa=document.getElementById("profWhatsapp");if(wa)wa.value=(rr[5].data&&rr[5].data.valor)||"";
   populateProfessorSalesFilter();
