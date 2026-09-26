@@ -291,6 +291,42 @@
     }
     .soon-dot { width:5px; height:5px; border-radius:50%; background:rgba(251,191,36,0.6); }
 
+    /* ── AULÕES GRAVADOS ── */
+    .auloes-intro {
+      display:flex; justify-content:space-between; align-items:flex-start; gap:20px;
+      padding:22px 24px; margin-bottom:24px; border-radius:18px;
+      border:1px solid rgba(168,85,247,.22);
+      background:linear-gradient(135deg,rgba(168,85,247,.10),rgba(34,211,238,.035));
+    }
+    .auloes-intro h2 { font-size:20px; font-weight:750; letter-spacing:-.4px; color:#f5f3ff; margin-bottom:5px; }
+    .auloes-intro p { font-size:12.5px; line-height:1.6; color:rgba(221,214,254,.62); max-width:720px; }
+    .auloes-tag { flex-shrink:0; padding:6px 11px; border-radius:999px; border:1px solid rgba(168,85,247,.28); background:rgba(168,85,247,.10); color:#c4b5fd; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+    .auloes-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+    .aulao-card {
+      position:relative; overflow:hidden; border-radius:18px; min-height:235px; padding:22px;
+      display:flex; flex-direction:column; border:1px solid rgba(168,85,247,.18);
+      background:
+        radial-gradient(circle at 100% 0%,rgba(168,85,247,.13),transparent 38%),
+        linear-gradient(155deg,rgba(17,24,39,.92),rgba(2,13,26,.98));
+      transition:transform .25s,border-color .25s,box-shadow .25s;
+    }
+    .aulao-card.unlocked { cursor:pointer; }
+    .aulao-card.unlocked:hover { transform:translateY(-4px); border-color:rgba(196,181,253,.52); box-shadow:0 14px 34px rgba(0,0,0,.3); }
+    .aulao-card.locked { border-color:rgba(148,163,184,.12); }
+    .aulao-top { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:18px; }
+    .aulao-icon { width:44px; height:44px; border-radius:13px; display:flex; align-items:center; justify-content:center; font-size:22px; background:rgba(168,85,247,.10); border:1px solid rgba(168,85,247,.20); }
+    .aulao-status { padding:4px 9px; border-radius:999px; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+    .aulao-status.ready { color:#86efac; background:rgba(74,222,128,.08); border:1px solid rgba(74,222,128,.22); }
+    .aulao-status.setup { color:#fde68a; background:rgba(251,191,36,.07); border:1px solid rgba(251,191,36,.18); }
+    .aulao-title { font-size:17px; font-weight:700; color:#f8fafc; margin-bottom:6px; }
+    .aulao-desc { font-size:12px; line-height:1.55; color:rgba(203,213,225,.62); margin-bottom:16px; }
+    .aulao-meta { display:flex; gap:6px; flex-wrap:wrap; margin-top:auto; margin-bottom:14px; }
+    .aulao-meta span { padding:4px 8px; border-radius:8px; font-size:9.5px; color:rgba(221,214,254,.70); background:rgba(168,85,247,.055); border:1px solid rgba(168,85,247,.12); }
+    .aulao-btn { width:100%; padding:10px 12px; border-radius:11px; border:1px solid rgba(168,85,247,.28); background:rgba(168,85,247,.11); color:#ddd6fe; font:600 11px 'Poppins',sans-serif; cursor:pointer; transition:all .2s; }
+    .aulao-btn:hover:not(:disabled) { background:rgba(168,85,247,.20); border-color:rgba(196,181,253,.5); color:#fff; }
+    .aulao-btn:disabled { opacity:.5; cursor:default; }
+    .aulao-empty { padding:34px 24px; border-radius:17px; border:1px dashed rgba(168,85,247,.18); text-align:center; color:rgba(221,214,254,.48); font-size:12px; }
+
     /* ── LOJA ── */
     /* ── SEMESTRE CARDS (acordeão) ── */
     .sem-card { border-radius:16px; border:1px solid var(--border); background:rgba(34,211,238,0.03); margin-bottom:12px; overflow:hidden; transition:all .3s; }
@@ -964,6 +1000,7 @@
       <button class="tab-btn active" onclick="switchTab('resumos')">📚 Meus Resumos</button>
       <button class="tab-btn" onclick="switchTab('aluno')">👤 Área do Aluno</button>
       <button class="tab-btn" onclick="switchTab('cursos')">🎓 Cursos</button>
+      <button class="tab-btn" onclick="switchTab('auloes')">🎥 Aulões</button>
       <button class="tab-btn" onclick="switchTab('loja')">🛒 Loja</button>
     </div>
 
@@ -1077,6 +1114,18 @@
         <p style="font-size:13px;color:#a5f3fc;">Mini-cursos com aulas, provas e certificado. Estude no seu ritmo.</p>
       </div>
       <div class="resumos-grid" id="cursosGrid"></div>
+    </div>
+
+    <!-- TAB: AULÕES -->
+    <div class="tab-panel" id="tab-auloes">
+      <div class="auloes-intro">
+        <div>
+          <h2>🎥 Aulões Gravados</h2>
+          <p>Aulas focadas no conteúdo da prova, organizadas em blocos para você assistir no seu ritmo. Os aulões são produtos separados dos resumos e têm acesso individual.</p>
+        </div>
+        <div class="auloes-tag">Nova modalidade</div>
+      </div>
+      <div class="auloes-grid" id="auloesGrid"></div>
     </div>
 
     <!-- TAB: LOJA -->
@@ -1649,6 +1698,22 @@ var currentPaymentId = null;
 // Estrutura: { "resumo_name": { expira_em: "2026-07-23", ... } }
 var acessosCache = {};
 
+// ── Aulões gravados ──────────────────────────────────────────────────────────
+// ETAPA 1: infraestrutura pronta. O primeiro item é um piloto visual/funcional.
+// Quando você definir matéria, preço e links, basta atualizar este catálogo.
+var AULOES = [
+  {
+    key: "aulao-piloto",
+    title: "Aulão Piloto",
+    emoji: "🎥",
+    desc: "Estrutura inicial pronta para receber o primeiro aulão gravado.",
+    aulas: 4,
+    duracao: "Vídeos por módulos",
+    page: "aulao-piloto.html",
+    status: "setup"
+  }
+];
+
 // ── Carrinho ──────────────────────────────────────────────────────────────────
 var cart = []; // [{key, label, emoji, preco, tipo}]
 var PRECO_UNIT = 15.00;
@@ -1702,7 +1767,8 @@ window.switchTab = function(tab) {
       (tab==="resumos"&&i===0)||
       (tab==="aluno"&&i===1)||
       (tab==="cursos"&&i===2)||
-      (tab==="loja"&&i===3)
+      (tab==="auloes"&&i===3)||
+      (tab==="loja"&&i===4)
     );
   });
   document.querySelectorAll(".tab-panel").forEach(function(p){
@@ -1714,8 +1780,70 @@ window.switchTab = function(tab) {
   }
   document.body.classList.toggle("loja-ativa", tab === "loja");
   if (tab === "aluno") renderStudentArea();
+  if (tab === "auloes") renderAuloesGrid();
 };
 
+
+// ── Aulões gravados ──────────────────────────────────────────────────────────
+function hasAulaoAccess(key) {
+  if (profile && profile.is_admin) return true;
+  var acesso = acessosCache[key];
+  if (!acesso) return false;
+  if (!acesso.expira_em) return true;
+  return new Date(acesso.expira_em) > new Date();
+}
+
+function renderAuloesGrid() {
+  var grid = document.getElementById("auloesGrid");
+  if (!grid) return;
+  grid.innerHTML = "";
+
+  if (!AULOES.length) {
+    grid.innerHTML = '<div class="aulao-empty">Nenhum aulão disponível no momento.</div>';
+    return;
+  }
+
+  AULOES.forEach(function(a) {
+    var unlocked = hasAulaoAccess(a.key);
+    var ready = a.status === "ready";
+    var card = document.createElement("div");
+    card.className = "aulao-card " + (unlocked ? "unlocked" : "locked");
+
+    var statusLabel = unlocked
+      ? '<span class="aulao-status ready">✓ Acesso liberado</span>'
+      : ready
+        ? '<span class="aulao-status setup">🔒 Acesso individual</span>'
+        : '<span class="aulao-status setup">⚙ Em configuração</span>';
+
+    var buttonLabel = unlocked
+      ? "▶ Abrir aulão"
+      : ready
+        ? "🛒 Comprar acesso"
+        : "Primeiro aulão sendo configurado";
+
+    card.innerHTML =
+      '<div class="aulao-top"><div class="aulao-icon">'+a.emoji+'</div>'+statusLabel+'</div>'+
+      '<div class="aulao-title">'+a.title+'</div>'+
+      '<div class="aulao-desc">'+a.desc+'</div>'+
+      '<div class="aulao-meta"><span>🎬 '+a.aulas+' blocos</span><span>⏱ '+a.duracao+'</span><span>🔐 Acesso individual</span></div>'+
+      '<button class="aulao-btn" '+(!unlocked && !ready ? "disabled" : "")+'>'+buttonLabel+'</button>';
+
+    var btn = card.querySelector(".aulao-btn");
+    if (unlocked) {
+      btn.addEventListener("click", function(ev) {
+        ev.stopPropagation();
+        window.location.href = a.page;
+      });
+      card.addEventListener("click", function(){ window.location.href = a.page; });
+    } else if (ready) {
+      btn.addEventListener("click", function(ev) {
+        ev.stopPropagation();
+        alert("Produto pronto para venda. Defina o preço deste aulão para ativarmos PIX e cartão.");
+      });
+    }
+    grid.appendChild(card);
+  });
+}
 
 // ── Área do Aluno / Calculadora de notas ─────────────────────────────────────
 var studentGradebook = { version:5, currentSemester:null, semesters:{} };
@@ -4466,6 +4594,7 @@ document.addEventListener("authReady", async function(e) {
   renderWelcome();
   renderResumosGrid();
   renderCursosGrid();
+  renderAuloesGrid();
   renderStore();
   await loadStudentGradebook();
 });
