@@ -184,6 +184,7 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
           <span class="status rascunho" id="signatureBadge">Não assinado</span>
         </div>
         <div class="grid">
+          <div class="field full"><label id="fullNameLabel">Nome completo</label><input class="input" id="termFullName" autocomplete="name" placeholder="Ex.: João da Silva Pereira"></div>
           <div class="field"><label id="docTypeLabel">Documento</label><select class="select" id="termDocType"><option value="CI">C.I.</option><option value="CPF">CPF</option></select></div>
           <div class="field"><label id="docNumberLabel">Número do documento</label><input class="input" id="termDocNumber" autocomplete="off" placeholder="Digite somente o número ou identificação"></div>
         </div>
@@ -433,6 +434,8 @@ function translateDom(){
   document.documentElement.lang=uiLang==="es"?"es":"pt-BR";
   var terms=document.getElementById("termsText");if(terms)terms.innerHTML=uiLang==="es"?TERMS_ES:TERMS_PT;
 
+  var fnl=document.getElementById("fullNameLabel");if(fnl)fnl.textContent=uiLang==="es"?"Nombre completo":"Nome completo";
+  var fn=document.getElementById("termFullName");if(fn)fn.placeholder=uiLang==="es"?"Ej.: Juan Carlos Pereira Silva":"Ex.: João da Silva Pereira";
   var st=document.getElementById("signatureTitle");if(st)st.textContent=uiLang==="es"?"Firma electrónica de aceptación":"Assinatura eletrônica do aceite";
   var ss=document.getElementById("signatureSub");if(ss)ss.textContent=uiLang==="es"?"Ingrese su documento y firme abajo con el dedo, Apple Pencil, lápiz del tablet o mouse.":"Informe seu documento e assine no campo abaixo com o dedo, Apple Pencil, caneta do tablet ou mouse.";
   var wl=document.getElementById("signatureWatermark");if(wl)wl.textContent=uiLang==="es"?"Firme aquí":"Assine aqui";
@@ -462,25 +465,105 @@ var signatureHasInk=false,signatureCtx=null,signatureCanvas=null,signatureDrawin
 function setupSignaturePad(){
   signatureCanvas=document.getElementById("signatureCanvas");
   if(!signatureCanvas)return;
-  var rect=signatureCanvas.getBoundingClientRect(),ratio=Math.max(1,window.devicePixelRatio||1);
-  signatureCanvas.width=Math.max(600,Math.floor(rect.width*ratio));
-  signatureCanvas.height=Math.floor(180*ratio);
-  signatureCtx=signatureCanvas.getContext("2d");
+
+  var rect=signatureCanvas.getBoundingClientRect();
+  var ratio=Math.min(3,Math.max(2,window.devicePixelRatio||1));
+  var cssWidth=Math.max(300,rect.width||600);
+  var cssHeight=180;
+
+  signatureCanvas.width=Math.round(cssWidth*ratio);
+  signatureCanvas.height=Math.round(cssHeight*ratio);
+  signatureCanvas.style.height=cssHeight+"px";
+
+  signatureCtx=signatureCanvas.getContext("2d",{alpha:true});
   signatureCtx.setTransform(ratio,0,0,ratio,0,0);
-  signatureCtx.lineWidth=2.2;signatureCtx.lineCap="round";signatureCtx.lineJoin="round";signatureCtx.strokeStyle="#07101d";
+  signatureCtx.lineCap="round";
+  signatureCtx.lineJoin="round";
+  signatureCtx.strokeStyle="#07101d";
+  signatureCtx.imageSmoothingEnabled=true;
+  signatureCtx.imageSmoothingQuality="high";
+
+  var last=null;
+
   function point(ev){
     var r=signatureCanvas.getBoundingClientRect();
-    var e=ev.touches&&ev.touches[0]?ev.touches[0]:ev;
-    return{x:e.clientX-r.left,y:e.clientY-r.top};
+    return{
+      x:(ev.clientX-r.left)*(cssWidth/r.width),
+      y:(ev.clientY-r.top)*(cssHeight/r.height),
+      pressure:typeof ev.pressure==="number"?ev.pressure:0.5,
+      pointerType:ev.pointerType||"mouse"
+    };
   }
-  function start(ev){if(currentAcceptance)return;signatureDrawing=true;signatureLast=point(ev);ev.preventDefault()}
-  function move(ev){if(!signatureDrawing||currentAcceptance)return;var p=point(ev);signatureCtx.beginPath();signatureCtx.moveTo(signatureLast.x,signatureLast.y);signatureCtx.lineTo(p.x,p.y);signatureCtx.stroke();signatureLast=p;signatureHasInk=true;ev.preventDefault()}
-  function end(ev){signatureDrawing=false;signatureLast=null;if(ev)ev.preventDefault()}
-  signatureCanvas.onpointerdown=start;signatureCanvas.onpointermove=move;signatureCanvas.onpointerup=end;signatureCanvas.onpointercancel=end;signatureCanvas.onpointerleave=end;
+
+  function strokeWidth(p){
+    // Traço deliberadamente fino, parecido com assinatura de caneta.
+    if(p.pointerType==="pen"){
+      var pr=p.pressure>0?p.pressure:0.25;
+      return Math.max(0.45,Math.min(1.00,0.44+(pr*0.58)));
+    }
+    if(p.pointerType==="touch")return 0.78;
+    return 0.68;
+  }
+
+  function dot(p){
+    signatureCtx.beginPath();
+    signatureCtx.fillStyle="#07101d";
+    signatureCtx.arc(p.x,p.y,Math.max(0.30,strokeWidth(p)/2),0,Math.PI*2);
+    signatureCtx.fill();
+  }
+
+  function segment(p){
+    if(!last){last=p;dot(p);return}
+    var mx=(last.x+p.x)/2,my=(last.y+p.y)/2;
+    signatureCtx.beginPath();
+    signatureCtx.lineWidth=(strokeWidth(last)+strokeWidth(p))/2;
+    signatureCtx.moveTo(last.x,last.y);
+    signatureCtx.quadraticCurveTo(last.x,last.y,mx,my);
+    signatureCtx.stroke();
+    last=p;
+  }
+
+  function begin(ev){
+    if(currentAcceptance)return;
+    signatureDrawing=true;
+    try{signatureCanvas.setPointerCapture(ev.pointerId)}catch(e){}
+    last=point(ev);
+    dot(last);
+    signatureHasInk=true;
+    ev.preventDefault();
+  }
+
+  function move(ev){
+    if(!signatureDrawing||currentAcceptance)return;
+    var events=typeof ev.getCoalescedEvents==="function"?ev.getCoalescedEvents():[ev];
+    if(!events.length)events=[ev];
+    for(var i=0;i<events.length;i++)segment(point(events[i]));
+    ev.preventDefault();
+  }
+
+  function finish(ev){
+    if(!signatureDrawing)return;
+    signatureDrawing=false;
+    last=null;
+    try{signatureCanvas.releasePointerCapture(ev.pointerId)}catch(e){}
+    ev.preventDefault();
+  }
+
+  signatureCanvas.onpointerdown=begin;
+  signatureCanvas.onpointermove=move;
+  signatureCanvas.onpointerup=finish;
+  signatureCanvas.onpointercancel=finish;
+  signatureCanvas.oncontextmenu=function(ev){ev.preventDefault()};
 }
 function clearSignature(){
   if(currentAcceptance)return;
-  if(signatureCtx&&signatureCanvas){signatureCtx.clearRect(0,0,signatureCanvas.width,signatureCanvas.height);signatureHasInk=false}
+  if(signatureCtx&&signatureCanvas){
+    signatureCtx.save();
+    signatureCtx.setTransform(1,0,0,1,0,0);
+    signatureCtx.clearRect(0,0,signatureCanvas.width,signatureCanvas.height);
+    signatureCtx.restore();
+    signatureHasInk=false;
+  }
 }
 function canvasBlob(){
   return new Promise(function(resolve,reject){
@@ -499,17 +582,17 @@ async function loadSavedSignature(){
 function renderTermsAcceptance(){
   var signed=!!currentAcceptance;
   var badge=document.getElementById("signatureBadge"),status=document.getElementById("signatureStatus"),canvasWrap=document.getElementById("signatureCanvasWrap");
-  var docType=document.getElementById("termDocType"),docNum=document.getElementById("termDocNumber"),signBtn=document.getElementById("signTermsBtn"),clearBtn=document.getElementById("clearSignatureBtn"),pdfBtn=document.getElementById("downloadTermsBtn");
+  var fullName=document.getElementById("termFullName"),docType=document.getElementById("termDocType"),docNum=document.getElementById("termDocNumber"),signBtn=document.getElementById("signTermsBtn"),clearBtn=document.getElementById("clearSignatureBtn"),pdfBtn=document.getElementById("downloadTermsBtn");
   if(signed){
     badge.className="status aprovado";badge.textContent=uiLang==="es"?"Firmado":"Assinado";
-    docType.value=currentAcceptance.document_type||"CI";docType.disabled=true;docNum.value=currentAcceptance.document_number||"";docNum.disabled=true;
+    fullName.value=currentAcceptance.full_name||"";fullName.disabled=true;docType.value=currentAcceptance.document_type||"CI";docType.disabled=true;docNum.value=currentAcceptance.document_number||"";docNum.disabled=true;
     signBtn.style.display="none";clearBtn.style.display="none";canvasWrap.style.display="none";pdfBtn.style.display="";
     status.classList.add("show");
     status.innerHTML=(uiLang==="es"?"✅ Términos firmados electrónicamente el ":"✅ Termos assinados eletronicamente em ")+new Date(currentAcceptance.signed_at).toLocaleString(uiLang==="es"?"es-PY":"pt-BR")+" · "+esc(currentAcceptance.document_type)+" "+esc(maskDocument(currentAcceptance.document_number))+" · "+esc(currentAcceptance.terms_version);
     loadSavedSignature();
   }else{
     badge.className="status pendente";badge.textContent=uiLang==="es"?"Firma pendiente":"Assinatura pendente";
-    docType.disabled=false;docNum.disabled=false;docNum.value="";signBtn.style.display="";clearBtn.style.display="";canvasWrap.style.display="";pdfBtn.style.display="none";
+    fullName.disabled=false;docType.disabled=false;docNum.disabled=false;docNum.value="";signBtn.style.display="";clearBtn.style.display="";canvasWrap.style.display="";pdfBtn.style.display="none";
     status.classList.add("show");status.textContent=uiLang==="es"?"La firma es obligatoria antes de enviar un curso para aprobación.":"A assinatura é obrigatória antes de enviar um aulão para aprovação.";
     document.getElementById("savedSignaturePreview").style.display="none";
   }
@@ -517,7 +600,8 @@ function renderTermsAcceptance(){
 function maskDocument(v){var s=String(v||"");if(s.length<=4)return s;return "••••••"+s.slice(-4)}
 async function signCurrentTerms(){
   if(currentAcceptance){toast(uiLang==="es"?"Estos términos ya están firmados.":"Estes termos já estão assinados.");return}
-  var type=document.getElementById("termDocType").value,num=document.getElementById("termDocNumber").value.trim();
+  var fullName=document.getElementById("termFullName").value.trim(),type=document.getElementById("termDocType").value,num=document.getElementById("termDocNumber").value.trim();
+  if(fullName.length<5||fullName.split(/\s+/).length<2){toast(uiLang==="es"?"Informe su nombre completo.":"Informe seu nome completo.");return}
   if(num.length<4){toast(uiLang==="es"?"Informe un documento válido.":"Informe um documento válido.");return}
   if(!signatureHasInk){toast(uiLang==="es"?"Realice su firma en el campo indicado.":"Faça sua assinatura no campo indicado.");return}
   if(!confirm(uiLang==="es"?"¿Confirma que leyó los términos y que la firma realizada es su manifestación de aceptación?":"Confirma que leu os termos e que a assinatura realizada representa sua manifestação de aceite?"))return;
@@ -529,6 +613,7 @@ async function signCurrentTerms(){
     if(up.error)throw up.error;
     var termsText=(document.getElementById("termsText").innerText||"").trim();
     var r=await client.rpc("accept_professor_terms",{
+      p_full_name:fullName,
       p_document_type:type,
       p_document_number:num,
       p_signature_path:path,
@@ -557,7 +642,8 @@ async function downloadSignedTermsPdf(){
     doc.setFont("helvetica","bold");doc.setFontSize(16);doc.text("RESUMOS DO ENZO",15,y);y+=8;
     doc.setFontSize(13);doc.text(uiLang==="es"?"Términos del Profesor Colaborador - Copia firmada":"Termos do Professor Colaborador - Cópia assinada",15,y);y+=9;
     doc.setFont("helvetica","normal");doc.setFontSize(9);
-    y=addPdfText(doc,(uiLang==="es"?"Profesor: ":"Professor: ")+((details&&details.nome_exibicao)||session.user.email),15,y,180,4.6);
+    y=addPdfText(doc,(uiLang==="es"?"Nombre completo: ":"Nome completo: ")+(currentAcceptance.full_name||((details&&details.nome_exibicao)||session.user.email)),15,y,180,4.6);
+    y=addPdfText(doc,(uiLang==="es"?"Nombre de exhibición: ":"Nome de exibição: ")+((details&&details.nome_exibicao)||"—"),15,y,180,4.6);
     y=addPdfText(doc,"E-mail: "+(session.user.email||""),15,y,180,4.6);
     y=addPdfText(doc,(uiLang==="es"?"Documento: ":"Documento: ")+currentAcceptance.document_type+" "+currentAcceptance.document_number,15,y,180,4.6);
     y=addPdfText(doc,(uiLang==="es"?"Versión: ":"Versão: ")+currentAcceptance.terms_version+" | "+(uiLang==="es"?"Firmado: ":"Assinado: ")+new Date(currentAcceptance.signed_at).toLocaleString(uiLang==="es"?"es-PY":"pt-BR"),15,y,180,4.6);

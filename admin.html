@@ -1064,7 +1064,7 @@ window.openProfessorContract=async function(userId){
   currentContract=professorTerms.find(function(t){return t.professor_user_id===userId;})||null;
   if(!currentContract){showToast("Este professor ainda não assinou os termos.","error");return}
   document.getElementById("contractProfName").textContent=professorName(userId);
-  document.getElementById("contractMeta").innerHTML='<b>E-mail:</b> '+escHtml((allAlunos.find(function(a){return a.id===userId;})||{}).email||"—")+'<br><b>Documento:</b> '+escHtml(currentContract.document_type)+' '+escHtml(maskDoc(currentContract.document_number))+'<br><b>Versão:</b> '+escHtml(currentContract.terms_version)+'<br><b>Idioma:</b> '+(currentContract.terms_language==="es"?"Español":"Português")+'<br><b>Assinado em:</b> '+new Date(currentContract.signed_at).toLocaleString("pt-BR")+'<br><b>ID do aceite:</b> '+escHtml(currentContract.id);
+  document.getElementById("contractMeta").innerHTML='<b>Nome completo:</b> '+escHtml(currentContract.full_name||"—")+'<br><b>E-mail:</b> '+escHtml((allAlunos.find(function(a){return a.id===userId;})||{}).email||"—")+'<br><b>Documento:</b> '+escHtml(currentContract.document_type)+' '+escHtml(maskDoc(currentContract.document_number))+'<br><b>Versão:</b> '+escHtml(currentContract.terms_version)+'<br><b>Idioma:</b> '+(currentContract.terms_language==="es"?"Español":"Português")+'<br><b>Assinado em:</b> '+new Date(currentContract.signed_at).toLocaleString("pt-BR")+'<br><b>ID do aceite:</b> '+escHtml(currentContract.id);
   var img=document.getElementById("contractSignature");img.removeAttribute("src");img.style.display="none";
   var dr=await client.storage.from("professor-documentos").download(currentContract.signature_path);
   if(!dr.error){img.src=URL.createObjectURL(dr.data);img.style.display="block"}
@@ -1084,7 +1084,8 @@ window.downloadAdminTermsPdf=async function(){
     doc.setFont("helvetica","bold");doc.setFontSize(16);doc.text("RESUMOS DO ENZO",15,y);y+=8;
     doc.setFontSize(12);doc.text("Termos do Professor Colaborador - Copia assinada",15,y);y+=9;
     doc.setFont("helvetica","normal");doc.setFontSize(9);
-    y=pdfAddText(doc,"Professor: "+professorName(uid),15,y,180,4.5);
+    y=pdfAddText(doc,"Nome completo: "+(currentContract.full_name||"—"),15,y,180,4.5);
+    y=pdfAddText(doc,"Nome de exibicao: "+professorName(uid),15,y,180,4.5);
     y=pdfAddText(doc,"E-mail: "+((allAlunos.find(function(a){return a.id===uid;})||{}).email||"—"),15,y,180,4.5);
     y=pdfAddText(doc,"Documento: "+currentContract.document_type+" "+currentContract.document_number,15,y,180,4.5);
     y=pdfAddText(doc,"Versao: "+currentContract.terms_version+" | Assinado: "+new Date(currentContract.signed_at).toLocaleString("pt-BR"),15,y,180,4.5);
