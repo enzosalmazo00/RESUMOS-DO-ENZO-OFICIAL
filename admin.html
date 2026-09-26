@@ -1549,7 +1549,7 @@ function renderCapaPreview(){var p=document.getElementById("aulaoCapaPreview");p
 window.toggleTurmasEditor=function(){document.getElementById("turmasBox").style.display=document.getElementById("aulaoUsarTurmas").checked?"block":"none";renderVideosRows();};
 window.addTurmaRow=function(){editorTurmas.push({id:null,turma:"",professor:"",ativo:true,ordem:editorTurmas.length+1});renderTurmasRows();renderVideosRows();};
 window.removeTurmaRow=function(i){editorTurmas.splice(i,1);renderTurmasRows();renderVideosRows();};
-function syncTurmaInput(i,field,val){if(editorTurmas[i])editorTurmas[i][field]=val;}
+window.syncTurmaInput=function(i,field,val){if(editorTurmas[i])editorTurmas[i][field]=val;};
 function renderTurmasRows(){
   var c=document.getElementById("turmasRows"); if(!c)return;
   if(!editorTurmas.length){c.innerHTML='<div style="font-size:10px;color:rgba(125,211,232,.4);margin-bottom:8px;">Nenhuma turma cadastrada.</div>';return;}
@@ -1562,7 +1562,7 @@ function renderTurmasRows(){
 }
 window.addVideoRow=function(){editorVideos.push({id:null,titulo:"Parte "+(editorVideos.length+1),youtube_url:"",youtube_id:"",ordem:editorVideos.length+1,publicado:true,turma_ref:""});renderVideosRows();};
 window.removeVideoRow=function(i){editorVideos.splice(i,1);editorVideos.forEach(function(v,n){v.ordem=n+1;});renderVideosRows();};
-function syncVideoInput(i,field,val){if(editorVideos[i]){editorVideos[i][field]=val;if(field==="youtube_url")editorVideos[i].youtube_id=youtubeId(val);}}
+window.syncVideoInput=function(i,field,val){if(editorVideos[i]){editorVideos[i][field]=val;if(field==="youtube_url")editorVideos[i].youtube_id=youtubeId(val);}};
 function renderVideosRows(){
   var c=document.getElementById("videosRows"); if(!c)return;
   if(!editorVideos.length){c.innerHTML='<div style="font-size:10px;color:rgba(125,211,232,.4);margin-bottom:8px;">Nenhum vídeo. Clique em “Adicionar vídeo”.</div>';return;}
