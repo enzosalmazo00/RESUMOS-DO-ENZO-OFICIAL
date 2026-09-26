@@ -52,6 +52,29 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
 .signature-preview-saved{display:none;margin-top:10px;max-width:360px;width:100%;height:120px;object-fit:contain;border-radius:10px;background:#fff;border:1px solid rgba(255,255,255,.1)}
 .terms-required{padding:11px 13px;border-radius:11px;border:1px solid rgba(251,191,36,.20);background:rgba(251,191,36,.055);color:#fde68a;font-size:9.5px;line-height:1.55;margin-top:10px}
 
+
+.tutorial-hero{padding:22px;border:1px solid rgba(34,211,238,.20);border-radius:18px;background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(168,85,247,.055));margin-bottom:14px}
+.tutorial-hero h2{margin:0 0 7px;font-size:20px}
+.tutorial-hero p{margin:0;font-size:10.5px;line-height:1.65;color:rgba(226,232,240,.62)}
+.tutorial-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tutorial-step{position:relative;padding:18px;border:1px solid rgba(34,211,238,.14);border-radius:16px;background:rgba(255,255,255,.02);overflow:hidden}
+.tutorial-step:before{content:attr(data-step);position:absolute;right:10px;top:4px;font-size:42px;font-weight:900;color:rgba(34,211,238,.055)}
+.tutorial-step h3{font-size:13px;margin:0 0 7px;color:#ecfeff}
+.tutorial-step p,.tutorial-step li{font-size:9.7px;line-height:1.65;color:rgba(226,232,240,.60)}
+.tutorial-step ol,.tutorial-step ul{padding-left:18px;margin:7px 0 0}
+.tutorial-step li{margin:4px 0}
+.tutorial-callout{margin-top:12px;padding:12px 14px;border-radius:12px;font-size:9.8px;line-height:1.6}
+.tutorial-callout.good{border:1px solid rgba(74,222,128,.22);background:rgba(74,222,128,.055);color:#bbf7d0}
+.tutorial-callout.warn{border:1px solid rgba(251,191,36,.22);background:rgba(251,191,36,.055);color:#fde68a}
+.tutorial-callout.danger{border:1px solid rgba(248,113,113,.22);background:rgba(248,113,113,.055);color:#fecaca}
+.tutorial-example{margin-top:8px;padding:10px 11px;border-radius:10px;background:#07101d;border:1px solid rgba(255,255,255,.07);font-family:monospace;font-size:9px;color:#a5f3fc;word-break:break-all}
+.tutorial-checklist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px}
+.tutorial-check{padding:9px 10px;border:1px solid rgba(74,222,128,.13);border-radius:10px;background:rgba(74,222,128,.025);font-size:9.5px;color:#d1fae5}
+.tutorial-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.tutorial-link{display:inline-flex;align-items:center;gap:6px;padding:9px 12px;border-radius:10px;border:1px solid rgba(34,211,238,.20);background:rgba(34,211,238,.06);color:#a5f3fc;text-decoration:none;font-size:9.5px;font-weight:700}
+.tutorial-link:hover{border-color:#22d3ee;color:#fff}
+@media(max-width:760px){.tutorial-grid,.tutorial-checklist{grid-template-columns:1fr}}
+
 @media(max-width:850px){.stats{grid-template-columns:1fr 1fr}.grid,.aulao-list{grid-template-columns:1fr}.part-row{grid-template-columns:40px 1fr 34px}.part-row .part-url{grid-column:2/3}.sem-checks{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:520px){.wrap{padding:18px 12px 55px}.hero{padding:20px}.stats{grid-template-columns:1fr 1fr}.stat-value{font-size:18px}.sem-checks{grid-template-columns:repeat(3,1fr)}.part-row{grid-template-columns:34px 1fr 30px}.tabs{margin-left:-2px;margin-right:-2px}}
 </style>
@@ -88,6 +111,7 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
     <button class="tab active" data-tab="overview">Visão geral</button>
     <button class="tab" data-tab="perfil">Meu perfil</button>
     <button class="tab" data-tab="auloes">Meus aulões</button>
+    <button class="tab" data-tab="tutorial">Tutorial de publicação</button>
     <button class="tab" data-tab="vendas">Minhas vendas</button>
     <button class="tab" data-tab="termos">Termos</button>
   </div>
@@ -149,12 +173,16 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
           <div class="field"><label>Dias de acesso</label><input class="input" id="aulaoDays" type="number" min="1" placeholder="Ex.: 30 (vazio = permanente)"></div>
           <div class="field full"><label>Descrição</label><textarea class="textarea" id="aulaoDescription" placeholder="Explique brevemente o que será revisado neste aulão."></textarea></div>
           <div class="field full"><label>Capa do aulão</label><div class="upload"><input id="coverFile" type="file" accept="image/jpeg,image/png,image/webp"><img id="coverPreview" class="upload-preview" alt=""><div><strong>🖼️ Escolher capa do dispositivo</strong><small>JPG, PNG ou WEBP · até 5 MB.</small></div></div></div>
-          <div class="field full"><label>Partes do aulão</label><div class="hint">Cole links do YouTube. Você pode dividir o conteúdo em quantas partes quiser.</div><div class="parts" id="parts"></div><div class="actions"><button class="btn ghost" id="addPartBtn" type="button">+ Adicionar parte</button></div></div>
+          <div class="field full"><label>Partes do aulão</label><div class="hint">Cole links do YouTube configurados como <strong>Não listados</strong>. Se precisar, consulte a aba <strong>Tutorial de publicação</strong>. Você pode dividir o conteúdo em quantas partes quiser.</div><div class="parts" id="parts"></div><div class="actions"><button class="btn ghost" id="addPartBtn" type="button">+ Adicionar parte</button></div></div>
         </div>
         <div class="actions"><button class="btn primary" type="submit" id="saveDraftBtn">Salvar rascunho</button><button class="btn violet" type="button" id="submitReviewBtn">Enviar para aprovação</button></div>
       </form>
     </div>
     <div class="card"><div class="card-head"><div><h2>Meus aulões</h2><div class="hint">Aprovados entram automaticamente na área de Aulões e na loja.</div></div></div><div class="aulao-list" id="aulaoList"></div></div>
+  </section>
+
+  <section class="panel" id="panel-tutorial">
+    <div id="tutorialContent"></div>
   </section>
 
   <section class="panel" id="panel-vendas">
@@ -172,7 +200,7 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
 
   <section class="panel" id="panel-termos">
     <div class="card">
-      <div class="card-head"><div><h2>Termos do Professor Colaborador</h2><div class="hint" id="termsVersionLabel">Versão 2026-09-26-v2</div></div></div>
+      <div class="card-head"><div><h2>Termos do Professor Colaborador</h2><div class="hint" id="termsVersionLabel">Versão 2026-09-26-v3</div></div></div>
       <div class="term-box" id="termsText"></div>
 
       <div class="signature-box">
@@ -208,7 +236,7 @@ button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index
 (function(){
 "use strict";
 var client=null,session=null,account=null,details=null,publicProfile=null,currentAcceptance=null,auloes=[],salesRows=[],whatsapp="";
-var TERMS_VERSION="2026-09-26-v2";
+var TERMS_VERSION="2026-09-26-v3";
 var uiLang="pt-BR";
 
 function esc(v){return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
@@ -216,6 +244,172 @@ function money(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",c
 
 function L(pt,es){return uiLang==="es"?es:pt}
 function contentLanguageLabel(code){return code==="es"?"Contenido en español":"Conteúdo em Português"}
+const TUTORIAL_PT=`
+<div class="tutorial-hero">
+  <h2>🎬 Como publicar seu aulão do jeito correto</h2>
+  <p>Este guia mostra todo o caminho: gravar o vídeo, carregar no YouTube sem deixá-lo público, copiar o link e cadastrar as partes dentro do Resumos do Enzo. Faça exatamente nesta ordem para evitar link quebrado ou vídeo indisponível para os alunos.</p>
+  <div class="tutorial-callout warn"><strong>Configuração recomendada no YouTube: NÃO LISTADO.</strong> Não use “Público” se não quiser que o vídeo apareça para qualquer pessoa. E não use “Privado” para o aulão da plataforma, porque vídeos privados podem exigir contas especificamente autorizadas e podem não funcionar corretamente quando incorporados em outro site.</div>
+</div>
+
+<div class="tutorial-grid">
+  <div class="tutorial-step" data-step="01">
+    <h3>1. Prepare o vídeo antes do upload</h3>
+    <ul>
+      <li>Finalize a gravação e confirme se áudio e imagem estão corretos.</li>
+      <li>Se o aulão for longo, recomendamos dividir em partes menores.</li>
+      <li>Dê nomes claros às partes para facilitar sua organização.</li>
+    </ul>
+    <div class="tutorial-example">Ex.: Microbiologia 2 — P1 — Parte 01</div>
+    <div class="tutorial-example">Ex.: Microbiologia 2 — P1 — Parte 02</div>
+  </div>
+
+  <div class="tutorial-step" data-step="02">
+    <h3>2. Envie o vídeo ao YouTube</h3>
+    <ol>
+      <li>Entre na sua conta do YouTube.</li>
+      <li>Abra o <strong>YouTube Studio</strong>.</li>
+      <li>Clique em <strong>Criar → Enviar vídeos</strong>.</li>
+      <li>Selecione o arquivo do computador, iPad, tablet ou celular.</li>
+      <li>Preencha o título. A descrição é opcional.</li>
+      <li>Avance pelas telas de detalhes e verificações.</li>
+    </ol>
+    <div class="tutorial-actions"><a class="tutorial-link" href="https://studio.youtube.com/" target="_blank" rel="noopener noreferrer">↗ Abrir YouTube Studio</a></div>
+  </div>
+
+  <div class="tutorial-step" data-step="03">
+    <h3>3. Deixe invisível ao público: selecione “Não listado”</h3>
+    <ol>
+      <li>Na etapa <strong>Visibilidade</strong>, selecione <strong>Não listado</strong>.</li>
+      <li>Não selecione <strong>Público</strong>.</li>
+      <li>Não selecione <strong>Privado</strong> para vídeos que serão reproduzidos dentro da plataforma.</li>
+      <li>Clique em <strong>Salvar</strong>.</li>
+    </ol>
+    <div class="tutorial-callout good">✅ <strong>Não listado</strong> significa que o vídeo normalmente não aparece na busca, no feed dos inscritos nem na aba pública de vídeos do canal. Ele é acessado por quem possui o link.</div>
+    <div class="tutorial-callout danger">⚠️ “Não listado” não é uma proteção DRM. Qualquer pessoa que consiga obter o link do YouTube poderá tecnicamente compartilhá-lo. Por isso, não divulgue o link fora da plataforma.</div>
+  </div>
+
+  <div class="tutorial-step" data-step="04">
+    <h3>4. Copie o link correto do vídeo</h3>
+    <ol>
+      <li>Depois que o vídeo terminar de carregar, clique em <strong>Compartilhar</strong>.</li>
+      <li>Clique em <strong>Copiar link</strong>.</li>
+      <li>Você também pode entrar em YouTube Studio → Conteúdo → abrir o vídeo e copiar a URL.</li>
+    </ol>
+    <div class="tutorial-example">https://youtu.be/XXXXXXXXXXX</div>
+    <div class="tutorial-callout warn">Copie o link do <strong>vídeo</strong>, não o link do seu canal e nem o link da página do YouTube Studio.</div>
+  </div>
+
+  <div class="tutorial-step" data-step="05">
+    <h3>5. Cadastre o aulão dentro da plataforma</h3>
+    <ol>
+      <li>Na sua Área do Professor, abra <strong>Meus aulões</strong>.</li>
+      <li>Clique em <strong>+ Novo</strong>.</li>
+      <li>Preencha nome do aulão, preço, matéria, semestre e P1/P2/Final.</li>
+      <li>Escolha o idioma do conteúdo.</li>
+      <li>Adicione descrição e capa.</li>
+      <li>Em <strong>Partes do aulão</strong>, cole o link do YouTube da Parte 01.</li>
+      <li>Para adicionar outro vídeo, clique em <strong>+ Adicionar parte</strong> e cole o próximo link.</li>
+      <li>Repita quantas vezes precisar.</li>
+    </ol>
+    <div class="tutorial-callout good">Você pode dividir um único aulão em 2, 3, 4, 5 ou mais vídeos. Todos ficam organizados como partes do mesmo produto.</div>
+  </div>
+
+  <div class="tutorial-step" data-step="06">
+    <h3>6. Salve, confira e envie para aprovação</h3>
+    <ol>
+      <li>Clique primeiro em <strong>Salvar rascunho</strong>.</li>
+      <li>Confira nome, preço, capa e ordem das partes.</li>
+      <li>Confirme que todos os links abrem corretamente.</li>
+      <li>Depois clique em <strong>Enviar para aprovação</strong>.</li>
+      <li>O aulão ficará aguardando análise do administrador e ainda não aparecerá na loja.</li>
+      <li>Após a aprovação, ele será publicado na plataforma.</li>
+    </ol>
+    <div class="tutorial-callout warn">Depois de aprovado, qualquer alteração importante envia o aulão novamente para revisão. Isso protege você, os alunos e a plataforma contra mudanças acidentais.</div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:14px">
+  <div class="card-head"><div><h2>✅ Checklist antes de enviar</h2><div class="hint">Faça esta conferência em menos de 1 minuto.</div></div></div>
+  <div class="tutorial-checklist">
+    <div class="tutorial-check">✓ Vídeos configurados como <strong>Não listados</strong></div>
+    <div class="tutorial-check">✓ Links testados e funcionando</div>
+    <div class="tutorial-check">✓ Partes na ordem correta</div>
+    <div class="tutorial-check">✓ Capa e título conferidos</div>
+    <div class="tutorial-check">✓ Matéria, semestre e avaliação corretos</div>
+    <div class="tutorial-check">✓ Idioma do conteúdo selecionado corretamente</div>
+    <div class="tutorial-check">✓ Nenhum dado de paciente ou informação sigilosa</div>
+    <div class="tutorial-check">✓ Materiais de terceiros utilizados com autorização adequada</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div><h2>🔐 Regras importantes de segurança</h2></div></div>
+  <div class="tutorial-callout danger"><strong>Nunca compartilhe sua senha do YouTube ou do Google com a plataforma, administrador ou alunos.</strong> Nós precisamos somente do link do vídeo.</div>
+  <div class="tutorial-callout warn"><strong>Não apague o vídeo e não mude para “Privado” depois que o aulão estiver vendido.</strong> Isso pode interromper o acesso de alunos que já compraram.</div>
+  <div class="tutorial-callout warn"><strong>Não publique o link do vídeo em grupos ou redes sociais.</strong> O acesso ao aulão deve acontecer pelo Resumos do Enzo.</div>
+</div>
+`;
+
+const TUTORIAL_ES=`
+<div class="tutorial-hero">
+  <h2>🎬 Cómo publicar correctamente su curso</h2>
+  <p>Esta guía muestra todo el proceso: cargar el video en YouTube sin hacerlo público, copiar el enlace y registrar cada parte dentro de Resumos do Enzo.</p>
+  <div class="tutorial-callout warn"><strong>Configuración recomendada en YouTube: NO LISTADO.</strong> No use “Público” si no desea que cualquiera encuentre el video. Tampoco use “Privado” para videos que deben reproducirse dentro de la plataforma, porque puede exigir cuentas específicamente autorizadas y no funcionar correctamente al incorporarse en otro sitio.</div>
+</div>
+
+<div class="tutorial-grid">
+  <div class="tutorial-step" data-step="01">
+    <h3>1. Prepare el video</h3>
+    <ul><li>Revise audio e imagen.</li><li>Si es muy largo, divídalo en varias partes.</li><li>Use nombres claros para organizar las partes.</li></ul>
+    <div class="tutorial-example">Ej.: Microbiología 2 — P1 — Parte 01</div>
+  </div>
+  <div class="tutorial-step" data-step="02">
+    <h3>2. Suba el video a YouTube</h3>
+    <ol><li>Entre en su cuenta de YouTube.</li><li>Abra <strong>YouTube Studio</strong>.</li><li>Seleccione <strong>Crear → Subir videos</strong>.</li><li>Elija el archivo.</li><li>Complete el título y avance por las verificaciones.</li></ol>
+    <div class="tutorial-actions"><a class="tutorial-link" href="https://studio.youtube.com/" target="_blank" rel="noopener noreferrer">↗ Abrir YouTube Studio</a></div>
+  </div>
+  <div class="tutorial-step" data-step="03">
+    <h3>3. Seleccione “No listado”</h3>
+    <ol><li>En <strong>Visibilidad</strong>, seleccione <strong>No listado</strong>.</li><li>No seleccione <strong>Público</strong>.</li><li>No seleccione <strong>Privado</strong> para videos de la plataforma.</li><li>Guarde los cambios.</li></ol>
+    <div class="tutorial-callout good">✅ Un video no listado normalmente no aparece en las búsquedas, recomendaciones ni en la pestaña pública de videos del canal. Se accede mediante el enlace.</div>
+    <div class="tutorial-callout danger">⚠️ Cualquier persona que obtenga el enlace puede técnicamente volver a compartirlo. No distribuya el enlace fuera de la plataforma.</div>
+  </div>
+  <div class="tutorial-step" data-step="04">
+    <h3>4. Copie el enlace del video</h3>
+    <ol><li>Use <strong>Compartir → Copiar enlace</strong>.</li><li>También puede copiar la URL desde YouTube Studio → Contenido.</li></ol>
+    <div class="tutorial-example">https://youtu.be/XXXXXXXXXXX</div>
+  </div>
+  <div class="tutorial-step" data-step="05">
+    <h3>5. Registre el curso en la plataforma</h3>
+    <ol><li>Abra <strong>Mis cursos</strong>.</li><li>Seleccione <strong>+ Nuevo</strong>.</li><li>Complete nombre, precio, materia, semestre y evaluación.</li><li>Elija el idioma.</li><li>Agregue portada y descripción.</li><li>Pegue el enlace de la Parte 01.</li><li>Use <strong>+ Agregar parte</strong> para los demás videos.</li></ol>
+  </div>
+  <div class="tutorial-step" data-step="06">
+    <h3>6. Guarde y envíe para aprobación</h3>
+    <ol><li>Primero seleccione <strong>Guardar borrador</strong>.</li><li>Verifique precio, portada, orden y enlaces.</li><li>Luego seleccione <strong>Enviar para aprobación</strong>.</li><li>El administrador revisará el curso antes de publicarlo.</li></ol>
+  </div>
+</div>
+
+<div class="card" style="margin-top:14px">
+  <div class="card-head"><div><h2>✅ Checklist antes de enviar</h2></div></div>
+  <div class="tutorial-checklist">
+    <div class="tutorial-check">✓ Videos como <strong>No listados</strong></div>
+    <div class="tutorial-check">✓ Enlaces funcionando</div>
+    <div class="tutorial-check">✓ Partes en el orden correcto</div>
+    <div class="tutorial-check">✓ Portada y título revisados</div>
+    <div class="tutorial-check">✓ Materia, semestre y evaluación correctos</div>
+    <div class="tutorial-check">✓ Idioma correcto</div>
+    <div class="tutorial-check">✓ Sin datos de pacientes o información confidencial</div>
+    <div class="tutorial-check">✓ Uso autorizado de materiales de terceros</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div><h2>🔐 Reglas importantes de seguridad</h2></div></div>
+  <div class="tutorial-callout danger"><strong>Nunca comparta su contraseña de YouTube o Google.</strong> La plataforma solamente necesita el enlace del video.</div>
+  <div class="tutorial-callout warn"><strong>No borre el video ni cambie su visibilidad a “Privado” después de vender el curso.</strong> Esto puede interrumpir el acceso de alumnos que ya compraron.</div>
+</div>
+`;
+
 const TERMS_PT=`
 <p><strong>Termos do Professor Colaborador — Resumos do Enzo</strong></p>
 <p>Ao utilizar uma conta de Professor Colaborador, você adere voluntariamente a estes termos para utilizar a infraestrutura tecnológica da plataforma para disponibilizar e distribuir conteúdo educacional próprio.</p>
@@ -282,10 +476,23 @@ const TERMS_PT=`
 <h3>17. Normas obrigatórias e direitos de terceiros</h3>
 <p>Nenhuma disposição destes termos deve ser interpretada como renúncia a direito indisponível, exclusão de responsabilidade que a lei proíba excluir ou afastamento de normas obrigatórias de proteção ao consumidor, trabalho, tributação, propriedade intelectual, privacidade ou proteção de dados.</p>
 
-<h3>18. Alterações dos termos e registro do aceite</h3>
+<h3>18. Hospedagem dos vídeos, YouTube e serviços de terceiros</h3>
+<p>Para disponibilização técnica dos aulões, o professor poderá utilizar serviços de terceiros, como o YouTube, observando também os termos e políticas desses serviços. Quando o vídeo for incorporado à plataforma por link, o professor deverá manter configuração compatível com a reprodução, preferencialmente <strong>Não listado</strong>, e não deverá tornar o vídeo público sem desejar essa exposição.</p>
+<p>O professor reconhece que um vídeo configurado como <strong>Não listado</strong> não aparece normalmente nas áreas públicas e resultados de busca do YouTube, mas pode ser assistido e compartilhado por quem obtiver o link. A plataforma adiciona seus próprios controles de autenticação e acesso, porém não transforma um link de terceiro em mecanismo absoluto de proteção contra compartilhamento.</p>
+<p>A plataforma nunca necessita da senha da conta Google/YouTube do professor. Credenciais pessoais não devem ser fornecidas ao administrador, alunos ou terceiros vinculados à plataforma.</p>
+
+<h3>19. Disponibilidade técnica e manutenção dos links</h3>
+<p>É responsabilidade do professor manter os vídeos, links e permissões necessários ao funcionamento dos aulões durante o período de acesso vendido aos alunos. O professor compromete-se a não apagar, privatizar, substituir ou tornar indisponível um vídeo ativo sem antes coordenar a alteração com a plataforma.</p>
+<p>Se um link deixar de funcionar ou um serviço de terceiros apresentar indisponibilidade, professor e plataforma deverão cooperar para restabelecer o acesso em prazo razoável. A plataforma poderá suspender temporariamente novas vendas do conteúdo afetado até a regularização, sem que isso represente penalidade trabalhista ou controle sobre a atividade profissional do professor.</p>
+
+<h3>20. Procedimento de publicação e dever de conferência</h3>
+<p>Antes de enviar um aulão para aprovação, o professor deverá conferir se os links correspondem aos vídeos corretos, se a ordem das partes está adequada, se o idioma informado corresponde ao conteúdo e se o vídeo está em configuração compatível com a reprodução na plataforma. O tutorial técnico disponibilizado na Área do Professor integra as orientações operacionais de uso do serviço.</p>
+<p>A aprovação administrativa não substitui a conferência do professor sobre conteúdo, direitos autorais, funcionamento dos links, qualidade acadêmica ou veracidade das informações apresentadas.</p>
+
+<h3>21. Alterações dos termos e registro do aceite</h3>
 <p>Alterações materiais serão apresentadas para novo aceite quando necessário. A plataforma registra a versão aceita, a data e a hora do aceite para fins de transparência e prova da manifestação de vontade.</p>
 
-<p style="margin-top:18px;color:rgba(165,243,252,.42)">Versão operacional 2026-09-26-v2. Recomenda-se revisão por advogado e contador com atuação transfronteiriça Brasil–Paraguai antes da implantação definitiva de repasses automáticos e expansão comercial.</p>`;
+<p style="margin-top:18px;color:rgba(165,243,252,.42)">Versão operacional 2026-09-26-v3. Recomenda-se revisão por advogado e contador com atuação transfronteiriça Brasil–Paraguai antes da implantação definitiva de repasses automáticos e expansão comercial.</p>`;
 
 const TERMS_ES=`
 <p><strong>Términos del Profesor Colaborador — Resumos do Enzo</strong></p>
@@ -353,10 +560,23 @@ const TERMS_ES=`
 <h3>17. Normas imperativas y derechos de terceros</h3>
 <p>Ninguna disposición de estos términos debe interpretarse como renuncia a un derecho indisponible, exclusión de responsabilidad que la ley prohíba excluir o apartamiento de normas imperativas de protección al consumidor, trabajo, tributación, propiedad intelectual, privacidad o protección de datos.</p>
 
-<h3>18. Cambios de los términos y registro de aceptación</h3>
+<h3>18. Alojamiento de videos, YouTube y servicios de terceros</h3>
+<p>Para la disponibilidad técnica de los cursos, el profesor podrá utilizar servicios de terceros, como YouTube, observando también los términos y políticas de dichos servicios. Cuando el video se incorpore a la plataforma mediante enlace, el profesor deberá mantener una configuración compatible con la reproducción, preferentemente <strong>No listado</strong>, y no deberá hacerlo público si no desea esa exposición.</p>
+<p>El profesor reconoce que un video <strong>No listado</strong> normalmente no aparece en las áreas públicas ni en los resultados de búsqueda de YouTube, pero puede ser visto y compartido por quien obtenga el enlace. La plataforma agrega sus propios controles de autenticación y acceso, pero no transforma un enlace de un tercero en un mecanismo absoluto contra la distribución.</p>
+<p>La plataforma nunca necesita la contraseña de la cuenta Google/YouTube del profesor. Las credenciales personales no deben entregarse al administrador, alumnos ni terceros vinculados a la plataforma.</p>
+
+<h3>19. Disponibilidad técnica y mantenimiento de enlaces</h3>
+<p>Es responsabilidad del profesor mantener los videos, enlaces y permisos necesarios durante el período de acceso vendido a los alumnos. El profesor se compromete a no borrar, privatizar, sustituir o volver indisponible un video activo sin coordinar previamente el cambio con la plataforma.</p>
+<p>Si un enlace deja de funcionar o un servicio de terceros presenta indisponibilidad, profesor y plataforma deberán cooperar para restablecer el acceso en un plazo razonable. La plataforma podrá suspender temporalmente nuevas ventas del contenido afectado hasta su regularización.</p>
+
+<h3>20. Procedimiento de publicación y deber de verificación</h3>
+<p>Antes de enviar un curso para aprobación, el profesor deberá comprobar que los enlaces correspondan a los videos correctos, que el orden de las partes sea adecuado, que el idioma informado coincida con el contenido y que la visibilidad permita la reproducción dentro de la plataforma. El tutorial técnico disponible en el Área del Profesor integra las orientaciones operativas de uso del servicio.</p>
+<p>La aprobación administrativa no sustituye la verificación del profesor respecto del contenido, derechos de autor, funcionamiento de enlaces, calidad académica o exactitud de la información presentada.</p>
+
+<h3>21. Cambios de los términos y registro de aceptación</h3>
 <p>Las modificaciones sustanciales serán presentadas para una nueva aceptación cuando sea necesario. La plataforma registra la versión aceptada, la fecha y la hora de aceptación para fines de transparencia y prueba de la manifestación de voluntad.</p>
 
-<p style="margin-top:18px;color:rgba(165,243,252,.42)">Versión operativa 2026-09-26-v2. Se recomienda revisión por abogado y contador con actuación transfronteriza Brasil–Paraguay antes de implementar transferencias automáticas y ampliar la operación comercial.</p>`;
+<p style="margin-top:18px;color:rgba(165,243,252,.42)">Versión operativa 2026-09-26-v3. Se recomienda revisión por abogado y contador con actuación transfronteriza Brasil–Paraguay antes de implementar transferencias automáticas y ampliar la operación comercial.</p>`;
 
 const ES_MAP={
 "Professor colaborador":"Profesor colaborador",
@@ -366,7 +586,7 @@ const ES_MAP={
 "Crie, organize e distribua seus próprios aulões de maneira simples e segura. Você produz o conteúdo, escolhe o valor e divide o aulão em quantas partes precisar. A plataforma cuida da vitrine, acesso dos alunos, pagamentos via PIX e cartão, infraestrutura de hospedagem do player e recursos de apoio ao aluno.":"Cree, organice y distribuya sus propios cursos de forma simple y segura. Usted produce el contenido, elige el precio y divide el curso en tantas partes como necesite. La plataforma se ocupa de la vitrina, el acceso de los alumnos, los pagos por PIX y tarjeta, la infraestructura del reproductor y los recursos de apoyo al alumno.",
 "💰 De cada venda, 2/3 são seus.":"💰 De cada venta, 2/3 son para usted.",
 "Exemplo: aulão de R$ 15,00 → R$ 10,00 para você. A parcela da plataforma mantém pagamentos, tecnologia, segurança, IA e operação do serviço.":"Ejemplo: curso de R$ 15,00 → R$ 10,00 para usted. La parte de la plataforma mantiene pagos, tecnología, seguridad, IA y operación del servicio.",
-"Visão geral":"Vista general","Meu perfil":"Mi perfil","Meus aulões":"Mis cursos","Minhas vendas":"Mis ventas","Termos":"Términos",
+"Visão geral":"Vista general","Meu perfil":"Mi perfil","Meus aulões":"Mis cursos","Tutorial de publicação":"Tutorial de publicación","Minhas vendas":"Mis ventas","Termos":"Términos",
 "Aprovados":"Aprobados","Vendas confirmadas":"Ventas confirmadas","Saldo a receber":"Saldo por cobrar",
 "Fluxo simples":"Flujo simple","Seu conteúdo só entra no ar depois da revisão administrativa.":"Su contenido solo se publica después de la revisión administrativa.",
 "1️⃣ Complete seu perfil, matérias, semestres, celular e chave PIX.":"1️⃣ Complete su perfil, materias, semestres, celular y clave PIX.",
@@ -432,6 +652,7 @@ function translateDom(){
   if(btn)btn.textContent=uiLang==="es"?"🌐 Seleccionar idioma: Español":"🌐 Selecionar idioma: Português";
   document.querySelectorAll("[data-ui-lang]").forEach(function(b){b.classList.toggle("active",b.dataset.uiLang===uiLang)});
   document.documentElement.lang=uiLang==="es"?"es":"pt-BR";
+  var tutorial=document.getElementById("tutorialContent");if(tutorial)tutorial.innerHTML=uiLang==="es"?TUTORIAL_ES:TUTORIAL_PT;
   var terms=document.getElementById("termsText");if(terms)terms.innerHTML=uiLang==="es"?TERMS_ES:TERMS_PT;
 
   var fnl=document.getElementById("fullNameLabel");if(fnl)fnl.textContent=uiLang==="es"?"Nombre completo":"Nome completo";
