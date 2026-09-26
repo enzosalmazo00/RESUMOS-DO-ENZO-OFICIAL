@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="theme-color" content="#020810">
-  <meta name="description" content="Resumos do Enzo — resumos, cursos e aulões em uma única plataforma de estudos.">
-  <title>Resumos do Enzo — Sua plataforma de estudos</title>
+  <meta name="description" content="Resumos do Enzo — plataforma digital de estudos com resumos interativos e cursos.">
+  <title>Resumos do Enzo — Plataforma digital de estudos</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -15,613 +15,1290 @@
 
   <style>
     :root{
+      --bg:#020810;
+      --bg2:#06111f;
+      --surface:#071525;
+      --surface2:#0a1b2f;
       --cyan:#22d3ee;
       --cyan2:#06b6d4;
-      --cyan3:#67e8f9;
+      --cyan3:#a5f3fc;
       --purple:#8b5cf6;
       --green:#4ade80;
-      --dark:#07111f;
-      --panel:rgba(8,20,36,.86);
-      --border:rgba(94,234,250,.22);
-      --text-soft:rgba(226,232,240,.80);
+      --white:#f8fafc;
+      --muted:#a8bbc9;
+      --border:rgba(103,232,249,.16);
+      --border2:rgba(255,255,255,.075);
+      --shadow:0 28px 80px rgba(0,0,0,.44);
     }
 
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    html,body{min-height:100%}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;background:var(--bg)}
     body{
+      min-height:100%;
       font-family:'Poppins',sans-serif;
+      color:var(--white);
       background:
-        radial-gradient(circle at 12% 14%, rgba(14,165,233,.13), transparent 34%),
-        radial-gradient(circle at 88% 82%, rgba(99,102,241,.12), transparent 38%),
-        linear-gradient(135deg,#07111f 0%,#091827 46%,#081320 100%);
-      color:#fff;
+        radial-gradient(circle at 12% 5%,rgba(34,211,238,.09),transparent 29%),
+        radial-gradient(circle at 88% 18%,rgba(99,102,241,.085),transparent 28%),
+        linear-gradient(180deg,#020810 0%,#04101d 46%,#020810 100%);
       overflow-x:hidden;
     }
 
+    a{text-decoration:none;color:inherit}
+    button,input{font-family:inherit}
+    button{cursor:pointer}
+
+    /* IDENTIDADE DNA */
     #dna-canvas{
-      position:fixed;inset:0;
-      width:100vw!important;height:100vh!important;
+      position:fixed;
+      inset:0;
+      width:100vw!important;
+      height:100vh!important;
       z-index:0;
+      opacity:.56;
+      pointer-events:none;
     }
-
-    .aurora{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
-    .aurora-blob{position:absolute;border-radius:50%;filter:blur(100px);opacity:.17;animation:drift 18s ease-in-out infinite}
-    .aurora-blob:nth-child(1){width:650px;height:650px;background:radial-gradient(circle,#22d3ee,transparent 70%);top:-180px;left:-140px;animation-duration:21s}
-    .aurora-blob:nth-child(2){width:560px;height:560px;background:radial-gradient(circle,#6366f1,transparent 70%);right:-160px;bottom:-120px;animation-duration:18s;animation-delay:-7s}
-    .aurora-blob:nth-child(3){width:420px;height:420px;background:radial-gradient(circle,#0ea5e9,transparent 70%);top:35%;left:48%;opacity:.09;animation-duration:26s;animation-delay:-11s}
-    @keyframes drift{
-      0%,100%{transform:translate(0,0) scale(1)}
-      33%{transform:translate(45px,-28px) scale(1.07)}
-      66%{transform:translate(-24px,38px) scale(.95)}
+    .background-layer{
+      position:fixed;inset:0;z-index:1;pointer-events:none;
+      background:
+        linear-gradient(90deg,rgba(2,8,16,.72) 0%,rgba(2,8,16,.16) 18%,rgba(2,8,16,.13) 82%,rgba(2,8,16,.72) 100%),
+        radial-gradient(ellipse 70% 66% at 50% 22%,transparent 20%,rgba(2,8,16,.20) 76%,rgba(2,8,16,.58) 100%);
     }
-
     .grid-overlay{
       position:fixed;inset:0;z-index:2;pointer-events:none;
       background-image:
-        linear-gradient(rgba(34,211,238,.022) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(34,211,238,.022) 1px,transparent 1px);
-      background-size:58px 58px;
+        linear-gradient(rgba(34,211,238,.018) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(34,211,238,.018) 1px,transparent 1px);
+      background-size:62px 62px;
+      mask-image:linear-gradient(to bottom,rgba(0,0,0,.65),transparent 78%);
     }
 
-    .scan-line{
-      position:fixed;left:0;right:0;height:2px;z-index:3;pointer-events:none;opacity:0;
-      background:linear-gradient(90deg,transparent,rgba(34,211,238,.25),rgba(103,232,249,.5),rgba(34,211,238,.25),transparent);
-      animation:scan 9s linear infinite;
-    }
-    @keyframes scan{0%{top:-2px;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:100vh;opacity:0}}
-
-    .vignette{
-      position:fixed;inset:0;z-index:4;pointer-events:none;
-      background:radial-gradient(ellipse 86% 86% at 50% 46%,transparent 34%,rgba(3,12,22,.20) 73%,rgba(2,8,16,.50) 100%);
+    .site{
+      position:relative;
+      z-index:10;
     }
 
-    .site-shell{
-      position:relative;z-index:10;
-      width:min(1280px,calc(100% - 56px));
+    .container{
+      width:min(1260px,calc(100% - 48px));
       margin:0 auto;
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      padding:28px 0 34px;
     }
 
-    .topbar{
+    /* NAV */
+    .nav-wrap{
+      position:sticky;
+      top:0;
+      z-index:40;
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      background:linear-gradient(180deg,rgba(2,8,16,.92),rgba(2,8,16,.70));
+      border-bottom:1px solid rgba(255,255,255,.045);
+    }
+    .nav{
+      min-height:78px;
       display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap:18px;
-      padding:4px 2px 22px;
-      animation:fadeDown .65s ease both;
+      gap:22px;
     }
-
-    .brand-lockup{display:flex;align-items:center;gap:11px}
-    .brand-mark{
-      width:42px;height:42px;border-radius:13px;
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex:0 0 auto;
+    }
+    .brand-symbol{
+      width:43px;height:43px;border-radius:14px;
       display:grid;place-items:center;
-      border:1px solid rgba(34,211,238,.2);
-      background:linear-gradient(135deg,rgba(34,211,238,.16),rgba(99,102,241,.08));
-      box-shadow:0 10px 30px rgba(0,0,0,.25),inset 0 0 24px rgba(34,211,238,.04);
-      font-size:19px;
+      border:1px solid rgba(34,211,238,.23);
+      background:linear-gradient(145deg,rgba(34,211,238,.14),rgba(6,182,212,.04));
+      box-shadow:inset 0 0 24px rgba(34,211,238,.04),0 8px 26px rgba(0,0,0,.25);
+      color:#cffafe;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.08em;
     }
-    .brand-name{font-size:19px;font-weight:800;letter-spacing:-.45px}
-    .brand-name span{color:var(--cyan3)}
-    .brand-sub{font-size:10px;color:rgba(207,250,254,.62);letter-spacing:.11em;text-transform:uppercase;margin-top:2px}
-
-    .release-pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 12px;border-radius:999px;
-      border:1px solid rgba(139,92,246,.23);
-      background:rgba(139,92,246,.07);
-      color:#ddd6fe;
-      font-size:11px;font-weight:650;
-      letter-spacing:.04em;
-      white-space:nowrap;
+    .brand-name{
+      font-size:17px;
+      font-weight:800;
+      letter-spacing:-.45px;
+      line-height:1;
     }
-    .release-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+    .brand-name span{color:var(--cyan)}
+    .brand-sub{
+      font-size:8.5px;
+      color:rgba(165,243,252,.46);
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      margin-top:5px;
+    }
 
-    .main-grid{
-      flex:1;
-      display:grid;
-      grid-template-columns:minmax(0,1.12fr) minmax(410px,.88fr);
-      gap:54px;
+    .nav-links{
+      display:flex;
       align-items:center;
-      padding:24px 0 30px;
+      gap:24px;
+      margin-left:22px;
+    }
+    .nav-link{
+      background:none;border:0;
+      color:rgba(226,232,240,.63);
+      font-size:11px;
+      font-weight:500;
+      transition:.2s color;
+    }
+    .nav-link:hover{color:#fff}
+
+    .nav-actions{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      gap:9px;
     }
 
-    .experience{
-      min-width:0;
-      animation:fadeUp .78s .06s ease both;
+    .lang-switch{
+      display:flex;
+      align-items:center;
+      padding:3px;
+      border-radius:11px;
+      border:1px solid var(--border2);
+      background:rgba(255,255,255,.025);
     }
+    .lang-btn{
+      border:0;
+      background:transparent;
+      color:rgba(226,232,240,.45);
+      padding:7px 9px;
+      border-radius:8px;
+      font-size:9px;
+      font-weight:700;
+      letter-spacing:.04em;
+      transition:.2s;
+    }
+    .lang-btn.active{
+      color:#e6fbff;
+      background:rgba(34,211,238,.10);
+      box-shadow:inset 0 0 0 1px rgba(34,211,238,.12);
+    }
+
+    .nav-cta{
+      border:1px solid rgba(34,211,238,.22);
+      background:rgba(34,211,238,.07);
+      color:#dffcff;
+      padding:9px 13px;
+      border-radius:10px;
+      font-size:10px;
+      font-weight:700;
+      transition:.2s;
+    }
+    .nav-cta:hover{background:rgba(34,211,238,.13);border-color:rgba(34,211,238,.40)}
+
+    /* HERO */
+    .hero{
+      min-height:680px;
+      display:grid;
+      grid-template-columns:minmax(0,1.17fr) minmax(390px,.83fr);
+      gap:58px;
+      align-items:center;
+      padding:58px 0 52px;
+    }
+    .hero-content{min-width:0}
 
     .eyebrow{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:7px 12px;border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      gap:9px;
+      padding:7px 11px;
       border:1px solid rgba(34,211,238,.16);
-      background:rgba(34,211,238,.055);
-      color:#a5f3fc;
-      font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
-      margin-bottom:18px;
+      border-radius:999px;
+      background:rgba(34,211,238,.05);
+      color:#bdf6ff;
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:20px;
     }
-    .eyebrow strong{
-      padding:2px 7px;border-radius:999px;
-      background:linear-gradient(135deg,#8b5cf6,#6366f1);
-      color:#fff;font-size:9px;letter-spacing:.07em;
+    .eyebrow-dot{
+      width:7px;height:7px;border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 10px rgba(74,222,128,.8);
     }
 
-    .hero-title{
+    .hero h1{
       max-width:760px;
-      font-size:clamp(46px,5vw,72px);
+      font-size:clamp(43px,5.15vw,72px);
       line-height:1.03;
-      letter-spacing:-2.6px;
+      letter-spacing:-2.8px;
       font-weight:800;
-      color:#f8fafc;
     }
-    .hero-title .gradient{
-      background:linear-gradient(100deg,#67e8f9 0%,#22d3ee 34%,#c4b5fd 78%,#8b5cf6 100%);
+    .hero h1 .accent{
+      background:linear-gradient(100deg,#d8fbff 0%,#67e8f9 28%,#22d3ee 56%,#a5b4fc 100%);
       -webkit-background-clip:text;
       -webkit-text-fill-color:transparent;
       background-clip:text;
     }
-
-    .hero-copy{
-      max-width:690px;
-      margin-top:18px;
-      font-size:16px;
-      line-height:1.72;
-      color:var(--text-soft);
+    .hero-lead{
+      max-width:720px;
+      margin-top:21px;
+      color:rgba(226,232,240,.76);
+      font-size:15.5px;
+      line-height:1.75;
       font-weight:400;
     }
-    .hero-copy strong{color:#e0f2fe;font-weight:600}
+    .hero-lead strong{color:#eefcff;font-weight:650}
 
-    .product-line{
-      display:flex;align-items:center;gap:7px;flex-wrap:wrap;
-      margin-top:21px;
+    .hero-tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:22px;
     }
-    .product-chip{
-      padding:8px 13px;border-radius:999px;
-      border:1px solid rgba(34,211,238,.13);
-      background:rgba(2,8,16,.48);
-      color:rgba(207,250,254,.74);
-      font-size:11px;font-weight:650;
-    }
-    .product-chip.new{
-      border-color:rgba(139,92,246,.30);
-      background:rgba(139,92,246,.09);
-      color:#ddd6fe;
-    }
-
-    .feature-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:13px;
-      margin-top:28px;
-    }
-    .feature-card{
-      min-height:178px;
-      padding:19px;
-      border-radius:18px;
-      border:1px solid rgba(34,211,238,.10);
-      background:linear-gradient(160deg,rgba(255,255,255,.032),rgba(255,255,255,.012));
-      backdrop-filter:blur(12px);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
-      transition:transform .2s,border-color .2s,background .2s;
-    }
-    .feature-card:hover{transform:translateY(-3px);border-color:rgba(34,211,238,.27);background:rgba(34,211,238,.035)}
-    .feature-card.feature-new{border-color:rgba(139,92,246,.20);background:linear-gradient(160deg,rgba(139,92,246,.07),rgba(255,255,255,.012))}
-    .feature-icon{
-      width:39px;height:39px;border-radius:11px;
-      display:grid;place-items:center;
-      background:rgba(34,211,238,.07);
-      border:1px solid rgba(34,211,238,.12);
-      font-size:13px;
-      font-weight:800;
-      letter-spacing:.04em;
-      margin-bottom:13px;
-    }
-    .feature-new .feature-icon{background:rgba(139,92,246,.10);border-color:rgba(139,92,246,.18)}
-    .feature-card h3{font-size:14px;color:#f8fafc;margin-bottom:8px;font-weight:700}
-    .feature-card p{font-size:11.3px;line-height:1.68;color:rgba(226,232,240,.70)}
-    .mini-new{
-      display:inline-block;margin-left:4px;padding:2px 5px;border-radius:5px;
-      background:rgba(139,92,246,.20);color:#ddd6fe;font-size:7.8px;letter-spacing:.08em;text-transform:uppercase;vertical-align:middle;
-    }
-
-    .proof-strip{
-      display:flex;align-items:center;gap:12px;flex-wrap:wrap;
-      margin-top:18px;
-      color:rgba(165,243,252,.42);
+    .hero-tag{
+      padding:7px 11px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.028);
+      border-radius:999px;
+      color:rgba(226,232,240,.72);
       font-size:10px;
-    }
-    .proof-item{display:flex;align-items:center;gap:5px}
-    .proof-check{color:#4ade80}
-
-    .login-side{
-      display:flex;justify-content:flex-end;
-      animation:fadeUp .82s .13s ease both;
+      font-weight:600;
     }
 
-    .glass-card{
+    .hero-actions{
+      display:flex;
+      gap:9px;
+      flex-wrap:wrap;
+      margin-top:26px;
+    }
+    .btn-primary,.btn-secondary,.btn-prof{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      border-radius:12px;
+      padding:12px 16px;
+      font-size:11px;
+      font-weight:750;
+      transition:.22s;
+    }
+    .btn-primary{
+      border:0;
+      background:linear-gradient(135deg,#22d3ee,#0891b2);
+      color:white;
+      box-shadow:0 12px 30px rgba(34,211,238,.20);
+    }
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(34,211,238,.28)}
+    .btn-secondary{
+      border:1px solid rgba(255,255,255,.09);
+      background:rgba(255,255,255,.03);
+      color:#d9eef3;
+    }
+    .btn-secondary:hover{background:rgba(255,255,255,.065);border-color:rgba(255,255,255,.16)}
+
+    /* LOGIN CARD */
+    .login-card{
       width:100%;
       max-width:470px;
-      background:var(--panel);
-      border:1px solid rgba(34,211,238,.17);
-      border-radius:28px;
-      padding:34px 34px 28px;
-      backdrop-filter:blur(30px);
-      -webkit-backdrop-filter:blur(30px);
-      box-shadow:
-        0 0 0 1px rgba(34,211,238,.04),
-        0 30px 80px rgba(0,0,0,.46),
-        0 0 100px rgba(34,211,238,.045) inset;
+      justify-self:end;
+      border:1px solid rgba(103,232,249,.17);
+      border-radius:25px;
+      background:
+        linear-gradient(145deg,rgba(8,23,40,.94),rgba(4,13,25,.94));
+      padding:28px;
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.025);
+      backdrop-filter:blur(22px);
+      -webkit-backdrop-filter:blur(22px);
     }
-
-    .login-new-badge{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      padding:9px 11px;border-radius:11px;
-      border:1px solid rgba(139,92,246,.18);
-      background:rgba(139,92,246,.055);
-      margin-bottom:19px;
+    .login-kicker{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding-bottom:17px;
+      margin-bottom:20px;
+      border-bottom:1px solid rgba(255,255,255,.065);
     }
-    .login-new-badge span:first-child{font-size:9.5px;font-weight:750;letter-spacing:.09em;text-transform:uppercase;color:#ddd6fe}
-    .login-new-badge span:last-child{font-size:9px;color:rgba(221,214,254,.65)}
-
-    .card-header{text-align:left;margin-bottom:22px}
-    .card-header h2{font-size:28px;letter-spacing:-.7px;font-weight:700;margin-bottom:6px}
-    .card-header p{font-size:12.5px;line-height:1.58;color:rgba(207,250,254,.66);font-weight:400}
-
-    .field{margin-bottom:14px}
+    .login-kicker strong{
+      font-size:9px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:#a5f3fc;
+    }
+    .login-kicker span{
+      font-size:8.5px;
+      color:rgba(226,232,240,.40);
+    }
+    .login-card h2{
+      font-size:26px;
+      font-weight:750;
+      letter-spacing:-.6px;
+    }
+    .login-intro{
+      font-size:11.5px;
+      line-height:1.6;
+      color:rgba(203,225,234,.58);
+      margin-top:5px;
+      margin-bottom:20px;
+    }
+    .field{margin-bottom:13px}
     .field label{
       display:block;
-      font-size:10.5px;font-weight:650;color:rgba(207,250,254,.70);
-      margin-bottom:6px;letter-spacing:.09em;text-transform:uppercase;
+      margin-bottom:6px;
+      font-size:9.5px;
+      font-weight:700;
+      color:rgba(207,250,254,.64);
+      text-transform:uppercase;
+      letter-spacing:.09em;
     }
     .field input{
-      width:100%;padding:13px 14px;
-      background:rgba(255,255,255,.035);
-      border:1px solid rgba(34,211,238,.13);
-      border-radius:12px;color:#fff;
-      font-size:14px;font-family:'Poppins',sans-serif;
-      transition:all .22s;-webkit-appearance:none;
+      width:100%;
+      border:1px solid rgba(103,232,249,.12);
+      background:rgba(255,255,255,.032);
+      color:#fff;
+      border-radius:12px;
+      padding:13px 14px;
+      font-size:13.5px;
+      transition:.2s;
+      outline:0;
     }
-    .field input::placeholder{color:rgba(255,255,255,.18)}
     .field input:focus{
-      outline:none;
-      border-color:var(--cyan);
+      border-color:rgba(34,211,238,.75);
       background:rgba(34,211,238,.05);
-      box-shadow:0 0 0 3px rgba(34,211,238,.09);
+      box-shadow:0 0 0 3px rgba(34,211,238,.08);
     }
+    .field input::placeholder{color:rgba(255,255,255,.19)}
 
     #mainBtn{
-      width:100%;padding:13px;margin-top:5px;
-      border:none;border-radius:12px;
+      width:100%;
+      border:0;
+      border-radius:12px;
+      padding:13px;
       background:linear-gradient(135deg,#22d3ee,#0891b2);
-      color:#fff;font-size:14.5px;font-weight:700;font-family:'Poppins',sans-serif;
-      cursor:pointer;
-      box-shadow:0 9px 27px rgba(34,211,238,.22),0 0 0 1px rgba(34,211,238,.14);
-      transition:all .22s;-webkit-appearance:none;position:relative;overflow:hidden;
+      color:#fff;
+      font-size:13px;
+      font-weight:750;
+      margin-top:5px;
+      box-shadow:0 10px 28px rgba(34,211,238,.18);
+      transition:.2s;
     }
-    #mainBtn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.10),transparent);border-radius:inherit;pointer-events:none}
-    #mainBtn:hover{transform:translateY(-2px);box-shadow:0 14px 35px rgba(34,211,238,.3)}
-    #mainBtn:active{transform:translateY(0)}
-    #mainBtn:disabled{opacity:.48;cursor:not-allowed;transform:none}
+    #mainBtn:hover:not(:disabled){transform:translateY(-2px)}
+    #mainBtn:disabled{opacity:.43;cursor:not-allowed}
 
     #toggleBtn{
-      width:100%;padding:11px;margin-top:7px;
-      border:1px solid var(--border);border-radius:12px;
-      background:transparent;color:rgba(165,243,252,.70);
-      font-size:12.5px;font-family:'Poppins',sans-serif;
-      cursor:pointer;transition:all .22s;-webkit-appearance:none;
+      width:100%;
+      padding:11px;
+      border-radius:12px;
+      margin-top:7px;
+      border:1px solid rgba(103,232,249,.14);
+      background:transparent;
+      color:rgba(207,250,254,.68);
+      font-size:11.5px;
+      font-weight:600;
     }
-    #toggleBtn:hover{border-color:rgba(34,211,238,.34);background:rgba(34,211,238,.045);color:#fff}
-    #toggleBtn:disabled{opacity:.5;cursor:not-allowed}
+    #toggleBtn:hover{background:rgba(34,211,238,.045)}
 
-    #msg{min-height:20px;font-size:11.5px;text-align:center;margin-top:11px}
-    .divider{
-      display:flex;align-items:center;gap:10px;margin:17px 0 12px;
-      color:rgba(255,255,255,.30);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;
+    #msg{
+      min-height:18px;
+      margin-top:10px;
+      text-align:center;
+      font-size:10.5px;
     }
-    .divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.065)}
-
-    .security-note{
-      padding:10px 12px;
-      background:rgba(34,211,238,.035);
-      border:1px solid rgba(34,211,238,.10);
-      border-radius:10px;
-      font-size:10.5px;line-height:1.58;color:rgba(207,250,254,.67);text-align:center;
-    }
-    .security-note strong{color:rgba(207,250,254,.75)}
-
-    .card-footer{margin-top:16px;text-align:center;font-size:9.5px;color:rgba(255,255,255,.28)}
 
     .terms-box{
       margin-bottom:12px;
-      border:1px solid rgba(34,211,238,.12);
+      border:1px solid rgba(103,232,249,.11);
       border-radius:12px;
       overflow:hidden;
+      background:rgba(255,255,255,.012);
     }
     .terms-scroll{
-      max-height:104px;
-      overflow-y:auto;
+      max-height:106px;
+      overflow:auto;
       padding:11px 13px;
-      background:rgba(255,255,255,.022);
-      font-size:10.5px;
-      line-height:1.68;
-      color:rgba(207,250,254,.68);
+      font-size:9.5px;
+      line-height:1.65;
+      color:rgba(203,225,234,.57);
       scrollbar-width:thin;
-      scrollbar-color:rgba(34,211,238,.3) transparent;
+      scrollbar-color:rgba(34,211,238,.28) transparent;
     }
-    .terms-scroll::-webkit-scrollbar{width:4px}
-    .terms-scroll::-webkit-scrollbar-thumb{background:rgba(34,211,238,.28);border-radius:4px}
     .terms-scroll p{margin-bottom:6px}
-    .terms-scroll strong{color:rgba(207,250,254,.82)}
+    .terms-scroll strong{color:#d8f9ff}
     .terms-scroll .t-section{
-      font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-      color:rgba(34,211,238,.48);margin:8px 0 3px;
+      margin:8px 0 3px;
+      color:rgba(103,232,249,.64);
+      text-transform:uppercase;
+      letter-spacing:.10em;
+      font-size:8.4px;
+      font-weight:750;
     }
     .terms-check{
-      display:flex;align-items:center;gap:9px;
+      display:flex;
+      align-items:flex-start;
+      gap:9px;
       padding:9px 12px;
-      background:rgba(34,211,238,.032);
-      border-top:1px solid rgba(34,211,238,.08);
-      cursor:pointer;
+      border-top:1px solid rgba(255,255,255,.055);
+      background:rgba(34,211,238,.022);
     }
-    .terms-check input[type="checkbox"]{width:15px;height:15px;flex-shrink:0;accent-color:#22d3ee;cursor:pointer}
-    .terms-check label{font-size:10.5px;font-weight:600;color:rgba(207,250,254,.74);cursor:pointer;line-height:1.45}
+    .terms-check input{margin-top:1px;width:15px;height:15px;accent-color:#22d3ee;flex:0 0 auto}
+    .terms-check label{
+      font-size:9.6px;
+      line-height:1.45;
+      color:rgba(207,250,254,.67);
+      font-weight:600;
+    }
+    .login-divider{
+      display:flex;align-items:center;gap:9px;
+      margin:16px 0 11px;
+      color:rgba(255,255,255,.18);
+      font-size:8px;
+      text-transform:uppercase;
+      letter-spacing:.10em;
+    }
+    .login-divider:before,.login-divider:after{
+      content:'';
+      flex:1;
+      height:1px;
+      background:rgba(255,255,255,.055);
+    }
+    .security-note{
+      border:1px solid rgba(103,232,249,.08);
+      background:rgba(34,211,238,.022);
+      border-radius:10px;
+      padding:9px 10px;
+      text-align:center;
+      font-size:9px;
+      line-height:1.5;
+      color:rgba(203,225,234,.50);
+    }
+    .card-footer{
+      margin-top:13px;
+      text-align:center;
+      font-size:8px;
+      color:rgba(255,255,255,.17);
+    }
 
-    .bottom-update{
-      width:100%;
+    /* SEÇÕES */
+    .section{
+      padding:68px 0;
+    }
+    .section + .section{
+      border-top:1px solid rgba(255,255,255,.045);
+    }
+    .section-head{
+      max-width:780px;
+      margin-bottom:28px;
+    }
+    .section-label{
+      color:#67e8f9;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:9px;
+      font-weight:750;
+      margin-bottom:8px;
+    }
+    .section-title{
+      font-size:clamp(29px,3.1vw,44px);
+      line-height:1.12;
+      letter-spacing:-1.6px;
+      font-weight:780;
+    }
+    .section-copy{
+      max-width:720px;
+      margin-top:11px;
+      font-size:13px;
+      line-height:1.75;
+      color:rgba(203,225,234,.62);
+    }
+
+    .study-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:13px;
+    }
+    .study-card{
+      min-height:230px;
+      padding:21px;
+      border:1px solid rgba(255,255,255,.07);
+      background:linear-gradient(155deg,rgba(10,27,47,.72),rgba(5,15,28,.72));
+      border-radius:18px;
+      position:relative;
+      overflow:hidden;
+      transition:.22s;
+    }
+    .study-card:before{
+      content:'';
+      position:absolute;
+      width:150px;height:150px;border-radius:50%;
+      right:-80px;top:-75px;
+      background:radial-gradient(circle,rgba(34,211,238,.13),transparent 68%);
+    }
+    .study-card:nth-child(2):before{background:radial-gradient(circle,rgba(139,92,246,.13),transparent 68%)}
+    .study-card:nth-child(3):before{background:radial-gradient(circle,rgba(74,222,128,.10),transparent 68%)}
+    .study-card:hover{transform:translateY(-3px);border-color:rgba(103,232,249,.20)}
+    .study-num{
+      font-size:9px;
+      font-weight:800;
+      letter-spacing:.1em;
+      color:rgba(103,232,249,.55);
+      margin-bottom:33px;
+    }
+    .study-card h3{
+      font-size:17px;
+      font-weight:700;
+      margin-bottom:9px;
+    }
+    .study-card p{
+      font-size:11px;
+      line-height:1.72;
+      color:rgba(203,225,234,.58);
+    }
+    .study-list{
+      list-style:none;
+      margin-top:13px;
+    }
+    .study-list li{
+      position:relative;
+      padding-left:14px;
+      font-size:9.5px;
+      line-height:1.6;
+      color:rgba(226,232,240,.62);
+      margin:4px 0;
+    }
+    .study-list li:before{
+      content:'';
+      position:absolute;
+      left:0;top:7px;
+      width:5px;height:5px;border-radius:50%;
+      background:var(--cyan);
+    }
+
+    /* CATÁLOGO ESTILO STREAMING */
+    .catalog-strip{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+    .catalog-card{
+      aspect-ratio:1.42/1;
+      position:relative;
+      overflow:hidden;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.075);
+      box-shadow:0 16px 42px rgba(0,0,0,.24);
+      padding:17px;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+    }
+    .catalog-card:after{
+      content:'';
+      position:absolute;inset:0;
+      background:linear-gradient(180deg,transparent 12%,rgba(2,8,16,.16) 50%,rgba(2,8,16,.88) 100%);
+      z-index:0;
+    }
+    .catalog-card > *{position:relative;z-index:1}
+    .cover-ecg{background:
+      radial-gradient(circle at 77% 16%,rgba(34,211,238,.28),transparent 28%),
+      linear-gradient(135deg,#07233a,#05101d 70%)}
+    .cover-venom{background:
+      radial-gradient(circle at 80% 18%,rgba(74,222,128,.21),transparent 30%),
+      linear-gradient(135deg,#143526,#07130f 70%)}
+    .cover-biochem{background:
+      radial-gradient(circle at 78% 15%,rgba(139,92,246,.25),transparent 29%),
+      linear-gradient(135deg,#24133f,#0d0918 72%)}
+    .cover-virus{background:
+      radial-gradient(circle at 79% 15%,rgba(14,165,233,.24),transparent 30%),
+      linear-gradient(135deg,#0b2740,#06121f 70%)}
+    .cover-watermark{
+      position:absolute!important;
+      z-index:0!important;
+      right:14px;top:8px;
+      font-size:68px;
+      font-weight:800;
+      letter-spacing:-5px;
+      color:rgba(255,255,255,.04);
+      line-height:1;
+    }
+    .catalog-tag{
+      width:max-content;
+      padding:4px 7px;
+      border-radius:6px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(2,8,16,.30);
+      color:rgba(255,255,255,.70);
+      font-size:7px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:6px;
+    }
+    .catalog-title{
+      font-size:14px;
+      font-weight:700;
+      line-height:1.22;
+    }
+    .catalog-sub{
+      font-size:8.5px;
+      color:rgba(226,232,240,.48);
+      margin-top:4px;
+    }
+
+    /* MÉTODO */
+    .focus-panel{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:24px;
+      padding:28px;
+      border:1px solid rgba(103,232,249,.12);
+      border-radius:22px;
+      background:linear-gradient(135deg,rgba(8,25,43,.72),rgba(5,14,27,.68));
+    }
+    .focus-copy h3{
+      font-size:25px;
+      letter-spacing:-.8px;
+      line-height:1.2;
+    }
+    .focus-copy p{
+      margin-top:11px;
+      font-size:12px;
+      line-height:1.75;
+      color:rgba(203,225,234,.62);
+    }
+    .focus-points{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:9px;
+    }
+    .focus-point{
+      padding:14px;
+      border:1px solid rgba(255,255,255,.065);
+      border-radius:13px;
+      background:rgba(255,255,255,.018);
+    }
+    .focus-point strong{
+      display:block;
+      font-size:10.5px;
+      margin-bottom:4px;
+      color:#e8fbff;
+    }
+    .focus-point span{
+      display:block;
+      font-size:9.2px;
+      line-height:1.55;
+      color:rgba(203,225,234,.49);
+    }
+
+    /* PROFESSOR CTA */
+    .professor-panel{
+      position:relative;
+      overflow:hidden;
+      display:grid;
+      grid-template-columns:1fr auto;
+      align-items:center;
+      gap:28px;
+      padding:31px 34px;
+      border:1px solid rgba(139,92,246,.18);
+      border-radius:22px;
+      background:
+        radial-gradient(circle at 84% 30%,rgba(139,92,246,.12),transparent 31%),
+        linear-gradient(135deg,rgba(25,20,53,.72),rgba(5,15,28,.80));
+    }
+    .professor-panel .section-label{color:#c4b5fd}
+    .professor-panel h3{
+      font-size:29px;
+      line-height:1.18;
+      letter-spacing:-1px;
+      margin-top:5px;
+    }
+    .professor-panel p{
+      max-width:720px;
       margin-top:8px;
-      padding:14px 16px;
-      border:1px solid rgba(139,92,246,.11);
-      border-radius:15px;
-      background:linear-gradient(90deg,rgba(139,92,246,.035),rgba(34,211,238,.02));
-      display:flex;align-items:center;justify-content:space-between;gap:16px;
-      color:rgba(226,232,240,.44);
-      font-size:8.8px;
+      font-size:11.5px;
+      line-height:1.7;
+      color:rgba(221,214,254,.62);
     }
-    .bottom-update strong{color:#ddd6fe;font-weight:650}
-    .bottom-update .right{white-space:nowrap;color:rgba(165,243,252,.34)}
+    .btn-prof{
+      flex:0 0 auto;
+      border:1px solid rgba(167,139,250,.26);
+      background:linear-gradient(135deg,rgba(139,92,246,.20),rgba(99,102,241,.13));
+      color:#f5f3ff;
+      padding:13px 17px;
+      white-space:nowrap;
+    }
+    .btn-prof:hover{transform:translateY(-2px);border-color:rgba(196,181,253,.48);background:linear-gradient(135deg,rgba(139,92,246,.29),rgba(99,102,241,.20))}
 
-    @keyframes fadeDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-
-    @media(max-width:980px){
-      .site-shell{width:min(930px,calc(100% - 32px))}
-      .main-grid{grid-template-columns:1fr;gap:25px;align-items:start;padding-top:12px}
-      .experience{text-align:center}
-      .hero-title,.hero-copy{margin-left:auto;margin-right:auto}
-      .product-line,.proof-strip{justify-content:center}
-      .feature-grid{text-align:left;max-width:780px;margin-left:auto;margin-right:auto}
-      .login-side{justify-content:center}
-      .glass-card{max-width:520px}
-      .bottom-update{max-width:780px;margin-left:auto;margin-right:auto}
+    footer{
+      padding:24px 0 32px;
+      color:rgba(226,232,240,.28);
+      font-size:8.5px;
+      text-align:center;
     }
 
-    @media(max-width:680px){
-      .site-shell{width:calc(100% - 24px);padding-top:14px}
-      .topbar{padding-bottom:14px}
-      .brand-mark{width:38px;height:38px}
-      .brand-name{font-size:16px}
-      .brand-sub{font-size:9px}
-      .release-pill{font-size:9.5px;padding:8px 10px}
-      .main-grid{gap:24px}
-      .hero-title{font-size:clamp(38px,10.8vw,52px);letter-spacing:-1.7px}
-      .hero-copy{font-size:14px;line-height:1.68;margin-top:15px}
-      .eyebrow{margin-bottom:14px}
-      .feature-grid{grid-template-columns:1fr;gap:8px;margin-top:19px}
-      .feature-card{min-height:0;padding:14px}
-      .feature-card h3{font-size:14px}
-      .feature-card p{font-size:11.5px}
-      .proof-strip{display:none}
-      .glass-card{padding:27px 22px 23px;border-radius:22px}
-      .bottom-update{display:block;text-align:center;line-height:1.55}
-      .bottom-update .right{margin-top:5px}
-      #dna-canvas{opacity:.40}
+    @media(max-width:1050px){
+      .nav-links{display:none}
+      .hero{
+        grid-template-columns:1fr;
+        gap:34px;
+        padding-top:44px;
+      }
+      .hero-content{text-align:center}
+      .hero h1,.hero-lead{margin-left:auto;margin-right:auto}
+      .hero-tags,.hero-actions{justify-content:center}
+      .login-card{justify-self:center;max-width:560px}
+      .study-grid{grid-template-columns:1fr}
+      .study-card{min-height:0}
+      .catalog-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .focus-panel{grid-template-columns:1fr}
     }
 
-    @media(max-width:430px){
-      .release-pill span:last-child{display:none}
-      .release-pill::after{content:"NOVO";font-size:7.8px;font-weight:800}
-      .hero-title{font-size:38px}
-      .product-chip{font-size:10px}
+    @media(max-width:720px){
+      .container{width:calc(100% - 24px)}
+      .nav{min-height:68px;gap:8px}
+      .brand-symbol{width:38px;height:38px;border-radius:12px}
+      .brand-name{font-size:14px}
+      .brand-sub{display:none}
+      .nav-actions{gap:6px}
+      .nav-cta{display:none}
+      .lang-btn{padding:6px 7px;font-size:8px}
+      .hero{min-height:auto;padding:35px 0 38px}
+      .eyebrow{font-size:8.5px;margin-bottom:16px}
+      .hero h1{font-size:clamp(37px,11.5vw,51px);letter-spacing:-1.9px}
+      .hero-lead{font-size:13px;line-height:1.67;margin-top:16px}
+      .hero-tag{font-size:8.5px}
+      .hero-actions{margin-top:21px}
+      .btn-primary,.btn-secondary{font-size:10px;padding:11px 13px}
+      .login-card{padding:22px 17px;border-radius:20px}
+      .login-card h2{font-size:23px}
+      .section{padding:48px 0}
+      .section-title{font-size:31px}
+      .section-copy{font-size:11.5px}
+      .study-card{padding:18px}
+      .study-num{margin-bottom:20px}
+      .catalog-strip{
+        display:flex;
+        overflow-x:auto;
+        scroll-snap-type:x mandatory;
+        padding-bottom:5px;
+        margin-right:-12px;
+      }
+      .catalog-card{
+        min-width:78vw;
+        max-width:315px;
+        scroll-snap-align:start;
+      }
+      .focus-panel{padding:20px}
+      .focus-points{grid-template-columns:1fr}
+      .professor-panel{grid-template-columns:1fr;padding:24px 20px}
+      .professor-panel h3{font-size:25px}
+      .btn-prof{width:100%}
+      #dna-canvas{opacity:.34}
     }
 
-    @media(max-height:720px) and (min-width:981px){
-      .site-shell{padding-top:14px;padding-bottom:18px}
-      .topbar{padding-bottom:10px}
-      .main-grid{padding-top:4px;padding-bottom:10px}
-      .hero-title{font-size:48px}
-      .hero-copy{margin-top:12px;line-height:1.55}
-      .feature-grid{margin-top:16px}
-      .feature-card{min-height:132px;padding:13px}
-      .glass-card{padding:22px 24px 19px}
-      .terms-scroll{max-height:80px}
+    @media(max-width:410px){
+      .brand-symbol{display:none}
+      .hero h1{font-size:36px}
+      .login-kicker span{display:none}
     }
   </style>
 </head>
 <body>
 
 <canvas id="dna-canvas"></canvas>
-
-<div class="aurora">
-  <div class="aurora-blob"></div>
-  <div class="aurora-blob"></div>
-  <div class="aurora-blob"></div>
-</div>
+<div class="background-layer"></div>
 <div class="grid-overlay"></div>
-<div class="scan-line"></div>
-<div class="vignette"></div>
 
-<div class="site-shell">
-  <header class="topbar">
-    <div class="brand-lockup">
-      <div class="brand-mark" style="font-size:12px;font-weight:800;letter-spacing:.04em;color:#cffafe;">R·E</div>
-      <div>
-        <div class="brand-name">RESUMOS DO <span>ENZO</span></div>
-        <div class="brand-sub">Plataforma acadêmica</div>
-      </div>
-    </div>
+<div class="site">
 
-    <div class="release-pill">
-      <span class="release-dot"></span>
-      <span>Nova experiência disponível</span>
-    </div>
-  </header>
+  <div class="nav-wrap">
+    <nav class="container nav">
+      <a class="brand" href="#top" aria-label="Resumos do Enzo">
+        <div class="brand-symbol">R·E</div>
+        <div>
+          <div class="brand-name">RESUMOS DO <span>ENZO</span></div>
+          <div class="brand-sub" data-i18n="brand.sub">Plataforma digital de estudos</div>
+        </div>
+      </a>
 
-  <main class="main-grid">
-    <section class="experience" aria-label="Novidades da plataforma">
-      <div class="eyebrow"><strong>NOVO</strong> A plataforma ficou ainda mais completa</div>
-
-      <h1 class="hero-title">
-        Tudo para estudar.<br>
-        <span class="gradient">Tudo em um só lugar.</span>
-      </h1>
-
-      <p class="hero-copy">
-        O <strong>Resumos do Enzo</strong> evoluiu. Agora você encontra
-        <strong>resumos, cursos e aulões dos seus professores favoritos</strong>
-        dentro da mesma plataforma — organizados para você revisar, aprender e acompanhar seus conteúdos com muito mais facilidade.
-      </p>
-
-      <div class="product-line">
-        <span class="product-chip">📚 Resumos</span>
-        <span class="product-chip">🎓 Cursos</span>
-        <span class="product-chip new">▶ Aulões de professores <b style="color:#c4b5fd;">• NOVO</b></span>
+      <div class="nav-links">
+        <button class="nav-link" onclick="document.getElementById('como-estudar').scrollIntoView({behavior:'smooth'})" data-i18n="nav.study">Como estudar</button>
+        <button class="nav-link" onclick="document.getElementById('catalogo').scrollIntoView({behavior:'smooth'})" data-i18n="nav.catalog">Conteúdos</button>
+        <button class="nav-link" onclick="document.getElementById('professor').scrollIntoView({behavior:'smooth'})" data-i18n="nav.prof">Para professores</button>
       </div>
 
-      <div class="feature-grid">
-        <article class="feature-card">
-          <div class="feature-icon">01</div>
-          <h3>Resumos interativos</h3>
-          <p>Conteúdo organizado por semestre e avaliação, com ferramentas para revisar e acompanhar seus estudos dentro da plataforma.</p>
-        </article>
-
-        <article class="feature-card">
-          <div class="feature-icon">02</div>
-          <h3>Cursos</h3>
-          <p>Conteúdos complementares estruturados para aprofundar temas importantes e estudar no seu próprio ritmo.</p>
-        </article>
-
-        <article class="feature-card feature-new">
-          <div class="feature-icon">03</div>
-          <h3>Aulões <span class="mini-new">novo</span></h3>
-          <p>Encontre aulões por professor, matéria, semestre e avaliação. Escolha seu professor favorito e assista diretamente pela plataforma.</p>
-        </article>
+      <div class="nav-actions">
+        <div class="lang-switch" aria-label="Selecionar idioma">
+          <button class="lang-btn active" data-lang="pt-BR" onclick="setPortalLanguage('pt-BR')">PT-BR</button>
+          <button class="lang-btn" data-lang="es-PY" onclick="setPortalLanguage('es-PY')">ES-PY</button>
+        </div>
+        <button class="nav-cta" onclick="document.getElementById('login').scrollIntoView({behavior:'smooth',block:'center'})" data-i18n="nav.login">Entrar</button>
       </div>
+    </nav>
+  </div>
 
-      <div class="proof-strip">
-        <span class="proof-item"><span class="proof-check">✓</span> Um único login</span>
-        <span class="proof-item"><span class="proof-check">✓</span> Conteúdo organizado por semestre</span>
-        <span class="proof-item"><span class="proof-check">✓</span> Acesso individual e protegido</span>
-        <span class="proof-item"><span class="proof-check">✓</span> Novas funcionalidades em evolução contínua</span>
-      </div>
-    </section>
+  <main id="top">
 
-    <aside class="login-side">
-      <div class="glass-card">
-        <div class="login-new-badge">
-          <span>✦ Resumos do Enzo 2026</span>
-          <span>Resumos • Cursos • Aulões</span>
+    <section class="container hero">
+      <div class="hero-content">
+        <div class="eyebrow">
+          <span class="eyebrow-dot"></span>
+          <span data-i18n="hero.kicker">Uma plataforma. Diferentes formas de aprender.</span>
         </div>
 
-        <div class="card-header">
-          <h2 id="title">Bem-vindo</h2>
-          <p>Entre na sua conta para acessar todo o conteúdo disponível para você.</p>
+        <h1>
+          <span data-i18n="hero.line1">Estude de forma mais inteligente.</span><br>
+          <span class="accent" data-i18n="hero.line2">Conteúdo feito para sua rotina real.</span>
+        </h1>
+
+        <p class="hero-lead" data-i18n-html="hero.lead">
+          O <strong>Resumos do Enzo</strong> é uma plataforma digital de estudos criada para reunir
+          <strong>resumos totalmente interativos, cursos temáticos e cursos de disciplinas</strong>
+          em um único ambiente — com conteúdo voltado para quem acompanha aulas presenciais e precisa revisar de forma séria, organizada e objetiva.
+        </p>
+
+        <div class="hero-tags">
+          <span class="hero-tag" data-i18n="tag.1">Resumos interativos</span>
+          <span class="hero-tag" data-i18n="tag.2">Cursos temáticos</span>
+          <span class="hero-tag" data-i18n="tag.3">Cursos de disciplinas</span>
+          <span class="hero-tag" data-i18n="tag.4">Revisão focada em aulas presenciais</span>
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="document.getElementById('login').scrollIntoView({behavior:'smooth',block:'center'})" data-i18n="hero.cta">Acessar minha conta</button>
+          <button class="btn-secondary" onclick="document.getElementById('como-estudar').scrollIntoView({behavior:'smooth'})" data-i18n="hero.learn">Conhecer a plataforma</button>
+        </div>
+      </div>
+
+      <aside class="login-card" id="login">
+        <div class="login-kicker">
+          <strong data-i18n="login.secure">Acesso seguro</strong>
+          <span data-i18n="login.products">Resumos • Cursos • Conteúdos interativos</span>
+        </div>
+
+        <h2 id="title" data-i18n="login.title">Bem-vindo</h2>
+        <p class="login-intro" data-i18n="login.copy">Entre na sua conta para acessar seus conteúdos e continuar de onde parou.</p>
+
+        <div class="field">
+          <label data-i18n="login.email">Email</label>
+          <input type="email" id="email" placeholder="seu@email.com" autocomplete="email" data-i18n-placeholder="login.emailph">
         </div>
 
         <div class="field">
-          <label>Email</label>
-          <input type="email" id="email" placeholder="seu@email.com" autocomplete="email">
-        </div>
-
-        <div class="field">
-          <label>Senha</label>
+          <label data-i18n="login.password">Senha</label>
           <div style="position:relative;">
             <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" style="padding-right:46px;" oninput="updateStrength()">
             <button type="button" id="togglePassword" onclick="togglePasswordVisibility()" style="
               position:absolute;right:13px;top:50%;transform:translateY(-50%);
-              background:transparent;border:none;cursor:pointer;color:rgba(34,211,238,.45);
-              font-size:15px;padding:0;line-height:1;transition:color .2s;
-            " onmouseover="this.style.color='rgba(34,211,238,0.85)'"
-               onmouseout="this.style.color='rgba(34,211,238,0.45)'">👁</button>
+              background:transparent;border:none;cursor:pointer;color:rgba(34,211,238,.48);
+              font-size:15px;padding:0;line-height:1;
+            ">👁</button>
           </div>
 
           <div id="strengthMeter" style="display:none;margin-top:8px;">
             <div style="display:flex;gap:4px;margin-bottom:5px;">
-              <div id="bar1" style="flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,0.08);transition:background .3s;"></div>
-              <div id="bar2" style="flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,0.08);transition:background .3s;"></div>
-              <div id="bar3" style="flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,0.08);transition:background .3s;"></div>
+              <div id="bar1" style="flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,.08);transition:background .3s;"></div>
+              <div id="bar2" style="flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,.08);transition:background .3s;"></div>
+              <div id="bar3" style="flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,.08);transition:background .3s;"></div>
             </div>
-            <div id="strengthLabel" style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.3);transition:color .3s;"></div>
+            <div id="strengthLabel" style="font-size:10px;font-weight:600;color:rgba(255,255,255,.3);"></div>
           </div>
         </div>
 
         <div class="terms-box" id="termsBox">
-          <div class="terms-scroll">
-            <div class="t-section">💳 Pagamentos</div>
-            <p>• Os materiais estão disponíveis por <strong>resumo individual</strong> ou em <strong>pacote completo</strong> (7 matérias), tanto para P1/P2 quanto para as Provas Finais.</p>
-            <p>• Os valores podem ser consultados diretamente na plataforma, na área de compras.</p>
-            <p>• Os pagamentos são <strong>não reembolsáveis</strong> após a liberação do acesso.</p>
-            <p>• Pagamento exclusivamente via <strong>PIX</strong>. O QR Code é gerado automaticamente na plataforma.</p>
-
-            <div class="t-section">📅 Prazo de Acesso</div>
-            <p>• O acesso fica disponível por <strong>50 dias</strong> a partir da data do pagamento.</p>
-            <p>• Após esse período, o acesso é encerrado automaticamente.</p>
-            <p>• Os resumos de P1/P2 <strong>não incluem</strong> os conteúdos das provas finais — são comercializados separadamente.</p>
-
-            <div class="t-section">🔒 Privacidade e Segurança</div>
-            <p>• Não armazenamos dados sensíveis.</p>
-            <p>• <strong>Nunca compartilhe sua senha</strong> com ninguém.</p>
-            <p>• Cada conta é pessoal e intransferível — permite apenas <strong>um dispositivo ativo por vez</strong>.</p>
-          </div>
+          <div class="terms-scroll" id="studentTerms"></div>
           <div class="terms-check">
             <input type="checkbox" id="termsChk" onchange="updateMainBtn()">
-            <label for="termsChk" onclick="event.preventDefault();document.getElementById('termsChk').checked=!document.getElementById('termsChk').checked;updateMainBtn();">
+            <label for="termsChk" onclick="event.preventDefault();document.getElementById('termsChk').checked=!document.getElementById('termsChk').checked;updateMainBtn();" data-i18n="terms.accept">
               Li e concordo com todos os termos para continuar
             </label>
           </div>
         </div>
 
-        <button id="mainBtn" disabled>Entrar</button>
-        <button id="toggleBtn">Criar conta</button>
+        <button id="mainBtn" disabled data-i18n="login.enter">Entrar</button>
+        <button id="toggleBtn" data-i18n="login.create">Criar conta</button>
 
         <button id="forgotBtn" style="
-          display:none;width:100%;padding:10px;margin-top:5px;border:none;border-radius:12px;
-          background:transparent;color:rgba(34,211,238,.48);font-size:10.5px;font-family:'Poppins',sans-serif;
-          cursor:pointer;transition:all .22s;-webkit-appearance:none;text-decoration:underline;text-underline-offset:3px;
-        " onmouseover="this.style.color='rgba(34,211,238,0.85)'"
-           onmouseout="this.style.color='rgba(34,211,238,0.48)'">
-          Esqueceu sua senha?
-        </button>
+          display:none;width:100%;padding:10px;margin-top:5px;border:0;background:transparent;
+          color:rgba(103,232,249,.56);font-size:10.5px;text-decoration:underline;text-underline-offset:3px;
+        " data-i18n="login.forgot">Esqueceu sua senha?</button>
 
         <button id="forceBtn" style="
-          display:none;width:100%;padding:11px;margin-top:7px;border:1px solid rgba(239,68,68,.35);
-          border-radius:12px;background:rgba(239,68,68,.07);color:#fca5a5;font-size:10.5px;
-          font-family:'Poppins',sans-serif;cursor:pointer;transition:all .22s;-webkit-appearance:none;
-        " onmouseover="this.style.background='rgba(239,68,68,0.16)'"
-           onmouseout="this.style.background='rgba(239,68,68,0.07)'">
-          ⚡ Forçar desconexão do outro dispositivo
-        </button>
+          display:none;width:100%;padding:11px;margin-top:7px;border:1px solid rgba(239,68,68,.32);
+          border-radius:11px;background:rgba(239,68,68,.06);color:#fca5a5;font-size:10px;
+        " data-i18n="login.force">Forçar desconexão do outro dispositivo</button>
 
         <div id="msg"></div>
-        <div class="divider">acesso seguro</div>
 
-        <div class="security-note">
-          <strong>🔒 Conta individual</strong>
-          Sua conta é pessoal e intransferível. Use uma senha exclusiva para esta plataforma.
+        <div class="login-divider" data-i18n="login.divider">conta individual</div>
+        <div class="security-note" data-i18n="login.note">
+          Sua conta é pessoal e intransferível. Use uma senha exclusiva para a plataforma.
+        </div>
+        <div class="card-footer">© 2026 Resumos do Enzo</div>
+      </aside>
+    </section>
+
+    <section class="section" id="como-estudar">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label" data-i18n="study.label">Uma plataforma, três experiências</div>
+          <h2 class="section-title" data-i18n="study.title">Escolha a forma de estudo que combina com o que você precisa hoje.</h2>
+          <p class="section-copy" data-i18n="study.copy">A ideia é simples: você não precisa procurar materiais em vários lugares. A plataforma reúne revisão escrita, conteúdos temáticos e cursos de disciplinas dentro da mesma experiência.</p>
         </div>
 
-        <div class="card-footer">&copy; 2026 Resumos do Enzo &bull; Medicina</div>
+        <div class="study-grid">
+          <article class="study-card">
+            <div class="study-num">01 — RESUMOS</div>
+            <h3 data-i18n="study.resumos.title">Resumos totalmente interativos</h3>
+            <p data-i18n="study.resumos.copy">Materiais desenvolvidos para acompanhar o conteúdo das aulas presenciais e transformar revisão em uma experiência ativa, não apenas em leitura passiva.</p>
+            <ul class="study-list">
+              <li data-i18n="study.resumos.1">Conteúdo organizado por matéria e avaliação</li>
+              <li data-i18n="study.resumos.2">Revisão séria e focada no que foi ministrado</li>
+              <li data-i18n="study.resumos.3">Questões, memorização e ferramentas interativas</li>
+            </ul>
+          </article>
+
+          <article class="study-card">
+            <div class="study-num">02 — CURSOS TEMÁTICOS</div>
+            <h3 data-i18n="study.theme.title">Cursos para aprofundar temas importantes</h3>
+            <p data-i18n="study.theme.copy">Conteúdos estruturados por assunto para estudar com mais profundidade, revisar conceitos essenciais e desenvolver competências específicas.</p>
+            <ul class="study-list">
+              <li data-i18n="study.theme.1">Acidentes com animais peçonhentos</li>
+              <li data-i18n="study.theme.2">Eletrocardiograma</li>
+              <li data-i18n="study.theme.3">Novos temas adicionados conforme a plataforma cresce</li>
+            </ul>
+          </article>
+
+          <article class="study-card">
+            <div class="study-num">03 — CURSOS DE DISCIPLINAS</div>
+            <h3 data-i18n="study.subject.title">Cursos produzidos por quem vive a matéria</h3>
+            <p data-i18n="study.subject.copy">Cursos de revisão de disciplinas podem ser produzidos por estudantes dedicados ou por professores e médicos que lecionam esses conteúdos.</p>
+            <ul class="study-list">
+              <li data-i18n="study.subject.1">Organizados por professor, matéria e avaliação</li>
+              <li data-i18n="study.subject.2">Conteúdo em vídeo dentro da plataforma</li>
+              <li data-i18n="study.subject.3">Uma forma prática de encontrar o curso certo</li>
+            </ul>
+          </article>
+        </div>
       </div>
-    </aside>
+    </section>
+
+    <section class="section" id="catalogo">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label" data-i18n="catalog.label">Conteúdos em destaque</div>
+          <h2 class="section-title" data-i18n="catalog.title">Um catálogo que cresce junto com sua formação.</h2>
+          <p class="section-copy" data-i18n="catalog.copy">Exemplos de conteúdos que fazem parte da proposta da plataforma. Após entrar, você visualiza o que está disponível para sua turma, semestre e conta.</p>
+        </div>
+
+        <div class="catalog-strip">
+          <article class="catalog-card cover-ecg">
+            <div class="cover-watermark">ECG</div>
+            <div class="catalog-tag" data-i18n="catalog.course">Curso temático</div>
+            <div class="catalog-title" data-i18n="catalog.ecg">Eletrocardiograma</div>
+            <div class="catalog-sub" data-i18n="catalog.ecgsub">Do raciocínio básico à interpretação</div>
+          </article>
+
+          <article class="catalog-card cover-venom">
+            <div class="cover-watermark">SOS</div>
+            <div class="catalog-tag" data-i18n="catalog.course">Curso temático</div>
+            <div class="catalog-title" data-i18n="catalog.venom">Acidentes com Animais Peçonhentos</div>
+            <div class="catalog-sub" data-i18n="catalog.venomsub">Revisão estruturada e aplicação prática</div>
+          </article>
+
+          <article class="catalog-card cover-biochem">
+            <div class="cover-watermark">BQ</div>
+            <div class="catalog-tag" data-i18n="catalog.subject">Curso de disciplina</div>
+            <div class="catalog-title" data-i18n="catalog.biochem">Bioquímica 2</div>
+            <div class="catalog-sub" data-i18n="catalog.biochemsub">Revisão focada em conteúdo de prova</div>
+          </article>
+
+          <article class="catalog-card cover-virus">
+            <div class="cover-watermark">VIR</div>
+            <div class="catalog-tag" data-i18n="catalog.interactive">Resumo interativo</div>
+            <div class="catalog-title" data-i18n="catalog.micro">Microbiologia • Virologia</div>
+            <div class="catalog-sub" data-i18n="catalog.microsub">Conteúdo, revisão, questões e memorização</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="focus-panel">
+          <div class="focus-copy">
+            <div class="section-label" data-i18n="focus.label">Foco no que realmente ajuda a estudar</div>
+            <h3 data-i18n="focus.title">Conteúdo digital sem perder o vínculo com a sala de aula.</h3>
+            <p data-i18n="focus.copy">A proposta do Resumos do Enzo é organizar conteúdos de apoio que conversem com a rotina acadêmica real. Os resumos são construídos para acompanhar aulas presenciais, enquanto os cursos oferecem uma segunda forma de revisar, aprofundar ou reaprender um tema.</p>
+          </div>
+
+          <div class="focus-points">
+            <div class="focus-point">
+              <strong data-i18n="focus.p1t">Revisão direcionada</strong>
+              <span data-i18n="focus.p1c">Organização por disciplina, semestre e avaliação.</span>
+            </div>
+            <div class="focus-point">
+              <strong data-i18n="focus.p2t">Experiência interativa</strong>
+              <span data-i18n="focus.p2c">Recursos de estudo além do texto tradicional.</span>
+            </div>
+            <div class="focus-point">
+              <strong data-i18n="focus.p3t">Cursos em vídeo</strong>
+              <span data-i18n="focus.p3c">Conteúdo preparado por colaboradores da plataforma.</span>
+            </div>
+            <div class="focus-point">
+              <strong data-i18n="focus.p4t">Tudo na mesma conta</strong>
+              <span data-i18n="focus.p4c">Acesso centralizado aos conteúdos disponíveis para você.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="professor">
+      <div class="container">
+        <div class="professor-panel">
+          <div>
+            <div class="section-label" data-i18n="prof.label">Para professores e colaboradores</div>
+            <h3 data-i18n="prof.title">Você é professor? Divulgue seus cursos aqui.</h3>
+            <p data-i18n="prof.copy">Se você leciona uma disciplina e quer disponibilizar seus cursos pela plataforma, fale diretamente com a administração. Você pode apresentar sua proposta e entender como funciona a publicação dos conteúdos.</p>
+          </div>
+          <a class="btn-prof" id="teacherWhatsapp" target="_blank" rel="noopener noreferrer" href="#" data-i18n="prof.cta">Falar pelo WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <div class="bottom-update">
-    <div><strong>Uma plataforma. Três formas de aprender.</strong> Entre e encontre seus conteúdos disponíveis no mesmo ambiente.</div>
-    <div class="right">Resumos do Enzo • 2026</div>
-  </div>
+  <footer class="container">
+    <span data-i18n="footer">Resumos do Enzo • Plataforma digital de estudos • 2026</span>
+  </footer>
 </div>
+
+<script>
+const PORTAL_TRANSLATIONS = {
+  "pt-BR":{
+    "brand.sub":"Plataforma digital de estudos",
+    "nav.study":"Como estudar",
+    "nav.catalog":"Conteúdos",
+    "nav.prof":"Para professores",
+    "nav.login":"Entrar",
+    "hero.kicker":"Uma plataforma. Diferentes formas de aprender.",
+    "hero.line1":"Estude de forma mais inteligente.",
+    "hero.line2":"Conteúdo feito para sua rotina real.",
+    "hero.lead":"O <strong>Resumos do Enzo</strong> é uma plataforma digital de estudos criada para reunir <strong>resumos totalmente interativos, cursos temáticos e cursos de disciplinas</strong> em um único ambiente — com conteúdo voltado para quem acompanha aulas presenciais e precisa revisar de forma séria, organizada e objetiva.",
+    "tag.1":"Resumos interativos",
+    "tag.2":"Cursos temáticos",
+    "tag.3":"Cursos de disciplinas",
+    "tag.4":"Revisão focada em aulas presenciais",
+    "hero.cta":"Acessar minha conta",
+    "hero.learn":"Conhecer a plataforma",
+    "login.secure":"Acesso seguro",
+    "login.products":"Resumos • Cursos • Conteúdos interativos",
+    "login.title":"Bem-vindo",
+    "login.copy":"Entre na sua conta para acessar seus conteúdos e continuar de onde parou.",
+    "login.email":"Email",
+    "login.emailph":"seu@email.com",
+    "login.password":"Senha",
+    "login.enter":"Entrar",
+    "login.create":"Criar conta",
+    "login.forgot":"Esqueceu sua senha?",
+    "login.force":"Forçar desconexão do outro dispositivo",
+    "login.divider":"conta individual",
+    "login.note":"Sua conta é pessoal e intransferível. Use uma senha exclusiva para a plataforma.",
+    "terms.accept":"Li e concordo com todos os termos para continuar",
+    "study.label":"Uma plataforma, três experiências",
+    "study.title":"Escolha a forma de estudo que combina com o que você precisa hoje.",
+    "study.copy":"A ideia é simples: você não precisa procurar materiais em vários lugares. A plataforma reúne revisão escrita, conteúdos temáticos e cursos de disciplinas dentro da mesma experiência.",
+    "study.resumos.title":"Resumos totalmente interativos",
+    "study.resumos.copy":"Materiais desenvolvidos para acompanhar o conteúdo das aulas presenciais e transformar revisão em uma experiência ativa, não apenas em leitura passiva.",
+    "study.resumos.1":"Conteúdo organizado por matéria e avaliação",
+    "study.resumos.2":"Revisão séria e focada no que foi ministrado",
+    "study.resumos.3":"Questões, memorização e ferramentas interativas",
+    "study.theme.title":"Cursos para aprofundar temas importantes",
+    "study.theme.copy":"Conteúdos estruturados por assunto para estudar com mais profundidade, revisar conceitos essenciais e desenvolver competências específicas.",
+    "study.theme.1":"Acidentes com animais peçonhentos",
+    "study.theme.2":"Eletrocardiograma",
+    "study.theme.3":"Novos temas adicionados conforme a plataforma cresce",
+    "study.subject.title":"Cursos produzidos por quem vive a matéria",
+    "study.subject.copy":"Cursos de revisão de disciplinas podem ser produzidos por estudantes dedicados ou por professores e médicos que lecionam esses conteúdos.",
+    "study.subject.1":"Organizados por professor, matéria e avaliação",
+    "study.subject.2":"Conteúdo em vídeo dentro da plataforma",
+    "study.subject.3":"Uma forma prática de encontrar o curso certo",
+    "catalog.label":"Conteúdos em destaque",
+    "catalog.title":"Um catálogo que cresce junto com sua formação.",
+    "catalog.copy":"Exemplos de conteúdos que fazem parte da proposta da plataforma. Após entrar, você visualiza o que está disponível para sua turma, semestre e conta.",
+    "catalog.course":"Curso temático",
+    "catalog.subject":"Curso de disciplina",
+    "catalog.interactive":"Resumo interativo",
+    "catalog.ecg":"Eletrocardiograma",
+    "catalog.ecgsub":"Do raciocínio básico à interpretação",
+    "catalog.venom":"Acidentes com Animais Peçonhentos",
+    "catalog.venomsub":"Revisão estruturada e aplicação prática",
+    "catalog.biochem":"Bioquímica 2",
+    "catalog.biochemsub":"Revisão focada em conteúdo de prova",
+    "catalog.micro":"Microbiologia • Virologia",
+    "catalog.microsub":"Conteúdo, revisão, questões e memorização",
+    "focus.label":"Foco no que realmente ajuda a estudar",
+    "focus.title":"Conteúdo digital sem perder o vínculo com a sala de aula.",
+    "focus.copy":"A proposta do Resumos do Enzo é organizar conteúdos de apoio que conversem com a rotina acadêmica real. Os resumos são construídos para acompanhar aulas presenciais, enquanto os cursos oferecem uma segunda forma de revisar, aprofundar ou reaprender um tema.",
+    "focus.p1t":"Revisão direcionada","focus.p1c":"Organização por disciplina, semestre e avaliação.",
+    "focus.p2t":"Experiência interativa","focus.p2c":"Recursos de estudo além do texto tradicional.",
+    "focus.p3t":"Cursos em vídeo","focus.p3c":"Conteúdo preparado por colaboradores da plataforma.",
+    "focus.p4t":"Tudo na mesma conta","focus.p4c":"Acesso centralizado aos conteúdos disponíveis para você.",
+    "prof.label":"Para professores e colaboradores",
+    "prof.title":"Você é professor? Divulgue seus cursos aqui.",
+    "prof.copy":"Se você leciona uma disciplina e quer disponibilizar seus cursos pela plataforma, fale diretamente com a administração. Você pode apresentar sua proposta e entender como funciona a publicação dos conteúdos.",
+    "prof.cta":"Falar pelo WhatsApp",
+    "footer":"Resumos do Enzo • Plataforma digital de estudos • 2026"
+  },
+  "es-PY":{
+    "brand.sub":"Plataforma digital de estudios",
+    "nav.study":"Cómo estudiar",
+    "nav.catalog":"Contenidos",
+    "nav.prof":"Para profesores",
+    "nav.login":"Ingresar",
+    "hero.kicker":"Una plataforma. Diferentes formas de aprender.",
+    "hero.line1":"Estudiá de forma más inteligente.",
+    "hero.line2":"Contenido pensado para tu rutina real.",
+    "hero.lead":"<strong>Resumos do Enzo</strong> es una plataforma digital de estudios creada para reunir <strong>resúmenes totalmente interactivos, cursos temáticos y cursos de asignaturas</strong> en un mismo entorno — con contenidos para quienes acompañan clases presenciales y necesitan repasar de manera seria, organizada y objetiva.",
+    "tag.1":"Resúmenes interactivos",
+    "tag.2":"Cursos temáticos",
+    "tag.3":"Cursos de asignaturas",
+    "tag.4":"Repaso enfocado en clases presenciales",
+    "hero.cta":"Acceder a mi cuenta",
+    "hero.learn":"Conocer la plataforma",
+    "login.secure":"Acceso seguro",
+    "login.products":"Resúmenes • Cursos • Contenidos interactivos",
+    "login.title":"Bienvenido",
+    "login.copy":"Ingresá a tu cuenta para acceder a tus contenidos y continuar desde donde quedaste.",
+    "login.email":"Correo electrónico",
+    "login.emailph":"tu@email.com",
+    "login.password":"Contraseña",
+    "login.enter":"Ingresar",
+    "login.create":"Crear cuenta",
+    "login.forgot":"¿Olvidaste tu contraseña?",
+    "login.force":"Desconectar el otro dispositivo",
+    "login.divider":"cuenta individual",
+    "login.note":"Tu cuenta es personal e intransferible. Utilizá una contraseña exclusiva para la plataforma.",
+    "terms.accept":"Leí y acepto todos los términos para continuar",
+    "study.label":"Una plataforma, tres experiencias",
+    "study.title":"Elegí la forma de estudio que mejor se adapta a lo que necesitás hoy.",
+    "study.copy":"La idea es simple: no necesitás buscar materiales en varios lugares. La plataforma reúne repaso escrito, contenidos temáticos y cursos de asignaturas dentro de una misma experiencia.",
+    "study.resumos.title":"Resúmenes totalmente interactivos",
+    "study.resumos.copy":"Materiales desarrollados para acompañar el contenido de las clases presenciales y transformar el repaso en una experiencia activa, no solamente en lectura pasiva.",
+    "study.resumos.1":"Contenido organizado por asignatura y evaluación",
+    "study.resumos.2":"Repaso serio y enfocado en lo que fue dictado",
+    "study.resumos.3":"Preguntas, memorización y herramientas interactivas",
+    "study.theme.title":"Cursos para profundizar temas importantes",
+    "study.theme.copy":"Contenidos estructurados por tema para estudiar con mayor profundidad, repasar conceptos esenciales y desarrollar competencias específicas.",
+    "study.theme.1":"Accidentes con animales ponzoñosos",
+    "study.theme.2":"Electrocardiograma",
+    "study.theme.3":"Nuevos temas agregados a medida que crece la plataforma",
+    "study.subject.title":"Cursos producidos por quienes viven la asignatura",
+    "study.subject.copy":"Los cursos de repaso de asignaturas pueden ser producidos por estudiantes dedicados o por profesores y médicos que enseñan esos contenidos.",
+    "study.subject.1":"Organizados por profesor, asignatura y evaluación",
+    "study.subject.2":"Contenido en video dentro de la plataforma",
+    "study.subject.3":"Una forma práctica de encontrar el curso adecuado",
+    "catalog.label":"Contenidos destacados",
+    "catalog.title":"Un catálogo que crece junto con tu formación.",
+    "catalog.copy":"Ejemplos de contenidos que forman parte de la propuesta de la plataforma. Después de ingresar, verás lo disponible para tu grupo, semestre y cuenta.",
+    "catalog.course":"Curso temático",
+    "catalog.subject":"Curso de asignatura",
+    "catalog.interactive":"Resumen interactivo",
+    "catalog.ecg":"Electrocardiograma",
+    "catalog.ecgsub":"Del razonamiento básico a la interpretación",
+    "catalog.venom":"Accidentes con Animales Ponzoñosos",
+    "catalog.venomsub":"Repaso estructurado y aplicación práctica",
+    "catalog.biochem":"Bioquímica 2",
+    "catalog.biochemsub":"Repaso enfocado en contenido de examen",
+    "catalog.micro":"Microbiología • Virología",
+    "catalog.microsub":"Contenido, repaso, preguntas y memorización",
+    "focus.label":"Foco en lo que realmente ayuda a estudiar",
+    "focus.title":"Contenido digital sin perder el vínculo con el aula.",
+    "focus.copy":"La propuesta de Resumos do Enzo es organizar contenidos de apoyo conectados con la rutina académica real. Los resúmenes acompañan las clases presenciales y los cursos ofrecen una segunda forma de repasar, profundizar o volver a aprender un tema.",
+    "focus.p1t":"Repaso dirigido","focus.p1c":"Organización por asignatura, semestre y evaluación.",
+    "focus.p2t":"Experiencia interactiva","focus.p2c":"Herramientas de estudio más allá del texto tradicional.",
+    "focus.p3t":"Cursos en video","focus.p3c":"Contenido preparado por colaboradores de la plataforma.",
+    "focus.p4t":"Todo en la misma cuenta","focus.p4c":"Acceso centralizado a los contenidos disponibles para vos.",
+    "prof.label":"Para profesores y colaboradores",
+    "prof.title":"¿Sos profesor? Publicá tus cursos acá.",
+    "prof.copy":"Si enseñás una asignatura y querés disponibilizar tus cursos en la plataforma, hablá directamente con la administración. Podés presentar tu propuesta y conocer cómo funciona la publicación de contenidos.",
+    "prof.cta":"Hablar por WhatsApp",
+    "footer":"Resumos do Enzo • Plataforma digital de estudios • 2026"
+  }
+};
+
+const TERMS_PT = `
+  <div class="t-section">💳 Pagamentos</div>
+  <p>• Os materiais estão disponíveis por <strong>resumo individual</strong> ou em <strong>pacotes e cursos</strong>, conforme as opções exibidas na plataforma.</p>
+  <p>• Os valores e formas de pagamento disponíveis são apresentados no momento da compra.</p>
+  <p>• Conteúdos digitais liberados após pagamento seguem as condições de acesso exibidas para cada produto.</p>
+  <div class="t-section">📅 Prazo de acesso</div>
+  <p>• O prazo de acesso pode variar conforme o conteúdo adquirido e é informado antes da compra.</p>
+  <p>• Produtos, avaliações e períodos diferentes podem ser comercializados separadamente.</p>
+  <div class="t-section">🔒 Privacidade e segurança</div>
+  <p>• <strong>Nunca compartilhe sua senha</strong> com ninguém.</p>
+  <p>• Cada conta é pessoal e intransferível e pode possuir controles de sessão e dispositivo.</p>
+`;
+
+const TERMS_ES = `
+  <div class="t-section">💳 Pagos</div>
+  <p>• Los materiales están disponibles como <strong>resúmenes individuales</strong>, <strong>paquetes y cursos</strong>, según las opciones mostradas en la plataforma.</p>
+  <p>• Los valores y medios de pago disponibles se muestran al momento de la compra.</p>
+  <p>• Los contenidos digitales liberados después del pago siguen las condiciones de acceso informadas para cada producto.</p>
+  <div class="t-section">📅 Plazo de acceso</div>
+  <p>• El plazo de acceso puede variar según el contenido adquirido y se informa antes de la compra.</p>
+  <p>• Productos, evaluaciones y períodos diferentes pueden comercializarse por separado.</p>
+  <div class="t-section">🔒 Privacidad y seguridad</div>
+  <p>• <strong>Nunca compartas tu contraseña</strong> con nadie.</p>
+  <p>• Cada cuenta es personal e intransferible y puede contar con controles de sesión y dispositivo.</p>
+`;
+
+window.portalLang = localStorage.getItem("resumos_portal_lang") || "pt-BR";
+
+window.portalT = function(key,fallback){
+  const dict=PORTAL_TRANSLATIONS[window.portalLang]||PORTAL_TRANSLATIONS["pt-BR"];
+  return dict[key]||fallback||key;
+};
+
+window.setPortalLanguage = function(lang){
+  if(!PORTAL_TRANSLATIONS[lang])lang="pt-BR";
+  window.portalLang=lang;
+  localStorage.setItem("resumos_portal_lang",lang);
+  document.documentElement.lang=lang==="es-PY"?"es":"pt-br";
+
+  document.querySelectorAll("[data-i18n]").forEach(function(el){
+    const key=el.getAttribute("data-i18n");
+    el.textContent=window.portalT(key,el.textContent);
+  });
+
+  document.querySelectorAll("[data-i18n-html]").forEach(function(el){
+    const key=el.getAttribute("data-i18n-html");
+    el.innerHTML=window.portalT(key,el.innerHTML);
+  });
+
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(function(el){
+    const key=el.getAttribute("data-i18n-placeholder");
+    el.placeholder=window.portalT(key,el.placeholder);
+  });
+
+  document.querySelectorAll(".lang-btn").forEach(function(btn){
+    btn.classList.toggle("active",btn.dataset.lang===lang);
+  });
+
+  const terms=document.getElementById("studentTerms");
+  if(terms)terms.innerHTML=lang==="es-PY"?TERMS_ES:TERMS_PT;
+
+  const wa=document.getElementById("teacherWhatsapp");
+  if(wa){
+    const msg=lang==="es-PY"
+      ?"Hola, soy profesor(a) y me gustaría conocer cómo puedo publicar mis cursos en Resumos do Enzo."
+      :"Olá, sou professor(a) e gostaria de saber como posso divulgar meus cursos no Resumos do Enzo.";
+    wa.href="https://wa.me/5517997220348?text="+encodeURIComponent(msg);
+  }
+
+  window.dispatchEvent(new CustomEvent("portal-language-change",{detail:{lang:lang}}));
+};
+
+document.addEventListener("DOMContentLoaded",function(){
+  setPortalLanguage(window.portalLang);
+});
+</script>
 
 <!-- THREE.JS — DNA NAS LATERAIS -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
@@ -734,61 +1411,36 @@
     geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
     scene.add(new THREE.Points(geo,new THREE.PointsMaterial({color,size,transparent:true,opacity})));
   }
-  makeParticles(260, 30, 0x22d3ee, 0.036, 0.16);
-  makeParticles(110, 34, 0x67e8f9, 0.020, 0.10);
+  makeParticles(500, 28, 0x22d3ee, 0.04, 0.25);
+  makeParticles(200, 32, 0x67e8f9, 0.022, 0.15);
 
-  function getDNAFrame() {
+  function getDNAOffset() {
     const aspect = window.innerWidth / window.innerHeight;
     const distance = Math.abs(camera.position.z);
     const visibleH = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5)) * distance;
     const visibleW = visibleH * aspect;
+    const mobile = window.innerWidth < 700;
+    const tablet = window.innerWidth < 1050;
 
-    if (window.innerWidth < 700) {
-      return {
-        leftVisible:false,
-        rightVisible:true,
-        leftX:0,
-        rightX:visibleW * 0.38,
-        scale:0.76,
-        opacity:0.24
-      };
+    if (mobile) {
+      return { leftX:0, rightX:visibleW*0.43, scale:.72, opacity:.30, showLeft:false, showRight:true };
     }
-
-    if (window.innerWidth < 1100) {
-      return {
-        leftVisible:true,
-        rightVisible:true,
-        leftX:-visibleW * 0.43,
-        rightX:visibleW * 0.43,
-        scale:0.88,
-        opacity:0.34
-      };
+    if (tablet) {
+      return { leftX:-visibleW*.46, rightX:visibleW*.46, scale:.84, opacity:.42, showLeft:true, showRight:true };
     }
-
-    return {
-      leftVisible:true,
-      rightVisible:true,
-      leftX:-visibleW * 0.455,
-      rightX:visibleW * 0.455,
-      scale:0.98,
-      opacity:0.40
-    };
+    return { leftX:-visibleW*.475, rightX:visibleW*.475, scale:.96, opacity:.48, showLeft:true, showRight:true };
   }
 
   function updatePositions() {
-    const cfg = getDNAFrame();
-
-    leftGroup.visible = cfg.leftVisible;
-    rightGroup.visible = cfg.rightVisible;
-
+    const cfg = getDNAOffset();
+    leftGroup.visible = cfg.showLeft;
+    rightGroup.visible = cfg.showRight;
     leftGroup.position.x = cfg.leftX;
     rightGroup.position.x = cfg.rightX;
-
     leftGroup.scale.setScalar(cfg.scale);
     rightGroup.scale.setScalar(cfg.scale);
-
     backboneMat.opacity = cfg.opacity;
-    baseMats.forEach(m => m.opacity = Math.min(.58, cfg.opacity + .12));
+    baseMats.forEach(function(m){m.opacity=Math.min(.72,cfg.opacity+.16);});
   }
 
   updatePositions();
@@ -796,13 +1448,13 @@
   (function animate() {
     requestAnimationFrame(animate);
     const t = Date.now() * 0.001;
-    leftGroup.rotation.y  =  t * 0.11;
-    rightGroup.rotation.y = -t * 0.11;
+    leftGroup.rotation.y  =  t * 0.12;
+    rightGroup.rotation.y = -t * 0.12;
     leftGroup.position.y  =  Math.sin(t * 0.18) * 0.16;
     rightGroup.position.y = -Math.sin(t * 0.18) * 0.16;
-    const frame = getDNAFrame();
-    lLeft.position.set(frame.leftX + Math.sin(t*0.35)*1.8, 2+Math.cos(t*0.2)*1.4, 6);
-    lRight.position.set(frame.rightX + Math.cos(t*0.28)*1.8, 2+Math.sin(t*0.18)*1.4, 6);
+    const cfg = getDNAOffset();
+    lLeft.position.set(cfg.leftX + Math.sin(t*.28)*1.6, 2+Math.cos(t*.18)*1.2, 6);
+    lRight.position.set(cfg.rightX + Math.cos(t*.24)*1.6, 2+Math.sin(t*.16)*1.2, 6);
     renderer.render(scene, camera);
   })();
 })();
@@ -856,7 +1508,7 @@ window.authConfig = {
     var chk = document.getElementById("termsChk");
     mainBtn.disabled = l ? true : !(chk && chk.checked);
     toggleBtn.disabled = l;
-    mainBtn.textContent = l ? "Processando..." : (isLogin ? "Entrar" : "Cadastrar");
+    mainBtn.textContent = l ? (window.portalLang==="es-PY"?"Procesando...":"Processando...") : (isLogin ? window.portalT("login.enter","Entrar") : (window.portalLang==="es-PY"?"Registrarme":"Cadastrar"));
   }
   function showForceBtn(show) { forceBtn.style.display = show ? "block" : "none"; }
 
@@ -912,9 +1564,9 @@ window.authConfig = {
   // Toggle login / cadastro
   toggleBtn.addEventListener("click", () => {
     isLogin = !isLogin;
-    title.textContent     = isLogin ? "Bem-vindo"   : "Criar conta";
-    mainBtn.textContent   = isLogin ? "Entrar"       : "Cadastrar";
-    toggleBtn.textContent = isLogin ? "Criar conta"  : "Já tenho conta";
+    title.textContent     = isLogin ? window.portalT("login.title","Bem-vindo") : (window.portalLang==="es-PY"?"Crear cuenta":"Criar conta");
+    mainBtn.textContent   = isLogin ? window.portalT("login.enter","Entrar") : (window.portalLang==="es-PY"?"Registrarme":"Cadastrar");
+    toggleBtn.textContent = isLogin ? window.portalT("login.create","Criar conta") : (window.portalLang==="es-PY"?"Ya tengo cuenta":"Já tenho conta");
     forgotBtn.style.display = isLogin ? "block" : "none";
     document.getElementById("strengthMeter").style.display = "none";
     msg.textContent = ""; email.value = ""; password.value = "";
@@ -1092,7 +1744,7 @@ window.authConfig = {
       setMsg("Erro ao enviar. Tente novamente.", "#f87171");
     } finally {
       forgotBtn.disabled = false;
-      forgotBtn.textContent = "Esqueceu sua senha?";
+      forgotBtn.textContent = window.portalT("login.forgot","Esqueceu sua senha?");
     }
   });
 
@@ -1109,3 +1761,10 @@ window.authConfig = {
 
 </body>
 </html>
+
+<script>
+window.addEventListener("portal-language-change",function(){
+  const forgot=document.getElementById("forgotBtn");
+  if(forgot && forgot.style.display!=="none")forgot.textContent=window.portalT("login.forgot","Esqueceu sua senha?");
+});
+</script>
