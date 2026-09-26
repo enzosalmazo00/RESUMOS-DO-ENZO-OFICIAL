@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#020810">
   <meta name="description" content="Resumos do Enzo — plataforma digital de estudos com resumos interativos e cursos.">
   <title>Resumos do Enzo — Plataforma digital de estudos</title>
+  <!-- BUILD: PROFESSOR-MODAL-ONLY-V3 -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -729,6 +730,28 @@
     .btn-prof:hover{transform:translateY(-2px);border-color:rgba(196,181,253,.48);background:linear-gradient(135deg,rgba(139,92,246,.29),rgba(99,102,241,.20))}
 
 
+
+    .professor-panel-public{
+      grid-template-columns:auto minmax(0,1fr) auto;
+      align-items:center;
+      gap:22px;
+      padding:30px 32px;
+    }
+    .professor-public-icon{
+      width:58px;height:58px;
+      display:grid;place-items:center;
+      border-radius:16px;
+      border:1px solid rgba(196,181,253,.22);
+      background:linear-gradient(145deg,rgba(139,92,246,.16),rgba(99,102,241,.08));
+      color:#e9ddff;
+      font-size:10px;font-weight:800;letter-spacing:.12em;
+    }
+    .professor-more-btn{
+      min-width:145px;
+      background:linear-gradient(135deg,rgba(139,92,246,.22),rgba(99,102,241,.16));
+      border-color:rgba(196,181,253,.28);
+    }
+
     .professor-copy{max-width:760px}
     .professor-info-grid{
       margin-top:18px;
@@ -762,6 +785,24 @@
       line-height:1.7;
       color:rgba(226,232,240,.68);
     }
+
+
+    .professor-panel-compact{grid-template-columns:minmax(0,1fr) auto}
+    .professor-cta-group{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .btn-prof-info{background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.10);color:#e2e8f0}
+    .btn-prof-info:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.20)}
+    .prof-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+    .prof-modal.open{display:flex}
+    .prof-modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.76);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+    .prof-modal-card{position:relative;width:min(980px,100%);max-height:min(88vh,860px);overflow:auto;border-radius:22px;border:1px solid rgba(167,139,250,.22);background:linear-gradient(155deg,#0a1426,#07101e);box-shadow:0 30px 90px rgba(0,0,0,.62);padding:26px}
+    .prof-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.065)}
+    .prof-modal-head h3{font-size:25px;line-height:1.2;letter-spacing:-.8px;margin-top:4px}
+    .prof-modal-close{width:38px;height:38px;border-radius:11px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);color:#fff;font-size:23px;line-height:1}
+    .prof-modal-intro{font-size:11.5px;line-height:1.7;color:rgba(226,232,240,.67);margin:17px 0}
+    .prof-modal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+    .prof-modal-note{margin-top:14px;padding:12px 14px;border-radius:12px;border:1px solid rgba(251,191,36,.17);background:rgba(251,191,36,.045);color:rgba(254,243,199,.75);font-size:9.5px;line-height:1.65}
+    .prof-modal-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:16px}
+    body.prof-modal-open{overflow:hidden}
 
     footer{
       padding:24px 0 32px;
@@ -825,7 +866,14 @@
       .focus-panel{padding:20px}
       .focus-points{grid-template-columns:1fr}
       .professor-panel{grid-template-columns:1fr;padding:24px 20px}
-      .professor-info-grid{grid-template-columns:1fr}
+      .professor-panel-public{grid-template-columns:1fr;gap:15px;text-align:left}
+      .professor-public-icon{width:48px;height:48px}
+      .professor-more-btn{width:100%}
+      .professor-cta-group{justify-content:stretch}
+      .professor-cta-group .btn-prof{flex:1}
+      .prof-modal{padding:10px}
+      .prof-modal-card{padding:18px;border-radius:18px}
+      .prof-modal-grid{grid-template-columns:1fr}
       .professor-panel h3{font-size:25px}
       .btn-prof{width:100%}
       #dna-canvas{opacity:.34}
@@ -1091,42 +1139,24 @@
 
     <section class="section" id="professor">
       <div class="container">
-        <div class="professor-panel">
+        <div class="professor-panel professor-panel-public">
+          <div class="professor-public-icon">PRO</div>
           <div class="professor-copy">
             <div class="section-label" data-i18n="prof.label">Para professores e colaboradores</div>
-            <h3 data-i18n="prof.title">Você é professor? Divulgue seus cursos aqui.</h3>
-            <p data-i18n="prof.copy">Se você leciona uma disciplina e quer publicar seus cursos na plataforma, nós organizamos a distribuição digital, a vitrine de vendas e a experiência do aluno em um único ambiente.</p>
+            <h3 data-i18n="prof.title">Você é professor? Publique seus cursos na plataforma.</h3>
+            <p data-i18n="prof.copy">Tenha seus cursos organizados em uma plataforma digital com catálogo, área do aluno, controle de acesso e estrutura comercial.</p>
           </div>
-          <a class="btn-prof" id="teacherWhatsapp" target="_blank" rel="noopener noreferrer" href="#" data-i18n="prof.cta">Falar pelo WhatsApp</a>
-        </div>
-
-        <div class="professor-info-grid">
-          <article class="prof-info-card">
-            <div class="prof-step">01</div>
-            <h4 data-i18n="prof.how1t">Cadastro e repasse</h4>
-            <p data-i18n="prof.how1c">O professor cria gratuitamente uma conta de vendedor no Mercado Pago e autoriza a plataforma a operar o repasse financeiro dentro do fluxo de venda.</p>
-          </article>
-
-          <article class="prof-info-card">
-            <div class="prof-step">02</div>
-            <h4 data-i18n="prof.how2t">Recebimento</h4>
-            <p data-i18n="prof.how2c">Quando um aluno compra o curso de disciplina, o repasse segue a configuração autorizada no Mercado Pago e o professor recebe a parte dele no mesmo fluxo da venda.</p>
-          </article>
-
-          <article class="prof-info-card">
-            <div class="prof-step">03</div>
-            <h4 data-i18n="prof.how3t">Médicos docentes</h4>
-            <p data-i18n="prof.how3c">Para médicos que lecionam, a política comercial segue 25% para a plataforma e 75% para o professor. As taxas cobradas pelo Mercado Pago na operação são suportadas pelas partes conforme a transação.</p>
-          </article>
-
-          <article class="prof-info-card">
-            <div class="prof-step">04</div>
-            <h4 data-i18n="prof.how4t">Alunos e outros colaboradores</h4>
-            <p data-i18n="prof.how4c">Para alunos e demais colaboradores que produzem conteúdo em vídeo, a política segue 33,33% para a plataforma e 66,67% para o colaborador, também com incidência das taxas do Mercado Pago na operação.</p>
-          </article>
+          <button class="btn-prof professor-more-btn" type="button" onclick="openProfessorInfo()" data-i18n="prof.more">Saiba mais</button>
         </div>
       </div>
     </section>
+
+    <div class="prof-modal" id="profInfoModal" aria-hidden="true">
+      <div class="prof-modal-backdrop" onclick="closeProfessorInfo()"></div>
+      <div class="prof-modal-card" role="dialog" aria-modal="true" aria-labelledby="profModalTitle">
+        <div id="profModalDynamicContent"></div>
+      </div>
+    </div>
 
   </main>
 
@@ -1207,18 +1237,29 @@ const PORTAL_TRANSLATIONS = {
     "focus.p3t":"Cursos em vídeo","focus.p3c":"Conteúdo preparado por colaboradores da plataforma.",
     "focus.p4t":"Tudo na mesma conta","focus.p4c":"Acesso centralizado aos conteúdos disponíveis para você.",
     "prof.label":"Para professores e colaboradores",
-    "prof.title":"Você é professor? Divulgue seus cursos aqui.",
-    "prof.copy":"Se você leciona uma disciplina e quer publicar seus cursos na plataforma, nós organizamos a distribuição digital, a vitrine de vendas e a experiência do aluno em um único ambiente.",
-    "prof.cta":"Quero publicar meus cursos",
+    "prof.title":"Você é professor? Publique seus cursos na plataforma.",
+    "prof.copy":"Tenha seus cursos organizados em uma plataforma digital com catálogo, área do aluno, controle de acesso e estrutura comercial.",
+    "prof.cta":"Falar pelo WhatsApp",
+    "prof.more":"Saiba mais",
+    "prof.modal.label":"Publicação de cursos",
+    "prof.modal.title":"Como funciona para professores e colaboradores",
+    "prof.modal.intro":"A plataforma cuida da vitrine digital, organização do conteúdo, acesso do aluno e integração comercial. O criador mantém a responsabilidade pelo conteúdo e define as informações do seu curso.",
+    "prof.how5t":"Preço e período de acesso",
+    "prof.how5c":"O professor informa o preço do curso e define o período de acesso oferecido aos alunos. Essas condições aparecem de forma clara antes da compra.",
+    "prof.how6t":"Publicação com revisão",
+    "prof.how6c":"Antes de entrar no catálogo, o curso é enviado para revisão administrativa. O objetivo é conferir organização, funcionamento técnico, apresentação e conformidade com as regras da plataforma.",
+    "prof.modal.note":"A conta do Mercado Pago pertence ao próprio vendedor. A plataforma não solicita senha da conta. A divisão automática depende da ativação e configuração da integração de marketplace do Mercado Pago.",
+    "prof.modal.cta":"Quero publicar meus cursos",
+    "prof.modal.close":"Fechar",
     "footer":"Resumos do Enzo • Plataforma digital de estudos • resumos interativos e cursos • 2026",
-    "prof.how1t":"Cadastro e repasse",
-    "prof.how1c":"O professor cria gratuitamente uma conta de vendedor no Mercado Pago e autoriza a plataforma a operar o repasse financeiro dentro do fluxo de venda.",
-    "prof.how2t":"Recebimento",
-    "prof.how2c":"Quando um aluno compra o curso de disciplina, o repasse segue a configuração autorizada no Mercado Pago e o professor recebe a parte dele no mesmo fluxo da venda.",
-    "prof.how3t":"Médicos docentes",
-    "prof.how3c":"Para médicos que lecionam, a política comercial segue 25% para a plataforma e 75% para o professor. As taxas cobradas pelo Mercado Pago na operação são suportadas pelas partes conforme a transação.",
+    "prof.how1t":"Conta de vendedor no Mercado Pago",
+    "prof.how1c":"O professor cria gratuitamente sua própria conta de vendedor no Mercado Pago. Depois, autoriza a plataforma a utilizar a integração necessária para processar e dividir os pagamentos das vendas.",
+    "prof.how2t":"Venda e repasse automático",
+    "prof.how2c":"Quando um aluno compra um curso de disciplina, o repasse é acionado dentro do mesmo fluxo de pagamento. A disponibilidade efetiva do dinheiro segue os prazos, regras de liquidação e políticas do Mercado Pago.",
+    "prof.how3t":"Médicos que lecionam",
+    "prof.how3c":"Para médicos que atuam como docentes, a política comercial prevista é de 75% do valor do curso para o professor e 25% para a plataforma. As taxas de processamento do Mercado Pago também integram o custo da transação.",
     "prof.how4t":"Alunos e outros colaboradores",
-    "prof.how4c":"Para alunos e demais colaboradores que produzem conteúdo em vídeo, a política segue 33,33% para a plataforma e 66,67% para o colaborador, também com incidência das taxas do Mercado Pago na operação."
+    "prof.how4c":"Para alunos e outros colaboradores que produzam conteúdo educacional em vídeo, a política prevista é de 66,67% para o colaborador e 33,33% para a plataforma, além das taxas de processamento do Mercado Pago."
   },
   "es-PY":{
     "brand.sub":"Plataforma digital de estudios",
@@ -1290,18 +1331,29 @@ const PORTAL_TRANSLATIONS = {
     "focus.p3t":"Cursos en video","focus.p3c":"Contenido preparado por colaboradores de la plataforma.",
     "focus.p4t":"Todo en la misma cuenta","focus.p4c":"Acceso centralizado a los contenidos disponibles para vos.",
     "prof.label":"Para profesores y colaboradores",
-    "prof.title":"¿Sos profesor? Publicá tus cursos acá.",
-    "prof.copy":"Si enseñás una asignatura y querés publicar tus cursos en la plataforma, nosotros organizamos la distribución digital, la vitrina de ventas y la experiencia del alumno en un solo entorno.",
-    "prof.cta":"Quiero publicar mis cursos",
+    "prof.title":"¿Sos profesor? Publicá tus cursos en la plataforma.",
+    "prof.copy":"Organizá tus cursos en una plataforma digital con catálogo, área del alumno, control de acceso y estructura comercial.",
+    "prof.cta":"Hablar por WhatsApp",
+    "prof.more":"Saber más",
+    "prof.modal.label":"Publicación de cursos",
+    "prof.modal.title":"Cómo funciona para profesores y colaboradores",
+    "prof.modal.intro":"La plataforma gestiona la vitrina digital, la organización del contenido, el acceso del alumno y la integración comercial. El creador mantiene la responsabilidad sobre el contenido y define la información de su curso.",
+    "prof.how5t":"Precio y período de acceso",
+    "prof.how5c":"El profesor informa el precio del curso y define el período de acceso ofrecido a los alumnos. Estas condiciones aparecen claramente antes de la compra.",
+    "prof.how6t":"Publicación con revisión",
+    "prof.how6c":"Antes de entrar al catálogo, el curso se envía a revisión administrativa para verificar organización, funcionamiento técnico, presentación y cumplimiento de las reglas de la plataforma.",
+    "prof.modal.note":"La cuenta de Mercado Pago pertenece al propio vendedor. La plataforma no solicita la contraseña. La división automática depende de la activación y configuración de la integración de marketplace de Mercado Pago.",
+    "prof.modal.cta":"Quiero publicar mis cursos",
+    "prof.modal.close":"Cerrar",
     "footer":"Resumos do Enzo • Plataforma digital de estudios • resúmenes interactivos y cursos • 2026",
-    "prof.how1t":"Registro y reparto",
-    "prof.how1c":"El profesor crea gratuitamente una cuenta de vendedor en Mercado Pago y autoriza a la plataforma a operar el reparto financiero dentro del flujo de venta.",
-    "prof.how2t":"Cobro",
-    "prof.how2c":"Cuando un alumno compra el curso de la asignatura, el reparto sigue la configuración autorizada en Mercado Pago y el profesor recibe su parte dentro del mismo flujo de la venta.",
-    "prof.how3t":"Médicos docentes",
-    "prof.how3c":"Para médicos que enseñan, la política comercial sigue 25% para la plataforma y 75% para el profesor. Las tasas cobradas por Mercado Pago en la operación son soportadas por las partes según la transacción.",
+    "prof.how1t":"Cuenta de vendedor en Mercado Pago",
+    "prof.how1c":"El profesor crea gratuitamente su propia cuenta de vendedor en Mercado Pago. Luego autoriza a la plataforma a utilizar la integración necesaria para procesar y dividir los pagos de las ventas.",
+    "prof.how2t":"Venta y reparto automático",
+    "prof.how2c":"Cuando un alumno compra un curso de asignatura, el reparto se activa dentro del mismo flujo de pago. La disponibilidad efectiva del dinero sigue los plazos, reglas de liquidación y políticas de Mercado Pago.",
+    "prof.how3t":"Médicos que lecionam",
+    "prof.how3c":"Para médicos que enseñan, la política comercial prevista es 75% del valor del curso para el profesor y 25% para la plataforma. Las tasas de procesamiento de Mercado Pago también forman parte del costo de la transacción.",
     "prof.how4t":"Alumnos y otros colaboradores",
-    "prof.how4c":"Para alumnos y demás colaboradores que producen contenido en video, la política sigue 33,33% para la plataforma y 66,67% para el colaborador, también con incidencia de las tasas de Mercado Pago en la operación."
+    "prof.how4c":"Para alumnos y otros colaboradores que produzcan contenido educativo en video, la política prevista es 66,67% para el colaborador y 33,33% para la plataforma, además de las tasas de procesamiento de Mercado Pago."
   }
 };
 
@@ -1368,16 +1420,80 @@ window.setPortalLanguage = function(lang){
   const terms=document.getElementById("studentTerms");
   if(terms)terms.innerHTML=lang==="es-PY"?TERMS_ES:TERMS_PT;
 
-  const wa=document.getElementById("teacherWhatsapp");
-  if(wa){
-    const msg=lang==="es-PY"
-      ?"Hola, soy profesor(a) y me gustaría entender cómo publicar mis cursos en la plataforma Resumos do Enzo."
-      :"Olá, sou professor(a) e gostaria de entender como publicar meus cursos na plataforma Resumos do Enzo.";
-    wa.href="https://wa.me/5517997220348?text="+encodeURIComponent(msg);
-  }
-
   window.dispatchEvent(new CustomEvent("portal-language-change",{detail:{lang:lang}}));
 };
+
+
+window.openProfessorInfo=function(){
+  const modal=document.getElementById("profInfoModal");
+  const target=document.getElementById("profModalDynamicContent");
+  if(!modal||!target)return;
+
+  const es=window.portalLang==="es-PY";
+
+  target.innerHTML=es ? `
+    <div class="prof-modal-head">
+      <div>
+        <div class="section-label">PUBLICACIÓN DE CURSOS</div>
+        <h3 id="profModalTitle">Cómo funciona para profesores y colaboradores</h3>
+      </div>
+      <button class="prof-modal-close" type="button" onclick="closeProfessorInfo()" aria-label="Cerrar">×</button>
+    </div>
+    <p class="prof-modal-intro">Acá encontrás todas las condiciones antes de decidir publicar un curso.</p>
+    <div class="prof-modal-grid">
+      <article class="prof-info-card"><div class="prof-step">01</div><h4>Cuenta de vendedor en Mercado Pago</h4><p>El profesor crea gratuitamente su propia cuenta de vendedor en Mercado Pago y autoriza la integración necesaria para que la plataforma pueda operar el reparto correspondiente a las ventas.</p></article>
+      <article class="prof-info-card"><div class="prof-step">02</div><h4>Venta y reparto</h4><p>Cuando un alumno compra un curso de asignatura, el pago se procesa por Mercado Pago y el reparto sigue la configuración autorizada. La disponibilidad efectiva del dinero depende de los plazos y reglas de liquidación de Mercado Pago.</p></article>
+      <article class="prof-info-card"><div class="prof-step">03</div><h4>Médicos docentes</h4><p>Para médicos que enseñan, la política comercial prevista es <strong>75% para el profesor y 25% para la plataforma</strong>. Las tasas de procesamiento de Mercado Pago también integran el costo de la operación.</p></article>
+      <article class="prof-info-card"><div class="prof-step">04</div><h4>Alumnos y otros colaboradores</h4><p>Para alumnos y demás colaboradores que produzcan contenido educativo en video, la política prevista es <strong>66,67% para el colaborador y 33,33% para la plataforma</strong>, además de las tasas de procesamiento de Mercado Pago.</p></article>
+      <article class="prof-info-card"><div class="prof-step">05</div><h4>Precio y acceso</h4><p>El creador informa el precio del curso y define el período de acceso ofrecido a los alumnos. Estas condiciones se muestran antes de la compra.</p></article>
+      <article class="prof-info-card"><div class="prof-step">06</div><h4>Revisión y publicación</h4><p>Antes de entrar al catálogo, el curso pasa por revisión administrativa para verificar presentación, organización, funcionamiento técnico y cumplimiento de las reglas de la plataforma.</p></article>
+    </div>
+    <div class="prof-modal-note">La cuenta de Mercado Pago pertenece al propio vendedor. La plataforma no solicita la contraseña. El reparto automático depende de la activación y configuración técnica de la integración de marketplace de Mercado Pago.</div>
+    <div class="prof-modal-actions">
+      <a class="btn-prof" target="_blank" rel="noopener noreferrer" href="https://wa.me/5517997220348?text=${encodeURIComponent('Hola, soy profesor(a) y me gustaría entender cómo publicar mis cursos en la plataforma Resumos do Enzo.')}">Quiero publicar mis cursos</a>
+      <button class="btn-prof btn-prof-info" type="button" onclick="closeProfessorInfo()">Cerrar</button>
+    </div>
+  ` : `
+    <div class="prof-modal-head">
+      <div>
+        <div class="section-label">PUBLICAÇÃO DE CURSOS</div>
+        <h3 id="profModalTitle">Como funciona para professores e colaboradores</h3>
+      </div>
+      <button class="prof-modal-close" type="button" onclick="closeProfessorInfo()" aria-label="Fechar">×</button>
+    </div>
+    <p class="prof-modal-intro">Aqui estão todas as condições antes de decidir publicar um curso.</p>
+    <div class="prof-modal-grid">
+      <article class="prof-info-card"><div class="prof-step">01</div><h4>Conta de vendedor no Mercado Pago</h4><p>O professor cria gratuitamente sua própria conta de vendedor no Mercado Pago e autoriza a integração necessária para que a plataforma possa operar o repasse correspondente às vendas.</p></article>
+      <article class="prof-info-card"><div class="prof-step">02</div><h4>Venda e repasse</h4><p>Quando um aluno compra um curso de disciplina, o pagamento é processado pelo Mercado Pago e o repasse segue a configuração autorizada. A disponibilidade efetiva do dinheiro depende dos prazos e regras de liquidação do Mercado Pago.</p></article>
+      <article class="prof-info-card"><div class="prof-step">03</div><h4>Médicos docentes</h4><p>Para médicos que lecionam, a política comercial prevista é de <strong>75% para o professor e 25% para a plataforma</strong>. As taxas de processamento cobradas pelo Mercado Pago também integram o custo da operação.</p></article>
+      <article class="prof-info-card"><div class="prof-step">04</div><h4>Alunos e outros colaboradores</h4><p>Para alunos e demais colaboradores que produzam conteúdo educacional em vídeo, a política prevista é de <strong>66,67% para o colaborador e 33,33% para a plataforma</strong>, além das taxas de processamento do Mercado Pago.</p></article>
+      <article class="prof-info-card"><div class="prof-step">05</div><h4>Preço e acesso</h4><p>O criador informa o preço do curso e define o período de acesso oferecido aos alunos. Essas condições são mostradas antes da compra.</p></article>
+      <article class="prof-info-card"><div class="prof-step">06</div><h4>Revisão e publicação</h4><p>Antes de entrar no catálogo, o curso passa por revisão administrativa para conferir apresentação, organização, funcionamento técnico e conformidade com as regras da plataforma.</p></article>
+    </div>
+    <div class="prof-modal-note">A conta do Mercado Pago pertence ao próprio vendedor. A plataforma não solicita a senha. O repasse automático depende da ativação e configuração técnica da integração de marketplace do Mercado Pago.</div>
+    <div class="prof-modal-actions">
+      <a class="btn-prof" target="_blank" rel="noopener noreferrer" href="https://wa.me/5517997220348?text=${encodeURIComponent('Olá, sou professor(a) e gostaria de entender como publicar meus cursos na plataforma Resumos do Enzo.')}">Quero publicar meus cursos</a>
+      <button class="btn-prof btn-prof-info" type="button" onclick="closeProfessorInfo()">Fechar</button>
+    </div>
+  `;
+
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden","false");
+  document.body.classList.add("prof-modal-open");
+};
+
+window.closeProfessorInfo=function(){
+  const modal=document.getElementById("profInfoModal");
+  const target=document.getElementById("profModalDynamicContent");
+  if(modal){
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden","true");
+  }
+  if(target)target.innerHTML="";
+  document.body.classList.remove("prof-modal-open");
+};
+
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeProfessorInfo()});
 
 document.addEventListener("DOMContentLoaded",function(){
   setPortalLanguage(window.portalLang);
