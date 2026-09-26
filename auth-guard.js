@@ -1,5 +1,5 @@
 /**
- * auth-guard.js — v4 (expiração individual obrigatória para resumos de prova)
+ * auth-guard.js — v3 (DUAL-MODE: acessos + profiles fallback)
  *
  * MUDANÇAS V2 → V3:
  *  [M1] Adicionada função checkAccessInAcessos() que:
@@ -31,6 +31,51 @@
 
   window.authClient  = null;
   window.authSession = null;
+
+  // ── Presença privada ─────────────────────────────────────────────────────
+  // Nunca publica UUID/e-mail em canal Realtime compartilhado.
+  // Cada usuário grava apenas o próprio heartbeat via RLS; usuários comuns
+  // recebem somente a CONTAGEM agregada.
+  var _presenceTouchTimer = null;
+  var _presenceCountTimer = null;
+
+  function startPrivatePresence(client, session) {
+    if (!client || !session || !session.user) return;
+
+    async function touch() {
+      try {
+        await client.rpc("presence_touch", {
+          p_page: (document.title || location.pathname || "").slice(0,160)
+        });
+      } catch (e) {
+        console.warn("[auth-guard] presence_touch:", e);
+      }
+    }
+
+    async function updateCount() {
+      try {
+        var r = await client.rpc("online_student_count");
+        if (r.error) return;
+        var count = Number(r.data || 0);
+        window.onlineStudentCount = count;
+        // Deliberadamente sem userIds.
+        document.dispatchEvent(new CustomEvent("onlinePresenceChanged", {
+          detail: { count: count }
+        }));
+      } catch (e) {
+        console.warn("[auth-guard] online_student_count:", e);
+      }
+    }
+
+    touch();
+    updateCount();
+
+    if (_presenceTouchTimer) clearInterval(_presenceTouchTimer);
+    if (_presenceCountTimer) clearInterval(_presenceCountTimer);
+
+    _presenceTouchTimer = setInterval(touch, 30000);
+    _presenceCountTimer = setInterval(updateCount, 20000);
+  }
 
   // ── Device ID persistente via crypto ────────────────────────────────────
   function getDeviceId() {
@@ -140,17 +185,11 @@
     // como coluna no select de profiles (evita erro 400) e validar via acessos.
     var isCurso = !!(pageKey && pageKey.indexOf("curso-") === 0);
 
-    function isS4PageKey(k) {
-      if (!k) return false;
-      return /^(fisiologia_2|bioquimica_2|epidemiologia|nutricao|microbiologia_2|micro_pratica_2|eletrocardiograma)_(p1|p2|final)$/.test(k);
-    }
-
     var pacoteKey = null;
     if (pageKey && !isCurso) {
-      var pacotePrefix = isS4PageKey(pageKey) ? "pacote_s4_" : "pacote_";
-      if (pageKey.endsWith("_p1"))    pacoteKey = pacotePrefix + "p1";
-      if (pageKey.endsWith("_p2"))    pacoteKey = pacotePrefix + "p2";
-      if (pageKey.endsWith("_final")) pacoteKey = pacotePrefix + "final";
+      if (pageKey.endsWith("_p1"))    pacoteKey = "pacote_p1";
+      if (pageKey.endsWith("_p2"))    pacoteKey = "pacote_p2";
+      if (pageKey.endsWith("_final")) pacoteKey = "pacote_final";
     }
 
     var extraFields = "";
@@ -159,7 +198,7 @@
     if (pageKey && !isCurso)  extraFields += ", " + pageKey + "_expira";
     if (pacoteKey)            extraFields += ", " + pacoteKey + "_expira";
 
-    var fields = "is_approved, is_admin, active_session, device_id, acesso_expira_em, resumos_presente" + extraFields;
+    var fields = "is_approved, active_session, device_id" + extraFields;
 
     var profile = null;
     try {
@@ -207,90 +246,44 @@
         ? await checkAccessInAcessos(client, session.user.id, pacoteKey)
         : false;
       
-      // Fallback para profiles, agora SEM usar acesso_expira_em global.
-      // Um resumo de prova só é válido se sua própria expiração (ou a do pacote correto)
-      // estiver válida. Isso impede que uma compra nova "ressuscite" flags antigas.
-      var agora = new Date();
+      // Fallback pro sistema antigo (profiles)
+      var temAcessoAntigo = !!profile[pageKey] || !!(pacoteKey && profile[pacoteKey]);
 
-      function ehPresente(flagKey) {
-        var arr = Array.isArray(profile.resumos_presente) ? profile.resumos_presente : [];
-        return arr.indexOf(flagKey) >= 0;
-      }
-
-      function profileAccessValido(flagKey) {
-        if (!flagKey || !profile[flagKey]) return false;
-
-        // Expiração individual é a regra principal.
-        var exp = profile[flagKey + "_expira"];
-        if (exp) return new Date(exp) > agora;
-
-        // Compatibilidade SOMENTE para cortesia explicitamente marcada no Admin.
-        // Uma flag antiga sem _expira e sem marcação de presente NÃO libera mais acesso.
-        if (ehPresente(flagKey)) {
-          if (profile.acesso_expira_em) return new Date(profile.acesso_expira_em) > agora;
-          return true; // cortesia permanente explicitamente marcada
-        }
-
-        return false;
-      }
-
-      var temAcessoAntigoDireto = profileAccessValido(pageKey);
-      var temAcessoAntigoPacote = pacoteKey ? profileAccessValido(pacoteKey) : false;
-
-      // Administrador autenticado mantém acesso para manutenção/testes.
-      var temAcesso = !!profile.is_admin || temAcessoNovo || temAcessoPacote || temAcessoAntigoDireto || temAcessoAntigoPacote;
+      // Tem se tá em QUALQUER um dos sistemas
+      var temAcesso = temAcessoNovo || temAcessoPacote || temAcessoAntigo;
 
       if (!temAcesso) {
-        var tinhaFlag = !!profile[pageKey] || !!(pacoteKey && profile[pacoteKey]);
-        if (tinhaFlag) {
-          alert("Seu acesso a este resumo está expirado ou sem validade individual. Renove para continuar.");
-        } else {
-          alert("Acesso não liberado para este conteúdo. Faça o pagamento para liberar.");
-        }
+        alert("Acesso não liberado para este conteúdo. Faça o pagamento para liberar.");
         window.location.replace(DASHBOARD_PAGE);
         return;
       }
-    }
 
-    // ── PRESENCE GLOBAL: ALUNOS ONLINE ───────────────────────────────────
-    // Um único canal para dashboard + todos os resumos protegidos.
-    // Administradores NÃO entram na contagem. O payload expõe somente o user_id.
-    if (!profile.is_admin) {
-      try {
-        var onlineChannel = client.channel("online-users", {
-          config: { presence: { key: session.user.id } }
-        });
+      // Verifica expiração — só bloqueia se tiver data E ela já passou
+      // Tenta expiration da nova tabela primeiro, depois fallback
+      var expiraData = null;
 
-        window.onlinePresenceChannel = onlineChannel;
+      if (temAcessoNovo) {
+        // Se veio de acessos, já verificou expiração na função (retorna true se válido)
+        // Não precisa verificar de novo aqui
+      } else if (temAcessoPacote) {
+        // Idem
+      } else {
+        // Veio de profiles — precisa verificar expiração das colunas antigas
+        var expiraCol  = pageKey + "_expira";
+        var expiraPack = pacoteKey ? pacoteKey + "_expira" : null;
+        expiraData = profile[expiraCol] || (expiraPack ? profile[expiraPack] : null);
 
-        onlineChannel
-          .on("presence", { event: "sync" }, function () {
-            var state = onlineChannel.presenceState() || {};
-            var onlineIds = Object.keys(state);
-            window.onlineStudentIds = onlineIds;
-            document.dispatchEvent(new CustomEvent("onlinePresenceChanged", {
-              detail: { count: onlineIds.length, userIds: onlineIds }
-            }));
-          })
-          .subscribe(async function (status) {
-            if (status === "SUBSCRIBED") {
-              try {
-                await onlineChannel.track({
-                  user_id: session.user.id,
-                  online_at: new Date().toISOString()
-                });
-              } catch (presenceErr) {
-                console.warn("[auth-guard] Falha ao registrar Presence:", presenceErr);
-              }
-            }
-          });
-      } catch (presenceErr) {
-        console.warn("[auth-guard] Presence indisponível:", presenceErr);
+        if (expiraData && new Date(expiraData) < new Date()) {
+          alert("Seu acesso a este resumo expirou. Renove para continuar.");
+          window.location.replace(DASHBOARD_PAGE);
+          return;
+        }
       }
     }
 
     // ── TUDO OK ───────────────────────────────────────────────────────────
     window.authSession = session;
+    startPrivatePresence(client, session);
     document.dispatchEvent(new CustomEvent("authReady", {
       detail: { session: session }
     }));

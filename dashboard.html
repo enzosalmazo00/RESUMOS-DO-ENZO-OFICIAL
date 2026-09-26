@@ -1877,7 +1877,12 @@ function hasAulaoAccess(key) {
 
 async function loadAuloes() {
   try {
-    var r = await window.authClient.from("auloes").select("*").order("semestre").order("created_at");
+    var r;
+    if (profile && profile.is_admin) {
+      r = await window.authClient.from("auloes").select("*").order("semestre").order("created_at");
+    } else {
+      r = await window.authClient.rpc("list_public_auloes");
+    }
     if (r.error) throw r.error;
     AULOES = r.data || [];
   } catch (e) {

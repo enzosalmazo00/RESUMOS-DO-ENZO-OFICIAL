@@ -1760,8 +1760,8 @@ window.deletarCupom=async function(id,codigo){if(!confirm("Excluir cupom "+codig
 async function loadPrecos(){try{var r=await client.from("config").select("*").in("chave",["preco_unit","preco_combo3","preco_pack","preco_final_unit","preco_final_pack"]);if(r.data&&r.data.length){r.data.forEach(function(c){if(c.chave==="preco_unit")document.getElementById("precoUnit").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_combo3")document.getElementById("precoCombo").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_pack")document.getElementById("precoPack").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_final_unit")document.getElementById("precoFinalUnit").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_final_pack")document.getElementById("precoFinalPack").value=parseFloat(c.valor).toFixed(2);});document.getElementById("precoStatus").textContent="Carregado do banco";}else{document.getElementById("precoStatus").textContent="Valores padr\u00e3o";}}catch(e){document.getElementById("precoStatus").textContent="Valores padr\u00e3o";}}
 window.salvarPrecos=async function(){var unit=parseFloat(document.getElementById("precoUnit").value);var combo=parseFloat(document.getElementById("precoCombo").value);var pack=parseFloat(document.getElementById("precoPack").value);var fUnit=parseFloat(document.getElementById("precoFinalUnit").value);var fPack=parseFloat(document.getElementById("precoFinalPack").value);if(isNaN(unit)||isNaN(combo)||isNaN(pack)||unit<=0||combo<=0||pack<=0||isNaN(fUnit)||isNaN(fPack)||fUnit<=0||fPack<=0){showToast("Preencha corretamente!","error");return;}var btn=document.getElementById("btnSalvarPrecos");btn.disabled=true;btn.textContent="Salvando...";var precos=[{chave:"preco_unit",valor:unit.toString()},{chave:"preco_combo3",valor:combo.toString()},{chave:"preco_pack",valor:pack.toString()},{chave:"preco_final_unit",valor:fUnit.toString()},{chave:"preco_final_pack",valor:fPack.toString()}];var ok=true;for(var i=0;i<precos.length;i++){var p=precos[i];var r=await client.from("config").upsert({chave:p.chave,valor:p.valor},{onConflict:"chave"});if(r.error){ok=false;console.error(r.error);}}if(ok){showToast("&#9989; Preços salvos!","success");document.getElementById("precoStatus").innerHTML="<span style='color:#4ade80;'>&#9989; Salvo!</span>";}else showToast("Erro!","error");btn.disabled=false;btn.textContent="💾 Salvar preços";};
 
-// ═══ ONLINE — SUPABASE REALTIME PRESENCE ═══
-var onlineWatcherChannel = null;
+// ═══ ONLINE — PRESENÇA PRIVADA ═══
+var onlineWatcherTimer = null;
 
 function escapeOnlineText(value){
   return String(value == null ? "" : value)
@@ -1769,15 +1769,10 @@ function escapeOnlineText(value){
     .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
 }
 
-function renderOnlineUsers(userIds){
-  var ids = Array.isArray(userIds) ? userIds : [];
+function renderOnlineUsers(rows){
+  var alunos = Array.isArray(rows) ? rows : [];
   var stat = document.getElementById("statOnline");
   var list = document.getElementById("onlineUsersList");
-
-  var uniqueIds = Array.from(new Set(ids));
-  var alunos = uniqueIds.map(function(id){
-    return allAlunos.find(function(a){ return a.id === id && !a.is_admin; });
-  }).filter(Boolean);
 
   if (stat) stat.textContent = alunos.length;
   if (!list) return;
@@ -1791,30 +1786,28 @@ function renderOnlineUsers(userIds){
     var nome = (a.nome_preferido || "").trim();
     var identificacao = nome || a.email || "Aluno";
     var complemento = nome && a.email ? " · " + a.email : "";
-    return '<span class="online-user" title="' + escapeOnlineText(a.email || "") + '">' +
+    var page = a.page ? " · " + a.page : "";
+    return '<span class="online-user" title="' + escapeOnlineText((a.email || "") + page) + '">' +
       escapeOnlineText(identificacao + complemento) + '</span>';
   }).join("");
 }
 
-function setupOnlineCounter(){
-  try {
-    onlineWatcherChannel = client.channel("online-users");
-
-    onlineWatcherChannel
-      .on("presence", {event:"sync"}, function(){
-        var state = onlineWatcherChannel.presenceState() || {};
-        renderOnlineUsers(Object.keys(state));
-      })
-      .subscribe(function(status){
-        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
-          console.warn("Presence status:", status);
-        }
-      });
-  } catch(e) {
-    console.warn("Presence:", e);
-    var stat = document.getElementById("statOnline");
-    if (stat) stat.textContent = "—";
+async function refreshOnlineUsers(){
+  try{
+    var r=await client.rpc("admin_online_students");
+    if(r.error)throw r.error;
+    renderOnlineUsers(r.data||[]);
+  }catch(e){
+    console.warn("Private presence:",e);
+    var stat=document.getElementById("statOnline");
+    if(stat)stat.textContent="—";
   }
+}
+
+function setupOnlineCounter(){
+  refreshOnlineUsers();
+  if(onlineWatcherTimer)clearInterval(onlineWatcherTimer);
+  onlineWatcherTimer=setInterval(refreshOnlineUsers,12000);
 }
 
 

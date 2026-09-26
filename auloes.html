@@ -170,7 +170,26 @@ function editAulao(id){var a=auloes.find(x=>x.id===id);if(!a)return;document.get
 async function deleteProf(id){var p=professores.find(x=>x.id===id);if(!p||!confirm('Excluir o cadastro de '+p.nome+'? Os aulões não serão apagados, mas ficarão sem professor até serem editados.'))return;var r=await client.from('aulao_professores').delete().eq('id',id);if(r.error){toast('Erro: '+r.error.message);return}await reloadData();toast('Professor excluído.')}
 function showAdminTab(tab){document.querySelectorAll('[data-admin-tab]').forEach(b=>b.classList.toggle('active',b.dataset.adminTab===tab));document.getElementById('adminAuloes').classList.toggle('hidden',tab!=='auloes');document.getElementById('adminProfessores').classList.toggle('hidden',tab!=='professores')}
 
-async function reloadData(){var [pr,ar,ac]=await Promise.all([client.from('aulao_professores').select('*').order('ordem').order('nome'),client.from('auloes').select('*').order('semestre').order('materia').order('avaliacao'),client.from('acessos').select('resumo').eq('user_id',session.user.id)]);if(pr.error)throw pr.error;if(ar.error)throw ar.error;professores=pr.data||[];auloes=ar.data||[];acessos=new Set((ac.data||[]).map(x=>x.resumo));fillProfessorSelect();renderAdminLists();render()}
+async function reloadData(){
+  var prPromise=isAdmin
+    ? client.from('aulao_professores').select('*').order('ordem').order('nome')
+    : client.rpc('list_public_aulao_professores');
+  var arPromise=isAdmin
+    ? client.from('auloes').select('*').order('semestre').order('materia').order('avaliacao')
+    : client.rpc('list_public_auloes');
+  var [pr,ar,ac]=await Promise.all([
+    prPromise,
+    arPromise,
+    client.from('acessos').select('resumo').eq('user_id',session.user.id)
+  ]);
+  if(pr.error)throw pr.error;
+  if(ar.error)throw ar.error;
+  professores=pr.data||[];
+  auloes=ar.data||[];
+  acessos=new Set((ac.data||[]).map(x=>x.resumo));
+  if(isAdmin){fillProfessorSelect();renderAdminLists();}
+  render();
+}
 
 
 const AULOES_MEDIA_BUCKET='auloes-capas';

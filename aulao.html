@@ -137,16 +137,10 @@ document.addEventListener("authReady",async function(e){
   if(!key){deny("Aulão não informado.");return}
   var client=window.authClient, session=e.detail.session;
   try{
-    var ar=await client.from("auloes").select("*").eq("chave",key).single();
-    if(ar.error||!ar.data){deny("Este aulão não existe ou não está disponível.");return}
-    var a=ar.data;
-    var pr=await client.from("profiles").select("is_admin").eq("id",session.user.id).single();
-    var admin=!!(pr.data&&pr.data.is_admin), owner=!!(a.owner_user_id&&a.owner_user_id===session.user.id), ok=admin||owner;
-    if(!ok){
-      var ac=await client.from("acessos").select("expira_em").eq("user_id",session.user.id).eq("resumo",key);
-      ok=!!(ac.data&&ac.data.some(function(x){return !x.expira_em||new Date(x.expira_em)>new Date()}));
-    }
-    if(!ok){deny("Este aulão é vendido separadamente. Adquira o acesso pela loja.");return}
+    var ar=await client.rpc("get_aulao_for_viewer",{p_key:key});
+    var a=(ar.data&&ar.data[0])||null;
+    if(ar.error||!a){deny("Este aulão não existe ou não está disponível.");return}
+    if(!a.viewer_authorized){deny("Este aulão é vendido separadamente. Adquira o acesso pela loja.");return}
 
     document.title=a.nome+" — Resumos do Enzo";
     document.getElementById("hero").innerHTML=
