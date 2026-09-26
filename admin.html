@@ -658,6 +658,9 @@ var CURSOS_COLS=[
 ];
 var currentCursoToggles={};
 var currentCursoOriginal={};
+// ── AULÕES (também gravam na tabela `acessos`) ──
+var currentAulaoToggles={};
+var currentAulaoOriginal={};
 
 // ── RESUMOS POR SEMESTRE (organizado em seções) ──
 var SEMESTRES = [
@@ -1136,6 +1139,7 @@ window.openModal=function(id){
   currentPresente=(currentAluno.resumos_presente||[]).slice();
   renderModalSections();
   loadCursosDoAluno(currentAluno.id);
+  loadAuloesDoAluno(currentAluno.id);
   document.getElementById("modalAluno").classList.add("open");
 };
 
@@ -1167,6 +1171,14 @@ function renderModalSections(){
     html+='</div></div></div>';
   });
 
+  // Aulões (renderizados separadamente após loadAuloesDoAluno)
+  html+='<div class="modal-sem-section open" data-sem="auloes">';
+  html+='<div class="modal-sem-header" onclick="toggleModalSem(this)">';
+  html+='<div class="modal-sem-title" style="color:#c4b5fd;">🎥 Aulões <span style="font-size:9px;font-weight:500;color:rgba(196,181,253,.45);">— libere para teste ou cortesia</span></div>';
+  html+='<span class="modal-sem-chevron">▼</span>';
+  html+='</div>';
+  html+='<div class="modal-sem-body"><div class="resumos-grid-modal" id="auloesGridModal"><div style="grid-column:1/-1;font-size:11px;color:rgba(196,181,253,.45);">Carregando aulões...</div></div></div></div>';
+
   // Cursos (renderizado separadamente após loadCursosDoAluno)
   html+='<div class="modal-sem-section open" data-sem="cursos">';
   html+='<div class="modal-sem-header" onclick="toggleModalSem(this)">';
@@ -1190,6 +1202,7 @@ window.grantSem=function(semId){
   renderModalSections();
   // Re-render cursos se já carregados
   if(Object.keys(currentCursoToggles).length>0) renderCursosGrid();
+  if(Object.keys(currentAulaoToggles).length>0) renderAuloesGridModal();
 };
 
 window.revokeSem=function(semId){
@@ -1198,6 +1211,7 @@ window.revokeSem=function(semId){
   sem.cols.forEach(function(c){currentToggles[c.key]=false;});
   renderModalSections();
   if(Object.keys(currentCursoToggles).length>0) renderCursosGrid();
+  if(Object.keys(currentAulaoToggles).length>0) renderAuloesGridModal();
 };
 
 function renderResumosGrid(){
@@ -1252,6 +1266,69 @@ function renderCursosGridModal(){
 }
 window.toggleCurso=function(k){currentCursoToggles[k]=!currentCursoToggles[k];renderCursosGridModal();};
 function renderCursosGrid(){renderCursosGridModal();}
+
+// Lê e gerencia acessos dos aulões usando a mesma tabela `acessos`.
+async function loadAuloesDoAluno(userId){
+  currentAulaoToggles={}; currentAulaoOriginal={};
+  var g=document.getElementById("auloesGridModal");
+  if(g)g.innerHTML="<div style='grid-column:1/-1;font-size:11px;color:rgba(196,181,253,.45);'>Carregando aulões...</div>";
+  try{
+    // O painel de aulões já é carregado na inicialização; se ainda não estiver pronto, busca agora.
+    if(!adminAuloes.length){
+      var ar=await client.from("auloes").select("*").order("semestre").order("created_at",{ascending:false});
+      if(!ar.error)adminAuloes=ar.data||[];
+    }
+    var chaves=adminAuloes.map(function(a){return a.chave;}).filter(Boolean);
+    var liberados={};
+    if(chaves.length){
+      var res=await client.from("acessos").select("resumo,expira_em").eq("user_id",userId).in("resumo",chaves);
+      if(res.error)throw res.error;
+      (res.data||[]).forEach(function(r){
+        var valido=!r.expira_em||new Date(r.expira_em)>new Date();
+        if(valido)liberados[r.resumo]=true;
+      });
+    }
+    adminAuloes.forEach(function(a){
+      currentAulaoToggles[a.chave]=!!liberados[a.chave];
+      currentAulaoOriginal[a.chave]=!!liberados[a.chave];
+    });
+  }catch(err){
+    console.warn("Erro ao carregar acessos de aulões:",err);
+    adminAuloes.forEach(function(a){currentAulaoToggles[a.chave]=false;currentAulaoOriginal[a.chave]=false;});
+  }
+  renderAuloesGridModal();
+}
+
+function renderAuloesGridModal(){
+  var g=document.getElementById("auloesGridModal"); if(!g)return;
+  if(!adminAuloes.length){
+    g.innerHTML="<div style='grid-column:1/-1;font-size:11px;color:rgba(196,181,253,.45);'>Nenhum aulão cadastrado.</div>";
+    return;
+  }
+  g.innerHTML=adminAuloes.map(function(a){
+    var key=a.chave;
+    var on=!!currentAulaoToggles[key];
+    var presenteOn=currentPresente.indexOf(key)>=0;
+    var status=a.publicado?"":" · rascunho";
+    return '<div class="resumo-toggle '+(on?'on':'')+'" data-key="'+escapeAulao(key)+'" data-act="toggleaulao" title="'+escapeAulao(a.nome||key)+'">'+
+      '<span class="presente-icon'+(presenteOn?' on':'')+'" data-act="presenteaulao" data-key="'+escapeAulao(key)+'" title="Marcar como presente/cortesia">🎁</span>'+
+      (on?'✅ ':'🔒 ')+escapeAulao(a.nome||key)+'<span style="display:block;font-size:8px;margin-top:3px;opacity:.48;">'+escapeAulao((a.semestre||'')+'º sem'+status)+'</span></div>';
+  }).join("");
+}
+window.toggleAulao=function(k){
+  currentAulaoToggles[k]=!currentAulaoToggles[k];
+  if(!currentAulaoToggles[k]){
+    var i=currentPresente.indexOf(k); if(i>=0)currentPresente.splice(i,1);
+  }
+  renderAuloesGridModal();
+};
+window.toggleAulaoPresente=function(k){
+  var i=currentPresente.indexOf(k);
+  if(i>=0) currentPresente.splice(i,1);
+  else { currentPresente.push(k); currentAulaoToggles[k]=true; }
+  renderAuloesGridModal();
+};
+
 window.toggleResumo=function(k){currentToggles[k]=!currentToggles[k];renderResumosGrid();};
 window.togglePresente=function(k){if(!currentAluno)return;var i=currentPresente.indexOf(k);if(i>=0)currentPresente.splice(i,1);else currentPresente.push(k);var el=document.querySelector('.presente-icon[data-key="'+k+'"]');if(el)el.classList.toggle("on",currentPresente.indexOf(k)>=0);};
 window.set50Days=function(){var d=new Date();d.setDate(d.getDate()+50);document.getElementById("expiryInput").value=d.toISOString().substring(0,10);};
@@ -1273,9 +1350,24 @@ try{
     }
   }
 }catch(errC){showToast("Resumos salvos, mas erro ao salvar cursos!","error");}
-{showToast("&#9989; Salvo!","success");closeModal();await loadAlunos();renderActivity();}btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";};
-window.revokeAll=async function(){if(!currentAluno)return;if(!confirm("Revogar TODOS os acessos de "+currentAluno.email+"?"))return;RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=false;});document.getElementById("expiryInput").value="";renderResumosGrid();showToast("Clique em Salvar para confirmar","success");};
-window.quickRevoke=async function(id,emailEnc){var email=decodeURIComponent(emailEnc);if(!confirm("Revogar todos de "+email+"?"))return;var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=false;u[r.key+"_expira"]=null;});u.acesso_expira_em=null;var res=await client.from("profiles").update(u).eq("id",id);if(res.error)showToast("Erro!","error");else{showToast("&#9989; Revogado!","success");await loadAlunos();renderActivity();}};
+// ── Persistir AULÕES na tabela acessos ──
+try{
+  for(var ai=0;ai<adminAuloes.length;ai++){
+    var ak=adminAuloes[ai].chave; if(!ak)continue;
+    var antesA=!!currentAulaoOriginal[ak];
+    var agoraA=!!currentAulaoToggles[ak];
+    if(agoraA&&!antesA){
+      await client.from("acessos").upsert({user_id:currentAluno.id,resumo:ak,expira_em:expiraIso},{onConflict:"user_id,resumo"});
+    }else if(!agoraA&&antesA){
+      await client.from("acessos").delete().match({user_id:currentAluno.id,resumo:ak});
+    }else if(agoraA&&antesA){
+      await client.from("acessos").update({expira_em:expiraIso}).match({user_id:currentAluno.id,resumo:ak});
+    }
+  }
+}catch(errA){showToast("Resumos salvos, mas erro ao salvar aulões!","error");}
+{showToast("&#9989; Acessos salvos!","success");closeModal();await loadAlunos();renderActivity();}btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";};
+window.revokeAll=async function(){if(!currentAluno)return;if(!confirm("Revogar TODOS os acessos de "+currentAluno.email+"?"))return;RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=false;});CURSOS_COLS.forEach(function(c){currentCursoToggles[c.key]=false;});adminAuloes.forEach(function(a){if(a.chave)currentAulaoToggles[a.chave]=false;});currentPresente=[];document.getElementById("expiryInput").value="";renderResumosGrid();renderCursosGridModal();renderAuloesGridModal();showToast("Clique em Salvar para confirmar","success");};
+window.quickRevoke=async function(id,emailEnc){var email=decodeURIComponent(emailEnc);if(!confirm("Revogar todos de "+email+"?"))return;var u={resumos_presente:[]};RESUMOS_COLS.forEach(function(r){u[r.key]=false;u[r.key+"_expira"]=null;});u.acesso_expira_em=null;var res=await client.from("profiles").update(u).eq("id",id);var ar=await client.from("acessos").delete().eq("user_id",id);if(res.error||ar.error)showToast("Erro ao revogar todos os acessos!","error");else{showToast("&#9989; Todos os acessos revogados!","success");await loadAlunos();renderActivity();}};
 window.quickGrantAll=async function(id,emailEnc){
   var email=decodeURIComponent(emailEnc);
   if(!confirm("Liberar TODOS os resumos por 50 dias para "+email+"?"))return;
@@ -1296,7 +1388,7 @@ window.doLogout=async function(){await client.auth.signOut();window.location.rep
 
 // ── EVENT DELEGATION ──
 document.addEventListener("click",function(e){var b=e.target.closest("[data-act]");if(!b)return;var id=b.dataset.id||"",em=b.dataset.email||"",key=b.dataset.key||"",act=b.dataset.act;
-  if(act==="edit")openModal(id);else if(act==="revoke")quickRevoke(id,em);else if(act==="grant")quickGrantAll(id,em);else if(act==="toggle"&&window.toggleResumo)toggleResumo(key);else if(act==="togglecurso"&&window.toggleCurso)toggleCurso(key);else if(act==="presente"&&window.togglePresente)togglePresente(key);else if(act==="cupom-off")toggleCupom(id,false);else if(act==="cupom-on")toggleCupom(id,true);else if(act==="cupom-del")deletarCupom(id,b.dataset.code||"");
+  if(act==="edit")openModal(id);else if(act==="revoke")quickRevoke(id,em);else if(act==="grant")quickGrantAll(id,em);else if(act==="toggle"&&window.toggleResumo)toggleResumo(key);else if(act==="togglecurso"&&window.toggleCurso)toggleCurso(key);else if(act==="toggleaulao"&&window.toggleAulao)toggleAulao(key);else if(act==="presenteaulao"&&window.toggleAulaoPresente)toggleAulaoPresente(key);else if(act==="presente"&&window.togglePresente)togglePresente(key);else if(act==="cupom-off")toggleCupom(id,false);else if(act==="cupom-on")toggleCupom(id,true);else if(act==="cupom-del")deletarCupom(id,b.dataset.code||"");
 });
 
 // ═══ CUPONS ═══

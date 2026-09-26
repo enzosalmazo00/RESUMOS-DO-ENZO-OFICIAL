@@ -387,6 +387,35 @@
     .combo-btn:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(34,211,238,0.45); }
     .combo-btn:disabled { opacity:0.5; cursor:default; transform:none; }
 
+    /* ── NAVEGAÇÃO DA LOJA ── */
+    .store-hub { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:18px 0 28px; }
+    .store-cat-btn { border:1px solid rgba(34,211,238,.13); border-radius:15px; padding:14px 12px; background:rgba(255,255,255,.018); color:rgba(226,248,252,.66); cursor:pointer; font:600 12px 'Poppins',sans-serif; text-align:left; transition:all .2s; }
+    .store-cat-btn strong { display:block; color:#e2f8fc; font-size:13px; margin-bottom:3px; }
+    .store-cat-btn small { display:block; font-size:9.5px; font-weight:400; color:rgba(125,211,232,.38); line-height:1.35; }
+    .store-cat-btn:hover { transform:translateY(-2px); border-color:rgba(34,211,238,.3); background:rgba(34,211,238,.035); }
+    .store-cat-btn.active { border-color:rgba(34,211,238,.45); background:linear-gradient(145deg,rgba(34,211,238,.10),rgba(6,182,212,.035)); box-shadow:0 8px 28px rgba(0,0,0,.2); color:#fff; }
+    .store-cat-btn[data-store-cat="auloes"].active { border-color:rgba(168,85,247,.45); background:linear-gradient(145deg,rgba(168,85,247,.12),rgba(139,92,246,.035)); }
+    .store-cat-btn[data-store-cat="cursos"].active { border-color:rgba(249,201,79,.42); background:linear-gradient(145deg,rgba(249,201,79,.10),rgba(245,158,11,.025)); }
+    .store-category-panel:not(.active) { display:none !important; }
+    .store-category-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
+    .store-category-hint { font-size:10px; color:rgba(125,211,232,.38); }
+    .semester-shortcuts { display:flex; gap:7px; flex-wrap:wrap; margin:0 0 16px; }
+    .semester-shortcuts button { border:1px solid rgba(34,211,238,.14); border-radius:999px; padding:7px 12px; background:rgba(34,211,238,.035); color:rgba(226,248,252,.68); font:600 10px 'Poppins',sans-serif; cursor:pointer; }
+    .semester-shortcuts button:hover { border-color:rgba(34,211,238,.35); color:#fff; background:rgba(34,211,238,.08); }
+    .aulao-store-card { padding:0; overflow:hidden; min-height:100%; }
+    .aulao-store-cover { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; border-bottom:1px solid rgba(168,85,247,.14); }
+    .aulao-store-cover-fallback { width:100%; aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; font-size:34px; background:linear-gradient(135deg,rgba(168,85,247,.18),rgba(34,211,238,.05)); border-bottom:1px solid rgba(168,85,247,.14); }
+    .aulao-store-body { padding:14px; display:flex; flex-direction:column; gap:7px; flex:1; }
+    .aulao-store-card .produto-preco { color:#c4b5fd; }
+    .aulao-store-card .add-btn { border-color:rgba(168,85,247,.26); background:rgba(168,85,247,.10); color:#ddd6fe; }
+    .aulao-store-card .add-btn:hover { border-color:rgba(196,181,253,.5); background:rgba(168,85,247,.18); }
+    .aulao-gift { position:absolute; top:10px; left:10px; z-index:2; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:rgba(2,13,26,.86); border:1px solid rgba(251,191,36,.36); cursor:pointer; font-size:14px; box-shadow:0 5px 18px rgba(0,0,0,.3); }
+
+    @media(max-width:640px){
+      .store-hub { grid-template-columns:1fr; gap:8px; }
+      .store-cat-btn { padding:12px 14px; }
+    }
+
     /* Carrinho FAB */
     .cart-fab { position:fixed; bottom:90px; right:20px; z-index:8000; width:52px; height:52px; border-radius:50%; border:none; cursor:pointer; background:linear-gradient(135deg,#22d3ee,#0891b2); box-shadow:0 4px 20px rgba(34,211,238,0.5); font-size:20px; transition:all .3s; display:flex; align-items:center; justify-content:center; }
     .cart-fab:hover { transform:scale(1.1); }
@@ -1141,19 +1170,30 @@
     <!-- TAB: LOJA -->
     <div class="tab-panel" id="tab-loja">
       <div class="store-intro">
-        <h2>🛍️ Loja — Cursos e Resumos</h2>
-        <p>Escolha o semestre, adicione ao carrinho e pague com PIX ou Cartão. Acesso liberado automaticamente.</p>
+        <h2>🛍️ Loja</h2>
+        <p>Escolha primeiro o tipo de conteúdo. Assim você vê apenas o que procura, sem misturar aulões, cursos e resumos.</p>
       </div>
 
+      <div class="store-hub" aria-label="Categorias da loja">
+        <button class="store-cat-btn" data-store-cat="auloes" onclick="switchStoreCategory('auloes')">
+          <strong>🎥 Aulões</strong><small>Aulas gravadas focadas na prova.</small>
+        </button>
+        <button class="store-cat-btn active" data-store-cat="resumos" onclick="switchStoreCategory('resumos')">
+          <strong>📚 Resumos</strong><small>Conteúdo por semestre, P1, P2 e Final.</small>
+        </button>
+        <button class="store-cat-btn" data-store-cat="cursos" onclick="switchStoreCategory('cursos')">
+          <strong>🎓 Cursos</strong><small>Formações completas com certificado.</small>
+        </button>
+      </div>
 
       <!-- AULÕES DINÂMICOS -->
-      <div class="store-section" id="storeAuloesSection" style="display:none;">
+      <div class="store-section store-category-panel" id="storeAuloesSection" style="display:none;">
         <div class="store-section-title" style="color:#c4b5fd;">🎥 Aulões Gravados</div>
         <div class="store-grid" id="store-grid-auloes"></div>
       </div>
 
       <!-- ★★★ CURSO — DESTAQUE PRINCIPAL ★★★ -->
-      <div class="store-section">
+      <div class="store-section store-category-panel" id="storeCursosSection">
         <div class="store-section-title" style="color:#f9c94f;">🎓 Cursos com Certificado</div>
         <div class="curso-loja-card" id="curso-pec-card" style="background-image:url('img/capa-curso-peconhentos.jpg');">
           <div class="curso-loja-overlay">
@@ -1203,8 +1243,17 @@
       </div>
 
       <!-- ═══ SEMESTRES ═══ -->
-      <div class="store-section">
-        <div class="store-section-title">📂 Resumos por Semestre</div>
+      <div class="store-section store-category-panel active" id="storeResumosSection">
+        <div class="store-category-head">
+          <div class="store-section-title" style="margin-bottom:0;flex:1;">📂 Resumos por Semestre</div>
+          <div class="store-category-hint">Toque no semestre para abrir</div>
+        </div>
+        <div class="semester-shortcuts">
+          <button onclick="focusStoreSemester(1)">📗 1º semestre</button>
+          <button onclick="focusStoreSemester(2)">📘 2º semestre</button>
+          <button onclick="focusStoreSemester(3)">🧬 3º semestre</button>
+          <button onclick="focusStoreSemester(4)">🔬 4º semestre</button>
+        </div>
 
         <!-- 1º SEMESTRE -->
         <div class="sem-card" id="sem-1">
@@ -1522,7 +1571,7 @@
       <div class="store-terms" id="store-terms-section">
         <div class="store-terms-title">⚠️ Informações importantes</div>
         <ul>
-          <li>⏳ <strong>90 dias de acesso</strong> para cursos e <strong>50 dias</strong> para resumos, a partir da confirmação do pagamento.</li>
+          <li>⏳ O prazo de acesso aparece em cada produto: cursos, resumos e aulões podem ter durações diferentes.</li>
           <li>✅ <strong>Liberação automática</strong> após a confirmação do PIX ou cartão.</li>
           <li>💳 <strong>Cartão de crédito</strong> em até 6x sem juros via Mercado Pago.</li>
           <li>📱 <strong>Um dispositivo por vez</strong> — segurança da sua conta.</li>
@@ -1781,12 +1830,40 @@ window.switchTab = function(tab) {
   if (tab === "loja") {
     var ezPanel = document.getElementById("ez-panel");
     if (ezPanel && ezPanel.classList.contains("open") && typeof ezToggle === "function") ezToggle();
+    restoreStoreCategory();
   }
   document.body.classList.toggle("loja-ativa", tab === "loja");
   if (tab === "aluno") renderStudentArea();
   if (tab === "auloes") renderAuloesGrid();
 };
 
+
+// ── Organização visual da loja ───────────────────────────────────────────────
+window.switchStoreCategory=function(cat){
+  var map={auloes:"storeAuloesSection",resumos:"storeResumosSection",cursos:"storeCursosSection"};
+  Object.keys(map).forEach(function(k){
+    var el=document.getElementById(map[k]); if(el)el.classList.toggle("active",k===cat);
+  });
+  document.querySelectorAll(".store-cat-btn").forEach(function(b){
+    b.classList.toggle("active",b.getAttribute("data-store-cat")===cat);
+  });
+  try{localStorage.setItem("enzo_store_category",cat);}catch(e){}
+};
+window.focusStoreSemester=function(n){
+  switchStoreCategory("resumos");
+  var target=document.getElementById("sem-"+n); if(!target)return;
+  document.querySelectorAll("#storeResumosSection .sem-card").forEach(function(c){
+    if(c!==target)c.classList.remove("open");
+  });
+  target.classList.add("open");
+  setTimeout(function(){target.scrollIntoView({behavior:"smooth",block:"start"});},80);
+};
+function restoreStoreCategory(){
+  var cat="resumos";
+  try{cat=localStorage.getItem("enzo_store_category")||"resumos";}catch(e){}
+  if(["auloes","resumos","cursos"].indexOf(cat)<0)cat="resumos";
+  switchStoreCategory(cat);
+}
 
 // ── Aulões gravados ──────────────────────────────────────────────────────────
 function hasAulaoAccess(key) {
@@ -1847,8 +1924,11 @@ function renderAuloesGrid() {
 
       var buttonLabel = unlocked ? "▶ Assistir agora" : sellable ? "🛒 Comprar acesso" : "Venda em breve";
       var capa = a.capa_url ? '<img class="aulao-cover-img" src="'+a.capa_url+'" alt="">' : '';
+      var presentesAulao=(profile&&Array.isArray(profile.resumos_presente))?profile.resumos_presente:[];
+      var ehPresenteAulao=unlocked&&presentesAulao.indexOf(a.chave)>=0;
 
       card.innerHTML =
+        (ehPresenteAulao?'<button class="aulao-gift" onclick="showPresenteMsg(event,\'aulão\')" title="Presente do Enzo">🎁</button>':'')+
         capa+
         '<div class="aulao-top"><div class="aulao-icon">🎥</div>'+statusLabel+'</div>'+
         '<div class="aulao-title">'+a.nome+'</div>'+
@@ -1874,20 +1954,28 @@ function renderAulaoStore(){
   var grid=document.getElementById("store-grid-auloes");
   if(!section||!grid)return;
   var itens=AULOES.filter(function(a){return a.publicado&&a.exibir_loja&&Number(a.preco||0)>0;});
-  section.style.display=itens.length?"block":"none";
+  section.style.display="";
   grid.innerHTML="";
+  if(!itens.length){
+    grid.innerHTML='<div class="aulao-empty" style="grid-column:1/-1;">Nenhum aulão disponível na loja neste momento.</div>';
+    return;
+  }
   itens.forEach(function(a){
     var owned=hasAulaoAccess(a.chave);
     var card=document.createElement("div");
     card.className="produto-card"+(owned?" owned":"");
     card.setAttribute("data-aulao-store",a.chave);
+    card.classList.add("aulao-store-card");
+    var storeCover=a.capa_url?'<img class="aulao-store-cover" src="'+a.capa_url+'" alt="">':'<div class="aulao-store-cover-fallback">🎥</div>';
     card.innerHTML=
       (a.destaque?'<span class="tag-popular">Destaque</span>':'')+
-      '<span class="produto-emoji">🎥</span>'+
-      '<div class="produto-nome">'+a.nome+'</div>'+
-      '<div class="produto-sub">'+a.semestre+'º Semestre · '+(a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+(a.usar_turmas?' · por turma/professor':'')+'</div>'+
-      '<div class="produto-preco">R$ '+Number(a.preco).toFixed(2).replace(".",",")+'</div>'+
-      '<button class="add-btn '+(owned?'owned':'')+'" '+(owned?'disabled':'onclick="addAulaoToCart(\''+a.chave+'\')"')+'>'+(owned?'✅ Já adquirido':'🛒 Comprar')+'</button>';
+      storeCover+
+      '<div class="aulao-store-body">'+
+        '<div class="produto-nome">'+a.nome+'</div>'+
+        '<div class="produto-sub">'+a.semestre+'º Semestre · '+(a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+(a.usar_turmas?' · por turma/professor':'')+'</div>'+
+        '<div class="produto-preco">R$ '+Number(a.preco).toFixed(2).replace(".",",")+'</div>'+
+        '<button class="add-btn '+(owned?'owned':'')+'" '+(owned?'disabled':'onclick="addAulaoToCart(\''+a.chave+'\')"')+'>'+(owned?'✅ Já adquirido':'🛒 Comprar')+'</button>'+
+      '</div>';
     grid.appendChild(card);
   });
 }
@@ -3096,12 +3184,13 @@ window.toggleSemestre = function(header) {
   card.classList.toggle("open");
 };
 
-window.showPresenteMsg = function(e) {
+window.showPresenteMsg = function(e, tipo) {
   e.preventDefault();
   e.stopPropagation();
   var nome = (profile && profile.nome_preferido) ? profile.nome_preferido : "nosso aluno(a)";
+  var item = (tipo === "aulão") ? "aulão" : "resumo";
   document.getElementById("presenteMsgTexto").innerHTML =
-    'Este resumo foi um presente do Enzo para você, <strong style="color:#fbbf24;">' + nome + '</strong>!<br><br>' +
+    'Este ' + item + ' foi um presente do Enzo para você, <strong style="color:#fbbf24;">' + nome + '</strong>!<br><br>' +
     'Que ele seja mais uma ferramenta na sua jornada rumo à medicina.<br>' +
     'Você está no caminho certo — continue firme! 💪<br><br>' +
     '<strong style="color:#fbbf24;">Bons estudos e boa prova! 🩺✨</strong>';
