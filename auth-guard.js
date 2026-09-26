@@ -252,6 +252,43 @@
       }
     }
 
+    // ── PRESENCE GLOBAL: ALUNOS ONLINE ───────────────────────────────────
+    // Um único canal para dashboard + todos os resumos protegidos.
+    // Administradores NÃO entram na contagem. O payload expõe somente o user_id.
+    if (!profile.is_admin) {
+      try {
+        var onlineChannel = client.channel("online-users", {
+          config: { presence: { key: session.user.id } }
+        });
+
+        window.onlinePresenceChannel = onlineChannel;
+
+        onlineChannel
+          .on("presence", { event: "sync" }, function () {
+            var state = onlineChannel.presenceState() || {};
+            var onlineIds = Object.keys(state);
+            window.onlineStudentIds = onlineIds;
+            document.dispatchEvent(new CustomEvent("onlinePresenceChanged", {
+              detail: { count: onlineIds.length, userIds: onlineIds }
+            }));
+          })
+          .subscribe(async function (status) {
+            if (status === "SUBSCRIBED") {
+              try {
+                await onlineChannel.track({
+                  user_id: session.user.id,
+                  online_at: new Date().toISOString()
+                });
+              } catch (presenceErr) {
+                console.warn("[auth-guard] Falha ao registrar Presence:", presenceErr);
+              }
+            }
+          });
+      } catch (presenceErr) {
+        console.warn("[auth-guard] Presence indisponível:", presenceErr);
+      }
+    }
+
     // ── TUDO OK ───────────────────────────────────────────────────────────
     window.authSession = session;
     document.dispatchEvent(new CustomEvent("authReady", {

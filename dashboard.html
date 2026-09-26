@@ -90,6 +90,20 @@
       font-size:13px; font-weight:500; cursor:pointer; transition:all .3s;
     }
     .logout-btn:hover { border-color:var(--cyan); background:rgba(34,211,238,0.05); color:#fff; }
+    .online-students-badge {
+      display:inline-flex; align-items:center; gap:7px;
+      padding:8px 12px; border-radius:20px;
+      border:1px solid rgba(74,222,128,0.24);
+      background:rgba(74,222,128,0.07);
+      color:#86efac; font-size:11px; font-weight:600;
+      white-space:nowrap;
+    }
+    .online-students-dot {
+      width:7px; height:7px; border-radius:50%;
+      background:#4ade80; box-shadow:0 0 8px rgba(74,222,128,.65);
+      animation:onlinePulse 1.6s ease-in-out infinite;
+    }
+    @keyframes onlinePulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.45;transform:scale(.72)} }
 
     /* ── TABS ── */
     .tabs {
@@ -874,6 +888,10 @@
   <div class="header">
     <div class="logo">RESUMOS <span>ENZO</span></div>
     <div class="header-right">
+      <div class="online-students-badge" id="onlineStudentsBadge" title="Alunos conectados agora">
+        <span class="online-students-dot"></span>
+        <span><strong id="onlineStudentsCount">0</strong> online agora</span>
+      </div>
       <div class="user-email" id="userEmail"></div>
       <div class="expiry-badge" id="expiryBadge" style="display:none"></div>
       <button class="admin-btn" id="adminBtn" onclick="window.location.href='admin.html'">&#9881;&#65039; Painel Admin</button>
@@ -4370,12 +4388,28 @@ window.copyPixCode = function() {
   });
 };
 
+// ── Alunos online (Supabase Realtime Presence) ───────────────────────────────
+document.addEventListener("onlinePresenceChanged", function(e) {
+  var countEl = document.getElementById("onlineStudentsCount");
+  if (!countEl) return;
+  var count = e && e.detail && Number.isFinite(e.detail.count) ? e.detail.count : 0;
+  countEl.textContent = count;
+});
+
+if (Array.isArray(window.onlineStudentIds)) {
+  var initialOnlineCount = document.getElementById("onlineStudentsCount");
+  if (initialOnlineCount) initialOnlineCount.textContent = window.onlineStudentIds.length;
+}
+
 // ── Logout ────────────────────────────────────────────────────────────────────
 logoutBtn.addEventListener("click", async function () {
   logoutBtn.disabled = true; logoutBtn.textContent = "Saindo…";
   var client  = window.authClient;
   var session = window.authSession;
   if (client && session) {
+    try {
+      if (window.onlinePresenceChannel) await window.onlinePresenceChannel.untrack();
+    } catch(e){}
     try { await client.from("profiles").update({ active_session:false, device_id:null }).eq("id", session.user.id); } catch(e){}
     try { await client.auth.signOut(); } catch(e){}
   }

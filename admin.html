@@ -51,6 +51,13 @@
     .stat-card.revenue{border-color:rgba(34,211,238,0.25);background:rgba(34,211,238,0.06);}
     .online-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4ade80;margin-right:5px;animation:pulse-dot 1.5s infinite;}
     @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.4);}}
+    .online-panel{margin:-10px 0 24px;padding:14px 16px;border:1px solid rgba(74,222,128,.18);border-radius:14px;background:rgba(74,222,128,.035);}
+    .online-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px;}
+    .online-panel-title{font-size:11px;font-weight:700;color:#86efac;letter-spacing:.08em;text-transform:uppercase;}
+    .online-list{display:flex;gap:7px;flex-wrap:wrap;}
+    .online-user{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;border:1px solid rgba(74,222,128,.18);background:rgba(74,222,128,.06);color:#d1fae5;font-size:10.5px;}
+    .online-user::before{content:'';width:6px;height:6px;border-radius:50%;background:#4ade80;}
+    .online-empty{font-size:11px;color:rgba(167,243,208,.42);}
 
     /* ── SECTION TITLE ── */
     .section-title{font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(34,211,238,0.5);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
@@ -295,7 +302,15 @@
       <div class="stat-card revenue"><div class="stat-label">Total Recebido</div><div class="stat-value" id="statReceita">&#8212;</div><div class="stat-sub">pagamentos aprovados</div></div>
       <div class="stat-card"><div class="stat-label">Pagtos Aprovados</div><div class="stat-value" id="statPagamentos">&#8212;</div><div class="stat-sub">pedidos confirmados</div></div>
       <div class="stat-card"><div class="stat-label">Expiram em 7 dias</div><div class="stat-value" id="statExpirando">&#8212;</div><div class="stat-sub">precisam renovar</div></div>
-      <div class="stat-card online"><div class="stat-label"><span class="online-dot"></span>Online Agora</div><div class="stat-value" id="statOnline">0</div><div class="stat-sub">usuários conectados</div></div>
+      <div class="stat-card online"><div class="stat-label"><span class="online-dot"></span>Online Agora</div><div class="stat-value" id="statOnline">0</div><div class="stat-sub">alunos conectados</div></div>
+    </div>
+
+    <div class="online-panel" id="onlinePanel">
+      <div class="online-panel-head">
+        <div class="online-panel-title"><span class="online-dot"></span> Alunos conectados agora</div>
+        <div style="font-size:10px;color:rgba(167,243,208,.45);">atualização em tempo real</div>
+      </div>
+      <div class="online-list" id="onlineUsersList"><span class="online-empty">Nenhum aluno conectado.</span></div>
     </div>
 
     <div class="section-title">&#128338; Atividade Recente</div>
@@ -666,6 +681,9 @@ async function loadAlunos(){
   allAlunos=r.data||[];
   document.getElementById("tabBadgeAlunos").textContent=allAlunos.length;
   renderStats();renderAlunos(allAlunos);
+  if (onlineWatcherChannel) {
+    try { renderOnlineUsers(Object.keys(onlineWatcherChannel.presenceState() || {})); } catch(e){}
+  }
 }
 function renderStats(){
   var ativos=allAlunos.filter(function(a){return RESUMOS_COLS.some(function(r){return resumoAtivo(a,r.key);});}).length;
@@ -1194,8 +1212,62 @@ window.deletarCupom=async function(id,codigo){if(!confirm("Excluir cupom "+codig
 async function loadPrecos(){try{var r=await client.from("config").select("*").in("chave",["preco_unit","preco_combo3","preco_pack","preco_final_unit","preco_final_pack"]);if(r.data&&r.data.length){r.data.forEach(function(c){if(c.chave==="preco_unit")document.getElementById("precoUnit").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_combo3")document.getElementById("precoCombo").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_pack")document.getElementById("precoPack").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_final_unit")document.getElementById("precoFinalUnit").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_final_pack")document.getElementById("precoFinalPack").value=parseFloat(c.valor).toFixed(2);});document.getElementById("precoStatus").textContent="Carregado do banco";}else{document.getElementById("precoStatus").textContent="Valores padr\u00e3o";}}catch(e){document.getElementById("precoStatus").textContent="Valores padr\u00e3o";}}
 window.salvarPrecos=async function(){var unit=parseFloat(document.getElementById("precoUnit").value);var combo=parseFloat(document.getElementById("precoCombo").value);var pack=parseFloat(document.getElementById("precoPack").value);var fUnit=parseFloat(document.getElementById("precoFinalUnit").value);var fPack=parseFloat(document.getElementById("precoFinalPack").value);if(isNaN(unit)||isNaN(combo)||isNaN(pack)||unit<=0||combo<=0||pack<=0||isNaN(fUnit)||isNaN(fPack)||fUnit<=0||fPack<=0){showToast("Preencha corretamente!","error");return;}var btn=document.getElementById("btnSalvarPrecos");btn.disabled=true;btn.textContent="Salvando...";var precos=[{chave:"preco_unit",valor:unit.toString()},{chave:"preco_combo3",valor:combo.toString()},{chave:"preco_pack",valor:pack.toString()},{chave:"preco_final_unit",valor:fUnit.toString()},{chave:"preco_final_pack",valor:fPack.toString()}];var ok=true;for(var i=0;i<precos.length;i++){var p=precos[i];var r=await client.from("config").upsert({chave:p.chave,valor:p.valor},{onConflict:"chave"});if(r.error){ok=false;console.error(r.error);}}if(ok){showToast("&#9989; Preços salvos!","success");document.getElementById("precoStatus").innerHTML="<span style='color:#4ade80;'>&#9989; Salvo!</span>";}else showToast("Erro!","error");btn.disabled=false;btn.textContent="💾 Salvar preços";};
 
-// ═══ ONLINE ═══
-function setupOnlineCounter(){try{var ch=client.channel("online-users",{config:{presence:{key:"admin-watcher"}}});ch.on("presence",{event:"sync"},function(){var s=ch.presenceState();var c=0;Object.keys(s).forEach(function(k){c+=s[k].length;});document.getElementById("statOnline").textContent=c;});ch.subscribe(function(st){if(st==="SUBSCRIBED")ch.track({online_at:new Date().toISOString(),role:"admin"});});}catch(e){console.warn("Presence:",e);document.getElementById("statOnline").textContent="\u2014";}}
+// ═══ ONLINE — SUPABASE REALTIME PRESENCE ═══
+var onlineWatcherChannel = null;
+
+function escapeOnlineText(value){
+  return String(value == null ? "" : value)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+
+function renderOnlineUsers(userIds){
+  var ids = Array.isArray(userIds) ? userIds : [];
+  var stat = document.getElementById("statOnline");
+  var list = document.getElementById("onlineUsersList");
+
+  var uniqueIds = Array.from(new Set(ids));
+  var alunos = uniqueIds.map(function(id){
+    return allAlunos.find(function(a){ return a.id === id && !a.is_admin; });
+  }).filter(Boolean);
+
+  if (stat) stat.textContent = alunos.length;
+  if (!list) return;
+
+  if (!alunos.length) {
+    list.innerHTML = '<span class="online-empty">Nenhum aluno conectado.</span>';
+    return;
+  }
+
+  list.innerHTML = alunos.map(function(a){
+    var nome = (a.nome_preferido || "").trim();
+    var identificacao = nome || a.email || "Aluno";
+    var complemento = nome && a.email ? " · " + a.email : "";
+    return '<span class="online-user" title="' + escapeOnlineText(a.email || "") + '">' +
+      escapeOnlineText(identificacao + complemento) + '</span>';
+  }).join("");
+}
+
+function setupOnlineCounter(){
+  try {
+    onlineWatcherChannel = client.channel("online-users");
+
+    onlineWatcherChannel
+      .on("presence", {event:"sync"}, function(){
+        var state = onlineWatcherChannel.presenceState() || {};
+        renderOnlineUsers(Object.keys(state));
+      })
+      .subscribe(function(status){
+        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+          console.warn("Presence status:", status);
+        }
+      });
+  } catch(e) {
+    console.warn("Presence:", e);
+    var stat = document.getElementById("statOnline");
+    if (stat) stat.textContent = "—";
+  }
+}
 
 init();
 })();
