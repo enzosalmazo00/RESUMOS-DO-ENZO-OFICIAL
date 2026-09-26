@@ -970,6 +970,7 @@
       <div class="user-email" id="userEmail"></div>
       <div class="expiry-badge" id="expiryBadge" style="display:none"></div>
       <button class="admin-btn" id="adminBtn" onclick="window.location.href='admin.html'">&#9881;&#65039; Painel Admin</button>
+      <button class="admin-btn" id="professorBtn" onclick="window.location.href='professor.html'" style="border-color:rgba(168,85,247,.35);background:rgba(168,85,247,.08);color:#c4b5fd;">🎓 Área do Professor</button>
       <button class="logout-btn" id="logoutBtn">Logout</button>
     </div>
   </div>
@@ -4712,6 +4713,27 @@ document.addEventListener("authReady", async function(e) {
     profile = res.data || {};
   } catch(err) {
     profile = {};
+  }
+
+  // Conta de Professor Colaborador
+  // A checagem usa RPC no Supabase para não depender da leitura direta da tabela.
+  try {
+    var profCheck = await window.authClient.rpc("is_professor");
+    var isProfessor = !profCheck.error && profCheck.data === true;
+
+    var professorBtn = document.getElementById("professorBtn");
+    if (professorBtn) professorBtn.classList.toggle("visible", isProfessor);
+
+    // Entrada normal: professor vai direto para a área própria.
+    // "?modo=aluno" permite que o professor entre voluntariamente na área de aluno,
+    // mantendo o botão "Área do Professor" visível para voltar.
+    if (isProfessor && !(profile && profile.is_admin) &&
+        new URLSearchParams(location.search).get("modo") !== "aluno") {
+      window.location.replace("professor.html");
+      return;
+    }
+  } catch (profErr) {
+    console.warn("[dashboard] Professor account:", profErr);
   }
 
   // ── [M3] Carregar acessos da tabela acessos ────────────────────────────────
