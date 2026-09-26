@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login — Resumos do Enzo</title>
+  <meta name="theme-color" content="#020810">
+  <meta name="description" content="Resumos do Enzo — resumos, cursos e aulões em uma única plataforma de estudos.">
+  <title>Resumos do Enzo — Sua plataforma de estudos</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -12,279 +14,423 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --cyan:    #22d3ee;
-      --cyan2:   #06b6d4;
-      --cyan3:   #67e8f9;
-      --dark:    #020810;
-      --card-bg: rgba(3, 10, 24, 0.72);
-      --border:  rgba(34, 211, 238, 0.18);
+    :root{
+      --cyan:#22d3ee;
+      --cyan2:#06b6d4;
+      --cyan3:#67e8f9;
+      --purple:#8b5cf6;
+      --green:#4ade80;
+      --dark:#020810;
+      --panel:rgba(3,10,24,.76);
+      --border:rgba(34,211,238,.16);
+      --text-soft:rgba(226,232,240,.62);
     }
 
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: var(--dark);
-      color: #fff;
-      overflow-x: hidden;
-      overflow-y: auto;
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    html,body{min-height:100%}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:var(--dark);
+      color:#fff;
+      overflow-x:hidden;
     }
 
-    #dna-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100vw !important;
-      height: 100vh !important;
-      z-index: 0;
+    #dna-canvas{
+      position:fixed;inset:0;
+      width:100vw!important;height:100vh!important;
+      z-index:0;
     }
 
-    .aurora { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
-    .aurora-blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(90px);
-      opacity: 0.18;
-      animation: drift 18s ease-in-out infinite;
-    }
-    .aurora-blob:nth-child(1) { width:600px; height:600px; background:radial-gradient(circle,#22d3ee,transparent 70%); top:-100px; left:-100px; animation-duration:20s; }
-    .aurora-blob:nth-child(2) { width:500px; height:500px; background:radial-gradient(circle,#0ea5e9,transparent 70%); bottom:-80px; right:-80px; animation-duration:16s; animation-delay:-6s; }
-    .aurora-blob:nth-child(3) { width:400px; height:400px; background:radial-gradient(circle,#6366f1,transparent 70%); top:40%; left:60%; animation-duration:24s; animation-delay:-12s; opacity:0.10; }
-    @keyframes drift {
-      0%,100% { transform:translate(0,0) scale(1); }
-      33%      { transform:translate(40px,-30px) scale(1.08); }
-      66%      { transform:translate(-20px,40px) scale(0.94); }
+    .aurora{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+    .aurora-blob{position:absolute;border-radius:50%;filter:blur(100px);opacity:.17;animation:drift 18s ease-in-out infinite}
+    .aurora-blob:nth-child(1){width:650px;height:650px;background:radial-gradient(circle,#22d3ee,transparent 70%);top:-180px;left:-140px;animation-duration:21s}
+    .aurora-blob:nth-child(2){width:560px;height:560px;background:radial-gradient(circle,#6366f1,transparent 70%);right:-160px;bottom:-120px;animation-duration:18s;animation-delay:-7s}
+    .aurora-blob:nth-child(3){width:420px;height:420px;background:radial-gradient(circle,#0ea5e9,transparent 70%);top:35%;left:48%;opacity:.09;animation-duration:26s;animation-delay:-11s}
+    @keyframes drift{
+      0%,100%{transform:translate(0,0) scale(1)}
+      33%{transform:translate(45px,-28px) scale(1.07)}
+      66%{transform:translate(-24px,38px) scale(.95)}
     }
 
-    .grid-overlay {
-      position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    .grid-overlay{
+      position:fixed;inset:0;z-index:2;pointer-events:none;
       background-image:
-        linear-gradient(rgba(34,211,238,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(34,211,238,0.025) 1px, transparent 1px);
-      background-size: 56px 56px;
+        linear-gradient(rgba(34,211,238,.022) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(34,211,238,.022) 1px,transparent 1px);
+      background-size:58px 58px;
     }
 
-    .scan-line {
-      position: fixed; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent 0%, rgba(34,211,238,0.35) 40%, rgba(103,232,249,0.6) 50%, rgba(34,211,238,0.35) 60%, transparent 100%);
-      z-index: 3; pointer-events: none;
-      animation: scan 8s linear infinite; opacity: 0;
+    .scan-line{
+      position:fixed;left:0;right:0;height:2px;z-index:3;pointer-events:none;opacity:0;
+      background:linear-gradient(90deg,transparent,rgba(34,211,238,.25),rgba(103,232,249,.5),rgba(34,211,238,.25),transparent);
+      animation:scan 9s linear infinite;
     }
-    @keyframes scan {
-      0%   { top:-2px; opacity:0; }
-      5%   { opacity:1; }
-      95%  { opacity:1; }
-      100% { top:100vh; opacity:0; }
+    @keyframes scan{0%{top:-2px;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:100vh;opacity:0}}
+
+    .vignette{
+      position:fixed;inset:0;z-index:4;pointer-events:none;
+      background:radial-gradient(ellipse 80% 80% at 50% 45%,transparent 28%,rgba(2,8,16,.48) 70%,rgba(2,8,16,.88) 100%);
     }
 
-    .vignette {
-      position: fixed; inset: 0; z-index: 4; pointer-events: none;
-      background: radial-gradient(ellipse 75% 75% at 50% 50%, transparent 30%, rgba(2,8,16,0.55) 70%, rgba(2,8,16,0.85) 100%);
+    .site-shell{
+      position:relative;z-index:10;
+      width:min(1220px,calc(100% - 38px));
+      margin:0 auto;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      padding:24px 0 32px;
     }
 
-    .page {
-      position: relative; z-index: 10;
-      min-height: 100vh;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 40px 20px 48px;
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      padding:4px 2px 22px;
+      animation:fadeDown .65s ease both;
     }
 
-    .top-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 7px 18px; border-radius: 9999px;
-      border: 1px solid var(--border);
-      background: rgba(34,211,238,0.07);
-      font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--cyan); margin-bottom: 18px;
-      animation: fadeDown 0.8s ease both;
+    .brand-lockup{display:flex;align-items:center;gap:11px}
+    .brand-mark{
+      width:42px;height:42px;border-radius:13px;
+      display:grid;place-items:center;
+      border:1px solid rgba(34,211,238,.2);
+      background:linear-gradient(135deg,rgba(34,211,238,.16),rgba(99,102,241,.08));
+      box-shadow:0 10px 30px rgba(0,0,0,.25),inset 0 0 24px rgba(34,211,238,.04);
+      font-size:19px;
     }
-    .badge-dot {
-      width:6px; height:6px; border-radius:50%;
-      background:var(--cyan); box-shadow:0 0 8px var(--cyan);
-      animation:pulse 2s ease-in-out infinite;
-    }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.65);} }
+    .brand-name{font-size:16px;font-weight:800;letter-spacing:-.4px}
+    .brand-name span{color:var(--cyan3)}
+    .brand-sub{font-size:8.8px;color:rgba(165,243,252,.4);letter-spacing:.1em;text-transform:uppercase;margin-top:1px}
 
-    .brand { text-align:center; margin-bottom:28px; animation:fadeDown 0.8s 0.1s ease both; }
-    .brand-main {
-      font-size: clamp(38px,6vw,72px); font-weight:800; letter-spacing:-3px; line-height:0.95; color:#fff;
+    .release-pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;
+      border:1px solid rgba(139,92,246,.23);
+      background:rgba(139,92,246,.07);
+      color:#ddd6fe;
+      font-size:9.5px;font-weight:650;
+      letter-spacing:.04em;
+      white-space:nowrap;
     }
-    .brand-main span {
-      background: linear-gradient(100deg, var(--cyan) 0%, var(--cyan3) 50%, var(--cyan2) 100%);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-    }
+    .release-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
 
-    .glass-card {
-      width:100%; max-width:400px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      padding: 40px 36px 32px;
-      backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
-      box-shadow: 0 0 0 1px rgba(34,211,238,0.06), 0 24px 64px rgba(0,0,0,0.55), 0 0 80px rgba(34,211,238,0.06) inset;
-      animation: fadeUp 0.9s 0.2s ease both;
+    .main-grid{
+      flex:1;
+      display:grid;
+      grid-template-columns:minmax(0,1.18fr) minmax(360px,.82fr);
+      gap:34px;
+      align-items:center;
+      padding:18px 0 26px;
     }
 
-    .card-header { text-align:center; margin-bottom:30px; }
-    .card-icon {
-      width:52px; height:52px; border-radius:16px;
-      background:linear-gradient(135deg,rgba(34,211,238,.18),rgba(6,182,212,.08));
-      border:1px solid var(--border);
-      display:flex; align-items:center; justify-content:center;
-      margin:0 auto 16px; font-size:24px;
-      box-shadow:0 0 20px rgba(34,211,238,0.1);
-    }
-    .card-header h2 { font-size:24px; font-weight:600; margin-bottom:4px; letter-spacing:-0.5px; }
-    .card-header p  { font-size:12.5px; color:rgba(34,211,238,0.45); font-weight:300; }
-
-    .field { margin-bottom:16px; }
-    .field label {
-      display:block; font-size:11px; font-weight:600; color:rgba(34,211,238,0.6);
-      margin-bottom:7px; letter-spacing:0.1em; text-transform:uppercase;
-    }
-    .field input {
-      width:100%; padding:14px 16px;
-      background:rgba(255,255,255,0.04); border:1px solid rgba(34,211,238,0.14);
-      border-radius:14px; color:#fff; font-size:15px; font-family:'Poppins',sans-serif;
-      transition:all 0.25s; -webkit-appearance:none;
-    }
-    .field input::placeholder { color:rgba(255,255,255,0.18); }
-    .field input:focus {
-      outline:none; border-color:var(--cyan);
-      background:rgba(34,211,238,0.06); box-shadow:0 0 0 3px rgba(34,211,238,0.12);
+    .experience{
+      min-width:0;
+      animation:fadeUp .78s .06s ease both;
     }
 
-    #mainBtn {
-      width:100%; padding:15px; margin-top:6px; border:none; border-radius:14px;
-      background:linear-gradient(135deg,#22d3ee,#0891b2); color:#fff;
-      font-size:15px; font-weight:600; font-family:'Poppins',sans-serif;
-      cursor:pointer; box-shadow:0 8px 28px rgba(34,211,238,0.28),0 0 0 1px rgba(34,211,238,0.2);
-      transition:all 0.25s; -webkit-appearance:none; position:relative; overflow:hidden;
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:7px 12px;border-radius:999px;
+      border:1px solid rgba(34,211,238,.16);
+      background:rgba(34,211,238,.055);
+      color:#a5f3fc;
+      font-size:9px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
+      margin-bottom:18px;
     }
-    #mainBtn::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,0.12),transparent); border-radius:inherit; }
-    #mainBtn:hover   { transform:translateY(-3px); box-shadow:0 14px 40px rgba(34,211,238,0.38); }
-    #mainBtn:active  { transform:translateY(0); }
-    #mainBtn:disabled{ opacity:0.55; cursor:not-allowed; transform:none; }
+    .eyebrow strong{
+      padding:2px 7px;border-radius:999px;
+      background:linear-gradient(135deg,#8b5cf6,#6366f1);
+      color:#fff;font-size:8px;letter-spacing:.07em;
+    }
 
-    #toggleBtn {
-      width:100%; padding:13px; margin-top:8px;
-      border:1px solid var(--border); border-radius:14px;
-      background:transparent; color:rgba(34,211,238,0.7);
-      font-size:13.5px; font-family:'Poppins',sans-serif;
-      cursor:pointer; transition:all 0.25s; -webkit-appearance:none;
+    .hero-title{
+      max-width:760px;
+      font-size:clamp(40px,5.1vw,68px);
+      line-height:1.02;
+      letter-spacing:-2.8px;
+      font-weight:800;
+      color:#f8fafc;
     }
-    #toggleBtn:hover    { border-color:rgba(34,211,238,0.4); background:rgba(34,211,238,0.05); color:#fff; }
-    #toggleBtn:disabled { opacity:0.5; cursor:not-allowed; }
+    .hero-title .gradient{
+      background:linear-gradient(100deg,#67e8f9 0%,#22d3ee 34%,#c4b5fd 78%,#8b5cf6 100%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
 
-    #msg { min-height:18px; font-size:12.5px; text-align:center; margin-top:12px; animation:fadeIn 0.3s ease; }
+    .hero-copy{
+      max-width:690px;
+      margin-top:18px;
+      font-size:14px;
+      line-height:1.75;
+      color:var(--text-soft);
+      font-weight:350;
+    }
+    .hero-copy strong{color:#e0f2fe;font-weight:600}
 
-    .divider {
-      display:flex; align-items:center; gap:10px; margin:22px 0 16px;
-      color:rgba(255,255,255,0.18); font-size:11px; letter-spacing:0.08em;
+    .product-line{
+      display:flex;align-items:center;gap:7px;flex-wrap:wrap;
+      margin-top:21px;
     }
-    .divider::before,.divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.07); }
+    .product-chip{
+      padding:7px 11px;border-radius:999px;
+      border:1px solid rgba(34,211,238,.13);
+      background:rgba(2,8,16,.48);
+      color:rgba(207,250,254,.74);
+      font-size:9px;font-weight:650;
+    }
+    .product-chip.new{
+      border-color:rgba(139,92,246,.30);
+      background:rgba(139,92,246,.09);
+      color:#ddd6fe;
+    }
 
-    .security-note {
-      padding:11px 14px;
-      background:rgba(251,191,36,0.06); border:1px solid rgba(251,191,36,0.18); border-radius:12px;
-      font-size:11.5px; line-height:1.6; color:rgba(252,211,77,0.8); text-align:center;
+    .feature-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+      margin-top:25px;
     }
-    .security-note strong { display:block; margin-bottom:2px; font-size:12px; }
+    .feature-card{
+      min-height:155px;
+      padding:16px;
+      border-radius:17px;
+      border:1px solid rgba(34,211,238,.10);
+      background:linear-gradient(160deg,rgba(255,255,255,.032),rgba(255,255,255,.012));
+      backdrop-filter:blur(12px);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+      transition:transform .2s,border-color .2s,background .2s;
+    }
+    .feature-card:hover{transform:translateY(-3px);border-color:rgba(34,211,238,.27);background:rgba(34,211,238,.035)}
+    .feature-card.feature-new{border-color:rgba(139,92,246,.20);background:linear-gradient(160deg,rgba(139,92,246,.07),rgba(255,255,255,.012))}
+    .feature-icon{
+      width:34px;height:34px;border-radius:10px;
+      display:grid;place-items:center;
+      background:rgba(34,211,238,.07);
+      border:1px solid rgba(34,211,238,.12);
+      font-size:16px;
+      margin-bottom:11px;
+    }
+    .feature-new .feature-icon{background:rgba(139,92,246,.10);border-color:rgba(139,92,246,.18)}
+    .feature-card h3{font-size:11.5px;color:#eefcff;margin-bottom:6px}
+    .feature-card p{font-size:9.2px;line-height:1.6;color:rgba(226,232,240,.46)}
+    .mini-new{
+      display:inline-block;margin-left:4px;padding:2px 5px;border-radius:5px;
+      background:rgba(139,92,246,.17);color:#c4b5fd;font-size:6.8px;letter-spacing:.08em;text-transform:uppercase;vertical-align:middle;
+    }
 
-    .card-footer { margin-top:20px; text-align:center; font-size:11px; color:rgba(255,255,255,0.15); }
+    .proof-strip{
+      display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+      margin-top:18px;
+      color:rgba(165,243,252,.42);
+      font-size:8.8px;
+    }
+    .proof-item{display:flex;align-items:center;gap:5px}
+    .proof-check{color:#4ade80}
 
-    .subjects {
-      display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
-      margin-top:24px; max-width:440px;
-      animation:fadeUp 0.9s 0.4s ease both;
+    .login-side{
+      display:flex;justify-content:flex-end;
+      animation:fadeUp .82s .13s ease both;
     }
-    .pill {
-      display:inline-flex; align-items:center; gap:6px;
-      padding:6px 14px; border-radius:9999px;
-      border:1px solid var(--border); background:rgba(34,211,238,0.04);
-      font-size:11px; font-weight:500; color:rgba(165,243,252,0.7);
-      backdrop-filter:blur(8px); transition:all 0.25s;
-    }
-    .pill:hover { background:rgba(34,211,238,0.1); border-color:rgba(34,211,238,0.4); color:#fff; transform:translateY(-2px); }
 
-    @keyframes fadeDown { from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:translateY(0);} }
-    @keyframes fadeUp   { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);} }
-    @keyframes fadeIn   { from{opacity:0;}to{opacity:1;} }
+    .glass-card{
+      width:100%;
+      max-width:430px;
+      background:var(--panel);
+      border:1px solid rgba(34,211,238,.17);
+      border-radius:25px;
+      padding:28px 28px 24px;
+      backdrop-filter:blur(30px);
+      -webkit-backdrop-filter:blur(30px);
+      box-shadow:
+        0 0 0 1px rgba(34,211,238,.04),
+        0 28px 70px rgba(0,0,0,.55),
+        0 0 90px rgba(34,211,238,.035) inset;
+    }
 
-    /* ── TERMOS DE USO ── */
-    .terms-box {
-      margin-bottom: 14px;
-      border: 1px solid rgba(34,211,238,0.14);
-      border-radius: 14px;
-      overflow: hidden;
+    .login-new-badge{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:9px 11px;border-radius:11px;
+      border:1px solid rgba(139,92,246,.18);
+      background:rgba(139,92,246,.055);
+      margin-bottom:19px;
     }
-    .terms-scroll {
-      max-height: 130px;
-      overflow-y: auto;
-      padding: 14px 16px;
-      background: rgba(255,255,255,0.03);
-      font-size: 11.5px;
-      line-height: 1.7;
-      color: rgba(165,243,252,0.6);
-      scrollbar-width: thin;
-      scrollbar-color: rgba(34,211,238,0.3) transparent;
+    .login-new-badge span:first-child{font-size:8px;font-weight:750;letter-spacing:.09em;text-transform:uppercase;color:#c4b5fd}
+    .login-new-badge span:last-child{font-size:7.5px;color:rgba(221,214,254,.46)}
+
+    .card-header{text-align:left;margin-bottom:22px}
+    .card-header h2{font-size:23px;letter-spacing:-.6px;font-weight:700;margin-bottom:4px}
+    .card-header p{font-size:10.5px;line-height:1.55;color:rgba(165,243,252,.43);font-weight:350}
+
+    .field{margin-bottom:14px}
+    .field label{
+      display:block;
+      font-size:9px;font-weight:650;color:rgba(165,243,252,.55);
+      margin-bottom:6px;letter-spacing:.09em;text-transform:uppercase;
     }
-    .terms-scroll::-webkit-scrollbar { width: 4px; }
-    .terms-scroll::-webkit-scrollbar-thumb { background: rgba(34,211,238,0.3); border-radius: 4px; }
-    .terms-scroll p { margin-bottom: 8px; }
-    .terms-scroll strong { color: rgba(165,243,252,0.9); }
-    .terms-scroll .t-section {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: rgba(34,211,238,0.5);
-      margin: 10px 0 4px;
+    .field input{
+      width:100%;padding:13px 14px;
+      background:rgba(255,255,255,.035);
+      border:1px solid rgba(34,211,238,.13);
+      border-radius:12px;color:#fff;
+      font-size:13px;font-family:'Poppins',sans-serif;
+      transition:all .22s;-webkit-appearance:none;
     }
-    .terms-check {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 11px 16px;
-      background: rgba(34,211,238,0.04);
-      border-top: 1px solid rgba(34,211,238,0.10);
-      cursor: pointer;
-      transition: background .2s;
+    .field input::placeholder{color:rgba(255,255,255,.18)}
+    .field input:focus{
+      outline:none;
+      border-color:var(--cyan);
+      background:rgba(34,211,238,.05);
+      box-shadow:0 0 0 3px rgba(34,211,238,.09);
     }
-    .terms-check:hover { background: rgba(34,211,238,0.08); }
-    .terms-check input[type="checkbox"] {
-      width: 16px; height: 16px; flex-shrink: 0;
-      accent-color: #22d3ee;
-      cursor: pointer;
+
+    #mainBtn{
+      width:100%;padding:13px;margin-top:5px;
+      border:none;border-radius:12px;
+      background:linear-gradient(135deg,#22d3ee,#0891b2);
+      color:#fff;font-size:13px;font-weight:700;font-family:'Poppins',sans-serif;
+      cursor:pointer;
+      box-shadow:0 9px 27px rgba(34,211,238,.22),0 0 0 1px rgba(34,211,238,.14);
+      transition:all .22s;-webkit-appearance:none;position:relative;overflow:hidden;
     }
-    .terms-check label {
-      font-size: 11.5px;
-      font-weight: 600;
-      color: rgba(165,243,252,0.7);
-      cursor: pointer;
-      line-height: 1.4;
+    #mainBtn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.10),transparent);border-radius:inherit;pointer-events:none}
+    #mainBtn:hover{transform:translateY(-2px);box-shadow:0 14px 35px rgba(34,211,238,.3)}
+    #mainBtn:active{transform:translateY(0)}
+    #mainBtn:disabled{opacity:.48;cursor:not-allowed;transform:none}
+
+    #toggleBtn{
+      width:100%;padding:11px;margin-top:7px;
+      border:1px solid var(--border);border-radius:12px;
+      background:transparent;color:rgba(165,243,252,.70);
+      font-size:11.5px;font-family:'Poppins',sans-serif;
+      cursor:pointer;transition:all .22s;-webkit-appearance:none;
     }
-    @media (max-width:600px) {
-      .brand-main { font-size:clamp(30px,9vw,44px); letter-spacing:-1.5px; }
-      .glass-card { padding:28px 20px 24px; border-radius:20px; }
-      #dna-canvas { opacity:0.40; }
-      .subjects { gap:6px; }
-      .pill { font-size:10.5px; padding:5px 11px; }
+    #toggleBtn:hover{border-color:rgba(34,211,238,.34);background:rgba(34,211,238,.045);color:#fff}
+    #toggleBtn:disabled{opacity:.5;cursor:not-allowed}
+
+    #msg{min-height:18px;font-size:10.5px;text-align:center;margin-top:10px}
+    .divider{
+      display:flex;align-items:center;gap:10px;margin:17px 0 12px;
+      color:rgba(255,255,255,.15);font-size:8.7px;letter-spacing:.09em;text-transform:uppercase;
     }
-    @media (max-width:380px) {
-      .brand-main { font-size:28px; letter-spacing:-1px; }
-      .glass-card { padding:24px 16px 20px; }
-      .top-badge { font-size:9.5px; padding:6px 14px; }
+    .divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.065)}
+
+    .security-note{
+      padding:10px 12px;
+      background:rgba(34,211,238,.035);
+      border:1px solid rgba(34,211,238,.10);
+      border-radius:10px;
+      font-size:9.2px;line-height:1.55;color:rgba(165,243,252,.52);text-align:center;
     }
-    @media (max-height:700px) {
-      .page { padding:24px 20px 32px; }
-      .brand { margin-bottom:16px; }
-      .top-badge { margin-bottom:12px; }
-      .glass-card { padding:24px 28px 20px; }
-      .card-header { margin-bottom:20px; }
-      .field { margin-bottom:12px; }
-      .subjects { margin-top:16px; }
+    .security-note strong{color:rgba(207,250,254,.75)}
+
+    .card-footer{margin-top:15px;text-align:center;font-size:8.5px;color:rgba(255,255,255,.14)}
+
+    .terms-box{
+      margin-bottom:12px;
+      border:1px solid rgba(34,211,238,.12);
+      border-radius:12px;
+      overflow:hidden;
+    }
+    .terms-scroll{
+      max-height:104px;
+      overflow-y:auto;
+      padding:11px 13px;
+      background:rgba(255,255,255,.022);
+      font-size:9.2px;
+      line-height:1.65;
+      color:rgba(165,243,252,.52);
+      scrollbar-width:thin;
+      scrollbar-color:rgba(34,211,238,.3) transparent;
+    }
+    .terms-scroll::-webkit-scrollbar{width:4px}
+    .terms-scroll::-webkit-scrollbar-thumb{background:rgba(34,211,238,.28);border-radius:4px}
+    .terms-scroll p{margin-bottom:6px}
+    .terms-scroll strong{color:rgba(207,250,254,.82)}
+    .terms-scroll .t-section{
+      font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+      color:rgba(34,211,238,.48);margin:8px 0 3px;
+    }
+    .terms-check{
+      display:flex;align-items:center;gap:9px;
+      padding:9px 12px;
+      background:rgba(34,211,238,.032);
+      border-top:1px solid rgba(34,211,238,.08);
+      cursor:pointer;
+    }
+    .terms-check input[type="checkbox"]{width:15px;height:15px;flex-shrink:0;accent-color:#22d3ee;cursor:pointer}
+    .terms-check label{font-size:9.3px;font-weight:600;color:rgba(165,243,252,.63);cursor:pointer;line-height:1.4}
+
+    .bottom-update{
+      width:100%;
+      margin-top:8px;
+      padding:14px 16px;
+      border:1px solid rgba(139,92,246,.11);
+      border-radius:15px;
+      background:linear-gradient(90deg,rgba(139,92,246,.035),rgba(34,211,238,.02));
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      color:rgba(226,232,240,.44);
+      font-size:8.8px;
+    }
+    .bottom-update strong{color:#ddd6fe;font-weight:650}
+    .bottom-update .right{white-space:nowrap;color:rgba(165,243,252,.34)}
+
+    @keyframes fadeDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+    @media(max-width:980px){
+      .site-shell{width:min(930px,calc(100% - 32px))}
+      .main-grid{grid-template-columns:1fr;gap:25px;align-items:start;padding-top:12px}
+      .experience{text-align:center}
+      .hero-title,.hero-copy{margin-left:auto;margin-right:auto}
+      .product-line,.proof-strip{justify-content:center}
+      .feature-grid{text-align:left;max-width:780px;margin-left:auto;margin-right:auto}
+      .login-side{justify-content:center}
+      .glass-card{max-width:520px}
+      .bottom-update{max-width:780px;margin-left:auto;margin-right:auto}
+    }
+
+    @media(max-width:680px){
+      .site-shell{width:calc(100% - 24px);padding-top:14px}
+      .topbar{padding-bottom:14px}
+      .brand-mark{width:38px;height:38px}
+      .brand-name{font-size:14px}
+      .brand-sub{font-size:7.7px}
+      .release-pill{font-size:8px;padding:7px 9px}
+      .main-grid{gap:20px}
+      .hero-title{font-size:clamp(34px,10.8vw,48px);letter-spacing:-1.7px}
+      .hero-copy{font-size:11.5px;line-height:1.65;margin-top:14px}
+      .eyebrow{margin-bottom:14px}
+      .feature-grid{grid-template-columns:1fr;gap:8px;margin-top:19px}
+      .feature-card{min-height:0;padding:14px}
+      .feature-card p{font-size:9.2px}
+      .proof-strip{display:none}
+      .glass-card{padding:23px 18px 20px;border-radius:20px}
+      .bottom-update{display:block;text-align:center;line-height:1.55}
+      .bottom-update .right{margin-top:5px}
+      #dna-canvas{opacity:.40}
+    }
+
+    @media(max-width:430px){
+      .release-pill span:last-child{display:none}
+      .release-pill::after{content:"NOVO";font-size:7.8px;font-weight:800}
+      .hero-title{font-size:36px}
+      .product-chip{font-size:8px}
+    }
+
+    @media(max-height:720px) and (min-width:981px){
+      .site-shell{padding-top:14px;padding-bottom:18px}
+      .topbar{padding-bottom:10px}
+      .main-grid{padding-top:4px;padding-bottom:10px}
+      .hero-title{font-size:48px}
+      .hero-copy{margin-top:12px;line-height:1.55}
+      .feature-grid{margin-top:16px}
+      .feature-card{min-height:132px;padding:13px}
+      .glass-card{padding:22px 24px 19px}
+      .terms-scroll{max-height:80px}
     }
   </style>
 </head>
@@ -297,124 +443,178 @@
   <div class="aurora-blob"></div>
   <div class="aurora-blob"></div>
 </div>
-
 <div class="grid-overlay"></div>
 <div class="scan-line"></div>
 <div class="vignette"></div>
 
-<div class="page">
-
-  <div class="top-badge">
-    <span class="badge-dot"></span>
-    Plataforma de Estudos &bull; Medicina
-  </div>
-
-  <div class="brand">
-    <div class="brand-main">RESUMOS DO <span>ENZO</span></div>
-  </div>
-
-  <div class="glass-card">
-    <div class="card-header">
-      <div class="card-icon">&#x1F9EC;</div>
-      <h2 id="title">Bem-vindo</h2>
-      <p>Acesso restrito a alunos autorizados</p>
-    </div>
-
-    <div class="field">
-      <label>Email</label>
-      <input type="email" id="email" placeholder="seu@email.com" autocomplete="email">
-    </div>
-
-    <div class="field">
-      <label>Senha</label>
-      <div style="position:relative;">
-        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" style="padding-right:46px;" oninput="updateStrength()">
-        <button type="button" id="togglePassword" onclick="togglePasswordVisibility()" style="
-          position:absolute; right:14px; top:50%; transform:translateY(-50%);
-          background:transparent; border:none; cursor:pointer;
-          color:rgba(34,211,238,0.45); font-size:17px; padding:0; line-height:1;
-          transition:color .2s;
-        " onmouseover="this.style.color='rgba(34,211,238,0.85)'" 
-           onmouseout="this.style.color='rgba(34,211,238,0.45)'">👁</button>
+<div class="site-shell">
+  <header class="topbar">
+    <div class="brand-lockup">
+      <div class="brand-mark">🧬</div>
+      <div>
+        <div class="brand-name">RESUMOS DO <span>ENZO</span></div>
+        <div class="brand-sub">Plataforma acadêmica</div>
       </div>
-      <!-- Medidor de força — só aparece no cadastro -->
-      <div id="strengthMeter" style="display:none;margin-top:8px;">
-        <div style="display:flex;gap:4px;margin-bottom:5px;">
-          <div id="bar1" style="flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,0.08);transition:background .3s;"></div>
-          <div id="bar2" style="flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,0.08);transition:background .3s;"></div>
-          <div id="bar3" style="flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,0.08);transition:background .3s;"></div>
+    </div>
+
+    <div class="release-pill">
+      <span class="release-dot"></span>
+      <span>Nova experiência disponível</span>
+    </div>
+  </header>
+
+  <main class="main-grid">
+    <section class="experience" aria-label="Novidades da plataforma">
+      <div class="eyebrow"><strong>NOVO</strong> A plataforma ficou ainda mais completa</div>
+
+      <h1 class="hero-title">
+        Tudo para estudar.<br>
+        <span class="gradient">Tudo em um só lugar.</span>
+      </h1>
+
+      <p class="hero-copy">
+        O <strong>Resumos do Enzo</strong> evoluiu. Agora você encontra
+        <strong>resumos, cursos e aulões dos seus professores favoritos</strong>
+        dentro da mesma plataforma — organizados para você revisar, aprender e acompanhar seus conteúdos com muito mais facilidade.
+      </p>
+
+      <div class="product-line">
+        <span class="product-chip">📚 Resumos</span>
+        <span class="product-chip">🎓 Cursos</span>
+        <span class="product-chip new">▶ Aulões de professores <b style="color:#c4b5fd;">• NOVO</b></span>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card">
+          <div class="feature-icon">📚</div>
+          <h3>Resumos interativos</h3>
+          <p>Conteúdo organizado por semestre e avaliação, com ferramentas para revisar e acompanhar seus estudos dentro da plataforma.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">🎓</div>
+          <h3>Cursos</h3>
+          <p>Conteúdos complementares estruturados para aprofundar temas importantes e estudar no seu próprio ritmo.</p>
+        </article>
+
+        <article class="feature-card feature-new">
+          <div class="feature-icon">▶</div>
+          <h3>Aulões <span class="mini-new">novo</span></h3>
+          <p>Encontre aulões por professor, matéria, semestre e avaliação. Escolha seu professor favorito e assista diretamente pela plataforma.</p>
+        </article>
+      </div>
+
+      <div class="proof-strip">
+        <span class="proof-item"><span class="proof-check">✓</span> Um único login</span>
+        <span class="proof-item"><span class="proof-check">✓</span> Conteúdo organizado por semestre</span>
+        <span class="proof-item"><span class="proof-check">✓</span> Acesso individual e protegido</span>
+        <span class="proof-item"><span class="proof-check">✓</span> Novas funcionalidades em evolução contínua</span>
+      </div>
+    </section>
+
+    <aside class="login-side">
+      <div class="glass-card">
+        <div class="login-new-badge">
+          <span>✦ Resumos do Enzo 2026</span>
+          <span>Resumos • Cursos • Aulões</span>
         </div>
-        <div id="strengthLabel" style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.3);transition:color .3s;"></div>
+
+        <div class="card-header">
+          <h2 id="title">Bem-vindo</h2>
+          <p>Entre na sua conta para acessar todo o conteúdo disponível para você.</p>
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="email" placeholder="seu@email.com" autocomplete="email">
+        </div>
+
+        <div class="field">
+          <label>Senha</label>
+          <div style="position:relative;">
+            <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" style="padding-right:46px;" oninput="updateStrength()">
+            <button type="button" id="togglePassword" onclick="togglePasswordVisibility()" style="
+              position:absolute;right:13px;top:50%;transform:translateY(-50%);
+              background:transparent;border:none;cursor:pointer;color:rgba(34,211,238,.45);
+              font-size:15px;padding:0;line-height:1;transition:color .2s;
+            " onmouseover="this.style.color='rgba(34,211,238,0.85)'"
+               onmouseout="this.style.color='rgba(34,211,238,0.45)'">👁</button>
+          </div>
+
+          <div id="strengthMeter" style="display:none;margin-top:8px;">
+            <div style="display:flex;gap:4px;margin-bottom:5px;">
+              <div id="bar1" style="flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,0.08);transition:background .3s;"></div>
+              <div id="bar2" style="flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,0.08);transition:background .3s;"></div>
+              <div id="bar3" style="flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,0.08);transition:background .3s;"></div>
+            </div>
+            <div id="strengthLabel" style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.3);transition:color .3s;"></div>
+          </div>
+        </div>
+
+        <div class="terms-box" id="termsBox">
+          <div class="terms-scroll">
+            <div class="t-section">💳 Pagamentos</div>
+            <p>• Os materiais estão disponíveis por <strong>resumo individual</strong> ou em <strong>pacote completo</strong> (7 matérias), tanto para P1/P2 quanto para as Provas Finais.</p>
+            <p>• Os valores podem ser consultados diretamente na plataforma, na área de compras.</p>
+            <p>• Os pagamentos são <strong>não reembolsáveis</strong> após a liberação do acesso.</p>
+            <p>• Pagamento exclusivamente via <strong>PIX</strong>. O QR Code é gerado automaticamente na plataforma.</p>
+
+            <div class="t-section">📅 Prazo de Acesso</div>
+            <p>• O acesso fica disponível por <strong>50 dias</strong> a partir da data do pagamento.</p>
+            <p>• Após esse período, o acesso é encerrado automaticamente.</p>
+            <p>• Os resumos de P1/P2 <strong>não incluem</strong> os conteúdos das provas finais — são comercializados separadamente.</p>
+
+            <div class="t-section">🔒 Privacidade e Segurança</div>
+            <p>• Não armazenamos dados sensíveis.</p>
+            <p>• <strong>Nunca compartilhe sua senha</strong> com ninguém.</p>
+            <p>• Cada conta é pessoal e intransferível — permite apenas <strong>um dispositivo ativo por vez</strong>.</p>
+          </div>
+          <div class="terms-check">
+            <input type="checkbox" id="termsChk" onchange="updateMainBtn()">
+            <label for="termsChk" onclick="event.preventDefault();document.getElementById('termsChk').checked=!document.getElementById('termsChk').checked;updateMainBtn();">
+              Li e concordo com todos os termos para continuar
+            </label>
+          </div>
+        </div>
+
+        <button id="mainBtn" disabled>Entrar</button>
+        <button id="toggleBtn">Criar conta</button>
+
+        <button id="forgotBtn" style="
+          display:none;width:100%;padding:10px;margin-top:5px;border:none;border-radius:12px;
+          background:transparent;color:rgba(34,211,238,.48);font-size:10.5px;font-family:'Poppins',sans-serif;
+          cursor:pointer;transition:all .22s;-webkit-appearance:none;text-decoration:underline;text-underline-offset:3px;
+        " onmouseover="this.style.color='rgba(34,211,238,0.85)'"
+           onmouseout="this.style.color='rgba(34,211,238,0.48)'">
+          Esqueceu sua senha?
+        </button>
+
+        <button id="forceBtn" style="
+          display:none;width:100%;padding:11px;margin-top:7px;border:1px solid rgba(239,68,68,.35);
+          border-radius:12px;background:rgba(239,68,68,.07);color:#fca5a5;font-size:10.5px;
+          font-family:'Poppins',sans-serif;cursor:pointer;transition:all .22s;-webkit-appearance:none;
+        " onmouseover="this.style.background='rgba(239,68,68,0.16)'"
+           onmouseout="this.style.background='rgba(239,68,68,0.07)'">
+          ⚡ Forçar desconexão do outro dispositivo
+        </button>
+
+        <div id="msg"></div>
+        <div class="divider">acesso seguro</div>
+
+        <div class="security-note">
+          <strong>🔒 Conta individual</strong>
+          Sua conta é pessoal e intransferível. Use uma senha exclusiva para esta plataforma.
+        </div>
+
+        <div class="card-footer">&copy; 2026 Resumos do Enzo &bull; Medicina</div>
       </div>
-    </div>
+    </aside>
+  </main>
 
-    <!-- TERMOS DE USO -->
-    <div class="terms-box" id="termsBox">
-      <div class="terms-scroll">
-        <div class="t-section">💳 Pagamentos</div>
-        <p>• Os materiais estão disponíveis por <strong>resumo individual</strong> ou em <strong>pacote completo</strong> (7 matérias), tanto para P1/P2 quanto para as Provas Finais.</p>
-        <p>• Os valores podem ser consultados diretamente na plataforma, na área de compras.</p>
-        <p>• Os pagamentos são <strong>não reembolsáveis</strong> após a liberação do acesso.</p>
-        <p>• Pagamento exclusivamente via <strong>PIX</strong>. O QR Code é gerado automaticamente na plataforma.</p>
-
-        <div class="t-section">📅 Prazo de Acesso</div>
-        <p>• O acesso fica disponível por <strong>50 dias</strong> a partir da data do pagamento.</p>
-        <p>• Após esse período, o acesso é encerrado automaticamente.</p>
-        <p>• Os resumos de P1/P2 <strong>não incluem</strong> os conteúdos das provas finais — são comercializados separadamente.</p>
-
-        <div class="t-section">🔒 Privacidade e Segurança</div>
-        <p>• Não armazenamos dados sensíveis.</p>
-        <p>• <strong>Nunca compartilhe sua senha</strong> com ninguém.</p>
-        <p>• Cada conta é pessoal e intransferível — permite apenas <strong>um dispositivo ativo por vez</strong>.</p>
-      </div>
-      <div class="terms-check">
-        <input type="checkbox" id="termsChk" onchange="updateMainBtn()">
-        <label for="termsChk" onclick="event.preventDefault(); document.getElementById('termsChk').checked = !document.getElementById('termsChk').checked; updateMainBtn();">Li e concordo com todos os termos para continuar</label>
-      </div>
-    </div>
-
-    <button id="mainBtn" disabled>Entrar</button>
-    <button id="toggleBtn">Criar conta</button>
-    <button id="forgotBtn" style="
-      display:none; width:100%; padding:11px; margin-top:6px;
-      border:none; border-radius:14px;
-      background:transparent; color:rgba(34,211,238,0.5);
-      font-size:12.5px; font-family:'Poppins',sans-serif;
-      cursor:pointer; transition:all 0.25s; -webkit-appearance:none;
-      text-decoration:underline; text-underline-offset:3px;
-    " onmouseover="this.style.color='rgba(34,211,238,0.85)'"
-       onmouseout="this.style.color='rgba(34,211,238,0.5)'">
-      Esqueceu sua senha?
-    </button>
-    <button id="forceBtn" style="
-      display:none; width:100%; padding:13px; margin-top:8px;
-      border:1px solid rgba(239,68,68,0.4); border-radius:14px;
-      background:rgba(239,68,68,0.08); color:#fca5a5;
-      font-size:13px; font-family:'Poppins',sans-serif;
-      cursor:pointer; transition:all 0.25s; -webkit-appearance:none;
-    " onmouseover="this.style.background='rgba(239,68,68,0.18)'"
-       onmouseout="this.style.background='rgba(239,68,68,0.08)'">
-      ⚡ Forçar desconexão do outro dispositivo
-    </button>
-
-    <div id="msg"></div>
-
-    <div class="divider">acesso seguro</div>
-
-    <div class="security-note">
-      <strong>&#x26A0; Aten&ccedil;&atilde;o</strong>
-      Sistema exclusivo para alunos. Use uma senha &uacute;nica para esta plataforma.
-    </div>
-
-    <div class="card-footer">&copy; 2026 Resumos do Enzo &bull; Medicina</div>
+  <div class="bottom-update">
+    <div><strong>Uma plataforma. Três formas de aprender.</strong> Entre e encontre seus conteúdos disponíveis no mesmo ambiente.</div>
+    <div class="right">Resumos do Enzo • 2026</div>
   </div>
-
-  <div class="subjects">
-    <span class="pill">&#x1F4DA; Resumos interativos</span>
-    <span class="pill">&#x1F393; Cursos com certificado</span>
-    <span class="pill">&#x2705; Atualizado por semestre</span>
-  </div>
-
 </div>
 
 <!-- THREE.JS — DNA NAS LATERAIS -->
