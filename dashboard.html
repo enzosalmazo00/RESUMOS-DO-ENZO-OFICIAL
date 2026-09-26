@@ -301,6 +301,12 @@
     .auloes-intro h2 { font-size:20px; font-weight:750; letter-spacing:-.4px; color:#f5f3ff; margin-bottom:5px; }
     .auloes-intro p { font-size:12.5px; line-height:1.6; color:rgba(221,214,254,.62); max-width:720px; }
     .auloes-tag { flex-shrink:0; padding:6px 11px; border-radius:999px; border:1px solid rgba(168,85,247,.28); background:rgba(168,85,247,.10); color:#c4b5fd; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+    .video-hub-actions { display:flex; gap:8px; flex-wrap:wrap; margin:0 0 20px; }
+    .video-hub-btn { padding:10px 14px; border-radius:11px; border:1px solid rgba(168,85,247,.22); background:rgba(168,85,247,.07); color:#e9d5ff; font:650 10.5px 'Poppins',sans-serif; cursor:pointer; transition:.2s; }
+    .video-hub-btn.primary { border-color:rgba(34,211,238,.24); background:rgba(34,211,238,.08); color:#cffafe; }
+    .video-hub-btn:hover { transform:translateY(-1px); border-color:rgba(196,181,253,.45); background:rgba(168,85,247,.13); }
+    .video-hub-btn.primary:hover { border-color:rgba(103,232,249,.48); background:rgba(34,211,238,.14); }
+    .video-hub-label { font-size:10px; text-transform:uppercase; letter-spacing:.09em; color:rgba(196,181,253,.48); margin:4px 0 10px; font-weight:700; }
     .auloes-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
     .aulao-card {
       position:relative; overflow:hidden; border-radius:18px; min-height:235px; padding:22px;
@@ -1040,7 +1046,7 @@
       <button class="tab-btn active" onclick="switchTab('resumos')">📚 Meus Resumos</button>
       <button class="tab-btn" onclick="switchTab('aluno')">👤 Área do Aluno</button>
       <button class="tab-btn" onclick="switchTab('cursos')">🎓 Cursos</button>
-      <button class="tab-btn" onclick="window.location.href='auloes.html'" title="Abrir Central de Aulões">🎥 Aulões</button>
+      <button class="tab-btn" onclick="switchTab('auloes')" title="Abrir Aulas em Vídeo">🎥 Aulas em Vídeo</button>
       <button class="tab-btn" onclick="switchTab('loja')">🛒 Loja</button>
     </div>
 
@@ -1156,15 +1162,20 @@
       <div class="resumos-grid" id="cursosGrid"></div>
     </div>
 
-    <!-- TAB: AULÕES -->
+    <!-- TAB: AULAS EM VÍDEO -->
     <div class="tab-panel" id="tab-auloes">
       <div class="auloes-intro">
         <div>
-          <h2>🎥 Aulões Gravados</h2>
-          <p>Aulas focadas no conteúdo da prova, organizadas em blocos para você assistir no seu ritmo. Os aulões são produtos separados dos resumos e têm acesso individual.</p>
+          <h2>🎥 Aulas em Vídeo</h2>
+          <p>Conteúdos em vídeo organizados por matéria, semestre, avaliação e professor. Aqui você encontra suas aulas já liberadas e pode acessar o catálogo completo em poucos cliques.</p>
         </div>
-        <div class="auloes-tag">Nova modalidade</div>
+        <div class="auloes-tag">Vídeos de estudo</div>
       </div>
+      <div class="video-hub-actions">
+        <button class="video-hub-btn primary" onclick="window.location.href='auloes.html'">🔎 Explorar catálogo completo</button>
+        <button class="video-hub-btn" onclick="switchTab('loja');setTimeout(function(){switchStoreCategory('auloes')},50)">🛒 Ver opções para comprar</button>
+      </div>
+      <div class="video-hub-label">Meus acessos e conteúdos disponíveis</div>
       <div class="auloes-grid" id="auloesGrid"></div>
     </div>
 
@@ -1172,12 +1183,12 @@
     <div class="tab-panel" id="tab-loja">
       <div class="store-intro">
         <h2>🛍️ Loja</h2>
-        <p>Escolha primeiro o tipo de conteúdo. Assim você vê apenas o que procura, sem misturar aulões, cursos e resumos.</p>
+        <p>Escolha primeiro o tipo de conteúdo. Assim você encontra rapidamente resumos, cursos e aulas em vídeo sem misturar as categorias.</p>
       </div>
 
       <div class="store-hub" aria-label="Categorias da loja">
         <button class="store-cat-btn" data-store-cat="auloes" onclick="switchStoreCategory('auloes')">
-          <strong>🎥 Aulões</strong><small>Aulas gravadas focadas na prova.</small>
+          <strong>🎥 Aulas em Vídeo</strong><small>Revisões em vídeo por matéria, professor e avaliação.</small>
         </button>
         <button class="store-cat-btn active" data-store-cat="resumos" onclick="switchStoreCategory('resumos')">
           <strong>📚 Resumos</strong><small>Conteúdo por semestre, P1, P2 e Final.</small>
@@ -1189,7 +1200,7 @@
 
       <!-- AULÕES DINÂMICOS -->
       <div class="store-section store-category-panel" id="storeAuloesSection" style="display:none;">
-        <div class="store-section-title" style="color:#c4b5fd;">🎥 Aulões Gravados</div>
+        <div class="store-section-title" style="color:#c4b5fd;">🎥 Aulas em Vídeo</div>
         <div class="store-grid" id="store-grid-auloes"></div>
       </div>
 
@@ -1572,7 +1583,7 @@
       <div class="store-terms" id="store-terms-section">
         <div class="store-terms-title">⚠️ Informações importantes</div>
         <ul>
-          <li>⏳ O prazo de acesso aparece em cada produto: cursos, resumos e aulões podem ter durações diferentes.</li>
+          <li>⏳ O prazo de acesso aparece em cada produto: cursos, resumos e aulas em vídeo podem ter durações diferentes.</li>
           <li>✅ <strong>Liberação automática</strong> após a confirmação do PIX ou cartão.</li>
           <li>💳 <strong>Cartão de crédito</strong> em até 6x sem juros via Mercado Pago.</li>
           <li>📱 <strong>Um dispositivo por vez</strong> — segurança da sua conta.</li>
@@ -1765,7 +1776,7 @@ var currentPaymentId = null;
 // Estrutura: { "resumo_name": { expira_em: "2026-07-23", ... } }
 var acessosCache = {};
 
-// ── Aulões gravados (carregados do Supabase) ─────────────────────────────
+// ── Aulas em Vídeo gravados (carregados do Supabase) ─────────────────────────────
 var AULOES = [];
 
 // ── Carrinho ──────────────────────────────────────────────────────────────────
@@ -1866,7 +1877,7 @@ function restoreStoreCategory(){
   switchStoreCategory(cat);
 }
 
-// ── Aulões gravados ──────────────────────────────────────────────────────────
+// ── Aulas em Vídeo gravados ──────────────────────────────────────────────────────────
 function hasAulaoAccess(key) {
   if (profile && profile.is_admin) return true;
   var acesso = acessosCache[key];
@@ -1886,7 +1897,7 @@ async function loadAuloes() {
     if (r.error) throw r.error;
     AULOES = r.data || [];
   } catch (e) {
-    console.warn("[dashboard] Erro ao carregar aulões:", e);
+    console.warn("[dashboard] Erro ao carregar aulas em vídeo:", e);
     AULOES = [];
   }
 }
@@ -1898,7 +1909,7 @@ function renderAuloesGrid() {
 
   var publicados = AULOES.filter(function(a){ return a.publicado || (profile && profile.is_admin); });
   if (!publicados.length) {
-    grid.innerHTML = '<div class="aulao-empty">Nenhum aulão disponível no momento.</div>';
+    grid.innerHTML = '<div class="aulao-empty">Nenhuma aula em vídeo disponível no momento.</div>';
     return;
   }
 
@@ -1913,7 +1924,7 @@ function renderAuloesGrid() {
     var wrap=document.createElement("div");
     wrap.className="aulao-sem-section";
     var itens=porSemestre[sem];
-    wrap.innerHTML='<div class="aulao-sem-head"><div class="aulao-sem-title">📚 '+sem+'º Semestre</div><div class="aulao-sem-count">'+itens.length+' aulão'+(itens.length===1?'':'ões')+'</div></div><div class="aulao-sem-body"><div class="auloes-grid"></div></div>';
+    wrap.innerHTML='<div class="aulao-sem-head"><div class="aulao-sem-title">📚 '+sem+'º Semestre</div><div class="aulao-sem-count">'+itens.length+' aula em vídeo'+(itens.length===1?'':'ões')+'</div></div><div class="aulao-sem-body"><div class="auloes-grid"></div></div>';
     var inner=wrap.querySelector(".auloes-grid");
 
     itens.forEach(function(a) {
@@ -1934,11 +1945,11 @@ function renderAuloesGrid() {
       var ehPresenteAulao=unlocked&&presentesAulao.indexOf(a.chave)>=0;
 
       card.innerHTML =
-        (ehPresenteAulao?'<button class="aulao-gift" onclick="showPresenteMsg(event,\'aulão\')" title="Presente do Enzo">🎁</button>':'')+
+        (ehPresenteAulao?'<button class="aulao-gift" onclick="showPresenteMsg(event,\'aula em vídeo\')" title="Presente do Enzo">🎁</button>':'')+
         capa+
         '<div class="aulao-top"><div class="aulao-icon">🎥</div>'+statusLabel+'</div>'+
         '<div class="aulao-title">'+a.nome+'</div>'+
-        '<div class="aulao-desc">'+(a.descricao||"Aulão gravado")+'</div>'+
+        '<div class="aulao-desc">'+(a.descricao||"Aula em vídeo")+'</div>'+
         '<div class="aulao-meta"><span>📚 '+a.semestre+'º semestre</span><span>📅 '+(a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+'</span>'+(a.usar_turmas?'<span>👨‍🏫 Escolha por turma/professor</span>':'')+'</div>'+
         '<button class="aulao-btn" '+(!unlocked && !sellable ? "disabled" : "")+'>'+buttonLabel+'</button>';
 
@@ -1963,7 +1974,7 @@ function renderAulaoStore(){
   section.style.display="";
   grid.innerHTML="";
   if(!itens.length){
-    grid.innerHTML='<div class="aulao-empty" style="grid-column:1/-1;">Nenhum aulão disponível na loja neste momento.</div>';
+    grid.innerHTML='<div class="aulao-empty" style="grid-column:1/-1;">Nenhuma aula em vídeo disponível na loja neste momento.</div>';
     return;
   }
   itens.forEach(function(a){
@@ -1988,7 +1999,7 @@ function renderAulaoStore(){
 window.addAulaoToCart=function(key){
   var a=AULOES.find(function(x){return x.chave===key;}); if(!a)return;
   if(cart.length && !(cart.length===1 && cart[0].key===key)){
-    if(!confirm("Aulões são comprados separadamente dos outros produtos. Substituir o carrinho atual por este aulão?"))return;
+    if(!confirm("Aulas em Vídeo são comprados separadamente dos outros produtos. Substituir o carrinho atual por este aula em vídeo?"))return;
   }
   cart=[{key:a.chave,label:a.nome,emoji:"🎥",preco:Number(a.preco),tipo:"aulao"}];
   updateCartUI();openCart();renderAulaoStore();
@@ -3194,7 +3205,7 @@ window.showPresenteMsg = function(e, tipo) {
   e.preventDefault();
   e.stopPropagation();
   var nome = (profile && profile.nome_preferido) ? profile.nome_preferido : "nosso aluno(a)";
-  var item = (tipo === "aulão") ? "aulão" : "resumo";
+  var item = (tipo === "aula em vídeo") ? "aula em vídeo" : "resumo";
   document.getElementById("presenteMsgTexto").innerHTML =
     'Este ' + item + ' foi um presente do Enzo para você, <strong style="color:#fbbf24;">' + nome + '</strong>!<br><br>' +
     'Que ele seja mais uma ferramenta na sua jornada rumo à medicina.<br>' +
@@ -4114,7 +4125,7 @@ function updateCartUI() {
     var precoOriginal = (c.tipo === "final" && !c.isPacoteCompleto && PROMO_FINAL_ATIVA && PRECO_FINAL < PRECO_FINAL_DE)
       ? '<span style="text-decoration:line-through;color:rgba(125,211,232,0.3);font-size:11px;margin-right:4px;">' + formatPrice(PRECO_FINAL_DE) + '</span>'
       : '';
-    var subLabel = c.tipo === "aulao" ? "Aulão gravado · acesso individual" : (c.isPacoteCompleto ? "Pacote Completo · 50 dias" : (c.tipo === "curso" ? "Curso · 90 dias de acesso" : (c.tipo === "s1" ? "1º Semestre · 50 dias de acesso" : (c.tipo === "s2" ? "2º Semestre · 50 dias de acesso" : ((c.tipo === "s4_p1" || c.tipo === "s4_p2" || c.tipo === "s4_final") ? "4º Semestre · 50 dias de acesso" : "3º Semestre · 50 dias de acesso")))));
+    var subLabel = c.tipo === "aulao" ? "Aula em vídeo · acesso individual" : (c.isPacoteCompleto ? "Pacote Completo · 50 dias" : (c.tipo === "curso" ? "Curso · 90 dias de acesso" : (c.tipo === "s1" ? "1º Semestre · 50 dias de acesso" : (c.tipo === "s2" ? "2º Semestre · 50 dias de acesso" : ((c.tipo === "s4_p1" || c.tipo === "s4_p2" || c.tipo === "s4_final") ? "4º Semestre · 50 dias de acesso" : "3º Semestre · 50 dias de acesso")))));
     return '<div class="cart-item">' +
       '<span class="cart-item-emoji">' + c.emoji + '</span>' +
       '<div class="cart-item-info">' +
@@ -4216,7 +4227,7 @@ window.checkoutCart = function(metodo) {
   if (cart.length === 0) return;
   var temAulao = cart.some(function(c){ return c.tipo === "aulao"; });
   if (temAulao && cart.length !== 1) {
-    alert("Aulões devem ser comprados separadamente dos outros produtos.");
+    alert("Aulas em Vídeo devem ser comprados separadamente dos outros produtos.");
     return;
   }
   metodo = metodo || "pix";

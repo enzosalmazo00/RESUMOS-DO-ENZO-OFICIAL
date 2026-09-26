@@ -449,7 +449,7 @@
     <button class="admin-tab" onclick="switchAdminTab('alunos')"><span class="tab-icon">&#128101;</span><span class="tab-text">Alunos</span><span class="tab-badge" id="tabBadgeAlunos">0</span></button>
     <button class="admin-tab" onclick="switchAdminTab('professores')"><span class="tab-icon">🎓</span><span class="tab-text">Professores</span><span class="tab-badge" id="tabBadgeProfessores">0</span></button>
     <button class="admin-tab" onclick="switchAdminTab('pagamentos')"><span class="tab-icon">&#128176;</span><span class="tab-text">Financeiro</span></button>
-    <button class="admin-tab" onclick="switchAdminTab('auloes')"><span class="tab-icon">🎥</span><span class="tab-text">Aulões</span></button>
+    <button class="admin-tab" onclick="switchAdminTab('auloes')"><span class="tab-icon">🎥</span><span class="tab-text">Aulas em Vídeo</span></button>
     <button class="admin-tab" onclick="switchAdminTab('promos')"><span class="tab-icon">&#127915;</span><span class="tab-text">Promoções</span></button>
   </div>
 
@@ -504,10 +504,10 @@
 
     <section class="prof-hub-hero">
       <div class="prof-hub-title">🎓 Central 360° de Professores</div>
-      <div class="prof-hub-sub">Gestão completa dos Professores Colaboradores: cadastro, aprovação de aulões, vendas, saldos, repasses, recibos, relatórios financeiros e documentos assinados — tudo concentrado em um único painel.</div>
+      <div class="prof-hub-sub">Gestão completa dos Professores Colaboradores: cadastro, aprovação de aulas em vídeo, vendas, saldos, repasses, recibos, relatórios financeiros e documentos assinados — tudo concentrado em um único painel.</div>
       <div class="prof-hub-kpis">
         <div class="prof-hub-kpi"><div class="phk-label">Professores ativos</div><div class="phk-value" id="profHubActive">0</div></div>
-        <div class="prof-hub-kpi warn"><div class="phk-label">Aulões aguardando aprovação</div><div class="phk-value" id="profHubPending">0</div></div>
+        <div class="prof-hub-kpi warn"><div class="phk-label">Aulas em Vídeo aguardando aprovação</div><div class="phk-value" id="profHubPending">0</div></div>
         <div class="prof-hub-kpi cyan"><div class="phk-label">Vendas dos professores</div><div class="phk-value" id="profHubSales">0</div></div>
         <div class="prof-hub-kpi good"><div class="phk-label">Gerado para professores</div><div class="phk-value" id="profHubGenerated">R$ 0,00</div></div>
         <div class="prof-hub-kpi warn"><div class="phk-label">Saldo total a repassar</div><div class="phk-value" id="profHubDue">R$ 0,00</div></div>
@@ -552,7 +552,7 @@
       <div class="prof-detail-panel active" id="prof-detail-resumo">
         <div class="prof-summary-grid" id="profDetailKpis"></div>
         <div class="prof-info-grid" id="profDetailInfo"></div>
-        <div class="section-title" style="margin-top:18px;">🎥 Desempenho dos aulões</div>
+        <div class="section-title" style="margin-top:18px;">🎥 Desempenho das aulas em vídeo</div>
         <div class="prof-aulao-grid" id="profDetailAuloes"></div>
       </div>
 
@@ -566,7 +566,7 @@
           <button class="btn-sm" onclick="generateSelectedProfessorSalesPdf()">📄 Gerar relatório do período</button>
         </div>
         <div class="prof-summary-grid" id="profSalesPeriodKpis"></div>
-        <div class="prof-ledger-wrap"><table class="prof-ledger"><thead><tr><th>Data</th><th>Aulão</th><th>Pedido</th><th>Pagamento MP</th><th>Bruto</th><th>Professor 2/3</th><th>Plataforma 1/3</th><th>Repasse</th></tr></thead><tbody id="profSalesLedger"></tbody></table></div>
+        <div class="prof-ledger-wrap"><table class="prof-ledger"><thead><tr><th>Data</th><th>Aula em Vídeo</th><th>Pedido</th><th>Pagamento MP</th><th>Bruto</th><th>Professor 2/3</th><th>Plataforma 1/3</th><th>Repasse</th></tr></thead><tbody id="profSalesLedger"></tbody></table></div>
       </div>
 
       <div class="prof-detail-panel" id="prof-detail-repasse">
@@ -583,8 +583,8 @@
       </div>
     </section>
 
-    <div class="section-title" style="margin-top:24px;">⏳ Aulões aguardando aprovação</div>
-    <div class="prof-approval-grid" id="pendingAuloesAdmin"><div class="empty-state">Carregando aulões…</div></div>
+    <div class="section-title" style="margin-top:24px;">⏳ Aulas em Vídeo aguardando aprovação</div>
+    <div class="prof-approval-grid" id="pendingAuloesAdmin"><div class="empty-state">Carregando aulas em vídeo…</div></div>
 
     <details class="prof-admin-tools" id="profAccountTools">
       <summary>⚙️ Administração de contas de Professor Colaborador</summary>
@@ -611,12 +611,12 @@
     <div class="section-title">&#128202; Financeiro e Análise de Vendas</div>
 
     <div class="finance-origin-grid">
-      <div class="finance-origin-card"><div class="fo-label">Receita total aprovada</div><div class="fo-value" id="finTotal">R$ 0,00</div><div class="fo-sub">Todos os produtos e aulões.</div></div>
+      <div class="finance-origin-card"><div class="fo-label">Receita total aprovada</div><div class="fo-value" id="finTotal">R$ 0,00</div><div class="fo-sub">Todos os produtos e aulas em vídeo.</div></div>
       <div class="finance-origin-card enzo"><div class="fo-label">Resumos e cursos</div><div class="fo-value" id="finResumos">R$ 0,00</div><div class="fo-sub" id="finResumosCount">0 vendas</div></div>
-      <div class="finance-origin-card enzo"><div class="fo-label">Aulões próprios — Enzo</div><div class="fo-value" id="finAuloesEnzo">R$ 0,00</div><div class="fo-sub" id="finAuloesEnzoCount">0 vendas</div></div>
-      <div class="finance-origin-card prof"><div class="fo-label">Aulões — Professores</div><div class="fo-value" id="finAuloesProf">R$ 0,00</div><div class="fo-sub" id="finAuloesProfCount">0 vendas</div></div>
+      <div class="finance-origin-card enzo"><div class="fo-label">Aulas em Vídeo — Plataforma</div><div class="fo-value" id="finAuloesEnzo">R$ 0,00</div><div class="fo-sub" id="finAuloesEnzoCount">0 vendas</div></div>
+      <div class="finance-origin-card prof"><div class="fo-label">Aulas em Vídeo — Professores</div><div class="fo-value" id="finAuloesProf">R$ 0,00</div><div class="fo-sub" id="finAuloesProfCount">0 vendas</div></div>
       <div class="finance-origin-card prof"><div class="fo-label">A receber pelos professores</div><div class="fo-value" id="finProfessorDue">R$ 0,00</div><div class="fo-sub">Saldo atual após repasses registrados.</div></div>
-      <div class="finance-origin-card"><div class="fo-label">Parcela plataforma — aulões prof.</div><div class="fo-value" id="finPlatformProf">R$ 0,00</div><div class="fo-sub">1/3 das vendas aprovadas dos professores.</div></div>
+      <div class="finance-origin-card"><div class="fo-label">Parcela da plataforma — aulas de professores</div><div class="fo-value" id="finPlatformProf">R$ 0,00</div><div class="fo-sub">1/3 das vendas aprovadas dos professores.</div></div>
     </div>
 
     <div class="sales-filter-card">
@@ -633,8 +633,8 @@
           <select class="form-input" id="salesSource" onchange="renderSalesAnalytics()">
             <option value="">Todas as vendas</option>
             <option value="resumos">Resumos / Cursos</option>
-            <option value="aulao_enzo">Aulões próprios — Enzo</option>
-            <option value="aulao_professor">Aulões — Professores</option>
+            <option value="aulao_enzo">Aulas em Vídeo — Plataforma</option>
+            <option value="aulao_professor">Aulas em Vídeo — Professores</option>
           </select>
         </div>
         <div class="form-group">
@@ -683,7 +683,7 @@
           <button class="filter-reset" onclick="resetSalesFilters()">Limpar filtros</button>
         </div>
       </div>
-      <div class="sales-note">Os indicadores abaixo consideram somente pagamentos <b>aprovados</b>. Você pode separar Resumos/Cursos, Aulões próprios e Aulões dos Professores. Em combos de resumos, o faturamento por matéria é rateado igualmente entre os itens para evitar duplicidade.</div>
+      <div class="sales-note">Os indicadores abaixo consideram somente pagamentos <b>aprovados</b>. Você pode separar Resumos/Cursos, Aulas em Vídeo da plataforma e Aulas em Vídeo dos Professores. Em combos de resumos, o faturamento por matéria é rateado igualmente entre os itens para evitar duplicidade.</div>
     </div>
 
     <div class="sales-kpis">
@@ -716,14 +716,14 @@
 
     <div class="section-title">🎓 Controle financeiro por Professor Colaborador</div>
     <div class="form-card" style="margin-bottom:20px;">
-      <div style="font-size:10px;color:rgba(125,211,232,.45);line-height:1.55;margin-bottom:12px;">Aqui aparecem somente as vendas dos aulões pertencentes a cada professor. O valor a receber corresponde a 2/3 de cada venda aprovada, descontando repasses já registrados.</div>
+      <div style="font-size:10px;color:rgba(125,211,232,.45);line-height:1.55;margin-bottom:12px;">Aqui aparecem somente as vendas das aulas em vídeo pertencentes a cada professor. O valor a receber corresponde a 2/3 de cada venda aprovada, descontando repasses já registrados.</div>
       <div style="overflow:auto;">
         <table class="prof-finance-table">
           <thead><tr><th>Professor</th><th>Vendas</th><th>Bruto vendido</th><th>Gerado professor</th><th>Já pago</th><th>A receber</th><th>Ações</th></tr></thead>
           <tbody id="profFinanceBody"><tr><td colspan="7" class="loading">Carregando…</td></tr></tbody>
         </table>
       </div>
-      <div id="profAulaoBreakdown" style="margin-top:14px;"><div class="empty-state">Selecione “Ver vendas” em um professor para detalhar cada aulão.</div></div>
+      <div id="profAulaoBreakdown" style="margin-top:14px;"><div class="empty-state">Selecione “Ver vendas” em um professor para detalhar cada aula em vídeo.</div></div>
     </div>
 
     <div class="section-title">🧾 Histórico de repasses aos professores</div>
@@ -753,10 +753,10 @@
   <div class="tab-panel" id="panel-auloes">
     <div class="aulao-admin-head">
       <div>
-        <h2>🎥 Gerenciar Aulões</h2>
-        <div class="aulao-admin-sub">Crie aulões, envie capa, organize por semestre, habilite turmas/professores, adicione vídeos do YouTube e publique na loja.</div>
+        <h2>🎥 Gerenciar Aulas em Vídeo</h2>
+        <div class="aulao-admin-sub">Crie e organize aulas em vídeo, envie capas, defina semestre, professor, turma, preço, acesso e vídeos do YouTube antes de publicar na loja.</div>
       </div>
-      <button class="btn-create" onclick="novoAulao()">+ Criar aulão</button>
+      <button class="btn-create" onclick="novoAulao()">+ Criar aula em vídeo</button>
     </div>
 
     <div class="aulao-admin-grid" id="adminAuloesGrid">
@@ -764,11 +764,11 @@
     </div>
 
     <div class="aulao-editor" id="aulaoEditor">
-      <div class="form-card-title">✏️ <span id="aulaoEditorTitle">Novo aulão</span></div>
+      <div class="form-card-title">✏️ <span id="aulaoEditorTitle">Nova aula em vídeo</span></div>
       <input type="hidden" id="aulaoId">
 
       <div class="aulao-editor-grid">
-        <div class="form-group"><div class="form-label">Nome do aulão</div><input class="form-input" id="aulaoNome" placeholder="Aulão de Bioquímica 2 — P1"></div>
+        <div class="form-group"><div class="form-label">Nome do aula em vídeo</div><input class="form-input" id="aulaoNome" placeholder="Aula em Vídeo de Bioquímica 2 — P1"></div>
         <div class="form-group"><div class="form-label">Matéria</div><input class="form-input" id="aulaoMateria" placeholder="Bioquímica 2"></div>
         <div class="form-group"><div class="form-label">Prova / etapa</div><input class="form-input" id="aulaoAvaliacao" placeholder="P1"></div>
 
@@ -786,7 +786,7 @@
         <div class="form-group"><div class="form-label">Preço (R$)</div><input class="form-input" type="number" min="0" step="0.01" id="aulaoPreco" value="0"></div>
         <div class="form-group"><div class="form-label">Dias de acesso</div><input class="form-input" type="number" min="1" id="aulaoDias" value="50"></div>
 
-        <div class="form-group wide"><div class="form-label">Descrição</div><textarea class="form-input" id="aulaoDescricao" rows="3" placeholder="Resumo do que será abordado no aulão"></textarea></div>
+        <div class="form-group wide"><div class="form-label">Descrição</div><textarea class="form-input" id="aulaoDescricao" rows="3" placeholder="Resumo do que será abordado no aula em vídeo"></textarea></div>
 
         <div class="form-group wide">
           <div class="form-label">Imagem de capa</div>
@@ -816,9 +816,9 @@
       </div>
 
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
-        <button class="btn-create" id="saveAulaoBtn" onclick="salvarAulao()">💾 Salvar aulão</button>
+        <button class="btn-create" id="saveAulaoBtn" onclick="salvarAulao()">💾 Salvar aula em vídeo</button>
         <button class="btn-outline" onclick="fecharEditorAulao()">Cancelar</button>
-        <button class="btn-outline" id="deleteAulaoBtn" style="display:none;border-color:rgba(248,113,113,.3);color:#fca5a5;" onclick="excluirAulao()">Excluir aulão</button>
+        <button class="btn-outline" id="deleteAulaoBtn" style="display:none;border-color:rgba(248,113,113,.3);color:#fca5a5;" onclick="excluirAulao()">Excluir aula em vídeo</button>
       </div>
     </div>
   </div>
@@ -1233,9 +1233,9 @@ window.toggleProfessorAccount=async function(userId,enable){
 function renderPendingAuloes(){
   var el=document.getElementById("pendingAuloesAdmin");if(!el)return;
   var list=adminAuloes.filter(function(a){return a.origem==="professor"&&a.status_aprovacao==="pendente";});
-  if(!list.length){el.innerHTML='<div class="empty-state" style="grid-column:1/-1;">Nenhum aulão aguardando aprovação.</div>';return;}
+  if(!list.length){el.innerHTML='<div class="empty-state" style="grid-column:1/-1;">Nenhum aula em vídeo aguardando aprovação.</div>';return;}
   el.innerHTML=list.map(function(a){
-    return '<article class="prof-approval-card"><h4>'+escHtml(a.nome||"Aulão")+'</h4>'+
+    return '<article class="prof-approval-card"><h4>'+escHtml(a.nome||"Aula em Vídeo")+'</h4>'+
       '<div class="meta">🎓 '+escHtml(professorName(a.owner_user_id))+'<br>📚 '+escHtml(a.materia||"")+' · '+a.semestre+'º · '+escHtml(a.avaliacao||"")+
       '<br>🌐 '+(a.idioma_conteudo==="es"?"Español":"Português (PT-BR)")+' · 💰 '+money(a.preco||0)+'</div>'+
       '<div class="prof-card-actions"><a class="btn-sm" href="aulao.html?key='+encodeURIComponent(a.chave)+'" target="_blank" style="text-decoration:none;">Abrir e revisar</a>'+
@@ -1245,10 +1245,10 @@ function renderPendingAuloes(){
 }
 window.reviewProfessorAulao=async function(id,approve){
   var reason=null;if(!approve){reason=prompt("Descreva de forma breve o ajuste necessário para o professor:");if(reason===null)return;if(!reason.trim()){showToast("Informe o motivo do ajuste.","error");return}}
-  if(approve&&!confirm("Aprovar este aulão e colocá-lo no ar e na loja?"))return;
+  if(approve&&!confirm("Aprovar este aula em vídeo e colocá-lo no ar e na loja?"))return;
   var r=await client.rpc("admin_review_aulao",{p_aulao_id:id,p_approve:approve,p_reason:reason});
   if(r.error){showToast("Erro: "+r.error.message,"error");return}
-  showToast(approve?"✅ Aulão aprovado e publicado!":"Ajuste enviado ao professor.",approve?"success":"error");
+  showToast(approve?"✅ Aula em Vídeo aprovado e publicado!":"Ajuste enviado ao professor.",approve?"success":"error");
   await loadAuloesAdmin();renderPendingAuloes();renderSalesAnalytics();
 }
 window.saveProfessorWhatsapp=async function(){
@@ -1441,7 +1441,7 @@ function renderProfessorDetail(userId){
 
   var agrid=document.getElementById("profDetailAuloes"),aul=professorAuloes(userId);
   if(agrid){
-    if(!aul.length)agrid.innerHTML='<div class="empty-state" style="grid-column:1/-1;">Nenhum aulão cadastrado.</div>';
+    if(!aul.length)agrid.innerHTML='<div class="empty-state" style="grid-column:1/-1;">Nenhum aula em vídeo cadastrado.</div>';
     else agrid.innerHTML=aul.map(function(a){
       var orders=row.orders.filter(function(o){return (aulaoForOrder(o)||{}).id===a.id});
       var gross=orders.reduce(function(s,o){return s+Number(o.valor||0)},0);
@@ -1487,7 +1487,7 @@ function renderProfessorSalesDetail(){
     var a=aulaoForOrder(o),v=Number(o.valor||0),ps=Math.round((v*2/3)*100)/100,pl=v-ps;
     var allocation=professorRepasseItens.find(function(i){return i.order_id===o.id});
     var rep=allocation?professorRepasses.find(function(r){return r.id===allocation.repasse_id}):null;
-    return '<tr><td>'+new Date(o.criado_em).toLocaleDateString("pt-BR")+'</td><td><strong>'+escHtml(a&&a.nome||o.produto_nome||"Aulão")+'</strong></td>'+
+    return '<tr><td>'+new Date(o.criado_em).toLocaleDateString("pt-BR")+'</td><td><strong>'+escHtml(a&&a.nome||o.produto_nome||"Aula em Vídeo")+'</strong></td>'+
       '<td class="muted">'+escHtml(shortId(o.id))+'</td><td class="muted">'+escHtml(shortId(o.mp_payment_id||"—"))+'</td>'+
       '<td>'+money(v)+'</td><td class="money-cell">'+money(ps)+'</td><td class="platform-cell">'+money(pl)+'</td>'+
       '<td>'+(rep?'<span class="badge badge-green">'+escHtml(rep.receipt_number||"Pago")+'</span>':'<span class="badge badge-yellow">Aguardando repasse</span>')+'</td></tr>';
@@ -1592,7 +1592,7 @@ function pdfProfessorIdentity(doc,userId,y){
 function buildSalesPdfRows(orders){
   return orders.map(function(o){var a=aulaoForOrder(o),v=Number(o.valor||0),ps=Math.round((v*2/3)*100)/100,pl=v-ps;return[
     new Date(o.criado_em).toLocaleDateString("pt-BR"),
-    a&&a.nome||o.produto_nome||"Aulão",
+    a&&a.nome||o.produto_nome||"Aula em Vídeo",
     shortId(o.id),
     money(v),money(ps),money(pl),
     isOrderAllocated(o.id)?"Repassada":"Pendente"
@@ -1610,9 +1610,9 @@ window.generateSelectedProfessorSalesPdf=async function(){
     doc.autoTable({startY:y,head:[["Vendas","Bruto vendido","Professor 2/3","Plataforma 1/3"]],body:[[String(orders.length),money(gross),money(ps),money(pl)]],theme:"grid",styles:{fontSize:9,halign:"center"},headStyles:{fillColor:[91,45,145],textColor:[255,255,255]}});
     y=doc.lastAutoTable.finalY+6;
     var breakdown=professorAulaoBreakdown(selectedProfessorId,orders);
-    doc.autoTable({startY:y,head:[["Aulão","Vendas","Bruto","Professor","Plataforma"]],body:breakdown.map(function(b){return[b.nome,String(b.count),money(b.gross),money(b.professor),money(b.platform)]}),theme:"striped",styles:{fontSize:7.5,cellPadding:2},headStyles:{fillColor:[18,42,58]}});
+    doc.autoTable({startY:y,head:[["Aula em Vídeo","Vendas","Bruto","Professor","Plataforma"]],body:breakdown.map(function(b){return[b.nome,String(b.count),money(b.gross),money(b.professor),money(b.platform)]}),theme:"striped",styles:{fontSize:7.5,cellPadding:2},headStyles:{fillColor:[18,42,58]}});
     y=doc.lastAutoTable.finalY+6;
-    doc.autoTable({startY:y,head:[["Data","Aulão","Pedido","Bruto","Professor","Plataforma","Situação"]],body:buildSalesPdfRows(orders),theme:"grid",styles:{fontSize:6.7,cellPadding:1.6},headStyles:{fillColor:[18,42,58]},columnStyles:{1:{cellWidth:46},2:{cellWidth:23}}});
+    doc.autoTable({startY:y,head:[["Data","Aula em Vídeo","Pedido","Bruto","Professor","Plataforma","Situação"]],body:buildSalesPdfRows(orders),theme:"grid",styles:{fontSize:6.7,cellPadding:1.6},headStyles:{fillColor:[18,42,58]},columnStyles:{1:{cellWidth:46},2:{cellWidth:23}}});
     var finalY=doc.lastAutoTable.finalY+6;if(finalY>275){doc.addPage();finalY=18}
     doc.setFontSize(7);doc.setTextColor(90);doc.text("Relatório administrativo de vendas. Não representa comprovante de pagamento. Os valores de repasse seguem a divisão contratual vigente registrada na plataforma.",15,finalY,{maxWidth:180});
     doc.save("relatorio-vendas-"+String(professorName(selectedProfessorId)).replace(/[^a-z0-9]+/gi,"-")+"-"+new Date().toISOString().slice(0,10)+".pdf");
@@ -1637,12 +1637,12 @@ async function generatePaymentPdf(repass,row,items){
     String(items.length),money(gross),money(professor),money(platform),money(repass.valor)
   ]],theme:"grid",styles:{fontSize:8.5,halign:"center"},headStyles:{fillColor:[91,45,145],textColor:[255,255,255]}});
   y=doc.lastAutoTable.finalY+5;
-  doc.autoTable({startY:y,head:[["Data da venda","Aulão","Pedido","Bruto","Professor","Plataforma"]],body:items.map(function(i){return[
+  doc.autoTable({startY:y,head:[["Data da venda","Aula em Vídeo","Pedido","Bruto","Professor","Plataforma"]],body:items.map(function(i){return[
     i.vendido_em?new Date(i.vendido_em).toLocaleDateString("pt-BR"):"—",i.aulao_nome,shortId(i.order_id),money(i.valor_bruto),money(i.valor_professor),money(i.valor_plataforma)
   ]}),theme:"striped",styles:{fontSize:7,cellPadding:1.8},headStyles:{fillColor:[18,42,58]},columnStyles:{1:{cellWidth:56},2:{cellWidth:25}}});
   y=doc.lastAutoTable.finalY+6;
   var breakdown={};items.forEach(function(i){var k=i.aulao_nome;if(!breakdown[k])breakdown[k]={n:0,g:0,p:0};breakdown[k].n++;breakdown[k].g+=Number(i.valor_bruto||0);breakdown[k].p+=Number(i.valor_professor||0)});
-  doc.autoTable({startY:y,head:[["Resumo por aulão","Vendas","Bruto","Valor do professor"]],body:Object.keys(breakdown).map(function(k){var b=breakdown[k];return[k,String(b.n),money(b.g),money(b.p)]}),theme:"grid",styles:{fontSize:7.2},headStyles:{fillColor:[18,42,58]}});
+  doc.autoTable({startY:y,head:[["Resumo por aula em vídeo","Vendas","Bruto","Valor do professor"]],body:Object.keys(breakdown).map(function(k){var b=breakdown[k];return[k,String(b.n),money(b.g),money(b.p)]}),theme:"grid",styles:{fontSize:7.2},headStyles:{fillColor:[18,42,58]}});
   y=doc.lastAutoTable.finalY+6;if(y>258){doc.addPage();y=18}
   doc.setFont("helvetica","bold");doc.setFontSize(9);doc.setTextColor(20,35,45);doc.text("DECLARAÇÃO DE REPASSE",15,y);y+=5;
   doc.setFont("helvetica","normal");doc.setFontSize(7.6);
@@ -1786,7 +1786,7 @@ function baseSubjectFromKey(k){
   return k.replace(/_(p1|p2|final)$/,"");
 }
 function subjectLabel(base){
-  if(String(base||"").indexOf("aulao:")===0){var id=String(base).slice(6),a=adminAuloes.find(function(x){return x.id===id;});return a?(a.materia||a.nome):"Aulão";}
+  if(String(base||"").indexOf("aulao:")===0){var id=String(base).slice(6),a=adminAuloes.find(function(x){return x.id===id;});return a?(a.materia||a.nome):"Aula em Vídeo";}
   return prettyProduct(base).replace(/ — (P1|P2|Final)$/,"");
 }
 function sameLocalDay(a,b){
@@ -2306,7 +2306,7 @@ async function loadAuloesAdmin(){
 }
 function renderAuloesAdmin(){
   var g=document.getElementById("adminAuloesGrid"); if(!g)return;
-  if(!adminAuloes.length){g.innerHTML='<div class="loading">Nenhum aulão cadastrado.</div>';return;}
+  if(!adminAuloes.length){g.innerHTML='<div class="loading">Nenhum aula em vídeo cadastrado.</div>';return;}
   g.innerHTML=adminAuloes.map(function(a){
     var bg=a.capa_url?'style="background-image:url(\''+escapeAulao(a.capa_url)+'\')"':'';
     return '<div class="aulao-admin-card">'+
@@ -2325,7 +2325,7 @@ function renderAuloesAdmin(){
 }
 window.novoAulao=function(){
   document.getElementById("aulaoEditor").classList.add("open");
-  document.getElementById("aulaoEditorTitle").textContent="Novo aulão";
+  document.getElementById("aulaoEditorTitle").textContent="Nova aula em vídeo";
   document.getElementById("aulaoId").value="";
   document.getElementById("aulaoNome").value="";
   document.getElementById("aulaoMateria").value="";
@@ -2390,7 +2390,7 @@ function renderVideosRows(){
 window.editarAulao=async function(id){
   var a=adminAuloes.find(function(x){return x.id===id;}); if(!a)return;
   document.getElementById("aulaoEditor").classList.add("open");
-  document.getElementById("aulaoEditorTitle").textContent="Editar aulão";
+  document.getElementById("aulaoEditorTitle").textContent="Editar aula em vídeo";
   document.getElementById("aulaoId").value=a.id;
   document.getElementById("aulaoNome").value=a.nome||"";
   document.getElementById("aulaoMateria").value=a.materia||"";
@@ -2492,18 +2492,18 @@ window.salvarAulao=async function(){
       if(vv.error)throw vv.error;
     }
 
-    showToast("✅ Aulão salvo!","success");
+    showToast("✅ Aula em Vídeo salvo!","success");
     await loadAuloesAdmin();
     fecharEditorAulao();
-  }catch(e){console.error(e);alert(e.message||"Erro ao salvar aulão.");}
-  btn.disabled=false;btn.textContent="💾 Salvar aulão";
+  }catch(e){console.error(e);alert(e.message||"Erro ao salvar aula em vídeo.");}
+  btn.disabled=false;btn.textContent="💾 Salvar aula em vídeo";
 };
 window.excluirAulao=async function(){
   var id=document.getElementById("aulaoId").value;if(!id)return;
-  if(!confirm("Excluir este aulão, turmas e vídeos?"))return;
+  if(!confirm("Excluir este aula em vídeo, turmas e vídeos?"))return;
   var r=await client.from("auloes").delete().eq("id",id);
   if(r.error){alert("Erro ao excluir.");return;}
-  fecharEditorAulao();await loadAuloesAdmin();showToast("Aulão excluído.","success");
+  fecharEditorAulao();await loadAuloesAdmin();showToast("Aula em Vídeo excluído.","success");
 };
 window.abrirAulaoAdmin=function(chave){window.open("aulao.html?key="+encodeURIComponent(chave),"_blank");};
 

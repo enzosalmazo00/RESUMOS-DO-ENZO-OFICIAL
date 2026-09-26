@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Aulão — Resumos do Enzo</title>
+<title>Aula em Vídeo — Resumos do Enzo</title>
 <script>window.PAGE_KEY=null;</script>
 <script>document.documentElement.style.visibility="hidden";</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -26,7 +26,7 @@
 </style>
 </head>
 <body>
-<div class="gate" id="gate"><div class="gatebox"><div style="font-size:34px">🔐</div><h2>Validando acesso…</h2><p>Aguarde enquanto confirmamos sua conta e o aulão.</p></div></div>
+<div class="gate" id="gate"><div class="gatebox"><div style="font-size:34px">🔐</div><h2>Validando acesso…</h2><p>Aguarde enquanto confirmamos sua conta e a aula em vídeo.</p></div></div>
 <main class="wrap" id="content" style="display:none">
   <div class="top"><div class="brand">RESUMOS DO <span>ENZO</span></div><a class="back" href="dashboard.html">← Voltar à página inicial</a></div>
   <section class="hero" id="hero"></section>
@@ -134,19 +134,19 @@ document.addEventListener('keydown',function(ev){
 },true);
 document.addEventListener("authReady",async function(e){
   var key=new URLSearchParams(location.search).get("key");
-  if(!key){deny("Aulão não informado.");return}
+  if(!key){deny("Aula em Vídeo não informado.");return}
   var client=window.authClient, session=e.detail.session;
   try{
     var ar=await client.rpc("get_aulao_for_viewer",{p_key:key});
     var a=(ar.data&&ar.data[0])||null;
-    if(ar.error||!a){deny("Este aulão não existe ou não está disponível.");return}
-    if(!a.viewer_authorized){deny("Este aulão é vendido separadamente. Adquira o acesso pela loja.");return}
+    if(ar.error||!a){deny("Este aula em vídeo não existe ou não está disponível.");return}
+    if(!a.viewer_authorized){deny("Este aula em vídeo é vendido separadamente. Adquira o acesso pela loja.");return}
 
     document.title=a.nome+" — Resumos do Enzo";
     document.getElementById("hero").innerHTML=
       (a.capa_url?'<img class="hero-cover" src="'+esc(a.capa_url)+'" alt="">':'')+
       '<div class="eyebrow">'+a.semestre+'º semestre'+(a.avaliacao?' · '+esc(a.avaliacao):'')+'</div>'+
-      '<h1>🎥 '+esc(a.nome)+'</h1><div class="desc">'+esc(a.descricao||"Aulão gravado")+'</div>'+
+      '<h1>🎥 '+esc(a.nome)+'</h1><div class="desc">'+esc(a.descricao||"Aula em vídeo")+'</div>'+
       '<div class="access">● Acesso autorizado</div><div class="content-lang">🌐 '+esc(contentLanguageText(a.idioma_conteudo||"pt-BR"))+'</div>';
 
     var turmas=[];
@@ -178,7 +178,7 @@ document.addEventListener("authReady",async function(e){
     if(!a.usar_turmas)await loadVideos(null);else document.getElementById("lessons").innerHTML='<div class="empty" style="grid-column:1/-1">Escolha sua turma/professor acima.</div>';
 
     document.getElementById("gate").style.display="none";document.getElementById("content").style.display="block";document.documentElement.style.visibility="visible";
-  }catch(err){console.error(err);deny("Erro ao validar o aulão. Recarregue a página.")}
+  }catch(err){console.error(err);deny("Erro ao validar o aula em vídeo. Recarregue a página.")}
 });
 </script>
 </body></html>
