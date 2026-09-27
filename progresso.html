@@ -1,0 +1,109 @@
+<!doctype html><html lang="pt-br"><head><title>Meu Progresso — Resumos do Enzo</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script>window.PAGE_KEY=null;document.documentElement.style.visibility="hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<style>
+:root{
+  --cyan:#22d3ee;--cyan2:#06b6d4;--cyan3:#67e8f9;--bg:#020810;
+  --panel:rgba(6,20,34,.82);--border:rgba(34,211,238,.16);
+  --muted:rgba(165,243,252,.58);--ok:#4ade80;--warn:#fbbf24;--bad:#f87171;--purple:#a78bfa;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Poppins,system-ui,sans-serif;background:
+radial-gradient(ellipse 80% 60% at 20% 20%,rgba(34,211,238,.06),transparent 60%),
+linear-gradient(160deg,#020d1a,#010812 55%,#020d1a);color:#fff}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:
+linear-gradient(rgba(34,211,238,.025) 1px,transparent 1px),
+linear-gradient(90deg,rgba(34,211,238,.025) 1px,transparent 1px);background-size:60px 60px}
+.shell{position:relative;z-index:1;max-width:1180px;margin:auto;padding:28px 18px 60px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:24px}
+.brand{font-weight:800;letter-spacing:-.7px}.brand span{color:var(--cyan)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--border);background:rgba(34,211,238,.05);color:#dffbff;border-radius:11px;padding:9px 13px;
+font:600 12px Poppins;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:rgba(34,211,238,.45);background:rgba(34,211,238,.1)}
+.btn.primary{background:linear-gradient(135deg,#22d3ee,#0891b2);border:0;color:#00131a}
+.btn.danger{border-color:rgba(248,113,113,.28);color:#fecaca;background:rgba(248,113,113,.06)}
+.hero{padding:24px;border:1px solid rgba(34,211,238,.2);border-radius:20px;background:
+linear-gradient(135deg,rgba(34,211,238,.09),rgba(6,182,212,.025));margin-bottom:18px}
+.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.15em;font-weight:800;color:rgba(34,211,238,.65)}
+h1{font-size:25px;margin:6px 0 5px}h2{font-size:16px;margin:0}.sub{font-size:12px;line-height:1.6;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0 18px}
+.metric,.panel{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.025)}
+.metric{padding:16px}.metric small{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:rgba(125,211,232,.48)}
+.metric strong{display:block;font-size:21px;margin-top:5px}
+.panel{padding:18px;margin-bottom:14px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 16px}.tab{border:1px solid var(--border);border-radius:999px;padding:8px 12px;background:transparent;color:#9bddea;font:600 10px Poppins;cursor:pointer}
+.tab.active{background:rgba(34,211,238,.12);color:#fff;border-color:rgba(34,211,238,.4)}
+.row{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid rgba(34,211,238,.08)}
+.row:first-child{border-top:0}.grow{flex:1;min-width:0}.title{font-weight:650;font-size:13px}.meta{font-size:10.5px;color:rgba(165,243,252,.46);margin-top:3px;line-height:1.5}
+.money{font-weight:750;color:#dffbff;white-space:nowrap}.status{font-size:9px;font-weight:800;padding:4px 8px;border-radius:999px;border:1px solid}
+.status.ok{color:#86efac;border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.07)}
+.status.warn{color:#fde68a;border-color:rgba(251,191,36,.25);background:rgba(251,191,36,.07)}
+.status.bad{color:#fecaca;border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.07)}
+.status.info{color:#a5f3fc;border-color:rgba(34,211,238,.25);background:rgba(34,211,238,.07)}
+.progress{height:8px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden;margin-top:8px}.progress>i{display:block;height:100%;background:linear-gradient(90deg,#22d3ee,#67e8f9);border-radius:999px}
+.empty{padding:26px;text-align:center;color:rgba(165,243,252,.38);font-size:12px;border:1px dashed var(--border);border-radius:14px}
+input,select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:rgba(2,13,26,.85);color:#e9feff;font:12px Poppins;outline:none}
+label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:rgba(125,211,232,.5);margin:0 0 5px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.filter-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.badge{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:9px;border:1px solid var(--border);color:#a5f3fc}
+details{border-top:1px solid rgba(34,211,238,.08)}summary{cursor:pointer;list-style:none}.timeline{padding:8px 0 2px 18px;border-left:1px solid rgba(34,211,238,.2);margin:8px 0 8px 8px}
+.event{position:relative;padding:0 0 14px 12px;font-size:11px}.event:before{content:"";position:absolute;left:-22px;top:3px;width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+.event small{display:block;color:rgba(165,243,252,.42);margin-top:2px}
+.loading{padding:40px;text-align:center;color:#7dd3e8}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.filter-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.grid,.form-grid,.filter-grid{grid-template-columns:1fr}.shell{padding:18px 12px 40px}.row{align-items:flex-start;flex-wrap:wrap}.money{margin-left:auto}}
+</style></head>
+<body><div class="shell">
+<div class="top"><div class="brand">RESUMOS <span>ENZO</span></div><div class="actions"><a class="btn" href="dashboard.html">← Página inicial</a><a class="btn" href="conta.html">👤 Minha Conta</a></div></div>
+<div class="hero"><div class="eyebrow">Desempenho acadêmico</div><h1>Meu Progresso</h1><div class="sub">Continue de onde parou e acompanhe seu ritmo de estudo.</div></div>
+<div id="loading" class="loading">Calculando seu progresso…</div><div id="app" style="display:none">
+<div id="continueCard" class="panel"></div>
+<div class="grid"><div class="metric"><small>Conteúdos acompanhados</small><strong id="mContent">0</strong></div><div class="metric"><small>Concluídos</small><strong id="mDone">0</strong></div><div class="metric"><small>Estudo últimos 7 dias</small><strong id="mWeek">0 min</strong></div><div class="metric"><small>Sequência recente</small><strong id="mStreak">0 dias</strong></div></div>
+<section class="panel"><div class="panel-head"><h2>📚 Conteúdos</h2><span class="badge">Resumos · vídeos · cursos</span></div><div id="contentList"></div></section>
+<section class="panel"><div class="panel-head"><h2>⏱️ Tempo de estudo</h2><span class="badge">Histórico existente</span></div><div id="studyList"></div></section>
+</div></div>
+<script>
+function esc(v){return String(v??"").replace(/[&<>"']/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[s]))}
+function money(v){return new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Number(v||0))}
+function dt(v){if(!v)return "—";try{return new Intl.DateTimeFormat("pt-BR",{dateStyle:"short",timeStyle:"short"}).format(new Date(v))}catch{return "—"}}
+function dateOnly(v){if(!v)return "Acesso permanente";try{return new Intl.DateTimeFormat("pt-BR",{dateStyle:"medium"}).format(new Date(v))}catch{return "—"}}
+function statusClass(s){s=String(s||"").toLowerCase();if(["approved","pago","connected","active"].includes(s))return"ok";if(["pending","pending_card","creating","pendente"].includes(s))return"warn";if(["payment_error","rejected","cancelled","cancelado","error","expired"].includes(s))return"bad";return"info"}
+function statusLabel(s){const m={approved:"Aprovado",pending:"Pendente",pending_card:"Aguardando cartão",creating:"Criando pagamento",payment_error:"Erro no pagamento",rejected:"Recusado",cancelled:"Cancelado",refunded:"Reembolsado",connected:"Conectado",disconnected:"Desconectado",expired:"Expirado",pago:"Pago",pendente:"Pendente"};return m[String(s||"").toLowerCase()]||String(s||"—")}
+function shortId(id){return id?String(id).split("-")[0].toUpperCase():"—"}
+function prettyKey(k){return String(k||"").replace(/^curso-/,"Curso · ").replace(/^aulao-/,"Aula · ").replace(/_/g," ").replace(/\b\w/g,c=>c.toUpperCase())}
+function logout(){window.authClient.auth.signOut().finally(()=>location.href="login.html")}
+
+document.addEventListener("authReady",init);
+async function init(){
+ const c=window.authClient,u=window.authSession.user.id;
+ const since=new Date(Date.now()-30*864e5).toISOString().slice(0,10);
+ const [gp,rp,vd,au,cp,ed]=await Promise.all([
+   c.from("study_progress").select("*").eq("user_id",u).order("last_opened_at",{ascending:false}),
+   c.from("resumo_progresso").select("*").eq("user_id",u).order("updated_at",{ascending:false}),
+   c.from("aulao_video_progress").select("*").eq("user_id",u),
+   c.from("auloes").select("id,chave,nome"),
+   c.from("curso_progresso").select("*").eq("user_id",u),
+   c.from("estudo_diario").select("data,materia,minutos,streak_dias").eq("user_id",u).gte("data",since).order("data",{ascending:false})
+ ]);
+ const auloes=Object.fromEntries((au.data||[]).map(a=>[a.id,a]));
+ let rows=[];
+ (gp.data||[]).forEach(x=>rows.push({key:x.product_key,name:prettyKey(x.product_key),type:x.product_type,pct:Number(x.progress_percent||0),last:x.last_opened_at,section:x.last_section,url:x.last_url,done:x.completed}));
+ (rp.data||[]).forEach(x=>{if(!rows.some(r=>r.key===x.resumo_key))rows.push({key:x.resumo_key,name:prettyKey(x.resumo_key),type:"resumo",pct:Number(x.percentual||0),last:x.updated_at,section:x.ultima_aba,url:null,done:Number(x.percentual||0)>=95})});
+ const grouped={};(vd.data||[]).forEach(v=>{const a=auloes[v.aulao_id]||{chave:"aulao-"+v.aulao_id,nome:"Aula em vídeo"};(grouped[a.chave]??={name:a.nome,total:0,watched:0,last:v.updated_at});grouped[a.chave].total+=Number(v.duration_seconds||0);grouped[a.chave].watched+=Math.min(Number(v.watched_seconds||0),Number(v.duration_seconds||0));if(new Date(v.updated_at)>new Date(grouped[a.chave].last))grouped[a.chave].last=v.updated_at});
+ Object.entries(grouped).forEach(([k,g])=>{const pct=g.total?Math.min(100,g.watched/g.total*100):0;const ex=rows.find(r=>r.key===k);if(!ex)rows.push({key:k,name:g.name,type:"aulao",pct,last:g.last,section:"Aulas em vídeo",url:"aulao.html?key="+encodeURIComponent(k),done:pct>=95})});
+ const courses={};(cp.data||[]).forEach(x=>{const k=x.curso;(courses[k]??={all:0,done:0,last:x.updated_at});courses[k].all++;courses[k].done+=x.concluida?1:0;if(new Date(x.updated_at)>new Date(courses[k].last))courses[k].last=x.updated_at});
+ Object.entries(courses).forEach(([k,g])=>{if(!rows.some(r=>r.key===k))rows.push({key:k,name:prettyKey(k),type:"curso",pct:g.all?g.done/g.all*100:0,last:g.last,section:"Curso",url:null,done:g.all>0&&g.done===g.all})});
+ rows.sort((a,b)=>new Date(b.last||0)-new Date(a.last||0));
+ const legacy=ed.data||[], today=Date.now(),week=legacy.filter(x=>today-new Date(x.data+"T12:00:00").getTime()<=7*864e5).reduce((s,x)=>s+Number(x.minutos||0),0);
+ document.getElementById("mContent").textContent=rows.length;document.getElementById("mDone").textContent=rows.filter(x=>x.done).length;document.getElementById("mWeek").textContent=week+" min";document.getElementById("mStreak").textContent=Math.max(0,...legacy.map(x=>Number(x.streak_dias||0)))+" dias";
+ const last=rows[0];document.getElementById("continueCard").innerHTML=last?`<div class="eyebrow">Continue estudando</div><div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:7px"><div class="grow"><div class="title" style="font-size:17px">${esc(last.name)}</div><div class="meta">${esc(last.section||"Última atividade")} · ${Math.round(last.pct)}% concluído · ${dt(last.last)}</div><div class="progress"><i style="width:${Math.max(2,last.pct)}%"></i></div></div>${last.url?`<a class="btn primary" href="${esc(last.url)}">Continuar →</a>`:""}</div>`:'<div class="empty">Seu próximo acesso a um conteúdo começará a preencher esta área.</div>';
+ document.getElementById("contentList").innerHTML=rows.length?rows.map(r=>`<div class="row"><div class="grow"><div class="title">${esc(r.name)}</div><div class="meta">${esc(r.type)} · Último acesso ${dt(r.last)}${r.section?" · "+esc(r.section):""}</div><div class="progress"><i style="width:${Math.max(1,Math.min(100,r.pct))}%"></i></div></div><div class="money">${Math.round(r.pct)}%</div></div>`).join(""):'<div class="empty">Nenhum progresso registrado ainda.</div>';
+ const byDay={};legacy.forEach(x=>{byDay[x.data]=(byDay[x.data]||0)+Number(x.minutos||0)});document.getElementById("studyList").innerHTML=Object.keys(byDay).length?Object.entries(byDay).slice(0,14).map(([d,m])=>`<div class="row"><div class="grow"><div class="title">${dateOnly(d+"T12:00:00")}</div><div class="meta">Tempo registrado nos seus resumos</div></div><div class="money">${m} min</div></div>`).join(""):'<div class="empty">Ainda não há tempo de estudo registrado neste período.</div>';
+ document.documentElement.style.visibility="visible";document.getElementById("loading").style.display="none";document.getElementById("app").style.display="";
+}
+</script></body></html>

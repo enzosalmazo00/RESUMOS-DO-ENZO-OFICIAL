@@ -1,0 +1,103 @@
+<!doctype html><html lang="pt-br"><head><title>Auditoria Financeira — Resumos do Enzo</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script>window.PAGE_KEY=null;document.documentElement.style.visibility="hidden";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+<style>
+:root{
+  --cyan:#22d3ee;--cyan2:#06b6d4;--cyan3:#67e8f9;--bg:#020810;
+  --panel:rgba(6,20,34,.82);--border:rgba(34,211,238,.16);
+  --muted:rgba(165,243,252,.58);--ok:#4ade80;--warn:#fbbf24;--bad:#f87171;--purple:#a78bfa;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Poppins,system-ui,sans-serif;background:
+radial-gradient(ellipse 80% 60% at 20% 20%,rgba(34,211,238,.06),transparent 60%),
+linear-gradient(160deg,#020d1a,#010812 55%,#020d1a);color:#fff}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:
+linear-gradient(rgba(34,211,238,.025) 1px,transparent 1px),
+linear-gradient(90deg,rgba(34,211,238,.025) 1px,transparent 1px);background-size:60px 60px}
+.shell{position:relative;z-index:1;max-width:1180px;margin:auto;padding:28px 18px 60px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:24px}
+.brand{font-weight:800;letter-spacing:-.7px}.brand span{color:var(--cyan)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--border);background:rgba(34,211,238,.05);color:#dffbff;border-radius:11px;padding:9px 13px;
+font:600 12px Poppins;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:rgba(34,211,238,.45);background:rgba(34,211,238,.1)}
+.btn.primary{background:linear-gradient(135deg,#22d3ee,#0891b2);border:0;color:#00131a}
+.btn.danger{border-color:rgba(248,113,113,.28);color:#fecaca;background:rgba(248,113,113,.06)}
+.hero{padding:24px;border:1px solid rgba(34,211,238,.2);border-radius:20px;background:
+linear-gradient(135deg,rgba(34,211,238,.09),rgba(6,182,212,.025));margin-bottom:18px}
+.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.15em;font-weight:800;color:rgba(34,211,238,.65)}
+h1{font-size:25px;margin:6px 0 5px}h2{font-size:16px;margin:0}.sub{font-size:12px;line-height:1.6;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0 18px}
+.metric,.panel{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.025)}
+.metric{padding:16px}.metric small{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:rgba(125,211,232,.48)}
+.metric strong{display:block;font-size:21px;margin-top:5px}
+.panel{padding:18px;margin-bottom:14px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 16px}.tab{border:1px solid var(--border);border-radius:999px;padding:8px 12px;background:transparent;color:#9bddea;font:600 10px Poppins;cursor:pointer}
+.tab.active{background:rgba(34,211,238,.12);color:#fff;border-color:rgba(34,211,238,.4)}
+.row{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid rgba(34,211,238,.08)}
+.row:first-child{border-top:0}.grow{flex:1;min-width:0}.title{font-weight:650;font-size:13px}.meta{font-size:10.5px;color:rgba(165,243,252,.46);margin-top:3px;line-height:1.5}
+.money{font-weight:750;color:#dffbff;white-space:nowrap}.status{font-size:9px;font-weight:800;padding:4px 8px;border-radius:999px;border:1px solid}
+.status.ok{color:#86efac;border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.07)}
+.status.warn{color:#fde68a;border-color:rgba(251,191,36,.25);background:rgba(251,191,36,.07)}
+.status.bad{color:#fecaca;border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.07)}
+.status.info{color:#a5f3fc;border-color:rgba(34,211,238,.25);background:rgba(34,211,238,.07)}
+.progress{height:8px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden;margin-top:8px}.progress>i{display:block;height:100%;background:linear-gradient(90deg,#22d3ee,#67e8f9);border-radius:999px}
+.empty{padding:26px;text-align:center;color:rgba(165,243,252,.38);font-size:12px;border:1px dashed var(--border);border-radius:14px}
+input,select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:rgba(2,13,26,.85);color:#e9feff;font:12px Poppins;outline:none}
+label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:rgba(125,211,232,.5);margin:0 0 5px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.filter-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.badge{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:9px;border:1px solid var(--border);color:#a5f3fc}
+details{border-top:1px solid rgba(34,211,238,.08)}summary{cursor:pointer;list-style:none}.timeline{padding:8px 0 2px 18px;border-left:1px solid rgba(34,211,238,.2);margin:8px 0 8px 8px}
+.event{position:relative;padding:0 0 14px 12px;font-size:11px}.event:before{content:"";position:absolute;left:-22px;top:3px;width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+.event small{display:block;color:rgba(165,243,252,.42);margin-top:2px}
+.loading{padding:40px;text-align:center;color:#7dd3e8}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.filter-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.grid,.form-grid,.filter-grid{grid-template-columns:1fr}.shell{padding:18px 12px 40px}.row{align-items:flex-start;flex-wrap:wrap}.money{margin-left:auto}}
+</style></head>
+<body><div class="shell">
+<div class="top"><div class="brand">RESUMOS <span>ENZO</span> · ADMIN</div><div class="actions"><a class="btn" href="admin.html">← Painel Admin</a><a class="btn" href="dashboard.html">Página inicial</a></div></div>
+<div class="hero"><div class="eyebrow">Controle financeiro</div><h1>Auditoria de Pagamentos</h1><div class="sub">Pedido → Mercado Pago → webhook → aprovação → liberação de acesso. Eventos legados aparecem como importação histórica.</div></div>
+<div id="loading" class="loading">Validando administrador e carregando auditoria…</div><div id="app" style="display:none">
+<div class="grid"><div class="metric"><small>Pedidos carregados</small><strong id="mAll">0</strong></div><div class="metric"><small>Aprovados</small><strong id="mApproved">0</strong></div><div class="metric"><small>Pendentes</small><strong id="mPending">0</strong></div><div class="metric"><small>Erros / recusados</small><strong id="mError">0</strong></div></div>
+<section class="panel"><div class="panel-head"><h2>🔎 Filtros</h2><button class="btn" id="reload">Atualizar</button></div><div class="filter-grid"><div><label>Status</label><select id="fStatus"><option value="">Todos</option><option value="approved">Aprovados</option><option value="pending">Pendentes</option><option value="payment_error">Erros</option></select></div><div><label>Forma</label><select id="fMethod"><option value="">Todas</option><option value="pix">PIX</option><option value="card">Cartão</option></select></div><div><label>Produto / pedido / e-mail</label><input id="fText" placeholder="Buscar..."></div><div><label>Modelo</label><select id="fSplit"><option value="">Todos</option><option value="platform_direct">Plataforma</option><option value="marketplace_1to1">Marketplace</option></select></div></div></section>
+<section class="panel"><div class="panel-head"><h2>💳 Pedidos</h2><span class="badge">Clique para abrir timeline</span></div><div id="orders"></div></section>
+</div></div>
+<script>
+function esc(v){return String(v??"").replace(/[&<>"']/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[s]))}
+function money(v){return new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Number(v||0))}
+function dt(v){if(!v)return "—";try{return new Intl.DateTimeFormat("pt-BR",{dateStyle:"short",timeStyle:"short"}).format(new Date(v))}catch{return "—"}}
+function dateOnly(v){if(!v)return "Acesso permanente";try{return new Intl.DateTimeFormat("pt-BR",{dateStyle:"medium"}).format(new Date(v))}catch{return "—"}}
+function statusClass(s){s=String(s||"").toLowerCase();if(["approved","pago","connected","active"].includes(s))return"ok";if(["pending","pending_card","creating","pendente"].includes(s))return"warn";if(["payment_error","rejected","cancelled","cancelado","error","expired"].includes(s))return"bad";return"info"}
+function statusLabel(s){const m={approved:"Aprovado",pending:"Pendente",pending_card:"Aguardando cartão",creating:"Criando pagamento",payment_error:"Erro no pagamento",rejected:"Recusado",cancelled:"Cancelado",refunded:"Reembolsado",connected:"Conectado",disconnected:"Desconectado",expired:"Expirado",pago:"Pago",pendente:"Pendente"};return m[String(s||"").toLowerCase()]||String(s||"—")}
+function shortId(id){return id?String(id).split("-")[0].toUpperCase():"—"}
+function prettyKey(k){return String(k||"").replace(/^curso-/,"Curso · ").replace(/^aulao-/,"Aula · ").replace(/_/g," ").replace(/\b\w/g,c=>c.toUpperCase())}
+function logout(){window.authClient.auth.signOut().finally(()=>location.href="login.html")}
+
+let orders=[],events=[],profiles={};
+document.addEventListener("authReady",init);
+["fStatus","fMethod","fText","fSplit"].forEach(id=>document.getElementById(id).addEventListener("input",render));
+document.getElementById("reload").onclick=load;
+async function init(){
+ const c=window.authClient,u=window.authSession.user.id;const pr=await c.from("profiles").select("is_admin").eq("id",u).single();
+ if(pr.error||!pr.data?.is_admin){location.replace("dashboard.html");return}
+ await load();document.documentElement.style.visibility="visible";document.getElementById("loading").style.display="none";document.getElementById("app").style.display="";
+}
+async function load(){
+ const c=window.authClient;
+ const or=await c.from("orders").select("id,user_id,produto_nome,produto_key,valor,status,payment_method,mp_payment_id,mp_preference_id,seller_user_id,commission_rate,marketplace_fee,mp_fee,seller_net_amount,payment_split_mode,provider_status_detail,criado_em,atualizado_em,approved_at,access_granted_at,coupon_code,discount_amount").order("criado_em",{ascending:false}).limit(200);
+ orders=or.data||[];
+ const ids=orders.map(x=>x.id),users=[...new Set(orders.map(x=>x.user_id).filter(Boolean))];
+ events=[];if(ids.length){const er=await c.from("payment_events").select("*").in("order_id",ids).order("created_at",{ascending:true});events=er.data||[]}
+ profiles={};if(users.length){const ur=await c.from("profiles").select("id,email,nome_preferido").in("id",users);(ur.data||[]).forEach(x=>profiles[x.id]=x)}
+ document.getElementById("mAll").textContent=orders.length;document.getElementById("mApproved").textContent=orders.filter(x=>x.status==="approved").length;document.getElementById("mPending").textContent=orders.filter(x=>["pending","pending_card","creating"].includes(x.status)).length;document.getElementById("mError").textContent=orders.filter(x=>["payment_error","rejected","cancelled"].includes(x.status)).length;render();
+}
+function render(){
+ const st=document.getElementById("fStatus").value,me=document.getElementById("fMethod").value,sp=document.getElementById("fSplit").value,q=document.getElementById("fText").value.trim().toLowerCase();
+ let list=orders.filter(o=>{if(st){if(st==="pending"&&!["pending","pending_card","creating"].includes(o.status))return false;if(st!=="pending"&&o.status!==st)return false}if(me&&o.payment_method!==me)return false;if(sp&&o.payment_split_mode!==sp)return false;const p=profiles[o.user_id]||{};if(q&&!`${o.id} ${o.produto_nome} ${o.produto_key} ${p.email||""} ${p.nome_preferido||""}`.toLowerCase().includes(q))return false;return true});
+ document.getElementById("orders").innerHTML=list.length?list.map(o=>{const p=profiles[o.user_id]||{},ev=events.filter(e=>e.order_id===o.id);return `<details><summary><div class="row"><div class="grow"><div class="title">${esc(o.produto_nome||prettyKey(o.produto_key))}</div><div class="meta">#${shortId(o.id)} · ${esc(p.nome_preferido||p.email||o.user_id||"Usuário")} · ${dt(o.criado_em)} · ${o.payment_method||"método legado"} · ${o.payment_split_mode||"legado"}</div></div><span class="status ${statusClass(o.status)}">${statusLabel(o.status)}</span><div class="money">${money(o.valor)}</div></div></summary><div style="padding:0 12px 16px"><div class="meta">MP: ${esc(o.mp_payment_id||o.mp_preference_id||"—")} · detalhe: ${esc(o.provider_status_detail||"—")}<br>Aprovado: ${dt(o.approved_at)} · acesso: ${dt(o.access_granted_at)}<br>Plataforma: ${money(o.marketplace_fee)} · taxa MP: ${money(o.mp_fee)} · produtor: ${money(o.seller_net_amount)}</div><div class="timeline">${ev.length?ev.map(e=>`<div class="event"><strong>${esc(e.event_type)}</strong> — ${esc(e.message||e.provider_status||"")}<small>${dt(e.created_at)} · ${esc(e.status)}${e.provider_status?" · "+esc(e.provider_status):""}</small></div>`).join(""):'<div class="event">Sem eventos detalhados para este pedido.</div>'}</div></div></details>`}).join(""):'<div class="empty">Nenhum pedido corresponde aos filtros.</div>';
+}
+</script></body></html>
