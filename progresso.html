@@ -72,6 +72,19 @@ function esc(v){return String(v??"").replace(/[&<>"']/g,s=>({"&":"&amp;","<":"&l
 function money(v){return new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Number(v||0))}
 function dt(v){if(!v)return "—";try{return new Intl.DateTimeFormat("pt-BR",{dateStyle:"short",timeStyle:"short"}).format(new Date(v))}catch{return "—"}}
 function dateOnly(v){if(!v)return "Acesso permanente";try{return new Intl.DateTimeFormat("pt-BR",{dateStyle:"medium"}).format(new Date(v))}catch{return "—"}}
+function safeStudySeconds(v){
+ const n=Number(v||0);
+ if(!Number.isFinite(n)||n<0||n>86400)return 0;
+ return n;
+}
+function formatStudyTime(seconds){
+ const s=Math.max(0,Number(seconds||0));
+ if(!s)return "0 min";
+ const totalMin=Math.max(1,Math.round(s/60));
+ if(totalMin<60)return totalMin+" min";
+ const h=Math.floor(totalMin/60),m=totalMin%60;
+ return m?h+"h "+m+"min":h+"h";
+}
 function statusClass(s){s=String(s||"").toLowerCase();if(["approved","pago","connected","active"].includes(s))return"ok";if(["pending","pending_card","creating","pendente"].includes(s))return"warn";if(["payment_error","rejected","cancelled","cancelado","error","expired"].includes(s))return"bad";return"info"}
 function statusLabel(s){const m={approved:"Aprovado",pending:"Pendente",pending_card:"Aguardando cartão",creating:"Criando pagamento",payment_error:"Erro no pagamento",rejected:"Recusado",cancelled:"Cancelado",refunded:"Reembolsado",connected:"Conectado",disconnected:"Desconectado",expired:"Expirado",pago:"Pago",pendente:"Pendente"};return m[String(s||"").toLowerCase()]||String(s||"—")}
 function shortId(id){return id?String(id).split("-")[0].toUpperCase():"—"}
@@ -99,11 +112,11 @@ async function init(){
  const courses={};(cp.data||[]).forEach(x=>{const k=x.curso;(courses[k]??={all:0,done:0,last:x.updated_at});courses[k].all++;courses[k].done+=x.concluida?1:0;if(new Date(x.updated_at)>new Date(courses[k].last))courses[k].last=x.updated_at});
  Object.entries(courses).forEach(([k,g])=>{if(!rows.some(r=>r.key===k))rows.push({key:k,name:prettyKey(k),type:"curso",pct:g.all?g.done/g.all*100:0,last:g.last,section:"Curso",url:null,done:g.all>0&&g.done===g.all})});
  rows.sort((a,b)=>new Date(b.last||0)-new Date(a.last||0));
- const legacy=ed.data||[], today=Date.now(),week=legacy.filter(x=>today-new Date(x.data+"T12:00:00").getTime()<=7*864e5).reduce((s,x)=>s+Number(x.minutos||0),0);
- document.getElementById("mContent").textContent=rows.length;document.getElementById("mDone").textContent=rows.filter(x=>x.done).length;document.getElementById("mWeek").textContent=week+" min";document.getElementById("mStreak").textContent=Math.max(0,...legacy.map(x=>Number(x.streak_dias||0)))+" dias";
+ const legacy=ed.data||[], today=Date.now(),weekSeconds=legacy.filter(x=>today-new Date(x.data+"T12:00:00").getTime()<=7*864e5).reduce((s,x)=>s+safeStudySeconds(x.minutos),0);
+ document.getElementById("mContent").textContent=rows.length;document.getElementById("mDone").textContent=rows.filter(x=>x.done).length;document.getElementById("mWeek").textContent=formatStudyTime(weekSeconds);document.getElementById("mStreak").textContent=Math.max(0,...legacy.map(x=>Number(x.streak_dias||0)))+" dias";
  const last=rows[0];document.getElementById("continueCard").innerHTML=last?`<div class="eyebrow">Continue estudando</div><div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:7px"><div class="grow"><div class="title" style="font-size:17px">${esc(last.name)}</div><div class="meta">${esc(last.section||"Última atividade")} · ${Math.round(last.pct)}% concluído · ${dt(last.last)}</div><div class="progress"><i style="width:${Math.max(2,last.pct)}%"></i></div></div>${last.url?`<a class="btn primary" href="${esc(last.url)}">Continuar →</a>`:""}</div>`:'<div class="empty">Seu próximo acesso a um conteúdo começará a preencher esta área.</div>';
  document.getElementById("contentList").innerHTML=rows.length?rows.map(r=>`<div class="row"><div class="grow"><div class="title">${esc(r.name)}</div><div class="meta">${esc(r.type)} · Último acesso ${dt(r.last)}${r.section?" · "+esc(r.section):""}</div><div class="progress"><i style="width:${Math.max(1,Math.min(100,r.pct))}%"></i></div></div><div class="money">${Math.round(r.pct)}%</div></div>`).join(""):'<div class="empty">Nenhum progresso registrado ainda.</div>';
- const byDay={};legacy.forEach(x=>{byDay[x.data]=(byDay[x.data]||0)+Number(x.minutos||0)});document.getElementById("studyList").innerHTML=Object.keys(byDay).length?Object.entries(byDay).slice(0,14).map(([d,m])=>`<div class="row"><div class="grow"><div class="title">${dateOnly(d+"T12:00:00")}</div><div class="meta">Tempo registrado nos seus resumos</div></div><div class="money">${m} min</div></div>`).join(""):'<div class="empty">Ainda não há tempo de estudo registrado neste período.</div>';
+ const byDay={};legacy.forEach(x=>{byDay[x.data]=(byDay[x.data]||0)+safeStudySeconds(x.minutos)});document.getElementById("studyList").innerHTML=Object.keys(byDay).length?Object.entries(byDay).slice(0,14).map(([d,s])=>`<div class="row"><div class="grow"><div class="title">${dateOnly(d+"T12:00:00")}</div><div class="meta">Tempo registrado nos seus resumos</div></div><div class="money">${formatStudyTime(s)}</div></div>`).join(""):'<div class="empty">Ainda não há tempo de estudo registrado neste período.</div>';
  document.documentElement.style.visibility="visible";document.getElementById("loading").style.display="none";document.getElementById("app").style.display="";
 }
 </script></body></html>
