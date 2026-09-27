@@ -784,7 +784,7 @@
             <option value="11">11º semestre</option><option value="12">12º semestre</option>
           </select>
         </div>
-        <div class="form-group"><div class="form-label">Preço (R$)</div><input class="form-input" type="number" min="0" step="0.01" id="aulaoPreco" value="0"></div>
+        <div class="form-group"><div class="form-label">Preço-base (R$)</div><input class="form-input" type="number" min="0" step="0.01" id="aulaoPreco" value="0" oninput="renderAulaoCommercialSummary()"><div style="margin-top:5px;font-size:9px;line-height:1.45;color:rgba(125,211,232,.45);">Em conteúdo de colaborador, este é o valor-base a ser dividido. O valor final mostrado ao aluno inclui automaticamente 1,5% de taxa do Mercado Pago.</div></div>
         <div class="form-group"><div class="form-label">Dias de acesso</div><input class="form-input" type="number" min="1" id="aulaoDias" value="50"></div>
 
         <div class="form-group wide" style="border:1px solid rgba(34,211,238,.16);border-radius:12px;padding:13px;background:rgba(2,19,31,.48);">
@@ -2320,14 +2320,27 @@ window.toggleAulaoPaymentModel=function(){
   if(model==="marketplace_split")populateAulaoCollaborators(document.getElementById("aulaoCollaborator").value);
   renderAulaoCommercialSummary();
 };
+function marketplacePricePreview(base){
+  base=Number(base||0);if(!(base>0))return{base:0,buyer:0,surcharge:0};
+  var feeRate=.015;
+  var buyer=Math.round(((base*(1+feeRate))+Number.EPSILON)*100)/100;
+  return{base:base,buyer:buyer,surcharge:Math.round((buyer-base)*100)/100};
+}
 window.renderAulaoCommercialSummary=function(){
   var out=document.getElementById("aulaoCommercialSummary");if(!out)return;
   var model=document.getElementById("aulaoPaymentModel").value;
-  if(model!=="marketplace_split"){out.innerHTML='✅ <strong>Produto próprio.</strong> O checkout normal permanece intacto e o valor da venda é recebido pela conta Mercado Pago da plataforma, sem split.';return;}
-  var uid=document.getElementById("aulaoCollaborator").value;if(!uid){out.innerHTML='⚠️ Selecione o produtor colaborador.';return;}
-  var cat=professorCategory(uid),rate=cat==="medico_docente"?"25%":cat==="aluno"?"33,33%":"—",st=professorMpStatus(uid),conn=professorMpConnection(uid);
+  var base=Number(document.getElementById("aulaoPreco").value||0),price=marketplacePricePreview(base);
+  if(model!=="marketplace_split"){
+    out.innerHTML='✅ <strong>Produto próprio.</strong> O checkout normal permanece intacto e o valor da venda é recebido pela conta Mercado Pago da plataforma, sem split.'+(base>0?'<br>Preço ao aluno: <strong>'+money(base)+'</strong>.':'');
+    return;
+  }
+  var uid=document.getElementById("aulaoCollaborator").value;if(!uid){out.innerHTML='⚠️ Selecione o produtor colaborador.'+(base>0?'<br>Preço-base informado: <strong>'+money(base)+'</strong> · Preço final ao aluno com taxa MP de 1,5%: <strong>'+money(price.buyer)+'</strong>.':'');return;}
+  var cat=professorCategory(uid),rateNum=cat==="medico_docente"?.25:cat==="aluno"?.3333:null,rate=rateNum===.25?"25%":rateNum===.3333?"33,33%":"—",st=professorMpStatus(uid),conn=professorMpConnection(uid);
   var exp=conn&&conn.expires_at?new Date(conn.expires_at).toLocaleDateString("pt-BR"):"—";
-  out.innerHTML='<strong>'+escapeAulao(professorName(uid))+'</strong><br>Categoria: '+escapeAulao(professorCategoryLabel(uid))+' · Comissão da plataforma: <strong>'+rate+'</strong><br>Mercado Pago: <strong>'+escapeAulao(professorMpStatusLabel(uid))+'</strong>'+(st==="connected"?' · autorização até '+exp:'')+(cat?'':'<br>❌ Categoria não definida.')+(st!=="connected"?'<br>❌ Não publique na loja até o colaborador conectar/reautorizar o Mercado Pago.':'');
+  var platform=rateNum!=null?Math.round(base*rateNum*100)/100:0,producer=rateNum!=null?Math.round((base-platform)*100)/100:0;
+  out.innerHTML='<strong>'+escapeAulao(professorName(uid))+'</strong><br>Categoria: '+escapeAulao(professorCategoryLabel(uid))+' · Comissão da plataforma: <strong>'+rate+'</strong><br>'+
+    (base>0?'<span style="display:block;margin-top:5px;">Preço-base: <strong>'+money(base)+'</strong> · Taxa MP 1,5%: <strong>'+money(price.surcharge)+'</strong> · Preço final ao aluno: <strong>'+money(price.buyer)+'</strong><br>Meta da divisão sobre o preço-base: plataforma <strong>'+money(platform)+'</strong> · produtor <strong>'+money(producer)+'</strong>.</span>':'')+
+    'Mercado Pago: <strong>'+escapeAulao(professorMpStatusLabel(uid))+'</strong>'+(st==="connected"?' · autorização até '+exp:'')+(cat?'':'<br>❌ Categoria não definida.')+(st!=="connected"?'<br>❌ Não publique na loja até o colaborador conectar/reautorizar o Mercado Pago.':'');
 }
 window.novoAulao=function(){
   document.getElementById("aulaoEditor").classList.add("open");
