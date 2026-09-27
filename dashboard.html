@@ -1767,6 +1767,7 @@ var acessosCache = {};
 
 // ── Aulões gravados (carregados do Supabase) ─────────────────────────────
 var AULOES = [];
+var AULAO_RATINGS = {}; // { aulao_id: { rating_count, rating_avg, five_star_count } }
 
 // ── Carrinho ──────────────────────────────────────────────────────────────────
 var cart = []; // [{key, label, emoji, preco, tipo}]
@@ -1885,10 +1886,34 @@ async function loadAuloes() {
     }
     if (r.error) throw r.error;
     AULOES = r.data || [];
+
+    AULAO_RATINGS = {};
+    try {
+      var rr = await window.authClient.rpc("list_aulao_rating_summaries");
+      if (!rr.error && Array.isArray(rr.data)) {
+        rr.data.forEach(function(x){
+          AULAO_RATINGS[x.aulao_id] = {
+            rating_count: Number(x.rating_count || 0),
+            rating_avg: Number(x.rating_avg || 0),
+            five_star_count: Number(x.five_star_count || 0)
+          };
+        });
+      }
+    } catch (ratingErr) {
+      console.warn("[dashboard] Erro ao carregar avaliações dos aulões:", ratingErr);
+    }
   } catch (e) {
     console.warn("[dashboard] Erro ao carregar aulões:", e);
     AULOES = [];
+    AULAO_RATINGS = {};
   }
+}
+
+function aulaoRatingSummary(a) {
+  var s = AULAO_RATINGS[a && a.id] || { rating_count:0, rating_avg:0 };
+  var count = Number(s.rating_count || 0), avg = Number(s.rating_avg || 0);
+  if (!count) return '<span style="color:rgba(251,191,36,.58);">☆ Ainda sem avaliações</span>';
+  return '<span style="color:#fbbf24;">★ '+avg.toFixed(1).replace(".",",")+'</span><span style="color:rgba(226,232,240,.48);"> · '+count+' avaliação'+(count===1?'':'ões')+'</span>';
 }
 
 function renderAuloesGrid() {
@@ -1938,6 +1963,7 @@ function renderAuloesGrid() {
         capa+
         '<div class="aulao-top"><div class="aulao-icon">🎥</div>'+statusLabel+'</div>'+
         '<div class="aulao-title">'+a.nome+'</div>'+
+        '<div style="font-size:10px;margin:2px 0 7px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;">'+aulaoRatingSummary(a)+'</div>'+
         '<div class="aulao-desc">'+(a.descricao||"Aulão gravado")+'</div>'+
         '<div class="aulao-meta"><span>📚 '+a.semestre+'º semestre</span><span>📅 '+(a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+'</span>'+(a.usar_turmas?'<span>👨‍🏫 Escolha por turma/professor</span>':'')+'</div>'+
         '<button class="aulao-btn" '+(!unlocked && !sellable ? "disabled" : "")+'>'+buttonLabel+'</button>';
@@ -1985,6 +2011,7 @@ function renderAulaoStore(){
       storeCover+
       '<div class="aulao-store-body">'+
         '<div class="produto-nome">'+a.nome+'</div>'+
+        '<div style="font-size:10px;margin:5px 0 4px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;">'+aulaoRatingSummary(a)+'</div>'+
         '<div class="produto-sub">'+a.semestre+'º Semestre · '+(a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+(a.usar_turmas?' · por turma/professor':'')+'</div>'+
         '<div class="produto-preco">R$ '+aulaoBuyerPrice(a).toFixed(2).replace(".",",")+'</div>'+
         '<button class="add-btn '+(owned?'owned':'')+'" '+(owned?'disabled':'onclick="addAulaoToCart(\''+a.chave+'\')"')+'>'+(owned?'✅ Já adquirido':'🛒 Comprar')+'</button>'+
