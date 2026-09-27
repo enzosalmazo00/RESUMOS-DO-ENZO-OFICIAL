@@ -1366,6 +1366,7 @@ function professorAuloes(userId){return adminAuloes.filter(function(a){return a.
 function professorApprovedOrders(userId){
   return allOrders.filter(function(o){
     if(o.status!=="approved")return false;
+    if(o.seller_user_id===userId&&o.payment_split_mode==="marketplace_1to1")return true;
     var a=aulaoForOrder(o);
     return a&&a.origem==="professor"&&a.owner_user_id===userId;
   });
@@ -1387,10 +1388,19 @@ function professorFinancialRow(userId){
 }
 function professorAulaoBreakdown(userId,orders){
   var map={};(orders||professorApprovedOrders(userId)).forEach(function(o){
-    var a=aulaoForOrder(o);if(!a)return;
-    if(!map[a.id])map[a.id]={id:a.id,nome:a.nome,materia:a.materia,avaliacao:a.avaliacao,semestre:a.semestre,count:0,gross:0,professor:0,platform:0,mpFees:0};
+    var a=aulaoForOrder(o);
+    var key=(a&&a.id)||o.aulao_id_snapshot||("historico:"+String(o.produto_key||o.id));
+    if(!map[key])map[key]={
+      id:(a&&a.id)||o.aulao_id_snapshot||null,
+      nome:(a&&a.nome)||o.produto_nome||o.produto_key||"Aulão removido",
+      materia:(a&&a.materia)||o.aulao_materia_snapshot||"Histórico financeiro",
+      avaliacao:(a&&a.avaliacao)||o.aulao_avaliacao_snapshot||"",
+      semestre:(a&&a.semestre)||o.aulao_semestre_snapshot||null,
+      historico:!a,
+      count:0,gross:0,professor:0,platform:0,mpFees:0
+    };
     var f=professorOrderFinancial(o,userId);
-    map[a.id].count++;map[a.id].gross+=f.gross;map[a.id].professor+=f.producer;map[a.id].platform+=f.platform;map[a.id].mpFees+=f.mpFee;
+    map[key].count++;map[key].gross+=f.gross;map[key].professor+=f.producer;map[key].platform+=f.platform;map[key].mpFees+=f.mpFee;
   });
   return Object.keys(map).map(function(k){return map[k]}).sort(function(a,b){return b.gross-a.gross});
 }
@@ -1714,12 +1724,16 @@ function aulaoForOrder(o){
   return aulaoByKey(keys[0]);
 }
 function orderSource(o){
+  if(o&&o.seller_user_id&&o.payment_split_mode==="marketplace_1to1")return"aulao_professor";
+  if(o&&o.aulao_origem_snapshot==="professor")return"aulao_professor";
+  if(o&&o.aulao_origem_snapshot==="enzo")return"aulao_enzo";
   var a=aulaoForOrder(o);
   if(!a)return"resumos";
   return a.origem==="professor"?"aulao_professor":"aulao_enzo";
 }
 function orderProfessorId(o){
-  var a=aulaoForOrder(o);return a&&a.origem==="professor"?a.owner_user_id||"":""; 
+  if(o&&o.seller_user_id)return o.seller_user_id;
+  var a=aulaoForOrder(o);return a&&a.origem==="professor"?a.owner_user_id||"":"";
 }
 function prettyProduct(k){
   var a=aulaoByKey(k);if(a)return a.nome||k;
@@ -2540,10 +2554,25 @@ window.salvarAulao=async function(){
 };
 window.excluirAulao=async function(){
   var id=document.getElementById("aulaoId").value;if(!id)return;
-  if(!confirm("Excluir este aulão, turmas e vídeos?"))return;
+  var a=adminAuloes.find(function(x){return x.id===id;});
+  if(!a)return;
+
+  var sold=await client.from("orders").select("id",{count:"exact",head:true}).eq("produto_key",a.chave).eq("status","approved");
+  if(sold.error){console.error(sold.error);alert("Não foi possível verificar o histórico de vendas. O aulão não foi excluído.");return;}
+  if(Number(sold.count||0)>0){
+    alert("Este aulão possui vendas aprovadas e NÃO pode ser apagado.\n\nPara retirá-lo de novas vendas, desmarque ‘Exibir na loja’ e salve. O histórico financeiro, os relatórios e os comprovantes permanecerão preservados.");
+    return;
+  }
+
+  if(!confirm("Excluir este aulão sem vendas, incluindo turmas e vídeos?"))return;
   var r=await client.from("auloes").delete().eq("id",id);
-  if(r.error){alert("Erro ao excluir.");return;}
-  fecharEditorAulao();await loadAuloesAdmin();showToast("Aulão excluído.","success");
+  if(r.error){
+    var msg=String(r.error.message||"");
+    if(msg.indexOf("AULAO_HAS_SALES")>=0)alert("Este aulão possui vendas aprovadas e não pode ser apagado. Retire-o da loja para preservar o histórico financeiro.");
+    else alert("Erro ao excluir: "+msg);
+    return;
+  }
+  fecharEditorAulao();await loadAuloesAdmin();showToast("Aulão sem vendas excluído.","success");
 };
 window.abrirAulaoAdmin=function(chave){window.open("aulao.html?key="+encodeURIComponent(chave),"_blank");};
 
