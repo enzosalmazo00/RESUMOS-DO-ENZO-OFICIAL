@@ -858,6 +858,303 @@
     .aulao-sem-body{padding:14px;}
     .aulao-cover-img{width:100%;aspect-ratio:16/8;object-fit:cover;border-radius:12px;margin-bottom:12px;border:1px solid rgba(168,85,247,.14);}
 
+
+    /* ── LOJA PREMIUM V2 ───────────────────────────────────────────────────── */
+    #tab-loja {
+      --shop-surface:#07111d;
+      --shop-surface-2:#0a1624;
+      --shop-line:rgba(148,163,184,.12);
+      --shop-text:#f5fbff;
+      --shop-muted:rgba(203,225,232,.56);
+    }
+    #tab-loja .store-premium-hero {
+      position:relative;
+      overflow:hidden;
+      margin-bottom:22px;
+      padding:30px 32px;
+      border-radius:24px;
+      border:1px solid rgba(148,163,184,.14);
+      background:
+        radial-gradient(circle at 88% 18%,rgba(34,211,238,.12),transparent 30%),
+        linear-gradient(145deg,rgba(11,26,42,.96),rgba(5,15,27,.96));
+      box-shadow:0 24px 60px rgba(0,0,0,.28);
+    }
+    #tab-loja .store-premium-hero::after {
+      content:"";
+      position:absolute;inset:auto -80px -120px auto;
+      width:280px;height:280px;border-radius:50%;
+      border:1px solid rgba(34,211,238,.09);
+      box-shadow:0 0 0 36px rgba(34,211,238,.025),0 0 0 72px rgba(34,211,238,.015);
+      pointer-events:none;
+    }
+    .store-premium-kicker {
+      position:relative;z-index:1;
+      font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+      color:rgba(103,232,249,.72);margin-bottom:8px;
+    }
+    #tab-loja .store-premium-hero h2 {
+      position:relative;z-index:1;
+      margin:0 0 8px;font-size:28px;font-weight:750;letter-spacing:-.8px;color:#f8fdff;
+    }
+    #tab-loja .store-premium-hero p {
+      position:relative;z-index:1;
+      max-width:720px;margin:0;color:rgba(207,238,244,.62);font-size:12.5px;line-height:1.7;
+    }
+    .store-trust-row {
+      position:relative;z-index:1;
+      display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;
+    }
+    .store-trust-row span {
+      padding:7px 10px;border-radius:999px;
+      border:1px solid rgba(148,163,184,.12);
+      background:rgba(255,255,255,.025);
+      color:rgba(226,247,250,.65);font-size:9.5px;font-weight:600;
+    }
+
+    #tab-loja .store-hub {
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:8px;margin:0 0 26px;padding:6px;
+      border:1px solid rgba(148,163,184,.12);
+      border-radius:18px;background:rgba(5,14,25,.72);
+      box-shadow:0 12px 34px rgba(0,0,0,.16);
+    }
+    #tab-loja .store-cat-btn {
+      min-height:74px;padding:14px 16px;border-radius:13px;
+      border:1px solid transparent;background:transparent;
+      color:rgba(211,236,241,.58);text-align:left;
+    }
+    #tab-loja .store-cat-btn strong {
+      font-size:12.5px;font-weight:650;color:rgba(241,252,255,.78);margin-bottom:4px;
+    }
+    #tab-loja .store-cat-btn small {
+      font-size:9.5px;color:rgba(184,218,225,.42);line-height:1.45;
+    }
+    #tab-loja .store-cat-btn:hover {
+      transform:none;background:rgba(255,255,255,.025);border-color:rgba(148,163,184,.10);
+    }
+    #tab-loja .store-cat-btn.active {
+      border-color:rgba(34,211,238,.26);
+      background:linear-gradient(145deg,rgba(34,211,238,.10),rgba(34,211,238,.025));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+    }
+    #tab-loja .store-cat-btn[data-store-cat="auloes"].active {
+      border-color:rgba(167,139,250,.26);
+      background:linear-gradient(145deg,rgba(139,92,246,.11),rgba(139,92,246,.025));
+    }
+    #tab-loja .store-cat-btn[data-store-cat="cursos"].active {
+      border-color:rgba(245,196,91,.24);
+      background:linear-gradient(145deg,rgba(245,196,91,.09),rgba(245,196,91,.02));
+    }
+
+    #tab-loja .store-section {margin-bottom:30px}
+    #tab-loja .store-section-title {
+      gap:10px;margin-bottom:14px;
+      font-size:10px;font-weight:700;letter-spacing:.13em;color:rgba(198,229,236,.55);
+    }
+    #tab-loja .store-section-title::after {background:linear-gradient(90deg,rgba(148,163,184,.16),transparent)}
+    #tab-loja .store-category-head {margin-bottom:14px}
+    #tab-loja .store-category-hint {font-size:9px;color:rgba(188,215,221,.35)}
+    #tab-loja .semester-shortcuts {gap:6px;margin-bottom:14px}
+    #tab-loja .semester-shortcuts button {
+      padding:7px 11px;border-color:rgba(148,163,184,.12);
+      background:rgba(255,255,255,.018);color:rgba(220,240,244,.58);
+      font-size:9.5px;
+    }
+    #tab-loja .semester-shortcuts button:hover {
+      transform:none;background:rgba(34,211,238,.055);border-color:rgba(34,211,238,.22)
+    }
+
+    #tab-loja .sem-card {
+      margin-bottom:12px;border-radius:19px;border-color:rgba(148,163,184,.12);
+      background:linear-gradient(145deg,rgba(8,20,33,.92),rgba(4,14,25,.92));
+      box-shadow:0 14px 34px rgba(0,0,0,.16);
+    }
+    #tab-loja .sem-card:hover {border-color:rgba(34,211,238,.18)}
+    #tab-loja .sem-card-header {padding:20px 22px}
+    #tab-loja .sem-card-header:hover {background:rgba(255,255,255,.018)}
+    #tab-loja .sem-card-emoji {
+      width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+      font-size:21px;background:rgba(255,255,255,.025);border:1px solid rgba(148,163,184,.10);
+    }
+    #tab-loja .sem-card-title {font-size:14px;font-weight:650;color:#edf9fc}
+    #tab-loja .sem-card-sub {font-size:10px;color:rgba(190,219,225,.44);max-width:680px}
+    #tab-loja .sem-card-badge {
+      border-color:rgba(148,163,184,.12);background:rgba(255,255,255,.02);
+      color:rgba(215,236,240,.48);font-size:8.5px;font-weight:650;
+    }
+    #tab-loja .sem-card.open .sem-card-body {padding:0 20px 22px}
+
+    #tab-loja .combo-card {
+      padding:22px;border-radius:18px;
+      border-color:rgba(34,211,238,.18);
+      background:
+        radial-gradient(circle at 100% 0%,rgba(34,211,238,.07),transparent 34%),
+        linear-gradient(145deg,rgba(10,25,40,.96),rgba(5,15,26,.96));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+    }
+    #tab-loja .combo-title {font-size:13px;font-weight:650;color:#f1fbfd}
+    #tab-loja .combo-sub {font-size:10px;color:rgba(192,222,228,.45)}
+    #tab-loja .combo-preco-old {font-size:10px;color:rgba(190,213,219,.28)}
+    #tab-loja .combo-preco-new {font-size:24px;font-weight:750;letter-spacing:-.5px;color:#e9fbff}
+    #tab-loja .combo-desconto {
+      border-color:rgba(74,222,128,.16);background:rgba(74,222,128,.055);
+      color:rgba(134,239,172,.72);font-size:8.5px;
+    }
+    #tab-loja .combo-tag {
+      padding:4px 8px;border-color:rgba(148,163,184,.10);
+      background:rgba(255,255,255,.018);color:rgba(207,230,235,.52);font-size:9px;
+    }
+    #tab-loja .combo-btn {
+      padding:11px 14px;border:1px solid rgba(34,211,238,.22);border-radius:11px;
+      background:rgba(34,211,238,.09);color:#c7f7ff;
+      box-shadow:none;font-size:11px;font-weight:650;
+    }
+    #tab-loja .combo-btn:hover {
+      transform:none;background:rgba(34,211,238,.15);box-shadow:none;border-color:rgba(34,211,238,.34)
+    }
+
+    #tab-loja .store-grid {
+      grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+      gap:12px;
+    }
+    #tab-loja .produto-card {
+      min-height:205px;padding:18px;border-radius:17px;
+      border-color:rgba(148,163,184,.11);
+      background:
+        radial-gradient(circle at 95% 0%,rgba(34,211,238,.045),transparent 34%),
+        linear-gradient(155deg,rgba(9,22,36,.96),rgba(5,14,25,.98));
+      box-shadow:0 10px 26px rgba(0,0,0,.14);
+      gap:7px;
+    }
+    #tab-loja .produto-card:hover {
+      transform:translateY(-2px);
+      border-color:rgba(34,211,238,.24);
+      box-shadow:0 16px 34px rgba(0,0,0,.22);
+    }
+    #tab-loja .produto-card.owned {opacity:.52}
+    #tab-loja .produto-emoji {
+      width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+      font-size:20px;background:rgba(255,255,255,.025);border:1px solid rgba(148,163,184,.09);
+    }
+    #tab-loja .produto-nome {font-size:13px;font-weight:650;color:#f2fbfd;line-height:1.35}
+    #tab-loja .produto-sub {font-size:9.5px;color:rgba(190,220,226,.44);line-height:1.5;min-height:29px}
+    #tab-loja .produto-price-label {
+      margin-top:auto;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;
+      color:rgba(188,216,222,.34);
+    }
+    #tab-loja .produto-preco {
+      margin-top:auto;font-size:22px;font-weight:750;letter-spacing:-.4px;color:#dffaff;
+    }
+    #tab-loja .produto-preco span {font-size:9px;color:rgba(195,221,226,.36)}
+    #tab-loja .add-btn {
+      margin-top:4px;padding:10px 9px;border-radius:10px;
+      border-color:rgba(34,211,238,.18);background:rgba(34,211,238,.075);
+      color:#b9f5ff;font-size:10px;font-weight:650;
+    }
+    #tab-loja .add-btn:hover {
+      background:rgba(34,211,238,.14);border-color:rgba(34,211,238,.30);
+    }
+    #tab-loja .add-btn.owned {
+      border-color:rgba(74,222,128,.14);background:rgba(74,222,128,.045);color:rgba(134,239,172,.62)
+    }
+    #tab-loja .tag-popular {
+      top:10px;right:10px;padding:4px 8px;
+      background:rgba(245,196,91,.10);border:1px solid rgba(245,196,91,.20);
+      color:#f4d98b;font-size:7.5px;box-shadow:none;
+    }
+    .product-badge-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:2px}
+    .product-origin-badge{
+      display:inline-flex;padding:4px 7px;border-radius:999px;
+      border:1px solid rgba(148,163,184,.11);background:rgba(255,255,255,.018);
+      color:rgba(218,239,244,.48);font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+    }
+    .product-origin-badge.professor{border-color:rgba(167,139,250,.17);color:rgba(196,181,253,.74);background:rgba(139,92,246,.045)}
+    .product-origin-badge.own{border-color:rgba(34,211,238,.16);color:rgba(103,232,249,.68);background:rgba(34,211,238,.04)}
+    .product-origin-badge.neutral{color:rgba(215,235,240,.42)}
+    #tab-loja .aulao-store-card {padding:0;min-height:100%}
+    #tab-loja .aulao-store-cover,
+    #tab-loja .aulao-store-cover-fallback {aspect-ratio:16/9;border-bottom-color:rgba(148,163,184,.10)}
+    #tab-loja .aulao-store-body {padding:16px;gap:7px}
+    #tab-loja .aulao-store-card .produto-preco {color:#eeeaff}
+    #tab-loja .aulao-store-card .add-btn {
+      border-color:rgba(167,139,250,.18);background:rgba(139,92,246,.07);color:#ddd6fe;
+    }
+
+    #tab-loja .curso-loja-card {
+      border-radius:20px;border-color:rgba(245,196,91,.16);
+      box-shadow:0 18px 42px rgba(0,0,0,.22);transform:none;
+    }
+    #tab-loja .curso-loja-card:hover {transform:translateY(-2px);box-shadow:0 24px 50px rgba(0,0,0,.28)}
+    #tab-loja .curso-loja-overlay {
+      padding:26px;background:linear-gradient(180deg,rgba(2,8,16,.20),rgba(3,12,22,.82) 45%,rgba(3,12,22,.98) 78%);
+    }
+    #tab-loja .curso-loja-badge-launch,
+    #tab-loja .curso-loja-badge-cert {
+      box-shadow:none;font-size:8px;letter-spacing:.05em;
+    }
+    #tab-loja .curso-loja-badge-launch {
+      background:rgba(245,196,91,.10);border:1px solid rgba(245,196,91,.20);color:#f4d98b;animation:none;
+    }
+    #tab-loja .curso-loja-title {font-size:21px;font-weight:700;letter-spacing:-.4px}
+    #tab-loja .curso-loja-sub {font-size:11px;color:rgba(234,241,243,.58)}
+    #tab-loja .curso-loja-tags span {
+      background:rgba(255,255,255,.025);border-color:rgba(245,196,91,.13);color:rgba(248,224,165,.62);font-size:9px
+    }
+    #tab-loja .curso-loja-pct {
+      background:rgba(74,222,128,.055);border-color:rgba(74,222,128,.14);color:rgba(134,239,172,.72);font-size:8px
+    }
+    #tab-loja .curso-loja-btn {
+      padding:12px 16px;border:1px solid rgba(245,196,91,.22);
+      background:rgba(245,196,91,.10);color:#f8e8b9;
+      box-shadow:none;font-size:11px;font-weight:650;
+    }
+    #tab-loja .curso-loja-btn:hover {
+      transform:none;background:rgba(245,196,91,.16);box-shadow:none;border-color:rgba(245,196,91,.32)
+    }
+
+    #tab-loja .store-terms {
+      border-color:rgba(148,163,184,.10);background:rgba(255,255,255,.018);padding:18px 20px;
+    }
+    #tab-loja .store-terms-title {color:rgba(212,234,239,.52);font-size:9px}
+    #tab-loja .store-terms li {color:rgba(195,220,226,.44);font-size:10.5px}
+    #tab-loja .store-terms li strong {color:rgba(231,246,249,.72)}
+
+    .cart-drawer {
+      background:linear-gradient(180deg,#07111d,#030b14);
+      border-left-color:rgba(148,163,184,.12);
+      box-shadow:-22px 0 70px rgba(0,0,0,.48);
+    }
+    .cart-header {border-bottom-color:rgba(148,163,184,.10)}
+    .cart-header-title {font-size:15px;font-weight:650;color:#f0fbfd}
+    .cart-item {border-color:rgba(148,163,184,.09);background:rgba(255,255,255,.018);border-radius:13px}
+    .cart-item-name {font-size:12px;font-weight:650}
+    .cart-item-sub {font-size:9.5px;color:rgba(190,219,225,.40)}
+    .cart-item-price {font-size:13px;color:#dffaff}
+    .cart-cupom-input {background:rgba(255,255,255,.018);border-color:rgba(148,163,184,.12)}
+    .cart-cupom-btn {background:rgba(34,211,238,.06);border-color:rgba(34,211,238,.16);font-size:10px}
+    .cart-footer {border-top-color:rgba(148,163,184,.10)}
+    .cart-summary-row {font-size:11px;color:rgba(195,219,225,.46)}
+    .cart-summary-row.total {font-size:15px;color:#f3fcfe;border-top-color:rgba(148,163,184,.10)}
+    .cart-checkout-btn {padding:12px;font-size:11px;border-radius:11px;box-shadow:none}
+    .cart-btn-pix {background:linear-gradient(135deg,#22d3ee,#0e7490)}
+    .cart-btn-card {background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
+    .cart-checkout-btn:hover {transform:none;filter:brightness(1.05)}
+
+    @media(max-width:760px){
+      #tab-loja .store-premium-hero{padding:24px 20px;border-radius:20px}
+      #tab-loja .store-premium-hero h2{font-size:23px}
+      #tab-loja .store-hub{grid-template-columns:1fr}
+      #tab-loja .store-cat-btn{min-height:auto}
+      #tab-loja .store-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      #tab-loja .sem-card-header{padding:17px 15px}
+      #tab-loja .sem-card.open .sem-card-body{padding:0 14px 18px}
+      #tab-loja .combo-card{padding:17px}
+    }
+    @media(max-width:470px){
+      #tab-loja .store-grid{grid-template-columns:1fr}
+      .store-trust-row span{width:100%;text-align:center}
+    }
+
 </style>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
@@ -1014,7 +1311,7 @@
     <div class="tab-panel" id="tab-auloes">
       <div class="auloes-intro">
         <div>
-          <h2>🎥 Aulões Gravados</h2>
+          <h2>🎥 Aulas em Vídeo</h2>
           <p>Aulas focadas no conteúdo da prova, organizadas em blocos para você assistir no seu ritmo. Os aulões são produtos separados dos resumos e têm acesso individual.</p>
         </div>
         <div class="auloes-tag">Nova modalidade</div>
@@ -1024,14 +1321,20 @@
 
     <!-- TAB: LOJA -->
     <div class="tab-panel" id="tab-loja">
-      <div class="store-intro">
-        <h2>🛍️ Loja</h2>
-        <p>Escolha primeiro o tipo de conteúdo. Assim você vê apenas o que procura, sem misturar aulões, cursos e resumos.</p>
+      <div class="store-intro store-premium-hero">
+        <div class="store-premium-kicker">Biblioteca premium</div>
+        <h2>Escolha como você quer estudar.</h2>
+        <p>Resumos, aulas em vídeo e cursos organizados para você encontrar o conteúdo certo sem distrações.</p>
+        <div class="store-trust-row" aria-label="Benefícios da loja">
+          <span>✓ Liberação automática</span>
+          <span>✓ Pagamento via Mercado Pago</span>
+          <span>✓ Acesso vinculado à sua conta</span>
+        </div>
       </div>
 
       <div class="store-hub" aria-label="Categorias da loja">
         <button class="store-cat-btn" data-store-cat="auloes" onclick="switchStoreCategory('auloes')">
-          <strong>🎥 Aulões</strong><small>Aulas gravadas focadas na prova.</small>
+          <strong>🎥 Aulas em Vídeo</strong><small>Aulas gravadas, objetivas e focadas na prova.</small>
         </button>
         <button class="store-cat-btn active" data-store-cat="resumos" onclick="switchStoreCategory('resumos')">
           <strong>📚 Resumos</strong><small>Conteúdo por semestre, P1, P2 e Final.</small>
@@ -1043,13 +1346,13 @@
 
       <!-- AULÕES DINÂMICOS -->
       <div class="store-section store-category-panel" id="storeAuloesSection" style="display:none;">
-        <div class="store-section-title" style="color:#c4b5fd;">🎥 Aulões Gravados</div>
+        <div class="store-section-title" style="color:#c4b5fd;">🎥 Aulas em Vídeo</div>
         <div class="store-grid" id="store-grid-auloes"></div>
       </div>
 
       <!-- ★★★ CURSO — DESTAQUE PRINCIPAL ★★★ -->
       <div class="store-section store-category-panel" id="storeCursosSection">
-        <div class="store-section-title" style="color:#f9c94f;">🎓 Cursos com Certificado</div>
+        <div class="store-section-title" style="color:#f9c94f;">Cursos com certificado</div>
         <div class="curso-loja-card" id="curso-pec-card" style="background-image:url('img/capa-curso-peconhentos.jpg');">
           <div class="curso-loja-overlay">
             <div class="curso-loja-badge-row">
@@ -1063,7 +1366,7 @@
                 <div class="curso-loja-tags">
                   <span>📖 11 aulas</span>
                   <span>📝 6 provas + final</span>
-                  <span>📅 90 dias</span>
+                  <span>📅 50 dias</span>
                 </div>
               </div>
               <div class="curso-loja-preco">
@@ -1100,7 +1403,7 @@
       <!-- ═══ SEMESTRES ═══ -->
       <div class="store-section store-category-panel active" id="storeResumosSection">
         <div class="store-category-head">
-          <div class="store-section-title" style="margin-bottom:0;flex:1;">📂 Resumos por Semestre</div>
+          <div class="store-section-title" style="margin-bottom:0;flex:1;">Resumos por semestre</div>
           <div class="store-category-hint">Toque no semestre para abrir</div>
         </div>
         <div class="semester-shortcuts">
@@ -1816,7 +2119,7 @@ function renderAuloesGrid() {
         '<div class="aulao-top"><div class="aulao-icon">🎥</div>'+statusLabel+'</div>'+
         '<div class="aulao-title">'+a.nome+'</div>'+
         '<div style="font-size:10px;margin:2px 0 7px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;">'+aulaoRatingSummary(a)+'</div>'+
-        '<div class="aulao-desc">'+(a.descricao||"Aulão gravado")+'</div>'+
+        '<div class="aulao-desc">'+(a.descricao||"Aula em vídeo")+'</div>'+
         '<div class="aulao-meta"><span>📚 '+a.semestre+'º semestre</span><span>📅 '+(a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+'</span>'+(a.usar_turmas?'<span>👨‍🏫 Escolha por turma/professor</span>':'')+'</div>'+
         '<button class="aulao-btn" '+(!unlocked && !sellable ? "disabled" : "")+'>'+buttonLabel+'</button>';
 
@@ -1858,15 +2161,20 @@ function renderAulaoStore(){
     card.setAttribute("data-aulao-store",a.chave);
     card.classList.add("aulao-store-card");
     var storeCover=a.capa_url?'<img class="aulao-store-cover" src="'+a.capa_url+'" alt="">':'<div class="aulao-store-cover-fallback">🎥</div>';
+    var originBadge=isMarketplaceAulao(a)
+      ? '<span class="product-origin-badge professor">Professor parceiro</span>'
+      : '<span class="product-origin-badge own">Conteúdo próprio</span>';
     card.innerHTML=
       (a.destaque?'<span class="tag-popular">Destaque</span>':'')+
       storeCover+
       '<div class="aulao-store-body">'+
+        '<div class="product-badge-row">'+originBadge+'<span class="product-origin-badge neutral">Aula em vídeo</span></div>'+
         '<div class="produto-nome">'+a.nome+'</div>'+
-        '<div style="font-size:10px;margin:5px 0 4px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;">'+aulaoRatingSummary(a)+'</div>'+
+        '<div style="font-size:10px;margin:3px 0 2px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;">'+aulaoRatingSummary(a)+'</div>'+
         '<div class="produto-sub">'+a.semestre+'º Semestre · '+(a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+(a.usar_turmas?' · por turma/professor':'')+'</div>'+
+        '<div class="produto-price-label">Preço final</div>'+
         '<div class="produto-preco">R$ '+aulaoBuyerPrice(a).toFixed(2).replace(".",",")+'</div>'+
-        '<button class="add-btn '+(owned?'owned':'')+'" '+(owned?'disabled':'onclick="addAulaoToCart(\''+a.chave+'\')"')+'>'+(owned?'✅ Já adquirido':'🛒 Comprar')+'</button>'+
+        '<button class="add-btn '+(owned?'owned':'')+'" '+(owned?'disabled':'onclick="addAulaoToCart(\''+a.chave+'\')"')+'>'+(owned?'✓ Já adquirido':'Adicionar ao carrinho')+'</button>'+
       '</div>';
     grid.appendChild(card);
   });
@@ -1874,7 +2182,7 @@ function renderAulaoStore(){
 window.addAulaoToCart=function(key){
   var a=AULOES.find(function(x){return x.chave===key;}); if(!a)return;
   if(cart.length && !(cart.length===1 && cart[0].key===key)){
-    if(!confirm("Aulões são comprados separadamente dos outros produtos. Substituir o carrinho atual por este aulão?"))return;
+    if(!confirm("Aulas em Vídeo são compradas separadamente dos outros produtos. Substituir o carrinho atual por este aulão?"))return;
   }
   cart=[{key:a.chave,label:a.nome,emoji:"🎥",preco:aulaoBuyerPrice(a),tipo:"aulao"}];
   updateCartUI();openCart();renderAulaoStore();
@@ -2743,7 +3051,7 @@ function renderStoreGridS1() {
     var card = document.createElement("div");
     card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
-    var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "+ Adicionar");
+    var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "Adicionar");
     var btnClass = "add-btn" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
     card.innerHTML =
@@ -2864,7 +3172,7 @@ function renderStoreGridS4() {
       var card = document.createElement("div");
       card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
-      var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "+ Adicionar");
+      var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "Adicionar");
       var btnClass = "add-btn" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
       card.innerHTML =
@@ -3090,7 +3398,7 @@ function renderStoreGridS2() {
     var card = document.createElement("div");
     card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
-    var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "+ Adicionar");
+    var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "Adicionar");
     var btnClass = "add-btn" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
     card.innerHTML =
@@ -3490,7 +3798,7 @@ function updateCartUI() {
     var precoOriginal = (c.tipo === "final" && !c.isPacoteCompleto && PROMO_FINAL_ATIVA && PRECO_FINAL < PRECO_FINAL_DE)
       ? '<span style="text-decoration:line-through;color:rgba(125,211,232,0.3);font-size:11px;margin-right:4px;">' + formatPrice(PRECO_FINAL_DE) + '</span>'
       : '';
-    var subLabel = c.tipo === "aulao" ? "Aulão gravado · acesso individual" : (c.isPacoteCompleto ? "Pacote Completo · 50 dias" : (c.tipo === "curso" ? "Curso · 90 dias de acesso" : (c.tipo === "s1" ? "1º Semestre · 50 dias de acesso" : (c.tipo === "s2" ? "2º Semestre · 50 dias de acesso" : ((c.tipo === "s4_p1" || c.tipo === "s4_p2" || c.tipo === "s4_final") ? "4º Semestre · 50 dias de acesso" : "3º Semestre · 50 dias de acesso")))));
+    var subLabel = c.tipo === "aulao" ? "Aula em vídeo · acesso individual" : (c.isPacoteCompleto ? "Pacote Completo · 50 dias" : (c.tipo === "curso" ? "Curso · 50 dias de acesso" : (c.tipo === "s1" ? "1º Semestre · 50 dias de acesso" : (c.tipo === "s2" ? "2º Semestre · 50 dias de acesso" : ((c.tipo === "s4_p1" || c.tipo === "s4_p2" || c.tipo === "s4_final") ? "4º Semestre · 50 dias de acesso" : "3º Semestre · 50 dias de acesso")))));
     return '<div class="cart-item">' +
       '<span class="cart-item-emoji">' + c.emoji + '</span>' +
       '<div class="cart-item-info">' +
@@ -3588,11 +3896,23 @@ function updateCartUI() {
   }
 }
 
+function checkoutPayloadItems(){
+  return cart.map(function(c){
+    return {
+      key:c.key,
+      label:c.label,
+      tipo:c.tipo,
+      preco:Number(c.preco||0),
+      isPacoteCompleto:!!c.isPacoteCompleto
+    };
+  });
+}
+
 window.checkoutCart = function(metodo) {
   if (cart.length === 0) return;
   var temAulao = cart.some(function(c){ return c.tipo === "aulao"; });
   if (temAulao && cart.length !== 1) {
-    alert("Aulões devem ser comprados separadamente dos outros produtos.");
+    alert("Aulas em Vídeo devem ser compradas separadamente dos outros produtos.");
     return;
   }
   metodo = metodo || "pix";
@@ -3600,8 +3920,9 @@ window.checkoutCart = function(metodo) {
   var nomes = cart.map(function(c){ return c.label; }).join(", ");
   var keys = cart.map(function(c){ return c.key; });
 
-  // Aplica cupom ao total — somente sobre itens individuais (não pacote completo)
+  // Aplica cupom ao total — somente sobre itens elegíveis.
   var finalTotal = calc.total;
+  var appliedDiscount = 0;
   var temPacoteCheckout = cart.some(function(c){ return c.isPacoteCompleto; });
   if (!temAulao && cupomAtivo && finalTotal > 0) {
     if (temPacoteCheckout) {
@@ -3609,24 +3930,35 @@ window.checkoutCart = function(metodo) {
       if (p2Only.length > 0) {
         var baseP2 = finalTotal - PRECO_PACK_FINAL;
         var cupomVal = Math.round(baseP2 * cupomAtivo.desconto_pct) / 100;
-        finalTotal = Math.max(0, finalTotal - cupomVal);
+        appliedDiscount = Math.max(0, cupomVal);
+        finalTotal = Math.max(0, finalTotal - appliedDiscount);
       }
     } else {
       var cupomVal = Math.round(finalTotal * cupomAtivo.desconto_pct) / 100;
-      finalTotal = Math.max(0, finalTotal - cupomVal);
+      appliedDiscount = Math.max(0, cupomVal);
+      finalTotal = Math.max(0, finalTotal - appliedDiscount);
     }
   }
+
+  finalTotal = Math.round((finalTotal + Number.EPSILON) * 100) / 100;
+  appliedDiscount = Math.round((appliedDiscount + Number.EPSILON) * 100) / 100;
+
+  var checkoutMeta = {
+    items: checkoutPayloadItems(),
+    coupon_code: appliedDiscount > 0 && cupomAtivo ? cupomAtivo.codigo : null,
+    discount_amount: appliedDiscount
+  };
 
   // Se for 1 item só, usa fluxo normal
   if (keys.length === 1) {
     var item = cart[0];
-    initPayment(item.key, item.label, finalTotal, metodo);
+    initPayment(item.key, item.label, finalTotal, metodo, checkoutMeta);
     closeCart();
     return;
   }
 
   // Múltiplos: manda lista completa
-  initPaymentMultiple(keys, nomes, finalTotal, metodo);
+  initPaymentMultiple(keys, nomes, finalTotal, metodo, checkoutMeta);
   closeCart();
 };
 
@@ -3681,8 +4013,9 @@ function startPaymentAccessPolling(keys,session){
 }
 
 // ── Pagamento múltiplo ────────────────────────────────────────────────────────
-window.initPaymentMultiple = async function(productKeys, productName, totalPrice, metodo) {
+window.initPaymentMultiple = async function(productKeys, productName, totalPrice, metodo, checkoutMeta) {
   metodo = metodo || "pix";
+  checkoutMeta = checkoutMeta || {};
 
   // ── CARTÃO: gera preference e redireciona pro Checkout Pro ──
   if (metodo === "card") {
@@ -3700,6 +4033,9 @@ window.initPaymentMultiple = async function(productKeys, productName, totalPrice
             user_id:      session.user.id,
             user_email:   session.user.email,
             metodo:       "card",
+            items:        checkoutMeta.items || [],
+            coupon_code:  checkoutMeta.coupon_code || null,
+            discount_amount: Number(checkoutMeta.discount_amount || 0),
           }),
         }
       );
@@ -3741,6 +4077,9 @@ window.initPaymentMultiple = async function(productKeys, productName, totalPrice
           user_id:      session.user.id,
           user_email:   session.user.email,
           metodo:       "pix",
+          items:        checkoutMeta.items || [],
+          coupon_code:  checkoutMeta.coupon_code || null,
+          discount_amount: Number(checkoutMeta.discount_amount || 0),
         }),
       }
     );
@@ -3800,7 +4139,7 @@ function renderStoreGrid() {
     var card = document.createElement("div");
     card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
-    var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "+ Adicionar");
+    var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "Adicionar");
     var btnClass = "add-btn" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
     card.innerHTML =
@@ -3866,7 +4205,7 @@ function renderStoreGridFinal() {
     var card = document.createElement("div");
     card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
-    var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "+ Adicionar");
+    var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "Adicionar");
     var btnClass = "add-btn" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
     var precoExibido = formatPrice(PRECO_FINAL);
@@ -3934,8 +4273,9 @@ function renderStoreGridFinal() {
 }
 
 // ── Inicia pagamento via Edge Function ────────────────────────────────────────
-window.initPayment = async function(productKey, productName, price, metodo) {
+window.initPayment = async function(productKey, productName, price, metodo, checkoutMeta) {
   metodo = metodo || "pix";
+  checkoutMeta = checkoutMeta || {};
 
   // ── CARTÃO: gera preference e redireciona ──
   if (metodo === "card") {
@@ -3953,6 +4293,9 @@ window.initPayment = async function(productKey, productName, price, metodo) {
             user_id:      session.user.id,
             user_email:   session.user.email,
             metodo:       "card",
+            items:        checkoutMeta.items || [],
+            coupon_code:  checkoutMeta.coupon_code || null,
+            discount_amount: Number(checkoutMeta.discount_amount || 0),
           }),
         }
       );
@@ -3996,6 +4339,9 @@ window.initPayment = async function(productKey, productName, price, metodo) {
           user_id:      session.user.id,
           user_email:   session.user.email,
           metodo:       "pix",
+          items:        checkoutMeta.items || [],
+          coupon_code:  checkoutMeta.coupon_code || null,
+          discount_amount: Number(checkoutMeta.discount_amount || 0),
         }),
       }
     );
