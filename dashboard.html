@@ -4818,6 +4818,36 @@ document.addEventListener("authReady", async function(e) {
   renderCursosGrid();
   renderAuloesGrid();
   renderStore();
+
+  // Entrada direta vinda da vitrine de Aulas em Vídeo.
+  // Ex.: dashboard.html?tab=loja&add_aulao=aulao-chave
+  try {
+    var directParams = new URLSearchParams(location.search);
+    var directAulaoKey = directParams.get("add_aulao");
+    var directTab = directParams.get("tab");
+    if (directAulaoKey) {
+      switchTab("loja");
+      switchStoreCategory("auloes");
+      setTimeout(function(){
+        var found = AULOES.find(function(x){ return x.chave === directAulaoKey; });
+        if (found) {
+          if (hasAulaoAccess(found.chave)) {
+            var ownedEl = document.querySelector('[data-aulao-store="'+CSS.escape(found.chave)+'"]');
+            if (ownedEl) ownedEl.scrollIntoView({behavior:"smooth",block:"center"});
+          } else {
+            window.addAulaoToCart(found.chave);
+          }
+        }
+        try { history.replaceState(null,"",location.pathname); } catch(_e) {}
+      },120);
+    } else if (directTab === "loja") {
+      switchTab("loja");
+      switchStoreCategory("auloes");
+    }
+  } catch (directErr) {
+    console.warn("[dashboard] Entrada direta para aulão:", directErr);
+  }
+
   await loadStudentGradebook();
 });
 
