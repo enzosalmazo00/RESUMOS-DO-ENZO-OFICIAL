@@ -1,24 +1,18 @@
 /**
- * auth-guard.js — v3 (DUAL-MODE: acessos + profiles fallback)
+ * auth-guard.js — v4
+ * DUAL-MODE: tabela acessos + fallback profiles.
  *
- * MUDANÇAS V2 → V3:
- *  [M1] Adicionada função checkAccessInAcessos() que:
- *       - Tenta ler de `acessos` table
- *       - Verifica expiração (expira_em)
- *       - FALLBACK: se não encontrar ou erro, retorna false (não quebra auth)
- *  [M2] Verificação de acesso à página agora usa dual-mode:
- *       - Primeiro: checkAccessInAcessos()
- *       - Depois: profile[pageKey] ou profile["pacote_" + tipo]
- *  [M3] Mantém compatibilidade 100% — nenhuma mudança quebra usuários antigos
+ * Integrações v4:
+ *  - Carrega study-tracker.js automaticamente.
+ *  - Carrega platform-addon.js automaticamente no dashboard.
+ *  - Adiciona atalho Financeiro na Área do Professor.
+ *  - Adiciona atalho Auditoria Financeira no Painel Admin.
+ *  - Mantém o sistema anterior de autenticação/acesso.
  *
- * Como usar em cada página protegida:
- *   <script>window.PAGE_KEY = "biofisica";</script>
- *   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
- *   <script src="auth-guard.js"></script>
- *
- * Após auth OK dispara: document.dispatchEvent(new CustomEvent("authReady"))
- * window.authClient  → cliente Supabase
- * window.authSession → sessão do usuário
+ * Após auth OK dispara:
+ *   document.dispatchEvent(new CustomEvent("authReady"))
+ *   window.authClient
+ *   window.authSession
  */
 
 (function () {
@@ -32,10 +26,46 @@
   window.authClient  = null;
   window.authSession = null;
 
+  // ── Scripts auxiliares do novo sistema ──────────────────────────────────
+  function loadScriptOnce(src, id) {
+    return new Promise(function (resolve) {
+      var existing = id ? document.getElementById(id) : null;
+      if (existing) {
+        if (existing.dataset.loaded === "1") {
+          resolve(true);
+          return;
+        }
+        existing.addEventListener("load", function () { resolve(true); }, { once:true });
+        existing.addEventListener("error", function () { resolve(false); }, { once:true });
+        return;
+      }
+
+      var s = document.createElement("script");
+      if (id) s.id = id;
+      s.src = src;
+      s.async = true;
+      s.addEventListener("load", function () {
+        s.dataset.loaded = "1";
+        resolve(true);
+      }, { once:true });
+      s.addEventListener("error", function () {
+        console.warn("[auth-guard] Não foi possível carregar:", src);
+        resolve(false);
+      }, { once:true });
+      document.head.appendChild(s);
+    });
+  }
+
+  var _path = (window.location.pathname || "").toLowerCase();
+
+  var _supportScriptsReady = Promise.all([
+    loadScriptOnce("study-tracker.js", "enzo-study-tracker"),
+    _path.indexOf("dashboard") !== -1
+      ? loadScriptOnce("platform-addon.js", "enzo-platform-addon")
+      : Promise.resolve(true)
+  ]);
+
   // ── Presença privada ─────────────────────────────────────────────────────
-  // Nunca publica UUID/e-mail em canal Realtime compartilhado.
-  // Cada usuário grava apenas o próprio heartbeat via RLS; usuários comuns
-  // recebem somente a CONTAGEM agregada.
   var _presenceTouchTimer = null;
   var _presenceCountTimer = null;
 
@@ -58,7 +88,6 @@
         if (r.error) return;
         var count = Number(r.data || 0);
         window.onlineStudentCount = count;
-        // Deliberadamente sem userIds.
         document.dispatchEvent(new CustomEvent("onlinePresenceChanged", {
           detail: { count: count }
         }));
@@ -77,6 +106,59 @@
     _presenceCountTimer = setInterval(updateCount, 20000);
   }
 
+  // ── Atalhos das novas áreas ──────────────────────────────────────────────
+  function installPlatformLinks() {
+    var pathname = (window.location.pathname || "").toLowerCase();
+
+    // Área do Professor
+    if (pathname.indexOf("professor.html") !== -1) {
+      var teacherHost = document.querySelector(".top-right");
+      if (teacherHost && !document.getElementById("professorFinanceShortcut")) {
+        var finance = document.createElement("a");
+        finance.id = "professorFinanceShortcut";
+        finance.className = "smallbtn";
+        finance.href = "financeiro-professor.html";
+        finance.textContent = "💰 Financeiro";
+        teacherHost.insertBefore(finance, teacherHost.lastElementChild);
+      }
+    }
+
+    // Painel ADM
+    if (pathname.indexOf("admin.html") !== -1) {
+      var adminHost = document.querySelector(".header-right");
+      if (adminHost && !document.getElementById("adminAuditShortcut")) {
+        var audit = document.createElement("button");
+        audit.id = "adminAuditShortcut";
+        audit.className = "btn-outline";
+        audit.type = "button";
+        audit.textContent = "💳 Auditoria";
+        audit.addEventListener("click", function () {
+          window.location.href = "auditoria-financeira.html";
+        });
+
+        var dashboardButton = Array.prototype.find.call(
+          adminHost.querySelectorAll("button"),
+          function (b) {
+            return (b.textContent || "").toLowerCase().indexOf("dashboard") !== -1;
+          }
+        );
+
+        if (dashboardButton) adminHost.insertBefore(audit, dashboardButton);
+        else adminHost.appendChild(audit);
+      }
+    }
+
+    // Padronização pedida anteriormente.
+    if (pathname.indexOf("dashboard") !== -1) {
+      Array.prototype.forEach.call(document.querySelectorAll(".tab-btn"), function (b) {
+        if ((b.textContent || "").indexOf("Aulões") !== -1) {
+          b.textContent = "🎥 Aulas em Vídeo!";
+          b.title = "Abrir Aulas em Vídeo";
+        }
+      });
+    }
+  }
+
   // ── Device ID persistente via crypto ────────────────────────────────────
   function getDeviceId() {
     var key = "_resumos_did";
@@ -92,48 +174,24 @@
     return id;
   }
 
-  // ── [M1] Verificar acesso em tabela `acessos` com fallback seguro ───────
+  // ── Verificar acesso na tabela `acessos` ────────────────────────────────
   async function checkAccessInAcessos(client, userId, resumo) {
     try {
-      // Tenta ler de acessos (com RLS — só vê seu próprio)
       var result = await client
         .from("acessos")
         .select("expira_em")
         .match({ user_id: userId, resumo: resumo })
         .single();
 
-      if (result.error) {
-        // Não encontrou — isso é esperado se user não tem esse acesso ainda
-        // NÃO é erro de conexão, é que não existe registro
-        // console.log("[auth-guard] acessos: nao encontrado para", resumo);
-        return false;
-      }
+      if (result.error) return false;
 
-      // Encontrou! Agora verifica expiração
       var record = result.data;
       if (!record) return false;
+      if (!record.expira_em) return true;
 
-      // Se não tem expira_em = acesso permanente
-      if (!record.expira_em) {
-        return true;
-      }
-
-      // Se tem expira_em, verifica se já passou
-      var expiraData = new Date(record.expira_em);
-      var agora = new Date();
-      
-      if (expiraData < agora) {
-        // Expirou
-        return false;
-      }
-
-      // Tá dentro do prazo
-      return true;
-
+      return new Date(record.expira_em) >= new Date();
     } catch (err) {
       console.error("[auth-guard] checkAccessInAcessos erro:", err);
-      // NUNCA retorna erro — sempre fallback pra false
-      // (que vai cair no sistema antigo de profiles)
       return false;
     }
   }
@@ -171,7 +229,6 @@
       return;
     }
 
-    // Sem sessão → redireciona para login
     if (!session) {
       window.location.replace(LOGIN_PAGE);
       return;
@@ -179,10 +236,6 @@
 
     // ── Buscar perfil ─────────────────────────────────────────────────────
     var pageKey = window.PAGE_KEY || null;
-
-    // [CURSOS] Chaves de curso (ex.: "curso-peconhentos") vivem SÓ na tabela
-    // `acessos`, não têm coluna em `profiles`. Marcamos para não injetar o nome
-    // como coluna no select de profiles (evita erro 400) e validar via acessos.
     var isCurso = !!(pageKey && pageKey.indexOf("curso-") === 0);
 
     var pacoteKey = null;
@@ -193,10 +246,10 @@
     }
 
     var extraFields = "";
-    if (pageKey && !isCurso)  extraFields += ", " + pageKey;
-    if (pacoteKey)            extraFields += ", " + pacoteKey;
-    if (pageKey && !isCurso)  extraFields += ", " + pageKey + "_expira";
-    if (pacoteKey)            extraFields += ", " + pacoteKey + "_expira";
+    if (pageKey && !isCurso) extraFields += ", " + pageKey;
+    if (pacoteKey)           extraFields += ", " + pacoteKey;
+    if (pageKey && !isCurso) extraFields += ", " + pageKey + "_expira";
+    if (pacoteKey)           extraFields += ", " + pacoteKey + "_expira";
 
     var fields = "is_approved, active_session, device_id" + extraFields;
 
@@ -229,7 +282,7 @@
       return;
     }
 
-    // ── Verificar dispositivo autorizado ──────────────────────────────────
+    // ── Dispositivo autorizado ────────────────────────────────────────────
     var currentDevice = getDeviceId();
 
     if (profile.active_session && profile.device_id && profile.device_id !== currentDevice) {
@@ -238,18 +291,14 @@
       return;
     }
 
-    // ── [M2] Verificar acesso à página (DUAL-MODE) ────────────────────────
+    // ── Verificar acesso à página ─────────────────────────────────────────
     if (pageKey) {
-      // Primeiro tenta nova tabela acessos, depois fallback pra profiles
       var temAcessoNovo = await checkAccessInAcessos(client, session.user.id, pageKey);
-      var temAcessoPacote = pacoteKey 
+      var temAcessoPacote = pacoteKey
         ? await checkAccessInAcessos(client, session.user.id, pacoteKey)
         : false;
-      
-      // Fallback pro sistema antigo (profiles)
-      var temAcessoAntigo = !!profile[pageKey] || !!(pacoteKey && profile[pacoteKey]);
 
-      // Tem se tá em QUALQUER um dos sistemas
+      var temAcessoAntigo = !!profile[pageKey] || !!(pacoteKey && profile[pacoteKey]);
       var temAcesso = temAcessoNovo || temAcessoPacote || temAcessoAntigo;
 
       if (!temAcesso) {
@@ -258,20 +307,10 @@
         return;
       }
 
-      // Verifica expiração — só bloqueia se tiver data E ela já passou
-      // Tenta expiration da nova tabela primeiro, depois fallback
-      var expiraData = null;
-
-      if (temAcessoNovo) {
-        // Se veio de acessos, já verificou expiração na função (retorna true se válido)
-        // Não precisa verificar de novo aqui
-      } else if (temAcessoPacote) {
-        // Idem
-      } else {
-        // Veio de profiles — precisa verificar expiração das colunas antigas
+      if (!temAcessoNovo && !temAcessoPacote) {
         var expiraCol  = pageKey + "_expira";
         var expiraPack = pacoteKey ? pacoteKey + "_expira" : null;
-        expiraData = profile[expiraCol] || (expiraPack ? profile[expiraPack] : null);
+        var expiraData = profile[expiraCol] || (expiraPack ? profile[expiraPack] : null);
 
         if (expiraData && new Date(expiraData) < new Date()) {
           alert("Seu acesso a este resumo expirou. Renove para continuar.");
@@ -281,9 +320,27 @@
       }
     }
 
+    // Garante que os scripts novos já estejam registrados antes do authReady.
+    try {
+      await _supportScriptsReady;
+    } catch (e) {
+      console.warn("[auth-guard] suporte adicional:", e);
+    }
+
     // ── TUDO OK ───────────────────────────────────────────────────────────
     window.authSession = session;
     startPrivatePresence(client, session);
+
+    if (window.EnzoStudyTracker) {
+      try {
+        window.EnzoStudyTracker.start(client, session, pageKey);
+      } catch (e) {
+        console.warn("[auth-guard] study tracker:", e);
+      }
+    }
+
+    installPlatformLinks();
+
     document.dispatchEvent(new CustomEvent("authReady", {
       detail: { session: session }
     }));
@@ -301,6 +358,7 @@
       "color:#fca5a5", "font-family:Poppins,sans-serif",
       "font-size:14px", "text-align:center", "padding:24px", "gap:16px"
     ].join(";");
+
     div.innerHTML =
       "<div style='font-size:32px'>⚠️</div>" +
       "<div>" + msg + "</div>" +
@@ -309,6 +367,7 @@
         "background:transparent;color:#fca5a5;font-family:Poppins,sans-serif;" +
         "font-size:13px;cursor:pointer" +
       "'>Recarregar</button>";
+
     document.body.appendChild(div);
   }
 
