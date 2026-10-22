@@ -26,6 +26,13 @@
   let initialized = false;
 
   const TOPIC_MAPS = {
+    fisiologia_2_p2: {
+      '47': 'cap47', 'cap 47': 'cap47',
+      '48': 'cap48', 'cap 48': 'cap48',
+      '49': 'cap49', 'cap 49': 'cap49',
+      '55': 'cap55', 'cap 55': 'cap55',
+      '56': 'cap56', 'cap 56': 'cap56'
+    },
     fisiologia_2_p1: {
       '38': 'cap38', 'cap 38': 'cap38', '39': 'cap39', 'cap 39': 'cap39',
       '40': 'cap40', 'cap 40': 'cap40', '41': 'cap41', 'cap 41': 'cap41',
@@ -648,6 +655,7 @@
   function bindEvents() {
     document.addEventListener('click', trackNavigation);
     document.addEventListener('click', detectQuizClick);
+    document.addEventListener('enzoQuizReset', updateQuizStats);
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('pagehide', function () {
       state.lastScroll = Math.max(0, Math.round(window.scrollY || 0));
