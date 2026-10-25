@@ -2987,5 +2987,5 @@ findDossiers('');
 document.querySelectorAll('[data-save]').forEach(el=>{const key='enzo-response:'+window.PAGE_KEY+':'+el.dataset.save;try{el.value=localStorage.getItem(key)||'';}catch(_){}el.addEventListener('input',()=>{try{localStorage.setItem(key,el.value)}catch(_){}})});
 // Persistência das respostas, isolada por resumo.
 (()=>{const key='enzo-quiz-answers:'+window.PAGE_KEY;let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')}catch(_){}const originalMC=window.answerMC,originalTF=window.answerTF,originalOpen=window.revealOpen,originalReset=window.resetQuiz;let restore=true;function save(i,ch){if(restore)return;saved[i]=ch;try{localStorage.setItem(key,JSON.stringify(saved))}catch(_){}}window.answerMC=(i,ch)=>{originalMC(i,ch);save(i,ch)};window.answerTF=(i,ch)=>{originalTF(i,ch);save(i,ch)};window.revealOpen=i=>{originalOpen(i);save(i,'open')};Object.entries(saved).forEach(([i,ch])=>{if(!QD[i])return;if(ch==='open')originalOpen(+i);else if(QD[i].t==='mc')originalMC(+i,ch);else originalTF(+i,ch)});restore=false;window.resetQuiz=()=>{saved={};try{localStorage.removeItem(key)}catch(_){}originalReset();};})();
-</script></body>
+</script><script src="micro-p2-terapeutica.js"></script></body>
 </html>
