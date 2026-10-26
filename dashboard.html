@@ -1838,7 +1838,7 @@
     <div class="modal-product">
       <div>
         <div class="modal-product-name" id="modalProductName">—</div>
-        <div style="font-size:11px;color:rgba(125,211,232,0.5);margin-top:2px;">3º Semestre</div>
+        <div id="modalProductSubtitle" style="font-size:11px;color:rgba(125,211,232,0.5);margin-top:2px;"></div>
       </div>
       <div class="modal-product-price" id="modalProductPrice">—</div>
     </div>
@@ -4012,6 +4012,35 @@ function startPaymentAccessPolling(keys,session){
   pollingTimer=setInterval(check,2000);
 }
 
+function paymentProductSubtitle(productKeys) {
+  var labels = [];
+  (productKeys || []).forEach(function(key) {
+    var label = "";
+    if (key.indexOf("curso-") === 0) label = "Curso";
+    else if (key.indexOf("aulao-") === 0) label = "Aula em vídeo";
+    else {
+      var groups = [
+        { materias: MATERIAS_S1, semestre: 1, provas: false },
+        { materias: MATERIAS_S2, semestre: 2, provas: false },
+        { materias: MATERIAS, semestre: 3, provas: true },
+        { materias: MATERIAS_S4, semestre: 4, provas: true }
+      ];
+      groups.some(function(group) {
+        var found = group.materias.some(function(m) {
+          return group.provas
+            ? ["p1", "p2", "final"].some(function(prova) { return key === m.key + "_" + prova; })
+            : key === m.key;
+        });
+        if (found) label = group.semestre + "º Semestre";
+        return found;
+      });
+    }
+    label = label || "Material de estudo";
+    if (labels.indexOf(label) === -1) labels.push(label);
+  });
+  return labels.join(" · ");
+}
+
 // ── Pagamento múltiplo ────────────────────────────────────────────────────────
 window.initPaymentMultiple = async function(productKeys, productName, totalPrice, metodo, checkoutMeta) {
   metodo = metodo || "pix";
@@ -4055,6 +4084,7 @@ window.initPaymentMultiple = async function(productKeys, productName, totalPrice
 
   // ── PIX: fluxo existente com QR Code ──
   document.getElementById("modalProductName").textContent = productName.length > 60 ? productName.substring(0,57)+"..." : productName;
+  document.getElementById("modalProductSubtitle").textContent = paymentProductSubtitle(productKeys);
   document.getElementById("modalProductPrice").textContent = formatPrice(totalPrice);
   document.getElementById("pixCode").textContent = "Gerando...";
   document.getElementById("qrcode-modal").innerHTML = "";
@@ -4314,6 +4344,7 @@ window.initPayment = async function(productKey, productName, price, metodo, chec
 
   // ── PIX: fluxo QR Code ──
   document.getElementById("modalProductName").textContent  = productName;
+  document.getElementById("modalProductSubtitle").textContent = paymentProductSubtitle([productKey]);
   document.getElementById("modalProductPrice").textContent = formatPrice(price);
   document.getElementById("pixCode").textContent = "Gerando...";
   document.getElementById("qrcode-modal").innerHTML = "";
