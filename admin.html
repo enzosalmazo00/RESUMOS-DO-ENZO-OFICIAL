@@ -2120,6 +2120,15 @@ async function loadCursosDoAluno(userId){
   var g=document.getElementById("cursosGridModal");
   if(g)g.innerHTML="<div style='grid-column:1/-1;font-size:11px;color:rgba(125,211,232,0.5);'>Carregando cursos...</div>";
   try{
+    // Aulões usam a mesma tabela de permissões dos cursos escritos.
+    // A chave é obtida do catálogo, sem presumir IDs ou alterar pagamentos.
+    var catalogo=await client.from("auloes").select("chave,nome,publicado").order("nome");
+    if(catalogo.error)throw catalogo.error;
+    CURSOS_COLS=[{key:"curso-peconhentos",label:"Curso Peçonhentos"}];
+    (catalogo.data||[]).forEach(function(a){
+      if(a.chave&&!CURSOS_COLS.some(function(c){return c.key===a.chave;}))
+        CURSOS_COLS.push({key:a.chave,label:"🎥 "+(a.nome||a.chave)+(a.publicado?"":" (não publicado)")});
+    });
     var chaves=CURSOS_COLS.map(function(c){return c.key;});
     var res=await client.from("acessos").select("resumo,expira_em").eq("user_id",userId).in("resumo",chaves);
     var liberados={};
