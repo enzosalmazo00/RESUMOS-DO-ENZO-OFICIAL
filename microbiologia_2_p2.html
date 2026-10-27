@@ -2236,9 +2236,42 @@ window.addEventListener("pagehide",saveToSupabase);
     '.section h1','.section h2','.section h3','.section h4','.section h5','.section h6',
     '.section blockquote','.section .fc-q','.section .fc-back-text'
   ].join(',');
-  const STORAGE_KEY=`enzo-highlights:v1:${window.PAGE_KEY||location.pathname||document.title}`;
+  const PAGE_SYNC_KEY=window.PAGE_KEY||location.pathname.split('/').pop().replace(/\.html?$/i,'');
+  let syncClient=null,syncUser=null,syncReady=false,syncTimer=null;
+  const STORAGE_KEY=`enzo-highlights:v2:${PAGE_SYNC_KEY}`;
+  async function initCloudHighlights(){
+    for(let i=0;i<30;i++){
+      syncClient=window.authClient||window.supabaseClient||window._sb||null;
+      if(syncClient?.auth?.getUser){
+        try{const {data:{user},error}=await syncClient.auth.getUser();if(!error&&user){syncUser=user;break}}catch(_){ }
+      }
+      await new Promise(resolve=>setTimeout(resolve,500));
+    }
+    if(!syncUser){showToast('Grifos: sessão indisponível; sincronização pendente.');return}
+    const scopedKey=`enzo-highlights:v2:${syncUser.id}:${PAGE_SYNC_KEY}`;
+    try{
+      const {data,error}=await syncClient.from('resumo_grifos').select('grifos').eq('user_id',syncUser.id).eq('resumo_key',PAGE_SYNC_KEY).maybeSingle();
+      if(error)throw error;
+      const local=JSON.parse(localStorage.getItem(scopedKey)||'[]');
+      records=Array.isArray(data?.grifos)?data.grifos:(Array.isArray(local)?local:[]);
+      localStorage.setItem(scopedKey,JSON.stringify(records));
+      syncReady=true;renderAll();updateToolbar();
+      if(!data&&records.length)queueCloudSave();
+    }catch(e){console.error('Erro ao recuperar grifos:',e);showToast('Erro ao sincronizar grifos. Dados preservados.');}
+  }
+  function queueCloudSave(){
+    if(!syncReady||!syncUser)return;
+    clearTimeout(syncTimer);
+    syncTimer=setTimeout(async()=>{
+      const payload=records.map(r=>({...r}));
+      try{
+        const {error}=await syncClient.from('resumo_grifos').upsert({user_id:syncUser.id,resumo_key:PAGE_SYNC_KEY,grifos:payload,updated_at:new Date().toISOString()},{onConflict:'user_id,resumo_key'});
+        if(error)throw error;
+      }catch(e){console.error('Falha ao salvar grifos:',e);showToast('Grifos não sincronizados; tente novamente.');}
+    },600);
+  }
   const COLORS=['yellow','green','red'];
-  let records=loadRecords();
+  let records=[];
   let history=[];
   let mode=null;
   let color='yellow';
@@ -2264,7 +2297,9 @@ window.addEventListener("pagehide",saveToSupabase);
     }catch(_){return[]}
   }
   function saveRecords(){
-    try{localStorage.setItem(STORAGE_KEY,JSON.stringify(records))}catch(_){showToast('Não foi possível salvar os grifos neste navegador.')}
+    if(!syncUser){showToast('Aguarde a sincronização da conta antes de grifar.');return;}
+    try{localStorage.setItem(`enzo-highlights:v2:${syncUser.id}:${PAGE_SYNC_KEY}`,JSON.stringify(records))}catch(_){showToast('Falha ao salvar localmente.')}
+    queueCloudSave();
   }
   function snapshot(){return records.map(r=>({...r}))}
   function pushHistory(state=snapshot()){
@@ -2479,7 +2514,7 @@ window.addEventListener("pagehide",saveToSupabase);
   });
 
   observer=new MutationObserver(()=>{clearTimeout(observer._timer);observer._timer=setTimeout(renderMissing,40)});
-  assignKeys();renderAll();observeDynamicAreas();updateToolbar();
+  assignKeys();renderAll();observeDynamicAreas();updateToolbar();initCloudHighlights();
 })();
 
 </script>
