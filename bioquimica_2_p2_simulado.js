@@ -86,10 +86,10 @@ window.renderQuiz=function(){
   const q=QD[i];const d=document.createElement("article");d.className="q-card";d.id="q"+i;d.dataset.category=q.c;d.dataset.type=q.t;
   let body="";
   if(q.t==="tf"){
-    body='<div class="tf-opts"><button class="tf-btn" data-v="V" onclick="answerTF('+i+',\\'V\\')">'+fmt("✅ VERDADEIRO","✅ VERDADERO")+'</button><button class="tf-btn" data-v="F" onclick="answerTF('+i+',\\'F\\')">'+fmt("❌ FALSO","❌ FALSO")+'</button></div>';
+    body='<div class="tf-opts"><button class="tf-btn" data-v="V" onclick="answerTF('+i+',\'V\')">'+fmt("✅ VERDADEIRO","✅ VERDADERO")+'</button><button class="tf-btn" data-v="F" onclick="answerTF('+i+',\'F\')">'+fmt("❌ FALSO","❌ FALSO")+'</button></div>';
   }else{
     const opts=langES()?q.oe:q.o;
-    body='<div class="opts">'+opts.map(o=>'<button class="opt-btn" data-l="'+o.l+'" onclick="bioAnswerOption('+i+',\\''+o.l+'\\')"><span class="ol">'+o.l+')</span><span>'+esc(o.v)+'</span></button>').join("")+'</div>';
+    body='<div class="opts">'+opts.map(o=>'<button class="opt-btn" data-l="'+o.l+'" onclick="bioAnswerOption('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+esc(o.v)+'</span></button>').join("")+'</div>';
   }
   d.innerHTML='<div class="q-head"><span class="q-num">'+fmt("Questão ","Pregunta ")+(i+1)+'</span><div style="display:flex;gap:.4rem;flex-wrap:wrap"><span class="q-tbadge '+(q.t==="tf"?"ttf":q.t==="mc"?"tmc":"tab")+'">'+label[q.t]+'</span><span class="ctag">'+esc(fmt(categories[q.c],q.c==="Lipídios"?"Lípidos":q.c==="Fosforilação oxidativa"?"Fosforilación oxidativa":q.c))+'</span></div></div><div class="res-ind" id="ri'+i+'"></div><p class="q-text">'+esc(fmt(q.q,q.qe))+'</p>'+body+'<div class="exp-box" id="ex'+i+'"><div class="et">'+fmt("📖 Explicação","📖 Explicación")+'</div><p>'+esc(fmt(q.ex,q.exe))+'</p></div>';
   ct.appendChild(d);
