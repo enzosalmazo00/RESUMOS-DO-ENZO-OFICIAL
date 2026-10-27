@@ -30,3 +30,8 @@
 .enzo-krebs-integracao div span{background:#1f2845;border:1px solid rgba(249,201,79,.3);border-radius:10px;padding:10px;font:700 13px var(--font-mono)}
 .enzo-krebs-integracao p{font-size:13px;line-height:1.7}
 @media(max-width:650px){.enzo-path-step{min-width:80px;flex-basis:85px}.enzo-path-arrow{font-size:14px}.enzo-complex{font-size:14px;padding:9px 2px}.enzo-deep-intro{padding:16px 4px 8px}}
+
+nav.tabs button .enzo-vector-icon{width:17px;height:17px;display:inline-block;vertical-align:-4px;margin-right:6px;flex:0 0 auto;color:currentColor}
+#topicCards .intro-card .ic-icon{display:flex;justify-content:flex-start;align-items:center;height:34px;margin-bottom:12px}
+#topicCards .intro-card .enzo-vector-icon{width:31px;height:31px;color:var(--accent2);filter:drop-shadow(0 0 6px rgba(56,232,192,.18))}
+nav.tabs button:hover .enzo-vector-icon,nav.tabs button.active .enzo-vector-icon{color:inherit}
