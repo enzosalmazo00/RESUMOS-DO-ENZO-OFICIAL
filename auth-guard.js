@@ -309,9 +309,11 @@
 
     var pacoteKey = null;
     if (pageKey && !isCurso) {
-      if (pageKey.endsWith("_p1")) pacoteKey = "pacote_p1";
-      if (pageKey.endsWith("_p2")) pacoteKey = "pacote_p2";
-      if (pageKey.endsWith("_final")) pacoteKey = "pacote_final";
+      // O 4º semestre possui pacotes independentes do 3º semestre.
+      var isS4 = /^(?:fisiologia_2|bioquimica_2|epidemiologia|nutricao|microbiologia_2|micro_pratica_2|eletrocardiograma)_(?:p1|p2|final)$/.test(pageKey);
+      if (pageKey.endsWith("_p1")) pacoteKey = isS4 ? "pacote_s4_p1" : "pacote_p1";
+      if (pageKey.endsWith("_p2")) pacoteKey = isS4 ? "pacote_s4_p2" : "pacote_p2";
+      if (pageKey.endsWith("_final")) pacoteKey = isS4 ? "pacote_s4_final" : "pacote_final";
     }
 
     var extraFields = "";
