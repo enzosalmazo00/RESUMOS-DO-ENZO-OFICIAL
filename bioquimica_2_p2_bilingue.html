@@ -754,6 +754,61 @@ nav.tabs button:hover .enzo-vector-icon,nav.tabs button.active .enzo-vector-icon
 .enzo-gap-filled.correct{background:rgba(74,222,128,.16);color:var(--green);border:1px solid rgba(74,222,128,.4)}
 .enzo-gap-filled.incorrect{background:rgba(249,95,95,.15);color:var(--red);border:1px solid rgba(249,95,95,.4)}
 
+</style><style>/* Diagrama do ciclo de Krebs (SVG) — usa os tokens da página */
+.enzo-krebs-figure.kx{padding:14px 14px 10px;overflow-x:auto}
+.kx-svg{display:block;width:100%;height:auto;max-width:980px;margin:0 auto;overflow:visible;user-select:none;-webkit-tap-highlight-color:transparent}
+.kx-svg text{font-family:var(--font-body)}
+.kx-matrix-label{font:700 15px var(--font-mono);letter-spacing:.28em;fill:#4f86d6;opacity:.7}
+.kx-link{stroke:#4f6ea3;stroke-width:1.5;stroke-dasharray:2 5;opacity:.7}
+/* setas */
+.kx-arc{cursor:pointer}
+.kx-hit{fill:none;stroke:transparent;stroke-width:34}
+.kx-arc-line{fill:none;stroke:#6a8fd0;stroke-width:6;stroke-linecap:butt;opacity:.8;transition:stroke .2s,stroke-width .2s}
+.kx-flow{fill:none;stroke:#fff;stroke-width:3;stroke-dasharray:2 16;opacity:0;stroke-linecap:round}
+.kx-arc.active .kx-arc-line{stroke:var(--accent2);stroke-width:9;opacity:1;filter:drop-shadow(0 0 7px rgba(56,232,192,.55))}
+.kx-arc.active .kx-flow{opacity:.85;animation:kxflow 1s linear infinite}
+@keyframes kxflow{to{stroke-dashoffset:-18}}
+.kx-arc:hover .kx-arc-line{stroke:#9ec0ff}
+/* enzimas */
+.kx-enz{cursor:pointer;outline:none}
+.kx-enz rect:first-child{fill:#111c33;stroke:rgba(79,156,249,.4);stroke-width:1.5;transition:all .18s}
+.kx-enz text{fill:#dfe9ff;font-size:13.5px;font-weight:600}
+.kx-enz:hover rect:first-child,.kx-enz:focus-visible rect:first-child{stroke:#9ec0ff}
+.kx-enz.sel rect:first-child{fill:#123a46;stroke:var(--accent2);stroke-width:2.5;filter:drop-shadow(0 0 8px rgba(56,232,192,.4))}
+.kx-enz .kx-rn{fill:#0a1121;stroke:var(--accent);stroke-width:1.5}
+.kx-enz.sel .kx-rn{stroke:var(--accent2);fill:var(--accent2)}
+.kx-enz .kx-rnt{fill:var(--accent);font:800 12px var(--font-mono)}
+.kx-enz.sel .kx-rnt{fill:#06121a}
+.kx-enz .kx-star,.kx-star{fill:var(--gold);color:var(--gold);font-size:15px;font-weight:400}
+.kx-enz .kx-cx{fill:#2a1a45;stroke:#c47bff;stroke-width:1}
+.kx-enz .kx-cxt{fill:#d9b6ff;font:700 10px var(--font-mono)}
+/* chips */
+.kx-chip rect{fill:#0b1427;stroke:rgba(159,176,214,.28);stroke-width:1.2}
+.kx-chip text{font:700 13px var(--font-mono)}
+/* núcleo */
+.kx-hub-k{fill:var(--muted);font:700 12.5px var(--font-mono);letter-spacing:.1em}
+.kx-hub-n{font:700 16px var(--font-mono)}
+.kx-hub-atp{fill:var(--gold);font:800 26px var(--font-display)}
+/* metabólitos */
+.kx-node{cursor:pointer;outline:none}
+.kx-node .kx-ring{fill:#0d172b;stroke-width:3;transition:all .18s}
+.kx-node .kx-halo{fill:var(--c);opacity:0;transition:opacity .2s}
+.kx-node .kx-c{font:800 20px var(--font-display)}
+.kx-node:hover .kx-ring,.kx-node:focus-visible .kx-ring{fill:#18284a}
+.kx-node.sel .kx-halo{opacity:.3}
+.kx-node.sel .kx-ring{fill:#17314a;stroke-width:5.5}
+.kx-node.sub .kx-halo{opacity:.14}
+.kx-name{fill:#eaf1ff;font:700 19px var(--font-display);cursor:pointer;transition:fill .2s}
+.kx-svg .kx-name.sel{fill:var(--accent2)}
+.kx-svg .kx-name.sub{fill:#c9d7f5}
+/* legenda */
+.kx-legend{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;align-items:center;margin:6px 8px 4px;font:700 11.5px var(--font-mono);color:var(--muted)}
+.kx-legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.kx-legend .kx-sep{width:1px;height:14px;background:var(--border)}
+.kx-caption{margin:8px auto 4px;text-align:center}
+.enzo-krebs-control{flex-wrap:wrap}
+@media(max-width:650px){.kx-svg{min-width:760px}.enzo-krebs-figure.kx{padding:8px}}
+@media(prefers-reduced-motion:reduce){.kx-arc.active .kx-flow{animation:none}}
 </style></head><body><canvas id="particles"></canvas>
 <header><div class="badge">🧪 Bioquímica II · P2 · 2026</div><h1>Bioquímica II — P2</h1><p class="sub">Lipídios · Aminoácidos · Ciclo de Krebs · Fosforilação oxidativa</p><p class="by">⚡ Elaborado por Enzo Salmazo · Explicações funcionais, exemplos e revisão ativa</p></header>
 <div class="enzo-langbar"><button type="button" class="active" onclick="enzoLang(false)">🇧🇷 Português</button><button type="button" onclick="enzoLang(true)">🇵🇾 Español Paraguay</button></div><nav class="tabs"><button class="active" data-section="intro" onclick="showSection('intro',this)"><span class="emoji-icon">📖</span> Início</button><button data-section="lip" onclick="showSection('lip',this)"><span class="emoji-icon">🧬</span> Lipídios</button><button data-section="aa" onclick="showSection('aa',this)"><span class="emoji-icon">🔬</span> Metabolismo dos aminoácidos</button><button data-section="krebs" onclick="showSection('krebs',this)"><span class="emoji-icon">🔄</span> Ciclo de Krebs</button><button data-section="ox" onclick="showSection('ox',this)"><span class="emoji-icon">⚡</span> Fosforilação oxidativa</button><button class="fc-tab" data-section="flashcards" onclick="showSection('flashcards',this)"><span class="emoji-icon">🃏</span> Flashcards</button><button class="qz-tab" data-section="quiz" onclick="showSection('quiz',this)"><span class="emoji-icon">📝</span> Questões</button></nav><section id="intro" class="section active"><div class="container"><div class="sequence-badge">BIOQUÍMICA II · P2</div><div class="chapter-title">🧪 <span class="pttext">Bioquímica II — P2</span><span class="estext" style="display:none">Bioquímica II — P2</span></div><p class="section-lead"><span class="pttext">Lipídios, metabolismo dos aminoácidos, ciclo de Krebs e fosforilação oxidativa. Referências: Harper, Lehninger e slides da disciplina.</span><span class="estext" style="display:none">Lípidos, metabolismo de aminoácidos, ciclo de Krebs y fosforilación oxidativa. Referencias: Harper, Lehninger y diapositivas de clase.</span></p><div id="topicCards" class="intro-grid"></div></div></section><section class="section" id="lip"><div class="container"><div class="chapter-title">🫒 <span class="pttext">Lipídios</span><span class="estext" style="display:none">Lípidos</span></div><div class="info-block"><div class="label"><span class="pttext">Visão geral</span><span class="estext" style="display:none">Panorama general</span></div><p><span class="pttext">Lipídios fornecem cerca de 9 kcal/g, formam membranas e participam da sinalização hormonal. O caminho pós-refeição é: emulsificação → hidrólise → micelas → enterócitos → quilomícrons → tecidos.</span><span class="estext" style="display:none">Los lípidos aportan aproximadamente 9 kcal/g, forman membranas y participan en señales hormonales. Ruta posprandial: emulsificación → hidrólisis → micelas → enterocitos → quilomicrones → tejidos.</span></p></div><div class="info-block"><div class="label"><span class="pttext">1. Digestão no duodeno</span><span class="estext" style="display:none">1. Digestión en duodeno</span></div><p><span class="pttext">Os sais biliares EMULSIFICAM a gordura, aumentando a superfície de contato; a lipase pancreática, com auxílio da colipase, quebra triacilgliceróis sobretudo em 2-monoacilglicerol e dois ácidos graxos. Fosfolipase A₂ e colesterol esterase atuam em outros lipídios.</span><span class="estext" style="display:none">Las sales biliares EMULSIONAN las grasas; la lipasa pancreática, ayudada por la colipasa, rompe triacilglicéridos principalmente en 2-monoacilglicerol y dos ácidos grasos. Fosfolipasa A₂ y colesterol esterasa actúan sobre otros lípidos.</span></p></div><div class="info-block"><div class="label"><span class="pttext">2. Micelas e absorção</span><span class="estext" style="display:none">2. Micelas y absorción</span></div><p><span class="pttext">Micelas mistas carregam produtos lipídicos até a borda em escova. Os lipídios entram no enterócito; os sais biliares permanecem no lúmen e são reabsorvidos principalmente no íleo terminal (circulação entero-hepática). A absorção do colesterol envolve NPC1L1.</span><span class="estext" style="display:none">Las micelas mixtas acercan lípidos al borde en cepillo. Los lípidos ingresan al enterocito; las sales biliares quedan en la luz y se reabsorben sobre todo en íleon terminal (circulación enterohepática). NPC1L1 participa en la absorción del colesterol.</span></p></div><div class="info-block"><div class="label"><span class="pttext">3. Transporte de lipídios</span><span class="estext" style="display:none">3. Transporte de lípidos</span></div><p><span class="pttext">No enterócito, ácidos graxos de cadeia longa são reesterificados em TAG e montados em quilomícrons contendo apoB-48; seguem pela linfa até o sangue. LPL, ativada por apoC-II, libera ácidos graxos nos capilares; remanescentes ricos em colesterol são captados pelo fígado. Ácidos graxos livres circulam associados à albumina.</span><span class="estext" style="display:none">En el enterocito, los ácidos grasos de cadena larga forman TAG y quilomicrones con apoB-48; pasan por linfa a sangre. La LPL, activada por apoC-II, libera ácidos grasos; los remanentes son captados por el hígado. Los ácidos grasos no esterificados viajan con albúmina.</span></p></div><div class="info-block"><div class="label"><span class="pttext">4. Lipólise × lipogênese</span><span class="estext" style="display:none">4. Lipólisis × lipogénesis</span></div><p><span class="pttext">Lipólise é quebra de TAG armazenados por ATGL, HSL e MGL, favorecida pelas catecolaminas no jejum/exercício; a insulina a reduz. Lipogênese sintetiza ácidos graxos a partir de acetil-CoA: ACC gera malonil-CoA e ácido graxo sintase alonga a cadeia usando NADPH; insulina a favorece. Malonil-CoA inibe CPT-I.</span><span class="estext" style="display:none">La lipólisis degrada TAG almacenados mediante ATGL, HSL y MGL; catecolaminas la favorecen e insulina la inhibe. La lipogénesis forma ácidos grasos: ACC genera malonil-CoA y ácido graso sintasa alarga cadenas utilizando NADPH. Malonil-CoA inhibe CPT-I.</span></p></div><div class="info-block"><div class="label"><span class="pttext">5. Beta-oxidação em quatro passos</span><span class="estext" style="display:none">5. Beta-oxidación en cuatro pasos</span></div><p><span class="pttext">1) Ativação: ácido graxo + CoA + ATP → acil-CoA + AMP + PPi (custo 2 equivalentes ATP). 2) Cadeias longas entram na matriz mitocondrial pela naveta de carnitina (CPT-I, translocase, CPT-II). Cada volta: oxidação com FAD → hidratação → oxidação com NAD⁺ → tiólise; gera FADH₂, NADH e acetil-CoA, removendo 2 carbonos.</span><span class="estext" style="display:none">1) Activación: ácido graso + CoA + ATP → acil-CoA + AMP + PPi (costo de 2 equivalentes de ATP). 2) Ácidos grasos largos ingresan a matriz mediante carnitina. Cada vuelta: oxidación con FAD → hidratación → oxidación con NAD⁺ → tiólisis. Forma FADH₂, NADH y acetil-CoA, acortando 2 carbonos.</span></p></div><div class="info-block"><div class="label"><span class="pttext">Exemplo: palmitato (C16:0)</span><span class="estext" style="display:none">Ejemplo: palmitato (C16:0)</span></div><p><span class="pttext">7 voltas → 8 acetil-CoA + 7 NADH + 7 FADH₂. Com rendimento moderno de 2,5 ATP/NADH e 1,5 ATP/FADH₂: 80 + 17,5 + 10,5 − 2 = 106 ATP líquidos.</span><span class="estext" style="display:none">7 vueltas → 8 acetil-CoA + 7 NADH + 7 FADH₂. Con 2,5 ATP/NADH y 1,5 ATP/FADH₂: 80 + 17,5 + 10,5 − 2 = 106 ATP netos.</span></p></div></div></section><section class="section" id="aa"><div class="container"><div class="chapter-title">🧬 <span class="pttext">Metabolismo dos aminoácidos</span><span class="estext" style="display:none">Metabolismo de aminoácidos</span></div><div class="info-block"><div class="label"><span class="pttext">Ideia central</span><span class="estext" style="display:none">Idea central</span></div><p><span class="pttext">Aminoácidos não têm reserva especializada. Seu grupo amino deve ser processado com segurança; o esqueleto carbônico entra em vias energéticas, gliconeogênese ou cetogênese.</span><span class="estext" style="display:none">Los aminoácidos no tienen reserva especializada. El grupo amino debe procesarse de forma segura; el esqueleto carbonado va a energía, gluconeogénesis o cetogénesis.</span></p></div><div class="info-block"><div class="label"><span class="pttext">1. Transaminação</span><span class="estext" style="display:none">1. Transaminación</span></div><p><span class="pttext">Aminotransferases ALT e AST transferem o grupo amino para α-cetoglutarato, formando glutamato. Requerem piridoxal-fosfato (vitamina B6). Na maioria dos casos, não liberam amônia livre nesta etapa.</span><span class="estext" style="display:none">ALT y AST transfieren el grupo amino al α-cetoglutarato y forman glutamato. Requieren fosfato de piridoxal (vitamina B6). Generalmente no liberan amoníaco libre aquí.</span></p></div><div class="info-block"><div class="label"><span class="pttext">2. Desaminação oxidativa</span><span class="estext" style="display:none">2. Desaminación oxidativa</span></div><p><span class="pttext">No fígado, glutamato desidrogenase mitocondrial converte glutamato em α-cetoglutarato e NH₄⁺, usando NAD⁺ ou NADP⁺. O amônio é tóxico, especialmente ao SNC, e precisa ser eliminado.</span><span class="estext" style="display:none">En hígado, glutamato deshidrogenasa mitocondrial convierte glutamato en α-cetoglutarato y NH₄⁺ usando NAD⁺ o NADP⁺. El amonio es neurotóxico y debe eliminarse.</span></p></div><div class="info-block"><div class="label"><span class="pttext">3. Transporte de nitrogênio</span><span class="estext" style="display:none">3. Transporte de nitrógeno</span></div><p><span class="pttext">Glutamina transporta nitrogênio de muitos tecidos ao fígado/rins. No músculo, a alanina transporta nitrogênio ao fígado pelo ciclo glicose-alanina. Glutaminase libera NH₄⁺ a partir de glutamina.</span><span class="estext" style="display:none">Glutamina transporta nitrógeno de tejidos a hígado/riñón. En músculo, alanina transporta nitrógeno al hígado por el ciclo glucosa-alanina. Glutaminasa libera NH₄⁺.</span></p></div><div class="info-block"><div class="label"><span class="pttext">4. Ciclo da ureia</span><span class="estext" style="display:none">4. Ciclo de la urea</span></div><p><span class="pttext">No fígado: (mitocôndria) NH₄⁺ + HCO₃⁻ —CPS-I→ carbamoil-fosfato; este + ornitina —OTC→ citrulina. (Citosol) citrulina + aspartato —argininossuccinato sintetase→ argininossuccinato → arginina + fumarato → ureia + ornitina (arginase). CPS-I necessita N-acetilglutamato. Consome 3 ATP, equivalentes a 4 ligações de alta energia.</span><span class="estext" style="display:none">En hígado: (mitocondria) NH₄⁺ + HCO₃⁻ —CPS-I→ carbamoil-fosfato; con ornitina —OTC→ citrulina. (Citosol) citrulina + aspartato → argininosuccinato → arginina + fumarato → urea + ornitina. CPS-I necesita N-acetilglutamato. Consume 3 ATP equivalentes a 4 enlaces de alta energía.</span></p></div><div class="info-block"><div class="label"><span class="pttext">5. Destino do carbono</span><span class="estext" style="display:none">5. Destino del carbono</span></div><p><span class="pttext">Glicogênicos produzem piruvato/intermediários do Krebs e podem gerar glicose. Cetogênicos originam acetil-CoA/acetoacetato. Leucina e lisina são exclusivamente cetogênicas; isoleucina, fenilalanina, tirosina, triptofano e treonina são mistas.</span><span class="estext" style="display:none">Glucogénicos generan piruvato/intermediarios del Krebs y pueden formar glucosa. Cetogénicos originan acetil-CoA/acetoacetato. Leucina y lisina son exclusivamente cetogénicos; isoleucina, fenilalanina, tirosina, triptófano y treonina son mixtos.</span></p></div><div class="info-block"><div class="label"><span class="pttext">Relação clínica</span><span class="estext" style="display:none">Relación clínica</span></div><p><span class="pttext">Defeitos do ciclo da ureia causam hiperamonemia, com vômitos, alteração neurológica e encefalopatia. ALT/AST elevadas indicam lesão hepatocelular em muitos contextos, mas não medem isoladamente a função hepática.</span><span class="estext" style="display:none">Defectos del ciclo de urea causan hiperamonemia, vómitos y encefalopatía. ALT/AST elevadas sugieren daño hepatocelular, pero por sí solas no miden función hepática.</span></p></div></div></section><section class="section" id="krebs"><div class="container"><div class="chapter-title">🔄 <span class="pttext">Ciclo de Krebs</span><span class="estext" style="display:none">Ciclo de Krebs</span></div><div class="info-block"><div class="label"><span class="pttext">O que entra e o que sai</span><span class="estext" style="display:none">Qué entra y qué sale</span></div><p><span class="pttext">Na matriz mitocondrial (exceto succinato desidrogenase, na membrana interna), acetil-CoA de 2 carbonos se condensa ao oxaloacetato de 4 carbonos. Uma volta regenera oxaloacetato e produz 3 NADH, 1 FADH₂, 1 GTP e 2 CO₂.</span><span class="estext" style="display:none">En matriz mitocondrial (salvo succinato deshidrogenasa en membrana interna), acetil-CoA de 2 carbonos se une a oxaloacetato de 4. Cada vuelta regenera oxaloacetato y produce 3 NADH, 1 FADH₂, 1 GTP y 2 CO₂.</span></p></div><div class="info-block"><div class="label"><span class="pttext">Regulação</span><span class="estext" style="display:none">Regulación</span></div><p><span class="pttext">As principais etapas regulatórias são citrato sintase, isocitrato desidrogenase e α-cetoglutarato desidrogenase. ATP e NADH elevados tendem a reduzir o fluxo; ADP e Ca²⁺ o estimulam em tecidos relevantes.</span><span class="estext" style="display:none">Las etapas reguladoras principales son citrato sintasa, isocitrato deshidrogenasa y α-cetoglutarato deshidrogenasa. ATP y NADH altos reducen flujo; ADP y Ca²⁺ lo aumentan en tejidos relevantes.</span></p></div><div class="unit-banner"><strong><span class="pttext">Clique em cada reação do ciclo</span><span class="estext" style="display:none">Pulse en cada reacción del ciclo</span></strong></div><div class="krebs-steps"><button class="tool-btn" onclick="enzoKrebs(0)">1. Oxaloacetato + acetil-CoA → Citrato</button><button class="tool-btn" onclick="enzoKrebs(1)">2. Citrato → Isocitrato</button><button class="tool-btn" onclick="enzoKrebs(2)">3. Isocitrato → α-Cetoglutarato</button><button class="tool-btn" onclick="enzoKrebs(3)">4. α-Cetoglutarato → Succinil-CoA</button><button class="tool-btn" onclick="enzoKrebs(4)">5. Succinil-CoA → Succinato</button><button class="tool-btn" onclick="enzoKrebs(5)">6. Succinato → Fumarato</button><button class="tool-btn" onclick="enzoKrebs(6)">7. Fumarato → Malato</button><button class="tool-btn" onclick="enzoKrebs(7)">8. Malato → Oxaloacetato</button></div><div class="info-block success" id="enzoKrebsInfo"></div></div></section><section class="section" id="ox"><div class="container"><div class="chapter-title">⚡ <span class="pttext">Fosforilação oxidativa</span><span class="estext" style="display:none">Fosforilación oxidativa</span></div><div class="info-block"><div class="label"><span class="pttext">Conceito e localização</span><span class="estext" style="display:none">Concepto y localización</span></div><p><span class="pttext">Na membrana mitocondrial interna, NADH e FADH₂ doam elétrons à cadeia respiratória. O fluxo de elétrons até O₂ bombeia prótons ao espaço intermembrana; o retorno de H⁺ pela ATP sintase sintetiza ATP.</span><span class="estext" style="display:none">En membrana mitocondrial interna, NADH y FADH₂ ceden electrones a la cadena respiratoria. El flujo hasta O₂ bombea protones al espacio intermembrana; el retorno de H⁺ por ATP sintasa produce ATP.</span></p></div><div class="info-block"><div class="label"><span class="pttext">Complexos e transportadores</span><span class="estext" style="display:none">Complejos y transportadores</span></div><p><span class="pttext">Complexo I recebe NADH e bombeia 4 H⁺; complexo II (succinato desidrogenase) recebe elétrons de FADH₂, mas não bombeia H⁺. Coenzima Q leva elétrons a III (4 H⁺), citocromo c leva a IV (2 H⁺ por par de elétrons), que reduz O₂ a H₂O.</span><span class="estext" style="display:none">Complejo I recibe NADH y bombea 4 H⁺; complejo II recibe electrones de FADH₂ pero no bombea H⁺. Coenzima Q lleva electrones a III (4 H⁺); citocromo c a IV (2 H⁺ por par), donde O₂ se reduce a H₂O.</span></p></div><div class="info-block"><div class="label"><span class="pttext">Quimiosmose e ATP</span><span class="estext" style="display:none">Quimiosmosis y ATP</span></div><p><span class="pttext">A energia da força próton-motriz atravessa o complexo V (ATP sintase). Estimativa integrada: cerca de 2,5 ATP por NADH e 1,5 por FADH₂, dependendo das condições e do transporte de metabólitos. Não se forma ATP diretamente nos complexos I–IV.</span><span class="estext" style="display:none">La fuerza protón-motriz impulsa el complejo V (ATP sintasa). Rendimiento aproximado: 2,5 ATP/NADH y 1,5 ATP/FADH₂, según condiciones y transporte. Los complejos I–IV no forman ATP directamente.</span></p></div><div class="info-block"><div class="label"><span class="pttext">Inibidores e desacopladores</span><span class="estext" style="display:none">Inhibidores y desacoplantes</span></div><p><span class="pttext">Rotenona inibe I; antimicina A inibe III; cianeto e monóxido de carbono inibem IV; oligomicina bloqueia ATP sintase. Desacopladores dissipam gradiente de H⁺, aumentam produção de calor e reduzem síntese de ATP.</span><span class="estext" style="display:none">Rotenona inhibe I; antimicina A inhibe III; cianuro y monóxido de carbono inhiben IV; oligomicina bloquea ATP sintasa. Desacoplantes disipan gradiente de H⁺, aumentan calor y reducen ATP.</span></p></div><div class="info-block"><div class="label"><span class="pttext">Integração com o Krebs</span><span class="estext" style="display:none">Integración con Krebs</span></div><p><span class="pttext">Cada acetil-CoA que completa o Krebs produz 3 NADH (≈7,5 ATP), 1 FADH₂ (≈1,5 ATP), 1 GTP (≈1 ATP), total aproximado de 10 ATP equivalentes por volta. O ciclo depende indiretamente de O₂ para reoxidar NADH/FADH₂.</span><span class="estext" style="display:none">Cada acetil-CoA en Krebs produce 3 NADH (≈7,5 ATP), 1 FADH₂ (≈1,5 ATP) y 1 GTP (≈1 ATP): total ≈10 ATP equivalentes. El ciclo depende indirectamente de O₂ para reoxidar NADH/FADH₂.</span></p></div></div></section><section id="flashcards" class="section"><div class="container">
@@ -1586,8 +1641,6 @@ const BIO2P2_FACTS=[{"c":"Lipídios","pt":"A emulsificação das gorduras no duo
 (()=>{"use strict";window.BIO2P2_FACTS=BIO2P2_FACTS;})();
 
 </script><script>
-/* Bioquímica II — P2: bioquimica_2_p2_krebs.js incorporado */
-
 (function(){
 "use strict";
 const old=document.querySelector("#krebs .krebs-steps");if(!old)return;
@@ -1602,29 +1655,135 @@ const entries=[
 ["Oxaloacetato","Oxaloacetato","4C","Malato desidrogenase","Malato deshidrogenasa","L-Malato (4C) + NAD⁺","L-Malato (4C) + NAD⁺","+ NADH + H⁺","O malato é oxidado a oxaloacetato; NAD⁺ recebe elétrons e forma o terceiro NADH. A citrato sintase consome o oxaloacetato recém-formado, favorecendo a continuidade da via.","El malato se oxida a oxaloacetato; NAD⁺ acepta electrones y forma el tercer NADH. La citrato sintasa consume oxaloacetato y favorece la continuidad de la vía.","Oxaloacetato se regenera; não é consumido no balanço líquido.","Oxaloacetato se regenera; no se consume en el balance neto."]
 ];
 window.BIO2P2_KREBS_STEPS=entries;
+
 const es=()=>document.documentElement.lang==="es-PY",tr=(p,e)=>es()?e:p;
 const escapeHtml=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const points=entries.map((_,i)=>{const a=(-90+i*45)*Math.PI/180;return {x:500+357*Math.cos(a),y:500+357*Math.sin(a)}});
-const colors=["#38e8c0","#4f9cf9","#f9c94f","#f9784f","#b84ff9","#4ff984","#58a9ff","#f7c44b"];
-const circle=document.createElement("div");circle.className="enzo-krebs-figure";
+const N=8,CX=550,CY=500,R=270,RN=40,R_ENZ=190,R_CHIP=372;
+const GAP=Math.asin((RN+9)/R)*180/Math.PI;
+const P=(a,r)=>{const t=a*Math.PI/180;return [CX+r*Math.sin(t),CY-r*Math.cos(t)]};
+const f1=n=>n.toFixed(1);
+const CC={6:"#38e8c0",5:"#4f9cf9",4:"#f9c94f"};
+const KIND={c:"#f9c94f",o:"#9fb0d6",n:"#38e8c0",f:"#c47bff",g:"#f9c94f",x:"#f9784f"};
+const REGULATED=[0,2,3];
+/* [tipo, texto]: ↓ entra · ↑ sai. n=NADH, f=FADH₂, g=GTP, x=CO₂, c=carbono, o=outros */
+const CHIPS=[
+ [["c","↓ Acetil-CoA (2C)"],["o","↑ CoA-SH"]],
+ [["o","↑↓ H₂O"]],
+ [["n","NAD⁺ → NADH"],["x","↑ CO₂"]],
+ [["n","NAD⁺ → NADH"],["x","↑ CO₂"],["o","↓ CoA-SH"]],
+ [["g","GDP + Pi → GTP"],["o","↑ CoA-SH"]],
+ [["f","FAD → FADH₂"]],
+ [["o","↓ H₂O"]],
+ [["n","NAD⁺ → NADH"]]
+];
+function splitName(s){
+ if(s.length<=14||s.indexOf(" ")<0)return [s];
+ let best=-1,bd=1e9;
+ for(let i=0;i<s.length;i++)if(s[i]===" "){const d=Math.abs(i-s.length/2);if(d<bd){bd=d;best=i}}
+ return [s.slice(0,best),s.slice(best+1)];
+}
+let playTimer=null;
+const stopPlay=()=>{if(playTimer){clearInterval(playTimer);playTimer=null}};
+const circle=document.createElement("div");circle.className="enzo-krebs-figure kx";
 old.replaceWith(circle);
 const panel=document.getElementById("enzoKrebsInfo");panel.classList.add("enzo-krebs-panel");
 const foot=document.createElement("div");foot.className="enzo-krebs-control";panel.after(foot);
+
+function buildSVG(){
+ let s='<svg class="kx-svg" viewBox="0 0 1100 1000" role="group" aria-label="'+escapeHtml(tr("Ciclo de Krebs: oito reações na matriz mitocondrial","Ciclo de Krebs: ocho reacciones en la matriz mitocondrial"))+'">';
+ s+='<defs><radialGradient id="kxMatrix" cx="50%" cy="48%" r="60%"><stop offset="0" stop-color="#1c2b4a"/><stop offset=".7" stop-color="#101a31"/><stop offset="1" stop-color="#0a1121"/></radialGradient>'
+  +'<radialGradient id="kxHub" cx="45%" cy="30%" r="80%"><stop offset="0" stop-color="#2a3d63"/><stop offset="1" stop-color="#0a1424"/></radialGradient>'
+  +'<marker id="kxArr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="3.4" markerHeight="3.4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6a8fd0"/></marker>'
+  +'<marker id="kxArrOn" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="3.4" markerHeight="3.4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#38e8c0"/></marker></defs>';
+ /* mitocôndria: membrana externa, membrana interna, cristas */
+ s+='<ellipse cx="550" cy="500" rx="540" ry="486" fill="#0b1426" stroke="#3a5f96" stroke-width="3"/>';
+ s+='<ellipse cx="550" cy="500" rx="518" ry="464" fill="url(#kxMatrix)" stroke="#4f86d6" stroke-opacity=".75" stroke-width="2.5"/>';
+ for(const y of [300,380,460,540,620,700]){
+  const k=Math.sqrt(1-Math.pow((y-500)/464,2)),ex=518*k;
+  const lx=550-ex,rx=550+ex;
+  const fold=(x,d)=>'M'+f1(x)+' '+y+' C'+f1(x+d*92)+' '+(y-8)+' '+f1(x+d*92)+' '+(y+44)+' '+f1(x)+' '+(y+52);
+  s+='<path d="'+fold(lx,1)+'" fill="none" stroke="#4f86d6" stroke-opacity=".16" stroke-width="16" stroke-linecap="round"/><path d="'+fold(lx,1)+'" fill="none" stroke="#4f86d6" stroke-opacity=".4" stroke-width="2"/>';
+  s+='<path d="'+fold(rx,-1)+'" fill="none" stroke="#4f86d6" stroke-opacity=".16" stroke-width="16" stroke-linecap="round"/><path d="'+fold(rx,-1)+'" fill="none" stroke="#4f86d6" stroke-opacity=".4" stroke-width="2"/>';
+ }
+ s+='<text x="550" y="946" text-anchor="middle" class="kx-matrix-label">'+escapeHtml(tr("MATRIZ MITOCONDRIAL","MATRIZ MITOCONDRIAL"))+'</text>';
+ /* trilho do ciclo */
+ s+='<circle cx="550" cy="500" r="'+R+'" fill="none" stroke="#08101f" stroke-width="22" opacity=".85"/>';
+ /* conexões dos cofatores */
+ for(let i=0;i<N;i++){
+  const am=(i-.5)*45,[x1,y1]=P(am,R+13),[x2,y2]=P(am,R_CHIP);
+  s+='<line x1="'+f1(x1)+'" y1="'+f1(y1)+'" x2="'+f1(x2)+'" y2="'+f1(y2)+'" class="kx-link"/>';
+ }
+ /* setas (reação i vai do nó i-1 ao nó i) */
+ for(let i=0;i<N;i++){
+  const a0=(i-1)*45+GAP,a1=i*45-GAP,[x0,y0]=P(a0,R),[x1,y1]=P(a1,R);
+  const d='M'+f1(x0)+' '+f1(y0)+' A'+R+' '+R+' 0 0 1 '+f1(x1)+' '+f1(y1);
+  s+='<g class="kx-arc" data-r="'+i+'"><path class="kx-hit" d="'+d+'"/><path class="kx-arc-line" d="'+d+'" marker-end="url(#kxArr)"/><path class="kx-flow" d="'+d+'"/></g>';
+ }
+ /* cartões de enzima */
+ for(let i=0;i<N;i++){
+  const d=entries[i],am=(i-.5)*45,[x,y]=P(am,R_ENZ),ls=splitName(tr(d[3],d[4]));
+  let g='<g class="kx-enz" data-r="'+i+'" transform="translate('+f1(x)+' '+f1(y)+')" tabindex="0" role="button" aria-label="'+escapeHtml(tr("Reação ","Reacción ")+(i+1)+": "+tr(d[3],d[4]))+'">';
+  g+='<rect x="-62" y="-24" width="124" height="48" rx="11"/>';
+  g+=ls.length===1?'<text y="5" text-anchor="middle">'+escapeHtml(ls[0])+'</text>':'<text y="-3" text-anchor="middle">'+escapeHtml(ls[0])+'</text><text y="13" text-anchor="middle">'+escapeHtml(ls[1])+'</text>';
+  g+='<circle class="kx-rn" cx="-62" cy="-24" r="11"/><text class="kx-rnt" x="-62" y="-20" text-anchor="middle">'+(i+1)+'</text>';
+  if(REGULATED.includes(i))g+='<text class="kx-star" x="52" y="-14" text-anchor="middle">★</text>';
+  if(i===5)g+='<rect class="kx-cx" x="-36" y="17" width="72" height="16" rx="8"/><text class="kx-cxt" y="29" text-anchor="middle">'+escapeHtml(tr("complexo II","complejo II"))+'</text>';
+  s+=g+'</g>';
+ }
+ /* chips de cofatores */
+ for(let i=0;i<N;i++){
+  const am=(i-.5)*45,[x,y]=P(am,R_CHIP),L=CHIPS[i];
+  const w=Math.max.apply(null,L.map(l=>l[1].length))*7.7+26,h=L.length*21+10;
+  let g='<g class="kx-chip" transform="translate('+f1(x)+' '+f1(y)+')"><rect x="'+f1(-w/2)+'" y="'+f1(-h/2)+'" width="'+f1(w)+'" height="'+h+'" rx="10"/>';
+  L.forEach((l,j)=>{g+='<text x="0" y="'+f1(-h/2+22+j*21-5)+'" text-anchor="middle" fill="'+KIND[l[0]]+'">'+escapeHtml(l[1])+'</text>'});
+  s+=g+'</g>';
+ }
+ /* núcleo: saldo da volta */
+ s+='<g class="kx-hub"><circle cx="550" cy="500" r="100" fill="url(#kxHub)" stroke="#f9c94f" stroke-opacity=".45" stroke-width="2"/><circle cx="550" cy="500" r="88" fill="none" stroke="#f9c94f" stroke-opacity=".18" stroke-dasharray="3 7"/>'
+  +'<text x="550" y="448" text-anchor="middle" class="kx-hub-k">↻ '+tr("1 VOLTA","1 VUELTA")+'</text>'
+  +'<text x="550" y="473" text-anchor="middle" class="kx-hub-n" fill="'+KIND.n+'">3 NADH</text>'
+  +'<text x="550" y="494" text-anchor="middle" class="kx-hub-n" fill="'+KIND.f+'">1 FADH₂</text>'
+  +'<text x="550" y="515" text-anchor="middle" class="kx-hub-n" fill="'+KIND.g+'">1 GTP</text>'
+  +'<text x="550" y="536" text-anchor="middle" class="kx-hub-n" fill="'+KIND.x+'">2 CO₂</text>'
+  +'<text x="550" y="568" text-anchor="middle" class="kx-hub-atp">≈ 10 ATP</text></g>';
+ /* metabólitos */
+ for(let i=0;i<N;i++){
+  const d=entries[i],a=i*45,[x,y]=P(a,R),c=parseInt(d[2],10),col=CC[c]||"#38e8c0";
+  const sn=Math.sin(a*Math.PI/180),cs=Math.cos(a*Math.PI/180),[tx,ty]=P(a,R+RN+16);
+  const anchor=sn>.3?"start":sn<-.3?"end":"middle";
+  const nyy=cs>.5?ty:cs<-.5?ty+14:ty+6;
+  let g='<g class="kx-node" data-step="'+i+'" transform="translate('+f1(x)+' '+f1(y)+')" tabindex="0" role="button" aria-pressed="false" aria-label="'+escapeHtml(tr(d[0],d[1])+" ("+d[2]+")")+'" style="--c:'+col+'">';
+  g+='<circle class="kx-halo" r="'+(RN+11)+'"/><circle class="kx-ring" r="'+RN+'" stroke="'+col+'"/><text class="kx-c" y="-4" text-anchor="middle" fill="'+col+'">'+c+'C</text>';
+  const x0=-(c-1)*4.6;
+  for(let k=0;k<c;k++)g+='<circle class="kx-atom" cx="'+f1(x0+k*9.2)+'" cy="15" r="3.3" fill="'+col+'"/>';
+  g+='</g>';
+  s+=g+'<text class="kx-name" data-step="'+i+'" x="'+f1(tx)+'" y="'+f1(nyy)+'" text-anchor="'+anchor+'">'+escapeHtml(tr(d[0],d[1]))+'</text>';
+ }
+ return s+'</svg>';
+}
+const legend=()=>'<div class="kx-legend"><span><i style="background:'+CC[6]+'"></i>6C</span><span><i style="background:'+CC[5]+'"></i>5C</span><span><i style="background:'+CC[4]+'"></i>4C</span><span class="kx-sep"></span><span style="color:'+KIND.n+'">NADH</span><span style="color:'+KIND.f+'">FADH₂</span><span style="color:'+KIND.g+'">GTP</span><span style="color:'+KIND.x+'">CO₂</span><span class="kx-sep"></span><span><b class="kx-star">★</b> '+tr("etapa regulada","etapa regulada")+'</span><span>↓ '+tr("entra","entra")+' · ↑ '+tr("sai","sale")+'</span></div>';
+
 const controller={current:0,draw(){
- const paths=points.map((p,i)=>{const n=points[(i+1)%8];const x1=p.x+(n.x-p.x)*.23,y1=p.y+(n.y-p.y)*.23,x2=p.x+(n.x-p.x)*.78,y2=p.y+(n.y-p.y)*.78;return '<path d="M '+x1+' '+y1+' L '+x2+' '+y2+'" fill="none" stroke="'+colors[i]+'" stroke-width="5" opacity=".9" marker-end="url(#krebsArrow)"/>'}).join("");
- const svg='<svg class="krebs-arrows" viewBox="0 0 1000 1000" role="img" aria-label="Oito etapas circulares conectadas por setas"><defs><marker id="krebsArrow" markerWidth="8" markerHeight="8" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7" stroke="#3be5d1" stroke-width="1.4" fill="none"/></marker></defs><circle cx="500" cy="500" r="358" stroke="rgba(79,156,249,.08)" stroke-width="89" fill="none"/>'+paths+'</svg>';
- let buttons="";
- entries.forEach((d,i)=>{const p=points[i];buttons+='<button type="button" class="enzo-krebs-node" data-step="'+i+'" style="--nx:'+(p.x/10)+'%;--ny:'+(p.y/10)+'%;--nodecolor:'+colors[i]+'" aria-pressed="false"><span class="enzo-krebs-num">'+(i+1)+'</span><span class="enzo-krebs-metabolite">'+escapeHtml(tr(d[0],d[1]))+'</span><small>'+d[2]+'</small></button>'});
- circle.innerHTML='<div class="enzo-krebs-heading"><span>↻ '+tr("CICLO DE KREBS","CICLO DE KREBS")+'</span><span>'+tr("8 REAÇÕES • MATRIZ MITOCONDRIAL","8 REACCIONES • MATRIZ MITOCONDRIAL")+'</span></div><div class="enzo-krebs-ring">'+svg+'<div class="enzo-krebs-core"><span class="k-core-symbol">↻</span><b>'+tr("1 volta","1 vuelta")+'</b><div>3 NADH</div><div>1 FADH₂</div><div>1 GTP</div><div>2 CO₂</div><strong>≈ 10 ATP</strong><small>'+tr("por acetil-CoA","por acetil-CoA")+'</small></div>'+buttons+'</div><div class="enzo-krebs-out"><div class="enzo-krebs-entry">'+tr("↘ Entrada: acetil-CoA (2C) + oxaloacetato (4C)","↘ Entrada: acetil-CoA (2C) + oxaloacetato (4C)")+'</div><p class="enzo-krebs-caption">'+tr("Clique em qualquer metabólito: os números mostram as reações que o produzem e as setas mostram o sentido do ciclo.","Pulse cualquier metabolito: los números muestran las reacciones que lo producen y las flechas el sentido del ciclo.")+'</p></div>';
- foot.innerHTML='<button type="button" data-kprev>← '+tr("Anterior","Anterior")+'</button><button type="button" data-knext>'+tr("Próxima reação","Siguiente reacción")+' →</button>';
- circle.querySelectorAll("[data-step]").forEach(b=>b.addEventListener("click",()=>controller.show(+b.dataset.step)));
- foot.querySelector("[data-kprev]").addEventListener("click",()=>controller.show(controller.current-1));
- foot.querySelector("[data-knext]").addEventListener("click",()=>controller.show(controller.current+1));
+ circle.innerHTML='<div class="enzo-krebs-heading"><span>↻ '+tr("CICLO DE KREBS","CICLO DE KREBS")+'</span><span>'+tr("8 REAÇÕES • MATRIZ MITOCONDRIAL","8 REACCIONES • MATRIZ MITOCONDRIAL")+'</span></div>'+buildSVG()+legend()+'<p class="enzo-krebs-caption kx-caption">'+tr("Clique em um metabólito, enzima ou seta. Os pontos mostram os carbonos: 6C → 5C → 4C; a cada volta saem 2 CO₂ e o oxaloacetato é regenerado.","Pulse un metabolito, enzima o flecha. Los puntos muestran los carbonos: 6C → 5C → 4C; en cada vuelta salen 2 CO₂ y se regenera oxaloacetato.")+'</p>';
+ foot.innerHTML='<button type="button" data-kprev>← '+tr("Anterior","Anterior")+'</button><button type="button" data-kplay>'+(playTimer?"❚❚ "+tr("Pausar","Pausar"):"▶ "+tr("Reproduzir ciclo","Reproducir ciclo"))+'</button><button type="button" data-knext>'+tr("Próxima reação","Siguiente reacción")+' →</button>';
+ const act=el=>{const go=()=>{stopPlay();controller.draw_play_ui();controller.show(+(el.dataset.step!==undefined?el.dataset.step:el.dataset.r))};el.addEventListener("click",go);el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}})};
+ circle.querySelectorAll(".kx-node,.kx-enz,.kx-arc,.kx-name").forEach(act);
+ foot.querySelector("[data-kprev]").addEventListener("click",()=>{stopPlay();controller.draw_play_ui();controller.show(controller.current-1)});
+ foot.querySelector("[data-knext]").addEventListener("click",()=>{stopPlay();controller.draw_play_ui();controller.show(controller.current+1)});
+ foot.querySelector("[data-kplay]").addEventListener("click",()=>{
+  if(playTimer){stopPlay()}else{controller.show(controller.current+1);playTimer=setInterval(()=>controller.show(controller.current+1),2800)}
+  controller.draw_play_ui();
+ });
  this.show(this.current);
+},draw_play_ui(){
+ const b=foot.querySelector("[data-kplay]");if(b)b.textContent=playTimer?"❚❚ "+tr("Pausar","Pausar"):"▶ "+tr("Reproduzir ciclo","Reproducir ciclo");
 },show(i){
- this.current=(i+8)%8;const d=entries[this.current];
- circle.querySelectorAll("[data-step]").forEach(b=>{const selected=+b.dataset.step===this.current;b.classList.toggle("selected",selected);b.setAttribute("aria-pressed",String(selected))});
- panel.innerHTML='<div class="enzo-krebs-detailhead"><span class="enzo-krebs-stepbadge">'+tr("ETAPA","ETAPA")+' '+(this.current+1)+'/8</span><h3>'+escapeHtml(tr(d[5],d[6]))+' → '+escapeHtml(tr(d[0],d[1]))+'</h3></div><div class="enzo-krebs-detailgrid"><div><small>'+tr("ENZIMA","ENZIMA")+'</small><strong>'+escapeHtml(tr(d[3],d[4]))+'</strong></div><div><small>'+tr("BALANÇO","BALANCE")+'</small><strong>'+escapeHtml(d[7])+'</strong></div></div><h4>'+tr("O que acontece nesta reação?","¿Qué ocurre en esta reacción?")+'</h4><p>'+escapeHtml(tr(d[8],d[9]))+'</p><div class="enzo-krebs-exam"><strong>★ '+tr("IMPORTANTE PARA A PROVA","IMPORTANTE PARA EL EXAMEN")+'</strong><p>'+escapeHtml(tr(d[10],d[11]))+'</p></div>';
+ this.current=(i+N)%N;const d=entries[this.current],cur=this.current,prevNode=(cur+N-1)%N;
+ circle.querySelectorAll(".kx-node").forEach(n=>{const k=+n.dataset.step;n.classList.toggle("sel",k===cur);n.classList.toggle("sub",k===prevNode);n.setAttribute("aria-pressed",String(k===cur))});
+ circle.querySelectorAll(".kx-name").forEach(n=>{const k=+n.dataset.step;n.classList.toggle("sel",k===cur);n.classList.toggle("sub",k===prevNode)});
+ circle.querySelectorAll(".kx-enz").forEach(n=>n.classList.toggle("sel",+n.dataset.r===cur));
+ circle.querySelectorAll(".kx-arc").forEach(n=>{const on=+n.dataset.r===cur;n.classList.toggle("active",on);n.querySelector(".kx-arc-line").setAttribute("marker-end",on?"url(#kxArrOn)":"url(#kxArr)")});
+ panel.innerHTML='<div class="enzo-krebs-detailhead"><span class="enzo-krebs-stepbadge">'+tr("ETAPA","ETAPA")+' '+(cur+1)+'/8</span><h3>'+escapeHtml(tr(d[5],d[6]))+' → '+escapeHtml(tr(d[0],d[1]))+'</h3></div><div class="enzo-krebs-detailgrid"><div><small>'+tr("ENZIMA","ENZIMA")+'</small><strong>'+escapeHtml(tr(d[3],d[4]))+'</strong></div><div><small>'+tr("BALANÇO","BALANCE")+'</small><strong>'+escapeHtml(d[7])+'</strong></div></div><h4>'+tr("O que acontece nesta reação?","¿Qué ocurre en esta reacción?")+'</h4><p>'+escapeHtml(tr(d[8],d[9]))+'</p><div class="enzo-krebs-exam"><strong>★ '+tr("IMPORTANTE PARA A PROVA","IMPORTANTE PARA EL EXAMEN")+'</strong><p>'+escapeHtml(tr(d[10],d[11]))+'</p></div>';
 }};
 window.BioKrebsCycle=controller;controller.draw();
 })();
