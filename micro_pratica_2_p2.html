@@ -2244,7 +2244,7 @@ window.addEventListener("pagehide",saveToSupabase);
     '.section h1','.section h2','.section h3','.section h4','.section h5','.section h6',
     '.section blockquote','.section .fc-q','.section .fc-back-text'
   ].join(',');
-  const PAGE_SYNC_KEY=window.PAGE_KEY||location.pathname.split('/').pop().replace(/\\.html?$/i,'');
+  const PAGE_SYNC_KEY=window.PAGE_KEY||location.pathname.split('/').pop().replace(/\.html?$/i,'');
   let syncClient=null,syncUser=null,syncReady=false,syncTimer=null;
   const STORAGE_KEY=`enzo-highlights:v2:${PAGE_SYNC_KEY}`;
   async function initCloudHighlights(){
