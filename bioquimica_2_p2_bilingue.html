@@ -659,6 +659,7 @@ nav.tabs button,.chapter-title,.info-block,.flashcard,.q-card{font-family:var(--
 const TOPICS=[["lip","🫒","Lipídios","Lipídios fornecem cerca de 9 kcal/g, formam membranas e participam da "],["aa","🧬","Metabolismo dos aminoácidos","Aminoácidos não têm reserva especializada. Seu grupo amino deve ser pr"],["krebs","🔄","Ciclo de Krebs","Na matriz mitocondrial (exceto succinato desidrogenase, na membrana in"],["ox","⚡","Fosforilação oxidativa","Na membrana mitocondrial interna, NADH e FADH₂ doam elétrons à cadeia "]];
 let FC=[];
 const QD=[];
+const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');let particles=[];
 function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}resize();window.addEventListener('resize',resize);
 for(let i=0;i<60;i++)particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+.5,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3,alpha:Math.random()*.35+.08,color:Math.random()>.5?'56,232,192':'79,156,249'});
 function animParticles(){ctx.clearRect(0,0,canvas.width,canvas.height);particles.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>canvas.width)p.dx*=-1;if(p.y<0||p.y>canvas.height)p.dy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(${p.color},${p.alpha})`;ctx.fill();});requestAnimationFrame(animParticles)}animParticles();
