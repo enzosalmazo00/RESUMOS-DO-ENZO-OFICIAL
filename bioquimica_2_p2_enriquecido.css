@@ -40,3 +40,27 @@
 .enzo-deep strong{color:#d9efff}
 .enzo-deep .enzo-deep-tip{font:600 12px var(--font-body);margin-top:13px;color:var(--gold)}
 @media(max-width:650px){.enzo-krebs-figure{padding:6px;border-radius:15px}.enzo-krebs-ring{width:100%}.enzo-krebs-node{width:19%;height:14%;min-height:42px;border-radius:9px;padding:2px;font-size:clamp(6.3px,2.1vw,10px)}.enzo-krebs-node .enzo-krebs-num{font-size:9px}.enzo-krebs-node small{font-size:8px}.enzo-krebs-core{width:32%;height:32%;gap:0;font-size:clamp(8px,2vw,12px)}.enzo-krebs-core b,.enzo-krebs-core small{font-size:8px}.enzo-krebs-core .k-core-symbol{font-size:16px}.enzo-krebs-detailgrid{grid-template-columns:1fr}.enzo-krebs-panel{padding:14px!important}}
+
+/* Flashcards P2: tipografia original da plataforma com espaço de leitura */
+#flashcards .flashcard{height:288px}
+#flashcards .flashcard-front{justify-content:center;align-items:center;text-align:center;gap:12px;padding:24px}
+#flashcards .flashcard-front .fc-q{font:700 clamp(15px,1.55vw,19px)/1.45 var(--font-display);overflow-wrap:anywhere;hyphens:auto}
+#flashcards .flashcard-front .fc-tag{position:absolute;top:19px;left:16px;right:16px}
+#flashcards .flashcard-front .fc-hint{position:absolute;bottom:19px;left:0;right:0;text-align:center}
+#flashcards .flashcard-back{justify-content:center;align-items:center;text-align:center;padding:24px;gap:13px}
+#flashcards .flashcard-back .fc-back-text{font:500 clamp(14px,1.45vw,17px)/1.58 var(--font-body);white-space:normal;overflow-y:auto;overflow-wrap:anywhere}
+#flashcards .flashcard-back .fc-tag{font-size:11px}
+#flashcards .flashcard:hover .flashcard-front{border-color:var(--accent2)}
+#quiz .q-card .q-text{font-size:15px;line-height:1.6}
+#quiz .q-card .opt-btn{min-height:48px}
+#quiz .q-card .exp-box{font-size:14px;line-height:1.8}
+@media(max-width:650px){
+ .enzo-krebs-figure{overflow-x:auto;padding:8px}
+ .enzo-krebs-ring{min-width:680px;width:680px}
+ .enzo-krebs-node{width:15.5%;height:13%;min-height:80px;font-size:12px}
+ .enzo-krebs-node .enzo-krebs-num{font-size:12px}
+ .enzo-krebs-node small{font-size:10px}
+ .enzo-krebs-core{width:35%;height:35%;font-size:13px}
+ .enzo-krebs-core b,.enzo-krebs-core small{font-size:10px}
+ #flashcards .flashcard{height:310px}
+}
