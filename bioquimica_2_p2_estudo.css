@@ -1,0 +1,32 @@
+
+.enzo-deep-intro{padding:26px 22px 12px;margin-top:30px;border-top:1px solid var(--border)}
+.enzo-deep-intro>span,.enzo-path-title{font:700 11px var(--font-mono);color:var(--accent2);letter-spacing:.06em}
+.enzo-deep-intro h2{font:800 clamp(19px,3vw,27px) var(--font-display);color:var(--text);margin:12px 0}
+.enzo-deep-intro p{color:var(--muted);font-size:14px;line-height:1.7}
+.enzo-pathway{border:1px solid var(--border);border-radius:18px;background:linear-gradient(125deg,var(--card),var(--bg2));padding:22px 18px;margin:14px 0 28px;overflow:hidden}
+.enzo-path-title{margin-bottom:18px}
+.enzo-path-flow{display:flex;flex-wrap:wrap;align-items:stretch;justify-content:center;gap:8px}
+.enzo-path-step{min-width:115px;max-width:148px;flex:1 1 100px;padding:12px 9px;text-align:center;border-radius:12px;border:1px solid rgba(56,232,192,.3);background:rgba(56,232,192,.06);display:flex;flex-direction:column;gap:8px;justify-content:center}
+.enzo-path-step b{font:700 12px var(--font-body);color:var(--text);line-height:1.25}
+.enzo-path-index{font:700 10px var(--font-mono);color:var(--accent2)}
+.enzo-path-arrow{align-self:center;font-size:20px;color:var(--gold)}
+.enzo-concept-list{counter-reset:enzo;list-style:none;margin:8px 0;padding:0}
+.enzo-concept-list li{display:grid;grid-template-columns:24px 1fr;gap:0 10px;margin:0;padding:13px 4px;border-bottom:1px solid rgba(79,156,249,.13)}
+.enzo-concept-list li:before{counter-increment:enzo;content:counter(enzo,decimal-leading-zero);grid-row:span 2;font:700 11px var(--font-mono);color:var(--accent2);padding-top:6px}
+.enzo-concept-list li p{grid-column:2;font-size:14px;line-height:1.7;margin:0 0 5px}
+.enzo-concept-list li span{grid-column:2;color:var(--muted);font-size:13px;line-height:1.6}
+.enzo-term{color:var(--gold);font-weight:800}
+.enzo-membrane-wrap{border-radius:13px;border:1px solid rgba(79,156,249,.2);background:#0b1221;margin:15px 0 20px;overflow:hidden}
+.enzo-h-space{color:var(--accent2);font:600 11px var(--font-mono);padding:13px;text-align:center;letter-spacing:.02em}
+.enzo-h-space strong{color:var(--gold)}
+.enzo-membrane{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;background:repeating-linear-gradient(90deg,#37507b 0,#37507b 13px,#25395c 13px,#25395c 25px);padding:12px}
+.enzo-complex{border:2px solid var(--accent2);border-radius:12px;background:#18283e;padding:16px 8px;text-align:center;font:800 22px var(--font-display);color:var(--text)}
+.enzo-complex small{display:block;color:var(--gold);font:600 11px var(--font-mono)}
+.enzo-atp{border-color:var(--gold)}
+.enzo-matrix{padding:15px;color:var(--muted);font-size:12px;line-height:1.8;text-align:center}
+.enzo-krebs-integracao{padding:20px;border:1px solid rgba(249,201,79,.3);background:rgba(249,201,79,.06);border-radius:14px;margin:20px 0}
+.enzo-krebs-integracao strong{color:var(--gold)}
+.enzo-krebs-integracao div{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.enzo-krebs-integracao div span{background:#1f2845;border:1px solid rgba(249,201,79,.3);border-radius:10px;padding:10px;font:700 13px var(--font-mono)}
+.enzo-krebs-integracao p{font-size:13px;line-height:1.7}
+@media(max-width:650px){.enzo-path-step{min-width:80px;flex-basis:85px}.enzo-path-arrow{font-size:14px}.enzo-complex{font-size:14px;padding:9px 2px}.enzo-deep-intro{padding:16px 4px 8px}}
