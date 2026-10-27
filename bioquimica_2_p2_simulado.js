@@ -36,7 +36,13 @@ const bq=facts.map((f,i)=>{
  return {n:i+1,t,c:f.c,q:question,qe:questionES,o:pt.o.map((v,j)=>({l:"ABCD"[j],v})),oe:es.o.map((v,j)=>({l:"ABCD"[j],v})),cr:t==="tf"?(isFalse?"F":"V"):pt.cr,crES:es.cr,ex:"Resposta: "+f.a+". "+f.why,exe:"Respuesta: "+f.ae+". "+f.whye,f};
 });
 QD.splice(0,QD.length,...bq);
-FC.splice(0,FC.length,...facts.map(f=>({c:f.c,q:f.pt,qe:f.es,a:"<strong>"+esc(f.a)+"</strong>. "+esc(f.why),ae:"<strong>"+esc(f.ae)+"</strong>. "+esc(f.whye)})));
+const studyCards=facts.map(f=>({c:f.c,q:f.pt,qe:f.es,a:"<strong>"+esc(f.a)+"</strong>. "+esc(f.why),ae:"<strong>"+esc(f.ae)+"</strong>. "+esc(f.whye)}));
+(window.BIO2P2_KREBS_STEPS||[]).forEach((k,i)=>{
+ studyCards.push({c:"Krebs",q:"Qual enzima catalisa a etapa "+(i+1)+" do Krebs?",qe:"¿Qué enzima cataliza la etapa "+(i+1)+" de Krebs?",a:"<strong>"+esc(k[3])+"</strong>. "+esc(k[5])+" → "+esc(k[0]),ae:"<strong>"+esc(k[4])+"</strong>. "+esc(k[6])+" → "+esc(k[1])});
+ studyCards.push({c:"Krebs",q:"Descreva a reação "+(i+1)+" do Krebs.",qe:"Describa la reacción "+(i+1)+" del Krebs.",a:esc(k[8]),ae:esc(k[9])});
+ studyCards.push({c:"Krebs",q:"Qual o balanço da reação "+(i+1)+"?",qe:"¿Cuál es el balance de la reacción "+(i+1)+"?",a:"<strong>"+esc(k[7])+"</strong>. "+esc(k[10]),ae:"<strong>"+esc(k[7])+"</strong>. "+esc(k[11])});
+});
+FC.splice(0,FC.length,...studyCards);
 const fcFilter=document.getElementById("fcFilter");
 const qType=document.getElementById("qType");
 const qCategory=document.getElementById("qCategory");
@@ -51,6 +57,9 @@ function resetSelectors(){
  qType.innerHTML='<option value="">'+fmt("Todos os tipos","Todos los tipos")+'</option><option value="mc">'+fmt("Múltipla escolha","Opción múltiple")+'</option><option value="tf">'+fmt("Verdadeiro ou falso","Verdadero o falso")+'</option><option value="gap">'+fmt("Completar lacunas","Completar espacios")+'</option>';
  qType.value=["mc","tf","gap"].includes(old)?old:"";
 }
+window.bioShuffleFlashcards=function(){for(let i=FC.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[FC[i],FC[j]]=[FC[j],FC[i]];}window.renderFlashcards();};
+const shufBtn=document.querySelector("#flashcards button[onclick]");
+if(shufBtn&&shufBtn.getAttribute("onclick")==="shuffleFlashcards()")shufBtn.setAttribute("onclick","bioShuffleFlashcards()");
 const setCounts=()=>{
  document.querySelectorAll("[data-question-count]").forEach(n=>n.textContent=QD.length);
  document.querySelectorAll("[data-flashcard-count]").forEach(n=>n.textContent=FC.length);
@@ -59,7 +68,7 @@ const setCounts=()=>{
  if(f)f.textContent=FC.length+" "+fmt("cartões de revisão","tarjetas de repaso");
  document.querySelector("#quiz .info-block h4").textContent=fmt("Questões dos slides + Harper e Lehninger","Preguntas de clases + Harper y Lehninger");
  document.querySelector("#quiz .info-block p").textContent=fmt("40 questões de múltipla escolha, 40 verdadeiro/falso e 20 lacunas. Todas com resposta fundamentada e explicação.","40 preguntas de opción múltiple, 40 verdadero/falso y 20 espacios. Cada una con respuesta justificada.");
- document.querySelector("#flashcards .info-block h4").textContent=fmt("100 conceitos para recuperação ativa","100 conceptos para recuperación activa");
+ document.querySelector("#flashcards .info-block h4").textContent=fmt(FC.length+" conceitos para recuperação ativa",FC.length+" conceptos para recuperación activa");
  document.getElementById("fcSearch").placeholder=fmt("Buscar conceito, enzima ou reação...","Buscar concepto, enzima o reacción...");
  document.querySelector("#quiz .chapter-title").textContent="📝 "+fmt("Simulado de Bioquímica II — P2","Simulacro de Bioquímica II — P2");
 };
