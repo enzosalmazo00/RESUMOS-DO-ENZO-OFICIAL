@@ -25,6 +25,16 @@ function diagram(g){
  }
  return '<div class="enzo-pathway"><div class="enzo-path-title">'+tr("MAPA DO PROCESSO — SIGA DA ESQUERDA PARA A DIREITA","MAPA DEL PROCESO — SIGA DE IZQUIERDA A DERECHA")+'</div><div class="enzo-path-flow">'+nodes+'</div></div>';
 }
+const iconPaths={
+intro:'<path d="M4 3h15a1 1 0 0 1 1 1v17H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3"/><path d="M3 17a3 3 0 0 1 3-3h14"/>',
+lip:'<path d="M12 22a8 8 0 0 0 8-8c0-4-8-12-8-12S4 10 4 14a8 8 0 0 0 8 8z"/>',
+aa:'<circle cx="12" cy="12" r="1.5"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/>',
+krebs:'<path d="M20 7V3l-3 3a8 8 0 1 0 2.5 9"/><path d="M20 3v5h-5"/>',
+ox:'<path d="M13 2 4 13h7l-1 9 10-12h-7l0-8z"/>',
+flashcards:'<rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 8h7M9 12h7M3 8V6a2 2 0 0 1 2-2"/>',
+quiz:'<path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/>'
+};
+const vectorIcon=id=>'<svg class="enzo-vector-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(iconPaths[id]||iconPaths.intro)+'</svg>';
 function renderAll(){
  for(const g of groups){
   const target=document.getElementById(g.key);
@@ -46,14 +56,14 @@ function renderAll(){
   holder.innerHTML=html;
  }
  const introductions=[["Lipídios","Lípidos","Digestão, absorção, lipólise, lipogênese e beta-oxidação","Digestión, absorción, lipólisis, lipogénesis y beta-oxidación"],["Aminoácidos","Aminoácidos","Transaminação, glutamato e ciclo da ureia","Transaminación, glutamato y ciclo de urea"],["Ciclo de Krebs","Ciclo de Krebs","Oito reações: produtos, enzimas, energia e controle","Ocho reacciones: productos, enzimas, energía y control"],["Fosforilação oxidativa","Fosforilación oxidativa","Cadeia respiratória, força próton-motriz e ATP sintase","Cadena respiratoria, fuerza protón-motriz y ATP sintasa"]];
-document.querySelectorAll("#topicCards .intro-card").forEach((card,i)=>{const v=introductions[i];if(!v)return;const title=card.querySelector(".ic-name"),desc=card.querySelector(".ic-desc");if(title)title.textContent=tr(v[0],v[1]);if(desc)desc.textContent=tr(v[2],v[3]);});
+document.querySelectorAll("#topicCards .intro-card").forEach((card,i)=>{const v=introductions[i];const pict=card.querySelector(".ic-icon");if(pict)pict.innerHTML=vectorIcon(["lip","aa","krebs","ox"][i]);if(!v)return;const title=card.querySelector(".ic-name"),desc=card.querySelector(".ic-desc");if(title)title.textContent=tr(v[0],v[1]);if(desc)desc.textContent=tr(v[2],v[3]);});
 document.querySelectorAll("#quiz .q-stats .sbox .sl").forEach((n,i)=>{const lbl=[["Corretas","Correctas"],["Incorretas","Incorrectas"],["Pendentes","Pendientes"]][i];if(lbl)n.textContent=tr(lbl[0],lbl[1]);});
 const fcintro=document.querySelector("#flashcards .info-block p");if(fcintro)fcintro.textContent=tr("Responda mentalmente antes de virar o cartão. Use os filtros para revisar cada tema ou embaralhe para integrar as vias metabólicas.","Responda antes de girar la tarjeta. Use filtros por tema o mezcle los conceptos para integrar las vías metabólicas.");
 const fbintro=document.querySelector("#flashcards .info-block h4");if(fbintro)fbintro.textContent=tr("124 cartões com explicações e reações","124 tarjetas con explicaciones y reacciones");
 document.querySelectorAll("nav.tabs [data-section]").forEach(b=>{
  const section=b.dataset.section;
  const label={intro:["📖 Início","📖 Inicio"],lip:["🧬 Lipídios","🧬 Lípidos"],aa:["🔬 Aminoácidos","🔬 Aminoácidos"],krebs:["🔄 Ciclo de Krebs","🔄 Ciclo de Krebs"],ox:["⚡ Fosforilação oxidativa","⚡ Fosforilación oxidativa"],flashcards:["🃏 Flashcards","🃏 Tarjetas"],quiz:["📝 Questões","📝 Preguntas"]}[section];
- if(label)b.textContent=tr(label[0],label[1]);
+ if(label)b.innerHTML=vectorIcon(section)+"<span>"+esc(tr(label[0],label[1]).replace(/^[^ ]+ /,""))+"</span>";
  });
  document.querySelectorAll("#flashcards .chapter-title").forEach(x=>x.textContent="🃏 "+tr("Flashcards — Bioquímica II P2","Tarjetas — Bioquímica II P2"));
  document.querySelectorAll("#quiz .study-tools label").forEach(x=>{if(x.htmlFor==="qCategory")x.textContent=tr("Tema","Tema");if(x.htmlFor==="qType")x.textContent=tr("Tipo","Tipo")});
