@@ -1668,7 +1668,7 @@
               <div class="combo-header">
                 <div>
                   <div class="combo-title">📦 Pacote Completo — P2 · 4º Semestre</div>
-                  <div class="combo-sub">Todas as disciplinas com P2 disponível</div>
+                  <div class="combo-sub">Todas as 7 disciplinas P2, inclusive futuros lançamentos · acesso por 50 dias após a compra</div>
                 </div>
                 <div class="combo-preco-box">
                   <div class="combo-preco-new" id="combo-s4p2-new">R$ 49,90</div>
@@ -2230,6 +2230,18 @@ function hasAccess(materia, tipo) {
   return validoNoProfile(col) || validoNoProfile(pacoteKey);
 }
 
+function hasS4Pack(tipo) {
+  if(!profile)return false;
+  if(profile.is_admin)return true;
+  var k="pacote_s4_"+tipo, a=acessosCache[k];
+  if(a&&(!a.expira_em||new Date(a.expira_em)>new Date()))return true;
+  if(!profile[k])return false;
+  var exp=profile[k+"_expira"];
+  if(exp)return new Date(exp)>new Date();
+  var pres=Array.isArray(profile.resumos_presente)&&profile.resumos_presente.indexOf(k)>=0;
+  return pres&&(!profile.acesso_expira_em||new Date(profile.acesso_expira_em)>new Date());
+}
+
 function daysLeftForResumo(materia, tipo) {
   if (!profile) return null;
   var col = colKey(materia, tipo);
@@ -2237,17 +2249,18 @@ function daysLeftForResumo(materia, tipo) {
   
   // ── [M2] DUAL-MODE: Tenta acessos PRIMEIRO ────────────────────────────────
   var chaveAcesso = col;
-  var acesso = acessosCache[chaveAcesso];
-  
-  if (acesso && acesso.expira_em) {
-    var diff = new Date(acesso.expira_em) - new Date();
-    return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
+  var acesso = acessosCache[chaveAcesso], pack = acessosCache[pacoteKey];
+  var expiryCandidates=[acesso&&acesso.expira_em,pack&&pack.expira_em,
+    profile[col+"_expira"],profile[pacoteKey+"_expira"]]
+    .filter(function(x){return x&&new Date(x)>new Date();});
+  if(expiryCandidates.length){
+    var latest=Math.max.apply(null,expiryCandidates.map(function(x){return new Date(x).getTime();}));
+    return Math.max(0,Math.ceil((latest-Date.now())/86400000));
   }
-  
-  // ── Fallback: Sistema antigo (profiles) ────────────────────────────────────
+  // ── Fallback: cortesias sem expiração própria ────────────────────────────────
   var expiraCol = col + "_expira";
   var expiraPacote = pacoteKey + "_expira";
-  var expira = profile[expiraCol] || profile[expiraPacote];
+  var expira = null;
   if (!expira) {
     var arr = Array.isArray(profile.resumos_presente) ? profile.resumos_presente : [];
     var cortesia = arr.indexOf(col) >= 0 || arr.indexOf(pacoteKey) >= 0;
@@ -3104,6 +3117,9 @@ window.addToCartS4 = function(key) {
     m = MATERIAS_S4.find(function(x){ return x.key + "_p1" === key; });
   }
   if (!m) return;
+  if (tipo==="p2" && cart.some(function(c){return c.key==="pacote_s4_p2";})){
+    alert("O pacote completo P2 já inclui esta disciplina e os próximos lançamentos.");return;
+  }
   if (cart.find(function(c){ return c.key === key; })) {
     removeFromCart(key); return;
   }
@@ -3116,6 +3132,14 @@ window.addToCartS4 = function(key) {
 
 // ── S4: pacote completo por prova (P1, P2 ou Final) ────────────────────────────
 window.addComboS4ToCart = function(tipo) {
+  // P2: um único produto inclui todas as sete matérias, publicadas ou futuras.
+  if(tipo==="p2"){
+    if(hasS4Pack("p2")){alert("Você já possui o pacote completo P2 do 4º semestre.");return;}
+    cart=cart.filter(function(c){return c.tipo!=="s4_p2";});
+    cart.push({key:"pacote_s4_p2",label:"Pacote Completo — P2 · 4º Semestre (7 disciplinas)",
+      emoji:"📦",preco:PRECO_S4_P2_PACK,tipo:"s4_p2",isComboS4:"p2"});
+    updateCartUI();renderStoreGridS4();openCart();return;
+  }
   var readyField = tipo === "p1" ? "p1Ready" : (tipo === "p2" ? "p2Ready" : "finalReady");
   var naoAdquiridos = MATERIAS_S4.filter(function(m){ return m[readyField] && !hasAccess(m, tipo); });
   if (naoAdquiridos.length === 0) { alert("Você já possui todos os resumos dessa prova disponíveis no momento!"); return; }
@@ -3193,7 +3217,7 @@ function renderStoreGridS4() {
 
     if (!comboCard) return;
 
-    if (itensReady.length < 2) {
+    if (tipo !== "p2" && itensReady.length < 2) {
       comboCard.style.display = "none";
       return;
     }
@@ -3208,7 +3232,14 @@ function renderStoreGridS4() {
     if (comboPct) comboPct.textContent = "🏷️ " + Math.max(0, pct) + "% off";
 
     if (comboBtn) {
-      if (readyNaoAdq.length === 0) {
+      if(tipo==="p2"){
+        var ownedPack=hasS4Pack("p2");
+        comboBtn.disabled=ownedPack;
+        comboBtn.textContent=ownedPack?"✅ Pacote P2 já adquirido":
+          (cart.some(function(c){return c.key==="pacote_s4_p2";})?
+            "✓ Pacote P2 no carrinho — "+formatPrice(PRECO_S4_P2_PACK):
+            "🛒 Adicionar pacote completo ao carrinho — "+formatPrice(PRECO_S4_P2_PACK));
+      } else if (readyNaoAdq.length === 0) {
         comboBtn.textContent = "✅ Você já possui todos os resumos disponíveis";
         comboBtn.disabled = true;
       } else {
@@ -3603,7 +3634,7 @@ function calcCartTotal() {
   var subtotalS1 = s1Items.length * PRECO_S1_UNIT;
   var subtotalS2 = s2Items.length * PRECO_S2_UNIT;
   var subtotalS4P1 = s4p1Items.length * PRECO_S4_P1_UNIT;
-  var subtotalS4P2 = s4p2Items.length * PRECO_S4_P2_UNIT;
+  var subtotalS4P2 = s4p2Items.reduce(function(sum,c){return sum+(c.key==="pacote_s4_p2"?PRECO_S4_P2_PACK:PRECO_S4_P2_UNIT);},0);
   var subtotalS4Final = s4finalItems.length * PRECO_S4_FINAL_UNIT;
   var subtotalCurso = cursoItems.reduce(function(acc,c){ return acc + c.preco; }, 0);
   var subtotalAulao = aulaoItems.reduce(function(acc,c){ return acc + Number(c.preco||0); }, 0);
@@ -3681,7 +3712,7 @@ function calcCartTotal() {
     var temCombo = sc.items.some(function(c){ return c.isComboS4; });
     if (temCombo) {
       totalS4[k] = sc.pack;
-      descLabel += (descLabel ? " + " : "") + "🏷️ Pacote " + sc.rotulo + " 4º Sem. completo";
+      descLabel += (descLabel ? " + " : "") + (k==="p2"?"Pacote completo P2 · 4º semestre":"🏷️ Pacote "+sc.rotulo+" 4º Sem. completo");
     } else if (sc.items.length >= 3) {
       totalS4[k] = sc.items.length * sc.combo3;
       descLabel += (descLabel ? " + " : "") + "🏷️ Desconto " + sc.rotulo + " 4º Sem. 3+ itens (20% off)";
