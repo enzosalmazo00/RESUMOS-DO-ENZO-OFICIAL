@@ -772,7 +772,7 @@ nav.tabs button:hover .enzo-vector-icon,nav.tabs button.active .enzo-vector-icon
 /* enzimas */
 .kx-enz{cursor:pointer;outline:none}
 .kx-enz rect:first-child{fill:#111c33;stroke:rgba(79,156,249,.4);stroke-width:1.5;transition:all .18s}
-.kx-enz text{fill:#dfe9ff;font-size:13.5px;font-weight:600}
+.kx-enz text{fill:#dfe9ff;font-size:14.5px;font-weight:600}
 .kx-enz:hover rect:first-child,.kx-enz:focus-visible rect:first-child{stroke:#9ec0ff}
 .kx-enz.sel rect:first-child{fill:#123a46;stroke:var(--accent2);stroke-width:2.5;filter:drop-shadow(0 0 8px rgba(56,232,192,.4))}
 .kx-enz .kx-rn{fill:#0a1121;stroke:var(--accent);stroke-width:1.5}
@@ -805,6 +805,37 @@ nav.tabs button:hover .enzo-vector-icon,nav.tabs button.active .enzo-vector-icon
 .kx-legend{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;align-items:center;margin:6px 8px 4px;font:700 11.5px var(--font-mono);color:var(--muted)}
 .kx-legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 .kx-legend .kx-sep{width:1px;height:14px;background:var(--border)}
+.kx-guide{margin:10px 8px 4px;padding:12px 14px;border:1px solid var(--border);border-radius:12px;background:rgba(79,156,249,.06)}.kx-guide-main{font-size:13px;line-height:1.6;color:var(--text);margin:0 0 8px}.kx-guide-main b{color:var(--accent2)}.kx-guide-grid{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--muted)}.kx-guide-grid i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}.kx-guide-grid b{color:var(--text);font-family:var(--font-mono)}
+.kx-now{margin:8px 8px 4px;padding:12px 16px;border-left:3px solid var(--accent2);background:rgba(56,232,192,.07);border-radius:0 10px 10px 0;font-size:14px;line-height:1.6;color:var(--text)}.kx-now b{color:var(--accent2);margin-right:4px}
+.kx-tablewrap{margin:12px 8px 4px;overflow-x:auto}.kx-table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.45}.kx-table th{font:700 10.5px var(--font-mono);color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);letter-spacing:.05em}.kx-table td{padding:9px 10px;border-bottom:1px solid rgba(79,156,249,.1);vertical-align:top;color:var(--text)}.kx-table td small{display:block;color:var(--muted);font-size:11.5px}.kx-row{cursor:pointer;transition:background .15s;outline:none}.kx-row:hover,.kx-row:focus-visible{background:rgba(79,156,249,.1)}.kx-row.sel{background:rgba(56,232,192,.13)}.kx-row.sel td:first-child{box-shadow:inset 3px 0 0 var(--accent2)}
+.kx-gloss{margin:12px 8px 6px;border:1px solid var(--border);border-radius:12px;background:rgba(0,0,0,.14);padding:4px 14px}.kx-gloss summary{cursor:pointer;padding:10px 0;font:700 12px var(--font-mono);color:var(--gold);letter-spacing:.04em}.kx-gloss dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:4px 22px;margin:0 0 10px}.kx-gloss dt{font-weight:700;color:var(--accent2);font-size:13px}.kx-gloss dd{margin:0 0 8px;font-size:13px;line-height:1.55;color:var(--muted)}
+.kx-lead{font-size:16px!important;line-height:1.65!important;color:var(--text);margin:0 0 16px;padding:12px 14px;background:rgba(56,232,192,.07);border-radius:10px}
+.kx-fstrip{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin:0 0 14px;padding:14px 10px;background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:14px}
+.kx-mol{min-width:118px;text-align:center;padding:10px 12px;border:2px solid var(--c);border-radius:14px;background:#0d172b;display:flex;flex-direction:column;gap:4px;align-items:center}.kx-mol b{font:700 13.5px var(--font-display);color:var(--text)}.kx-cn{font:800 17px var(--font-display)}.kx-dots{display:flex;gap:3px;flex-wrap:wrap;justify-content:center}.kx-dots i{display:block;width:7px;height:7px;border-radius:50%}.kx-plus{font:700 20px var(--font-mono);color:var(--muted)}
+.kx-fmid{display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;min-width:150px;max-width:230px}.kx-fenz{font:700 12px var(--font-body);color:var(--accent)}.kx-farrow{font-size:30px;line-height:1;color:var(--accent2)}.kx-ftype{font:700 10.5px var(--font-mono);color:var(--gold)}.kx-fchips{display:flex;flex-wrap:wrap;gap:3px 10px;justify-content:center;font:700 12px var(--font-mono);margin-top:2px}
+.kx-track{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:0 0 18px;padding:10px 14px;border:1px dashed rgba(159,176,214,.35);border-radius:12px}.kx-trk-t{flex:1 0 100%;font:700 10.5px var(--font-mono);color:var(--muted);letter-spacing:.04em}.kx-trk{display:inline-flex;align-items:center;gap:5px;font:700 12.5px var(--font-mono)}.kx-trk i{width:13px;height:13px;border-radius:50%;border:2px solid var(--c);opacity:.45}.kx-trk i.on{background:var(--c);opacity:1}.kx-trk i.new{box-shadow:0 0 0 4px rgba(255,255,255,.14),0 0 12px var(--c)}.kx-trk em{font-style:normal;color:var(--muted);font-size:11px}
+@media(max-width:650px){.kx-fstrip{flex-direction:column}.kx-farrow{transform:rotate(90deg)}.kx-table th:nth-child(3),.kx-table td:nth-child(3){display:none}}
+/* painel lateral fixo no computador: o aluno clica no ciclo e lê/avança sem rolar */
+.kx-extra{margin-top:18px}
+.kx-extra .kx-table,.kx-extra .kx-guide,.kx-extra .kx-gloss{max-width:1100px}
+.enzo-krebs-control{position:sticky;bottom:10px;z-index:5}
+@media(min-width:1100px){
+ #krebs .container{max-width:min(1600px,97vw)}
+ #krebs .container>.chapter-title,#krebs .container>.info-block,#krebs .container>.unit-banner{max-width:1060px;margin-left:auto;margin-right:auto}
+ .kx-layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(400px,.85fr);gap:20px;align-items:start}
+ .enzo-krebs-figure.kx{margin:0;padding:10px 14px 8px}
+ .kx-svg{max-height:calc(100vh - 205px)}
+ .kx-side{position:sticky;top:70px;max-height:calc(100vh - 86px);display:flex;flex-direction:column;gap:10px}
+ .kx-side .enzo-krebs-control{position:static;margin:0;flex:0 0 auto}
+ .kx-side .enzo-krebs-panel{margin:0;min-height:0;flex:1 1 auto;overflow-y:auto;padding:18px!important}
+ .kx-side .kx-fstrip{flex-direction:column;gap:6px}.kx-side .kx-farrow{transform:rotate(90deg);font-size:24px}
+ .kx-side .kx-fmid{max-width:none}
+ .kx-now{display:none}
+ .kx-caption{display:none}
+}
+@media(max-width:1099px){
+ .enzo-krebs-control{background:rgba(10,13,20,.92);backdrop-filter:blur(8px);padding:8px;border-radius:12px;border:1px solid var(--border)}
+}
 .kx-caption{margin:8px auto 4px;text-align:center}
 .enzo-krebs-control{flex-wrap:wrap}
 @media(max-width:650px){.kx-svg{min-width:760px}.enzo-krebs-figure.kx{padding:8px}}
@@ -1665,6 +1696,34 @@ const f1=n=>n.toFixed(1);
 const CC={6:"#38e8c0",5:"#4f9cf9",4:"#f9c94f"};
 const KIND={c:"#f9c94f",o:"#9fb0d6",n:"#38e8c0",f:"#c47bff",g:"#f9c94f",x:"#f9784f"};
 const REGULATED=[0,2,3];
+const TYPE=[["Condensação","Condensación"],["Isomerização","Isomerización"],["Oxidação + descarboxilação","Oxidación + descarboxilación"],["Oxidação + descarboxilação","Oxidación + descarboxilación"],["Fosforilação em nível de substrato","Fosforilación a nivel de sustrato"],["Oxidação (desidrogenação)","Oxidación (deshidrogenación)"],["Hidratação","Hidratación"],["Oxidação (desidrogenação)","Oxidación (deshidrogenación)"]];
+const CARB=[["4C + 2C → 6C","entram 2 carbonos novos","entran 2 carbonos nuevos"],["6C → 6C","só muda o OH de lugar","solo cambia el OH de lugar"],["6C → 5C","perde 1 carbono (CO₂)","pierde 1 carbono (CO₂)"],["5C → 4C","perde 1 carbono (CO₂)","pierde 1 carbono (CO₂)"],["4C → 4C","sem perda de carbono","sin pérdida de carbono"],["4C → 4C","sem perda de carbono","sin pérdida de carbono"],["4C → 4C","sem perda de carbono","sin pérdida de carbono"],["4C → 4C","sem perda de carbono","sin pérdida de carbono"]];
+const RENDE=["—","—","1 NADH + 1 CO₂","1 NADH + 1 CO₂","1 GTP","1 FADH₂","—","1 NADH"];
+const GAIN=[{},{},{n:1,x:1},{n:1,x:1},{g:1},{f:1},{},{n:1}];
+const FRASE=[
+["O acetil (2C) entra e se junta ao oxaloacetato (4C): nasce o citrato (6C). É a «porta de entrada» do ciclo.","El acetilo (2C) entra y se une al oxaloacetato (4C): nace el citrato (6C). Es la «puerta de entrada» del ciclo."],
+["O citrato troca o OH de lugar (passando pelo cis-aconitato) e vira isocitrato, pronto para ser oxidado. Nada é ganho nem perdido.","El citrato cambia el OH de lugar (pasando por cis-aconitato) y se vuelve isocitrato, listo para oxidarse. No se gana ni se pierde nada."],
+["Primeira «colheita»: o isocitrato é oxidado, rende 1 NADH e solta o 1º CO₂. A molécula passa de 6C para 5C.","Primera «cosecha»: el isocitrato se oxida, rinde 1 NADH y libera el 1.er CO₂. La molécula pasa de 6C a 5C."],
+["Segunda colheita: o α-cetoglutarato rende 1 NADH, solta o 2º CO₂ e recebe a CoA. Passa de 5C para 4C.","Segunda cosecha: el α-cetoglutarato rinde 1 NADH, libera el 2.º CO₂ y recibe la CoA. Pasa de 5C a 4C."],
+["A energia da ligação tioéster do succinil-CoA é usada para formar GTP (ou ATP): a única etapa com nucleotídeo trifosfato direto.","La energía del enlace tioéster del succinil-CoA se usa para formar GTP (o ATP): única etapa con nucleótido trifosfato directo."],
+["O succinato perde 2 H e vira fumarato. O FAD (preso à enzima) vira FADH₂ e entrega elétrons à cadeia respiratória (complexo II).","El succinato pierde 2 H y se vuelve fumarato. El FAD (unido a la enzima) pasa a FADH₂ y cede electrones a la cadena respiratoria (complejo II)."],
+["Entra uma molécula de água na dupla ligação: fumarato vira L-malato. É só hidratação, sem oxidação.","Entra una molécula de agua en el doble enlace: fumarato pasa a L-malato. Es solo hidratación, sin oxidación."],
+["Última oxidação: o malato rende o 3º NADH e o oxaloacetato é regenerado. O ciclo está pronto para outra volta.","Última oxidación: el malato rinde el 3.er NADH y se regenera el oxaloacetato. El ciclo queda listo para otra vuelta."]
+];
+const dots=(c,col)=>Array.from({length:c},()=>'<i style="background:'+col+'"></i>').join("");
+const mol=(name,c)=>{const col=CC[c]||"#ff8fb1";return '<div class="kx-mol" style="--c:'+col+'"><b>'+escapeHtml(name)+'</b><span class="kx-cn" style="color:'+col+'">'+c+'C</span><span class="kx-dots">'+dots(c,col)+'</span></div>'};
+function flowHTML(i){
+ const d=entries[i],pv=entries[(i+N-1)%N];
+ const subs=mol(tr(pv[0],pv[1]),parseInt(pv[2],10))+(i===0?'<span class="kx-plus">+</span>'+mol("Acetil-CoA",2):"");
+ const chips=CHIPS[i].map(l=>'<span style="color:'+KIND[l[0]]+'">'+escapeHtml(l[1])+'</span>').join("");
+ return '<div class="kx-fstrip">'+subs+'<div class="kx-fmid"><span class="kx-fenz">'+escapeHtml(tr(d[3],d[4]))+'</span><span class="kx-farrow">⟶</span><span class="kx-ftype">'+escapeHtml(tr(TYPE[i][0],TYPE[i][1]))+'</span><div class="kx-fchips">'+chips+'</div></div>'+mol(tr(d[0],d[1]),parseInt(d[2],10))+'</div>';
+}
+function trackHTML(i){
+ const tot={n:0,f:0,g:0,x:0},now={n:0,f:0,g:0,x:0};
+ GAIN.forEach((g,k)=>{if(k<=i)for(const key in g)tot[key]+=g[key];if(k===i)for(const key in g)now[key]=g[key]});
+ const defs=[["n","NADH",3],["f","FADH₂",1],["g","GTP",1],["x","CO₂",2]];
+ return '<div class="kx-track"><span class="kx-trk-t">'+tr("Saldo acumulado até esta etapa (1 volta)","Saldo acumulado hasta esta etapa (1 vuelta)")+'</span>'+defs.map(([k,nm,max])=>{let p="";for(let j=0;j<max;j++)p+='<i class="'+(j<tot[k]?"on":"")+(j>=tot[k]-now[k]&&j<tot[k]?" new":"")+'" style="--c:'+KIND[k]+'"></i>';return '<span class="kx-trk" style="color:'+KIND[k]+'"><b>'+nm+'</b>'+p+'<em>'+tot[k]+'/'+max+'</em></span>'}).join("")+'</div>';
+}
 /* [tipo, texto]: ↓ entra · ↑ sai. n=NADH, f=FADH₂, g=GTP, x=CO₂, c=carbono, o=outros */
 const CHIPS=[
  [["c","↓ Acetil-CoA (2C)"],["o","↑ CoA-SH"]],
@@ -1685,9 +1744,9 @@ function splitName(s){
 let playTimer=null;
 const stopPlay=()=>{if(playTimer){clearInterval(playTimer);playTimer=null}};
 const circle=document.createElement("div");circle.className="enzo-krebs-figure kx";
-old.replaceWith(circle);
+const layout=document.createElement("div");layout.className="kx-layout";const side=document.createElement("div");side.className="kx-side";const extra=document.createElement("div");extra.className="kx-extra";old.replaceWith(layout);layout.append(circle,side);layout.after(extra);
 const panel=document.getElementById("enzoKrebsInfo");panel.classList.add("enzo-krebs-panel");
-const foot=document.createElement("div");foot.className="enzo-krebs-control";panel.after(foot);
+const foot=document.createElement("div");foot.className="enzo-krebs-control";side.append(foot,panel);
 
 function buildSVG(){
  let s='<svg class="kx-svg" viewBox="0 0 1100 1000" role="group" aria-label="'+escapeHtml(tr("Ciclo de Krebs: oito reações na matriz mitocondrial","Ciclo de Krebs: ocho reacciones en la matriz mitocondrial"))+'">';
@@ -1761,13 +1820,23 @@ function buildSVG(){
  }
  return s+'</svg>';
 }
-const legend=()=>'<div class="kx-legend"><span><i style="background:'+CC[6]+'"></i>6C</span><span><i style="background:'+CC[5]+'"></i>5C</span><span><i style="background:'+CC[4]+'"></i>4C</span><span class="kx-sep"></span><span style="color:'+KIND.n+'">NADH</span><span style="color:'+KIND.f+'">FADH₂</span><span style="color:'+KIND.g+'">GTP</span><span style="color:'+KIND.x+'">CO₂</span><span class="kx-sep"></span><span><b class="kx-star">★</b> '+tr("etapa regulada","etapa regulada")+'</span><span>↓ '+tr("entra","entra")+' · ↑ '+tr("sai","sale")+'</span></div>';
+const legend=()=>{
+ const gl=[["Condensação","Condensación","junta duas moléculas em uma maior.","une dos moléculas en una mayor."],["Isomerização","Isomerización","mesmos átomos, rearranjados: muda só a posição de um grupo.","mismos átomos, reordenados: solo cambia la posición de un grupo."],["Oxidação (desidrogenação)","Oxidación (deshidrogenación)","a molécula perde H/elétrons e o NAD⁺ ou FAD ficam reduzidos (NADH, FADH₂).","la molécula pierde H/electrones y NAD⁺ o FAD se reducen (NADH, FADH₂)."],["Descarboxilação","Descarboxilación","sai um carbono da molécula, na forma de CO₂.","sale un carbono de la molécula, como CO₂."],["Hidratação","Hidratación","entra uma H₂O na molécula.","entra una H₂O en la molécula."],["Fosforilação em nível de substrato","Fosforilación a nivel de sustrato","GTP/ATP formado direto pela energia de uma ligação, sem cadeia respiratória.","GTP/ATP formado directo por la energía de un enlace, sin cadena respiratoria."],["NADH e FADH₂","NADH y FADH₂","«carregadores de elétrons»: levam a energia do ciclo à cadeia respiratória, onde rendem ATP.","«transportadores de electrones»: llevan la energía a la cadena respiratoria, donde rinden ATP."]];
+ let h='<div class="kx-guide"><p class="kx-guide-main"><b>'+tr("Como ler o diagrama:","Cómo leer el diagrama:")+'</b> '+tr("os <b>círculos</b> são os metabólitos; o número com <b>C</b> é a quantidade de <b>carbonos</b> (6C = 6 carbonos) e cada pontinho é um carbono. As <b>setas</b> são as reações, numeradas de 1 a 8; a enzima de cada reação fica dentro do anel e o que entra ou sai (NADH, CO₂...) fica fora.","los <b>círculos</b> son los metabolitos; el número con <b>C</b> es la cantidad de <b>carbonos</b> (6C = 6 carbonos) y cada puntito es un carbono. Las <b>flechas</b> son las reacciones, numeradas de 1 a 8; la enzima de cada reacción está dentro del anillo y lo que entra o sale (NADH, CO₂...) está fuera.")+'</p><div class="kx-guide-grid"><span><i style="background:#ff8fb1"></i><b>2C</b> '+tr("acetil-CoA (entra no ciclo)","acetil-CoA (entra al ciclo)")+'</span><span><i style="background:'+CC[6]+'"></i><b>6C</b> '+tr("citrato e isocitrato","citrato e isocitrato")+'</span><span><i style="background:'+CC[5]+'"></i><b>5C</b> '+tr("α-cetoglutarato (perdeu 1 CO₂)","α-cetoglutarato (perdió 1 CO₂)")+'</span><span><i style="background:'+CC[4]+'"></i><b>4C</b> '+tr("do succinil-CoA ao oxaloacetato (perdeu o 2º CO₂)","de succinil-CoA a oxaloacetato (perdió el 2.º CO₂)")+'</span></div></div>';
+ const chips='<div class="kx-legend"><span style="color:'+KIND.n+'">NADH</span><span style="color:'+KIND.f+'">FADH₂</span><span style="color:'+KIND.g+'">GTP</span><span style="color:'+KIND.x+'">CO₂</span><span class="kx-sep"></span><span><b class="kx-star">★</b> '+tr("etapa regulada","etapa regulada")+'</span><span>↓ '+tr("entra","entra")+' · ↑ '+tr("sai","sale")+'</span></div>';
+ h+='<div class="kx-tablewrap"><table class="kx-table"><thead><tr><th>#</th><th>'+tr("Substrato → produto","Sustrato → producto")+'</th><th>'+tr("Tipo de reação","Tipo de reacción")+'</th><th>'+tr("Carbonos","Carbonos")+'</th><th>'+tr("Rende","Rinde")+'</th></tr></thead><tbody>';
+ for(let i=0;i<N;i++){const d=entries[i],pv=entries[(i+N-1)%N];h+='<tr class="kx-row" data-r="'+i+'" tabindex="0"><td><b>'+(i+1)+'</b></td><td>'+escapeHtml(tr(pv[0],pv[1]))+(i===0?' + acetil-CoA':'')+' → <b>'+escapeHtml(tr(d[0],d[1]))+'</b></td><td>'+escapeHtml(tr(TYPE[i][0],TYPE[i][1]))+'</td><td>'+CARB[i][0]+'<small>'+escapeHtml(tr(CARB[i][1],CARB[i][2]))+'</small></td><td>'+RENDE[i]+'</td></tr>'}
+ h+='</tbody></table></div>';
+ h+='<details class="kx-gloss" open><summary>'+tr("Termos que aparecem nas reações","Términos que aparecen en las reacciones")+'</summary><dl>'+gl.map(g=>'<div><dt>'+tr(g[0],g[1])+'</dt><dd>'+tr(g[2],g[3])+'</dd></div>').join("")+'</dl></details>';
+ return {chips:chips,rest:h};
+};
 
 const controller={current:0,draw(){
- circle.innerHTML='<div class="enzo-krebs-heading"><span>↻ '+tr("CICLO DE KREBS","CICLO DE KREBS")+'</span><span>'+tr("8 REAÇÕES • MATRIZ MITOCONDRIAL","8 REACCIONES • MATRIZ MITOCONDRIAL")+'</span></div>'+buildSVG()+legend()+'<p class="enzo-krebs-caption kx-caption">'+tr("Clique em um metabólito, enzima ou seta. Os pontos mostram os carbonos: 6C → 5C → 4C; a cada volta saem 2 CO₂ e o oxaloacetato é regenerado.","Pulse un metabolito, enzima o flecha. Los puntos muestran los carbonos: 6C → 5C → 4C; en cada vuelta salen 2 CO₂ y se regenera oxaloacetato.")+'</p>';
+ const L=legend();extra.innerHTML=L.rest;
+ circle.innerHTML='<div class="enzo-krebs-heading"><span>↻ '+tr("CICLO DE KREBS","CICLO DE KREBS")+'</span><span>'+tr("8 REAÇÕES • MATRIZ MITOCONDRIAL","8 REACCIONES • MATRIZ MITOCONDRIAL")+'</span></div>'+buildSVG()+'<div class="kx-now" id="kxNow"></div>'+L.chips+'<p class="enzo-krebs-caption kx-caption">'+tr("Clique em um metabólito, enzima ou seta. Os pontos mostram os carbonos: 6C → 5C → 4C; a cada volta saem 2 CO₂ e o oxaloacetato é regenerado.","Pulse un metabolito, enzima o flecha. Los puntos muestran los carbonos: 6C → 5C → 4C; en cada vuelta salen 2 CO₂ y se regenera oxaloacetato.")+'</p>';
  foot.innerHTML='<button type="button" data-kprev>← '+tr("Anterior","Anterior")+'</button><button type="button" data-kplay>'+(playTimer?"❚❚ "+tr("Pausar","Pausar"):"▶ "+tr("Reproduzir ciclo","Reproducir ciclo"))+'</button><button type="button" data-knext>'+tr("Próxima reação","Siguiente reacción")+' →</button>';
  const act=el=>{const go=()=>{stopPlay();controller.draw_play_ui();controller.show(+(el.dataset.step!==undefined?el.dataset.step:el.dataset.r))};el.addEventListener("click",go);el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}})};
- circle.querySelectorAll(".kx-node,.kx-enz,.kx-arc,.kx-name").forEach(act);
+ circle.querySelectorAll(".kx-node,.kx-enz,.kx-arc,.kx-name").forEach(act);extra.querySelectorAll(".kx-row").forEach(act);
  foot.querySelector("[data-kprev]").addEventListener("click",()=>{stopPlay();controller.draw_play_ui();controller.show(controller.current-1)});
  foot.querySelector("[data-knext]").addEventListener("click",()=>{stopPlay();controller.draw_play_ui();controller.show(controller.current+1)});
  foot.querySelector("[data-kplay]").addEventListener("click",()=>{
@@ -1783,7 +1852,9 @@ const controller={current:0,draw(){
  circle.querySelectorAll(".kx-name").forEach(n=>{const k=+n.dataset.step;n.classList.toggle("sel",k===cur);n.classList.toggle("sub",k===prevNode)});
  circle.querySelectorAll(".kx-enz").forEach(n=>n.classList.toggle("sel",+n.dataset.r===cur));
  circle.querySelectorAll(".kx-arc").forEach(n=>{const on=+n.dataset.r===cur;n.classList.toggle("active",on);n.querySelector(".kx-arc-line").setAttribute("marker-end",on?"url(#kxArrOn)":"url(#kxArr)")});
- panel.innerHTML='<div class="enzo-krebs-detailhead"><span class="enzo-krebs-stepbadge">'+tr("ETAPA","ETAPA")+' '+(cur+1)+'/8</span><h3>'+escapeHtml(tr(d[5],d[6]))+' → '+escapeHtml(tr(d[0],d[1]))+'</h3></div><div class="enzo-krebs-detailgrid"><div><small>'+tr("ENZIMA","ENZIMA")+'</small><strong>'+escapeHtml(tr(d[3],d[4]))+'</strong></div><div><small>'+tr("BALANÇO","BALANCE")+'</small><strong>'+escapeHtml(d[7])+'</strong></div></div><h4>'+tr("O que acontece nesta reação?","¿Qué ocurre en esta reacción?")+'</h4><p>'+escapeHtml(tr(d[8],d[9]))+'</p><div class="enzo-krebs-exam"><strong>★ '+tr("IMPORTANTE PARA A PROVA","IMPORTANTE PARA EL EXAMEN")+'</strong><p>'+escapeHtml(tr(d[10],d[11]))+'</p></div>';
+ extra.querySelectorAll(".kx-row").forEach(n=>n.classList.toggle("sel",+n.dataset.r===cur));
+ const now=document.getElementById("kxNow");if(now)now.innerHTML='<b>'+tr("Reação ","Reacción ")+(cur+1)+' · '+escapeHtml(tr(TYPE[cur][0],TYPE[cur][1]))+'</b> '+escapeHtml(tr(FRASE[cur][0],FRASE[cur][1]));
+ panel.innerHTML='<div class="enzo-krebs-detailhead"><span class="enzo-krebs-stepbadge">'+tr("ETAPA","ETAPA")+' '+(cur+1)+'/8 · '+escapeHtml(tr(TYPE[cur][0],TYPE[cur][1])).toUpperCase()+'</span><h3>'+escapeHtml(tr(d[5],d[6]))+' → '+escapeHtml(tr(d[0],d[1]))+'</h3></div><p class="kx-lead">'+escapeHtml(tr(FRASE[cur][0],FRASE[cur][1]))+'</p>'+flowHTML(cur)+trackHTML(cur)+'<div class="enzo-krebs-detailgrid"><div><small>'+tr("ENZIMA","ENZIMA")+'</small><strong>'+escapeHtml(tr(d[3],d[4]))+'</strong></div><div><small>'+tr("BALANÇO","BALANCE")+'</small><strong>'+escapeHtml(d[7])+'</strong></div></div><h4>'+tr("O que acontece nesta reação?","¿Qué ocurre en esta reacción?")+'</h4><p>'+escapeHtml(tr(d[8],d[9]))+'</p><div class="enzo-krebs-exam"><strong>★ '+tr("IMPORTANTE PARA A PROVA","IMPORTANTE PARA EL EXAMEN")+'</strong><p>'+escapeHtml(tr(d[10],d[11]))+'</p></div>';
 }};
 window.BioKrebsCycle=controller;controller.draw();
 })();
