@@ -12,6 +12,7 @@ const entries=[
 ["L-Malato","L-Malato","4C","Fumarase","Fumarasa","Fumarato (4C) + H₂O","Fumarato (4C) + H₂O","+ H₂O","A fumarase incorpora água de modo estereoespecífico à dupla ligação do fumarato e forma L-malato. É hidratação, e não uma etapa de oxidação.","La fumarasa incorpora agua estereoespecíficamente al doble enlace de fumarato y forma L-malato. Es hidratación, no oxidación.","Não produz coenzimas reduzidas.","No produce coenzimas reducidas."],
 ["Oxaloacetato","Oxaloacetato","4C","Malato desidrogenase","Malato deshidrogenasa","L-Malato (4C) + NAD⁺","L-Malato (4C) + NAD⁺","+ NADH + H⁺","O malato é oxidado a oxaloacetato; NAD⁺ recebe elétrons e forma o terceiro NADH. A citrato sintase consome o oxaloacetato recém-formado, favorecendo a continuidade da via.","El malato se oxida a oxaloacetato; NAD⁺ acepta electrones y forma el tercer NADH. La citrato sintasa consume oxaloacetato y favorece la continuidad de la vía.","Oxaloacetato se regenera; não é consumido no balanço líquido.","Oxaloacetato se regenera; no se consume en el balance neto."]
 ];
+window.BIO2P2_KREBS_STEPS=entries;
 const es=()=>document.documentElement.lang==="es-PY",tr=(p,e)=>es()?e:p;
 const escapeHtml=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const points=entries.map((_,i)=>{const a=(-90+i*45)*Math.PI/180;return {x:500+357*Math.cos(a),y:500+357*Math.sin(a)}});
