@@ -101,6 +101,11 @@ function restoreMarked(){
   }
   const ind=document.getElementById("ri"+i);ind.className="res-ind vis "+(choice.ok?"c":"w");
   ind.textContent=choice.ok?fmt("✅ Correto!","✅ ¡Correcto!"):fmt("❌ Incorreto. Resposta: ","❌ Incorrecto. Respuesta: ")+correct;
+  if(q.t==="gap"){
+   const chosen=(langES()?q.oe:q.o).find(o=>o.l===choice.letter);
+   const question=card.querySelector(".q-text");
+   if(chosen&&question)question.innerHTML=esc(fmt(q.q,q.qe)).replace("___",'<strong class="enzo-gap-filled '+(choice.ok?"correct":"incorrect")+'">'+esc(chosen.v)+'</strong>');
+  }
   document.getElementById("ex"+i).classList.add("vis");
  }
 }
@@ -116,7 +121,7 @@ window.renderQuiz=function(){
     body='<div class="tf-opts"><button class="tf-btn" data-v="V" onclick="answerTF('+i+',\'V\')">'+fmt("✅ VERDADEIRO","✅ VERDADERO")+'</button><button class="tf-btn" data-v="F" onclick="answerTF('+i+',\'F\')">'+fmt("❌ FALSO","❌ FALSO")+'</button></div>';
   }else{
     const opts=langES()?q.oe:q.o;
-    body='<div class="opts">'+opts.map(o=>'<button class="opt-btn" data-l="'+o.l+'" onclick="bioAnswerOption('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+esc(o.v)+'</span></button>').join("")+'</div>';
+    body='<div class="opts '+(q.t==="gap"?"enzo-gap-choices":"")+'">'+opts.map(o=>'<button class="opt-btn" data-l="'+o.l+'" onclick="bioAnswerOption('+i+',\''+o.l+'\')"><span class="ol">'+o.l+')</span><span>'+esc(o.v)+'</span></button>').join("")+'</div>';
   }
   d.innerHTML='<div class="q-head"><span class="q-num">'+fmt("Questão ","Pregunta ")+(i+1)+'</span><div style="display:flex;gap:.4rem;flex-wrap:wrap"><span class="q-tbadge '+(q.t==="tf"?"ttf":q.t==="mc"?"tmc":"tab")+'">'+label[q.t]+'</span><span class="ctag">'+esc(fmt(categories[q.c],q.c==="Lipídios"?"Lípidos":q.c==="Fosforilação oxidativa"?"Fosforilación oxidativa":q.c))+'</span></div></div><div class="res-ind" id="ri'+i+'"></div><p class="q-text">'+esc(fmt(q.q,q.qe))+'</p>'+body+'<div class="exp-box" id="ex'+i+'"><div class="et">'+fmt("📖 Explicação","📖 Explicación")+'</div><p>'+esc(fmt(q.ex,q.exe))+'</p></div>';
   ct.appendChild(d);
@@ -131,6 +136,11 @@ window.bioAnswerOption=function(i,letter){
   b.disabled=true;if(b.dataset.l===answer)b.classList.add("ca");if(b.dataset.l===letter&&letter!==answer)b.classList.add("wa");
  }
  const ok=letter===answer;card.classList.add("ans",ok?"cq":"wq");
+ if(q.t==="gap"){
+  const chosen=(langES()?q.oe:q.o).find(o=>o.l===letter);
+  const question=card.querySelector(".q-text");
+  if(chosen&&question)question.innerHTML=esc(fmt(q.q,q.qe)).replace("___",'<strong class="enzo-gap-filled '+(ok?"correct":"incorrect")+'">'+esc(chosen.v)+'</strong>');
+ }
  const result=document.getElementById("ri"+i);result.className="res-ind vis "+(ok?"c":"w");result.textContent=ok?fmt("✅ Correto!","✅ ¡Correcto!"):fmt("❌ Incorreto. Resposta: ","❌ Incorrecto. Respuesta: ")+answer;
  document.getElementById("ex"+i).classList.add("vis");
  marked.set(i,{letter,ok});if(ok)QS.c++;else QS.w++;QS.a++;updateScores();
