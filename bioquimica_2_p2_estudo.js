@@ -45,7 +45,12 @@ function renderAll(){
   }
   holder.innerHTML=html;
  }
- document.querySelectorAll("nav.tabs [data-section]").forEach(b=>{
+ const introductions=[["Lipídios","Lípidos","Digestão, absorção, lipólise, lipogênese e beta-oxidação","Digestión, absorción, lipólisis, lipogénesis y beta-oxidación"],["Aminoácidos","Aminoácidos","Transaminação, glutamato e ciclo da ureia","Transaminación, glutamato y ciclo de urea"],["Ciclo de Krebs","Ciclo de Krebs","Oito reações: produtos, enzimas, energia e controle","Ocho reacciones: productos, enzimas, energía y control"],["Fosforilação oxidativa","Fosforilación oxidativa","Cadeia respiratória, força próton-motriz e ATP sintase","Cadena respiratoria, fuerza protón-motriz y ATP sintasa"]];
+document.querySelectorAll("#topicCards .intro-card").forEach((card,i)=>{const v=introductions[i];if(!v)return;const title=card.querySelector(".ic-name"),desc=card.querySelector(".ic-desc");if(title)title.textContent=tr(v[0],v[1]);if(desc)desc.textContent=tr(v[2],v[3]);});
+document.querySelectorAll("#quiz .q-stats .sbox .sl").forEach((n,i)=>{const lbl=[["Corretas","Correctas"],["Incorretas","Incorrectas"],["Pendentes","Pendientes"]][i];if(lbl)n.textContent=tr(lbl[0],lbl[1]);});
+const fcintro=document.querySelector("#flashcards .info-block p");if(fcintro)fcintro.textContent=tr("Responda mentalmente antes de virar o cartão. Use os filtros para revisar cada tema ou embaralhe para integrar as vias metabólicas.","Responda antes de girar la tarjeta. Use filtros por tema o mezcle los conceptos para integrar las vías metabólicas.");
+const fbintro=document.querySelector("#flashcards .info-block h4");if(fbintro)fbintro.textContent=tr("124 cartões com explicações e reações","124 tarjetas con explicaciones y reacciones");
+document.querySelectorAll("nav.tabs [data-section]").forEach(b=>{
  const section=b.dataset.section;
  const label={intro:["📖 Início","📖 Inicio"],lip:["🧬 Lipídios","🧬 Lípidos"],aa:["🔬 Aminoácidos","🔬 Aminoácidos"],krebs:["🔄 Ciclo de Krebs","🔄 Ciclo de Krebs"],ox:["⚡ Fosforilação oxidativa","⚡ Fosforilación oxidativa"],flashcards:["🃏 Flashcards","🃏 Tarjetas"],quiz:["📝 Questões","📝 Preguntas"]}[section];
  if(label)b.textContent=tr(label[0],label[1]);
@@ -58,7 +63,7 @@ function renderAll(){
  const logo=document.querySelector("header .badge");if(logo)logo.textContent="BIOQUÍMICA II · P2 · 2026";
  const header=document.querySelector("header p.sub");if(header)header.textContent=tr("Lipídios · Aminoácidos · Ciclo de Krebs · Fosforilação oxidativa","Lípidos · Aminoácidos · Ciclo de Krebs · Fosforilación oxidativa");
  const headerBy=document.querySelector("header p.by");if(headerBy)headerBy.textContent=tr("Elaborado por Enzo Salmazo · Material interativo para revisão","Elaborado por Enzo Salmazo · Material interactivo de repaso");
- const foot=document.querySelector("footer");if(foot)foot.textContent=tr("Bioquímica II — P2 · 100 conceitos · 100 flashcards · 100 questões · Harper, Lehninger e slides das aulas","Bioquímica II — P2 · 100 conceptos · 100 tarjetas · 100 preguntas · Harper, Lehninger y diapositivas");
+ const foot=document.querySelector("footer");if(foot)foot.textContent=tr("Bioquímica II — P2 · 100 conceitos · 124 flashcards · 100 questões · Harper, Lehninger e slides das aulas","Bioquímica II — P2 · 100 conceptos · 124 tarjetas · 100 preguntas · Harper, Lehninger y diapositivas");
  if(window.BioKrebsCycle)window.BioKrebsCycle.draw();
 }
 const prev=window.enzoLang;
