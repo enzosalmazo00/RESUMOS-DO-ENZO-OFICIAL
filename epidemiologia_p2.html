@@ -997,7 +997,8 @@ nav.tabs button:hover .enzo-vector-icon,nav.tabs button.active .enzo-vector-icon
   function undo(){
     if(!history.length)return;
     records=history.pop();saveRecords();renderAll();showToast('Última ação desfeita.');
-  }  function setMode(next){
+  }
+  function setMode(next){
     mode=next;
     document.body.classList.toggle('enzo-highlight-mode',mode==='highlight');
     document.body.classList.toggle('enzo-eraser-mode',mode==='erase');
