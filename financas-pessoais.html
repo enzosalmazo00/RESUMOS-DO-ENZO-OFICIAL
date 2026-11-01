@@ -736,6 +736,49 @@ function parseQuickCommand(value){
  try{const amount=cents(quickNumberBRL(raw));return {amount,description,category:quickGuessCategory(description),formatted:(amount/100).toFixed(2).replace('.',',')};}catch{return null;}
 }
 
+
+function quickCategoryFields(){
+ const custom=$('quickCategory').value==='__custom';
+ $('quickCustomLabel').hidden=!custom;
+ $('quickCustomCategory').required=custom;
+}
+function quickSetCategory(value){
+ if(!Array.from($('quickCategory').options).some(o=>o.value===value)){
+  $('quickCategory').value='__custom';$('quickCustomCategory').value=value;
+ }else $('quickCategory').value=value;
+ quickCategoryFields();
+}
+function quickUpdatePreview(){
+ const description=$('quickDescription').value.trim(),day=$('quickDate').value;
+ let amount=null;
+ try{amount=cents(quickNumberBRL($('quickAmount').value));}catch{}
+ const category=$('quickCategory').value==='__custom'?$('quickCustomCategory').value.trim():$('quickCategory').value;
+ $('quickPreview').innerHTML=amount&&description
+  ?'<b>Confira antes de salvar:</b><strong>'+money(amount)+'</strong>'+esc(description)+' · '+esc(category||'Sem categoria')+' · '+date(day)+($('quickStatus').value==='paid'?' · Pago':' · Pendente')
+  :'<span>Preencha valor e item. O gasto entrará automaticamente nos totais e relatórios.</span>';
+ $('quickCreditNote').hidden=$('quickMethod').value!=='Cartão de crédito';
+}
+function quickCommandChanged(){
+ const parsed=parseQuickCommand($('quickCommand').value);
+ if(parsed){
+  $('quickAmount').value=parsed.formatted;
+  $('quickDescription').value=parsed.description;
+  quickSetCategory(parsed.category);
+ }
+ quickUpdatePreview();
+}
+function openQuickExpense(){
+ if(!loaded||busy)return;
+ $('quickForm').reset();
+ $('quickCommand').value='';$('quickAmount').value='';$('quickDescription').value='';
+ $('quickDate').value=today();$('quickStatus').value='paid';$('quickMethod').value='';
+ $('quickError').textContent='';$('quickSave').disabled=false;
+ const categories=[...new Set([...QUICK_CATEGORIES,...rows.map(r=>r.category).filter(Boolean)])];
+ $('quickCategory').replaceChildren(...categories.map(category=>new Option(category,category)),new Option('Outra categoria — escrever','__custom'));
+ $('quickCategory').value='Outros gastos';$('quickCustomCategory').value='';
+ quickCategoryFields();quickUpdatePreview();$('quickDialog').showModal();$('quickCommand').focus();
+}
+
 function exportCSV(){
  const cell=v=>'"'+String(v??'').replace(/^[=+@-]/,"'$&").replace(/"/g,'""')+'"';
  const heading=['Vencimento','Tipo','Item','Categoria','Valor original (R$)','Valor pago / previsto (R$)','Desconto economizado (R$)','Situação','Data efetiva','Extra','Forma','Parcela','Banco','Tipo no banco','Observações'];
