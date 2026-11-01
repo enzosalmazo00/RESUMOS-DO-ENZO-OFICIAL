@@ -296,14 +296,14 @@ function renderBanks(){
   const inner=groups.map(([month,records])=>'<section class="bank-installments-month"><h4>'+esc(financeMonthLabel(month))+' <span>'+records.length+' lançamento(s)</span></h4>'+records.map(r=>{
    const settled=!!r.settled_date,isLate=!settled&&r.due_date<t,klass=isLate?'bank-parcel-late':settled?'bank-parcel-paid':'bank-parcel-pending';
    const situation=isLate?'⚠ EM ATRASO':settled?'✓ PAGO':'▣ A PAGAR';
-   const detail=settled?'Pago em '+date(r.settled_date):'Vencimento: '+date(r.due_date);
-   return '<div class="bank-installment '+klass+'"><div class="bank-installment-info"><b>'+esc(r.description)+'</b><small>'+esc(r.bank_product||r.category||'Despesa')+(r.installments>1?' · Parcela '+Number(r.installment)+'/'+Number(r.installments):'')+'</small><small>Vence em '+date(r.due_date)+'</small></div><div class="bank-installment-values"><strong>'+money(Number(r.amount_cents))+'</strong><span class="bank-installment-status">'+situation+'</span><small>'+detail+'</small></div></div>';
+   const detail=settled?'Pago em '+date(r.settled_date):'Vencimento: '+date(r.due_date);const savingDetail=discountOf(r)?'<small class="positive">Economizou '+money(discountOf(r))+' · valor original '+money(Number(r.amount_cents))+'</small>':'';
+   return '<div class="bank-installment '+klass+'"><div class="bank-installment-info"><b>'+esc(r.description)+'</b><small>'+esc(r.bank_product||r.category||'Despesa')+(r.installments>1?' · Parcela '+Number(r.installment)+'/'+Number(r.installments):'')+'</small><small>Vence em '+date(r.due_date)+'</small></div><div class="bank-installment-values"><strong>'+money(effectiveAmount(r))+'</strong><span class="bank-installment-status">'+situation+'</span><small>'+detail+'</small>'+savingDetail+'</div></div>';
   }).join('')+'</section>').join('');
   return '<details class="bank-card" data-bank="'+esc(name)+'"'+(expanded.has(name)?' open':'')+'><summary class="bank-open"><div class="row"><h3>'+esc(name)+'</h3><span class="bank-expand-hint">Ver parcelas e pagamentos <b>⌄</b></span></div>'
   +'<p>'+list.length+' pendente(s) · '+paid.length+' pago(s)'+(late.length?' · <span class="negative">'+late.length+' em atraso</span>':'')+'</p>'
   +'<div class="bank-metrics"><div class="bank-metric-main"><span>Falta pagar</span><strong class="money-pay">'+money(summary.total)+'</strong></div>'
-  +'<div class="bank-metric"><span>Total já pago</span><strong class="money-receive">'+money(sum(paid))+'</strong></div>'
-  +'<div class="bank-metric"><span>Meses restantes</span><strong>'+summary.months.length+'</strong><small>média futura '+money(summary.average)+'</small></div></div>'
+  +'<div class="bank-metric"><span>Total já pago</span><strong class="money-receive">'+money(sumEffective(paid))+'</strong></div>'
+  +'<div class="bank-metric"><span>Meses restantes</span><strong>'+summary.months.length+'</strong><small>média futura '+money(summary.average)+'</small></div></div>'+(sum(paid)>sumEffective(paid)?'<div class="bank-savings-chip">✓ Economia com descontos: '+money(sum(paid)-sumEffective(paid))+'</div>':'')
   +(summary.overdue?'<div class="bank-late-banner">⚠ EM ATRASO: '+money(summary.overdue)+' · '+late.length+' parcela(s)</div>':'')
   +types.map(type=>'<div class="bank-detail"><span>'+esc(type)+'</span><b class="money-pay">'+money(sum(list.filter(r=>(r.bank_product||'Não informado')===type)))+'</b></div>').join('')
   +'</summary><div class="bank-installments"><div class="bank-installments-title"><b>Histórico de parcelas e vencimentos</b><small>✓ Pago · ▣ Pendente · ⚠ Em atraso</small></div>'
@@ -340,7 +340,7 @@ function render(){renderBanks();const current=monthly(),t=today(),balance=rows.f
 const forecastEnd=monthlyDate($('month').value+'-01',1),forecastBalance=rows.filter(r=>(r.settled_date||r.due_date)<forecastEnd).reduce((a,r)=>a+signed(r),0);renderSavingsPanel();const financialCards=[{label:'SALDO REALIZADO ATÉ HOJE',value:balance,note:'Somente movimentações confirmadas; saldo bancário não consultado',tone:balance<0?'deficit':'available',status:balance<0?'SALDO NEGATIVO REGISTRADO':'SALDO REGISTRADO'},{label:'DINHEIRO A RECEBER',value:pendingIn,note:'Receitas pendentes neste mês',tone:'receivable',status:'ENTRADAS PENDENTES'},{label:'TOTAL DE CONTAS A PAGAR',value:pendingOut,note:'Despesas pendentes neste mês',tone:'payable',status:'PAGAMENTOS PENDENTES'},{label:forecastBalance<0?'FALTA DINHEIRO APÓS AS CONTAS':forecastBalance>0?'SOBRA PROJETADA APÓS AS CONTAS':'SALDO FINAL PROJETADO ZERO',value:Math.abs(forecastBalance),note:'Inclui saldo acumulado dos meses anteriores e todas as previsões até o fim do mês selecionado',tone:forecastBalance<0?'deficit':forecastBalance>0?'surplus':'balanced',status:forecastBalance<0?'DÉFICIT PROJETADO':forecastBalance>0?'SOBRA PROJETADA':'SEM SOBRA'}];$('cards').innerHTML=financialCards.map(c=>`<div class="card finance-card finance-${c.tone}"><span class="finance-label">${c.label}</span><strong class="finance-amount">${money(c.value)}</strong><span class="finance-status">${c.status}</span><small>${c.note}</small></div>`).join('');
 const selected=$('catFilter').value,categories=[...new Set(current.map(r=>r.category))].sort();$('catFilter').innerHTML='<option value="">Todas</option>'+categories.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');$('catFilter').value=categories.includes(selected)?selected:'';
 const windowDays=$('alertWindow').value;const upcoming=rows.filter(r=>!r.settled_date&&dayNumber(r.due_date)-dayNumber(t)<= (windowDays===''?Number(r.reminder_days??0):Number(windowDays)));const alertMarkup=(list,kind)=>list.length?list.map(r=>`<div class="alert-item"><div><b class="${r.due_date<t?'negative':kind==='income'?'positive':'warning'}">${esc(r.description)}</b><small>${date(r.due_date)} · ${esc(r.bank_name||'')} ${esc(r.bank_product||'')} · ${kind==='income'?'A receber':'A pagar'} · ${status(r)}</small></div><div><b class="${kind==='income'?'positive':'negative'}">${kind==='income'?'+':'−'} ${money(Number(r.amount_cents))}</b><br><button data-edit="${r.id}">Abrir</button></div></div>`).join(''):`<div class="empty">${kind==='income'?'Nenhum recebimento pendente no período.':'Nenhuma conta a pagar próxima ou atrasada.'}</div>`;$('alerts').innerHTML=alertMarkup(upcoming.filter(r=>r.kind==='expense'),'expense');$('receivableAlerts').innerHTML=alertMarkup(upcoming.filter(r=>r.kind==='income'),'income');
-const amounts=Object.create(null);current.filter(r=>r.kind==='expense').forEach(r=>amounts[r.category]=(amounts[r.category]||0)+Number(r.amount_cents));const total=Object.values(amounts).reduce((a,b)=>a+b,0);$('categories').innerHTML=Object.entries(amounts).sort((a,b)=>b[1]-a[1]).map(([cat,n])=>`<div class="row"><span>${esc(cat)}</span><b>${money(n)}</b></div><div class="bar"><i style="width:${n/total*100}%"></i></div>`).join('')||'<div class="empty">Cadastre suas despesas para ver a distribuição.</div>';
+const amounts=Object.create(null);current.filter(r=>r.kind==='expense').forEach(r=>amounts[r.category]=(amounts[r.category]||0)+effectiveAmount(r));const total=Object.values(amounts).reduce((a,b)=>a+b,0);$('categories').innerHTML=Object.entries(amounts).sort((a,b)=>b[1]-a[1]).map(([cat,n])=>`<div class="row"><span>${esc(cat)}</span><b>${money(n)}</b></div><div class="bar"><i style="width:${n/total*100}%"></i></div>`).join('')||'<div class="empty">Cadastre suas despesas para ver a distribuição.</div>';
 renderEntries();renderLedger();
 }
 
@@ -350,7 +350,7 @@ function renderLedger(){
  const ordered=rows.slice().sort((a,b)=>ledgerDate(a).localeCompare(ledgerDate(b))||(a.kind===b.kind?0:a.kind==='income'?-1:1)||(a.bank_name||'').localeCompare(b.bank_name||'')||String(a.id).localeCompare(String(b.id)));
  const opening=ordered.filter(r=>ledgerDate(r)<first).reduce((v,r)=>v+signed(r),0);
  const scheduled=ordered.filter(r=>ledgerDate(r)>=first&&ledgerDate(r)<end);
- const monthlyIncome=sum(scheduled.filter(r=>r.kind==='income')),monthlyOut=sum(scheduled.filter(r=>r.kind==='expense'));
+ const monthlyIncome=sum(scheduled.filter(r=>r.kind==='income')),monthlyOut=sumEffective(scheduled.filter(r=>r.kind==='expense'));
  const previousOverdue=rows.filter(r=>!r.settled_date&&r.due_date<first);
  const actualToday=rows.filter(r=>r.settled_date&&r.settled_date<=today()).reduce((v,r)=>v+signed(r),0);
  let running=opening;
@@ -358,7 +358,7 @@ function renderLedger(){
  for(const r of scheduled){
   const d=ledgerDate(r);
   if(!dayMap.has(d))dayMap.set(d,{start:running,income:0,out:0,items:[]});
-  const day=dayMap.get(d),amount=Number(r.amount_cents)||0;
+  const day=dayMap.get(d),amount=effectiveAmount(r);
   if(r.kind==='income')day.income+=amount;else day.out+=amount;
   running+=signed(r);day.items.push({r,balanceAfter:running});day.end=running;
  }
@@ -389,7 +389,7 @@ function renderLedger(){
    if(pending.length>1)bulkGroups.set(bulkKey,{ids:pending.map(x=>x.r.id),date:d,bank});
    const bulkButton=pending.length>1?`<button type="button" class="ledger-bulk" data-bulk="${bulkKey}">Marcar ${pending.length} como pagas · ${money(sum(pending.map(x=>x.r)))}</button>`:'';
    const title=isIncome?'Entradas do dia':bank?'Pagamentos · '+esc(bank):'Outras despesas';
-   return `<div class="ledger-group"><div class="ledger-group-heading"><b>${title}</b>${bulkButton}</div>${items.map(({r,balanceAfter})=>`<div class="ledger-line"><div><b>${esc(r.description)}</b><small>${esc(r.category)} · ${stateText(r)}${r.installments>1?' · Parcela '+r.installment+'/'+r.installments:''}</small></div><strong class="${r.kind==='income'?'positive':'ledger-white'}">${r.kind==='income'?'+':'−'} ${money(Number(r.amount_cents))}</strong><div class="ledger-after"><small>Saldo após lançamento</small><strong class="${balanceColor(balanceAfter)}">${money(balanceAfter)}</strong></div></div>`).join('')}</div>`;
+   return `<div class="ledger-group"><div class="ledger-group-heading"><b>${title}</b>${bulkButton}</div>${items.map(({r,balanceAfter})=>`<div class="ledger-line"><div><b>${esc(r.description)}</b><small>${esc(r.category)} · ${stateText(r)}${r.installments>1?' · Parcela '+r.installment+'/'+r.installments:''}${discountOf(r)?' · Desconto '+money(discountOf(r)):''}</small></div><strong class="${r.kind==='income'?'positive':'ledger-white'}">${r.kind==='income'?'+':'−'} ${money(effectiveAmount(r))}</strong><div class="ledger-after"><small>Saldo após lançamento</small><strong class="${balanceColor(balanceAfter)}">${money(balanceAfter)}</strong></div></div>`).join('')}</div>`;
   }).join('');
   pieces.push(`<article class="ledger-day"><div class="ledger-day-head"><b>${date(d)}</b><div><span>Saldo anterior <strong class="${balanceColor(day.start)}">${money(day.start)}</strong></span><span>Entradas <strong class="positive">+${money(day.income)}</strong></span><span>Saídas <strong class="ledger-white">−${money(day.out)}</strong></span></div></div>${groupHtml}<div class="ledger-day-foot">Saldo disponível projetado após o dia <strong class="${balanceColor(day.end)}">${money(day.end)}</strong></div></article>`);
  }
@@ -423,7 +423,7 @@ async function confirmBulk(e){
  }catch(err){$('bulkError').textContent='Falha ao confirmar: '+err.message;busy=false;await refresh();}finally{busy=false;$('bulkConfirm').disabled=false;}
 }
 
-function renderEntries(){const list=filtered();$('count').textContent=list.length+' lançamento(s)';$('entries').innerHTML=list.map(r=>`<tr><td>${date(r.due_date)}${r.installments>1?`<small>Parcela ${r.installment}/${r.installments}</small>`:''}</td><td><b>${esc(r.description)}</b><small>${esc(r.category)}${r.is_extra?' · Extra':''}</small><small>${esc(r.bank_name||'')}${r.bank_product?' · '+esc(r.bank_product):''}</small><small>${esc(r.payment_method)}</small></td><td class="${r.kind==='income'?'positive':'negative'}">${r.kind==='income'?'+':'−'} ${money(Number(r.amount_cents))}</td><td class="${r.settled_date?'positive':r.due_date<today()?'negative':'warning'}">${status(r)}${r.settled_date?`<small>${date(r.settled_date)}</small>`:''}</td><td><div class="actions"><button data-edit="${r.id}">${r.settled_date?'Editar':'Pagar / receber'}</button><button class="danger" data-delete="${r.id}" aria-label="Excluir ${esc(r.description)}">Excluir</button></div></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Nenhum lançamento encontrado. Use “Novo lançamento” para começar.</td></tr>';}
+function renderEntries(){const list=filtered();$('count').textContent=list.length+' lançamento(s)';$('entries').innerHTML=list.map(r=>`<tr><td>${date(r.due_date)}${r.installments>1?`<small>Parcela ${r.installment}/${r.installments}</small>`:''}</td><td><b>${esc(r.description)}</b><small>${esc(r.category)}${r.is_extra?' · Extra':''}</small><small>${esc(r.bank_name||'')}${r.bank_product?' · '+esc(r.bank_product):''}</small><small>${esc(r.payment_method)}</small></td><td class="${r.kind==='income'?'positive':'negative'}">${r.kind==='income'?'+':'−'} ${money(effectiveAmount(r))}${discountOf(r)?`<small class="positive">Desconto ${money(discountOf(r))}</small><small>Original ${money(Number(r.amount_cents))}</small>`:''}</td><td class="${r.settled_date?'positive':r.due_date<today()?'negative':'warning'}">${status(r)}${r.settled_date?`<small>${date(r.settled_date)}</small>`:''}</td><td><div class="actions"><button data-edit="${r.id}">${r.settled_date?'Editar':'Pagar / receber'}</button><button class="danger" data-delete="${r.id}" aria-label="Excluir ${esc(r.description)}">Excluir</button></div></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Nenhum lançamento encontrado. Use “Novo lançamento” para começar.</td></tr>';}
 function optionalDiscountCents(value){const v=String(value||'').trim();return (!v||v==='0'||v==='0,00'||v==='0,0')?0:cents(v);}
 function discountFields(){const eligible=$('kind').value==='expense'&&$('settled').value==='yes';$('discountPanel').hidden=!eligible;const enabled=eligible&&$('settlementDiscount').value==='yes';$('discountFields').hidden=!enabled;$('discountAmount').required=enabled;if(!enabled)return;
  try{const original=cents($('amount').value),saved=optionalDiscountCents($('discountAmount').value);if(saved>=original)throw Error('O desconto precisa ser menor que a parcela.');$('discountPreview').innerHTML='<span>Valor original <b>'+money(original)+'</b></span><span>Desconto <b class="positive">'+money(saved)+'</b></span><span>Efetivamente pago <strong>'+money(original-saved)+'</strong></span>';}catch(e){$('discountPreview').textContent='Preencha valores válidos: '+e.message;}}
@@ -446,7 +446,7 @@ function reportGroup(list,key){
 }
 function reportAmounts(list){
  const exp=list.filter(r=>r.kind==='expense'),inc=list.filter(r=>r.kind==='income');
- return {exp:sum(exp),inc:sum(inc),expPending:sum(exp.filter(r=>!r.settled_date)),incPending:sum(inc.filter(r=>!r.settled_date)),expPaid:sum(exp.filter(r=>r.settled_date)),incPaid:sum(inc.filter(r=>r.settled_date))};
+ return {exp:sumEffective(exp),inc:sum(inc),expPending:sum(exp.filter(r=>!r.settled_date)),incPending:sum(inc.filter(r=>!r.settled_date)),expPaid:sumEffective(exp.filter(r=>r.settled_date)),incPaid:sum(inc.filter(r=>r.settled_date)),saved:exp.reduce((a,r)=>a+discountOf(r),0)};
 }
 function reportPeriodFields(){
  const kind=$('reportPeriod').value;
@@ -502,7 +502,7 @@ function reportPreview(){
   $('reportPreview').innerHTML='<b>Prévia do relatório</b><div>'+esc(config.periodName)+' · '+config.selected.size+' banco(s) / instituição(ões) · '+count+' lançamento(s)</div>'
    +'<strong class="money-pay">A pagar / despesas: '+money(x.exp)+'</strong>'
    +'<strong class="money-receive">A receber / receitas: '+money(x.inc)+'</strong>'
-   +'<div class="fine">Despesas pendentes: '+money(x.expPending)+' · Receitas pendentes: '+money(x.incPending)+'</div>';
+   +'<div class="fine">Despesas pendentes: '+money(x.expPending)+' · Receitas pendentes: '+money(x.incPending)+' · Economizado: '+money(x.saved)+'</div>';
   $('reportError').textContent='';
   $('reportGenerate').disabled=count===0;
  }catch(err){
@@ -513,14 +513,14 @@ function reportPreview(){
 }
 function reportPartTotals(items){
  const x=reportAmounts(items),net=x.inc-x.exp;
- return '<div class="totals"><span>Despesas: <b>'+money(x.exp)+'</b></span><span>Receitas: <b class="green">'+money(x.inc)+'</b></span><span>Resultado: <b class="'+(net<0?'red':'green')+'">'+money(net)+'</b></span></div>';
+ return '<div class="totals"><span>Despesas: <b>'+money(x.exp)+'</b></span><span>Receitas: <b class="green">'+money(x.inc)+'</b></span><span>Resultado: <b class="'+(net<0?'red':'green')+'">'+money(net)+'</b></span><span>Descontos economizados: <b class="green">'+money(x.saved)+'</b></span></div>';
 }
 function reportRows(items){
  const head='<table class="detail"><thead><tr><th>Vencimento</th><th>Descrição / categoria</th><th>Parcela</th><th>Situação / data efetiva</th><th class="num">Valor</th></tr></thead><tbody>';
  const body=items.map(r=>{
   const value=Number(r.amount_cents),late=!r.settled_date&&r.due_date<today(),settled=!!r.settled_date;
   const status=settled?(r.kind==='income'?'✓ Recebido':'✓ Pago')+' em '+date(r.settled_date):late?'⚠ EM ATRASO':'◷ Pendente';
-  return '<tr'+(late?' class="overdue"':'')+'><td>'+date(r.due_date)+'</td><td>'+esc(r.description)+'<small>'+esc(r.category||'Sem categoria')+' · '+esc(reportBankName(reportKey(r)))+(r.bank_product?' · '+esc(r.bank_product):'')+'</small></td><td>'+(r.installments>1?Number(r.installment)+'/'+Number(r.installments):'—')+'</td><td>'+status+'</td><td class="num '+(late?'red':r.kind==='income'?'green':'')+'">'+(r.kind==='income'?'+':'−')+' '+money(value)+'</td></tr>';
+  return '<tr'+(late?' class="overdue"':'')+'><td>'+date(r.due_date)+'</td><td>'+esc(r.description)+'<small>'+esc(r.category||'Sem categoria')+' · '+esc(reportBankName(reportKey(r)))+(r.bank_product?' · '+esc(r.bank_product):'')+(discountOf(r)?' · Desconto '+money(discountOf(r))+' · Original '+money(Number(r.amount_cents)):'')+'</small></td><td>'+(r.installments>1?Number(r.installment)+'/'+Number(r.installments):'—')+'</td><td>'+status+'</td><td class="num '+(late?'red':r.kind==='income'?'green':'')+'">'+(r.kind==='income'?'+':'−')+' '+money(effectiveAmount(r))+'</td></tr>';
  }).join('');
  return head+body+'</tbody></table>';
 }
@@ -555,7 +555,7 @@ function buildFinanceReport(config){
  const x=reportAmounts(config.list),labels=[
   ['Contas / despesas',x.exp,''],['Receitas',x.inc,'green'],
   ['Pendente a pagar',x.expPending,''],['Pendente a receber',x.incPending,'green'],
-  ['Já pago',x.expPaid,''],['Já recebido',x.incPaid,'green']
+  ['Já pago',x.expPaid,''],['Já recebido',x.incPaid,'green'],['Juros/descontos economizados',x.saved,'green']
  ];
  const cards='<div class="cards">'+labels.map(([name,value,tone])=>'<div><span>'+name+'</span><strong class="'+tone+'">'+money(value)+'</strong></div>').join('')+'</div>';
  const names=[...config.selected].map(reportBankName).sort((a,b)=>a.localeCompare(b,'pt-BR')).join(', ');
