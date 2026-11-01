@@ -162,6 +162,33 @@ details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotat
 @media(max-width:650px){.savings-metrics,.discount-preview{grid-template-columns:1fr}.savings-panel{padding:17px}}
 .bank-pay-btn{font-size:11px;padding:5px 9px;margin-top:4px;border-color:#3c907c;background:#1a4b44;color:#b1ffe5;font-weight:700}
 @media print{.bank-pay-btn{display:none!important}}
+
+/* Fechamento mensal por item + total acumulado do banco e de todas as despesas */
+.bank-month-close{margin:13px 0 21px;background:#132d3d;border:1px solid #3c6472;border-radius:12px;overflow:hidden}
+.bank-month-close h5{font-size:13px;color:#d8edf7;padding:12px 14px;margin:0;background:#1b394b;letter-spacing:.1px}
+.bank-month-item-total{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;padding:12px 14px;border-bottom:1px solid #304956;font-size:12px}
+.bank-month-item-total>div{min-width:0}
+.bank-month-item-total b{font-size:12px;overflow-wrap:anywhere}
+.bank-month-item-total small{display:block;color:#a7becd;margin-top:3px}
+.bank-month-item-amounts{text-align:right;flex-shrink:0;display:flex;flex-direction:column;gap:4px}
+.bank-month-item-amounts span{font-size:11px;color:#adbecc;white-space:nowrap}
+.bank-month-item-amounts strong{font-size:13px;margin-left:6px;font-variant-numeric:tabular-nums}
+.bank-month-sum{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:13px 14px;background:#183a44}
+.bank-month-sum>div{padding:11px;border:1px solid #38636c;border-radius:9px}
+.bank-month-sum span,.bank-final-stats span{display:block;font-size:11px;color:#bed1df}
+.bank-month-sum strong{display:block;font-size:clamp(17px,2vw,22px);margin-top:3px;font-variant-numeric:tabular-nums}
+.bank-closure-note{display:block;padding:9px 14px;color:#aec9ce;font-size:11px}
+.bank-final-close{margin-top:24px;padding:17px;background:linear-gradient(130deg,#143a40,#102536);border:1px solid #36856e;border-radius:12px}
+.bank-final-close h4,.banks-grand-total h2{font-size:17px;margin:0 0 13px;color:#d8f9ec}
+.bank-final-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.bank-final-stats>div{padding:15px;background:#0f2b35;border:1px solid #3b6570;border-radius:10px;min-width:0}
+.bank-final-stats strong{display:block;font-size:clamp(20px,2.2vw,27px);margin:5px 0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.bank-final-stats small{color:#a3bbc7;display:block;font-size:11px}
+.banks-grand-total{border:2px solid #3f9c79;border-radius:17px;background:linear-gradient(125deg,#103d3c,#112637);padding:22px;margin:15px 0 24px}
+.banks-grand-total .section-label{margin:0 0 7px}
+.banks-grand-total p{margin-top:12px}
+@media(max-width:540px){.bank-month-sum,.bank-final-stats{grid-template-columns:1fr}.banks-grand-total{padding:15px}.bank-month-item-total{flex-direction:column;gap:6px}.bank-month-item-amounts{width:100%;align-items:stretch;text-align:left;flex-direction:row;justify-content:space-between;flex-wrap:wrap}}
+@media print{.bank-month-close,.bank-final-close,.banks-grand-total{break-inside:avoid;background:white!important;color:#111!important}.bank-month-close h5,.bank-final-close h4,.banks-grand-total h2{color:#111!important}}
 </style></head><body><main>
 <header><a href="admin.html">← Administrador</a><span class="eyebrow">RESUMOS DO ENZO</span><span class="badge">Área pessoal • acesso privado</span></header>
 <div id="gate" class="notice" role="status">Verificando seu acesso…</div>
@@ -169,7 +196,7 @@ details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotat
 <div class="row hero"><div><div class="eyebrow">SEU PLANEJAMENTO PESSOAL</div><h1>Minhas finanças</h1><p>Clareza para hoje. Organização para os próximos meses.</p></div><div class="tools"><button id="reload">Atualizar</button><button class="primary" id="add">+ Novo lançamento</button></div></div>
 <div id="message" role="status" aria-live="polite"></div>
 <div class="row"><label>Mês de planejamento<input class="month" id="month" type="month"></label><div class="tools"><button id="csv">Exportar CSV</button><button id="print" type="button">Relatórios / PDF</button></div></div>
-<div class="cards" id="cards"></div><div id="debtSummary" class="debt-strip"></div><section id="savingsPanel" class="savings-panel" aria-label="Economia com antecipação de parcelas"></section><div class="row bank-summary-head"><div><div class="section-label">CONTROLE POR INSTITUIÇÃO</div><h2>Bancos e compromissos</h2></div><span class="fine">Valores cadastrados • despesas pendentes</span></div><div id="banks" class="bank-grid"></div><p class="fine">Cartão de crédito: registre as compras/parcelas ou o total da fatura, para não contar a mesma despesa duas vezes. Os valores e juros são informados por você; não há consulta automática aos bancos.</p>
+<div class="cards" id="cards"></div><div id="debtSummary" class="debt-strip"></div><section id="savingsPanel" class="savings-panel" aria-label="Economia com antecipação de parcelas"></section><div class="row bank-summary-head"><div><div class="section-label">CONTROLE POR INSTITUIÇÃO</div><h2>Bancos e compromissos</h2></div><span class="fine">Valores cadastrados • despesas pendentes</span></div><div id="banks" class="bank-grid"></div><div id="banksGrandTotal" class="banks-grand-total" aria-live="polite"></div><p class="fine">Cartão de crédito: registre as compras/parcelas ou o total da fatura, para não contar a mesma despesa duas vezes. Os valores e juros são informados por você; não há consulta automática aos bancos.</p>
 <div class="finances-separation">
 <section class="panel flow-money-panel flow-payable"><div class="section-label">SAÍDAS • CONTAS E PARCELAS</div><h2>Valores a pagar por mês</h2><p class="fine">Valor total, meses restantes, média mensal e vencimentos detalhados, sem receitas misturadas.</p><div id="payablesByMonth"></div></section>
 <section class="panel flow-money-panel flow-income"><div class="section-label">ENTRADAS • RECEBIMENTOS</div><h2>Valores a receber por mês</h2><p class="fine">Receitas pendentes, datas de recebimento e origem de cada entrada, sem despesas misturadas.</p><div id="receivables"></div></section>
@@ -277,6 +304,61 @@ function renderSavingsPanel(){
  +'<div class="savings-by-bank">'+(banks.map(bank=>'<div class="row"><span>'+esc(bank)+'</span><strong class="positive">'+money(discounted.filter(r=>(r.bank_name||'Sem banco / particular')===bank).reduce((s,r)=>s+discountOf(r),0))+'</strong></div>').join('')||'<div class="empty">Nenhum desconto registrado. Abra uma parcela, marque como paga e informe o desconto concedido.</div>')+'</div>';
 }
 
+
+/* Fechamentos dos bancos: parcelas pagas pelo valor efetivamente desembolsado. */
+function groupBankItemsForMonth(records){
+ const groups=new Map();
+ for(const r of records){
+  const key=r.series_id?'series:'+r.series_id:'item:'+String(r.description||'')+'|'+String(r.category||'')+'|'+String(r.bank_product||'');
+  if(!groups.has(key))groups.set(key,[]);
+  groups.get(key).push(r);
+ }
+ return [...groups.values()];
+}
+function renderBankMonthClosure(records,month){
+ const paid=records.filter(r=>!!r.settled_date),pending=records.filter(r=>!r.settled_date);
+ const paidTotal=sumEffective(paid),pendingTotal=sum(pending);
+ const savings=paid.reduce((v,r)=>v+discountOf(r),0);
+ const groups=groupBankItemsForMonth(records);
+ const itemRows=groups.map((items,index)=>{
+  const r=items[0],label=r.description||'Item não identificado',paidItems=items.filter(x=>!!x.settled_date),pendingItems=items.filter(x=>!x.settled_date);
+  const paidAmount=sumEffective(paidItems),pendingAmount=sum(pendingItems),economy=paidItems.reduce((v,x)=>v+discountOf(x),0);
+  const repeated=groups.slice(0,index).some(other=>other[0].description===label);
+  return '<div class="bank-month-item-total"><div><b>'+esc(label)+(repeated?' · compromisso '+(index+1):'')+'</b>'
+    +'<small>'+items.length+' lançamento(s) · '+esc(r.bank_product||r.category||'Despesa')+'</small></div>'
+    +'<div class="bank-month-item-amounts"><span>Pago <strong class="positive">'+money(paidAmount)+'</strong></span>'
+    +'<span>A pagar <strong class="money-pay">'+money(pendingAmount)+'</strong></span>'
+    +(economy?'<small class="positive">Desconto: '+money(economy)+'</small>':'')+'</div></div>';
+ }).join('');
+ return '<div class="bank-month-close"><h5>Fechamento de '+esc(financeMonthLabel(month))+' · por item</h5>'
+   +itemRows
+   +'<div class="bank-month-sum"><div><span>Total pago das parcelas deste mês</span><strong class="positive">'+money(paidTotal)+'</strong></div>'
+   +'<div><span>Total ainda a pagar deste mês</span><strong class="money-pay">'+money(pendingTotal)+'</strong></div>'
+   +'<div><span>Total do mês (pago + a pagar)</span><strong>'+money(paidTotal+pendingTotal)+'</strong></div>'
+   +(savings?'<div><span>Economia com descontos</span><strong class="positive">'+money(savings)+'</strong></div>':'')+'</div>'
+   +'<small class="bank-closure-note">Agrupado pelo mês de vencimento. Pagamentos antecipados são considerados pagos aqui; a saída real aparece no extrato na data efetiva.</small></div>';
+}
+function renderBankFinalClosure(all,name){
+ const paid=all.filter(r=>!!r.settled_date),pending=all.filter(r=>!r.settled_date);
+ const totalPaid=sumEffective(paid),totalPending=sum(pending),saved=paid.reduce((n,r)=>n+discountOf(r),0);
+ return '<section class="bank-final-close"><h4>Fechamento geral · '+esc(name)+'</h4>'
+  +'<div class="bank-final-stats"><div><span>TOTAL PAGO · TODOS OS MESES</span><strong class="positive">'+money(totalPaid)+'</strong><small>'+paid.length+' lançamento(s) efetivamente pagos</small></div>'
+  +'<div><span>TOTAL QUE FALTA PAGAR</span><strong class="money-pay">'+money(totalPending)+'</strong><small>'+pending.length+' lançamento(s) ainda pendentes</small></div>'
+  +'<div><span>TOTAL DE COMPROMISSOS</span><strong>'+money(totalPaid+totalPending)+'</strong><small>Somente valores líquidos, sem duplicar descontos</small></div>'
+  +'<div><span>DESCONTOS ECONOMIZADOS</span><strong class="positive">'+money(saved)+'</strong><small>Descontos registrados nas parcelas pagas</small></div></div></section>';
+}
+function renderBanksGrandTotal(){
+ const paid=rows.filter(r=>r.kind==='expense'&&r.settled_date),pending=rows.filter(r=>r.kind==='expense'&&!r.settled_date);
+ const totalPaid=sumEffective(paid),totalPending=sum(pending),totalSaved=paid.reduce((v,r)=>v+discountOf(r),0);
+ $('banksGrandTotal').innerHTML='<div class="section-label">TOTAL GERAL DE TODOS OS COMPROMISSOS</div>'
+  +'<h2>Fechamento de todos os bancos e despesas</h2>'
+  +'<div class="bank-final-stats"><div><span>TOTAL JÁ PAGO · TODOS OS MESES</span><strong class="positive">'+money(totalPaid)+'</strong><small>'+paid.length+' despesas pagas</small></div>'
+  +'<div><span>TOTAL QUE AINDA FALTA PAGAR</span><strong class="money-pay">'+money(totalPending)+'</strong><small>'+pending.length+' despesas pendentes</small></div>'
+  +'<div><span>TOTAL DE DESPESAS REGISTRADAS</span><strong>'+money(totalPaid+totalPending)+'</strong><small>Pagas + pendentes; sem contar receitas</small></div>'
+  +'<div><span>ECONOMIA EM DESCONTOS</span><strong class="positive">'+money(totalSaved)+'</strong><small>Descontos já confirmados</small></div></div>'
+  +'<p class="fine">Inclui todos os lançamentos de despesas cadastrados, inclusive os sem banco. Valores pagos consideram descontos; valores a receber ficam fora deste fechamento.</p>';
+}
+
 function renderBanks(){
  const t=today(),pending=rows.filter(r=>r.kind==='expense'&&!r.settled_date),incoming=rows.filter(r=>r.kind==='income'&&!r.settled_date);
  const debt=pending.filter(r=>['Cartão de crédito','Cheque especial','Empréstimo pessoal','Financiamento'].includes(r.bank_product));
@@ -300,7 +382,7 @@ function renderBanks(){
    const situation=isLate?'⚠ EM ATRASO':settled?'✓ PAGO':'▣ A PAGAR';
    const detail=settled?'Pago em '+date(r.settled_date):'Vencimento: '+date(r.due_date);const savingDetail=discountOf(r)?'<small class="positive">Economizou '+money(discountOf(r))+' · valor original '+money(Number(r.amount_cents))+'</small>':'';
    return '<div class="bank-installment '+klass+'"><div class="bank-installment-info"><b>'+esc(r.description)+'</b><small>'+esc(r.bank_product||r.category||'Despesa')+(r.installments>1?' · Parcela '+Number(r.installment)+'/'+Number(r.installments):'')+'</small><small>Vence em '+date(r.due_date)+'</small></div><div class="bank-installment-values"><strong>'+money(effectiveAmount(r))+'</strong><span class="bank-installment-status">'+situation+'</span><small>'+detail+'</small>' +savingDetail+(settled?'<button type="button" class="bank-pay-btn" data-edit="'+r.id+'">Editar pagamento</button>':'<button type="button" class="bank-pay-btn" data-edit="'+r.id+'">Pagar com desconto</button>')+'</div></div>';
-  }).join('')+'</section>').join('');
+  }).join('')+renderBankMonthClosure(records,month)+'</section>').join('');
   return '<details class="bank-card" data-bank="'+esc(name)+'"'+(expanded.has(name)?' open':'')+'><summary class="bank-open"><div class="row"><h3>'+esc(name)+'</h3><span class="bank-expand-hint">Ver parcelas e pagamentos <b>⌄</b></span></div>'
   +'<p>'+list.length+' pendente(s) · '+paid.length+' pago(s)'+(late.length?' · <span class="negative">'+late.length+' em atraso</span>':'')+'</p>'
   +'<div class="bank-metrics"><div class="bank-metric-main"><span>Falta pagar</span><strong class="money-pay">'+money(summary.total)+'</strong></div>'
@@ -309,8 +391,9 @@ function renderBanks(){
   +(summary.overdue?'<div class="bank-late-banner">⚠ EM ATRASO: '+money(summary.overdue)+' · '+late.length+' parcela(s)</div>':'')
   +types.map(type=>'<div class="bank-detail"><span>'+esc(type)+'</span><b class="money-pay">'+money(sum(list.filter(r=>(r.bank_product||'Não informado')===type)))+'</b></div>').join('')
   +'</summary><div class="bank-installments"><div class="bank-installments-title"><b>Histórico de parcelas e vencimentos</b><small>✓ Pago · ▣ Pendente · ⚠ Em atraso</small></div>'
-  +(inner||'<div class="empty">Nenhuma parcela cadastrada para este banco.</div>')+'</div></details>';
+  +(inner||'<div class="empty">Nenhuma parcela cadastrada para este banco.</div>')+renderBankFinalClosure(all,name)+'</div></details>';
  }).join('');
+ renderBanksGrandTotal();
  renderFinanceMonthly('payablesByMonth',pending,'expense');
  renderFinanceMonthly('receivables',incoming,'income');
  const chosen=$('bankFilter').value;
