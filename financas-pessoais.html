@@ -30,6 +30,14 @@
 .cards .finance-balanced .finance-status{background:#67512b;color:#fff2cf}
 @media(max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.cards{grid-template-columns:1fr}.cards .finance-card{min-height:155px}}
+
+/* Cores obrigatórias dos NÚMEROS grandes, independente das cores do card */
+#cards .finance-card.finance-receivable .finance-amount,
+#cards .finance-card.finance-surplus .finance-amount,
+#cards .finance-card.finance-available .finance-amount{color:#69f0ae!important;-webkit-text-fill-color:#69f0ae!important}
+#cards .finance-card.finance-payable .finance-amount{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important}
+#cards .finance-card.finance-deficit .finance-amount{color:#ff526b!important;-webkit-text-fill-color:#ff526b!important}
+#cards .finance-card.finance-balanced .finance-amount{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important}
 </style></head><body><main>
 <header><a href="admin.html">← Administrador</a><span class="eyebrow">RESUMOS DO ENZO</span><span class="badge">Área pessoal • acesso privado</span></header>
 <div id="gate" class="notice" role="status">Verificando seu acesso…</div>
