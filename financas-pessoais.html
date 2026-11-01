@@ -62,6 +62,43 @@
 @media(max-width:850px){#agendaSummary{grid-template-columns:repeat(2,minmax(0,1fr))}.ledger-line{grid-template-columns:minmax(0,1fr) auto}.ledger-after{grid-column:1/-1;flex-direction:row;justify-content:space-between;border-top:1px dashed #304359;padding-top:5px}}
 @media(max-width:540px){#agendaSummary{grid-template-columns:1fr}.ledger-day-head>div{width:100%;gap:8px;justify-content:space-between}.ledger-day-head>div span{display:block}.ledger-day{margin:12px 0}.ledger-line>strong{font-size:14px}.ledger-day-foot strong{font-size:18px}}
 @media print{.ledger-bulk{display:none!important}.ledger-day,.ledger-metric{break-inside:avoid}.ledger-line{color:#111}.ledger-day-foot{color:#111}}
+
+/* Separação nítida de compromissos e recebimentos por mês */
+.debt-strip>div{display:flex;flex-direction:column;gap:3px;min-width:135px}
+.debt-strip small{font-size:11px;color:#9eb2c8;line-height:1.35}
+.bank-card .bank-metrics{display:grid;grid-template-columns:1.3fr .85fr 1.15fr;gap:10px;margin:12px 0 18px}
+.bank-metric-main,.bank-metric{border:1px solid #354a64;border-radius:11px;background:#0d2133;padding:13px 10px;min-width:0}
+.bank-metric-main span,.bank-metric span{display:block;color:#aabbd1;font-size:11px;font-weight:650}
+.bank-metric-main strong,.bank-metric strong{display:block;font-size:clamp(17px,1.7vw,24px);margin-top:6px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.bank-metric small{display:block;font-size:10px;color:#99afc3}
+.money-pay{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important}
+.money-receive{color:#69f0ae!important;-webkit-text-fill-color:#69f0ae!important}
+.finances-separation{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px 0}
+.flow-money-panel{min-width:0}
+.flow-payable{border-top:3px solid #e1e8f4}
+.flow-income{border-top:3px solid #69f0ae}
+.flow-money-panel h2{margin:0 0 8px}
+.monthly-finance-head{display:grid;grid-template-columns:1.2fr .8fr 1fr;gap:8px;margin:16px 0}
+.monthly-finance-head>div{padding:12px 10px;background:#16283a;border:1px solid #30445c;border-radius:10px;min-width:0}
+.monthly-finance-head span{display:block;color:#a9bed0;font-size:11px;min-height:32px;line-height:1.3}
+.monthly-finance-head strong{display:block;font-size:clamp(17px,1.6vw,22px);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.finance-month-group{border:1px solid #2b4055;border-radius:11px;margin:10px 0;background:#101e30}
+.finance-month-group>summary{padding:13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;list-style:none}
+.finance-month-group>summary::-webkit-details-marker{display:none}
+.finance-month-group>summary span{font-weight:700}
+.finance-month-group>summary small{display:block;font-weight:400;font-size:11px;color:#a3b6ca}
+.finance-month-group>summary b{font-size:16px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.finance-month-group[open]>summary{border-bottom:1px solid #30445c;background:#1b2d40}
+.finance-month-items{padding:0 13px;max-height:310px;overflow:auto}
+.monthly-finance-entry{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:11px 0;border-bottom:1px solid #293e53;font-size:12px}
+.monthly-finance-entry:last-child{border-bottom:0}
+.monthly-finance-entry b{overflow-wrap:anywhere}
+.monthly-finance-entry small{display:block;color:#91a9c0}
+.monthly-finance-entry strong{font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
+@media(max-width:1080px){.finances-separation{grid-template-columns:1fr}.bank-card .bank-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:540px){.bank-card .bank-metrics,.monthly-finance-head{grid-template-columns:1fr 1fr}.bank-metric-main,.monthly-finance-head>div:first-child{grid-column:1/-1}.finances-separation{gap:12px}.finance-month-group>summary b{white-space:normal}}
+@media print{.finances-separation{display:block}.flow-money-panel{break-inside:avoid}.finance-month-items{max-height:none;overflow:visible}}
+
 </style></head><body><main>
 <header><a href="admin.html">← Administrador</a><span class="eyebrow">RESUMOS DO ENZO</span><span class="badge">Área pessoal • acesso privado</span></header>
 <div id="gate" class="notice" role="status">Verificando seu acesso…</div>
@@ -70,6 +107,10 @@
 <div id="message" role="status" aria-live="polite"></div>
 <div class="row"><label>Mês de planejamento<input class="month" id="month" type="month"></label><div class="tools"><button id="csv">Exportar CSV</button><button id="print">Imprimir / PDF</button></div></div>
 <div class="cards" id="cards"></div><div id="debtSummary" class="debt-strip"></div><div class="row bank-summary-head"><div><div class="section-label">CONTROLE POR INSTITUIÇÃO</div><h2>Bancos e compromissos</h2></div><span class="fine">Valores cadastrados • despesas pendentes</span></div><div id="banks" class="bank-grid"></div><p class="fine">Cartão de crédito: registre as compras/parcelas ou o total da fatura, para não contar a mesma despesa duas vezes. Os valores e juros são informados por você; não há consulta automática aos bancos.</p>
+<div class="finances-separation">
+<section class="panel flow-money-panel flow-payable"><div class="section-label">SAÍDAS • CONTAS E PARCELAS</div><h2>Valores a pagar por mês</h2><p class="fine">Valor total, meses restantes, média mensal e vencimentos detalhados, sem receitas misturadas.</p><div id="payablesByMonth"></div></section>
+<section class="panel flow-money-panel flow-income"><div class="section-label">ENTRADAS • RECEBIMENTOS</div><h2>Valores a receber por mês</h2><p class="fine">Receitas pendentes, datas de recebimento e origem de cada entrada, sem despesas misturadas.</p><div id="receivables"></div></section>
+</div>
 <div class="split"><section class="panel"><div class="row"><h2>Contas a pagar • próximos vencimentos</h2><label>Mostrar<select id="alertWindow"><option value="">Conforme cada aviso</option><option value="3">Próximos 3 dias</option><option value="7">Próximos 7 dias</option><option value="15">Próximos 15 dias</option><option value="30">Próximos 30 dias</option></select></label></div><p class="fine">Avisos exibidos ao abrir esta área, conforme a antecedência de cada lançamento. Inclui atrasadas e pendências de todos os meses. A antecedência é configurada em cada item.</p><div id="alerts" class="alerts"></div></section><section class="panel"><h2>Valores a receber • próximos recebimentos</h2><p class="fine">Receitas previstas e ainda não recebidas, incluindo atrasadas. Utiliza o mesmo intervalo de avisos selecionado ao lado.</p><div id="receivableAlerts" class="alerts"></div></section></div><section class="panel" style="margin:18px 0"><h2>Despesas por categoria</h2><p class="fine">Valores previstos e pagos do mês, pela data de vencimento. Receitas não entram neste gráfico.</p><div id="categories"></div></section>
 <section class="panel"><div class="row"><h2>Lançamentos do mês</h2><span id="count" class="badge"></span></div><div class="filters"><label>Tipo<select id="typeFilter"><option value="">Todos</option><option value="expense">Despesas</option><option value="income">Receitas</option><option value="extra">Entradas extras</option></select></label><label>Situação<select id="statusFilter"><option value="">Todas</option><option value="pending">Pendente</option><option value="settled">Pago / recebido</option><option value="overdue">Atrasado</option></select></label><label>Categoria<select id="catFilter"><option value="">Todas</option></select></label><label>Banco<select id="bankFilter"><option value="">Todos</option></select></label><label>Buscar item<input id="search" placeholder="Mercado, faculdade, salário…" type="search"></label></div><div class="scroll"><table><thead><tr><th>Vencimento</th><th>Item / categoria</th><th>Valor</th><th>Situação</th><th>Ações</th></tr></thead><tbody id="entries"></tbody></table></div><p class="fine" style="margin-top:15px">O filtro mensal usa o vencimento. O saldo disponível considera somente pagamentos e recebimentos efetivados até hoje. Para começar, cadastre o dinheiro que já tem como receita recebida, categoria “Saldo inicial”.</p></section>
 <section class="panel ledger-panel" style="margin-top:18px"><div class="row"><div><div class="section-label">FLUXO DE CAIXA</div><h2>Extrato financeiro com saldo acumulado</h2></div><span class="badge">Realizado + previsto</span></div><p class="fine">O saldo de cada dia passa para o dia seguinte e de um mês para o outro. Lançamentos recebidos/pagos usam a data efetiva; pendentes usam o vencimento previsto. A projeção supõe que todas as pendências ocorram nas datas previstas e não é o extrato do banco.</p><div id="agendaSummary"></div><div id="agenda"></div></section>
@@ -101,8 +142,70 @@ function categoryFields(){const custom=$('categoryPick').value==='__custom';$('c
 function bankFields(){const v=$('bank').value;$('customBankLabel').hidden=v!=='__custom';$('customBank').required=v==='__custom';$('productLabel').hidden=!v;$('product').required=!!v;if(!v)$('product').value='';}
 function scheduleFields(){const n=Number($('repeat').value),start=Number($('startInstallment').value);$('schedulePanel').hidden=!!editing||n<=1;if(editing||n<=1){$('schedule').innerHTML='';$('scheduleTotal').textContent='';return;}let amount=0;try{amount=cents($('amount').value);}catch{}if(!Number.isInteger(n)||n<1||n>120||!Number.isInteger(start)||start<1||start>n||!$('due').value){$('schedule').innerHTML='';return;}$('schedule').innerHTML=Array.from({length:n-start+1},(_,i)=>`<div class="installment-row"><b>${i+start}/${n}</b><label>Vencimento<input id="parcelDate${i}" type="date" value="${monthlyDate($('due').value,i)}" required></label><label>Valor (R$)<input id="parcelAmount${i}" inputmode="decimal" value="${(amount/100).toFixed(2).replace('.',',')}" required></label></div>`).join('');scheduleTotal();}
 function scheduleTotal(){let total=0;try{for(let i=0;i<Number($('repeat').value)-Number($('startInstallment').value)+1;i++){total+=cents($('parcelAmount'+i).value);}$('scheduleTotal').textContent='Total das parcelas cadastradas: '+money(total);}catch{$('scheduleTotal').textContent='Preencha os valores para calcular o total.';}}
-function renderBanks(){const pending=rows.filter(r=>r.kind==='expense'&&!r.settled_date),debt=pending.filter(r=>['Cartão de crédito','Cheque especial','Empréstimo pessoal','Financiamento'].includes(r.bank_product)),overdue=pending.filter(r=>r.due_date<today());$('debtSummary').innerHTML=`<div><span>Compromissos pendentes · todos os meses</span><strong>${money(sum(pending))}</strong></div><div><span>Em cartões, empréstimos e financiamentos</span><strong>${money(sum(debt))}</strong></div><div><span>Contas atrasadas</span><strong class="negative">${money(sum(overdue))}</strong></div><div><span>Parcelas pendentes cadastradas</span><strong>${pending.filter(r=>r.installments>1).length}</strong></div>`;const names=[...new Set(['Nubank','Bradesco','Mercado Pago',...rows.map(r=>r.bank_name).filter(Boolean)])];$('banks').innerHTML=names.map(name=>{const list=pending.filter(r=>r.bank_name===name),types=[...new Set(list.map(r=>r.bank_product||'Não informado'))];return `<article class="bank-card" data-bank="${esc(name)}"><h3>${esc(name)}</h3><p>${list.length} compromisso(s) pendente(s)</p><strong>${money(sum(list))}</strong>${types.map(type=>`<div class="bank-detail"><span>${esc(type)}</span><b>${money(sum(list.filter(r=>(r.bank_product||'Não informado')===type)))}</b></div>`).join('')||'<p style="margin-top:12px">Nenhuma despesa pendente.</p>'}</article>`}).join('');const chosen=$('bankFilter').value;$('bankFilter').innerHTML='<option value="">Todos</option>'+names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');$('bankFilter').value=names.includes(chosen)?chosen:'';}
-
+function financePendingSummary(items,referenceDate){
+ const overdue=items.filter(r=>String(r.due_date||'')<referenceDate);
+ const upcoming=items.filter(r=>String(r.due_date||'')>=referenceDate);
+ const months=[...new Set(upcoming.map(r=>String(r.due_date).slice(0,7)))].sort();
+ const futureSum=sum(upcoming);
+ return {total:sum(items),overdue:sum(overdue),futureSum,months,average:months.length?Math.round(futureSum/months.length):0,upcoming,overdueItems:overdue};
+}
+function financeMonthLabel(ym){
+ const [year,month]=ym.split('-').map(Number);
+ return new Intl.DateTimeFormat('pt-BR',{timeZone:'UTC',month:'long',year:'numeric'}).format(new Date(Date.UTC(year,month-1,1)));
+}
+function financeMonthlyGroups(items,t){
+ const summary=financePendingSummary(items,t),groups=new Map();
+ for(const r of items){
+  const period=r.due_date<t?'late':r.due_date.slice(0,7);
+  if(!groups.has(period))groups.set(period,[]);
+  groups.get(period).push(r);
+ }
+ return {summary,groups};
+}
+function renderFinanceMonthly(containerId,items,kind){
+ const isIncome=kind==='income',t=today(),{summary,groups}=financeMonthlyGroups(items,t),ordered=[...groups.entries()].sort(([a],[b])=>a==='late'?-1:b==='late'?1:a.localeCompare(b));
+ const valueClass=isIncome?'money-receive':'money-pay';
+ const title=isIncome?'Valor a receber':'Valor a pagar';
+ const labels='<div class="monthly-finance-head"><div><span>Total pendente</span><strong class="'+valueClass+'">'+money(summary.total)+'</strong></div><div><span>Meses restantes com lançamentos</span><strong>'+summary.months.length+'</strong></div><div><span>Média mensal futura</span><strong class="'+valueClass+'">'+money(summary.average)+'</strong></div></div>';
+ const overdue=summary.overdue?'<p class="fine"><b class="negative">Atrasados: '+money(summary.overdue)+'</b> (incluídos no total pendente, mas não na média futura).</p>':'';
+ const foot='<p class="fine">Média = total dos vencimentos futuros ÷ quantidade de meses com lançamentos futuros. Valores já pagos/recebidos não entram.</p>';
+ const lines=ordered.map(([month,list],index)=>{
+  const subtotal=sum(list),late=month==='late',monthTitle=late?'Vencimentos atrasados':financeMonthLabel(month);
+  const content=list.slice().sort((a,b)=>a.due_date.localeCompare(b.due_date)||String(a.description).localeCompare(String(b.description))).map(r=>'<div class="monthly-finance-entry"><div><b>'+esc(r.description)+'</b><small>'+date(r.due_date)+' · '+esc(r.category||'Sem categoria')+(r.bank_name?' · '+esc(r.bank_name):'')+'</small></div><strong class="'+valueClass+'">'+money(Number(r.amount_cents))+'</strong></div>').join('');
+  return '<details class="finance-month-group"'+(late||index===0?' open':'')+'><summary><span>'+monthTitle+' <small>'+list.length+' lançamento(s)</small></span><b class="'+valueClass+'">'+money(subtotal)+'</b></summary><div class="finance-month-items">'+content+'</div></details>';
+ }).join('');
+ $(containerId).innerHTML=labels+overdue+(lines||'<p class="empty">Nenhum lançamento pendente.</p>')+foot;
+}
+function renderBanks(){
+ const t=today(),pending=rows.filter(r=>r.kind==='expense'&&!r.settled_date),incoming=rows.filter(r=>r.kind==='income'&&!r.settled_date);
+ const debt=pending.filter(r=>['Cartão de crédito','Cheque especial','Empréstimo pessoal','Financiamento'].includes(r.bank_product));
+ const overdue=pending.filter(r=>r.due_date<t);
+ const allExpense=financePendingSummary(pending,t),allIncome=financePendingSummary(incoming,t);
+ $('debtSummary').innerHTML='<div><span>Total a pagar · todos os meses</span><strong class="money-pay">'+money(allExpense.total)+'</strong><small>'+allExpense.months.length+' mês(es) com vencimentos futuros</small></div>'
+ +'<div><span>Total a receber · todos os meses</span><strong class="money-receive">'+money(allIncome.total)+'</strong><small>'+allIncome.months.length+' mês(es) com recebimentos futuros</small></div>'
+ +'<div><span>Cartões, empréstimos e financiamentos</span><strong class="money-pay">'+money(sum(debt))+'</strong><small>Somente parcelas ainda pendentes</small></div>'
+ +'<div><span>Contas atrasadas</span><strong class="negative">'+money(sum(overdue))+'</strong><small>Incluídas no valor total a pagar</small></div>'
+ +'<div><span>Parcelas pendentes cadastradas</span><strong>'+pending.filter(r=>r.installments>1).length+'</strong><small>Quantidade de lançamentos, não de meses</small></div>';
+ const names=[...new Set(['Nubank','Bradesco','Mercado Pago',...rows.map(r=>r.bank_name).filter(Boolean)])];
+ $('banks').innerHTML=names.map(name=>{
+  const list=pending.filter(r=>r.bank_name===name),summary=financePendingSummary(list,t);
+  const types=[...new Set(list.map(r=>r.bank_product||'Não informado'))];
+  return '<article class="bank-card" data-bank="'+esc(name)+'"><h3>'+esc(name)+'</h3>'
+  +'<p>'+list.length+' compromisso(s) pendente(s)</p>'
+  +'<div class="bank-metrics"><div class="bank-metric-main"><span>Total a pagar</span><strong class="money-pay">'+money(summary.total)+'</strong></div>'
+  +'<div class="bank-metric"><span>Meses restantes</span><strong>'+summary.months.length+'</strong><small>com vencimentos futuros</small></div>'
+  +'<div class="bank-metric"><span>Média mensal futura</span><strong class="money-pay">'+money(summary.average)+'</strong></div></div>'
+  +(summary.overdue?'<div class="bank-detail"><span>Parcelas atrasadas (incluídas no total)</span><b class="negative">'+money(summary.overdue)+'</b></div>':'')
+  +types.map(type=>'<div class="bank-detail"><span>'+esc(type)+'</span><b class="money-pay">'+money(sum(list.filter(r=>(r.bank_product||'Não informado')===type)))+'</b></div>').join('')
+  +(!list.length?'<p style="margin-top:12px">Nenhuma despesa pendente.</p>':'')
+  +'</article>';
+ }).join('');
+ renderFinanceMonthly('payablesByMonth',pending,'expense');
+ renderFinanceMonthly('receivables',incoming,'income');
+ const chosen=$('bankFilter').value;
+ $('bankFilter').innerHTML='<option value="">Todos</option>'+names.map(n=>'<option value="'+esc(n)+'">'+esc(n)+'</option>').join('');
+ $('bankFilter').value=names.includes(chosen)?chosen:'';
+}
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const money=v=>(v/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
