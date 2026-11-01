@@ -702,6 +702,40 @@ function generateFinanceReport(e){
  }catch(err){$('reportError').textContent=err.message;}
 }
 
+
+const QUICK_CATEGORIES=['Uber','Cigarro','Mercado','Cerveja','Refrigerante','Carne','Suco','Café na faculdade','Café','Alimentação','Transporte','Farmácia','Faculdade','Lazer','Outros gastos'];
+function quickNormalize(value){return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/\s+/g,' ');}
+function quickGuessCategory(description){
+ const n=quickNormalize(description);
+ if(/\b(uber|99|taxi)\b/.test(n))return 'Uber';
+ if(/\b(cigarro|cigarros|tabaco)\b/.test(n))return 'Cigarro';
+ if(/\b(mercado|supermercado|mercearia)\b/.test(n))return 'Mercado';
+ if(/\b(cerveja|chopp)\b/.test(n))return 'Cerveja';
+ if(/\b(refrigerante|refri|coca cola|guarana)\b/.test(n))return 'Refrigerante';
+ if(/\b(carne|picanha|acougue|bife|frango)\b/.test(n))return 'Carne';
+ if(/\b(suco|sucos)\b/.test(n))return 'Suco';
+ if(/\b(cafe|cappuccino|expresso)\b/.test(n)&&/\b(faculdade|aula|universidade|cantina)\b/.test(n))return 'Café na faculdade';
+ if(/\b(cafe|cappuccino|expresso)\b/.test(n))return 'Café';
+ if(/\b(remedio|farmacia|medicamento)\b/.test(n))return 'Farmácia';
+ if(/\b(lanche|almoco|janta|restaurante|pizza)\b/.test(n))return 'Alimentação';
+ if(/\b(onibus|gasolina|combustivel|estacionamento)\b/.test(n))return 'Transporte';
+ if(/\b(faculdade|livro|apostila|xerox)\b/.test(n))return 'Faculdade';
+ return 'Outros gastos';
+}
+function quickNumberBRL(value){
+ const s=String(value).trim().replace(/\s/g,'');
+ return /^\d+\.\d{1,2}$/.test(s)?s.replace('.',','):s;
+}
+function parseQuickCommand(value){
+ const s=String(value||'').trim().replace(/\s+/g,' ');
+ const prefix=s.match(/^(?:R\$\s*)?((?:\d{1,3}(?:\.\d{3})+|\d+)(?:[,.]\d{1,2})?)\s+(.+)$/i);
+ const suffix=s.match(/^(.+?)\s+(?:R\$\s*)?((?:\d{1,3}(?:\.\d{3})+|\d+)(?:[,.]\d{1,2})?)$/i);
+ const description=(prefix?prefix[2]:suffix?suffix[1]:'').trim().replace(/^[-–:]\s*/,'');
+ const raw=prefix?prefix[1]:suffix?suffix[2]:'';
+ if(!description||description.length>160)return null;
+ try{const amount=cents(quickNumberBRL(raw));return {amount,description,category:quickGuessCategory(description),formatted:(amount/100).toFixed(2).replace('.',',')};}catch{return null;}
+}
+
 function exportCSV(){
  const cell=v=>'"'+String(v??'').replace(/^[=+@-]/,"'$&").replace(/"/g,'""')+'"';
  const heading=['Vencimento','Tipo','Item','Categoria','Valor original (R$)','Valor pago / previsto (R$)','Desconto economizado (R$)','Situação','Data efetiva','Extra','Forma','Parcela','Banco','Tipo no banco','Observações'];
