@@ -244,7 +244,7 @@ details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotat
 <dialog id="editor"><form id="entryForm"><div class="row"><h2 id="formTitle">Novo lançamento</h2><button type="button" id="close" aria-label="Fechar">✕</button></div><div class="formgrid">
 <label>Tipo<select id="kind"><option value="expense">Despesa</option><option value="income">Receita</option></select></label><label>Valor de cada ocorrência (R$)<input id="amount" inputmode="decimal" placeholder="0,00" required maxlength="16"></label>
 <label class="wide">Item / descrição<input id="description" required maxlength="160" placeholder="Ex.: mensalidade da faculdade"></label>
-<label>Categoria<select id="categoryPick" required><option value="">Selecione</option><option>Água</option><option>Energia</option><option>Mercado</option><option>Uber</option><option>Cigarro</option><option>Empréstimo pessoal</option><option>Cartão de crédito</option><option>Cheque especial</option><option>Aluguel</option><option>Internet</option><option>Telefone</option><option>Faculdade</option><option>Saúde</option><option>Farmácia</option><option>Transporte</option><option>Alimentação</option><option>Lazer</option><option>Assinaturas</option><option>Dívidas</option><option>Renda fixa</option><option>Renda extra</option><option>Saldo inicial</option><option>Moradia</option><option>Contas da casa</option><option value="__custom">Outra — preencher à mão</option></select></label><label id="customCategoryLabel" hidden>Minha categoria<input id="category" maxlength="80" placeholder="Digite sua categoria"></label>
+<label>Categoria<select id="categoryPick" required><option value="">Selecione</option><option>Água</option><option>Energia</option><option>Mercado</option><option>Uber</option><option>Cigarro</option><option>Cerveja</option><option>Refrigerante</option><option>Carne</option><option>Suco</option><option>Café na faculdade</option><option>Café</option><option>Outros gastos</option><option>Empréstimo pessoal</option><option>Cartão de crédito</option><option>Cheque especial</option><option>Aluguel</option><option>Internet</option><option>Telefone</option><option>Faculdade</option><option>Saúde</option><option>Farmácia</option><option>Transporte</option><option>Alimentação</option><option>Lazer</option><option>Assinaturas</option><option>Dívidas</option><option>Renda fixa</option><option>Renda extra</option><option>Saldo inicial</option><option>Moradia</option><option>Contas da casa</option><option value="__custom">Outra — preencher à mão</option></select></label><label id="customCategoryLabel" hidden>Minha categoria<input id="category" maxlength="80" placeholder="Digite sua categoria"></label>
 <div class="form-section">BANCO E TIPO DE COMPROMISSO</div><label>Banco / instituição<select id="bank"><option value="">Sem banco / dinheiro</option><option>Nubank</option><option>Bradesco</option><option>Mercado Pago</option><option>Itaú</option><option>Santander</option><option>Banco do Brasil</option><option>Caixa</option><option>Inter</option><option>PicPay</option><option value="__custom">Outro — preencher à mão</option></select></label><label id="customBankLabel" hidden>Nome do banco<input id="customBank" maxlength="80"></label><label id="productLabel" hidden>Tipo no banco<select id="product"><option value="">Selecione</option><option>Conta corrente</option><option>Cartão de crédito</option><option>Cheque especial</option><option>Empréstimo pessoal</option><option>Financiamento</option><option>Outro</option></select></label><div class="form-section">DATAS E PARCELAS</div><label>Vencimento / recebimento previsto<input id="due" type="date" required></label>
 <label>Situação<select id="settled"><option value="no">Pendente</option><option value="yes">Pago / recebido</option></select></label><label id="settledDateLabel" hidden>Data efetiva<input id="settledDate" type="date"></label>
 <div class="wide early-payment" id="discountPanel" hidden><div class="row"><div><b>Quitação antecipada com desconto</b><p class="fine">Registre o abatimento concedido pelo banco. O valor original da parcela será preservado.</p></div><label>Recebeu desconto?<select id="settlementDiscount"><option value="no">Não</option><option value="yes">Sim, tive desconto</option></select></label></div><div id="discountFields" hidden><label>Desconto concedido (R$)<input id="discountAmount" inputmode="decimal" value="0,00" placeholder="Ex.: 80,00"></label><div class="discount-preview" id="discountPreview" aria-live="polite"></div><p class="fine">O desconto entra em “Economia com antecipações” apenas depois da confirmação do pagamento. Não é uma receita.</p></div></div>
@@ -779,6 +779,42 @@ function openQuickExpense(){
  quickCategoryFields();quickUpdatePreview();$('quickDialog').showModal();$('quickCommand').focus();
 }
 
+
+async function saveQuickExpense(event){
+ event.preventDefault();
+ if(busy||!loaded)return;
+ const parsed=parseQuickCommand($('quickCommand').value);
+ if(parsed&&!$('quickAmount').value.trim()){
+  $('quickAmount').value=parsed.formatted;$('quickDescription').value=parsed.description;quickSetCategory(parsed.category);
+ }
+ try{
+  const amount=cents(quickNumberBRL($('quickAmount').value));
+  const description=$('quickDescription').value.trim();
+  const category=$('quickCategory').value==='__custom'?$('quickCustomCategory').value.trim():$('quickCategory').value;
+  const day=$('quickDate').value;
+  const paid=$('quickStatus').value==='paid',method=$('quickMethod').value;
+  if(!description||description.length>160)throw Error('Informe um item válido (até 160 caracteres).');
+  if(!category||category.length>80)throw Error('Informe uma categoria válida (até 80 caracteres).');
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(day)||Number.isNaN(Date.parse(day+'T12:00:00Z')))throw Error('Informe uma data válida.');
+  if(paid&&day>today())throw Error('Não é possível confirmar um pagamento com data futura.');
+  if(method==='Cartão de crédito'&&paid&&!confirm('Compra no crédito marcada como paga. Se você registrar também o valor da fatura, poderá contar essa despesa duas vezes. Confirmar?'))return;
+  const entry={
+   id:crypto.randomUUID(),kind:'expense',description,category,amount_cents:amount,discount_cents:0,
+   due_date:day,settled_date:paid?day:null,bank_name:'',bank_product:'',
+   payment_method:method,notes:'Gasto rápido',reminder_days:0,is_extra:false,
+   series_id:null,installment:1,installments:1
+  };
+  busy=true;$('quickSave').disabled=true;
+  const {data,error}=await db.from(TABLE).insert([entry]).select('id');
+  if(error)throw error;
+  if(!data||data.length!==1)throw Error('Registro não confirmado. Atualize a página para verificar antes de tentar novamente.');
+  $('quickDialog').close();$('month').value=day.slice(0,7);
+  busy=false;await refresh();
+  notify('Gasto registrado: '+money(amount)+' · '+description+' · '+date(day)+(paid?' · Pago':' · Pendente')+'.');
+ }catch(error){$('quickError').textContent='Não foi possível registrar: '+error.message;}
+ finally{busy=false;$('quickSave').disabled=false;}
+}
+
 function exportCSV(){
  const cell=v=>'"'+String(v??'').replace(/^[=+@-]/,"'$&").replace(/"/g,'""')+'"';
  const heading=['Vencimento','Tipo','Item','Categoria','Valor original (R$)','Valor pago / previsto (R$)','Desconto economizado (R$)','Situação','Data efetiva','Extra','Forma','Parcela','Banco','Tipo no banco','Observações'];
@@ -797,6 +833,24 @@ $('reportDialog').addEventListener('change',e=>{if(e.target.id==='reportPeriod')
 $('reportDialog').addEventListener('input',e=>{if(e.target.id!=='reportTitle')reportPreview();});
 $('reportAllBanks').onclick=()=>{$('reportBanks').querySelectorAll('input[name="reportBank"]').forEach(el=>el.checked=true);reportPreview();};
 $('reportNoBanks').onclick=()=>{$('reportBanks').querySelectorAll('input[name="reportBank"]').forEach(el=>el.checked=false);reportPreview();};
+
+
+$('quickAdd').onclick=openQuickExpense;
+$('quickForm').addEventListener('submit',saveQuickExpense);
+['quickClose','quickCancel'].forEach(id=>$(id).onclick=()=>{if(!busy)$('quickDialog').close();});
+$('quickShortcuts').addEventListener('click',event=>{
+ const button=event.target.closest('[data-quick-item]');if(!button)return;
+ const item=button.dataset.quickItem;
+ $('quickCommand').value='';$('quickDescription').value=item;quickSetCategory(quickGuessCategory(item));
+ $('quickAmount').focus();quickUpdatePreview();
+});
+$('quickCommand').addEventListener('input',quickCommandChanged);
+$('quickDescription').addEventListener('input',()=>{
+ quickSetCategory(quickGuessCategory($('quickDescription').value));quickUpdatePreview();
+});
+['quickCategory','quickCustomCategory','quickAmount','quickDate','quickMethod','quickStatus'].forEach(id=>$(id).addEventListener('input',()=>{
+ if(id==='quickCategory')quickCategoryFields();quickUpdatePreview();
+}));
 
 db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||(session&&session.user.id!==OWNER)){rows=[];$('app').hidden=true;$('editor').close();location.replace('login.html');}});
 (async()=>{try{const {data,error}=await db.auth.getUser();if(error||!data.user){location.replace('login.html');return;}if(data.user.id!==OWNER){$('gate').textContent='Esta área é exclusiva do proprietário.';return;}$('gate').hidden=true;$('app').hidden=false;await refresh();}catch(e){$('gate').textContent='Não foi possível verificar seu acesso. Recarregue a página.';}})();
