@@ -99,13 +99,30 @@
 @media(max-width:540px){.bank-card .bank-metrics,.monthly-finance-head{grid-template-columns:1fr 1fr}.bank-metric-main,.monthly-finance-head>div:first-child{grid-column:1/-1}.finances-separation{gap:12px}.finance-month-group>summary b{white-space:normal}}
 @media print{.finances-separation{display:block}.flow-money-panel{break-inside:avoid}.finance-month-items{max-height:none;overflow:visible}}
 
+
+/* Gerador de relatório por banco/mês */
+.report-dialog{width:min(860px,calc(100% - 22px));max-height:92vh;padding:25px;overflow:auto;background:#111e30}
+.report-dialog h2{margin:3px 0 7px}.report-settings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.report-settings .wide{grid-column:1/-1}.report-settings label[hidden]{display:none!important}
+.report-bank-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin:20px 0 10px;padding-top:15px;border-top:1px solid #344a5d}
+.report-bank-head button{font-size:12px;padding:7px 10px}
+.report-bank-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;max-height:210px;overflow:auto}
+.report-bank-grid label{display:flex;align-items:center;gap:9px;border:1px solid #34495e;background:#162b40;border-radius:9px;padding:10px;color:#e0edf8;overflow-wrap:anywhere;font-size:12px}
+.report-bank-grid input,.report-check input{width:17px;height:17px;margin:0;flex:0 0 17px;accent-color:#68e0cc}
+.report-check{display:flex;align-items:center;gap:10px;margin:17px 0}
+.report-preview{background:#1b3445;border:1px solid #355f73;padding:13px 16px;border-radius:10px;color:#d1e7f5;font-size:13px}
+.report-preview strong{font-size:16px;margin:7px 15px 2px 0;display:inline-block}
+#reportError:empty{display:none}
+@media(max-width:620px){.report-dialog{padding:17px}.report-settings{grid-template-columns:1fr}.report-settings .wide{grid-column:auto}.report-bank-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:400px){.report-bank-grid{grid-template-columns:1fr}}
+
 </style></head><body><main>
 <header><a href="admin.html">← Administrador</a><span class="eyebrow">RESUMOS DO ENZO</span><span class="badge">Área pessoal • acesso privado</span></header>
 <div id="gate" class="notice" role="status">Verificando seu acesso…</div>
 <div id="app" hidden>
 <div class="row hero"><div><div class="eyebrow">SEU PLANEJAMENTO PESSOAL</div><h1>Minhas finanças</h1><p>Clareza para hoje. Organização para os próximos meses.</p></div><div class="tools"><button id="reload">Atualizar</button><button class="primary" id="add">+ Novo lançamento</button></div></div>
 <div id="message" role="status" aria-live="polite"></div>
-<div class="row"><label>Mês de planejamento<input class="month" id="month" type="month"></label><div class="tools"><button id="csv">Exportar CSV</button><button id="print">Imprimir / PDF</button></div></div>
+<div class="row"><label>Mês de planejamento<input class="month" id="month" type="month"></label><div class="tools"><button id="csv">Exportar CSV</button><button id="print" type="button">Relatórios / PDF</button></div></div>
 <div class="cards" id="cards"></div><div id="debtSummary" class="debt-strip"></div><div class="row bank-summary-head"><div><div class="section-label">CONTROLE POR INSTITUIÇÃO</div><h2>Bancos e compromissos</h2></div><span class="fine">Valores cadastrados • despesas pendentes</span></div><div id="banks" class="bank-grid"></div><p class="fine">Cartão de crédito: registre as compras/parcelas ou o total da fatura, para não contar a mesma despesa duas vezes. Os valores e juros são informados por você; não há consulta automática aos bancos.</p>
 <div class="finances-separation">
 <section class="panel flow-money-panel flow-payable"><div class="section-label">SAÍDAS • CONTAS E PARCELAS</div><h2>Valores a pagar por mês</h2><p class="fine">Valor total, meses restantes, média mensal e vencimentos detalhados, sem receitas misturadas.</p><div id="payablesByMonth"></div></section>
@@ -129,6 +146,30 @@
 <label class="wide">Observações<textarea id="notes" rows="2" maxlength="2000"></textarea></label>
 <p class="fine wide">Ao repetir, somente a primeira ocorrência pode ficar paga/recebida; as seguintes são criadas pendentes. Vencimentos nos dias 29–31 se ajustam ao último dia dos meses menores. Editar ou excluir afeta somente a ocorrência escolhida.</p>
 </div><div id="formError" class="negative" role="alert"></div><div class="formbuttons"><button type="button" id="cancel">Cancelar</button><button class="primary" id="save" type="submit">Salvar lançamento</button></div></form></dialog>
+
+<dialog id="reportDialog" class="report-dialog" aria-labelledby="reportTitleHeading">
+ <form id="reportForm">
+ <div class="row"><div><div class="eyebrow">RELATÓRIOS PERSONALIZADOS</div><h2 id="reportTitleHeading">Gerar relatório / PDF</h2></div><button type="button" id="reportClose" aria-label="Fechar">✕</button></div>
+ <p class="fine">Escolha instituições, meses e tipos de lançamentos. O relatório não altera seus registros.</p>
+ <div class="report-settings">
+ <label class="wide">Título<input id="reportTitle" maxlength="100" value="Relatório financeiro pessoal"></label>
+ <label>Período<select id="reportPeriod"><option value="month">Mês específico</option><option value="range">Intervalo de meses</option><option value="all">Todos os meses cadastrados</option></select></label>
+ <label id="reportOneMonthLabel">Mês<input id="reportMonth" type="month" required></label>
+ <label id="reportStartLabel" hidden>Mês inicial<input id="reportStart" type="month"></label>
+ <label id="reportEndLabel" hidden>Mês final<input id="reportEnd" type="month"></label>
+ <label>Tipo<select id="reportKind"><option value="expense">Contas a pagar / despesas</option><option value="income">Valores a receber / receitas</option><option value="both">Despesas e receitas separadas</option></select></label>
+ <label>Situação<select id="reportStatus"><option value="all">Pagos e pendentes</option><option value="pending">Somente pendentes</option><option value="settled">Somente pagos / recebidos</option><option value="overdue">Somente pendentes atrasados</option></select></label>
+ <label>Organização<select id="reportGroup"><option value="bank">Por banco, depois por mês</option><option value="month">Por mês, depois por banco</option><option value="summary">Resumo geral dos meses e bancos</option></select></label>
+ <label>Categoria<select id="reportCategory"><option value="">Todas as categorias</option></select></label>
+ </div>
+ <div class="report-bank-head"><b>Quais bancos / instituições incluir?</b><div class="tools"><button id="reportAllBanks" type="button">Todos</button><button id="reportNoBanks" type="button">Nenhum</button></div></div>
+ <div id="reportBanks" class="report-bank-grid" role="group" aria-label="Bancos para incluir"></div>
+ <label class="report-check"><input id="reportDetails" type="checkbox" checked> Incluir lançamentos, parcelas, vencimentos e situação</label>
+ <div id="reportPreview" class="report-preview" aria-live="polite"></div>
+ <p id="reportError" class="negative" role="alert"></p>
+ <div class="formbuttons"><button type="button" id="reportCancel">Cancelar</button><button type="submit" class="primary" id="reportGenerate">Gerar e imprimir / salvar PDF</button></div>
+ </form>
+</dialog>
 <dialog id="bulkDialog" aria-labelledby="bulkTitle"><form id="bulkForm"><div class="row"><h2 id="bulkTitle">Marcar contas como pagas</h2><button type="button" id="bulkClose" aria-label="Fechar">✕</button></div><p id="bulkInfo"></p><label>Data efetiva em que o pagamento foi realizado<input id="bulkPaidDate" type="date" required></label><p class="fine" style="margin-top:12px">Somente as despesas pendentes deste banco e deste vencimento serão atualizadas. Outras datas, outros bancos e valores a receber não serão alterados.</p><div id="bulkError" class="negative" role="alert"></div><div class="formbuttons"><button id="bulkCancel" type="button">Cancelar</button><button id="bulkConfirm" class="primary" type="submit">Confirmar pagamento de todas</button></div></form></dialog>
 <script>
 'use strict';
