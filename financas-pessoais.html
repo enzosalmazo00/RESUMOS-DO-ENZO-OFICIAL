@@ -149,9 +149,9 @@ function renderLedger(){
   ['Entradas do mês',monthlyIncome,'Confirmadas e previstas'],
   ['Saídas do mês',monthlyOut,'Confirmadas e previstas'],
   [running<0?'Falta ao fim do mês':'Saldo após todas as contas',Math.abs(running),'Saldo acumulado projetado no fim do mês']
- ].map(([label,value,note],i)=>\`<div class="ledger-metric"><span>\${label}</span><strong class="\${i===2?'ledger-white':i===3?balanceColor(running):i===0?balanceColor(opening):'positive'}">\${money(value)}</strong><small>\${note}</small></div>\`).join('');
- const warning=previousOverdue.length?\`<div class="ledger-disclaimer">Atenção: existem \${previousOverdue.length} lançamentos anteriores ainda pendentes. Eles entram no saldo <b>projetado</b> conforme os vencimentos anteriores, mas não foram confirmados como pagos/recebidos.</div>\`:'';
- $('agendaSummary').insertAdjacentHTML('afterbegin',\`<div class="ledger-real">Saldo realizado até hoje, apenas lançamentos confirmados: <strong class="\${balanceColor(actualToday)}">\${money(actualToday)}</strong></div>\`);
+ ].map(([label,value,note],i)=>`<div class="ledger-metric"><span>${label}</span><strong class="${i===2?'ledger-white':i===3?balanceColor(running):i===0?balanceColor(opening):'positive'}">${money(value)}</strong><small>${note}</small></div>`).join('');
+ const warning=previousOverdue.length?`<div class="ledger-disclaimer">Atenção: existem ${previousOverdue.length} lançamentos anteriores ainda pendentes. Eles entram no saldo <b>projetado</b> conforme os vencimentos anteriores, mas não foram confirmados como pagos/recebidos.</div>`:'';
+ $('agendaSummary').insertAdjacentHTML('afterbegin',`<div class="ledger-real">Saldo realizado até hoje, apenas lançamentos confirmados: <strong class="${balanceColor(actualToday)}">${money(actualToday)}</strong></div>`);
  if(warning)$('agendaSummary').insertAdjacentHTML('beforeend',warning);
  bulkGroups.clear();let seq=0;
  const pieces=[];
@@ -167,11 +167,11 @@ function renderLedger(){
    const pending=items.filter(x=>!x.r.settled_date&&x.r.kind==='expense'&&bank);
    const bulkKey=String(seq++);
    if(pending.length>1)bulkGroups.set(bulkKey,{ids:pending.map(x=>x.r.id),date:d,bank});
-   const bulkButton=pending.length>1?\`<button type="button" class="ledger-bulk" data-bulk="\${bulkKey}">Marcar \${pending.length} como pagas · \${money(sum(pending.map(x=>x.r)))}</button>\`:'';
+   const bulkButton=pending.length>1?`<button type="button" class="ledger-bulk" data-bulk="${bulkKey}">Marcar ${pending.length} como pagas · ${money(sum(pending.map(x=>x.r)))}</button>`:'';
    const title=isIncome?'Entradas do dia':bank?'Pagamentos · '+esc(bank):'Outras despesas';
-   return \`<div class="ledger-group"><div class="ledger-group-heading"><b>\${title}</b>\${bulkButton}</div>\${items.map(({r,balanceAfter})=>\`<div class="ledger-line"><div><b>\${esc(r.description)}</b><small>\${esc(r.category)} · \${stateText(r)}\${r.installments>1?' · Parcela '+r.installment+'/'+r.installments:''}</small></div><strong class="\${r.kind==='income'?'positive':'ledger-white'}">\${r.kind==='income'?'+':'−'} \${money(Number(r.amount_cents))}</strong><div class="ledger-after"><small>Saldo após lançamento</small><strong class="\${balanceColor(balanceAfter)}">\${money(balanceAfter)}</strong></div></div>\`).join('')}</div>\`;
+   return `<div class="ledger-group"><div class="ledger-group-heading"><b>${title}</b>${bulkButton}</div>${items.map(({r,balanceAfter})=>`<div class="ledger-line"><div><b>${esc(r.description)}</b><small>${esc(r.category)} · ${stateText(r)}${r.installments>1?' · Parcela '+r.installment+'/'+r.installments:''}</small></div><strong class="${r.kind==='income'?'positive':'ledger-white'}">${r.kind==='income'?'+':'−'} ${money(Number(r.amount_cents))}</strong><div class="ledger-after"><small>Saldo após lançamento</small><strong class="${balanceColor(balanceAfter)}">${money(balanceAfter)}</strong></div></div>`).join('')}</div>`;
   }).join('');
-  pieces.push(\`<article class="ledger-day"><div class="ledger-day-head"><b>\${date(d)}</b><div><span>Saldo anterior <strong class="\${balanceColor(day.start)}">\${money(day.start)}</strong></span><span>Entradas <strong class="positive">+\${money(day.income)}</strong></span><span>Saídas <strong class="ledger-white">−\${money(day.out)}</strong></span></div></div>\${groupHtml}<div class="ledger-day-foot">Saldo disponível projetado após o dia <strong class="\${balanceColor(day.end)}">\${money(day.end)}</strong></div></article>\`);
+  pieces.push(`<article class="ledger-day"><div class="ledger-day-head"><b>${date(d)}</b><div><span>Saldo anterior <strong class="${balanceColor(day.start)}">${money(day.start)}</strong></span><span>Entradas <strong class="positive">+${money(day.income)}</strong></span><span>Saídas <strong class="ledger-white">−${money(day.out)}</strong></span></div></div>${groupHtml}<div class="ledger-day-foot">Saldo disponível projetado após o dia <strong class="${balanceColor(day.end)}">${money(day.end)}</strong></div></article>`);
  }
  $('agenda').innerHTML=pieces.join('')||'<div class="empty">Nenhuma movimentação neste mês. O saldo acumulado continua valendo para os meses seguintes.</div>';
 }
