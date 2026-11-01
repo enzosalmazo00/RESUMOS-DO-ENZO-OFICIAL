@@ -116,6 +116,35 @@
 @media(max-width:620px){.report-dialog{padding:17px}.report-settings{grid-template-columns:1fr}.report-settings .wide{grid-column:auto}.report-bank-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:400px){.report-bank-grid{grid-template-columns:1fr}}
 
+
+/* Bancos expansíveis: parcelas quitadas, pendentes e atrasadas */
+.bank-card{min-width:0}
+details.bank-card>summary{display:block;list-style:none;cursor:pointer;outline-offset:3px}
+details.bank-card>summary::-webkit-details-marker{display:none}
+details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotate(180deg)}
+.bank-expand-hint{font-size:12px;color:#98eed9;font-weight:600}
+.bank-card .row h3{margin:0}
+.bank-late-banner{background:#642032;border:1px solid #fb617b;color:#ffd1da;border-radius:8px;padding:9px 12px;margin:10px 0;font-weight:800;font-size:13px}
+.bank-installments{border-top:1px solid #39536c;margin-top:20px;padding-top:12px;max-height:640px;overflow-y:auto}
+.bank-installments-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.bank-installments-title small{color:#a1bbd0}
+.bank-installments-month h4{font-size:13px;color:#c9e7fa;background:#1a3248;padding:8px 12px;border-radius:8px;margin:14px 0 5px;display:flex;justify-content:space-between}
+.bank-installments-month h4 span{font-size:11px;color:#a0bbce;font-weight:400}
+.bank-installment{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 12px;border-bottom:1px solid #2c4457;font-size:13px}
+.bank-installment-info,.bank-installment-values{min-width:0}
+.bank-installment-info b{overflow-wrap:anywhere}
+.bank-installment-info small,.bank-installment-values small{display:block;color:#a2b7c8;font-size:11px}
+.bank-installment-values{text-align:right;display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+.bank-installment-values strong{font-size:16px;font-variant-numeric:tabular-nums;color:#fff}
+.bank-installment-status{font-size:11px;font-weight:900;letter-spacing:.3px}
+.bank-parcel-paid .bank-installment-values strong,.bank-parcel-paid .bank-installment-status{color:#69f0ae}
+.bank-parcel-pending .bank-installment-values strong{color:#fff}
+.bank-parcel-pending .bank-installment-status{color:#f7d681}
+.bank-parcel-late{background:#4c1b2a;border-left:4px solid #ff5875;border-radius:5px;margin:5px 0}
+.bank-parcel-late *,.bank-parcel-late .bank-installment-values strong,.bank-parcel-late .bank-installment-status,.bank-parcel-late small{color:#ffb7c4!important}
+@media(max-width:500px){.bank-installment{align-items:flex-start}.bank-installment-values strong{font-size:14px}.bank-installment-status{font-size:10px}}
+@media print{.bank-installments{max-height:none;overflow:visible}.bank-installment{break-inside:avoid}.bank-parcel-late *{color:#a22338!important}}
+
 </style></head><body><main>
 <header><a href="admin.html">← Administrador</a><span class="eyebrow">RESUMOS DO ENZO</span><span class="badge">Área pessoal • acesso privado</span></header>
 <div id="gate" class="notice" role="status">Verificando seu acesso…</div>
@@ -227,25 +256,40 @@ function renderBanks(){
  +'<div><span>Cartões, empréstimos e financiamentos</span><strong class="money-pay">'+money(sum(debt))+'</strong><small>Somente parcelas ainda pendentes</small></div>'
  +'<div><span>Contas atrasadas</span><strong class="negative">'+money(sum(overdue))+'</strong><small>Incluídas no valor total a pagar</small></div>'
  +'<div><span>Parcelas pendentes cadastradas</span><strong>'+pending.filter(r=>r.installments>1).length+'</strong><small>Quantidade de lançamentos, não de meses</small></div>';
+ const expanded=new Set([...$('banks').querySelectorAll('details.bank-card[open]')].map(el=>el.getAttribute('data-bank')));
  const names=[...new Set(['Nubank','Bradesco','Mercado Pago',...rows.map(r=>r.bank_name).filter(Boolean)])];
  $('banks').innerHTML=names.map(name=>{
-  const list=pending.filter(r=>r.bank_name===name),summary=financePendingSummary(list,t);
+  const list=pending.filter(r=>r.bank_name===name),all=rows.filter(r=>r.kind==='expense'&&r.bank_name===name);
+  const summary=financePendingSummary(list,t),paid=all.filter(r=>r.settled_date),late=list.filter(r=>r.due_date<t);
   const types=[...new Set(list.map(r=>r.bank_product||'Não informado'))];
-  return '<article class="bank-card" data-bank="'+esc(name)+'"><h3>'+esc(name)+'</h3>'
-  +'<p>'+list.length+' compromisso(s) pendente(s)</p>'
-  +'<div class="bank-metrics"><div class="bank-metric-main"><span>Total a pagar</span><strong class="money-pay">'+money(summary.total)+'</strong></div>'
-  +'<div class="bank-metric"><span>Meses restantes</span><strong>'+summary.months.length+'</strong><small>com vencimentos futuros</small></div>'
-  +'<div class="bank-metric"><span>Média mensal futura</span><strong class="money-pay">'+money(summary.average)+'</strong></div></div>'
-  +(summary.overdue?'<div class="bank-detail"><span>Parcelas atrasadas (incluídas no total)</span><b class="negative">'+money(summary.overdue)+'</b></div>':'')
+  const sorted=all.slice().sort((a,b)=>a.due_date.localeCompare(b.due_date)||String(a.description).localeCompare(String(b.description),'pt-BR'));
+  const groups=reportBankMonthsForCard(sorted);
+  const inner=groups.map(([month,records])=>'<section class="bank-installments-month"><h4>'+esc(financeMonthLabel(month))+' <span>'+records.length+' lançamento(s)</span></h4>'+records.map(r=>{
+   const settled=!!r.settled_date,isLate=!settled&&r.due_date<t,klass=isLate?'bank-parcel-late':settled?'bank-parcel-paid':'bank-parcel-pending';
+   const situation=isLate?'⚠ EM ATRASO':settled?'✓ PAGO':'▣ A PAGAR';
+   const detail=settled?'Pago em '+date(r.settled_date):'Vencimento: '+date(r.due_date);
+   return '<div class="bank-installment '+klass+'"><div class="bank-installment-info"><b>'+esc(r.description)+'</b><small>'+esc(r.bank_product||r.category||'Despesa')+(r.installments>1?' · Parcela '+Number(r.installment)+'/'+Number(r.installments):'')+'</small><small>Vence em '+date(r.due_date)+'</small></div><div class="bank-installment-values"><strong>'+money(Number(r.amount_cents))+'</strong><span class="bank-installment-status">'+situation+'</span><small>'+detail+'</small></div></div>';
+  }).join('')+'</section>').join('');
+  return '<details class="bank-card" data-bank="'+esc(name)+'"'+(expanded.has(name)?' open':'')+'><summary class="bank-open"><div class="row"><h3>'+esc(name)+'</h3><span class="bank-expand-hint">Ver parcelas e pagamentos <b>⌄</b></span></div>'
+  +'<p>'+list.length+' pendente(s) · '+paid.length+' pago(s)'+(late.length?' · <span class="negative">'+late.length+' em atraso</span>':'')+'</p>'
+  +'<div class="bank-metrics"><div class="bank-metric-main"><span>Falta pagar</span><strong class="money-pay">'+money(summary.total)+'</strong></div>'
+  +'<div class="bank-metric"><span>Total já pago</span><strong class="money-receive">'+money(sum(paid))+'</strong></div>'
+  +'<div class="bank-metric"><span>Meses restantes</span><strong>'+summary.months.length+'</strong><small>média futura '+money(summary.average)+'</small></div></div>'
+  +(summary.overdue?'<div class="bank-late-banner">⚠ EM ATRASO: '+money(summary.overdue)+' · '+late.length+' parcela(s)</div>':'')
   +types.map(type=>'<div class="bank-detail"><span>'+esc(type)+'</span><b class="money-pay">'+money(sum(list.filter(r=>(r.bank_product||'Não informado')===type)))+'</b></div>').join('')
-  +(!list.length?'<p style="margin-top:12px">Nenhuma despesa pendente.</p>':'')
-  +'</article>';
+  +'</summary><div class="bank-installments"><div class="bank-installments-title"><b>Histórico de parcelas e vencimentos</b><small>✓ Pago · ▣ Pendente · ⚠ Em atraso</small></div>'
+  +(inner||'<div class="empty">Nenhuma parcela cadastrada para este banco.</div>')+'</div></details>';
  }).join('');
  renderFinanceMonthly('payablesByMonth',pending,'expense');
  renderFinanceMonthly('receivables',incoming,'income');
  const chosen=$('bankFilter').value;
  $('bankFilter').innerHTML='<option value="">Todos</option>'+names.map(n=>'<option value="'+esc(n)+'">'+esc(n)+'</option>').join('');
  $('bankFilter').value=names.includes(chosen)?chosen:'';
+}
+function reportBankMonthsForCard(list){
+ const map=new Map();
+ for(const r of list){const key=String(r.due_date).slice(0,7);if(!map.has(key))map.set(key,[]);map.get(key).push(r);}
+ return [...map.entries()].sort(([a],[b])=>a.localeCompare(b));
 }
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const money=v=>(v/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
