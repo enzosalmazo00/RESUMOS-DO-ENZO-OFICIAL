@@ -189,11 +189,22 @@ details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotat
 .banks-grand-total p{margin-top:12px}
 @media(max-width:540px){.bank-month-sum,.bank-final-stats{grid-template-columns:1fr}.banks-grand-total{padding:15px}.bank-month-item-total{flex-direction:column;gap:6px}.bank-month-item-amounts{width:100%;align-items:stretch;text-align:left;flex-direction:row;justify-content:space-between;flex-wrap:wrap}}
 @media print{.bank-month-close,.bank-final-close,.banks-grand-total{break-inside:avoid;background:white!important;color:#111!important}.bank-month-close h5,.bank-final-close h4,.banks-grand-total h2{color:#111!important}}
+.quick-launch{background:#1c6353;border:1px solid #3bbd9b;color:#e0fff5;font-weight:800}.quick-launch:hover{border-color:#9dffe0;background:#22735e}
+.quick-dialog{width:min(740px,calc(100% - 22px));background:#101f30;padding:24px;max-height:93vh;overflow-y:auto}
+.quick-dialog h2{margin:3px 0 8px}.quick-command-label{font-weight:700;font-size:13px;color:#d5f2e8}
+.quick-command-label input{padding:17px 14px;font-size:18px;font-weight:700;border:1px solid #44a48e;background:#071d2b}
+.quick-shortcuts{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0 20px}.quick-shortcuts button{padding:8px 11px;border-radius:999px;background:#163949;border-color:#315b68;font-size:12px}
+.quick-shortcuts button:hover,.quick-shortcuts button:focus-visible{background:#1b554d;border-color:#70dabb}
+.quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.quick-grid label[hidden]{display:none!important}.quick-grid input,.quick-grid select{min-width:0}
+.quick-preview{padding:13px 16px;margin:17px 0 10px;background:#153b3b;border:1px solid #398e77;border-radius:10px;color:#d6f9ed;font-size:13px}
+.quick-preview b{color:#75f4b9}.quick-preview strong{display:block;font-size:21px;color:#75f4b9}
+.quick-hint{border:1px solid #aa8c43;background:#393220;color:#ffeab5;padding:11px;border-radius:9px;font-size:12px;margin-top:12px}
+#quickError:empty{display:none}@media(max-width:600px){.quick-dialog{padding:15px}.quick-grid{grid-template-columns:1fr}.quick-shortcuts button{padding:8px 10px}.quick-launch{font-size:13px}}
 </style></head><body><main>
 <header><a href="admin.html">← Administrador</a><span class="eyebrow">RESUMOS DO ENZO</span><span class="badge">Área pessoal • acesso privado</span></header>
 <div id="gate" class="notice" role="status">Verificando seu acesso…</div>
 <div id="app" hidden>
-<div class="row hero"><div><div class="eyebrow">SEU PLANEJAMENTO PESSOAL</div><h1>Minhas finanças</h1><p>Clareza para hoje. Organização para os próximos meses.</p></div><div class="tools"><button id="reload">Atualizar</button><button class="primary" id="add">+ Novo lançamento</button></div></div>
+<div class="row hero"><div><div class="eyebrow">SEU PLANEJAMENTO PESSOAL</div><h1>Minhas finanças</h1><p>Clareza para hoje. Organização para os próximos meses.</p></div><div class="tools"><button id="reload">Atualizar</button><button class="quick-launch" type="button" id="quickAdd">⚡ Gasto rápido</button><button class="primary" id="add">+ Novo lançamento</button></div></div>
 <div id="message" role="status" aria-live="polite"></div>
 <div class="row"><label>Mês de planejamento<input class="month" id="month" type="month"></label><div class="tools"><button id="csv">Exportar CSV</button><button id="print" type="button">Relatórios / PDF</button></div></div>
 <div class="cards" id="cards"></div><div id="debtSummary" class="debt-strip"></div><section id="savingsPanel" class="savings-panel" aria-label="Economia com antecipação de parcelas"></section><div class="row bank-summary-head"><div><div class="section-label">CONTROLE POR INSTITUIÇÃO</div><h2>Bancos e compromissos</h2></div><span class="fine">Valores cadastrados • despesas pendentes</span></div><div id="banks" class="bank-grid"></div><div id="banksGrandTotal" class="banks-grand-total" aria-live="polite"></div><p class="fine">Cartão de crédito: registre as compras/parcelas ou o total da fatura, para não contar a mesma despesa duas vezes. Os valores e juros são informados por você; não há consulta automática aos bancos.</p>
@@ -206,6 +217,30 @@ details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotat
 <section class="panel ledger-panel" style="margin-top:18px"><div class="row"><div><div class="section-label">FLUXO DE CAIXA</div><h2>Extrato financeiro com saldo acumulado</h2></div><span class="badge">Realizado + previsto</span></div><p class="fine">O saldo de cada dia passa para o dia seguinte e de um mês para o outro. Lançamentos recebidos/pagos usam a data efetiva; pendentes usam o vencimento previsto. A projeção supõe que todas as pendências ocorram nas datas previstas e não é o extrato do banco.</p><div id="agendaSummary"></div><div id="agenda"></div></section>
 <p class="fine" style="margin-top:22px">Dados pessoais protegidos e sincronizados na sua conta. Moeda: real (R$). Datas de referência: horário de Brasília.</p>
 </div></main>
+<dialog id="quickDialog" class="quick-dialog" aria-labelledby="quickHeading"><form id="quickForm">
+<div class="row"><div><div class="eyebrow">REGISTRO RÁPIDO DE DESPESAS</div><h2 id="quickHeading">Quanto gastou agora?</h2></div><button type="button" id="quickClose" aria-label="Fechar">✕</button></div>
+<p class="fine">Digite valor e item de uma vez. A data de hoje e a categoria são preenchidas automaticamente. Confira antes de salvar.</p>
+<label class="quick-command-label">Digite, por exemplo: 10,00 Uber<input id="quickCommand" type="text" autocomplete="off" placeholder="10,00 Uber" maxlength="180"></label>
+<div class="quick-shortcuts" id="quickShortcuts">
+<button type="button" data-quick-item="Uber">🚕 Uber</button>
+<button type="button" data-quick-item="Cigarro">Cigarro</button>
+<button type="button" data-quick-item="Mercado">🛒 Mercado</button>
+<button type="button" data-quick-item="Cerveja">Cerveja</button>
+<button type="button" data-quick-item="Refrigerante">Refrigerante</button>
+<button type="button" data-quick-item="Carne">Carne</button>
+<button type="button" data-quick-item="Suco">Suco</button>
+<button type="button" data-quick-item="Café na faculdade">☕ Café na faculdade</button></div>
+<div class="quick-grid">
+<label>Valor gasto (R$)<input id="quickAmount" inputmode="decimal" required maxlength="16" placeholder="Ex.: 10,00"></label>
+<label>O que comprou / pagou?<input id="quickDescription" required maxlength="160" placeholder="Ex.: Café na faculdade"></label>
+<label>Categoria<select id="quickCategory" required></select></label>
+<label id="quickCustomLabel" hidden>Outra categoria<input id="quickCustomCategory" maxlength="80" placeholder="Escreva a categoria"></label>
+<label>Data do gasto<input id="quickDate" type="date" required></label>
+<label>Forma de pagamento<select id="quickMethod"><option value="">Não informado</option><option>Pix</option><option>Dinheiro</option><option value="Débito">Cartão de débito</option><option>Transferência</option><option value="Cartão de crédito">Cartão de crédito</option></select></label>
+<label>Situação<select id="quickStatus"><option value="paid">Já paguei / saiu do meu dinheiro</option><option value="pending">Ainda vou pagar</option></select></label></div>
+<div class="quick-hint" id="quickCreditNote" hidden>Compras no cartão: evite cadastrar a mesma despesa novamente ao lançar a fatura, para não contabilizar duas vezes. Caso ainda não tenha pago, selecione “Ainda vou pagar” e ajuste o vencimento.</div>
+<div class="quick-preview" id="quickPreview" aria-live="polite"></div><p id="quickError" class="negative" role="alert"></p>
+<div class="formbuttons"><button type="button" id="quickCancel">Cancelar</button><button class="primary" id="quickSave" type="submit">✓ Registrar gasto</button></div></form></dialog>
 <dialog id="editor"><form id="entryForm"><div class="row"><h2 id="formTitle">Novo lançamento</h2><button type="button" id="close" aria-label="Fechar">✕</button></div><div class="formgrid">
 <label>Tipo<select id="kind"><option value="expense">Despesa</option><option value="income">Receita</option></select></label><label>Valor de cada ocorrência (R$)<input id="amount" inputmode="decimal" placeholder="0,00" required maxlength="16"></label>
 <label class="wide">Item / descrição<input id="description" required maxlength="160" placeholder="Ex.: mensalidade da faculdade"></label>
