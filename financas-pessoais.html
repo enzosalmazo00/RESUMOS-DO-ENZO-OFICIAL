@@ -398,10 +398,167 @@ const cat=r?.category||'';$('categoryPick').value=Array.from($('categoryPick').o
 const bank=r?.bank_name||'';$('bank').value=Array.from($('bank').options).some(o=>o.value===bank)?bank:'__custom';$('customBank').value=bank;$('product').value=r?.bank_product||'';bankFields();scheduleFields();fields();$('editor').showModal();}
 async function save(event){event.preventDefault();if(busy)return;try{const value=cents($('amount').value),repeat=editing?1:Number($('repeat').value),start=editing?1:Number($('startInstallment').value);categoryFields();if(!Number.isInteger(start)||start<1||start>repeat)throw Error('A parcela inicial deve estar entre 1 e o total de parcelas.');if($('bank').value&&(!bankValue()||!$('product').value))throw Error('Informe o banco e o tipo de compromisso.');if(!Number.isInteger(Number($('reminder').value))||Number($('reminder').value)<0||Number($('reminder').value)>30)throw Error('O aviso deve ser entre 0 e 30 dias.');if(!Number.isInteger(repeat)||repeat<1||repeat>120)throw Error('Escolha de 1 a 120 ocorrências.');if(!$('description').value.trim()||!$('category').value.trim())throw Error('Preencha item e categoria.');if($('settled').value==='yes'&&(!$('settledDate').value||$('settledDate').value>today()))throw Error('A data efetiva deve ser hoje ou uma data anterior.');const entry={bank_name:bankValue(),bank_product:$('bank').value?$('product').value:'',kind:$('kind').value,description:$('description').value.trim(),category:$('category').value.trim(),amount_cents:value,due_date:$('due').value,settled_date:$('settled').value==='yes'?$('settledDate').value:null,payment_method:$('method').value.trim(),notes:$('notes').value.trim(),reminder_days:Number($('reminder').value),is_extra:$('kind').value==='income'&&$('extra').value==='yes'};busy=true;$('save').disabled=true;let result;if(editing){result=await db.from(TABLE).update(entry).eq('id',editing).select('id');if(!result.error&&result.data.length!==1)throw Error('O lançamento não está mais disponível. Atualize a página.');}else{const series=repeat>1?crypto.randomUUID():null;const batch=Array.from({length:repeat-start+1},(_,i)=>{const due=repeat>1?$('parcelDate'+i).value:entry.due_date;if(!due)throw Error('Preencha todos os vencimentos.');return {...entry,id:crypto.randomUUID(),amount_cents:repeat>1?cents($('parcelAmount'+i).value):value,due_date:due,settled_date:i?null:entry.settled_date,series_id:series,installment:i+start,installments:repeat};});result=await db.from(TABLE).insert(batch).select('id');}if(result.error)throw result.error;$('editor').close();busy=false;await refresh();notify('Lançamento salvo com sucesso.');}catch(e){$('formError').textContent='Não foi possível salvar: '+e.message;}finally{busy=false;$('save').disabled=false;}}
 async function remove(id){if(busy)return;const r=rows.find(x=>x.id===id);if(!r||!confirm('Excluir somente “'+r.description+'” de '+date(r.due_date)+'? Esta ação não pode ser desfeita.'))return;busy=true;try{const {data,error}=await db.from(TABLE).delete().eq('id',id).select('id');if(error)throw error;if(data.length!==1)throw Error('Lançamento não encontrado.');busy=false;await refresh();}catch(e){notify('Não foi possível excluir: '+e.message,true);}finally{busy=false;}}
+const FINANCE_REPORT_CSS="@page{size:A4;margin:14mm 11mm}\n*{box-sizing:border-box}body{font:11px/1.45 Arial,Helvetica,sans-serif;background:#eff4f7;color:#182839;margin:0}\nmain{max-width:192mm;margin:18px auto;padding:23px 27px;background:#fff;box-shadow:0 4px 20px #0002}\nh1{font-size:24px;margin:4px 0 7px}h2{font-size:16px;border-bottom:2px solid #cddbe6;padding-bottom:6px;margin:23px 0 10px}h3{font-size:13px;color:#284b61;margin:15px 0 8px}\n.eyebrow{color:#0a735b;font-size:10px;letter-spacing:2px;font-weight:bold}.header{border-bottom:3px solid #1a3e53;padding-bottom:15px}.muted,.foot{color:#5d7183}\n.metadata{background:#eaf1f6;padding:12px;border-radius:7px;display:grid;grid-template-columns:1fr 1fr;gap:8px 15px;margin:16px 0}.metadata div{overflow-wrap:anywhere}\n.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:18px 0}.cards>div{padding:12px;border:1px solid #d4e0e8;border-radius:7px;break-inside:avoid}\n.cards span{display:block;color:#607487;font-size:10px}.cards strong{display:block;font-size:17px;margin-top:4px;overflow-wrap:anywhere}\n.green{color:#08734e!important}.red{color:#b0253b!important}\ntable{border-collapse:collapse;width:100%;table-layout:fixed;font-size:10px;margin:10px 0}thead{display:table-header-group}\nth{background:#dce8ef;color:#243f50;text-align:left;padding:7px}td{padding:6px 7px;border-bottom:1px solid #e2e8ee;vertical-align:top;overflow-wrap:anywhere}\ntd small{display:block;color:#647b89}.num{text-align:right;font-variant-numeric:tabular-nums}\n.detail th:nth-child(1){width:15%}.detail th:nth-child(2){width:39%}.detail th:nth-child(3){width:10%}.detail th:nth-child(4){width:20%}.detail th:nth-child(5){width:16%}\n.totals{background:#eff3f7;padding:8px;display:flex;flex-wrap:wrap;gap:8px 17px;margin:9px 0;border-radius:6px}\n.overdue{background:#ffe1e5;color:#ad1c38}.overdue small,.overdue .num{color:#ad1c38!important}\n.foot{border-top:1px solid #cad8e3;padding-top:12px;margin-top:24px;font-size:10px}\n.toolbar{background:#173b50;color:white;text-align:center;padding:12px;position:sticky;top:0}.toolbar button{border:0;border-radius:7px;padding:10px 17px;background:#64e2b7;color:#073827;font-weight:bold;cursor:pointer}.toolbar span{margin-left:12px;font-size:12px}\ntr{break-inside:avoid;page-break-inside:avoid}h2,h3{break-after:avoid;page-break-after:avoid}\n@media(max-width:650px){main{margin:0;padding:16px;box-shadow:none}.cards,.metadata{grid-template-columns:1fr 1fr}.toolbar span{display:block;margin:8px 0 0}}\n@media print{body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}main{max-width:none;margin:0;padding:0;box-shadow:none}.toolbar{display:none!important}section{break-inside:auto}}";
+
+/* Relatórios financeiros personalizados - dados já carregados na conta */
+const REPORT_UNBANKED='__sem_banco__';
+function reportKey(r){return r.bank_name||REPORT_UNBANKED;}
+function reportBankName(k){return k===REPORT_UNBANKED?'Sem banco / particular':k;}
+function reportGroup(list,key){
+ const map=new Map();
+ for(const row of list){const k=key(row);if(!map.has(k))map.set(k,[]);map.get(k).push(row);}
+ return [...map.entries()].sort(([a],[b])=>a.localeCompare(b,'pt-BR'));
+}
+function reportAmounts(list){
+ const exp=list.filter(r=>r.kind==='expense'),inc=list.filter(r=>r.kind==='income');
+ return {exp:sum(exp),inc:sum(inc),expPending:sum(exp.filter(r=>!r.settled_date)),incPending:sum(inc.filter(r=>!r.settled_date)),expPaid:sum(exp.filter(r=>r.settled_date)),incPaid:sum(inc.filter(r=>r.settled_date))};
+}
+function reportPeriodFields(){
+ const kind=$('reportPeriod').value;
+ $('reportOneMonthLabel').hidden=kind!=='month';
+ $('reportStartLabel').hidden=kind!=='range';
+ $('reportEndLabel').hidden=kind!=='range';
+ $('reportMonth').required=kind==='month';
+ $('reportStart').required=kind==='range';
+ $('reportEnd').required=kind==='range';
+}
+function openReportDialog(){
+ if(!loaded||busy)return;
+ $('reportPeriod').value='month';$('reportMonth').value=$('month').value||today().slice(0,7);
+ $('reportStart').value=$('month').value||today().slice(0,7);
+ $('reportEnd').value=$('month').value||today().slice(0,7);
+ $('reportKind').value='expense';$('reportStatus').value='all';
+ $('reportGroup').value='bank';$('reportCategory').value='';$('reportDetails').checked=true;
+ $('reportError').textContent='';
+ const banks=[...new Set(rows.map(reportKey))].sort((a,b)=>reportBankName(a).localeCompare(reportBankName(b),'pt-BR'));
+ $('reportBanks').replaceChildren(...banks.map(k=>{
+  const label=document.createElement('label'),check=document.createElement('input'),title=document.createElement('span');
+  check.type='checkbox';check.name='reportBank';check.value=k;check.checked=true;title.textContent=reportBankName(k);
+  label.append(check,title);return label;
+ }));
+ $('reportCategory').replaceChildren(new Option('Todas as categorias',''),...[...new Set(rows.map(r=>r.category).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR')).map(cat=>new Option(cat,cat)));
+ reportPeriodFields();reportPreview();$('reportDialog').showModal();
+}
+function reportConfig(){
+ const selected=new Set([...$('reportBanks').querySelectorAll('input[name="reportBank"]:checked')].map(e=>e.value));
+ if(!selected.size)throw Error('Selecione pelo menos uma instituição.');
+ const period=$('reportPeriod').value,start=$('reportStart').value,end=$('reportEnd').value,month=$('reportMonth').value;
+ if(period==='month'&&!/^\d{4}-\d{2}$/.test(month))throw Error('Selecione o mês de referência.');
+ if(period==='range'&&(!/^\d{4}-\d{2}$/.test(start)||!/^\d{4}-\d{2}$/.test(end)||start>end))throw Error('Informe um intervalo válido de meses.');
+ const kind=$('reportKind').value,state=$('reportStatus').value,category=$('reportCategory').value;
+ const list=rows.filter(r=>{
+  if(!selected.has(reportKey(r)))return false;
+  const ym=String(r.due_date||'').slice(0,7);
+  if(period==='month'&&ym!==month)return false;
+  if(period==='range'&&(ym<start||ym>end))return false;
+  if(kind!=='both'&&r.kind!==kind)return false;
+  if(category&&r.category!==category)return false;
+  if(state==='pending'&&r.settled_date)return false;
+  if(state==='settled'&&!r.settled_date)return false;
+  if(state==='overdue'&&(r.settled_date||r.due_date>=today()))return false;
+  return true;
+ }).sort((a,b)=>a.due_date.localeCompare(b.due_date)||reportBankName(reportKey(a)).localeCompare(reportBankName(reportKey(b)),'pt-BR')||String(a.description).localeCompare(String(b.description),'pt-BR'));
+ const periodName=period==='all'?'Todos os meses cadastrados':period==='month'?financeMonthLabel(month):financeMonthLabel(start)+' a '+financeMonthLabel(end);
+ return {list,selected,kind,state,period,periodName,group:$('reportGroup').value,details:$('reportDetails').checked,title:$('reportTitle').value.trim().slice(0,100)||'Relatório financeiro pessoal',category};
+}
+function reportPreview(){
+ try{
+  const config=reportConfig(),x=reportAmounts(config.list),count=config.list.length;
+  $('reportPreview').innerHTML='<b>Prévia do relatório</b><div>'+esc(config.periodName)+' · '+config.selected.size+' banco(s) / instituição(ões) · '+count+' lançamento(s)</div>'
+   +'<strong class="money-pay">A pagar / despesas: '+money(x.exp)+'</strong>'
+   +'<strong class="money-receive">A receber / receitas: '+money(x.inc)+'</strong>'
+   +'<div class="fine">Despesas pendentes: '+money(x.expPending)+' · Receitas pendentes: '+money(x.incPending)+'</div>';
+  $('reportError').textContent='';
+  $('reportGenerate').disabled=count===0;
+ }catch(err){
+  $('reportPreview').textContent='Ajuste as opções do relatório.';
+  $('reportError').textContent=err.message;
+  $('reportGenerate').disabled=true;
+ }
+}
+function reportPartTotals(items){
+ const x=reportAmounts(items),net=x.inc-x.exp;
+ return '<div class="totals"><span>Despesas: <b>'+money(x.exp)+'</b></span><span>Receitas: <b class="green">'+money(x.inc)+'</b></span><span>Resultado: <b class="'+(net<0?'red':'green')+'">'+money(net)+'</b></span></div>';
+}
+function reportRows(items){
+ const head='<table class="detail"><thead><tr><th>Vencimento</th><th>Descrição / categoria</th><th>Parcela</th><th>Situação / data efetiva</th><th class="num">Valor</th></tr></thead><tbody>';
+ const body=items.map(r=>{
+  const value=Number(r.amount_cents),late=!r.settled_date&&r.due_date<today(),settled=!!r.settled_date;
+  const status=settled?(r.kind==='income'?'✓ Recebido':'✓ Pago')+' em '+date(r.settled_date):late?'⚠ EM ATRASO':'◷ Pendente';
+  return '<tr'+(late?' class="overdue"':'')+'><td>'+date(r.due_date)+'</td><td>'+esc(r.description)+'<small>'+esc(r.category||'Sem categoria')+' · '+esc(reportBankName(reportKey(r)))+(r.bank_product?' · '+esc(r.bank_product):'')+'</small></td><td>'+(r.installments>1?Number(r.installment)+'/'+Number(r.installments):'—')+'</td><td>'+status+'</td><td class="num '+(late?'red':r.kind==='income'?'green':'')+'">'+(r.kind==='income'?'+':'−')+' '+money(value)+'</td></tr>';
+ }).join('');
+ return head+body+'</tbody></table>';
+}
+function reportOverview(items,key,banks){
+ return '<table class="overview"><thead><tr><th>'+(banks?'Instituição':'Mês')+'</th><th class="num">Despesas</th><th class="num">Receitas</th><th class="num">Pend. pagar</th><th class="num">Pend. receber</th></tr></thead><tbody>'
+ +reportGroup(items,key).map(([name,parts])=>{
+  const x=reportAmounts(parts);
+  return '<tr><td>'+esc(banks?reportBankName(name):financeMonthLabel(name))+'</td><td class="num">'+money(x.exp)+'</td><td class="num green">'+money(x.inc)+'</td><td class="num">'+money(x.expPending)+'</td><td class="num green">'+money(x.incPending)+'</td></tr>';
+ }).join('')+'</tbody></table>';
+}
+function reportSections(config){
+ const data=config.list,sections=[];
+ if(config.group==='summary'){
+  sections.push('<section><h2>Total geral por instituição</h2>'+reportOverview(data,reportKey,true)+'</section>');
+  sections.push('<section><h2>Total geral por mês</h2>'+reportOverview(data,r=>r.due_date.slice(0,7),false)+'</section>');
+  if(config.details)sections.push('<section><h2>Lançamentos individuais</h2>'+reportRows(data)+'</section>');
+ }else{
+  const byBank=config.group==='bank',outer=reportGroup(data,byBank?reportKey:r=>r.due_date.slice(0,7));
+  for(const [primary,items] of outer){
+   let html='<section><h2>'+esc(byBank?reportBankName(primary):financeMonthLabel(primary))+'</h2>'+reportPartTotals(items);
+   for(const [secondary,subset] of reportGroup(items,byBank?r=>r.due_date.slice(0,7):reportKey)){
+    html+='<div class="subsection"><h3>'+esc(byBank?financeMonthLabel(secondary):reportBankName(secondary))+'</h3>'+reportPartTotals(subset);
+    if(config.details)html+=reportRows(subset);
+    html+='</div>';
+   }
+   sections.push(html+'</section>');
+  }
+ }
+ return sections.join('');
+}
+function buildFinanceReport(config){
+ const x=reportAmounts(config.list),labels=[
+  ['Contas / despesas',x.exp,''],['Receitas',x.inc,'green'],
+  ['Pendente a pagar',x.expPending,''],['Pendente a receber',x.incPending,'green'],
+  ['Já pago',x.expPaid,''],['Já recebido',x.incPaid,'green']
+ ];
+ const cards='<div class="cards">'+labels.map(([name,value,tone])=>'<div><span>'+name+'</span><strong class="'+tone+'">'+money(value)+'</strong></div>').join('')+'</div>';
+ const names=[...config.selected].map(reportBankName).sort((a,b)=>a.localeCompare(b,'pt-BR')).join(', ');
+ const stamp=new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',dateStyle:'short',timeStyle:'short'}).format(new Date());
+ return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(config.title)+'</title><style>'+FINANCE_REPORT_CSS+'</style></head><body>'
+ +'<div class="toolbar"><button type="button" onclick="window.print()">Imprimir / Salvar PDF</button><span>Para salvar, escolha “Salvar como PDF” na impressão ou o compartilhamento do navegador.</span></div>'
+ +'<main><header class="header"><div class="eyebrow">FINANÇAS PESSOAIS</div><h1>'+esc(config.title)+'</h1><div class="muted">Emitido em '+esc(stamp)+'</div></header>'
+ +'<div class="metadata"><div><b>Período:</b> '+esc(config.periodName)+'</div><div><b>Organização:</b> '+esc(config.group==='bank'?'Por banco':config.group==='month'?'Por mês':'Resumo geral')+'</div>'
+ +'<div><b>Instituições:</b> '+esc(names)+'</div><div><b>Categoria:</b> '+esc(config.category||'Todas')+'</div>'
+ +'<div><b>Tipo:</b> '+esc(config.kind==='both'?'Despesas e receitas':config.kind==='income'?'Receitas':'Despesas')+'</div>'
+ +'<div><b>Situação:</b> '+esc(config.state==='all'?'Todas':config.state==='pending'?'Pendentes':config.state==='settled'?'Pagos / recebidos':'Em atraso')+'</div>'
+ +'<div><b>Quantidade de lançamentos:</b> '+config.list.length+'</div><div><b>Critério:</b> data do vencimento cadastrado</div></div>'
+ +cards+reportSections(config)+'<footer class="foot">Dados declarados pelo usuário. Valores futuros são previsões e não constituem extrato bancário. Os totais não duplicam lançamentos.</footer></main></body></html>';
+}
+function generateFinanceReport(e){
+ e.preventDefault();
+ try{
+  const config=reportConfig();if(!config.list.length)throw Error('Não há lançamentos com esses filtros.');
+  const tab=window.open('','_blank');
+  if(!tab)throw Error('Seu navegador bloqueou uma nova aba. Permita pop-ups neste site e tente novamente.');
+  tab.document.open();tab.document.write(buildFinanceReport(config));tab.document.close();
+  $('reportDialog').close();tab.focus();
+  // O botão na página do relatório abre impressão também no iPad/Safari.
+ }catch(err){$('reportError').textContent=err.message;}
+}
+
 function exportCSV(){const cell=v=>'"'+String(v??'').replace(/^[=+@-]/,"'$&").replace(/"/g,'""')+'"';const content=[['Vencimento','Tipo','Item','Categoria','Valor (R$)','Situação','Data efetiva','Extra','Forma','Parcela','Banco','Tipo no banco','Observações'],...filtered().map(r=>[r.due_date,r.kind==='income'?'Receita':'Despesa',r.description,r.category,(Number(r.amount_cents)/100).toFixed(2).replace('.',','),status(r),r.settled_date,r.is_extra?'Sim':'Não',r.payment_method,r.installment+'/'+r.installments,r.bank_name,r.bank_product,r.notes])].map(r=>r.map(cell).join(';')).join('\r\n');const url=URL.createObjectURL(new Blob(['\ufeff'+content],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='financas-pessoais-'+$('month').value+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 $('categoryPick').onchange=categoryFields;$('bank').onchange=bankFields;$('alertWindow').onchange=render;['repeat','startInstallment','due','amount'].forEach(id=>$(id).addEventListener('input',scheduleFields));$('schedule').addEventListener('input',scheduleTotal);
-$('month').value=today().slice(0,7);$('month').addEventListener('change',()=>{if(!$('month').value)$('month').value=today().slice(0,7);render();});['typeFilter','statusFilter','catFilter','bankFilter','search'].forEach(id=>$(id).addEventListener('input',renderEntries));$('add').onclick=()=>openEditor();$('reload').onclick=refresh;$('entryForm').onsubmit=save;['cancel','close'].forEach(id=>$(id).onclick=()=>{if(!busy)$('editor').close();});$('editor').addEventListener('cancel',e=>{if(busy)e.preventDefault();});$('kind').onchange=fields;$('settled').onchange=fields;$('csv').onclick=exportCSV;$('print').onclick=()=>window.print();document.addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(edit)openEditor(edit.dataset.edit);if(del)remove(del.dataset.delete);});
+$('month').value=today().slice(0,7);$('month').addEventListener('change',()=>{if(!$('month').value)$('month').value=today().slice(0,7);render();});['typeFilter','statusFilter','catFilter','bankFilter','search'].forEach(id=>$(id).addEventListener('input',renderEntries));$('add').onclick=()=>openEditor();$('reload').onclick=refresh;$('entryForm').onsubmit=save;['cancel','close'].forEach(id=>$(id).onclick=()=>{if(!busy)$('editor').close();});$('editor').addEventListener('cancel',e=>{if(busy)e.preventDefault();});$('kind').onchange=fields;$('settled').onchange=fields;$('csv').onclick=exportCSV;$('print').onclick=openReportDialog;document.addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(edit)openEditor(edit.dataset.edit);if(del)remove(del.dataset.delete);});
 $('bulkForm').addEventListener('submit',confirmBulk);['bulkCancel','bulkClose'].forEach(id=>$(id).onclick=()=>{if(!busy){$('bulkDialog').close();activeBulkId=null;}});document.addEventListener('click',e=>{const button=e.target.closest('[data-bulk]');if(button)openBulk(button.dataset.bulk);});
+
+$('reportForm').addEventListener('submit',generateFinanceReport);
+['reportClose','reportCancel'].forEach(id=>$(id).onclick=()=>{$('reportDialog').close();});
+$('reportDialog').addEventListener('change',e=>{if(e.target.id==='reportPeriod')reportPeriodFields();reportPreview();});
+$('reportDialog').addEventListener('input',e=>{if(e.target.id!=='reportTitle')reportPreview();});
+$('reportAllBanks').onclick=()=>{$('reportBanks').querySelectorAll('input[name="reportBank"]').forEach(el=>el.checked=true);reportPreview();};
+$('reportNoBanks').onclick=()=>{$('reportBanks').querySelectorAll('input[name="reportBank"]').forEach(el=>el.checked=false);reportPreview();};
+
 db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||(session&&session.user.id!==OWNER)){rows=[];$('app').hidden=true;$('editor').close();location.replace('login.html');}});
 (async()=>{try{const {data,error}=await db.auth.getUser();if(error||!data.user){location.replace('login.html');return;}if(data.user.id!==OWNER){$('gate').textContent='Esta área é exclusiva do proprietário.';return;}$('gate').hidden=true;$('app').hidden=false;await refresh();}catch(e){$('gate').textContent='Não foi possível verificar seu acesso. Recarregue a página.';}})();
 </script></body></html>
