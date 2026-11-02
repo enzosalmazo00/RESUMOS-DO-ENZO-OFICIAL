@@ -200,6 +200,7 @@ details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotat
 .quick-preview b{color:#75f4b9}.quick-preview strong{display:block;font-size:21px;color:#75f4b9}
 .quick-hint{border:1px solid #aa8c43;background:#393220;color:#ffeab5;padding:11px;border-radius:9px;font-size:12px;margin-top:12px}
 #quickError:empty{display:none}@media(max-width:600px){.quick-dialog{padding:15px}.quick-grid{grid-template-columns:1fr}.quick-shortcuts button{padding:8px 10px}.quick-launch{font-size:13px}}
+.checkpoint-panel{margin:20px 0}.checkpoint-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:12px}
 </style></head><body><main>
 <header><a href="admin.html">← Administrador</a><span class="eyebrow">RESUMOS DO ENZO</span><span class="badge">Área pessoal • acesso privado</span></header>
 <div id="gate" class="notice" role="status">Verificando seu acesso…</div>
@@ -207,7 +208,7 @@ details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotat
 <div class="row hero"><div><div class="eyebrow">SEU PLANEJAMENTO PESSOAL</div><h1>Minhas finanças</h1><p>Clareza para hoje. Organização para os próximos meses.</p></div><div class="tools"><button id="reload">Atualizar</button><button class="quick-launch" type="button" id="quickAdd">⚡ Gasto rápido</button><button class="primary" id="add">+ Novo lançamento</button></div></div>
 <div id="message" role="status" aria-live="polite"></div>
 <div class="row"><label>Mês de planejamento<input class="month" id="month" type="month"></label><div class="tools"><button id="csv">Exportar CSV</button><button id="print" type="button">Relatórios / PDF</button></div></div>
-<div class="cards" id="cards"></div><div id="debtSummary" class="debt-strip"></div><section id="savingsPanel" class="savings-panel" aria-label="Economia com antecipação de parcelas"></section><div class="row bank-summary-head"><div><div class="section-label">CONTROLE POR INSTITUIÇÃO</div><h2>Bancos e compromissos</h2></div><span class="fine">Valores cadastrados • despesas pendentes</span></div><div id="banks" class="bank-grid"></div><div id="banksGrandTotal" class="banks-grand-total" aria-live="polite"></div><p class="fine">Cartão de crédito: registre as compras/parcelas ou o total da fatura, para não contar a mesma despesa duas vezes. Os valores e juros são informados por você; não há consulta automática aos bancos.</p>
+<div class="cards" id="cards"></div><section class="checkpoint-panel" aria-labelledby="checkpointTitle"><h2 id="checkpointTitle">Quanto vai sobrar nos dias 10, 20 e 30?</h2><p class="fine">Saldo acumulado após as entradas e contas até cada data, inclusive. Lançamentos pendentes entram pelo vencimento e os confirmados pela data da movimentação. Em fevereiro, a última previsão usa o último dia do mês.</p><div class="checkpoint-grid" id="checkpointBalances"></div></section><div id="debtSummary" class="debt-strip"></div><section id="savingsPanel" class="savings-panel" aria-label="Economia com antecipação de parcelas"></section><div class="row bank-summary-head"><div><div class="section-label">CONTROLE POR INSTITUIÇÃO</div><h2>Bancos e compromissos</h2></div><span class="fine">Valores cadastrados • despesas pendentes</span></div><div id="banks" class="bank-grid"></div><div id="banksGrandTotal" class="banks-grand-total" aria-live="polite"></div><p class="fine">Cartão de crédito: registre as compras/parcelas ou o total da fatura, para não contar a mesma despesa duas vezes. Os valores e juros são informados por você; não há consulta automática aos bancos.</p>
 <div class="finances-separation">
 <section class="panel flow-money-panel flow-payable"><div class="section-label">SAÍDAS • CONTAS E PARCELAS</div><h2>Valores a pagar por mês</h2><p class="fine">Valor total, meses restantes, média mensal e vencimentos detalhados, sem receitas misturadas.</p><div id="payablesByMonth"></div></section>
 <section class="panel flow-money-panel flow-income"><div class="section-label">ENTRADAS • RECEBIMENTOS</div><h2>Valores a receber por mês</h2><p class="fine">Receitas pendentes, datas de recebimento e origem de cada entrada, sem despesas misturadas.</p><div id="receivables"></div></section>
@@ -483,6 +484,20 @@ function renderLedger(){
   running+=signed(r);day.items.push({r,balanceAfter:running});day.end=running;
  }
  const balanceColor=v=>v<0?'negative':v>0?'positive':'';
+ const lastDay=new Date(Number(selected.slice(0,4)),Number(selected.slice(5)),0).getDate();
+ let previous=first;
+ let balance=opening;
+ $('checkpointBalances').innerHTML=[10,20,Math.min(30,lastDay)].map(day=>{
+  const cutoff=selected+'-'+day;
+  let income=0,expense=0;
+  for(const [d,totals] of dayMap){
+   if(d>=previous&&d<=cutoff){income+=totals.income;expense+=totals.out;}
+  }
+  balance+=income-expense;
+  const period=previous.slice(-2)+' a '+day;
+  previous=selected+'-'+(day+1);
+  return `<article class="ledger-metric"><span>${balance<0?'Falta prevista':'Sobra prevista'} em ${date(cutoff)}</span><strong class="${balanceColor(balance)}">${money(Math.abs(balance))}</strong><small>Dias ${period} · Entradas ${money(income)} · Saídas ${money(expense)}</small></article>`;
+ }).join('');
  const stateText=r=>r.settled_date?(r.kind==='income'?'Recebido em ':'Pago em ')+date(r.settled_date):r.due_date<today()?'Pendente • vencido':'Pendente • previsto';
  $('agendaSummary').innerHTML=[
   ['Saldo vindo de meses anteriores',opening,'Saldo projetado até o início do mês'],
