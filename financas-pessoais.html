@@ -466,6 +466,15 @@ renderEntries();renderLedger();
 }
 
 function ledgerDate(r){return r.settled_date||r.due_date;}
+function checkpointItems(list){
+ const groups=new Map();
+ for(const row of list){
+  const bank=row.bank_name||'Sem banco';
+  if(!groups.has(bank))groups.set(bank,[]);
+  groups.get(bank).push(row);
+ }
+ return [...groups].map(([bank,items])=>`<p><b>${esc(bank)} · ${money(sumEffective(items))}</b></p>${items.map(r=>`<p><small>${date(ledgerDate(r))} · ${esc(r.description)}${r.installments>1?' · '+r.installment+'/'+r.installments:''} · ${money(effectiveAmount(r))}</small></p>`).join('')}`).join('')||'<small>Nenhuma conta cadastrada neste intervalo.</small>';
+}
 function renderLedger(){
  const selected=$('month').value,first=selected+'-01',end=monthlyDate(first,1);
  const ordered=rows.slice().sort((a,b)=>ledgerDate(a).localeCompare(ledgerDate(b))||(a.kind===b.kind?0:a.kind==='income'?-1:1)||(a.bank_name||'').localeCompare(b.bank_name||'')||String(a.id).localeCompare(String(b.id)));
@@ -489,14 +498,18 @@ function renderLedger(){
  let balance=opening;
  $('checkpointBalances').innerHTML=[10,20,Math.min(30,lastDay)].map(day=>{
   const cutoff=selected+'-'+day;
-  let income=0,expense=0;
-  for(const [d,totals] of dayMap){
-   if(d>=previous&&d<=cutoff){income+=totals.income;expense+=totals.out;}
-  }
+  const periodRows=scheduled.filter(r=>ledgerDate(r)>=previous&&ledgerDate(r)<=cutoff);
+  const expenses=periodRows.filter(r=>r.kind==='expense');
+  const income=sum(periodRows.filter(r=>r.kind==='income')),expense=sumEffective(expenses);
   balance+=income-expense;
+  const nextIncome=ordered.find(r=>r.kind==='income'&&ledgerDate(r)>cutoff);
+  const reserveEnd=nextIncome?ledgerDate(nextIncome):end;
+  const upcoming=ordered.filter(r=>r.kind==='expense'&&ledgerDate(r)>cutoff&&ledgerDate(r)<reserveEnd);
+  const reserve=sumEffective(upcoming),free=balance-reserve;
   const period=previous.slice(-2)+' a '+day;
   previous=selected+'-'+(day+1);
-  return `<article class="ledger-metric"><span>${balance<0?'Falta prevista':'Sobra prevista'} em ${date(cutoff)}</span><strong class="${balanceColor(balance)}">${money(Math.abs(balance))}</strong><small>Dias ${period} · Entradas ${money(income)} · Saídas ${money(expense)}</small></article>`;
+  const horizon=nextIncome?'antes da entrada de '+date(reserveEnd):'até o fim do mês (sem próxima entrada cadastrada)';
+  return `<article class="ledger-metric"><span>Saldo previsto em ${date(cutoff)}</span><strong class="${balanceColor(balance)}">${money(balance)}</strong><small>Dias ${period} · Entradas ${money(income)} · Saídas ${money(expense)}</small><small>Reservar ${money(reserve)} ${horizon}</small><b class="${balanceColor(free)}">${free<0?'Faltam':'Livre após a reserva'} ${money(Math.abs(free))}</b><details><summary>Conferir contas por banco</summary><p>Saídas dos dias ${period}</p>${checkpointItems(expenses)}<p>Contas reservadas</p>${checkpointItems(upcoming)}</details></article>`;
  }).join('');
  const stateText=r=>r.settled_date?(r.kind==='income'?'Recebido em ':'Pago em ')+date(r.settled_date):r.due_date<today()?'Pendente • vencido':'Pendente • previsto';
  $('agendaSummary').innerHTML=[
