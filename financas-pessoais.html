@@ -269,7 +269,7 @@ details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotat
  <label id="reportOneMonthLabel">Mês<input id="reportMonth" type="month" required></label>
  <label id="reportStartLabel" hidden>Mês inicial<input id="reportStart" type="month"></label>
  <label id="reportEndLabel" hidden>Mês final<input id="reportEnd" type="month"></label>
- <label>Tipo<select id="reportKind"><option value="expense">Contas a pagar / despesas</option><option value="income">Valores a receber / receitas</option><option value="both">Despesas e receitas separadas</option></select></label>
+ <label>Tipo<select id="reportKind"><option value="expense">Contas a pagar / despesas</option><option value="income">Valores a receber / receitas</option><option value="both" selected>Completo — receitas e despesas separadas</option></select></label>
  <label>Situação<select id="reportStatus"><option value="all">Pagos e pendentes</option><option value="pending">Somente pendentes</option><option value="settled">Somente pagos / recebidos</option><option value="overdue">Somente pendentes atrasados</option></select></label>
  <label>Organização<select id="reportGroup"><option value="bank">Por banco, depois por mês</option><option value="month">Por mês, depois por banco</option><option value="summary">Resumo geral dos meses e bancos</option></select></label>
  <label>Categoria<select id="reportCategory"><option value="">Todas as categorias</option></select></label>
@@ -620,7 +620,7 @@ function openReportDialog(){
  $('reportPeriod').value='month';$('reportMonth').value=$('month').value||today().slice(0,7);
  $('reportStart').value=$('month').value||today().slice(0,7);
  $('reportEnd').value=$('month').value||today().slice(0,7);
- $('reportKind').value='expense';$('reportStatus').value='all';
+ $('reportKind').value='both';$('reportStatus').value='all';
  $('reportGroup').value='bank';$('reportCategory').value='';$('reportDetails').checked=true;
  $('reportError').textContent='';
  const banks=[...new Set(rows.map(reportKey))].sort((a,b)=>reportBankName(a).localeCompare(reportBankName(b),'pt-BR'));
@@ -658,9 +658,7 @@ function reportPreview(){
  try{
   const config=reportConfig(),x=reportAmounts(config.list),count=config.list.length;
   $('reportPreview').innerHTML='<b>Prévia do relatório</b><div>'+esc(config.periodName)+' · '+config.selected.size+' banco(s) / instituição(ões) · '+count+' lançamento(s)</div>'
-   +'<strong class="money-pay">A pagar / despesas: '+money(x.exp)+'</strong>'
-   +'<strong class="money-receive">A receber / receitas: '+money(x.inc)+'</strong>'
-   +'<div class="fine">Despesas pendentes: '+money(x.expPending)+' · Receitas pendentes: '+money(x.incPending)+' · Economizado: '+money(x.saved)+'</div>';
+   +reportPartTotals(config.list,config.kind);
   $('reportError').textContent='';
   $('reportGenerate').disabled=count===0;
  }catch(err){
@@ -669,9 +667,21 @@ function reportPreview(){
   $('reportGenerate').disabled=true;
  }
 }
-function reportPartTotals(items){
- const x=reportAmounts(items),net=x.inc-x.exp;
- return '<div class="totals"><span>Despesas: <b>'+money(x.exp)+'</b></span><span>Receitas: <b class="green">'+money(x.inc)+'</b></span><span>Resultado: <b class="'+(net<0?'red':'green')+'">'+money(net)+'</b></span><span>Descontos economizados: <b class="green">'+money(x.saved)+'</b></span></div>';
+function reportMetrics(x,kind,detail=false){
+ const metrics=[];
+ if(kind!=='expense'){
+  metrics.push(['Receitas',x.inc,'green']);
+  if(detail)metrics.push(['A receber',x.incPending,'green'],['Já recebido',x.incPaid,'green']);
+ }
+ if(kind!=='income'){
+  metrics.push(['Despesas',x.exp,'']);
+  if(detail)metrics.push(['A pagar',x.expPending,''],['Já pago',x.expPaid,''],['Descontos obtidos',x.saved,'green']);
+ }
+ if(kind==='both')metrics.push(['Resultado do período',x.inc-x.exp,x.inc<x.exp?'red':'green']);
+ return metrics;
+}
+function reportPartTotals(items,kind){
+ return '<div class="totals">'+reportMetrics(reportAmounts(items),kind).map(([label,value,tone])=>'<span>'+label+' <b class="'+tone+'">'+money(value)+'</b></span>').join('')+'</div>';
 }
 function reportRows(items){
  const head='<table class="detail"><thead><tr><th>Vencimento</th><th>Descrição / categoria</th><th>Parcela</th><th>Situação / data efetiva</th><th class="num">Valor</th></tr></thead><tbody>';
@@ -682,26 +692,30 @@ function reportRows(items){
  }).join('');
  return head+body+'</tbody></table>';
 }
-function reportOverview(items,key,banks){
- return '<table class="overview"><thead><tr><th>'+(banks?'Instituição':'Mês')+'</th><th class="num">Despesas</th><th class="num">Receitas</th><th class="num">Pend. pagar</th><th class="num">Pend. receber</th></tr></thead><tbody>'
- +reportGroup(items,key).map(([name,parts])=>{
-  const x=reportAmounts(parts);
-  return '<tr><td>'+esc(banks?reportBankName(name):financeMonthLabel(name))+'</td><td class="num">'+money(x.exp)+'</td><td class="num green">'+money(x.inc)+'</td><td class="num">'+money(x.expPending)+'</td><td class="num green">'+money(x.incPending)+'</td></tr>';
- }).join('')+'</tbody></table>';
+function reportOverview(items,key,banks,kind){
+ const metrics=list=>reportMetrics(reportAmounts(list),kind).concat(kind!=='income'?[['A pagar',reportAmounts(list).expPending,'']]:[],kind!=='expense'?[['A receber',reportAmounts(list).incPending,'green']]:[]);
+ return '<table class="overview"><thead><tr><th>'+(banks?'Instituição':'Mês')+'</th>'+metrics([]).map(([name])=>'<th class="num">'+name+'</th>').join('')+'</tr></thead><tbody>'+reportGroup(items,key).map(([name,parts])=>'<tr><td>'+esc(banks?reportBankName(name):financeMonthLabel(name))+'</td>'+metrics(parts).map(([,value,tone])=>'<td class="num '+tone+'">'+money(value)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+}
+function reportDetail(items,kind){
+ if(kind!=='both')return reportRows(items);
+ return [['income','Receitas'],['expense','Despesas']].map(([type,label])=>{
+  const group=items.filter(r=>r.kind===type);
+  return group.length?'<h4>'+label+'</h4>'+reportRows(group):'';
+ }).join('');
 }
 function reportSections(config){
  const data=config.list,sections=[];
  if(config.group==='summary'){
-  sections.push('<section><h2>Total geral por instituição</h2>'+reportOverview(data,reportKey,true)+'</section>');
-  sections.push('<section><h2>Total geral por mês</h2>'+reportOverview(data,r=>r.due_date.slice(0,7),false)+'</section>');
-  if(config.details)sections.push('<section><h2>Lançamentos individuais</h2>'+reportRows(data)+'</section>');
+  sections.push('<section><h2>Total geral por instituição</h2>'+reportOverview(data,reportKey,true,config.kind)+'</section>');
+  sections.push('<section><h2>Total geral por mês</h2>'+reportOverview(data,r=>r.due_date.slice(0,7),false,config.kind)+'</section>');
+  if(config.details)sections.push('<section><h2>Lançamentos individuais</h2>'+reportDetail(data,config.kind)+'</section>');
  }else{
   const byBank=config.group==='bank',outer=reportGroup(data,byBank?reportKey:r=>r.due_date.slice(0,7));
   for(const [primary,items] of outer){
-   let html='<section><h2>'+esc(byBank?reportBankName(primary):financeMonthLabel(primary))+'</h2>'+reportPartTotals(items);
+   let html='<section><h2>'+esc(byBank?reportBankName(primary):financeMonthLabel(primary))+'</h2>'+reportPartTotals(items,config.kind);
    for(const [secondary,subset] of reportGroup(items,byBank?r=>r.due_date.slice(0,7):reportKey)){
-    html+='<div class="subsection"><h3>'+esc(byBank?financeMonthLabel(secondary):reportBankName(secondary))+'</h3>'+reportPartTotals(subset);
-    if(config.details)html+=reportRows(subset);
+    html+='<div class="subsection"><h3>'+esc(byBank?financeMonthLabel(secondary):reportBankName(secondary))+'</h3>'+reportPartTotals(subset,config.kind);
+    if(config.details)html+=reportDetail(subset,config.kind);
     html+='</div>';
    }
    sections.push(html+'</section>');
@@ -710,19 +724,15 @@ function reportSections(config){
  return sections.join('');
 }
 function buildFinanceReport(config){
- const x=reportAmounts(config.list),labels=[
-  ['Contas / despesas',x.exp,''],['Receitas',x.inc,'green'],
-  ['Pendente a pagar',x.expPending,''],['Pendente a receber',x.incPending,'green'],
-  ['Já pago',x.expPaid,''],['Já recebido',x.incPaid,'green'],['Juros/descontos economizados',x.saved,'green']
- ];
+ const labels=reportMetrics(reportAmounts(config.list),config.kind,true);
  const cards='<div class="cards">'+labels.map(([name,value,tone])=>'<div><span>'+name+'</span><strong class="'+tone+'">'+money(value)+'</strong></div>').join('')+'</div>';
- const names=[...config.selected].map(reportBankName).sort((a,b)=>a.localeCompare(b,'pt-BR')).join(', ');
+ const names=[...new Set(config.list.map(reportKey))].map(reportBankName).sort((a,b)=>a.localeCompare(b,'pt-BR')).join(', ');
  const stamp=new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',dateStyle:'short',timeStyle:'short'}).format(new Date());
  return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(config.title)+'</title><style>'+FINANCE_REPORT_CSS+'</style></head><body>'
  +'<div class="toolbar"><button type="button" onclick="window.print()">Imprimir / Salvar PDF</button><span>Para salvar, escolha “Salvar como PDF” na impressão ou o compartilhamento do navegador.</span></div>'
  +'<main><header class="header"><div class="eyebrow">FINANÇAS PESSOAIS</div><h1>'+esc(config.title)+'</h1><div class="muted">Emitido em '+esc(stamp)+'</div></header>'
  +'<div class="metadata"><div><b>Período:</b> '+esc(config.periodName)+'</div><div><b>Organização:</b> '+esc(config.group==='bank'?'Por banco':config.group==='month'?'Por mês':'Resumo geral')+'</div>'
- +'<div><b>Instituições:</b> '+esc(names)+'</div><div><b>Categoria:</b> '+esc(config.category||'Todas')+'</div>'
+ +'<div><b>Instituições com lançamentos:</b> '+esc(names)+'</div><div><b>Categoria:</b> '+esc(config.category||'Todas')+'</div>'
  +'<div><b>Tipo:</b> '+esc(config.kind==='both'?'Despesas e receitas':config.kind==='income'?'Receitas':'Despesas')+'</div>'
  +'<div><b>Situação:</b> '+esc(config.state==='all'?'Todas':config.state==='pending'?'Pendentes':config.state==='settled'?'Pagos / recebidos':'Em atraso')+'</div>'
  +'<div><b>Quantidade de lançamentos:</b> '+config.list.length+'</div><div><b>Critério:</b> data do vencimento cadastrado</div></div>'
