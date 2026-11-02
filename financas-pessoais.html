@@ -205,7 +205,7 @@ details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotat
 <header><a href="admin.html">← Administrador</a><span class="eyebrow">RESUMOS DO ENZO</span><span class="badge">Área pessoal • acesso privado</span></header>
 <div id="gate" class="notice" role="status">Verificando seu acesso…</div>
 <div id="app" hidden>
-<div class="row hero"><div><div class="eyebrow">SEU PLANEJAMENTO PESSOAL</div><h1>Minhas finanças</h1><p>Clareza para hoje. Organização para os próximos meses.</p></div><div class="tools"><button id="reload">Atualizar</button><button class="quick-launch" type="button" id="quickAdd">⚡ Gasto rápido</button><button class="primary" id="add">+ Novo lançamento</button></div></div>
+<div class="row hero"><div><div class="eyebrow">SEU PLANEJAMENTO PESSOAL</div><h1>Minhas finanças</h1><p>Clareza para hoje. Organização para os próximos meses.</p></div><div class="tools"><button id="reload">Atualizar</button><button type="button" id="openingAdd">Saldo inicial</button><button class="quick-launch" type="button" id="quickAdd">⚡ Gasto rápido</button><button class="primary" id="add">+ Novo lançamento</button></div></div>
 <div id="message" role="status" aria-live="polite"></div>
 <div class="row"><label>Mês de planejamento<input class="month" id="month" type="month"></label><div class="tools"><button id="csv">Exportar CSV</button><button id="print" type="button">Relatórios / PDF</button></div></div>
 <div class="cards" id="cards"></div><section class="checkpoint-panel" aria-labelledby="checkpointTitle"><h2 id="checkpointTitle">Quanto vai sobrar nos dias 10, 20 e 30?</h2><p class="fine">Saldo acumulado após as entradas e contas até cada data, inclusive. Lançamentos pendentes entram pelo vencimento e os confirmados pela data da movimentação. Em fevereiro, a última previsão usa o último dia do mês.</p><div class="checkpoint-grid" id="checkpointBalances"></div></section><div id="debtSummary" class="debt-strip"></div><section id="savingsPanel" class="savings-panel" aria-label="Economia com antecipação de parcelas"></section><div class="row bank-summary-head"><div><div class="section-label">CONTROLE POR INSTITUIÇÃO</div><h2>Bancos e compromissos</h2></div><span class="fine">Valores cadastrados • despesas pendentes</span></div><div id="banks" class="bank-grid"></div><div id="banksGrandTotal" class="banks-grand-total" aria-live="polite"></div><p class="fine">Cartão de crédito: registre as compras/parcelas ou o total da fatura, para não contar a mesma despesa duas vezes. Os valores e juros são informados por você; não há consulta automática aos bancos.</p>
@@ -257,6 +257,7 @@ details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotat
 <p class="fine wide">Ao repetir, somente a primeira ocorrência pode ficar paga/recebida; as seguintes são criadas pendentes. Vencimentos nos dias 29–31 se ajustam ao último dia dos meses menores. Editar ou excluir afeta somente a ocorrência escolhida.</p>
 </div><div id="formError" class="negative" role="alert"></div><div class="formbuttons"><button type="button" id="cancel">Cancelar</button><button class="primary" id="save" type="submit">Salvar lançamento</button></div></form></dialog>
 
+<dialog id="openingDialog" aria-labelledby="openingTitle"><form id="openingForm"><h2 id="openingTitle">Saldo inicial por conta</h2><p class="fine">Informe o saldo de partida antes das movimentações que você vai contabilizar. Alterar o saldo de uma conta substitui o valor inicial anterior.</p><label>Banco ou carteira<input id="openingBank" required list="openingBanks" maxlength="80" placeholder="Ex.: Nubank"></label><datalist id="openingBanks"></datalist><label>Saldo inicial (R$)<input id="openingAmount" inputmode="text" required placeholder="0,00"></label><label>Data de referência<input type="date" required id="openingDate"></label><p id="openingError" role="alert" class="negative"></p><div class="formbuttons"><button type="button" id="openingCancel">Cancelar</button><button class="primary" id="openingSave">Salvar saldo inicial</button></div><p id="openingList" class="fine"></p></form></dialog>
 <dialog id="reportDialog" class="report-dialog" aria-labelledby="reportTitleHeading">
  <form id="reportForm">
  <div class="row"><div><div class="eyebrow">RELATÓRIOS PERSONALIZADOS</div><h2 id="reportTitleHeading">Gerar relatório / PDF</h2></div><button type="button" id="reportClose" aria-label="Fechar">✕</button></div>
@@ -286,6 +287,7 @@ details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotat
 const OWNER='7e757386-e344-4cd0-8490-f81df33c35b3';
 const db=supabase.createClient('https://chqhdmjqnjjdatowfyif.supabase.co',"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNocWhkbWpxbmpqZGF0b3dmeWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDc0MDAsImV4cCI6MjA5NTgyMzQwMH0.v_7y0YD9R1LvFJkz9Vr_zJX0_CE2lo8OY5xX-KtVcFk");
 const $=id=>document.getElementById(id), TABLE='personal_finance_entries';
+let openings=[];
 let rows=[],editing=null,busy=false,loaded=false,bulkGroups=new Map(),activeBulkId=null;
 const sum=list=>list.reduce((a,r)=>a+Number(r.amount_cents),0);
 function bankValue(){return $('bank').value==='__custom'?$('customBank').value.trim():$('bank').value;}
@@ -456,9 +458,10 @@ function status(r){return r.settled_date?(r.kind==='income'?'Recebido':'Pago'):(
 function notify(msg,error=false){$('message').className='notice'+(error?' error':'');$('message').textContent=msg;}
 function monthly(){return rows.filter(r=>r.due_date.startsWith($('month').value));}
 function filtered(){return monthly().filter(r=>(!$('typeFilter').value||($('typeFilter').value==='extra'?r.kind==='income'&&r.is_extra:r.kind===$('typeFilter').value))&&(!$('statusFilter').value||($('statusFilter').value==='settled'?r.settled_date:$('statusFilter').value==='overdue'?!r.settled_date&&r.due_date<today():!r.settled_date))&&(!$('catFilter').value||r.category===$('catFilter').value)&&(!$('bankFilter').value||r.bank_name===$('bankFilter').value)&&((r.description+' '+r.category+' '+(r.bank_name||'')+' '+(r.bank_product||'')+' '+r.notes).toLocaleLowerCase('pt-BR').includes($('search').value.toLocaleLowerCase('pt-BR'))));}
-async function refresh(){if(busy)return;busy=true;$('reload').disabled=true;try{let all=[];for(let start=0;;start+=1000){const {data,error}=await db.from(TABLE).select('*').order('due_date').order('id').range(start,start+999);if(error)throw error;all.push(...data);if(data.length<1000)break;}rows=all;loaded=true;render();$('message').textContent='';}catch(e){notify('Não foi possível atualizar. '+e.message,true);}finally{busy=false;$('reload').disabled=false;}}
-function render(){renderBanks();const current=monthly(),t=today(),balance=rows.filter(r=>r.settled_date&&r.settled_date<=t).reduce((a,r)=>a+signed(r),0),pendingIn=current.filter(r=>r.kind==='income'&&!r.settled_date).reduce((a,r)=>a+Number(r.amount_cents),0),pendingOut=current.filter(r=>r.kind==='expense'&&!r.settled_date).reduce((a,r)=>a+Number(r.amount_cents),0),monthNet=current.reduce((a,r)=>a+signed(r),0);
-const forecastEnd=monthlyDate($('month').value+'-01',1),forecastBalance=rows.filter(r=>(r.settled_date||r.due_date)<forecastEnd).reduce((a,r)=>a+signed(r),0);renderSavingsPanel();const financialCards=[{label:'SALDO REALIZADO ATÉ HOJE',value:balance,note:'Somente movimentações confirmadas; saldo bancário não consultado',tone:balance<0?'deficit':'available',status:balance<0?'SALDO NEGATIVO REGISTRADO':'SALDO REGISTRADO'},{label:'DINHEIRO A RECEBER',value:pendingIn,note:'Receitas pendentes neste mês',tone:'receivable',status:'ENTRADAS PENDENTES'},{label:'TOTAL DE CONTAS A PAGAR',value:pendingOut,note:'Despesas pendentes neste mês',tone:'payable',status:'PAGAMENTOS PENDENTES'},{label:forecastBalance<0?'FALTA DINHEIRO APÓS AS CONTAS':forecastBalance>0?'SOBRA PROJETADA APÓS AS CONTAS':'SALDO FINAL PROJETADO ZERO',value:Math.abs(forecastBalance),note:'Inclui saldo acumulado dos meses anteriores e todas as previsões até o fim do mês selecionado',tone:forecastBalance<0?'deficit':forecastBalance>0?'surplus':'balanced',status:forecastBalance<0?'DÉFICIT PROJETADO':forecastBalance>0?'SOBRA PROJETADA':'SEM SOBRA'}];$('cards').innerHTML=financialCards.map(c=>`<div class="card finance-card finance-${c.tone}"><span class="finance-label">${c.label}</span><strong class="finance-amount">${money(c.value)}</strong><span class="finance-status">${c.status}</span><small>${c.note}</small></div>`).join('');
+async function refresh(){if(busy)return;busy=true;$('reload').disabled=true;try{let all=[];for(let start=0;;start+=1000){const {data,error}=await db.from(TABLE).select('*').order('due_date').order('id').range(start,start+999);if(error)throw error;all.push(...data);if(data.length<1000)break;}const balances=await db.from('personal_finance_openings').select('bank_key,bank_name,reference_date,amount_cents');if(balances.error)throw balances.error;openings=balances.data;rows=all;loaded=true;render();$('message').textContent='';}catch(e){notify('Não foi possível atualizar. '+e.message,true);}finally{busy=false;$('reload').disabled=false;}}
+function openingThrough(d){return openings.filter(r=>r.reference_date<=d).reduce((n,r)=>n+Number(r.amount_cents),0);}
+function render(){renderBanks();const current=monthly(),t=today(),balance=openingThrough(t)+rows.filter(r=>r.settled_date&&r.settled_date<=t).reduce((a,r)=>a+signed(r),0),pendingIn=current.filter(r=>r.kind==='income'&&!r.settled_date).reduce((a,r)=>a+Number(r.amount_cents),0),pendingOut=current.filter(r=>r.kind==='expense'&&!r.settled_date).reduce((a,r)=>a+Number(r.amount_cents),0),monthNet=current.reduce((a,r)=>a+signed(r),0);
+const forecastEnd=monthlyDate($('month').value+'-01',1),forecastBalance=openingThrough($('month').value+'-31')+rows.filter(r=>(r.settled_date||r.due_date)<forecastEnd).reduce((a,r)=>a+signed(r),0);renderSavingsPanel();const financialCards=[{label:'SALDO REALIZADO ATÉ HOJE',value:balance,note:'Somente movimentações confirmadas; saldo bancário não consultado',tone:balance<0?'deficit':'available',status:balance<0?'SALDO NEGATIVO REGISTRADO':'SALDO REGISTRADO'},{label:'DINHEIRO A RECEBER',value:pendingIn,note:'Receitas pendentes neste mês',tone:'receivable',status:'ENTRADAS PENDENTES'},{label:'TOTAL DE CONTAS A PAGAR',value:pendingOut,note:'Despesas pendentes neste mês',tone:'payable',status:'PAGAMENTOS PENDENTES'},{label:forecastBalance<0?'FALTA DINHEIRO APÓS AS CONTAS':forecastBalance>0?'SOBRA PROJETADA APÓS AS CONTAS':'SALDO FINAL PROJETADO ZERO',value:Math.abs(forecastBalance),note:'Inclui saldo acumulado dos meses anteriores e todas as previsões até o fim do mês selecionado',tone:forecastBalance<0?'deficit':forecastBalance>0?'surplus':'balanced',status:forecastBalance<0?'DÉFICIT PROJETADO':forecastBalance>0?'SOBRA PROJETADA':'SEM SOBRA'}];$('cards').innerHTML=financialCards.map(c=>`<div class="card finance-card finance-${c.tone}"><span class="finance-label">${c.label}</span><strong class="finance-amount">${money(c.value)}</strong><span class="finance-status">${c.status}</span><small>${c.note}</small></div>`).join('');
 const selected=$('catFilter').value,categories=[...new Set(current.map(r=>r.category))].sort();$('catFilter').innerHTML='<option value="">Todas</option>'+categories.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');$('catFilter').value=categories.includes(selected)?selected:'';
 const windowDays=$('alertWindow').value;const upcoming=rows.filter(r=>!r.settled_date&&dayNumber(r.due_date)-dayNumber(t)<= (windowDays===''?Number(r.reminder_days??0):Number(windowDays)));const alertMarkup=(list,kind)=>list.length?list.map(r=>`<div class="alert-item"><div><b class="${r.due_date<t?'negative':kind==='income'?'positive':'warning'}">${esc(r.description)}</b><small>${date(r.due_date)} · ${esc(r.bank_name||'')} ${esc(r.bank_product||'')} · ${kind==='income'?'A receber':'A pagar'} · ${status(r)}</small></div><div><b class="${kind==='income'?'positive':'negative'}">${kind==='income'?'+':'−'} ${money(Number(r.amount_cents))}</b><br><button data-edit="${r.id}">Abrir</button></div></div>`).join(''):`<div class="empty">${kind==='income'?'Nenhum recebimento pendente no período.':'Nenhuma conta a pagar próxima ou atrasada.'}</div>`;$('alerts').innerHTML=alertMarkup(upcoming.filter(r=>r.kind==='expense'),'expense');$('receivableAlerts').innerHTML=alertMarkup(upcoming.filter(r=>r.kind==='income'),'income');
 const amounts=Object.create(null);current.filter(r=>r.kind==='expense').forEach(r=>amounts[r.category]=(amounts[r.category]||0)+effectiveAmount(r));const total=Object.values(amounts).reduce((a,b)=>a+b,0);$('categories').innerHTML=Object.entries(amounts).sort((a,b)=>b[1]-a[1]).map(([cat,n])=>`<div class="row"><span>${esc(cat)}</span><b>${money(n)}</b></div><div class="bar"><i style="width:${n/total*100}%"></i></div>`).join('')||'<div class="empty">Cadastre suas despesas para ver a distribuição.</div>';
@@ -478,20 +481,24 @@ function checkpointItems(list){
 function renderLedger(){
  const selected=$('month').value,first=selected+'-01',end=monthlyDate(first,1);
  const ordered=rows.slice().sort((a,b)=>ledgerDate(a).localeCompare(ledgerDate(b))||(a.kind===b.kind?0:a.kind==='income'?-1:1)||(a.bank_name||'').localeCompare(b.bank_name||'')||String(a.id).localeCompare(String(b.id)));
- const opening=ordered.filter(r=>ledgerDate(r)<first).reduce((v,r)=>v+signed(r),0);
+ const priorBase=openingThrough(selected+'-00');
+ const opening=priorBase+ordered.filter(r=>ledgerDate(r)<first).reduce((v,r)=>v+signed(r),0);
  const scheduled=ordered.filter(r=>ledgerDate(r)>=first&&ledgerDate(r)<end);
  const monthlyIncome=sum(scheduled.filter(r=>r.kind==='income')),monthlyOut=sumEffective(scheduled.filter(r=>r.kind==='expense'));
  const previousOverdue=rows.filter(r=>!r.settled_date&&r.due_date<first);
- const actualToday=rows.filter(r=>r.settled_date&&r.settled_date<=today()).reduce((v,r)=>v+signed(r),0);
+ const actualToday=openingThrough(today())+rows.filter(r=>r.settled_date&&r.settled_date<=today()).reduce((v,r)=>v+signed(r),0);
  let running=opening;
+ let appliedBase=priorBase;
  const dayMap=new Map();
  for(const r of scheduled){
   const d=ledgerDate(r);
+  const base=openingThrough(d);running+=base-appliedBase;appliedBase=base;
   if(!dayMap.has(d))dayMap.set(d,{start:running,income:0,out:0,items:[]});
   const day=dayMap.get(d),amount=effectiveAmount(r);
   if(r.kind==='income')day.income+=amount;else day.out+=amount;
   running+=signed(r);day.items.push({r,balanceAfter:running});day.end=running;
  }
+ running+=openingThrough(selected+'-31')-appliedBase;
  const balanceColor=v=>v<0?'negative':v>0?'positive':'';
  const lastDay=new Date(Number(selected.slice(0,4)),Number(selected.slice(5)),0).getDate();
  let previous=first;
@@ -505,11 +512,12 @@ function renderLedger(){
   const nextIncome=ordered.find(r=>r.kind==='income'&&ledgerDate(r)>cutoff);
   const reserveEnd=nextIncome?ledgerDate(nextIncome):end;
   const upcoming=ordered.filter(r=>r.kind==='expense'&&ledgerDate(r)>cutoff&&ledgerDate(r)<reserveEnd);
-  const reserve=sumEffective(upcoming),free=balance-reserve;
+  const atDate=balance+openingThrough(cutoff)-priorBase;
+  const reserve=sumEffective(upcoming),free=atDate-reserve;
   const period=previous.slice(-2)+' a '+day;
   previous=selected+'-'+(day+1);
   const horizon=nextIncome?'antes da entrada de '+date(reserveEnd):'até o fim do mês (sem próxima entrada cadastrada)';
-  return `<article class="ledger-metric"><span>Saldo previsto em ${date(cutoff)}</span><strong class="${balanceColor(balance)}">${money(balance)}</strong><small>Dias ${period} · Entradas ${money(income)} · Saídas ${money(expense)}</small><small>Reservar ${money(reserve)} ${horizon}</small><b class="${balanceColor(free)}">${free<0?'Faltam':'Livre após a reserva'} ${money(Math.abs(free))}</b><details><summary>Conferir contas por banco</summary><p>Saídas dos dias ${period}</p>${checkpointItems(expenses)}<p>Contas reservadas</p>${checkpointItems(upcoming)}</details></article>`;
+  return `<article class="ledger-metric"><span>Saldo previsto em ${date(cutoff)}</span><strong class="${balanceColor(atDate)}">${money(atDate)}</strong><small>Dias ${period} · Entradas ${money(income)} · Saídas ${money(expense)}</small><small>Reservar ${money(reserve)} ${horizon}</small><b class="${balanceColor(free)}">${free<0?'Faltam':'Livre após a reserva'} ${money(Math.abs(free))}</b><details><summary>Conferir contas por banco</summary><p>Saídas dos dias ${period}</p>${checkpointItems(expenses)}<p>Contas reservadas</p>${checkpointItems(upcoming)}</details></article>`;
  }).join('');
  const stateText=r=>r.settled_date?(r.kind==='income'?'Recebido em ':'Pago em ')+date(r.settled_date):r.due_date<today()?'Pendente • vencido':'Pendente • previsto';
  $('agendaSummary').innerHTML=[
@@ -851,7 +859,41 @@ function exportCSV(){
  const url=URL.createObjectURL(new Blob(['\ufeff'+content],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');
  a.href=url;a.download='financas-pessoais-'+$('month').value+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
-$('categoryPick').onchange=categoryFields;$('bank').onchange=bankFields;$('alertWindow').onchange=render;['repeat','startInstallment','due','amount'].forEach(id=>$(id).addEventListener('input',()=>{scheduleFields();discountFields();}));$('schedule').addEventListener('input',scheduleTotal);
+function fillOpening(){
+ const row=openings.find(r=>r.bank_key===$('openingBank').value.trim().toLowerCase());
+ if(row||!$('openingAmount').value)$('openingAmount').value=row?(Number(row.amount_cents)/100).toFixed(2).replace('.',','):'';
+ $('openingDate').value=row?.reference_date||today();
+}
+function openOpening(bank='',amount=''){
+ if(!loaded||busy)return;
+ $('openingBanks').innerHTML=[...new Set(['Nubank','Bradesco','Mercado Pago','Dinheiro',...openings.map(r=>r.bank_name),...rows.map(r=>r.bank_name).filter(Boolean)])].map(b=>'<option value="'+esc(b)+'"></option>').join('');
+ $('openingList').textContent=openings.map(r=>r.bank_name+' · '+money(r.amount_cents)+' em '+date(r.reference_date)).join(' | ');
+ $('openingBank').value=bank;$('openingAmount').value='';fillOpening();if(amount)$('openingAmount').value=amount;
+ $('openingBank').dataset.existing=openings.some(r=>r.bank_key===bank.trim().toLowerCase())?'yes':'no';$('openingDate').max=today();$('openingError').textContent='';$('openingDialog').showModal();
+}
+$('openingAdd').onclick=()=>openOpening();
+$('openingBank').onchange=()=>{const exists=openings.some(r=>r.bank_key===$('openingBank').value.trim().toLowerCase());if(exists||$('openingBank').dataset.existing==='yes')$('openingAmount').value='';fillOpening();$('openingBank').dataset.existing=exists?'yes':'no';};
+$('openingCancel').onclick=()=>$('openingDialog').close();
+$('openingForm').onsubmit=async event=>{
+ event.preventDefault();if(busy)return;
+ const bank=$('openingBank').value.trim(),raw=$('openingAmount').value.trim(),reference=$('openingDate').value;
+ try{
+  if(!bank||!reference||reference>today())throw Error('Confira o banco e a data de referência.');
+  if(!/^-?(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d{1,2})?$/.test(raw))throw Error('Use reais e vírgula para centavos, como 164,00.');
+  const [whole,fraction='']=raw.replace(/\./g,'').replace('-','').split(',');
+  const amount=(Number(whole)*100+Number(fraction.padEnd(2,'0')))*(raw.startsWith('-')?-1:1);
+  if(!Number.isSafeInteger(amount)||Math.abs(amount)>999999999999)throw Error('Valor fora do limite.');
+  busy=true;$('openingSave').disabled=true;
+  const result=await db.from('personal_finance_openings').upsert({bank_key:bank.toLowerCase(),bank_name:bank,amount_cents:amount,reference_date:reference},{onConflict:'owner_id,bank_key'}).select('bank_key').single();
+  if(result.error)throw result.error;
+  $('openingDialog').close();busy=false;await refresh();
+ }catch(error){$('openingError').textContent=error.message;}finally{busy=false;$('openingSave').disabled=false;}
+};
+$('categoryPick').onchange=()=>{
+ if($('categoryPick').value==='Saldo inicial'){
+  const amount=$('amount').value,bank=bankValue();$('categoryPick').value='';categoryFields();$('editor').close();openOpening(bank,amount);
+ }else categoryFields();
+};$('bank').onchange=bankFields;$('alertWindow').onchange=render;['repeat','startInstallment','due','amount'].forEach(id=>$(id).addEventListener('input',()=>{scheduleFields();discountFields();}));$('schedule').addEventListener('input',scheduleTotal);
 $('month').value=today().slice(0,7);$('month').addEventListener('change',()=>{if(!$('month').value)$('month').value=today().slice(0,7);render();});['typeFilter','statusFilter','catFilter','bankFilter','search'].forEach(id=>$(id).addEventListener('input',renderEntries));$('add').onclick=()=>openEditor();$('reload').onclick=refresh;$('entryForm').onsubmit=save;['cancel','close'].forEach(id=>$(id).onclick=()=>{if(!busy)$('editor').close();});$('editor').addEventListener('cancel',e=>{if(busy)e.preventDefault();});$('kind').onchange=fields;$('settled').onchange=fields;$('settlementDiscount').onchange=discountFields;$('discountAmount').addEventListener('input',discountFields);$('csv').onclick=exportCSV;$('print').onclick=openReportDialog;document.addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(edit)openEditor(edit.dataset.edit);if(del)remove(del.dataset.delete);});
 $('bulkForm').addEventListener('submit',confirmBulk);['bulkCancel','bulkClose'].forEach(id=>$(id).onclick=()=>{if(!busy){$('bulkDialog').close();activeBulkId=null;}});document.addEventListener('click',e=>{const button=e.target.closest('[data-bulk]');if(button)openBulk(button.dataset.bulk);});
 
