@@ -2183,7 +2183,6 @@ async function syncEcgP2Manual(userId, desired, expiryIso, previous, force){
       continue;
     }
     if(row&&row.source==="purchase"&&!changed)continue;
-    if(row&&row.source==="purchase"&&want&&force)continue;
     if(!changed&&row&&row.source!=="admin_grant"&&row.source!=="legacy_manual")continue;
     if(!changed&&row&&String(row.expira_em||"")===String(expiryIso||""))continue;
     if(changed||row||!row){
