@@ -2186,7 +2186,7 @@ async function syncEcgP2Manual(userId, desired, expiryIso, previous, force){
     if(row&&row.source==="purchase"&&want&&force)continue;
     if(!changed&&row&&row.source!=="admin_grant"&&row.source!=="legacy_manual")continue;
     if(!changed&&row&&String(row.expira_em||"")===String(expiryIso||""))continue;
-    if(changed||row){
+    if(changed||row||!row){
       var up=await client.from("acessos").upsert({
         user_id:userId,resumo:k,expira_em:expiryIso,source:"admin_grant",order_id:null
       },{onConflict:"user_id,resumo"});
