@@ -29,7 +29,7 @@ a{color:#67e8f9}
 (function(){
 "use strict";
 var started=false;
-var expectedLength=3524970; // UTF-16 JavaScript (diferente da contagem Unicode do PostgreSQL)
+var minExpectedLength=3500000; // Verifica arquivo completo, incluindo revisões didáticas
 var statusEl=document.getElementById("status");
 var detail=document.getElementById("detail");
 var spinner=document.getElementById("spin");
@@ -55,7 +55,7 @@ async function loadPremium(){
    if(chunks.length!==12 || chunks.some(function(p,i){return p.part!==i || typeof p.content!=="string"}))
       throw new Error("Conteúdo indisponível ou acesso ainda não liberado");
    var page=chunks.map(function(p){return p.content}).join("");
-   if(page.length!==expectedLength || !page.startsWith("<!DOCTYPE html>") || !page.trimEnd().endsWith("</html>"))
+   if(page.length<minExpectedLength || !page.startsWith("<!DOCTYPE html>") || !page.trimEnd().endsWith("</html>"))
       throw new Error("Material incompleto");
    statusEl.textContent="Conteúdo autorizado. Abrindo resumo…";
    document.open();
