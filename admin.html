@@ -2161,7 +2161,41 @@ window.toggleResumo=function(k){currentToggles[k]=!currentToggles[k];renderResum
 window.togglePresente=function(k){if(!currentAluno)return;var i=currentPresente.indexOf(k);if(i>=0)currentPresente.splice(i,1);else currentPresente.push(k);var el=document.querySelector('.presente-icon[data-key="'+k+'"]');if(el)el.classList.toggle("on",currentPresente.indexOf(k)>=0);};
 window.set50Days=function(){var d=new Date();d.setDate(d.getDate()+50);document.getElementById("expiryInput").value=d.toISOString().substring(0,10);};
 window.closeModal=function(){document.getElementById("modalAluno").classList.remove("open");currentAluno=null;};
-window.saveAluno=async function(){if(!currentAluno)return;var btn=document.getElementById("saveBtn");btn.disabled=true;btn.textContent="Salvando...";var u={};var ev=document.getElementById("expiryInput").value;var expiraIso=ev?new Date(ev).toISOString():null;u.acesso_expira_em=expiraIso;RESUMOS_COLS.forEach(function(r){var antes=!!currentAluno[r.key];var agora=!!currentToggles[r.key];u[r.key]=agora;if(agora&&!antes&&expiraIso){u[r.key+"_expira"]=expiraIso;}else if(!agora){u[r.key+"_expira"]=null;}});u.resumos_presente=currentPresente;var res=await client.from("profiles").update(u).eq("id",currentAluno.id);if(res.error){showToast("Erro ao salvar!","error");btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";return;}
+
+// ECG P2: toda liberação manual deve sincronizar também a tabela de acesso
+// protegida por RLS; o catálogo visual e a autorização real ficam coerentes.
+async function syncEcgP2Manual(userId, desired, expiryIso, previous, force){
+  var keys=["eletrocardiograma_p2","pacote_s4_p2"];
+  var existing=await client.from("acessos")
+    .select("resumo,source,order_id,expira_em")
+    .eq("user_id",userId).in("resumo",keys);
+  if(existing.error)throw existing.error;
+  var byKey={};
+  (existing.data||[]).forEach(function(r){byKey[r.resumo]=r;});
+  for(var i=0;i<keys.length;i++){
+    var k=keys[i],want=!!desired[k],before=!!(previous&&previous[k]),row=byKey[k];
+    var changed=force||want!==before;
+    if(!want){
+      if(changed&&row){
+        var del=await client.from("acessos").delete().match({user_id:userId,resumo:k});
+        if(del.error)throw del.error;
+      }
+      continue;
+    }
+    if(row&&row.source==="purchase"&&!changed)continue;
+    if(row&&row.source==="purchase"&&want&&force)continue;
+    if(!changed&&row&&row.source!=="admin_grant"&&row.source!=="legacy_manual")continue;
+    if(!changed&&row&&String(row.expira_em||"")===String(expiryIso||""))continue;
+    if(changed||row){
+      var up=await client.from("acessos").upsert({
+        user_id:userId,resumo:k,expira_em:expiryIso,source:"admin_grant",order_id:null
+      },{onConflict:"user_id,resumo"});
+      if(up.error)throw up.error;
+    }
+  }
+}
+
+window.saveAluno=async function(){if(!currentAluno)return;var btn=document.getElementById("saveBtn");btn.disabled=true;btn.textContent="Salvando...";var u={};var ev=document.getElementById("expiryInput").value;var expiraIso=ev?new Date(ev).toISOString():null;u.acesso_expira_em=expiraIso;RESUMOS_COLS.forEach(function(r){var antes=!!currentAluno[r.key];var agora=!!currentToggles[r.key];u[r.key]=agora;if(agora&&!antes&&expiraIso){u[r.key+"_expira"]=expiraIso;}else if(!agora){u[r.key+"_expira"]=null;}});u.resumos_presente=currentPresente;var res=await client.from("profiles").update(u).eq("id",currentAluno.id);if(res.error){showToast("Erro ao salvar!","error");btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";return;}try{await syncEcgP2Manual(currentAluno.id,currentToggles,expiraIso,currentAluno,false);}catch(e){console.error("[admin] ECG P2",e);showToast("Perfil atualizado, porém falhou sincronizar acesso ao ECG P2. Tente salvar novamente.","error");btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";return;}
 // ── Persistir CURSOS na tabela acessos (insert/delete conforme diff) ──
 try{
   for(var ci=0;ci<CURSOS_COLS.length;ci++){
@@ -2180,7 +2214,7 @@ try{
 }catch(errC){showToast("Resumos salvos, mas erro ao salvar cursos!","error");}
 {showToast("&#9989; Salvo!","success");closeModal();await loadAlunos();renderActivity();}btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";};
 window.revokeAll=async function(){if(!currentAluno)return;if(!confirm("Revogar TODOS os acessos de "+currentAluno.email+"?"))return;RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=false;});document.getElementById("expiryInput").value="";renderResumosGrid();showToast("Clique em Salvar para confirmar","success");};
-window.quickRevoke=async function(id,emailEnc){var email=decodeURIComponent(emailEnc);if(!confirm("Revogar todos de "+email+"?"))return;var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=false;u[r.key+"_expira"]=null;});u.acesso_expira_em=null;var res=await client.from("profiles").update(u).eq("id",id);if(res.error)showToast("Erro!","error");else{showToast("&#9989; Revogado!","success");await loadAlunos();renderActivity();}};
+window.quickRevoke=async function(id,emailEnc){var email=decodeURIComponent(emailEnc);if(!confirm("Revogar todos de "+email+"?"))return;var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=false;u[r.key+"_expira"]=null;});u.acesso_expira_em=null;var res=await client.from("profiles").update(u).eq("id",id);if(res.error)showToast("Erro!","error");else{try{await syncEcgP2Manual(id,{eletrocardiograma_p2:false,pacote_s4_p2:false},null,{eletrocardiograma_p2:true,pacote_s4_p2:true},true);}catch(e){console.error("[admin] revogação ECG P2",e);showToast("Perfil revogado, mas falhou revogação no ECG P2.","error");return;}showToast("&#9989; Revogado!","success");await loadAlunos();renderActivity();}};
 window.quickGrantAll=async function(id,emailEnc){
   var email=decodeURIComponent(emailEnc);
   if(!confirm("Liberar TODOS os resumos por 50 dias para "+email+"?"))return;
@@ -2192,7 +2226,7 @@ window.quickGrantAll=async function(id,emailEnc){
   });
   var res=await client.from("profiles").update(u).eq("id",id);
   if(res.error)showToast("Erro!","error");
-  else{showToast("&#9989; Todos liberados por 50 dias!","success");await loadAlunos();renderActivity();}
+  else{try{await syncEcgP2Manual(id,{eletrocardiograma_p2:true,pacote_s4_p2:true},exp,{eletrocardiograma_p2:false,pacote_s4_p2:false},true);}catch(e){console.error("[admin] liberação ECG P2",e);showToast("Perfil atualizado, mas falhou liberar ECG P2.","error");return;}showToast("&#9989; Todos liberados por 50 dias!","success");await loadAlunos();renderActivity();}
 };
 
 function showToast(msg,type){var t=document.createElement("div");t.className="toast "+type;t.innerHTML=msg;document.body.appendChild(t);setTimeout(function(){t.remove();},3000);}
