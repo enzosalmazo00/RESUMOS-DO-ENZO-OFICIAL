@@ -322,7 +322,7 @@
     if (pageKey && !isCurso) extraFields += ", " + pageKey + "_expira";
     if (pacoteKey) extraFields += ", " + pacoteKey + "_expira";
 
-    var fields = "is_approved, active_session, device_id" + extraFields;
+    var fields = "is_approved, active_session, device_id" + (pageKey==="eletrocardiograma_p2" ? ", is_admin" : "") + extraFields;
 
     // Perfil e acesso normalizado são buscados em paralelo.
     var profilePromise = client
@@ -375,14 +375,15 @@
       var temAcessoNovo = !!accessResult[0];
       var temAcessoPacote = !!accessResult[1];
       var temAcessoAntigo = !!profile[pageKey] || !!(pacoteKey && profile[pacoteKey]);
-      var temAcesso = temAcessoNovo || temAcessoPacote || temAcessoAntigo;
+      var temAcessoAdminECG = pageKey==="eletrocardiograma_p2" && profile.is_admin === true;
+      var temAcesso = temAcessoNovo || temAcessoPacote || temAcessoAntigo || temAcessoAdminECG;
 
       if (!temAcesso) {
         window.location.replace(DASHBOARD_PAGE);
         return;
       }
 
-      if (!temAcessoNovo && !temAcessoPacote) {
+      if (!temAcessoNovo && !temAcessoPacote && !temAcessoAdminECG) {
         var expiraCol = pageKey + "_expira";
         var expiraPack = pacoteKey ? pacoteKey + "_expira" : null;
         var expiraData = profile[expiraCol] || (expiraPack ? profile[expiraPack] : null);
