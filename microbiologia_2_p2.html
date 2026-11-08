@@ -3022,5 +3022,85 @@ findDossiers('');
 document.querySelectorAll('[data-save]').forEach(el=>{const key='enzo-response:'+window.PAGE_KEY+':'+el.dataset.save;try{el.value=localStorage.getItem(key)||'';}catch(_){}el.addEventListener('input',()=>{try{localStorage.setItem(key,el.value)}catch(_){}})});
 // Persistência das respostas, isolada por resumo.
 (()=>{const key='enzo-quiz-answers:'+window.PAGE_KEY;let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')}catch(_){}const originalMC=window.answerMC,originalTF=window.answerTF,originalOpen=window.revealOpen,originalReset=window.resetQuiz;let restore=true;function save(i,ch){if(restore)return;saved[i]=ch;try{localStorage.setItem(key,JSON.stringify(saved))}catch(_){}}window.answerMC=(i,ch)=>{originalMC(i,ch);save(i,ch)};window.answerTF=(i,ch)=>{originalTF(i,ch);save(i,ch)};window.revealOpen=i=>{originalOpen(i);save(i,'open')};Object.entries(saved).forEach(([i,ch])=>{if(!QD[i])return;if(ch==='open')originalOpen(+i);else if(QD[i].t==='mc')originalMC(+i,ch);else originalTF(+i,ch)});restore=false;window.resetQuiz=()=>{saved={};try{localStorage.removeItem(key)}catch(_){}originalReset();};})();
-</script><script src="micro-p2-terapeutica.js?v=20261025-ms-lacunas"></script></body>
+</script><script src="micro-p2-terapeutica.js?v=20261025-ms-lacunas"></script>
+<!-- ESTRELAS DE PROVA POR FICHA - RESUMOS DO ENZO -->
+<style>
+.dossier{position:relative}
+.dossier>h3{padding-right:52px}
+.enzo-exam-star{position:absolute;right:13px;top:12px;z-index:2;width:42px;height:42px;border:1px solid rgba(249,201,79,.25);border-radius:12px;background:rgba(249,201,79,.05);color:#9aa2b7;display:grid;place-items:center;cursor:pointer;touch-action:manipulation;transition:color .2s,border-color .2s,background .2s}
+.enzo-exam-star:before{content:"☆";font:32px/1 Arial,sans-serif}
+.enzo-exam-star[aria-pressed="true"]{color:#f9c94f;background:rgba(249,201,79,.14);border-color:#f9c94f}
+.enzo-exam-star[aria-pressed="true"]:before{content:"★"}
+.enzo-exam-star:focus-visible{outline:3px solid #38e8c0;outline-offset:2px}
+.enzo-exam-star[disabled]{opacity:.55;cursor:wait}
+@media print{.enzo-exam-star{display:none}}
+</style>
+<script>
+(function(){
+  'use strict';
+  const PAGE='microbiologia_2_p2', TABLE='resumo_estrelas_prova';
+  const fichas=Array.from(document.querySelectorAll('.dossier[id]'));
+  const botoes=new Map();
+  let client=null,user=null;
+  function paint(button,marked){
+    button.setAttribute('aria-pressed',String(marked));
+    button.setAttribute('aria-label',marked?'Marcado: cai na prova. Clique para desmarcar.':'Não marcado: não cai na prova. Clique para marcar.');
+    button.title=marked?'Cai na prova — clique para apagar':'Não cai na prova — clique para acender';
+  }
+  function localKey(){return 'enzo:estrelas-prova:v1:'+user.id+':'+PAGE;}
+  function readLocal(){try{return JSON.parse(localStorage.getItem(localKey())||'{}')}catch(_){return {}}}
+  function cache(values){try{localStorage.setItem(localKey(),JSON.stringify(values))}catch(_){}}
+  fichas.forEach(ficha=>{
+    const button=document.createElement('button');
+    button.type='button';button.className='enzo-exam-star';
+    button.dataset.fichaId=ficha.id;
+    paint(button,false);button.disabled=true;
+    ficha.insertBefore(button,ficha.querySelector('h3')||ficha.firstChild);
+    botoes.set(ficha.id,button);
+    button.addEventListener('click',async()=>{
+      if(!client||!user||button.disabled)return;
+      const was=button.getAttribute('aria-pressed')==='true';
+      const marked=!was;
+      button.disabled=true;
+      paint(button,marked);
+      const values=readLocal();values[ficha.id]=marked;cache(values);
+      try{
+        const {error}=await client.from(TABLE).upsert({
+          user_id:user.id,resumo_key:PAGE,ficha_id:ficha.id,marcado:marked,updated_at:new Date().toISOString()
+        },{onConflict:'user_id,resumo_key,ficha_id'});
+        if(error)throw error;
+      }catch(err){
+        paint(button,was);values[ficha.id]=was;cache(values);
+        console.error('Não foi possível salvar a estrela',err);
+        alert('Não foi possível salvar sua estrela. Verifique a conexão e tente novamente.');
+      }finally{button.disabled=false}
+    });
+  });
+  async function init(){
+    try{
+      if(window.authReady)await window.authReady;
+      client=window.authClient;
+      user=window.authSession&&window.authSession.user;
+      if((!user||!client)&&client?.auth?.getUser){
+        const response=await client.auth.getUser();user=response.data?.user;
+      }
+      if(!client||!user)throw new Error('Sessão do aluno indisponível');
+      const local=readLocal();
+      botoes.forEach((button,id)=>{if(Object.prototype.hasOwnProperty.call(local,id))paint(button,local[id])});
+      const {data,error}=await client.from(TABLE).select('ficha_id,marcado').eq('user_id',user.id).eq('resumo_key',PAGE);
+      if(error)throw error;
+      const values={};
+      (data||[]).forEach(row=>{values[row.ficha_id]=row.marcado===true});
+      cache(values);
+      botoes.forEach((button,id)=>{paint(button,values[id]===true);button.disabled=false});
+    }catch(err){
+      console.error('Estrelas de prova: falha ao carregar',err);
+      // Não permitir falsa confirmação de gravação sem sessão/nuvem.
+      botoes.forEach(button=>{button.disabled=true;button.title='Marcações indisponíveis: recarregue a página'});
+    }
+  }
+  init();
+})();
+</script>
+</body>
 </html>
