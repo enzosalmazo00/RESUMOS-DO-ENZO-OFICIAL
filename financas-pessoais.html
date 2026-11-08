@@ -206,7 +206,7 @@ details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotat
 <header><a href="admin.html">← Administrador</a><span class="eyebrow">RESUMOS DO ENZO</span><span class="badge">Área pessoal • acesso privado</span></header>
 <div id="gate" class="notice" role="status">Verificando seu acesso…</div>
 <div id="app" hidden>
-<div class="row hero"><div><div class="eyebrow">SEU PLANEJAMENTO PESSOAL</div><h1>Minhas finanças</h1><p>Clareza para hoje. Organização para os próximos meses.</p></div><div class="tools"><button id="reload">Atualizar</button><button type="button" id="openingAdd">Saldo inicial</button><button class="quick-launch" type="button" id="quickAdd">⚡ Gasto rápido</button><button class="primary" id="add">+ Novo lançamento</button></div></div>
+<div class="row hero"><div><div class="eyebrow">SEU PLANEJAMENTO PESSOAL</div><h1>Minhas finanças</h1><p>Clareza para hoje. Organização para os próximos meses.</p></div><div class="tools"><button id="reload">Atualizar</button><button type="button" id="openingAdd">Saldo inicial</button><button type="button" id="manageBanks">⚙ Gerenciar bancos</button><button class="quick-launch" type="button" id="quickAdd">⚡ Gasto rápido</button><button class="primary" id="add">+ Novo lançamento</button></div></div>
 <div id="message" role="status" aria-live="polite"></div>
 <div class="row"><label>Mês de planejamento<input class="month" id="month" type="month"></label><div class="tools"><button id="csv">Exportar CSV</button><button id="print" type="button">Relatórios / PDF</button></div></div>
 <div class="cards" id="cards"></div><section class="checkpoint-panel" aria-labelledby="checkpointTitle"><h2 id="checkpointTitle">Quanto vai sobrar nos dias 10, 20 e 30?</h2><p class="fine">Saldo acumulado após as entradas e contas até cada data, inclusive. Lançamentos pendentes entram pelo vencimento e os confirmados pela data da movimentação. Em fevereiro, a última previsão usa o último dia do mês.</p><div class="checkpoint-grid" id="checkpointBalances"></div></section><div id="afterFlex" class="fine"></div><h2>Minhas ferramentas</h2><div class="hub-grid"><button data-pane="flex" aria-controls="flex" aria-expanded="false"><strong aria-hidden="true">◷</strong>Gastos planejados</button><button data-pane="market" aria-controls="market" aria-expanded="false"><strong aria-hidden="true">🛒</strong>Lista de compras e preços</button><button data-pane="banksPane" aria-controls="banksPane" aria-expanded="false"><strong aria-hidden="true">▤</strong>Bancos e compromissos</button><button data-pane="flows" aria-controls="flows" aria-expanded="false"><strong aria-hidden="true">⇄</strong>Contas e recebimentos</button><button data-pane="alertsPane" aria-controls="alertsPane" aria-expanded="false"><strong aria-hidden="true">◴</strong>Avisos e vencimentos</button><button data-pane="entriesPane" aria-controls="entriesPane" aria-expanded="false"><strong aria-hidden="true">≡</strong>Lançamentos e categorias</button><button data-pane="ledgerPane" aria-controls="ledgerPane" aria-expanded="false"><strong aria-hidden="true">▥</strong>Extrato por dia</button><button data-pane="savingsPane" aria-controls="savingsPane" aria-expanded="false"><strong aria-hidden="true">◇</strong>Economia com quitações</button></div><section class="panel hub-area" id="flex" hidden><div class="row"><h2>Gastos planejados</h2><button data-closepane>Fechar</button></div><p>Reserve um valor por categoria em até três períodos do mês. O que já foi lançado na categoria, pago ou previsto, consome a reserva do período uma única vez. Valores planejados não geram cobrança nem atraso.</p><form id="flexForm" class="market-fields"><label>Categoria<input id="flexCat" required maxlength="80" list="flexCats" value="Mercado"></label><datalist id="flexCats"></datalist><label>Período<select id="flexPeriod"><option value="1">Dias 1 a 10</option><option value="2">Dias 11 a 20</option><option value="3">Dia 21 ao fim do mês</option></select></label><label>Valor planejado (R$)<input id="flexAmount" inputmode="decimal" required placeholder="0,00"></label><button>Salvar planejamento</button></form><p class="fine">Para retirar uma reserva, salve o valor zero.</p><div id="flexRows"></div></section><section class="panel hub-area" id="market" hidden><div class="row"><h2>Lista de compras e preços</h2><button data-closepane>Fechar</button></div><p>Selecione os itens para a lista do mês. Em Editar, informe a quantidade e o preço observado por unidade ou embalagem. Para comparar preços, mantenha o mesmo produto e tamanho.</p><div class="tools"><input id="marketSearch" placeholder="Buscar produto" aria-label="Buscar produto"><button id="newItem">Adicionar produto</button><button id="printList">Imprimir lista</button></div><p id="cartTotal"></p><div class="market-scroll" id="marketList"></div></section><section class="panel hub-area" id="banksPane" hidden><div class="row"><h2>Bancos e compromissos</h2><button data-closepane>Fechar</button></div><div id="debtSummary" class="debt-strip"></div><div class="row bank-summary-head"><div><div class="section-label">CONTROLE POR INSTITUIÇÃO</div><h2>Bancos e compromissos</h2></div><span class="fine">Valores cadastrados • despesas pendentes</span></div><div id="banks" class="bank-grid"></div><div id="banksGrandTotal" class="banks-grand-total" aria-live="polite"></div><p class="fine">Cartão de crédito: registre as compras/parcelas ou o total da fatura, para não contar a mesma despesa duas vezes. Os valores e juros são informados por você; não há consulta automática aos bancos.</p>
@@ -258,7 +258,7 @@ details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotat
 <p class="fine wide">Ao repetir, somente a primeira ocorrência pode ficar paga/recebida; as seguintes são criadas pendentes. Vencimentos nos dias 29–31 se ajustam ao último dia dos meses menores. Editar ou excluir afeta somente a ocorrência escolhida.</p>
 </div><div id="formError" class="negative" role="alert"></div><div class="formbuttons"><button type="button" id="cancel">Cancelar</button><button class="primary" id="save" type="submit">Salvar lançamento</button></div></form></dialog>
 
-<dialog id="openingDialog" aria-labelledby="openingTitle"><form id="openingForm"><h2 id="openingTitle">Saldo inicial por conta</h2><p class="fine">Informe o saldo de partida antes das movimentações que você vai contabilizar. Alterar o saldo de uma conta substitui o valor inicial anterior.</p><label>Banco ou carteira<input id="openingBank" required list="openingBanks" maxlength="80" placeholder="Ex.: Nubank"></label><datalist id="openingBanks"></datalist><label>Saldo inicial (R$)<input id="openingAmount" inputmode="text" required placeholder="0,00"></label><label>Data de referência<input type="date" required id="openingDate"></label><p id="openingError" role="alert" class="negative"></p><div class="formbuttons"><button type="button" id="openingCancel">Cancelar</button><button class="primary" id="openingSave">Salvar saldo inicial</button></div><p id="openingList" class="fine"></p></form></dialog>
+<dialog id="manageBanksDialog" aria-labelledby="manageBanksTitle"><div class="row"><h2 id="manageBanksTitle">Gerenciar bancos</h2><button type="button" id="manageBanksClose">✕</button></div><p class="fine">Edite os saldos e lançamentos de cada instituição. A limpeza atua apenas sobre o banco selecionado e exige backup e confirmação.</p><label>Banco / carteira<select id="manageBankSelect"></select></label><div class="row"><button type="button" id="manageBankOpening">Editar saldo inicial</button><button type="button" id="manageBankExport">Baixar backup JSON</button></div><div id="manageBankSummary" class="notice"></div><label>Período para exclusão<select id="manageBankScope"><option value="month">Somente um mês</option><option value="all">Todos os meses e anos</option></select></label><label id="manageBankMonthLabel">Mês<input id="manageBankMonth" type="month"></label><p class="fine">O backup contém os registros financeiros do banco. Guarde-o em local privado. Zerar todos os meses também remove o saldo inicial, mas preserva o cadastro e os outros bancos.</p><div class="row"><button type="button" class="danger" id="manageBankReset">Zerar período selecionado</button></div><p id="manageBankError" class="negative" role="alert"></p><div class="scroll"><table><thead><tr><th>Data</th><th>Lançamento</th><th>Valor</th><th>Ação</th></tr></thead><tbody id="manageBankEntries"></tbody></table></div></dialog><dialog id="openingDialog" aria-labelledby="openingTitle"><form id="openingForm"><h2 id="openingTitle">Saldo inicial por conta</h2><p class="fine">Informe o saldo de partida antes das movimentações que você vai contabilizar. Alterar o saldo de uma conta substitui o valor inicial anterior.</p><label>Banco ou carteira<input id="openingBank" required list="openingBanks" maxlength="80" placeholder="Ex.: Nubank"></label><datalist id="openingBanks"></datalist><label>Saldo inicial (R$)<input id="openingAmount" inputmode="text" required placeholder="0,00"></label><label>Data de referência<input type="date" required id="openingDate"></label><p id="openingError" role="alert" class="negative"></p><div class="formbuttons"><button type="button" id="openingCancel">Cancelar</button><button class="primary" id="openingSave">Salvar saldo inicial</button></div><p id="openingList" class="fine"></p></form></dialog>
 <dialog id="reportDialog" class="report-dialog" aria-labelledby="reportTitleHeading">
  <form id="reportForm">
  <div class="row"><div><div class="eyebrow">RELATÓRIOS PERSONALIZADOS</div><h2 id="reportTitleHeading">Gerar relatório / PDF</h2></div><button type="button" id="reportClose" aria-label="Fechar">✕</button></div>
@@ -872,6 +872,78 @@ function exportCSV(){
  const url=URL.createObjectURL(new Blob(['\ufeff'+content],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');
  a.href=url;a.download='financas-pessoais-'+$('month').value+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
+
+/* Gestão isolada de bancos: sem alterações em outras áreas do sistema. */
+let manageBankBackupKey='';
+function managedBank(){return $('manageBankSelect').value;}
+function managedRecords(){return rows.filter(r=>(r.bank_name||'')===managedBank());}
+function manageBankScopeRows(){const bank=managedBank(),month=$('manageBankMonth').value;return rows.filter(r=>(r.bank_name||'')===bank&&($('manageBankScope').value==='all'||String(r.due_date).slice(0,7)===month));}
+function renderManageBanks(){
+ const bank=managedBank(),list=managedRecords(),scope=manageBankScopeRows(),opening=openings.find(o=>o.bank_key===bank.toLowerCase());
+ $('manageBankMonthLabel').hidden=$('manageBankScope').value==='all';
+ $('manageBankSummary').textContent=bank+': '+list.length+' lançamentos · '+money(sum(list.filter(r=>r.kind==='income')))+' em receitas · '+money(sum(list.filter(r=>r.kind==='expense')))+' em despesas · saldo inicial '+(opening?money(opening.amount_cents):'não cadastrado')+'. Exclusão selecionada: '+scope.length+' lançamentos'+($('manageBankScope').value==='all'&&opening?' e saldo inicial':'')+'.';
+ $('manageBankEntries').innerHTML=list.slice().sort((a,b)=>b.due_date.localeCompare(a.due_date)).map(r=>'<tr><td>'+date(r.due_date)+'</td><td>'+esc(r.description)+'</td><td>'+money(r.amount_cents)+'</td><td><button type="button" data-manage-edit="'+esc(r.id)+'">Editar</button></td></tr>').join('')||'<tr><td colspan="4">Sem lançamentos neste banco.</td></tr>';
+}
+function openManageBanks(){
+ if(!loaded||busy)return;
+ const banks=[...new Set([...openings.map(o=>o.bank_name),...rows.map(r=>r.bank_name).filter(Boolean)])].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+ $('manageBankSelect').innerHTML=banks.map(b=>'<option value="'+esc(b)+'">'+esc(b)+'</option>').join('');
+ $('manageBankMonth').value=$('month').value;$('manageBankScope').value='month';$('manageBankError').textContent='';manageBankBackupKey='';
+ if(!banks.length){notify('Nenhum banco cadastrado.',true);return;}
+ renderManageBanks();$('manageBanksDialog').showModal();
+}
+function bankBackupPayload(){
+ const bank=managedBank();
+ return {format:'resumos-do-enzo-financas-backup-v1',bank,exported_at:new Date().toISOString(),entries:managedRecords(),opening:openings.find(o=>o.bank_key===bank.toLowerCase())||null};
+}
+function downloadBankBackup(){
+ const payload=bankBackupPayload(),data=JSON.stringify(payload,null,2);
+ const blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='backup-financas-'+payload.bank.toLowerCase().replace(/[^a-z0-9]+/g,'-')+'-'+today()+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
+ manageBankBackupKey=payload.bank+'|'+payload.entries.map(r=>r.id).sort().join('|')+'|'+(payload.opening?.amount_cents??'');
+ $('manageBankError').textContent='Backup solicitado ao navegador. Confira se o arquivo foi salvo antes de excluir.';
+}
+async function resetManagedBank(){
+ if(busy)return;
+ const bank=managedBank(),scope=$('manageBankScope').value,month=$('manageBankMonth').value;
+ if(!bank||scope==='month'&&!/^\d{4}-\d{2}$/.test(month)){$('manageBankError').textContent='Selecione banco e mês válidos.';return;}
+ const list=manageBankScopeRows(),opening=scope==='all'?openings.find(o=>o.bank_key===bank.toLowerCase()):null;
+ if(!list.length&&!opening){$('manageBankError').textContent='Não há dados para zerar neste período.';return;}
+ const currentKey=bank+'|'+managedRecords().map(r=>r.id).sort().join('|')+'|'+(openings.find(o=>o.bank_key===bank.toLowerCase())?.amount_cents??'');
+ if(manageBankBackupKey!==currentKey){$('manageBankError').textContent='Primeiro baixe um backup atualizado deste banco.';return;}
+ const label=scope==='all'?'TODOS OS MESES E ANOS':month;
+ if(!confirm('ATENÇÃO: excluir '+list.length+' lançamentos de '+bank+' ('+label+')'+(opening?' e o saldo inicial':'')+'? Outros bancos serão preservados. Verifique seu backup antes de continuar.'))return;
+ const typed=prompt('Para confirmar a exclusão definitiva, digite exatamente o nome do banco: '+bank);
+ if(typed!==bank){$('manageBankError').textContent='Exclusão cancelada: nome do banco não corresponde.';return;}
+ busy=true;$('manageBankReset').disabled=true;
+ try{
+  // IDs específicos evitam exclusão acidental de outros bancos; lotes limitados.
+  for(let i=0;i<list.length;i+=100){
+   const batch=list.slice(i,i+100);
+   const {data,error}=await db.from(TABLE).delete().eq('bank_name',bank).in('id',batch.map(r=>r.id)).select('id');
+   if(error)throw error;
+   if((data||[]).length!==batch.length)throw Error('Exclusão parcial detectada. Atualize e confira o backup antes de tentar novamente.');
+  }
+  if(opening){
+   const {data,error}=await db.from('personal_finance_openings').delete().eq('bank_key',opening.bank_key).select('bank_key');
+   if(error)throw error;
+   if((data||[]).length!==1)throw Error('Não foi possível confirmar a remoção do saldo inicial.');
+  }
+  $('manageBanksDialog').close();busy=false;await refresh();notify('Limpeza concluída para '+bank+' ('+label+').');
+ }catch(e){$('manageBankError').textContent='Operação interrompida: '+e.message+'. Confira os registros antes de repetir.';busy=false;await refresh();}
+ finally{busy=false;$('manageBankReset').disabled=false;manageBankBackupKey='';}
+}
+$('manageBanks').onclick=openManageBanks;
+$('manageBanksClose').onclick=()=>{if(!busy)$('manageBanksDialog').close();};
+$('manageBankSelect').onchange=()=>{manageBankBackupKey='';renderManageBanks();};
+$('manageBankScope').onchange=renderManageBanks;
+$('manageBankMonth').onchange=renderManageBanks;
+$('manageBankOpening').onclick=()=>{const bank=managedBank();$('manageBanksDialog').close();openOpening(bank);};
+$('manageBankExport').onclick=downloadBankBackup;
+$('manageBankReset').onclick=resetManagedBank;
+$('manageBankEntries').onclick=e=>{const button=e.target.closest('[data-manage-edit]');if(!button)return;const id=button.dataset.manageEdit;$('manageBanksDialog').close();openEditor(id);};
+$('manageBanksDialog').addEventListener('cancel',e=>{if(busy)e.preventDefault();});
+
 function fillOpening(){
  const row=openings.find(r=>r.bank_key===$('openingBank').value.trim().toLowerCase());
  if(row||!$('openingAmount').value)$('openingAmount').value=row?(Number(row.amount_cents)/100).toFixed(2).replace('.',','):'';
