@@ -23,6 +23,17 @@ body.aulao-fullscreen-open .player-card{overflow:visible}
 .secure-video-shell.fullscreen-portrait .custom-controls{height:50px}
 .secure-video-shell.fullscreen-portrait .yt-stage,.secure-video-shell.fullscreen-portrait .video-shield{inset:0 0 50px 0}
 .secure-video-shell.fullscreen-portrait iframe{inset:0 0 50px 0!important;height:calc(100% - 50px)!important}
+
+/* Readable pasted descriptions, with native emoji font fallbacks. */
+.aulao-description{font-family:Poppins,-apple-system,BlinkMacSystemFont,"Segoe UI","Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-size:14px;line-height:1.8;color:#d5deeb;overflow-wrap:anywhere;word-break:normal}
+.aulao-description p{margin:0 0 1em}
+.aulao-description h3{font-size:1.12em;line-height:1.5;color:#f0f7ff;margin:1.3em 0 .6em}
+.aulao-description strong{font-weight:700;color:#f0f7ff}
+.aulao-description ul,.aulao-description ol{padding-left:1.5em;margin:.5em 0 1.2em}
+.aulao-description li{padding-left:.15em;margin:.45em 0}
+.aulao-description>:first-child{margin-top:0}
+.aulao-description>:last-child{margin-bottom:0}
+@media(max-width:620px){.aulao-description{font-size:13px;line-height:1.8}}
 </style>
 </head>
 <body>
@@ -60,7 +71,7 @@ body.aulao-fullscreen-open .player-card{overflow:visible}
       <div class="info-card">
         <div class="info-kicker" id="currentPartLabel">PARTE 01</div>
         <div class="info-title" id="currentPartTitle">Carregando aula…</div>
-        <div class="info-desc" id="aulaoDescription"></div>
+        <div class="info-desc aulao-description" id="aulaoDescription"></div>
         <div class="teacher-row"><div class="teacher-icon">🩺</div><div><div class="teacher-label">Ministrado por</div><div class="teacher-name" id="teacherName">Professor(a)</div></div></div>
       </div>
       <div class="rating-card" id="ratingCard">
@@ -88,6 +99,25 @@ body.aulao-fullscreen-open .player-card{overflow:visible}
 <script>
 (function(){
 "use strict";
+function formatAulaoDescription(value){
+  function inline(text){
+    return String(text).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")
+      .replace(/\*\*([^*\n]+)\*\*/g,"<strong>$1</strong>")
+      .replace(/(^|[\s(])\*([^*\n]+)\*(?=$|[\s).,;:!?])/g,"$1<em>$2</em>");
+  }
+  var lines=String(value||"").replace(/\r\n?/g,"\n").split("\n"),out=[],paragraph=[],list=null;
+  function flushParagraph(){if(paragraph.length){out.push("<p>"+paragraph.map(inline).join("<br>")+"</p>");paragraph=[];}}
+  function closeList(){if(list){out.push("</"+list+">");list=null;}}
+  lines.forEach(function(line){
+    line=line.trim();
+    if(!line){flushParagraph();closeList();return;}
+    var heading=line.match(/^#{1,6}\s+(.+)$/),bullet=line.match(/^(?:[-*•]\s+)(.+)$/),number=line.match(/^\d+[.)]\s+(.+)$/);
+    if(heading){flushParagraph();closeList();out.push('<h3>'+inline(heading[1])+'</h3>');return;}
+    if(bullet||number){flushParagraph();var kind=number?"ol":"ul";if(list!==kind){closeList();out.push("<"+kind+">");list=kind;}out.push("<li>"+inline((bullet||number)[1])+"</li>");return;}
+    closeList();paragraph.push(line);
+  });
+  flushParagraph();closeList();return out.join("");
+}
 function esc(v){return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;")}
 function contentLanguageText(code){return code==="es"?"Contenido en español":"Conteúdo em Português"}
 function deny(msg){var g=document.getElementById("gate");g.innerHTML='<div class="gatebox"><div style="font-size:34px">🔒</div><h2>Acesso não liberado</h2><p>'+esc(msg)+'</p><a class="gatebtn" href="dashboard.html">Voltar à página inicial</a></div>';document.documentElement.style.visibility="visible"}
@@ -165,7 +195,7 @@ function getWatched(v){var p=getProgress(v.id);return Number(p.watched_seconds||
 function partPercent(v){var d=getDuration(v),w=getWatched(v);if(getProgress(v.id).completed)return 100;if(!d)return 0;return clamp((w/d)*100,0,100)}
 function updatePlaylist(){var list=document.getElementById("partList");list.innerHTML=videos.map(function(v,i){var p=getProgress(v.id),d=getDuration(v),w=Math.min(getWatched(v),d||getWatched(v)),pct=partPercent(v),state="Não iniciada",time="";if(p.completed){state="✓ Assistida";time=d?fmtTime(d):"Concluída"}else if(w>1){state="Em andamento";time=d?"Faltam "+fmtRemaining(Math.max(0,d-w)):"Continue de onde parou"}else if(d){state="Faltam "+fmtRemaining(d);time=fmtTime(d)}return '<button type="button" class="part-item '+(i===currentIndex?'active ':'')+(p.completed?'done':'')+'" data-part-index="'+i+'"><div class="part-top"><span class="part-num">Parte '+String(v.ordem||i+1).padStart(2,"0")+'</span><span class="part-state">'+esc(state)+'</span></div><div class="part-title">'+esc(v.titulo||("Parte "+(i+1)))+'</div><div class="part-progress-track"><div class="part-progress-fill" style="width:'+pct.toFixed(1)+'%"></div></div><div class="part-time">'+esc(time)+'</div></button>'}).join("");list.querySelectorAll("[data-part-index]").forEach(function(b){b.addEventListener("click",function(){switchPart(Number(b.dataset.partIndex))})});document.getElementById("playlistSub").textContent=videos.length+" parte"+(videos.length===1?"":"s")+" neste aulão"}
 function updateCourseProgress(){if(!videos.length)return;var knownDur=0,watched=0,complete=0;videos.forEach(function(v){var d=getDuration(v),p=getProgress(v.id),w=getWatched(v);if(p.completed)complete++;if(d>0){knownDur+=d;watched+=p.completed?d:Math.min(w,d)}});var pct=knownDur>0?clamp((watched/knownDur)*100,0,100):(videos.length?complete/videos.length*100:0);document.getElementById("courseProgressFill").style.width=pct.toFixed(1)+"%";document.getElementById("courseProgressLabel").textContent=Math.round(pct)+"% concluído · "+complete+" de "+videos.length+" partes assistidas";document.getElementById("courseProgress").style.display="block"}
-function updateCurrentInfo(){var v=currentVideo();if(!v)return;document.getElementById("currentPartLabel").textContent="PARTE "+String(v.ordem||currentIndex+1).padStart(2,"0")+" DE "+String(videos.length).padStart(2,"0");document.getElementById("currentPartTitle").textContent=v.titulo||("Parte "+(currentIndex+1));document.getElementById("aulaoDescription").textContent=aulao.descricao||"Aula em vídeo";document.getElementById("teacherName").textContent=displayMeta.professor_nome||"Professor(a)"}
+function updateCurrentInfo(){var v=currentVideo();if(!v)return;document.getElementById("currentPartLabel").textContent="PARTE "+String(v.ordem||currentIndex+1).padStart(2,"0")+" DE "+String(videos.length).padStart(2,"0");document.getElementById("currentPartTitle").textContent=v.titulo||("Parte "+(currentIndex+1));document.getElementById("aulaoDescription").innerHTML=formatAulaoDescription(aulao.descricao||"Aula em vídeo");document.getElementById("teacherName").textContent=displayMeta.professor_nome||"Professor(a)"}
 function renderAllProgress(){updatePlaylist();updateCourseProgress();updateCurrentInfo();updateRatingVisibility()}
 
 async function saveCurrentProgress(forceCompleted){var v=currentVideo();if(!v||!mainPlayerReady)return;try{var t=Number(mainPlayer.getCurrentTime()||0),d=Number(mainPlayer.getDuration()||getDuration(v)||0),prev=getProgress(v.id),watched=Math.max(Number(prev.watched_seconds||0),Math.floor(t)),completed=!!forceCompleted||!!prev.completed||(d>0&&t>=d*.95);durations[v.id]=d||durations[v.id]||0;progress[v.id]={watched_seconds:watched,duration_seconds:Math.floor(d||0),completed:completed};await client.from("aulao_video_progress").upsert({user_id:session.user.id,aulao_id:aulao.id,video_id:v.id,watched_seconds:watched,duration_seconds:Math.floor(d||0),completed:completed,updated_at:new Date().toISOString()},{onConflict:"user_id,video_id"});renderAllProgress()}catch(e){console.warn("[aulao] progresso:",e)}}
