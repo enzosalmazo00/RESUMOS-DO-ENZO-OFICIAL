@@ -111,7 +111,14 @@ function filtered(){
 function render(){
   document.getElementById("btnPlatform").classList.toggle("active",category==="platform");
   document.getElementById("btnDoctors").classList.toggle("active",category==="doctors");
-  var list=filtered().sort(function(a,b){return Number(isFreeAulao(b))-Number(isFreeAulao(a))}),grid=document.getElementById("grid");
+  var microP2Order=[
+    "aulao-aulao-micro-2-parte-1-protozoarios",
+    "aulao-aulao-micro-2-parte-2-nematelmintos",
+    "aulao-aulao-micro-2-parte-3-cestodeos",
+    "aulao-aulao-micro-2-parte-4-fungos"
+  ];
+  function courseOrder(a){var index=microP2Order.indexOf(a.chave);return index<0?microP2Order.length:index;}
+  var list=filtered().sort(function(a,b){return courseOrder(a)-courseOrder(b)}),grid=document.getElementById("grid");
   document.getElementById("resultCount").textContent=list.length+" aula"+(list.length===1?"":"s")+" disponível"+(list.length===1?"":"eis");
   if(!list.length){grid.innerHTML='<div class="empty">Nenhuma aula encontrada nesta área.</div>';return}
   grid.innerHTML=list.map(function(a){var p=prof(a),owned=hasAccess(a);return '<article class="card '+(isFreeAulao(a)?'free-access':'')+'" tabindex="0" data-key="'+esc(a.chave)+'">'+
