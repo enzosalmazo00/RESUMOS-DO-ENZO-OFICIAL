@@ -16,6 +16,8 @@
 /* Landscape player even when the device keeps its portrait orientation. */
 .player-fullscreen-stage{display:block;position:absolute;inset:0;width:100%;height:100%}
 body.aulao-fullscreen-open{overflow:hidden}
+body.aulao-fullscreen-open .player-card{overflow:visible}
+
 .secure-video-shell.fullscreen-fallback{position:fixed!important;inset:0!important;width:var(--fullscreen-width,100vw)!important;height:var(--fullscreen-height,100vh)!important;aspect-ratio:auto!important;border-radius:0!important;z-index:10001}
 .secure-video-shell.fullscreen-portrait .player-fullscreen-stage{display:block;position:absolute;inset:auto;left:50%;top:50%;width:var(--landscape-width);height:var(--landscape-height);transform:translate(-50%,-50%) rotate(90deg);background:#000}
 .secure-video-shell.fullscreen-portrait .custom-controls{height:50px}
@@ -102,7 +104,7 @@ function ensureYouTubeApi(){if(ytReady){onYouTubeReady();return}if(ytLoading)ret
 window.onYouTubeIframeAPIReady=function(){ytReady=true;onYouTubeReady()};
 function onYouTubeReady(){if(!videos.length)return;initDurationProbes();initMainPlayer()}
 function setPlayVisual(playing){playBtn.textContent=playing?"❚❚":"▶";playBtn.setAttribute("aria-label",playing?"Pausar":"Reproduzir");centerPlay.textContent=playing?"❚❚":"▶";centerPlay.classList.toggle("playing",playing)}
-var fullscreenHome=null,fullscreenNativeSeen=false;
+var fullscreenNativeSeen=false;
 function nativeFullscreen(){return document.fullscreenElement===shell||document.webkitFullscreenElement===shell}
 function isFullscreen(){return nativeFullscreen()||shell.classList.contains("fullscreen-fallback")}
 function updateFullscreenVisual(){
@@ -122,8 +124,7 @@ function updateFullscreenVisual(){
 }
 function restoreFullscreenPlayer(){
   shell.classList.remove("fullscreen-fallback","fullscreen-portrait");
-  if(fullscreenHome&&fullscreenHome.parentNode){fullscreenHome.parentNode.insertBefore(shell,fullscreenHome);fullscreenHome.remove();}
-  fullscreenHome=null;fullscreenNativeSeen=false;
+  fullscreenNativeSeen=false;
   updateFullscreenVisual();
 }
 function toggleFullscreen(){
@@ -135,10 +136,6 @@ function toggleFullscreen(){
     return;
   }
   // Expand immediately: native APIs can exist without actually entering fullscreen.
-  fullscreenHome=document.createElement("div");
-  fullscreenHome.style.height=shell.getBoundingClientRect().height+"px";
-  shell.parentNode.insertBefore(fullscreenHome,shell);
-  document.body.appendChild(shell);
   shell.classList.add("fullscreen-fallback");
   updateFullscreenVisual();
   var enter=shell.requestFullscreen||shell.webkitRequestFullscreen;
