@@ -1213,6 +1213,12 @@
       </div>
     </div>
 
+    <a id="freeAulaoBanner" href="aulao.html?key=aulao-aulao-micro-2-parte-1-protozoarios" style="display:none;margin-bottom:16px;padding:18px;border:1px solid #22d3ee;border-radius:16px;background:linear-gradient(135deg,#073246,#192344);color:#fff;text-decoration:none;line-height:1.7;">
+      <strong style="display:block;color:#67e8f9;font-size:17px;">🎁 Micro P2 — Parte 1 GRATUITA</strong>
+      <span style="display:block;font-size:13px;">Protozoários: conheça nossos aulões e comece a revisão sem pagar.</span>
+      <strong style="display:block;margin-top:8px;">▶ Assistir gratuitamente →</strong>
+    </a>
+
     <!-- BANNER ENZO IA -->
     <div onclick="if(typeof ezToggle==='function'){ezToggle();}else{var f=document.getElementById('ez-fab');if(f)f.click();}" style="
       display:flex; align-items:center; gap:14px;
@@ -2021,7 +2027,9 @@ function restoreStoreCategory(){
 }
 
 // ── Aulões gravados ──────────────────────────────────────────────────────────
+function isFreeAulao(a){return !!a && a.chave==="aulao-aulao-micro-2-parte-1-protozoarios" && a.publicado===true && a.origem==="enzo" && Number(a.preco)===0;}
 function hasAulaoAccess(key) {
+  if (AULOES.some(function(a){return a.chave===key && isFreeAulao(a);})) return true;
   if (profile && profile.is_admin) return true;
   var acesso = acessosCache[key];
   if (!acesso) return false;
@@ -2039,6 +2047,7 @@ async function loadAuloes() {
     }
     if (r.error) throw r.error;
     AULOES = r.data || [];
+    document.getElementById("freeAulaoBanner").style.display = AULOES.some(isFreeAulao) ? "block" : "none";
 
     AULAO_RATINGS = {};
     try {
@@ -2100,13 +2109,13 @@ function renderAuloesGrid() {
       var card = document.createElement("div");
       card.className = "aulao-card " + (unlocked ? "unlocked" : "locked");
 
-      var statusLabel = unlocked
+      var statusLabel = isFreeAulao(a) ? '<span class="aulao-status ready">🎁 Aula gratuita</span>' : unlocked
         ? '<span class="aulao-status ready">✓ Acesso liberado</span>'
         : sellable
           ? '<span class="aulao-status setup">🔒 Acesso individual</span>'
           : '<span class="aulao-status setup">🎬 Em produção</span>';
 
-      var buttonLabel = unlocked ? "▶ Assistir agora" : sellable ? "🛒 Comprar acesso" : "Venda em breve";
+      var buttonLabel = isFreeAulao(a) ? "▶ Assistir gratuitamente" : unlocked ? "▶ Assistir agora" : sellable ? "🛒 Comprar acesso" : "Venda em breve";
       var capa = a.capa_url ? '<img class="aulao-cover-img" src="'+a.capa_url+'" alt="">' : '';
       var presentesAulao=(profile&&Array.isArray(profile.resumos_presente))?profile.resumos_presente:[];
       var ehPresenteAulao=unlocked&&presentesAulao.indexOf(a.chave)>=0;
@@ -2118,7 +2127,7 @@ function renderAuloesGrid() {
         '<div class="aulao-title">'+a.nome+'</div>'+
         '<div style="font-size:10px;margin:2px 0 7px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;">'+aulaoRatingSummary(a)+'</div>'+
         '<div class="aulao-desc">'+(a.descricao||"Aula em vídeo")+'</div>'+
-        '<div class="aulao-meta"><span>📚 '+a.semestre+'º semestre</span><span>📅 '+(a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+'</span>'+(a.usar_turmas?'<span>👨‍🏫 Escolha por turma/professor</span>':'')+'</div>'+
+        '<div class="aulao-meta"><span>📚 '+a.semestre+'º semestre</span><span>📅 '+(isFreeAulao(a)?'Acesso gratuito':a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+'</span>'+(a.usar_turmas?'<span>👨‍🏫 Escolha por turma/professor</span>':'')+'</div>'+
         '<button class="aulao-btn" '+(!unlocked && !sellable ? "disabled" : "")+'>'+buttonLabel+'</button>';
 
       var btn = card.querySelector(".aulao-btn");
@@ -2145,7 +2154,7 @@ function renderAulaoStore(){
   var section=document.getElementById("storeAuloesSection");
   var grid=document.getElementById("store-grid-auloes");
   if(!section||!grid)return;
-  var itens=AULOES.filter(function(a){return a.publicado&&a.exibir_loja&&Number(a.preco||0)>0;});
+  var itens=AULOES.filter(function(a){return a.publicado&&a.exibir_loja&&(Number(a.preco||0)>0||isFreeAulao(a));});
   section.style.display="";
   grid.innerHTML="";
   if(!itens.length){
@@ -2169,16 +2178,17 @@ function renderAulaoStore(){
         '<div class="product-badge-row">'+originBadge+'<span class="product-origin-badge neutral">Aula em vídeo</span></div>'+
         '<div class="produto-nome">'+a.nome+'</div>'+
         '<div style="font-size:10px;margin:3px 0 2px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;">'+aulaoRatingSummary(a)+'</div>'+
-        '<div class="produto-sub">'+a.semestre+'º Semestre · '+(a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+(a.usar_turmas?' · por turma/professor':'')+'</div>'+
+        '<div class="produto-sub">'+a.semestre+'º Semestre · '+(isFreeAulao(a)?'Acesso gratuito':a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+(a.usar_turmas?' · por turma/professor':'')+'</div>'+
         '<div class="produto-price-label">Preço final</div>'+
-        '<div class="produto-preco">R$ '+aulaoBuyerPrice(a).toFixed(2).replace(".",",")+'</div>'+
-        '<button class="add-btn '+(owned?'owned':'')+'" '+(owned?'disabled':'onclick="addAulaoToCart(\''+a.chave+'\')"')+'>'+(owned?'✓ Já adquirido':'Adicionar ao carrinho')+'</button>'+
+        '<div class="produto-preco">'+(isFreeAulao(a)?'Grátis':'R$ '+aulaoBuyerPrice(a).toFixed(2).replace(".",","))+'</div>'+
+        (isFreeAulao(a)?'<a class="add-btn" style="display:block;text-align:center;text-decoration:none" href="aulao.html?key='+encodeURIComponent(a.chave)+'">▶ Assistir gratuitamente</a>':'<button class="add-btn '+(owned?'owned':'')+'" '+(owned?'disabled':'onclick="addAulaoToCart(\''+a.chave+'\')"')+'>'+(owned?'✓ Já adquirido':'Adicionar ao carrinho')+'</button>')+
       '</div>';
     grid.appendChild(card);
   });
 }
 window.addAulaoToCart=function(key){
   var a=AULOES.find(function(x){return x.chave===key;}); if(!a)return;
+  if(isFreeAulao(a)){window.location.href="aulao.html?key="+encodeURIComponent(a.chave);return;}
   if(cart.length && !(cart.length===1 && cart[0].key===key)){
     if(!confirm("Aulas em Vídeo são compradas separadamente dos outros produtos. Substituir o carrinho atual por este aulão?"))return;
   }
