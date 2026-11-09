@@ -808,6 +808,7 @@
           <div class="form-label">Imagem de capa</div>
           <input class="form-input" type="file" id="aulaoCapa" accept="image/jpeg,image/png,image/webp" onchange="previewAulaoCapa()">
           <div class="aulao-cover-preview" id="aulaoCapaPreview">Sem imagem</div>
+          <button type="button" class="aulao-mini-btn aulao-danger" onclick="removerCapaAulao()">Remover capa</button>
         </div>
       </div>
 
@@ -2425,9 +2426,14 @@ window.novoAulao=function(){
   document.getElementById("aulaoEditor").scrollIntoView({behavior:"smooth",block:"start"});
 };
 window.fecharEditorAulao=function(){document.getElementById("aulaoEditor").classList.remove("open");};
+window.removerCapaAulao=function(){
+  document.getElementById("aulaoCapa").value="";
+  editorCapaUrl="";
+  renderCapaPreview();
+};
 window.previewAulaoCapa=function(){
   var f=document.getElementById("aulaoCapa").files[0]; if(!f){renderCapaPreview();return;}
-  var rd=new FileReader(); rd.onload=function(e){var p=document.getElementById("aulaoCapaPreview");p.style.backgroundImage="url('"+e.target.result+"')";p.textContent="";};rd.readAsDataURL(f);
+  var rd=new FileReader(); rd.onload=function(e){if(document.getElementById("aulaoCapa").files[0]!==f)return;var p=document.getElementById("aulaoCapaPreview");p.style.backgroundImage="url('"+e.target.result+"')";p.textContent="";};rd.readAsDataURL(f);
 };
 function renderCapaPreview(){var p=document.getElementById("aulaoCapaPreview");p.style.backgroundImage=editorCapaUrl?"url('"+editorCapaUrl+"')":"";p.textContent=editorCapaUrl?"":"Sem imagem";}
 window.toggleTurmasEditor=function(){document.getElementById("turmasBox").style.display=document.getElementById("aulaoUsarTurmas").checked?"block":"none";renderVideosRows();};
