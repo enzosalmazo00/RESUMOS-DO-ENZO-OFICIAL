@@ -1213,7 +1213,7 @@
       </div>
     </div>
 
-    <a id="freeAulaoBanner" href="aulao.html?key=aulao-aulao-micro-2-parte-1-protozoarios" style="display:none;margin-bottom:16px;padding:18px;border:1px solid #22d3ee;border-radius:16px;background:linear-gradient(135deg,#073246,#192344);color:#fff;text-decoration:none;line-height:1.7;">
+    <a id="freeAulaoBanner" href="aulao.html?v=seek-icons-2&key=aulao-aulao-micro-2-parte-1-protozoarios" style="display:none;margin-bottom:16px;padding:18px;border:1px solid #22d3ee;border-radius:16px;background:linear-gradient(135deg,#073246,#192344);color:#fff;text-decoration:none;line-height:1.7;">
       <strong style="display:block;color:#67e8f9;font-size:17px;">🎁 Micro P2 — Parte 1 GRATUITA</strong>
       <span style="display:block;font-size:13px;">Protozoários: conheça nossos aulões e comece a revisão sem pagar.</span>
       <strong style="display:block;margin-top:8px;">▶ Assistir gratuitamente →</strong>
@@ -2132,8 +2132,8 @@ function renderAuloesGrid() {
 
       var btn = card.querySelector(".aulao-btn");
       if (unlocked) {
-        btn.addEventListener("click", function(ev){ev.stopPropagation();window.location.href="aulao.html?key="+encodeURIComponent(a.chave);});
-        card.addEventListener("click", function(){window.location.href="aulao.html?key="+encodeURIComponent(a.chave);});
+        btn.addEventListener("click", function(ev){ev.stopPropagation();window.location.href="aulao.html?v=seek-icons-2&key="+encodeURIComponent(a.chave);});
+        card.addEventListener("click", function(){window.location.href="aulao.html?v=seek-icons-2&key="+encodeURIComponent(a.chave);});
       } else if (sellable) {
         btn.addEventListener("click", function(ev){ev.stopPropagation();switchTab("loja");setTimeout(function(){var el=document.querySelector('[data-aulao-store="'+a.chave+'"]');if(el)el.scrollIntoView({behavior:"smooth",block:"center"});},100);});
       }
@@ -2181,14 +2181,14 @@ function renderAulaoStore(){
         '<div class="produto-sub">'+a.semestre+'º Semestre · '+(isFreeAulao(a)?'Acesso gratuito':a.dias_acesso?a.dias_acesso+' dias':'acesso permanente')+(a.usar_turmas?' · por turma/professor':'')+'</div>'+
         '<div class="produto-price-label">Preço final</div>'+
         '<div class="produto-preco">'+(isFreeAulao(a)?'Grátis':'R$ '+aulaoBuyerPrice(a).toFixed(2).replace(".",","))+'</div>'+
-        (isFreeAulao(a)?'<a class="add-btn" style="display:block;text-align:center;text-decoration:none" href="aulao.html?key='+encodeURIComponent(a.chave)+'">▶ Assistir gratuitamente</a>':'<button class="add-btn '+(owned?'owned':'')+'" '+(owned?'disabled':'onclick="addAulaoToCart(\''+a.chave+'\')"')+'>'+(owned?'✓ Já adquirido':'Adicionar ao carrinho')+'</button>')+
+        (isFreeAulao(a)?'<a class="add-btn" style="display:block;text-align:center;text-decoration:none" href="aulao.html?v=seek-icons-2&key='+encodeURIComponent(a.chave)+'">▶ Assistir gratuitamente</a>':'<button class="add-btn '+(owned?'owned':'')+'" '+(owned?'disabled':'onclick="addAulaoToCart(\''+a.chave+'\')"')+'>'+(owned?'✓ Já adquirido':'Adicionar ao carrinho')+'</button>')+
       '</div>';
     grid.appendChild(card);
   });
 }
 window.addAulaoToCart=function(key){
   var a=AULOES.find(function(x){return x.chave===key;}); if(!a)return;
-  if(isFreeAulao(a)){window.location.href="aulao.html?key="+encodeURIComponent(a.chave);return;}
+  if(isFreeAulao(a)){window.location.href="aulao.html?v=seek-icons-2&key="+encodeURIComponent(a.chave);return;}
   if(cart.length && !(cart.length===1 && cart[0].key===key)){
     if(!confirm("Aulas em Vídeo são compradas separadamente dos outros produtos. Substituir o carrinho atual por este aulão?"))return;
   }

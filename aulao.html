@@ -44,6 +44,14 @@ body.aulao-fullscreen-open .player-card{overflow:visible}
 .secure-video-shell:fullscreen .skip-zone,.secure-video-shell:-webkit-full-screen .skip-zone{bottom:54px}
 .secure-video-shell.fullscreen-portrait .skip-zone{bottom:50px}
 .player-seek-hint{margin:9px 4px 2px;color:#cbd5e1;font-size:11px;line-height:1.6;text-align:center}
+
+/* Always-visible ten-second controls, including iPad fullscreen. */
+.seek-icon{display:block;width:40px;height:40px;pointer-events:none}
+.seek-icon.reverse path{transform:translateX(40px) scaleX(-1)}
+.skip-zone span{display:flex;align-items:center;justify-content:center;opacity:1;width:68px;height:68px;padding:12px;border:2px solid rgba(255,255,255,.8);border-radius:50%;background:rgba(0,0,0,.68);box-shadow:0 2px 12px rgba(0,0,0,.35)}
+.seek-control{flex-shrink:0;width:34px;height:34px}
+.seek-control .seek-icon{width:30px;height:30px}
+@media(max-width:620px){.skip-zone span{width:52px;height:52px;padding:8px}.skip-zone .seek-icon{width:34px;height:34px}.custom-controls{gap:2px;padding:0 4px}.seek-control{width:28px}.seek-control .seek-icon{width:26px;height:26px}.video-time{font-size:7px}.video-progress{min-width:30px}}
 </style>
 </head>
 <body>
@@ -63,14 +71,16 @@ body.aulao-fullscreen-open .player-card{overflow:visible}
           <div class="player-fullscreen-stage">
           <div class="yt-stage" id="mainStageWrap"><div id="mainPlayerStage"></div></div>
           <button class="video-shield" id="videoShield" type="button" aria-label="Reproduzir ou pausar"></button>
-          <button class="skip-zone back" id="skipBack" type="button" aria-label="Voltar 10 segundos. Mantenha pressionado para continuar voltando."><span>↶ 10 s</span></button>
-          <button class="skip-zone forward" id="skipForward" type="button" aria-label="Avançar 10 segundos. Mantenha pressionado para continuar avançando."><span>10 s ↷</span></button>
+          <button class="skip-zone back" id="skipBack" type="button" aria-label="Voltar 10 segundos. Mantenha pressionado para continuar voltando."><span><svg class="seek-icon reverse" viewBox="0 0 40 40" aria-hidden="true"><path d="M30 10a14 14 0 1 0 4 16M30 3v8H22" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><text x="20" y="25" text-anchor="middle" fill="currentColor" font-size="15" font-weight="800">10</text></svg></span></button>
+          <button class="skip-zone forward" id="skipForward" type="button" aria-label="Avançar 10 segundos. Mantenha pressionado para continuar avançando."><span><svg class="seek-icon" viewBox="0 0 40 40" aria-hidden="true"><path d="M30 10a14 14 0 1 0 4 16M30 3v8H22" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><text x="20" y="25" text-anchor="middle" fill="currentColor" font-size="15" font-weight="800">10</text></svg></span></button>
           <div class="seek-feedback" id="seekFeedback" role="status" aria-live="polite" aria-atomic="true"></div>
           <div class="video-watermark">Conteúdo protegido · uso individual</div>
           <div class="screen-record-watermark" id="screenWatermark">USO INDIVIDUAL</div>
           <div class="video-center-icon" id="centerPlay">▶</div>
           <div class="custom-controls">
             <button class="ctrl-btn" id="playBtn" type="button" aria-label="Reproduzir">▶</button>
+            <button class="ctrl-btn seek-control" id="skipBackControl" type="button" aria-label="Voltar 10 segundos" title="Voltar 10 segundos"><svg class="seek-icon reverse" viewBox="0 0 40 40" aria-hidden="true"><path d="M30 10a14 14 0 1 0 4 16M30 3v8H22" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><text x="20" y="25" text-anchor="middle" fill="currentColor" font-size="15" font-weight="800">10</text></svg></button>
+            <button class="ctrl-btn seek-control" id="skipForwardControl" type="button" aria-label="Avançar 10 segundos" title="Avançar 10 segundos"><svg class="seek-icon" viewBox="0 0 40 40" aria-hidden="true"><path d="M30 10a14 14 0 1 0 4 16M30 3v8H22" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><text x="20" y="25" text-anchor="middle" fill="currentColor" font-size="15" font-weight="800">10</text></svg></button>
             <input class="video-progress" id="seekBar" type="range" min="0" max="1000" value="0" aria-label="Progresso do vídeo">
             <div class="video-time" id="videoTime">0:00 / 0:00</div>
             <button class="ctrl-btn" id="muteBtn" type="button" aria-label="Silenciar">🔊</button>
@@ -318,6 +328,7 @@ function bindSeekZone(id,seconds){
   button.addEventListener("dblclick",function(ev){ev.preventDefault();ev.stopPropagation();});
 }
 bindSeekZone("skipBack",-10);bindSeekZone("skipForward",10);
+bindSeekZone("skipBackControl",-10);bindSeekZone("skipForwardControl",10);
 document.addEventListener("keydown",function(ev){
   if(ev.key!=="ArrowLeft"&&ev.key!=="ArrowRight")return;
   var target=ev.target;
