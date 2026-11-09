@@ -34,6 +34,16 @@ body.aulao-fullscreen-open .player-card{overflow:visible}
 .aulao-description>:first-child{margin-top:0}
 .aulao-description>:last-child{margin-bottom:0}
 @media(max-width:620px){.aulao-description{font-size:13px;line-height:1.8}}
+
+.skip-zone{position:absolute;top:0;bottom:50px;width:32%;z-index:8;border:0;background:transparent;color:#fff;cursor:pointer;touch-action:none;-webkit-touch-callout:none;display:flex;align-items:center;justify-content:center}
+.skip-zone.back{left:0}.skip-zone.forward{right:0}
+.skip-zone span{background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.25);border-radius:30px;padding:8px 12px;font:700 13px Poppins,sans-serif;opacity:.65;pointer-events:none}
+.skip-zone:hover span,.skip-zone:focus-visible span{opacity:1}.skip-zone:focus-visible{outline:2px solid #22d3ee;outline-offset:-3px}
+.seek-feedback{position:absolute;top:calc(50% - 25px);transform:translateY(-50%);z-index:9;border-radius:30px;background:rgba(0,0,0,.85);padding:15px 20px;color:white;font:800 24px Poppins,sans-serif;pointer-events:none;opacity:0;transition:opacity .12s}
+.seek-feedback.visible{opacity:1}.seek-feedback.forward{right:6%}.seek-feedback.backward{left:6%}
+.secure-video-shell:fullscreen .skip-zone,.secure-video-shell:-webkit-full-screen .skip-zone{bottom:54px}
+.secure-video-shell.fullscreen-portrait .skip-zone{bottom:50px}
+.player-seek-hint{margin:9px 4px 2px;color:#cbd5e1;font-size:11px;line-height:1.6;text-align:center}
 </style>
 </head>
 <body>
@@ -53,6 +63,9 @@ body.aulao-fullscreen-open .player-card{overflow:visible}
           <div class="player-fullscreen-stage">
           <div class="yt-stage" id="mainStageWrap"><div id="mainPlayerStage"></div></div>
           <button class="video-shield" id="videoShield" type="button" aria-label="Reproduzir ou pausar"></button>
+          <button class="skip-zone back" id="skipBack" type="button" aria-label="Voltar 10 segundos. Mantenha pressionado para continuar voltando."><span>↶ 10 s</span></button>
+          <button class="skip-zone forward" id="skipForward" type="button" aria-label="Avançar 10 segundos. Mantenha pressionado para continuar avançando."><span>10 s ↷</span></button>
+          <div class="seek-feedback" id="seekFeedback" role="status" aria-live="polite" aria-atomic="true"></div>
           <div class="video-watermark">Conteúdo protegido · uso individual</div>
           <div class="screen-record-watermark" id="screenWatermark">USO INDIVIDUAL</div>
           <div class="video-center-icon" id="centerPlay">▶</div>
@@ -68,6 +81,7 @@ body.aulao-fullscreen-open .player-card{overflow:visible}
         </div>
       </div>
       </div>
+      <p class="player-seek-hint">Laterais ou setas ← →: 10 s · Dois toques: 20 s · Segure para continuar · Centro: reproduzir/pausar</p>
       <div class="info-card">
         <div class="info-kicker" id="currentPartLabel">PARTE 01</div>
         <div class="info-title" id="currentPartTitle">Carregando aula…</div>
@@ -242,8 +256,84 @@ function initMainPlayer(){
     }
   });
 }
-function cueCurrentPart(){if(!mainPlayerReady)return;var v=currentVideo();if(!v)return;var p=getProgress(v.id),start=(!p.completed&&Number(p.watched_seconds||0)>3)?Number(p.watched_seconds):0;try{captionsTrack=null;mainPlayer.cueVideoById({videoId:v.youtube_id,startSeconds:start});applyCaptionPreference();setPlayVisual(false);seek.value="0";var d=getDuration(v);timeEl.textContent=fmtTime(start)+" / "+fmtTime(d);updateCurrentInfo();updatePlaylist()}catch(e){console.warn(e)}}
-async function switchPart(idx){idx=clamp(Number(idx)||0,0,Math.max(0,videos.length-1));if(idx===currentIndex&&mainPlayerReady)return;await saveCurrentProgress(false);currentIndex=idx;cueCurrentPart();renderAllProgress();window.scrollTo({top:Math.max(0,shell.getBoundingClientRect().top+window.scrollY-16),behavior:"smooth"})}
+function cueCurrentPart(){stopSeekHold();resetSeekTarget();if(!mainPlayerReady)return;var v=currentVideo();if(!v)return;var p=getProgress(v.id),start=(!p.completed&&Number(p.watched_seconds||0)>3)?Number(p.watched_seconds):0;try{captionsTrack=null;mainPlayer.cueVideoById({videoId:v.youtube_id,startSeconds:start});applyCaptionPreference();setPlayVisual(false);seek.value="0";var d=getDuration(v);timeEl.textContent=fmtTime(start)+" / "+fmtTime(d);updateCurrentInfo();updatePlaylist()}catch(e){console.warn(e)}}
+async function switchPart(idx){stopSeekHold();resetSeekTarget();idx=clamp(Number(idx)||0,0,Math.max(0,videos.length-1));if(idx===currentIndex&&mainPlayerReady)return;await saveCurrentProgress(false);currentIndex=idx;cueCurrentPart();renderAllProgress();window.scrollTo({top:Math.max(0,shell.getBoundingClientRect().top+window.scrollY-16),behavior:"smooth"})}
+// Repeated seeks accumulate even before the iframe reports its new position.
+var seekTarget=null,seekTargetAt=0,seekHoldDelay=null,seekHoldTimer=null,seekHoldSource=null;
+var seekFeedbackTimer=null,seekFeedbackDirection=0,seekFeedbackTotal=0,seekFeedbackAt=0;
+function resetSeekTarget(){seekTarget=null;seekTargetAt=0;}
+function skipVideo(seconds){
+  if(!mainPlayerReady||!mainPlayer)return;
+  try{
+    var duration=Number(mainPlayer.getDuration()),current=Number(mainPlayer.getCurrentTime()),now=Date.now();
+    if(!Number.isFinite(duration)||duration<=0||!Number.isFinite(current))return;
+    var base=seekTarget!==null&&now-seekTargetAt<2000&&Math.abs(current-seekTarget)>1?seekTarget:current;
+    var target=clamp(base+seconds,0,duration);
+    mainPlayer.seekTo(target,true);
+    seekTarget=target;seekTargetAt=now;
+    seek.value=String(Math.round(target/duration*1000));
+    timeEl.textContent=fmtTime(target)+" / "+fmtTime(duration);
+    var direction=seconds>0?1:-1;
+    if(direction!==seekFeedbackDirection||now-seekFeedbackAt>900)seekFeedbackTotal=0;
+    seekFeedbackTotal+=Math.abs(target-base);seekFeedbackAt=now;seekFeedbackDirection=direction;
+    var feedback=document.getElementById("seekFeedback");
+    feedback.textContent=(direction>0?"+":"−")+Math.round(seekFeedbackTotal)+" s";
+    feedback.className="seek-feedback visible "+(direction>0?"forward":"backward");
+    clearTimeout(seekFeedbackTimer);
+    seekFeedbackTimer=setTimeout(function(){feedback.classList.remove("visible");},850);
+  }catch(e){console.warn("[aulao] salto no vídeo:",e);}
+}
+function stopSeekHold(){
+  clearTimeout(seekHoldDelay);clearInterval(seekHoldTimer);
+  seekHoldDelay=null;seekHoldTimer=null;seekHoldSource=null;
+}
+function startSeekHold(seconds,source){
+  stopSeekHold();seekHoldSource=source;skipVideo(seconds);
+  seekHoldDelay=setTimeout(function(){
+    skipVideo(seconds);
+    seekHoldTimer=setInterval(function(){skipVideo(seconds);},300);
+  },450);
+}
+function bindSeekZone(id,seconds){
+  var button=document.getElementById(id),pointerId=null,suppressClickUntil=0;
+  button.addEventListener("pointerdown",function(ev){
+    if(!mainPlayerReady||!ev.isPrimary||ev.button!==0)return;
+    ev.preventDefault();ev.stopPropagation();
+    button.focus({preventScroll:true});pointerId=ev.pointerId;suppressClickUntil=Date.now()+1500;
+    try{button.setPointerCapture(pointerId);}catch(_){}
+    startSeekHold(seconds,"pointer:"+id);
+  });
+  function release(ev){
+    if(pointerId===null||(ev.pointerId!==undefined&&ev.pointerId!==pointerId))return;
+    pointerId=null;suppressClickUntil=Date.now()+1500;
+    if(seekHoldSource==="pointer:"+id)stopSeekHold();
+  }
+  ["pointerup","pointercancel","lostpointercapture"].forEach(function(type){button.addEventListener(type,release);});
+  window.addEventListener("pointerup",release);
+  button.addEventListener("click",function(ev){
+    ev.preventDefault();ev.stopPropagation();
+    // Enter/Space and assistive technology produce a click without pointerdown.
+    if(ev.detail===0&&Date.now()>suppressClickUntil)skipVideo(seconds);
+  });
+  button.addEventListener("dblclick",function(ev){ev.preventDefault();ev.stopPropagation();});
+}
+bindSeekZone("skipBack",-10);bindSeekZone("skipForward",10);
+document.addEventListener("keydown",function(ev){
+  if(ev.key!=="ArrowLeft"&&ev.key!=="ArrowRight")return;
+  var target=ev.target;
+  if(!mainPlayerReady||document.hidden||ev.altKey||ev.ctrlKey||ev.metaKey||ev.shiftKey)return;
+  if(target&&target!==seek&&(target.isContentEditable||target.closest("input,textarea,select,[role='textbox']")))return;
+  if(target&&target.closest("button,a")&&!shell.contains(target))return;
+  ev.preventDefault();
+  var source="key:"+ev.key;
+  if(seekHoldSource!==source&&!ev.repeat)startSeekHold(ev.key==="ArrowRight"?10:-10,source);
+});
+document.addEventListener("keyup",function(ev){if(seekHoldSource==="key:"+ev.key){ev.preventDefault();stopSeekHold();}});
+window.addEventListener("blur",stopSeekHold);
+document.addEventListener("visibilitychange",function(){if(document.hidden)stopSeekHold();});
+seek.addEventListener("pointerdown",function(){stopSeekHold();resetSeekTarget();});
+seek.addEventListener("input",resetSeekTarget);
+
 function togglePlay(){if(!mainPlayerReady)return;try{var s=mainPlayer.getPlayerState();if(s===YT.PlayerState.PLAYING)mainPlayer.pauseVideo();else mainPlayer.playVideo()}catch(_){}}
 playBtn.addEventListener("click",togglePlay);document.getElementById("videoShield").addEventListener("click",togglePlay);document.getElementById("videoShield").addEventListener("dblclick",toggleFullscreen);fullBtn.addEventListener("click",toggleFullscreen);muteBtn.addEventListener("click",function(){if(!mainPlayerReady)return;try{if(mainPlayer.isMuted()||mainPlayer.getVolume()===0){mainPlayer.unMute();var v=Number(volumeBar.dataset.last||70);mainPlayer.setVolume(v);volumeBar.value=String(v);muteBtn.textContent=v<50?"🔉":"🔊"}else{volumeBar.dataset.last=String(mainPlayer.getVolume()||70);mainPlayer.mute();volumeBar.value="0";muteBtn.textContent="🔇"}}catch(_){}});volumeBar.addEventListener("input",function(){if(!mainPlayerReady)return;var n=clamp(Number(volumeBar.value)||0,0,100);try{mainPlayer.setVolume(n);if(n===0)mainPlayer.mute();else mainPlayer.unMute();muteBtn.textContent=n===0?"🔇":(n<50?"🔉":"🔊")}catch(_){}});seek.addEventListener("input",function(){if(!mainPlayerReady)return;try{var d=Number(mainPlayer.getDuration()||0),t=d*Number(seek.value||0)/1000;timeEl.textContent=fmtTime(t)+" / "+fmtTime(d)}catch(_){}});seek.addEventListener("change",function(){if(!mainPlayerReady)return;try{var d=Number(mainPlayer.getDuration()||0);mainPlayer.seekTo(d*Number(seek.value||0)/1000,true)}catch(_){}});var captionsWanted=null,captionsTrack=null,captionsRestorePending=false;
 function updateCaptionButton(){
@@ -304,7 +394,7 @@ document.querySelectorAll(".star-btn").forEach(function(b){b.addEventListener("c
 async function loadMeta(){var r=await client.rpc("get_aulao_display_meta",{p_aulao_id:aulao.id});if(!r.error&&r.data&&r.data[0])displayMeta=r.data[0];var own=await client.from("aulao_ratings").select("rating").eq("user_id",session.user.id).eq("aulao_id",aulao.id).maybeSingle();if(!own.error&&own.data)myRating=Number(own.data.rating||0)}
 async function loadProgress(){var r=await client.from("aulao_video_progress").select("video_id,watched_seconds,duration_seconds,completed").eq("user_id",session.user.id).eq("aulao_id",aulao.id);if(r.error)return;(r.data||[]).forEach(function(x){progress[x.video_id]={watched_seconds:Number(x.watched_seconds||0),duration_seconds:Number(x.duration_seconds||0),completed:!!x.completed};if(Number(x.duration_seconds||0)>0)durations[x.video_id]=Number(x.duration_seconds)})}
 function renderHero(){document.title=aulao.nome+" — Resumos do Enzo";document.getElementById("hero").innerHTML='<div><div class="eyebrow">'+aulao.semestre+'º semestre'+(aulao.avaliacao?' · '+esc(aulao.avaliacao):'')+'</div><div class="hero-title">🎥 '+esc(aulao.nome)+'</div><div class="hero-meta"><span class="chip">● Acesso autorizado</span><span class="chip">🌐 '+esc(contentLanguageText(aulao.idioma_conteudo||"pt-BR"))+'</span><span class="chip">👨‍🏫 '+esc(displayMeta.professor_nome||"Professor(a)")+'</span></div></div><div class="rating-chip" id="heroRating">★ '+esc(ratingText(displayMeta))+'</div>'}
-async function loadVideos(turmaId){var q=client.from("aulao_videos").select("*").eq("aulao_id",aulao.id).eq("publicado",true).order("ordem");if(aulao.usar_turmas){if(!turmaId){document.getElementById("playerLayout").style.display="none";document.getElementById("courseProgress").style.display="none";var e=document.getElementById("emptyState");e.style.display="block";e.textContent="Escolha sua turma/professor para ver os vídeos.";return}q=q.eq("aulao_turma_id",turmaId)}else q=q.is("aulao_turma_id",null);var vr=await q;videos=vr.data||[];currentIndex=0;progress={};durations={};mainPlayerReady=false;if(mainPlayer){try{mainPlayer.destroy()}catch(_){}mainPlayer=null;var stageWrap=document.getElementById("mainStageWrap");if(stageWrap)stageWrap.innerHTML='<div id="mainPlayerStage"></div>'}Object.keys(durationPlayers).forEach(function(k){try{durationPlayers[k].destroy()}catch(_){}});durationPlayers={};if(!videos.length){document.getElementById("playerLayout").style.display="none";var e2=document.getElementById("emptyState");e2.style.display="block";e2.textContent="Nenhum vídeo publicado para esta opção ainda.";return}document.getElementById("emptyState").style.display="none";await loadProgress();document.getElementById("playerLayout").style.display="grid";renderAllProgress();ensureYouTubeApi()}
+async function loadVideos(turmaId){stopSeekHold();resetSeekTarget();var q=client.from("aulao_videos").select("*").eq("aulao_id",aulao.id).eq("publicado",true).order("ordem");if(aulao.usar_turmas){if(!turmaId){document.getElementById("playerLayout").style.display="none";document.getElementById("courseProgress").style.display="none";var e=document.getElementById("emptyState");e.style.display="block";e.textContent="Escolha sua turma/professor para ver os vídeos.";return}q=q.eq("aulao_turma_id",turmaId)}else q=q.is("aulao_turma_id",null);var vr=await q;videos=vr.data||[];currentIndex=0;progress={};durations={};mainPlayerReady=false;if(mainPlayer){try{mainPlayer.destroy()}catch(_){}mainPlayer=null;var stageWrap=document.getElementById("mainStageWrap");if(stageWrap)stageWrap.innerHTML='<div id="mainPlayerStage"></div>'}Object.keys(durationPlayers).forEach(function(k){try{durationPlayers[k].destroy()}catch(_){}});durationPlayers={};if(!videos.length){document.getElementById("playerLayout").style.display="none";var e2=document.getElementById("emptyState");e2.style.display="block";e2.textContent="Nenhum vídeo publicado para esta opção ainda.";return}document.getElementById("emptyState").style.display="none";await loadProgress();document.getElementById("playerLayout").style.display="grid";renderAllProgress();ensureYouTubeApi()}
 
 document.addEventListener("authReady",async function(e){var key=new URLSearchParams(location.search).get("key");if(!key){deny("Aula em Vídeo não informada.");return}client=window.authClient;session=e.detail.session;try{var ar=await client.rpc("get_aulao_for_viewer",{p_key:key});aulao=(ar.data&&ar.data[0])||null;if(ar.error||!aulao){deny("Esta aula em vídeo não existe ou não está disponível.");return}if(!aulao.viewer_authorized){deny("Esta aula em vídeo é vendida separadamente. Adquira o acesso pela loja.");return}await loadMeta();renderHero();document.getElementById("teacherName").textContent=displayMeta.professor_nome||"Professor(a)";var turmas=[];if(aulao.usar_turmas){var tr=await client.from("aulao_turmas").select("*").eq("aulao_id",aulao.id).eq("ativo",true).order("ordem");turmas=tr.data||[];var box=document.getElementById("turmaSelector"),sel=document.getElementById("turmaSelect");box.style.display="block";sel.innerHTML='<option value="">Selecione sua turma / professor</option>'+turmas.map(function(t){return '<option value="'+t.id+'">'+esc(t.turma)+' — '+esc(t.professor)+'</option>'}).join("");sel.addEventListener("change",function(){loadVideos(sel.value)})}if(!aulao.usar_turmas)await loadVideos(null);else{var em=document.getElementById("emptyState");em.style.display="block";em.textContent="Escolha sua turma/professor acima."}document.getElementById("gate").style.display="none";document.getElementById("content").style.display="block";document.documentElement.style.visibility="visible"}catch(err){console.error(err);deny("Erro ao validar a aula em vídeo. Recarregue a página.")}});
 window.addEventListener("beforeunload",function(){try{saveCurrentProgress(false)}catch(_){}});
