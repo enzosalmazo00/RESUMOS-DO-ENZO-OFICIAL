@@ -427,8 +427,9 @@
 #cursosGridModal::-webkit-scrollbar-thumb{background:#38bdf8;border-radius:10px}
 #cursosGridModal .curso-tile{position:relative;min-width:0}
 #cursosGridModal .resumo-toggle{width:100%;min-width:0;min-height:64px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;overflow-wrap:anywhere;word-break:normal;padding:10px 14px;font-size:11px;line-height:1.45}
-#cursosGridModal .curso-gift-icon{position:absolute;top:-6px;right:-6px;z-index:2;width:21px;height:21px;line-height:19px;font-size:12px;opacity:.85;cursor:pointer;border:1px solid #fbbf24;background:#422006;color:#fcd34d}
-#cursosGridModal .curso-gift-icon:hover,#cursosGridModal .curso-gift-icon.on{opacity:1;background:#854d0e;box-shadow:0 0 9px #f59e0b88}
+#cursosGridModal .curso-gift-icon{position:absolute;top:-6px;right:-6px;z-index:2;width:21px;height:21px;line-height:19px;font-size:12px;opacity:.4;filter:grayscale(1);cursor:pointer;border:1px solid #64748b;background:#192332;color:#94a3b8;box-shadow:none}
+#cursosGridModal .curso-gift-icon:hover{opacity:.75}
+#cursosGridModal .curso-gift-icon.on,#cursosGridModal .curso-gift-icon.on:hover{opacity:1;filter:none;background:#854d0e;border-color:#fbbf24;color:#fcd34d;box-shadow:0 0 9px #f59e0b88}
 @media(max-width:600px){#cursosGridModal{grid-template-columns:repeat(2,minmax(0,1fr));max-height:310px}}
 </style>
 </head>
@@ -2231,7 +2232,7 @@ try{
     var antesC=!!currentCursoOriginal[ck];
     var agoraC=!!currentCursoToggles[ck];
     if(agoraC&&!antesC){
-      var grant=await client.from("acessos").upsert({user_id:currentAluno.id,resumo:ck,expira_em:expiraIso,source:"admin_grant",order_id:null},{onConflict:"user_id,resumo"});if(grant.error)throw grant.error;
+      var grant=await client.from("acessos").upsert({user_id:currentAluno.id,resumo:ck,expira_em:expiraIso,source:"legacy",order_id:null},{onConflict:"user_id,resumo"});if(grant.error)throw grant.error;
     }else if(!agoraC&&antesC){
       await client.from("acessos").delete().match({user_id:currentAluno.id,resumo:ck});
     }else if(agoraC&&antesC){
