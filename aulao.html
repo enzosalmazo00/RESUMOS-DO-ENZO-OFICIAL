@@ -53,9 +53,10 @@ body.aulao-fullscreen-open .player-card{overflow:visible}
 .seek-control .seek-icon{width:30px;height:30px}
 @media(max-width:620px){.skip-zone span{width:52px;height:52px;padding:8px}.skip-zone .seek-icon{width:34px;height:34px}.custom-controls{gap:2px;padding:0 4px}.seek-control{width:28px}.seek-control .seek-icon{width:26px;height:26px}.video-time{font-size:7px}.video-progress{min-width:30px}}
 
-@media (hover:hover) and (pointer:fine){.secure-video-shell:hover .skip-zone span{opacity:1}}
+/* Show seek overlays only during recent interaction; never permanently on hover. */
+.secure-video-shell.seek-ui-active .skip-zone span{opacity:1}
 .skip-zone:focus-visible span{opacity:1}
-@media (hover:none){.skip-zone:hover span{opacity:0}}
+@media (hover:none){.skip-zone:hover span{opacity:0}.secure-video-shell.seek-ui-active .skip-zone span{opacity:1}}
 </style>
 </head>
 <body>
@@ -331,6 +332,21 @@ function bindSeekZone(id,seconds){
   });
   button.addEventListener("dblclick",function(ev){ev.preventDefault();ev.stopPropagation();});
 }
+/* Hide overlay icons after 2s of inactivity, including when cursor stays over the video. */
+(function(){
+  var seekUiTimer=null;
+  function showSeekUi(){
+    shell.classList.add("seek-ui-active");
+    clearTimeout(seekUiTimer);
+    seekUiTimer=setTimeout(function(){shell.classList.remove("seek-ui-active");},2000);
+  }
+  function hideSeekUi(){clearTimeout(seekUiTimer);shell.classList.remove("seek-ui-active");}
+  shell.addEventListener("pointermove",showSeekUi,{passive:true});
+  shell.addEventListener("pointerdown",showSeekUi,{passive:true});
+  shell.addEventListener("pointerleave",hideSeekUi);
+  shell.addEventListener("pointercancel",hideSeekUi);
+  shell.addEventListener("focusout",function(){if(!shell.contains(document.activeElement))hideSeekUi();});
+})();
 bindSeekZone("skipBack",-10);bindSeekZone("skipForward",10);
 bindSeekZone("skipBackControl",-10);bindSeekZone("skipForwardControl",10);
 document.addEventListener("keydown",function(ev){
