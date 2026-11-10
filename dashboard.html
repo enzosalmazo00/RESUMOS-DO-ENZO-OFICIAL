@@ -4652,8 +4652,21 @@ document.getElementById('temporaryPasswordForm').addEventListener('submit',async
  if(password.length<12||password!==confirmation){error.textContent=password.length<12?'A senha precisa ter no mínimo 12 caracteres.':'As senhas não coincidem.';return;}
  button.disabled=true;button.textContent='Salvando...';error.textContent='';
  try{
-  var result=await window.authClient.functions.invoke('complete-temporary-password',{body:{password:password}});
-  if(result.error||!result.data?.ok)throw new Error(result.data?.error||result.error?.message||'Falha na atualização');
+  var current=await window.authClient.auth.getSession();
+  if(!current.data?.session?.access_token)throw new Error('Sua sessão expirou. Saia e entre novamente usando a senha provisória.');
+  var result=await window.authClient.functions.invoke('complete-temporary-password',{
+   body:{password:password},
+   headers:{Authorization:'Bearer '+current.data.session.access_token}
+  });
+  if(result.error||!result.data?.ok){
+   var detail=result.data?.error||'';
+   if(result.error?.context?.json){try{var response=await result.error.context.json();detail=response.error||detail;}catch(_e){}}
+   if(detail==='No pending password change'){
+    location.reload();return;
+   }
+   if(detail==='Unauthorized')throw new Error('Sua sessão não é mais válida. Saia e entre novamente com a senha provisória.');
+   throw new Error(detail||result.error?.message||'Falha na atualização');
+  }
   document.getElementById('temporaryNewPassword').value='';
   document.getElementById('temporaryConfirmPassword').value='';
   location.reload();
