@@ -422,11 +422,11 @@
 
 
 /* Cursos: cartões compactos, ícone de presente sobreposto e rolagem acessível */
-#cursosGridModal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 9px;max-height:360px;overflow-y:auto;overflow-x:hidden;padding:8px 7px 12px;scrollbar-width:thin;scrollbar-color:#38bdf8 #102334}
+#cursosGridModal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 12px;max-height:360px;overflow-y:auto;overflow-x:hidden;padding:12px 9px 14px;scrollbar-width:thin;scrollbar-color:#38bdf8 #102334}
 #cursosGridModal::-webkit-scrollbar{width:9px}
 #cursosGridModal::-webkit-scrollbar-thumb{background:#38bdf8;border-radius:10px}
 #cursosGridModal .curso-tile{position:relative;min-width:0}
-#cursosGridModal .resumo-toggle{width:100%;min-width:0;min-height:52px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;overflow-wrap:anywhere;word-break:normal;padding:9px 12px;font-size:10px;line-height:1.35}
+#cursosGridModal .resumo-toggle{width:100%;min-width:0;min-height:64px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;overflow-wrap:anywhere;word-break:normal;padding:10px 14px;font-size:11px;line-height:1.45}
 #cursosGridModal .curso-gift-icon{position:absolute;top:-6px;right:-6px;z-index:2;width:21px;height:21px;line-height:19px;font-size:12px;opacity:.85;cursor:pointer;border:1px solid #fbbf24;background:#422006;color:#fcd34d}
 #cursosGridModal .curso-gift-icon:hover,#cursosGridModal .curso-gift-icon.on{opacity:1;background:#854d0e;box-shadow:0 0 9px #f59e0b88}
 @media(max-width:600px){#cursosGridModal{grid-template-columns:repeat(2,minmax(0,1fr));max-height:310px}}
@@ -2169,7 +2169,7 @@ function renderCursosGridModal(){
   g.innerHTML=CURSOS_COLS.map(function(c){
     var on=!!currentCursoToggles[c.key],aulao=c.key.indexOf("aulao-")===0;
     var icon=on&&aulao?"<span class='presente-icon curso-gift-icon' role='button' tabindex='0' data-key='"+c.key+"' data-act='markgift' title='Marcar como presente do ADM' aria-label='Marcar como presente do ADM'>🎁</span>":"";
-    return "<div class='curso-tile'><div class='resumo-toggle "+(on?"on":"")+"' data-key='"+c.key+"' data-act='togglecurso'>"+(on?"\\u2705 ":"\\uD83D\\uDD12 ")+c.label+"</div>"+icon+"</div>";
+    return "<div class='curso-tile'><div class='resumo-toggle "+(on?"on":"")+"' data-key='"+c.key+"' data-act='togglecurso'>"+(on?"✅ ":"🔒 ")+c.label+"</div>"+icon+"</div>";
   }).join("");
 }
 window.markAulaoGift=async function(k){
