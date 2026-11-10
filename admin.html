@@ -1164,8 +1164,8 @@ function renderAlunos(list){
     var ei=expInfo(a);var ll=a.last_login?new Date(a.last_login).toLocaleDateString("pt-BR"):"\u2014";
     var adm=a.is_admin?"<span class='badge badge-yellow' style='font-size:9px;margin-left:4px;'>Admin</span>":"";
     var bdg="<span class='badge "+(cnt>0?"badge-green":"badge-red")+"'>"+(cnt>0?cnt+" resumo"+(cnt>1?"s":""):"Nenhum")+"</span>";
-    rows+="<tr><td class='email-cell'>"+(a.email||"\u2014")+adm+"</td><td>"+bdg+"</td><td style='"+ei.css+";font-size:11px;'>"+ei.str+"</td><td class='date-cell'>"+ll+"</td><td><div class='actions-cell'>"+"<button class='action-btn cyan' data-id='"+a.id+"' data-act='edit'>&#9998;&#65039;</button>"+(cnt>0?"<button class='action-btn red' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='revoke'>Revogar</button>":"<button class='action-btn green' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='grant'>Liberar</button>")+"</div></td></tr>";
-    cds+="<div class='aluno-card'><div class='ac-top'><div class='ac-email'>"+(a.email||"\u2014")+adm+"</div><div>"+bdg+"</div></div><div class='ac-meta'>"+(ei.str!=="\u2014"?"<span style='color:"+(ei.color||"rgba(125,211,232,0.5)")+"'>&#8987; "+ei.str+"</span>":"")+"<span>&#128197; "+ll+"</span></div><button class='ac-btn cyan' data-id='"+a.id+"' data-act='edit'>&#9998;&#65039; Editar acesso</button>"+(cnt>0?"<button class='ac-btn red' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='revoke'>&#128683; Revogar</button>":"<button class='ac-btn green' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='grant'>&#9989; Liberar tudo</button>")+"</div>";
+    rows+="<tr><td class='email-cell'>"+(a.email||"\u2014")+adm+"</td><td>"+bdg+"</td><td style='"+ei.css+";font-size:11px;'>"+ei.str+"</td><td class='date-cell'>"+ll+"</td><td><div class='actions-cell'>"+"<button class='action-btn cyan' data-id='"+a.id+"' data-act='edit'>&#9998;&#65039;</button>"+"<button class='action-btn cyan' data-id='"+a.id+"' data-act='password'>🔑 Senha</button>"+(cnt>0?"<button class='action-btn red' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='revoke'>Revogar</button>":"<button class='action-btn green' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='grant'>Liberar</button>")+"</div></td></tr>";
+    cds+="<div class='aluno-card'><div class='ac-top'><div class='ac-email'>"+(a.email||"\u2014")+adm+"</div><div>"+bdg+"</div></div><div class='ac-meta'>"+(ei.str!=="\u2014"?"<span style='color:"+(ei.color||"rgba(125,211,232,0.5)")+"'>&#8987; "+ei.str+"</span>":"")+"<span>&#128197; "+ll+"</span></div><button class='ac-btn cyan' data-id='"+a.id+"' data-act='edit'>&#9998;&#65039; Editar acesso</button><button class='ac-btn cyan' data-id='"+a.id+"' data-act='password'>🔑 Redefinir senha</button>"+(cnt>0?"<button class='ac-btn red' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='revoke'>&#128683; Revogar</button>":"<button class='ac-btn green' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='grant'>&#9989; Liberar tudo</button>")+"</div>";
   });
   tbody.innerHTML=rows;cards.innerHTML=cds;
 }
@@ -2235,7 +2235,7 @@ window.doLogout=async function(){await client.auth.signOut();window.location.rep
 
 // ── EVENT DELEGATION ──
 document.addEventListener("click",function(e){var b=e.target.closest("[data-act]");if(!b)return;var id=b.dataset.id||"",em=b.dataset.email||"",key=b.dataset.key||"",act=b.dataset.act;
-  if(act==="edit")openModal(id);else if(act==="revoke")quickRevoke(id,em);else if(act==="grant")quickGrantAll(id,em);else if(act==="toggle"&&window.toggleResumo)toggleResumo(key);else if(act==="togglecurso"&&window.toggleCurso)toggleCurso(key);else if(act==="presente"&&window.togglePresente)togglePresente(key);else if(act==="cupom-off")toggleCupom(id,false);else if(act==="cupom-on")toggleCupom(id,true);else if(act==="cupom-del")deletarCupom(id,b.dataset.code||"");
+  if(act==="password")openPasswordReset(id);else if(act==="edit")openModal(id);else if(act==="revoke")quickRevoke(id,em);else if(act==="grant")quickGrantAll(id,em);else if(act==="toggle"&&window.toggleResumo)toggleResumo(key);else if(act==="togglecurso"&&window.toggleCurso)toggleCurso(key);else if(act==="presente"&&window.togglePresente)togglePresente(key);else if(act==="cupom-off")toggleCupom(id,false);else if(act==="cupom-on")toggleCupom(id,true);else if(act==="cupom-del")deletarCupom(id,b.dataset.code||"");
 });
 
 // ═══ CUPONS ═══
@@ -2637,6 +2637,56 @@ window.abrirAulaoAdmin=function(chave){window.open("aulao.html?key="+encodeURICo
 
 init();
 })();
+</script>
+
+<!-- Redefinição emergencial de senha -->
+<div id="passwordResetOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:99999;align-items:center;justify-content:center;padding:18px">
+ <div style="width:100%;max-width:440px;background:#061725;border:1px solid #22d3ee;border-radius:18px;padding:24px;color:#fff">
+  <h3 style="margin-bottom:12px">🔑 Redefinição emergencial</h3>
+  <p id="passwordResetEmail" style="overflow-wrap:anywhere;color:#7dd3e8;font-size:13px;margin-bottom:12px"></p>
+  <p style="font-size:12px;margin-bottom:12px;color:#cbd5e1">A nova senha substitui a atual. O aluno deverá trocá-la ao entrar.</p>
+  <input id="passwordResetValue" type="text" autocomplete="off" spellcheck="false" placeholder="Senha provisória (mínimo 12 caracteres)" style="width:100%;padding:12px;background:#102333;border:1px solid #34758a;border-radius:10px;color:white;margin-bottom:12px"/>
+  <button class="btn-outline" onclick="generateEmergencyPassword()">Gerar senha segura</button>
+  <div id="passwordResetMessage" style="font-size:12px;margin:12px 0;color:#fbbf24"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+   <button class="btn-create" id="passwordResetConfirm" onclick="confirmEmergencyPassword()">Confirmar alteração</button>
+   <button class="btn-outline" onclick="closePasswordReset()">Fechar</button>
+  </div>
+ </div>
+</div>
+<script>
+var emergencyTarget=null;
+function openPasswordReset(id){
+ var a=allAlunos.find(function(u){return u.id===id;});
+ if(!a||a.is_admin){alert("Esta operação é exclusiva para contas de alunos.");return;}
+ emergencyTarget=id;
+ document.getElementById("passwordResetEmail").textContent=a.email||id;
+ document.getElementById("passwordResetValue").value="";
+ document.getElementById("passwordResetMessage").textContent="";
+ document.getElementById("passwordResetOverlay").style.display="flex";
+}
+function closePasswordReset(){document.getElementById("passwordResetOverlay").style.display="none";emergencyTarget=null;}
+function generateEmergencyPassword(){
+ var chars="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";
+ var values=new Uint32Array(20);crypto.getRandomValues(values);
+ document.getElementById("passwordResetValue").value=Array.from(values,n=>chars[n%chars.length]).join("");
+}
+async function confirmEmergencyPassword(){
+ if(!emergencyTarget)return;
+ var value=document.getElementById("passwordResetValue").value;
+ var message=document.getElementById("passwordResetMessage");
+ if(value.length<12||value.length>128){message.textContent="Use entre 12 e 128 caracteres.";return;}
+ if(!confirm("Confirma a alteração da senha deste aluno?"))return;
+ var button=document.getElementById("passwordResetConfirm");button.disabled=true;
+ try{
+  var result=await client.functions.invoke("admin-reset-password",{body:{user_id:emergencyTarget,password:value}});
+  if(result.error||!result.data?.ok)throw new Error(result.data?.error||result.error?.message||"Erro na função");
+  message.style.color="#4ade80";
+  message.textContent="Senha alterada. Copie e entregue ao aluno por canal privado. Ela não ficará armazenada neste painel.";
+  button.textContent="Senha alterada";
+ }catch(e){message.style.color="#f87171";message.textContent="Falha: "+e.message;}
+ finally{button.disabled=false;}
+}
 </script>
 </body>
 </html>
