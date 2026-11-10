@@ -2158,9 +2158,20 @@ function renderCursosGridModal(){
   var g=document.getElementById("cursosGridModal");if(!g)return;
   g.innerHTML=CURSOS_COLS.map(function(c){
     var on=currentCursoToggles[c.key];
-    return "<div class='resumo-toggle "+(on?"on":"")+"' data-key='"+c.key+"' data-act='togglecurso'>"+(on?"\u2705 ":"\uD83D\uDD12 ")+c.label+"</div>";
+    return "<div style='display:flex;gap:6px;align-items:center'><div style='flex:1' class='resumo-toggle "+(on?"on":"")+"' data-key='"+c.key+"' data-act='togglecurso'>"+(on?"\u2705 ":"\uD83D\uDD12 ")+c.label+"</div>"+(on&&c.key.indexOf("aulao-")===0?"<button type='button' class='btn-outline' data-key='"+c.key+"' data-act='markgift' title='Identificar este acesso como presente do ADM' style='color:#facc15;border-color:#b45309;white-space:nowrap'>🎁 Presente</button>":"")+"</div>";
   }).join("");
 }
+window.markAulaoGift=async function(k){
+ if(!currentAluno||!currentCursoToggles[k]||k.indexOf("aulao-")!==0)return;
+ if(!confirm("Marcar este acesso como PRESENTE do ADM? Use somente se ele foi realmente concedido gratuitamente."))return;
+ var existing=await client.from("acessos").select("source,expira_em").eq("user_id",currentAluno.id).eq("resumo",k).maybeSingle();
+ if(existing.error){showToast("Falha ao consultar acesso.","error");return;}
+ if(!existing.data){showToast("Acesso não encontrado. Salve a liberação primeiro.","error");return;}
+ if(existing.data.source==="purchase"){showToast("Este acesso está registrado como compra e não pode ser convertido em presente.","error");return;}
+ var result=await client.from("acessos").update({source:"admin_grant"}).eq("user_id",currentAluno.id).eq("resumo",k);
+ if(result.error){showToast("Falha ao marcar presente: "+result.error.message,"error");return;}
+ showToast("🎁 Acesso identificado como presente do ADM!","success");
+};
 window.toggleCurso=function(k){currentCursoToggles[k]=!currentCursoToggles[k];renderCursosGridModal();};
 function renderCursosGrid(){renderCursosGridModal();}
 window.toggleResumo=function(k){currentToggles[k]=!currentToggles[k];renderResumosGrid();};
@@ -2240,7 +2251,7 @@ window.doLogout=async function(){await client.auth.signOut();window.location.rep
 
 // ── EVENT DELEGATION ──
 document.addEventListener("click",function(e){var b=e.target.closest("[data-act]");if(!b)return;var id=b.dataset.id||"",em=b.dataset.email||"",key=b.dataset.key||"",act=b.dataset.act;
-  if(act==="password")openPasswordReset(id);else if(act==="edit")openModal(id);else if(act==="revoke")quickRevoke(id,em);else if(act==="grant")quickGrantAll(id,em);else if(act==="toggle"&&window.toggleResumo)toggleResumo(key);else if(act==="togglecurso"&&window.toggleCurso)toggleCurso(key);else if(act==="presente"&&window.togglePresente)togglePresente(key);else if(act==="cupom-off")toggleCupom(id,false);else if(act==="cupom-on")toggleCupom(id,true);else if(act==="cupom-del")deletarCupom(id,b.dataset.code||"");
+  if(act==="password")openPasswordReset(id);else if(act==="edit")openModal(id);else if(act==="revoke")quickRevoke(id,em);else if(act==="grant")quickGrantAll(id,em);else if(act==="toggle"&&window.toggleResumo)toggleResumo(key);else if(act==="togglecurso"&&window.toggleCurso)toggleCurso(key);else if(act==="markgift"&&window.markAulaoGift)markAulaoGift(key);else if(act==="presente"&&window.togglePresente)togglePresente(key);else if(act==="cupom-off")toggleCupom(id,false);else if(act==="cupom-on")toggleCupom(id,true);else if(act==="cupom-del")deletarCupom(id,b.dataset.code||"");
 });
 
 // ═══ CUPONS ═══
