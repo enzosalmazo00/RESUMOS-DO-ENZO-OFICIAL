@@ -2208,7 +2208,7 @@ try{
     var antesC=!!currentCursoOriginal[ck];
     var agoraC=!!currentCursoToggles[ck];
     if(agoraC&&!antesC){
-      await client.from("acessos").upsert({user_id:currentAluno.id,resumo:ck,expira_em:expiraIso},{onConflict:"user_id,resumo"});
+      var grant=await client.from("acessos").upsert({user_id:currentAluno.id,resumo:ck,expira_em:expiraIso,source:"admin_grant",order_id:null},{onConflict:"user_id,resumo"});if(grant.error)throw grant.error;
     }else if(!agoraC&&antesC){
       await client.from("acessos").delete().match({user_id:currentAluno.id,resumo:ck});
     }else if(agoraC&&antesC){
