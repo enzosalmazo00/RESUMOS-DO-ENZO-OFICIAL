@@ -2640,6 +2640,9 @@ window.excluirAulao=async function(){
 };
 window.abrirAulaoAdmin=function(chave){window.open("aulao.html?key="+encodeURIComponent(chave),"_blank");};
 
+// Expor somente leitura da lista para o diálogo de senha, fora do escopo IIFE.
+window.getAdminStudentsForPasswordReset=function(){return allAlunos.slice();};
+window.adminResetPasswordInvoke=function(payload){return client.functions.invoke('admin-reset-password',{body:payload});};
 init();
 })();
 </script>
@@ -2661,9 +2664,9 @@ init();
 </div>
 <script>
 var emergencyTarget=null;
-function openPasswordResetFromSearch(){var query=(document.getElementById('searchInput').value||'').trim().toLowerCase();var matches=allAlunos.filter(function(a){return !a.is_admin&&a.email&&a.email.toLowerCase().includes(query);});if(!query||matches.length!==1){alert('Digite o e-mail completo do aluno no campo de busca para selecionar uma única conta.');return;}openPasswordReset(matches[0].id);}
+function openPasswordResetFromSearch(){var query=(document.getElementById('searchInput').value||'').trim().toLowerCase();var matches=(window.getAdminStudentsForPasswordReset?window.getAdminStudentsForPasswordReset():[]).filter(function(a){return !a.is_admin&&a.email&&a.email.toLowerCase().includes(query);});if(!query||matches.length!==1){alert('Digite o e-mail completo do aluno no campo de busca para selecionar uma única conta.');return;}openPasswordReset(matches[0].id);}
 function openPasswordReset(id){
- var a=allAlunos.find(function(u){return u.id===id;});
+ var a=(window.getAdminStudentsForPasswordReset?window.getAdminStudentsForPasswordReset():[]).find(function(u){return u.id===id;});
  if(!a||a.is_admin){alert("Esta operação é exclusiva para contas de alunos.");return;}
  emergencyTarget=id;
  document.getElementById("passwordResetEmail").textContent=a.email||id;
@@ -2685,7 +2688,7 @@ async function confirmEmergencyPassword(){
  if(!confirm("Confirma a alteração da senha deste aluno?"))return;
  var button=document.getElementById("passwordResetConfirm");button.disabled=true;
  try{
-  var result=await client.functions.invoke("admin-reset-password",{body:{user_id:emergencyTarget,password:value}});
+  var result=await window.adminResetPasswordInvoke({user_id:emergencyTarget,password:value});
   if(result.error||!result.data?.ok)throw new Error(result.data?.error||result.error?.message||"Erro na função");
   message.style.color="#4ade80";
   message.textContent="Senha alterada. Copie e entregue ao aluno por canal privado. Ela não ficará armazenada neste painel.";
