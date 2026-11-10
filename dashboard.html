@@ -4518,6 +4518,12 @@ document.addEventListener("authReady", async function(e) {
     profile = {};
   }
 
+  // Bloqueio obrigatório para contas com senha provisória definida pelo ADM.
+  if (session.user.app_metadata && session.user.app_metadata.must_change_password === true) {
+    window.showTemporaryPasswordChange();
+    return;
+  }
+
   // Conta de Professor Colaborador
   // A checagem usa RPC no Supabase para não depender da leitura direta da tabela.
   try {
@@ -4613,5 +4619,46 @@ document.addEventListener("authReady", async function(e) {
 
 <script src="enzo-ia.js"></script>
 <script src="mascote-copa.js"></script>
+
+<div id="temporaryPasswordOverlay" role="dialog" aria-modal="true" aria-labelledby="temporaryPasswordTitle" style="display:none;position:fixed;inset:0;z-index:2147483640;background:#06111df5;align-items:center;justify-content:center;padding:18px">
+ <form id="temporaryPasswordForm" style="background:#10263a;border:1px solid #22d3ee;border-radius:18px;padding:26px;max-width:450px;width:100%;color:white;box-shadow:0 10px 40px #0009">
+  <h2 id="temporaryPasswordTitle" style="font-size:22px;margin:0 0 12px">🔐 Redefina sua senha</h2>
+  <p style="font-size:14px;line-height:1.5;margin-bottom:20px">Você entrou com uma senha provisória fornecida pelo administrador. Para proteger sua conta, crie uma nova senha pessoal antes de continuar.</p>
+  <label for="temporaryNewPassword" style="display:block;margin-bottom:6px">Nova senha</label>
+  <input id="temporaryNewPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password" placeholder="Mínimo de 12 caracteres" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #7dd3e8;border-radius:8px;background:#081a2b;color:white;margin-bottom:14px"/>
+  <label for="temporaryConfirmPassword" style="display:block;margin-bottom:6px">Confirmar nova senha</label>
+  <input id="temporaryConfirmPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password" placeholder="Repita a nova senha" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #7dd3e8;border-radius:8px;background:#081a2b;color:white;margin-bottom:14px"/>
+  <p id="temporaryPasswordError" role="alert" style="color:#fda4af;font-size:13px;min-height:18px"></p>
+  <button id="temporaryPasswordSubmit" type="submit" style="width:100%;padding:13px;border:0;border-radius:9px;background:#06b6d4;color:#001827;font-weight:700;cursor:pointer">Salvar nova senha</button>
+  <button type="button" id="temporaryPasswordLogout" style="width:100%;margin-top:12px;background:transparent;border:1px solid #64748b;border-radius:9px;padding:11px;color:white">Sair da conta</button>
+ </form>
+</div>
+<script>
+window.showTemporaryPasswordChange=function(){
+ document.getElementById('temporaryPasswordOverlay').style.display='flex';
+ document.documentElement.style.visibility='visible';
+ document.getElementById('temporaryNewPassword').focus();
+};
+document.getElementById('temporaryPasswordLogout').addEventListener('click',async function(){
+ try{await window.authClient.auth.signOut()}catch(e){}
+ location.replace('login.html');
+});
+document.getElementById('temporaryPasswordForm').addEventListener('submit',async function(event){
+ event.preventDefault();
+ var password=document.getElementById('temporaryNewPassword').value;
+ var confirmation=document.getElementById('temporaryConfirmPassword').value;
+ var error=document.getElementById('temporaryPasswordError');
+ var button=document.getElementById('temporaryPasswordSubmit');
+ if(password.length<12||password!==confirmation){error.textContent=password.length<12?'A senha precisa ter no mínimo 12 caracteres.':'As senhas não coincidem.';return;}
+ button.disabled=true;button.textContent='Salvando...';error.textContent='';
+ try{
+  var result=await window.authClient.functions.invoke('complete-temporary-password',{body:{password:password}});
+  if(result.error||!result.data?.ok)throw new Error(result.data?.error||result.error?.message||'Falha na atualização');
+  document.getElementById('temporaryNewPassword').value='';
+  document.getElementById('temporaryConfirmPassword').value='';
+  location.reload();
+ }catch(e){error.textContent='Não foi possível alterar a senha. '+e.message;button.disabled=false;button.textContent='Salvar nova senha';}
+});
+</script>
 </body>
 </html>
