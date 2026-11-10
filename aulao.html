@@ -38,20 +38,24 @@ body.aulao-fullscreen-open .player-card{overflow:visible}
 .skip-zone{position:absolute;top:0;bottom:50px;width:32%;z-index:8;border:0;background:transparent;color:#fff;cursor:pointer;touch-action:none;-webkit-touch-callout:none;display:flex;align-items:center;justify-content:center}
 .skip-zone.back{left:0}.skip-zone.forward{right:0}
 .skip-zone span{background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.25);border-radius:30px;padding:8px 12px;font:700 13px Poppins,sans-serif;opacity:.65;pointer-events:none}
-.skip-zone:hover span,.skip-zone:focus-visible span{opacity:1}.skip-zone:focus-visible{outline:2px solid #22d3ee;outline-offset:-3px}
+.skip-zone:focus-visible span{opacity:1}.skip-zone:focus-visible{outline:2px solid #22d3ee;outline-offset:-3px}
 .seek-feedback{position:absolute;top:calc(50% - 25px);transform:translateY(-50%);z-index:9;border-radius:30px;background:rgba(0,0,0,.85);padding:15px 20px;color:white;font:800 24px Poppins,sans-serif;pointer-events:none;opacity:0;transition:opacity .12s}
 .seek-feedback.visible{opacity:1}.seek-feedback.forward{right:6%}.seek-feedback.backward{left:6%}
 .secure-video-shell:fullscreen .skip-zone,.secure-video-shell:-webkit-full-screen .skip-zone{bottom:54px}
 .secure-video-shell.fullscreen-portrait .skip-zone{bottom:50px}
 .player-seek-hint{margin:9px 4px 2px;color:#cbd5e1;font-size:11px;line-height:1.6;text-align:center}
 
-/* Always-visible ten-second controls, including iPad fullscreen. */
+/* Side icons appear on mouse hover; transparent touch zones remain active. */
 .seek-icon{display:block;width:40px;height:40px;pointer-events:none}
 .seek-icon.reverse path{transform:translateX(40px) scaleX(-1)}
-.skip-zone span{display:flex;align-items:center;justify-content:center;opacity:1;width:68px;height:68px;padding:12px;border:2px solid rgba(255,255,255,.8);border-radius:50%;background:rgba(0,0,0,.68);box-shadow:0 2px 12px rgba(0,0,0,.35)}
+.skip-zone span{display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s ease;width:68px;height:68px;padding:12px;border:2px solid rgba(255,255,255,.8);border-radius:50%;background:rgba(0,0,0,.68);box-shadow:0 2px 12px rgba(0,0,0,.35)}
 .seek-control{flex-shrink:0;width:34px;height:34px}
 .seek-control .seek-icon{width:30px;height:30px}
 @media(max-width:620px){.skip-zone span{width:52px;height:52px;padding:8px}.skip-zone .seek-icon{width:34px;height:34px}.custom-controls{gap:2px;padding:0 4px}.seek-control{width:28px}.seek-control .seek-icon{width:26px;height:26px}.video-time{font-size:7px}.video-progress{min-width:30px}}
+
+@media (hover:hover) and (pointer:fine){.secure-video-shell:hover .skip-zone span{opacity:1}}
+.skip-zone:focus-visible span{opacity:1}
+@media (hover:none){.skip-zone:hover span{opacity:0}}
 </style>
 </head>
 <body>
