@@ -2,6 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin — Resumos do Enzo</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -482,6 +483,10 @@
   <!-- ═══ TAB: ALUNOS ═══ -->
   <div class="tab-panel" id="panel-alunos">
     <div class="section-title">&#128101; Gerenciar Alunos</div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 18px;padding:14px;border:1px solid rgba(34,211,238,.35);border-radius:12px;background:rgba(34,211,238,.06)">
+      <button class="btn-outline" onclick="openPasswordResetFromSearch()" style="font-weight:700;border-color:#22d3ee;color:#fff;background:#07566c">🔑 REDEFINIR SENHA DE ALUNO</button>
+      <span style="color:#a5d8e7;font-size:12px">Busque o aluno pelo e-mail ou use o botão Senha na linha.</span>
+    </div>
     <div class="search-bar">
       <input class="search-input" id="searchInput" placeholder="&#128269; Buscar por email..." oninput="filterAlunos()">
       <select class="filter-select" id="filterSelect" onchange="filterAlunos()">
@@ -2656,6 +2661,7 @@ init();
 </div>
 <script>
 var emergencyTarget=null;
+function openPasswordResetFromSearch(){var query=(document.getElementById('searchInput').value||'').trim().toLowerCase();var matches=allAlunos.filter(function(a){return !a.is_admin&&a.email&&a.email.toLowerCase().includes(query);});if(!query||matches.length!==1){alert('Digite o e-mail completo do aluno no campo de busca para selecionar uma única conta.');return;}openPasswordReset(matches[0].id);}
 function openPasswordReset(id){
  var a=allAlunos.find(function(u){return u.id===id;});
  if(!a||a.is_admin){alert("Esta operação é exclusiva para contas de alunos.");return;}
