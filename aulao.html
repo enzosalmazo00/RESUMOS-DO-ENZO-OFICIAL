@@ -166,7 +166,7 @@ function ratingText(summary){var count=Number(summary&&summary.rating_count||0),
 function clamp(n,min,max){return Math.max(min,Math.min(max,n))}
 
 var client=null,session=null,aulao=null,videos=[],progress={},durations={},displayMeta={professor_nome:"Professor(a)",rating_count:0,rating_avg:0,five_star_count:0},myRating=0;
-var ytReady=!!(window.YT&&window.YT.Player),ytLoading=false,mainPlayer=null,mainPlayerReady=false,currentIndex=0,progressTimer=null,saveTick=0,watermarkTimer=null,durationPlayers={};
+var ytReady=!!(window.YT&&window.YT.Player),ytLoading=false,mainPlayer=null,mainPlayerReady=false,currentIndex=0,progressTimer=null,displayTimer=null,saveTick=0,watermarkTimer=null,durationPlayers={};
 var shell=document.getElementById("mainVideoShell"),seek=document.getElementById("seekBar"),timeEl=document.getElementById("videoTime"),playBtn=document.getElementById("playBtn"),muteBtn=document.getElementById("muteBtn"),volumeBar=document.getElementById("volumeBar"),ccBtn=document.getElementById("ccBtn"),speedSelect=document.getElementById("playbackSpeed"),preferredPlaybackRate=1,fullBtn=document.getElementById("fullBtn"),centerPlay=document.getElementById("centerPlay");
 
 function syncPlaybackRate(){
@@ -263,9 +263,39 @@ function updateCurrentInfo(){var v=currentVideo();if(!v)return;document.getEleme
 function renderAllProgress(){updatePlaylist();updateCourseProgress();updateCurrentInfo();updateRatingVisibility()}
 
 async function saveCurrentProgress(forceCompleted){var v=currentVideo();if(!v||!mainPlayerReady)return;try{var t=Number(mainPlayer.getCurrentTime()||0),d=Number(mainPlayer.getDuration()||getDuration(v)||0),prev=getProgress(v.id),watched=Math.max(Number(prev.watched_seconds||0),Math.floor(t)),completed=!!forceCompleted||!!prev.completed||(d>0&&t>=d*.95);durations[v.id]=d||durations[v.id]||0;progress[v.id]={watched_seconds:watched,duration_seconds:Math.floor(d||0),completed:completed};await client.from("aulao_video_progress").upsert({user_id:session.user.id,aulao_id:aulao.id,video_id:v.id,watched_seconds:watched,duration_seconds:Math.floor(d||0),completed:completed,updated_at:new Date().toISOString()},{onConflict:"user_id,video_id"});renderAllProgress()}catch(e){console.warn("[aulao] progresso:",e)}}
-function startProgressLoop(){clearInterval(progressTimer);progressTimer=setInterval(function(){if(!mainPlayerReady)return;try{var v=currentVideo(),t=Number(mainPlayer.getCurrentTime()||0),d=Number(mainPlayer.getDuration()||0);if(v&&d>0){durations[v.id]=d;var prev=getProgress(v.id),completed=prev.completed||t>=d*.95;progress[v.id]={watched_seconds:Math.max(Number(prev.watched_seconds||0),Math.floor(t)),duration_seconds:Math.floor(d),completed:completed};seek.value=String(Math.round(clamp(t/d,0,1)*1000));timeEl.textContent=fmtTime(t)+" / "+fmtTime(d);saveTick++;if(saveTick%3===0)saveCurrentProgress(false);renderAllProgress()}}catch(_){}} ,5000)}
-function stopProgressLoop(){clearInterval(progressTimer);progressTimer=null}
-
+function updatePlayerClock(){
+  if(!mainPlayerReady||!mainPlayer)return;
+  try{
+    var t=Number(mainPlayer.getCurrentTime()),d=Number(mainPlayer.getDuration());
+    if(!Number.isFinite(t)||!Number.isFinite(d)||d<=0)return;
+    seek.value=String(Math.round(clamp(t/d,0,1)*1000));
+    var label=fmtTime(t)+" / "+fmtTime(d);
+    if(timeEl.textContent!==label)timeEl.textContent=label;
+  }catch(_){}
+}
+function startProgressLoop(){
+  stopProgressLoop();
+  updatePlayerClock();
+  displayTimer=setInterval(updatePlayerClock,200);
+  progressTimer=setInterval(function(){
+    if(!mainPlayerReady)return;
+    try{
+      var v=currentVideo(),t=Number(mainPlayer.getCurrentTime()||0),d=Number(mainPlayer.getDuration()||0);
+      if(v&&d>0){
+        durations[v.id]=d;
+        var prev=getProgress(v.id),completed=prev.completed||t>=d*.95;
+        progress[v.id]={watched_seconds:Math.max(Number(prev.watched_seconds||0),Math.floor(t)),duration_seconds:Math.floor(d),completed:completed};
+        saveTick++;
+        if(saveTick%3===0)saveCurrentProgress(false);
+        renderAllProgress();
+      }
+    }catch(_){}
+  },5000);
+}
+function stopProgressLoop(){
+  clearInterval(displayTimer);displayTimer=null;
+  clearInterval(progressTimer);progressTimer=null;
+}
 function initMainPlayer(){
   if(mainPlayer||!videos.length)return;
   var v=currentVideo();
