@@ -39,7 +39,7 @@ const r=await db.auth.getUser();user=r.data?.user||null;
 if(user){const p=await db.from('profiles').select('is_admin,nome_preferido').eq('id',user.id).maybeSingle();isAdmin=!!p.data?.is_admin;displayName=(p.data?.nome_preferido||user.user_metadata?.full_name||user.user_metadata?.name||'Estudante').trim()}
 if(adminPage&&!isAdmin){el.remove();return}if(!adminPage){el.classList.add('rde-floating');el.insertAdjacentHTML('afterbegin','<button id="rde-chat-toggle" type="button" aria-expanded="false" aria-controls="rde-chat-body">💬 Chat dos alunos</button><div id="rde-chat-body" hidden></div>');const body=$('#rde-chat-body');Array.from(el.children).filter(x=>x.id!=='rde-chat-toggle'&&x.id!=='rde-chat-body').forEach(x=>body.append(x));$('#rde-chat-toggle').onclick=()=>{const open=body.hidden;body.hidden=!open;el.classList.toggle('open',open);$('#rde-chat-toggle').setAttribute('aria-expanded',String(open));if(open){refresh();$('#rde-msg-text').focus()}};}
 const draft=sessionStorage.getItem('rde-draft');if(draft){const d=JSON.parse(draft);$('#rde-msg-text').value=d.body||'';mode=d.mode==='private'?'private':'public';status('Mensagem recuperada. Clique em enviar para publicar.')}
-await refresh();if(user)setInterval(()=>{if(document.visibilityState==='visible')refresh()},30000);
+await refresh();if(user)setInterval(()=>{if(document.visibilityState==='visible'&&(adminPage||!$('#rde-chat-body')?.hidden))refresh()},5000);
 }catch(e){status('Não foi possível iniciar: '+e.message)}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
