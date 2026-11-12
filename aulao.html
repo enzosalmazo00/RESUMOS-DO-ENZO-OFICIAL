@@ -98,6 +98,7 @@ body.aulao-fullscreen-open .player-card{overflow:visible}
             <button class="ctrl-btn" id="ccBtn" type="button" aria-label="Legendas">CC</button>
             <select class="playback-speed" id="playbackSpeed" aria-label="Velocidade de reprodução" title="Velocidade de reprodução">
               <option value="1">1×</option>
+              <option value="1.25">1,25×</option>
               <option value="1.5">1,5×</option>
               <option value="2">2×</option>
             </select>
@@ -173,7 +174,7 @@ function syncPlaybackRate(){
   if(!mainPlayerReady||!mainPlayer)return;
   try{
     var rate=Number(mainPlayer.getPlaybackRate());
-    if([1,1.5,2].includes(rate))speedSelect.value=String(rate);
+    if([1,1.25,1.5,2].includes(rate))speedSelect.value=String(rate);
   }catch(_){}
 }
 function applyPlaybackRate(){
@@ -182,7 +183,7 @@ function applyPlaybackRate(){
     var available=mainPlayer.getAvailablePlaybackRates?mainPlayer.getAvailablePlaybackRates():[];
     if(Array.isArray(available)&&available.length&&!available.includes(preferredPlaybackRate)){
       var actual=Number(mainPlayer.getPlaybackRate())||1;
-      speedSelect.value=String([1,1.5,2].includes(actual)?actual:1);
+      speedSelect.value=String([1,1.25,1.5,2].includes(actual)?actual:1);
       speedSelect.title="Esta velocidade não está disponível para este vídeo";
       return;
     }
@@ -315,7 +316,7 @@ function initMainPlayer(){
       },
       onPlaybackRateChange:function(ev){
         var rate=Number(ev.data);
-        if([1,1.5,2].includes(rate))speedSelect.value=String(rate);
+        if([1,1.25,1.5,2].includes(rate))speedSelect.value=String(rate);
       },
       onApiChange:restoreCaptionTrack,
       onStateChange:function(ev){
