@@ -22,7 +22,7 @@ if(error)throw error;t.value='';reply=null;sessionStorage.removeItem('rde-draft'
 async function start(){
 const style=document.createElement('style');style.textContent='.rde-messages{max-width:1050px;margin:20px auto;padding:22px;border:1px solid #42687d;border-radius:18px;background:#0b1c2b;color:#eaf4ff;font:14px system-ui}.rde-messages *{box-sizing:border-box}.rde-messages button{cursor:pointer;padding:9px 13px;margin:4px;border:1px solid #568da3;border-radius:9px;background:#17435a;color:#fff}.rde-messages textarea{width:100%;min-height:85px;padding:12px;background:#071523;color:#fff;border:1px solid #568da3;border-radius:10px}.rde-messages small{color:#acc7d4}.rde-messages p{line-height:1.5}';document.head.append(style);
 const adminPage=document.body.dataset.rdeCommunityAdmin==='1';
-const host=adminPage?$('.admin-tabs'):$('.rde-login-notice')||$('.hero-content');
+const host=adminPage?$('.admin-tabs'):$('.rde-login-notice')||$('.hero-content')||document.body.lastElementChild;
 if(!host)return;
 const el=document.createElement('section');el.className='rde-messages';el.innerHTML='<h2>💬 '+(adminPage?'Central de mensagens':'Mensagens para o Resumos do Enzo')+'</h2><p>Deixe sua mensagem para a equipe ou converse com outros estudantes.</p><div><button data-mode="public">Mural público</button><button data-mode="private">Mensagens particulares</button></div><textarea id="rde-msg-text" maxlength="2000" placeholder="Escreva sua mensagem..."></textarea><p><button id="rde-msg-send">Enviar mensagem</button><button id="rde-msg-refresh">Atualizar</button><button id="rde-msg-cancel" hidden>Cancelar resposta</button></p><p id="rde-msg-status" role="status"></p><div id="rde-msg-list"></div>';
 host.insertAdjacentElement('afterend',el);
