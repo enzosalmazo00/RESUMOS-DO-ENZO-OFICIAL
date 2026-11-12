@@ -433,7 +433,7 @@
 @media(max-width:600px){#cursosGridModal{grid-template-columns:repeat(2,minmax(0,1fr));max-height:310px}}
 </style>
 </head>
-<body>
+<body data-rde-community-admin="1">
 <div id="loadingOverlay" style="position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#020d1a 0%,#010812 50%,#020d1a 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;">
   <div style="width:36px;height:36px;border:3px solid rgba(34,211,238,0.2);border-top-color:#22d3ee;border-radius:50%;animation:spin .8s linear infinite;"></div>
   <div style="font-family:Poppins,sans-serif;font-size:14px;color:rgba(125,211,232,0.6);">Carregando painel...</div>
@@ -2722,5 +2722,6 @@ async function confirmEmergencyPassword(){
  finally{button.disabled=false;}
 }
 </script>
+<script defer src="community-messages.js?v=20261112"></script>
 </body>
 </html>
