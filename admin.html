@@ -863,13 +863,19 @@
       <div class="form-row">
         <div class="form-group" style="flex:2;">
           <div class="form-label">Código do cupom</div>
-          <input class="form-input" id="cupomCodigo" placeholder="Ex: PROVA20, DESCONTO50..." style="text-transform:uppercase;">
+          <input class="form-input" id="cupomCodigo" maxlength="30" placeholder="Ex: PROVA20, DESCONTO50..." style="text-transform:uppercase;">
         </div>
         <div class="form-group" style="flex:1;">
           <div class="form-label">Desconto (%)</div>
-          <input class="form-input" id="cupomDesconto" type="number" min="1" max="100" placeholder="Ex: 20">
+          <input class="form-input" id="cupomDesconto" type="number" min="1" max="99" placeholder="Ex: 20">
         </div>
       </div>
+      <div class="form-row">
+        <label class="form-group"><span class="form-label">Semestre</span><select class="form-input" id="cupomSemestre" onchange="atualizarEscopoCupom()"></select></label>
+        <label class="form-group"><span class="form-label">Avaliação</span><select class="form-input" id="cupomProva" onchange="atualizarEscopoCupom()"></select></label>
+        <label class="form-group"><span class="form-label">Item</span><select class="form-input" id="cupomItem"></select></label>
+      </div>
+      <p class="form-label">Cupons incidem sobre resumos avulsos elegíveis. Itens com preço de combo ou pacote ficam fora do cupom.</p>
       <div class="form-row">
         <div class="form-group">
           <div class="form-label">Máx. de usos (vazio = ilimitado)</div>
@@ -886,40 +892,30 @@
     </div>
     <div id="cuponsLista"><div class="empty-state"><span class="spinner-inline"></span> Carregando cupons...</div></div>
 
-    <div class="section-title" style="margin-top:28px;">&#128176; Preços da Loja</div>
+    <div class="section-title" style="margin-top:28px;">Preços e combos da loja</div>
     <div class="form-card">
-      <div class="form-card-title">&#128184; Alterar Preços — P2</div>
-      <div class="price-item">
-        <div class="price-label">&#128196; Unitário (1-2 itens)</div>
-        <span class="price-prefix">R$</span>
-        <input class="price-input" id="precoUnit" type="number" step="0.01" min="0" value="15.00">
+      <div class="form-card-title">Preços por semestre e avaliação</div>
+      <p class="form-label">Defina o preço padrão dos resumos, o preço por unidade a partir de 3 itens e o valor do pacote completo. Para um preço específico, preencha o campo da disciplina.</p>
+      <div id="storePriceGroups"></div>
+      <label class="price-item"><span class="price-label">Curso Acidentes com Animais Peçonhentos</span><span class="price-prefix">R$</span><input class="price-input" id="storeCoursePrice" type="number" min=".01" step=".01"></label>
+    </div>
+    <div class="form-card">
+      <div class="form-card-title">Combos personalizados</div>
+      <p class="form-label">Selecione pelo menos dois resumos disponíveis. Você pode combinar avaliações e semestres. O preço deve ficar abaixo da soma dos itens avulsos.</p>
+      <div id="storeComboList"></div>
+      <div class="form-row">
+        <label class="form-group"><span class="form-label">Nome do combo</span><input class="form-input" id="storeComboName" maxlength="70"></label>
+        <label class="form-group"><span class="form-label">Preço do combo (R$)</span><input class="form-input" id="storeComboPrice" type="number" min=".01" step=".01"></label>
       </div>
-      <div class="price-item">
-        <div class="price-label">&#128230; Combo (3+ itens)</div>
-        <span class="price-prefix">R$</span>
-        <input class="price-input" id="precoCombo" type="number" step="0.01" min="0" value="12.00">
+      <div id="storeComboItems"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+        <button class="btn-outline" id="storeComboStage" onclick="prepararCombo()">Adicionar combo à lista</button>
+        <button class="btn-outline" id="storeComboCancel" onclick="limparEditorCombo()" hidden>Cancelar edição</button>
       </div>
-      <div class="price-item">
-        <div class="price-label">&#128293; Pacote completo (7)</div>
-        <span class="price-prefix">R$</span>
-        <input class="price-input" id="precoPack" type="number" step="0.01" min="0" value="69.90">
-      </div>
-      <div style="border-top:1px solid rgba(34,211,238,0.1);margin:16px 0;"></div>
-      <div class="form-card-title" style="color:#4ade80;">🎓 Alterar Preços — Final</div>
-      <div class="price-item" style="border-color:rgba(74,222,128,0.15);">
-        <div class="price-label">📄 Final Unitário</div>
-        <span class="price-prefix">R$</span>
-        <input class="price-input" id="precoFinalUnit" type="number" step="0.01" min="0" value="24.99" style="color:#4ade80;">
-      </div>
-      <div class="price-item" style="border-color:rgba(74,222,128,0.15);">
-        <div class="price-label">🎓 Final Pacote (7)</div>
-        <span class="price-prefix">R$</span>
-        <input class="price-input" id="precoFinalPack" type="number" step="0.01" min="0" value="89.90" style="color:#4ade80;">
-      </div>
-      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
-        <button class="btn-create" id="btnSalvarPrecos" onclick="salvarPrecos()">&#128190; Salvar preços</button>
-        <span id="precoStatus" style="font-size:11px;color:rgba(125,211,232,0.4);display:flex;align-items:center;"></span>
-      </div>
+    </div>
+    <div class="form-card">
+      <button class="btn-create" id="btnSalvarPrecos" onclick="salvarPrecos()" disabled>Publicar preços e combos</button>
+      <span id="precoStatus" role="status" style="margin-left:10px">Carregando preços…</span>
     </div>
   </div>
 </div>
@@ -997,6 +993,7 @@
   </div>
 </div>
 
+<script src="store-pricing.js?v=1"></script>
 <script>
 (async function(){
 "use strict";
@@ -2278,16 +2275,177 @@ function renderCupons(){
     var statusBadge=!c.ativo?"<span class='badge badge-red' style='font-size:9px;'>Inativo</span>":expirado?"<span class='badge badge-red' style='font-size:9px;'>Expirado</span>":esgotado?"<span class='badge badge-yellow' style='font-size:9px;'>Esgotado</span>":"<span class='badge badge-green' style='font-size:9px;'>Ativo</span>";
     var expStr=c.expira_em?new Date(c.expira_em).toLocaleDateString("pt-BR"):"Sem expiração";
     var usosStr=c.max_usos?c.usos+"/"+c.max_usos:c.usos+" (ilimitado)";
-    return"<div class='cupom-row'><div class='cupom-info'><div style='display:flex;align-items:center;gap:6px;flex-wrap:wrap;'><span class='cupom-code'>"+c.codigo+"</span><span class='badge badge-cyan' style='font-size:10px;font-weight:700;'>-"+c.desconto_pct+"%</span>"+statusBadge+"</div><div class='cupom-meta'><span>&#128197; "+expStr+"</span><span>&#128100; "+usosStr+"</span></div></div><div class='cupom-actions'>"+(c.ativo?"<button class='btn-sm red' data-act='cupom-off' data-id='"+c.id+"'>Desativar</button>":"<button class='btn-sm green' data-act='cupom-on' data-id='"+c.id+"'>Ativar</button>")+"<button class='btn-sm red' data-act='cupom-del' data-id='"+c.id+"' data-code='"+c.codigo+"'>&#128465;</button></div></div>";
+    return"<div class='cupom-row'><div class='cupom-info'><div style='display:flex;align-items:center;gap:6px;flex-wrap:wrap;'><span class='cupom-code'>" +escHtml(c.codigo)+ "</span><span class='badge badge-cyan' style='font-size:10px;font-weight:700;'>-"+c.desconto_pct+"%</span>"+statusBadge+"</div><div class='cupom-meta'><span>"+escHtml(couponScopeLabel(c.escopo))+"</span><span>&#128197; "+expStr+"</span><span>&#128100; "+usosStr+"</span></div></div><div class='cupom-actions'>"+(c.ativo?"<button class='btn-sm red' data-act='cupom-off' data-id='"+c.id+"'>Desativar</button>":"<button class='btn-sm green' data-act='cupom-on' data-id='"+c.id+"'>Ativar</button>")+"<button class='btn-sm red' data-act='cupom-del' data-id='"+c.id+"' data-code='" +escHtml(c.codigo)+ "'>&#128465;</button></div></div>";
   }).join("");
 }
-window.criarCupom=async function(){var codigo=(document.getElementById("cupomCodigo").value||"").trim().toUpperCase();var desconto=parseInt(document.getElementById("cupomDesconto").value);var maxUsos=document.getElementById("cupomMaxUsos").value?parseInt(document.getElementById("cupomMaxUsos").value):null;var expira=document.getElementById("cupomExpira").value||null;if(!codigo){showToast("Digite o código!","error");return;}if(!desconto||desconto<1||desconto>100){showToast("Desconto 1-100%!","error");return;}var btn=document.getElementById("btnCriarCupom");btn.disabled=true;btn.textContent="Criando...";var payload={codigo:codigo,desconto_pct:desconto,max_usos:maxUsos,expira_em:expira?new Date(expira+"T23:59:59").toISOString():null,ativo:true,usos:0};var r=await client.from("cupons").insert(payload);if(r.error){if(r.error.message&&r.error.message.includes("duplicate"))showToast("Cupom j\u00e1 existe!","error");else showToast("Erro: "+(r.error.message||""),"error");}else{showToast("&#9989; Cupom "+codigo+" criado! (-"+desconto+"%)","success");document.getElementById("cupomCodigo").value="";document.getElementById("cupomDesconto").value="";document.getElementById("cupomMaxUsos").value="";document.getElementById("cupomExpira").value="";await loadCupons();}btn.disabled=false;btn.textContent="\u2728 Criar cupom";};
+window.criarCupom=async function(){var codigo=(document.getElementById("cupomCodigo").value||"").trim().toUpperCase();var desconto=parseInt(document.getElementById("cupomDesconto").value);var maxUsos=document.getElementById("cupomMaxUsos").value?parseInt(document.getElementById("cupomMaxUsos").value):null;var expira=document.getElementById("cupomExpira").value||null;if(!/^[A-Z0-9_-]{1,30}$/.test(codigo)){showToast("Use até 30 letras, números, hífens ou sublinhados.","error");return;}if(!desconto||desconto<1||desconto>99){showToast("Use um desconto de 1% a 99%.","error");return;}if(maxUsos!==null&&(!Number.isInteger(maxUsos)||maxUsos<1)){showToast("Informe um limite de usos válido.","error");return;}var btn=document.getElementById("btnCriarCupom");btn.disabled=true;btn.textContent="Criando...";var payload={codigo:codigo,escopo:cupomScope(),desconto_pct:desconto,max_usos:maxUsos,expira_em:expira?new Date(expira+"T23:59:59").toISOString():null,ativo:true,usos:0};var r=await client.from("cupons").insert(payload);if(r.error){if(r.error.message&&r.error.message.includes("duplicate"))showToast("Cupom j\u00e1 existe!","error");else showToast("Erro: "+(r.error.message||""),"error");}else{showToast("&#9989; Cupom "+codigo+" criado! (-"+desconto+"%)","success");document.getElementById("cupomCodigo").value="";document.getElementById("cupomDesconto").value="";document.getElementById("cupomMaxUsos").value="";document.getElementById("cupomExpira").value="";await loadCupons();}btn.disabled=false;btn.textContent="\u2728 Criar cupom";};
 window.toggleCupom=async function(id,ativo){var r=await client.from("cupons").update({ativo:ativo}).eq("id",id);if(r.error)showToast("Erro!","error");else{showToast(ativo?"&#9989; Ativado!":"Desativado.",ativo?"success":"error");await loadCupons();}};
 window.deletarCupom=async function(id,codigo){if(!confirm("Excluir cupom "+codigo+"?"))return;var r=await client.from("cupons").delete().eq("id",id);if(r.error)showToast("Erro!","error");else{showToast("Exclu\u00eddo.","success");await loadCupons();}};
 
-// ═══ PREÇOS ═══
-async function loadPrecos(){try{var r=await client.from("config").select("*").in("chave",["preco_unit","preco_combo3","preco_pack","preco_final_unit","preco_final_pack"]);if(r.data&&r.data.length){r.data.forEach(function(c){if(c.chave==="preco_unit")document.getElementById("precoUnit").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_combo3")document.getElementById("precoCombo").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_pack")document.getElementById("precoPack").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_final_unit")document.getElementById("precoFinalUnit").value=parseFloat(c.valor).toFixed(2);if(c.chave==="preco_final_pack")document.getElementById("precoFinalPack").value=parseFloat(c.valor).toFixed(2);});document.getElementById("precoStatus").textContent="Carregado do banco";}else{document.getElementById("precoStatus").textContent="Valores padr\u00e3o";}}catch(e){document.getElementById("precoStatus").textContent="Valores padr\u00e3o";}}
-window.salvarPrecos=async function(){var unit=parseFloat(document.getElementById("precoUnit").value);var combo=parseFloat(document.getElementById("precoCombo").value);var pack=parseFloat(document.getElementById("precoPack").value);var fUnit=parseFloat(document.getElementById("precoFinalUnit").value);var fPack=parseFloat(document.getElementById("precoFinalPack").value);if(isNaN(unit)||isNaN(combo)||isNaN(pack)||unit<=0||combo<=0||pack<=0||isNaN(fUnit)||isNaN(fPack)||fUnit<=0||fPack<=0){showToast("Preencha corretamente!","error");return;}var btn=document.getElementById("btnSalvarPrecos");btn.disabled=true;btn.textContent="Salvando...";var precos=[{chave:"preco_unit",valor:unit.toString()},{chave:"preco_combo3",valor:combo.toString()},{chave:"preco_pack",valor:pack.toString()},{chave:"preco_final_unit",valor:fUnit.toString()},{chave:"preco_final_pack",valor:fPack.toString()}];var ok=true;for(var i=0;i<precos.length;i++){var p=precos[i];var r=await client.from("config").upsert({chave:p.chave,valor:p.valor},{onConflict:"chave"});if(r.error){ok=false;console.error(r.error);}}if(ok){showToast("&#9989; Preços salvos!","success");document.getElementById("precoStatus").innerHTML="<span style='color:#4ade80;'>&#9989; Salvo!</span>";}else showToast("Erro!","error");btn.disabled=false;btn.textContent="💾 Salvar preços";};
+// Preços e promoções do catálogo
+var storeProductNames = {"bioquimica": "Bioquímica", "biofisica": "Biofísica", "genetica": "Genética", "fisiologia": "Fisiologia", "microbiologia": "Microbiologia", "micro_pratica": "Micro Prática", "imunologia": "Imunologia", "biologia_celular": "Biologia Celular", "embriologia": "Embriologia", "histologia_1": "Histologia I", "anatomia_1": "Anatomia I", "psicologia_salud": "Psicología en Salud", "medicina_comunitaria": "Medicina Comunitária", "histologia_2": "Histologia II", "guarani": "Guaraní", "anatomia_2": "Anatomia II", "bioestatistica": "Bioestatística", "fisiologia_2": "Fisiologia II", "bioquimica_2": "Bioquímica II", "epidemiologia": "Epidemiologia", "nutricao": "Nutrição", "microbiologia_2": "Microbiologia II", "micro_pratica_2": "Micro Prática II", "eletrocardiograma": "Eletrocardiograma"};
+var storeDraftCombos = [];
+var editingStoreCombo = null;
+var examNames = {unico:"Resumo único",p1:"P1",p2:"P2",final:"Final"};
+function storeGroupName(group) { return group.semester+"º semestre · "+examNames[group.exam]; }
+function storeProductName(key) {
+  var group = StorePricing.products[key];
+  if(!group) return key;
+  var stem = group.exam==="unico" ? key : key.slice(0,-group.exam.length-1);
+  return (storeProductNames[stem]||stem)+" · "+storeGroupName(group);
+}
+function fillPromoSelect(select,items,all) {
+  var current = select.value;
+  select.replaceChildren(new Option(all,""),...items.map(([value,name])=>new Option(name,value)));
+  if([...select.options].some(option=>option.value===current)) select.value=current;
+}
+window.atualizarEscopoCupom = function() {
+  var select = id=>document.getElementById(id);
+  var groups = StorePricing.groups;
+  fillPromoSelect(select("cupomSemestre"),[...new Set(groups.map(g=>g.semester))].map(n=>[String(n),n+"º semestre"]),"Todos os semestres");
+  groups = groups.filter(g=>!select("cupomSemestre").value || g.semester===Number(select("cupomSemestre").value));
+  fillPromoSelect(select("cupomProva"),[...new Set(groups.map(g=>g.exam))].map(exam=>[exam,examNames[exam]]),"Todas as avaliações");
+  groups = groups.filter(g=>!select("cupomProva").value || g.exam===select("cupomProva").value);
+  fillPromoSelect(select("cupomItem"),groups.flatMap(g=>g.keys.map(key=>[key,storeProductName(key)])),"Todos os resumos do filtro");
+};
+function cupomScope() {
+  return { semester:Number(document.getElementById("cupomSemestre").value)||null,
+    exam:document.getElementById("cupomProva").value||null,
+    item:document.getElementById("cupomItem").value||null };
+}
+function couponScopeLabel(scope) {
+  if(scope?.item) return storeProductName(scope.item);
+  return [scope?.semester && scope.semester+"º semestre",examNames[scope?.exam]].filter(Boolean).join(" · ") || "Todos os resumos avulsos";
+}
+function storeMoney(cents) { return (cents/100).toFixed(2); }
+
+async function loadPrecos(){
+  atualizarEscopoCupom();
+  var button=document.getElementById("btnSalvarPrecos");
+  var status=document.getElementById("precoStatus");
+  button.disabled=true;
+  try {
+    var r=await client.from("config").select("chave,valor").in("chave",StorePricing.configKeys);
+    if(r.error) throw r.error;
+    var config=StorePricing.settings(r.data);
+    var field=(label,value,attr)=>'<label class="price-item"><span class="price-label">'+escHtml(label)+'</span><span class="price-prefix">R$</span><input class="price-input" type="number" min=".01" step=".01" '+attr+' value="'+value+'"></label>';
+    document.getElementById("storePriceGroups").innerHTML=StorePricing.groups.map(g=>{
+      var prices=config.groups[g.id];
+      return '<details style="margin-bottom:12px"><summary style="cursor:pointer;padding:9px">'+storeGroupName(g)+'</summary>'+
+        [["unit","Preço padrão por resumo"],["bulk","Preço por resumo no combo de 3+"],["pack","Pacote completo"]].map(([key,label])=>
+          field(label,storeMoney(prices[key]),'data-price-group="'+g.id+'" data-price-type="'+key+'"')).join("")+
+        g.keys.map(key=>field(storeProductName(key),StorePricing.validCents(config.itemPrices[key])?storeMoney(config.itemPrices[key]):"",
+          'placeholder="Padrão" data-price-item="'+key+'"')).join("")+'</details>';
+    }).join("");
+    document.getElementById("storeCoursePrice").value=storeMoney(config.course);
+    document.getElementById("storeComboItems").innerHTML=StorePricing.groups.filter(g=>g.ready.length).map(g=>
+      '<details><summary style="cursor:pointer;padding:8px">'+storeGroupName(g)+'</summary>'+g.ready.map(key=>
+        '<label style="display:block;padding:5px"><input type="checkbox" value="'+key+'" data-combo-item> '+escHtml(storeProductName(key))+'</label>').join("")+'</details>').join("");
+    storeDraftCombos=config.combos;
+    limparEditorCombo();
+    renderStoreComboDrafts();
+    button.disabled=false;
+    status.textContent="Preços carregados.";
+  } catch(error) {
+    status.textContent="Erro ao carregar preços. Atualize o painel.";
+    console.error(error);
+  }
+}
+function renderStoreComboDrafts() {
+  var host=document.getElementById("storeComboList");
+  host.replaceChildren();
+  storeDraftCombos.forEach(combo=>{
+    var row=document.createElement("div");
+    row.className="price-item";
+    var label=document.createElement("span");
+    label.className="price-label";
+    label.textContent=combo.name+" · R$ "+storeMoney(combo.price)+" · "+combo.keys.map(storeProductName).join(", ");
+    var edit=document.createElement("button");
+    edit.className="btn-outline";
+    edit.textContent="Editar";
+    edit.onclick=()=>{
+      editingStoreCombo=combo.id;
+      document.getElementById("storeComboName").value=combo.name;
+      document.getElementById("storeComboPrice").value=storeMoney(combo.price);
+      document.querySelectorAll("[data-combo-item]").forEach(input=>{input.checked=combo.keys.includes(input.value);});
+      document.getElementById("storeComboStage").textContent="Aplicar edição do combo";
+      document.getElementById("storeComboCancel").hidden=false;
+      document.getElementById("storeComboName").focus();
+    };
+    var remove=document.createElement("button");
+    remove.className="btn-outline";
+    remove.textContent="Remover";
+    remove.onclick=()=>{
+      storeDraftCombos=storeDraftCombos.filter(item=>item.id!==combo.id);
+      if(editingStoreCombo===combo.id) limparEditorCombo();
+      renderStoreComboDrafts();
+      document.getElementById("precoStatus").textContent="Alterações pendentes de publicação.";
+    };
+    row.append(label,edit,remove);
+    host.append(row);
+  });
+}
+window.limparEditorCombo = function() {
+  editingStoreCombo=null;
+  document.getElementById("storeComboName").value="";
+  document.getElementById("storeComboPrice").value="";
+  document.querySelectorAll("[data-combo-item]").forEach(input=>{input.checked=false;});
+  document.getElementById("storeComboStage").textContent="Adicionar combo à lista";
+  document.getElementById("storeComboCancel").hidden=true;
+};
+window.prepararCombo = function() {
+  var name=document.getElementById("storeComboName").value.trim();
+  var price=StorePricing.cents(document.getElementById("storeComboPrice").value);
+  var keys=[...document.querySelectorAll("[data-combo-item]:checked")].map(input=>input.value);
+  if(!name||!StorePricing.validCents(price)||keys.length<2) {
+    showToast("Informe o nome, um preço válido e ao menos dois resumos.","error");
+    return false;
+  }
+  var id=editingStoreCombo||crypto.randomUUID();
+  storeDraftCombos=storeDraftCombos.filter(combo=>combo.id!==id).concat({id,name,keys,price});
+  limparEditorCombo();
+  renderStoreComboDrafts();
+  document.getElementById("precoStatus").textContent="Alterações pendentes de publicação.";
+  return true;
+};
+window.salvarPrecos=async function(){
+  var button=document.getElementById("btnSalvarPrecos");
+  var status=document.getElementById("precoStatus");
+  if(editingStoreCombo || document.getElementById("storeComboName").value || document.getElementById("storeComboPrice").value ||
+    document.querySelector("[data-combo-item]:checked")) {
+    if(!prepararCombo()) return;
+  }
+  var config={groups:{},itemPrices:{},course:StorePricing.cents(document.getElementById("storeCoursePrice").value),combos:storeDraftCombos};
+  var inputs=[...document.querySelectorAll("[data-price-group],[data-price-item]")];
+  for(var input of inputs){
+    if(input.dataset.priceItem && !input.value) continue;
+    var centavos=StorePricing.cents(input.value);
+    if(!StorePricing.validCents(centavos)){input.closest("details").open=true;input.focus();showToast("Informe um preço válido.","error");return;}
+    if(input.dataset.priceItem) config.itemPrices[input.dataset.priceItem]=centavos;
+    else (config.groups[input.dataset.priceGroup] ||= {})[input.dataset.priceType]=centavos;
+  }
+  if(!StorePricing.validCents(config.course)){showToast("Informe um preço válido para o curso.","error");return;}
+  for(var group of StorePricing.groups) {
+    if(config.groups[group.id].bulk>config.groups[group.id].unit){
+      status.textContent="O preço de 3+ deve ser igual ou menor que o avulso em "+storeGroupName(group)+".";
+      return;
+    }
+  }
+  if(config.combos.some(combo=>combo.price>=combo.keys.reduce((total,key)=>total+StorePricing.price(key,config),0))){
+    showToast("O preço do combo deve ficar abaixo da soma dos itens avulsos.","error");return;
+  }
+  button.disabled=true;
+  status.textContent="Publicando…";
+  try {
+    var result=await client.from("config").upsert({chave:StorePricing.configKey,valor:JSON.stringify(config),updated_at:new Date().toISOString()},{onConflict:"chave"});
+    if(result.error) throw result.error;
+    status.textContent="Preços e combos publicados.";
+    showToast("Preços e combos publicados!","success");
+  } catch(error) {
+    console.error(error);
+    status.textContent="Falha ao publicar. Revise a conexão e tente novamente.";
+  } finally { button.disabled=false; }
+};
 
 // ═══ ONLINE — PRESENÇA PRIVADA ═══
 var onlineWatcherTimer = null;

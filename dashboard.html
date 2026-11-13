@@ -1377,15 +1377,13 @@
               </div>
               <div class="curso-loja-preco">
                 <div style="font-size:10px;color:rgba(255,255,255,0.5);">De:</div>
-                <div style="font-size:18px;color:rgba(255,255,255,0.35);text-decoration:line-through;">R$ 79,99</div>
-                <div style="font-size:32px;font-weight:800;color:#f9c94f;text-shadow:0 2px 12px rgba(249,201,79,0.5);">R$ 29,99</div>
-                <div class="curso-loja-pct">🏷️ 63% off</div>
+                <div style="font-size:32px;font-weight:800;color:#f9c94f;text-shadow:0 2px 12px rgba(249,201,79,0.5);" id="storeCursoPrice">R$ 29,99</div>
               </div>
             </div>
             <button class="curso-loja-btn" id="curso-pec-btn" onclick="addCursoToCart()">
               🛒 Adicionar curso ao carrinho — R$ 29,99
             </button>
-            <div style="font-size:10px;color:rgba(255,255,255,0.3);text-align:center;margin-top:6px;">⏳ Preço promocional por tempo limitado</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.3);text-align:center;margin-top:6px;">Curso com certificado</div>
           </div>
         </div>
 
@@ -1419,6 +1417,7 @@
           <button onclick="focusStoreSemester(4)">🔬 4º semestre</button>
         </div>
 
+        <section id="storeCustomSection" hidden style="margin:16px 0"><div class="store-section-title">Combos disponíveis</div><div class="store-grid" id="storeCustomCombos"></div></section>
         <!-- 1º SEMESTRE -->
         <div class="sem-card" id="sem-1">
           <div class="sem-card-header" onclick="toggleSemLoja(this)">
@@ -1458,7 +1457,7 @@
             <div style="margin-top:20px;">
               <div class="store-section-title" style="margin-bottom:12px;">📝 Individuais
                 <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
-                  R$ 15,00 unit · <span style="color:#4ade80;">R$ 12,00 com 3+</span>
+                  Preço por disciplina
                 </span>
               </div>
               <div class="store-grid" id="store-grid-s1"></div>
@@ -1505,7 +1504,7 @@
             <div style="margin-top:20px;">
               <div class="store-section-title" style="margin-bottom:12px;">📝 Individuais
                 <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
-                  R$ 15,00 unit · <span style="color:#4ade80;">R$ 12,00 com 3+</span>
+                  Preço por disciplina
                 </span>
               </div>
               <div class="store-grid" id="store-grid-s2"></div>
@@ -1542,9 +1541,9 @@
                   <div class="combo-sub">Todos os 7 resumos de P2 — 3º Semestre</div>
                 </div>
                 <div class="combo-preco-box">
-                  <div class="combo-preco-old">R$ 105,00</div>
-                  <div class="combo-preco-new">R$ 69,90</div>
-                  <div class="combo-desconto">🏷️ 33% off</div>
+                  <div class="combo-preco-old" id="combo-p2-old">R$ 105,00</div>
+                  <div class="combo-preco-new" id="combo-p2-new">R$ 69,90</div>
+                  <div class="combo-desconto" id="combo-p2-pct">🏷️ 33% off</div>
                 </div>
               </div>
               <div class="combo-materias">
@@ -1565,7 +1564,7 @@
             <div style="margin-top:20px;">
               <div class="store-section-title" style="margin-bottom:12px;">📝 Individuais P2
                 <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
-                  R$ 15,00 unit · <span style="color:#4ade80;">R$ 12,00 com 3+</span>
+                  Preço por disciplina
                 </span>
               </div>
               <div class="store-grid" id="store-grid-p2"></div>
@@ -1594,24 +1593,7 @@
 
             <!-- FINAIS INDIVIDUAIS -->
             <div style="margin-top:20px;">
-              <div class="store-section-title" style="color:#4ade80;margin-bottom:12px;">🎓 Individuais Final</div>
-              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
-                <div style="flex:1;min-width:130px;border-radius:12px;padding:12px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.2);text-align:center;">
-                  <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(74,222,128,0.6);margin-bottom:4px;">Individual</div>
-                  <div style="font-size:20px;font-weight:800;color:#4ade80;">R$ 24,99</div>
-                </div>
-                <div style="flex:1;min-width:130px;border-radius:12px;padding:12px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);text-align:center;">
-                  <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(74,222,128,0.6);margin-bottom:4px;">3+ resumos</div>
-                  <div style="font-size:20px;font-weight:800;color:#4ade80;">R$ 19,99</div>
-                  <div style="font-size:10px;color:rgba(74,222,128,0.5);">20% off</div>
-                </div>
-                <div style="flex:1;min-width:130px;border-radius:12px;padding:12px;background:rgba(74,222,128,0.13);border:1px solid rgba(74,222,128,0.45);text-align:center;position:relative;">
-                  <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#4ade80,#16a34a);color:#fff;font-size:8px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;">MELHOR NEGÓCIO ⭐</div>
-                  <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(74,222,128,0.6);margin-bottom:4px;">Pacote 7 resumos</div>
-                  <div style="font-size:20px;font-weight:800;color:#4ade80;">R$ 89,90</div>
-                  <div style="font-size:10px;color:rgba(74,222,128,0.5);">49% off</div>
-                </div>
-              </div>
+              <div class="store-section-title">Individuais Final</div>
               <div class="store-grid" id="store-grid-final"></div>
               <div id="store-final-breve" style="padding:14px 18px;border-radius:12px;border:1px solid rgba(251,191,36,0.15);background:rgba(251,191,36,0.04);font-size:12px;color:rgba(251,191,36,0.5);text-align:center;margin-top:10px;display:none;">
                 As demais finais serão disponibilizadas em breve.
@@ -1663,7 +1645,7 @@
             <div style="margin-top:20px;">
               <div class="store-section-title" style="margin-bottom:12px;">📝 Individuais P1
                 <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
-                  R$ 12,90 unit · <span style="color:#4ade80;">R$ 10,90 com 3+</span>
+                  Preço por disciplina
                 </span>
               </div>
               <div class="store-grid" id="store-grid-s4-p1"></div>
@@ -1690,7 +1672,7 @@
             <div style="margin-top:20px;">
               <div class="store-section-title" style="margin-bottom:12px;">📝 Individuais P2
                 <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
-                  R$ 12,90 unit · <span style="color:#4ade80;">R$ 10,90 com 3+</span>
+                  Preço por disciplina
                 </span>
               </div>
               <div class="store-grid" id="store-grid-s4-p2"></div>
@@ -1719,7 +1701,7 @@
             <div style="margin-top:20px;">
               <div class="store-section-title" style="color:#4ade80;margin-bottom:12px;">🎓 Individuais Final
                 <span style="color:rgba(125,211,232,0.4);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">
-                  R$ 12,90 unit · <span style="color:#4ade80;">R$ 10,90 com 3+</span>
+                  Preço por disciplina
                 </span>
               </div>
               <div class="store-grid" id="store-grid-s4-final"></div>
@@ -1865,6 +1847,7 @@
 </div>
 
 <!-- ══ LÓGICA PRINCIPAL ══ -->
+<script src="store-pricing.js?v=1"></script>
 <script>
 (function () {
 "use strict";
@@ -3022,6 +3005,10 @@ function renderMateriaInternaS1(key) {
 
 // ── S1: Carrinho ─────────────────────────────────────────────────────────────
 window.addToCartS1 = function(key) {
+  if(cart.some(item=>item.tipo==="aulao")) { alert("Finalize ou remova a aula em vídeo do carrinho."); return; }
+  if(cart.some(item=>item.comboId && item.key===key)) { alert("Esse resumo já está no combo do carrinho."); return; }
+  if(cart.some(item=>StorePricing.packages[item.key]?.keys.includes(key))) { alert("Esse resumo já está no pacote do carrinho."); return; }
+
   var m = MATERIAS_S1.find(function(x){ return x.key === key; });
   if (!m) return;
   if (cart.find(function(c){ return c.key === key; })) {
@@ -3032,21 +3019,11 @@ window.addToCartS1 = function(key) {
   renderStoreGridS1();
 };
 
-window.addComboS1ToCart = function() {
-  var naoAdquiridos = MATERIAS_S1.filter(function(m){ return m.ready && !hasAccessS1(m); });
-  if (naoAdquiridos.length === 0) { alert("Você já possui todos os resumos do 1º Semestre!"); return; }
-  cart = cart.filter(function(c){ return c.tipo !== "s1"; });
-  var precoPorItem = PRECO_S1_PACK / naoAdquiridos.length;
-  naoAdquiridos.forEach(function(m) {
-    cart.push({ key: m.key, label: m.label, emoji: m.emoji, preco: precoPorItem, tipo: "s1", isComboS1: true });
-  });
-  updateCartUI();
-  renderStoreGridS1();
-  openCart();
-};
+window.addComboS1ToCart = function() { addStorePackage("s1","s1"); };
 
 // ── S1: Loja grid ────────────────────────────────────────────────────────────
 function renderStoreGridS1() {
+  renderPackagePrice("s1","s1");
   var grid = document.getElementById("store-grid-s1");
   if (!grid) return;
   grid.innerHTML = "";
@@ -3079,7 +3056,7 @@ function renderStoreGridS1() {
       '<span class="produto-emoji">' + m.emoji + '</span>' +
       '<div class="produto-nome">' + m.label + '</div>' +
       '<div class="produto-sub">1º Semestre · 50 dias</div>' +
-      '<div class="produto-preco">R$ 15,00<span>/resumo</span></div>' +
+      '<div class="produto-preco">'+formatPrice(itemPrice(key))+'<span>/resumo</span></div>' +
       '<button class="' + btnClass + '"' + (owned ? ' disabled' : ' onclick="addToCartS1(\'' + key + '\')"') + '>' + btnLabel + '</button>';
 
     grid.appendChild(card);
@@ -3115,6 +3092,10 @@ window.toggleSemLoja = function(header) {
 
 // ── S4: adicionar item individual ao carrinho (key já vem com sufixo _p1/_p2/_final) ──
 window.addToCartS4 = function(key) {
+  if(cart.some(item=>item.tipo==="aulao")) { alert("Finalize ou remova a aula em vídeo do carrinho."); return; }
+  if(cart.some(item=>item.comboId && item.key===key)) { alert("Esse resumo já está no combo do carrinho."); return; }
+  if(cart.some(item=>StorePricing.packages[item.key]?.keys.includes(key))) { alert("Esse resumo já está no pacote do carrinho."); return; }
+
   var tipo, m;
   if (key.indexOf("_final") === key.length - 6) {
     tipo = "final";
@@ -3141,31 +3122,35 @@ window.addToCartS4 = function(key) {
 };
 
 // ── S4: pacote completo por prova (P1, P2 ou Final) ────────────────────────────
-window.addComboS4ToCart = function(tipo) {
-  // P2: um único produto inclui todas as sete matérias, publicadas ou futuras.
-  if(tipo==="p2"){
-    if(hasS4Pack("p2")){alert("Você já possui o pacote completo P2 do 4º semestre.");return;}
-    cart=cart.filter(function(c){return c.tipo!=="s4_p2";});
-    cart.push({key:"pacote_s4_p2",label:"Pacote Completo — P2 · 4º Semestre (7 disciplinas)",
-      emoji:"📦",preco:PRECO_S4_P2_PACK,tipo:"s4_p2",isComboS4:"p2"});
-    updateCartUI();renderStoreGridS4();openCart();return;
-  }
-  var readyField = tipo === "p1" ? "p1Ready" : (tipo === "p2" ? "p2Ready" : "finalReady");
-  var naoAdquiridos = MATERIAS_S4.filter(function(m){ return m[readyField] && !hasAccess(m, tipo); });
-  if (naoAdquiridos.length === 0) { alert("Você já possui todos os resumos dessa prova disponíveis no momento!"); return; }
+window.addComboS4ToCart = function(tipo) { addStorePackage("s4_"+tipo,"s4_"+tipo); };
 
-  var packMap = { p1: PRECO_S4_P1_PACK, p2: PRECO_S4_P2_PACK, final: PRECO_S4_FINAL_PACK };
-  var rotuloMap = { p1: "P1", p2: "P2", final: "Final" };
-  var precoPorItem = packMap[tipo] / naoAdquiridos.length;
+function renderPackagePrice(id,groupId) {
+  var group = StorePricing.groups.find(g=>g.id===groupId);
+  var full = group.keys.reduce((sum,key)=>sum+itemPrice(key),0);
+  var pack = itemPrice(group.packageKey);
+  document.getElementById("combo-"+id+"-old").textContent = formatPrice(full);
+  document.getElementById("combo-"+id+"-new").textContent = formatPrice(pack);
+  document.getElementById("combo-"+id+"-pct").textContent = Math.max(0,Math.round((1-pack/full)*100))+"% de desconto";
+}
 
-  cart = cart.filter(function(c){ return c.tipo !== "s4_" + tipo; });
-  naoAdquiridos.forEach(function(m) {
-    cart.push({ key: m.key + "_" + tipo, label: m.label + " — " + rotuloMap[tipo], emoji: m.emoji, preco: precoPorItem, tipo: "s4_" + tipo, isComboS4: tipo });
-  });
+function canBuyStorePackage(group) {
+  return group.ready.length === group.keys.length && !group.keys.some(ownsStoreKey) &&
+    StorePricing.price(group.packageKey,storePrices) < group.keys.reduce((sum,key)=>sum+StorePricing.price(key,storePrices),0);
+}
+
+function addStorePackage(groupId,tipo) {
+  var group = StorePricing.groups.find(g=>g.id===groupId);
+  if (!canBuyStorePackage(group)) return;
+  if(cart.some(item=>item.tipo==="aulao")) { alert("Finalize ou remova a aula em vídeo do carrinho."); return; }
+  if(cart.some(item=>item.comboId && group.keys.includes(item.key))) { alert("Remova o combo que já contém estes materiais."); return; }
+  cart = cart.filter(item=>!group.keys.includes(item.key) && item.key!==group.packageKey);
+  cart.push({key:group.packageKey,label:"Pacote completo · "+storeItemDetails(group.packageKey),
+    emoji:"📦",preco:itemPrice(group.packageKey),tipo,isPacoteCompleto:true});
   updateCartUI();
-  renderStoreGridS4();
+  renderStore();
   openCart();
-};
+}
+
 
 // ── S4: Loja grid (P1/P2/Final — cada prova com seu combo + individuais) ──────
 function renderStoreGridS4() {
@@ -3211,7 +3196,7 @@ function renderStoreGridS4() {
         '<span class="produto-emoji">' + m.emoji + '</span>' +
         '<div class="produto-nome">' + m.label + '</div>' +
         '<div class="produto-sub">4º Semestre · 50 dias</div>' +
-        '<div class="produto-preco">R$ ' + unitMap[tipo].toFixed(2).replace(".",",") + '<span>/resumo</span></div>' +
+        '<div class="produto-preco">R$ ' + itemPrice(key).toFixed(2).replace(".",",") + '<span>/resumo</span></div>' +
         '<button class="' + btnClass + '"' + (owned ? ' disabled' : ' onclick="addToCartS4(\'' + key + '\')"') + '>' + btnLabel + '</button>';
 
       grid.appendChild(card);
@@ -3232,6 +3217,7 @@ function renderStoreGridS4() {
       return;
     }
     comboCard.style.display = "block";
+    renderPackagePrice("s4"+tipo,"s4_"+tipo);
 
     var readyNaoAdq = itensReady.filter(function(m){ return !hasAccess(m, tipo); });
     var precoCheio = itensReady.length * unitMap[tipo];
@@ -3387,6 +3373,10 @@ function renderMateriaInternaS2(key) {
 
 // ── S2: Carrinho ─────────────────────────────────────────────────────────────
 window.addToCartS2 = function(key) {
+  if(cart.some(item=>item.tipo==="aulao")) { alert("Finalize ou remova a aula em vídeo do carrinho."); return; }
+  if(cart.some(item=>item.comboId && item.key===key)) { alert("Esse resumo já está no combo do carrinho."); return; }
+  if(cart.some(item=>StorePricing.packages[item.key]?.keys.includes(key))) { alert("Esse resumo já está no pacote do carrinho."); return; }
+
   var m = MATERIAS_S2.find(function(x){ return x.key === key; });
   if (!m) return;
   if (cart.find(function(c){ return c.key === key; })) {
@@ -3397,21 +3387,11 @@ window.addToCartS2 = function(key) {
   renderStoreGridS2();
 };
 
-window.addComboS2ToCart = function() {
-  var naoAdquiridos = MATERIAS_S2.filter(function(m){ return m.ready && !hasAccessS2(m); });
-  if (naoAdquiridos.length === 0) { alert("Você já possui todos os resumos do 2º Semestre!"); return; }
-  cart = cart.filter(function(c){ return c.tipo !== "s2"; });
-  var precoPorItem = PRECO_S2_PACK / naoAdquiridos.length;
-  naoAdquiridos.forEach(function(m) {
-    cart.push({ key: m.key, label: m.label, emoji: m.emoji, preco: precoPorItem, tipo: "s2", isComboS2: true });
-  });
-  updateCartUI();
-  renderStoreGridS2();
-  openCart();
-};
+window.addComboS2ToCart = function() { addStorePackage("s2","s2"); };
 
 // ── S2: Loja grid ────────────────────────────────────────────────────────────
 function renderStoreGridS2() {
+  renderPackagePrice("s2","s2");
   var grid = document.getElementById("store-grid-s2");
   if (!grid) return;
   grid.innerHTML = "";
@@ -3444,7 +3424,7 @@ function renderStoreGridS2() {
       '<span class="produto-emoji">' + m.emoji + '</span>' +
       '<div class="produto-nome">' + m.label + '</div>' +
       '<div class="produto-sub">2º Semestre · 50 dias</div>' +
-      '<div class="produto-preco">R$ 15,00<span>/resumo</span></div>' +
+      '<div class="produto-preco">'+formatPrice(itemPrice(key))+'<span>/resumo</span></div>' +
       '<button class="' + btnClass + '"' + (owned ? ' disabled' : ' onclick="addToCartS2(\'' + key + '\')"') + '>' + btnLabel + '</button>';
 
     grid.appendChild(card);
@@ -3554,6 +3534,10 @@ function renderCursosGrid() {
 function cartKey(m) { return m.key + "_p2"; }
 
 window.addToCart = function(key) {
+  if(cart.some(item=>item.tipo==="aulao")) { alert("Finalize ou remova a aula em vídeo do carrinho."); return; }
+  if(cart.some(item=>item.comboId && item.key===key)) { alert("Esse resumo já está no combo do carrinho."); return; }
+  if(cart.some(item=>StorePricing.packages[item.key]?.keys.includes(key))) { alert("Esse resumo já está no pacote do carrinho."); return; }
+
   // Detectar se é P2 ou Final
   var isFinal = key.indexOf("_final") !== -1;
   var m;
@@ -3579,13 +3563,14 @@ window.addToCart = function(key) {
 };
 
 window.addCursoToCart = function() {
+  if(cart.some(item=>item.tipo==="aulao")) { alert("Finalize ou remova a aula em vídeo do carrinho."); return; }
   /* Verifica se já tem acesso */
   if (cursoLiberado("curso-peconhentos")){
     alert("Você já possui acesso a este curso!"); return;
   }
   /* Remove curso duplicado do carrinho se existir */
   cart = cart.filter(function(c){ return c.tipo !== "curso"; });
-  cart.push({ key: "curso-peconhentos", label: "Curso Peçonhentos — 35h", emoji: "🐍", preco: 29.99, tipo: "curso" });
+  cart.push({ key: "curso-peconhentos", label: "Curso Peçonhentos — 35h", emoji: "🐍", preco: itemPrice("curso-peconhentos"), tipo: "curso" });
   updateCartUI();
   openCart();
   /* Atualizar botão */
@@ -3593,25 +3578,13 @@ window.addCursoToCart = function() {
   if(btn){ btn.textContent = "✅ Curso no carrinho"; btn.style.background = "rgba(249,201,79,0.2)"; btn.style.color = "#f9c94f"; }
 };
 
-window.addComboToCart = function() {
-  // Limpa carrinho e adiciona todos os P2 não adquiridos
-  var naoAdquiridos = MATERIAS.filter(function(m){ return !hasAccess(m,"p2"); });
-  if (naoAdquiridos.length === 0) { alert("Você já possui todos os resumos de P2!"); return; }
-
-  // Remove itens P2 do carrinho (mantém finais se houver)
-  cart = cart.filter(function(c){ return c.tipo === "final"; });
-  naoAdquiridos.forEach(function(m) {
-    cart.push({ key: m.key+"_p2", label: m.label+" — P2", emoji: m.emoji, preco: PRECO_UNIT, tipo: "p2", isCombo: true });
-  });
-  updateCartUI();
-  renderStoreGrid();
-  openCart();
-};
+window.addComboToCart = function() { addStorePackage("p2","p2"); };
 
 window.removeFromCart = function(key) {
-  cart = cart.filter(function(c){ return c.key !== key; });
+  var comboId = cart.find(c=>c.key===key)?.comboId;
+  cart = cart.filter(c=>c.key!==key && (!comboId || c.comboId!==comboId));
   updateCartUI();
-  renderStoreGrid();
+  renderStore();
 };
 
 window.openCart = function() {
@@ -3624,119 +3597,98 @@ window.closeCart = function() {
   document.getElementById("cartOverlay").classList.remove("open");
 };
 
-function calcCartTotal() {
-  var n = cart.length;
-  if (n === 0) return { subtotal: 0, desconto: 0, total: 0, descLabel: "" };
+var storePrices = StorePricing.settings([]);
+var storePricesReady = false;
 
-  // Separar itens P2, Final, S1, S2, S4 (p1/p2/final) e Curso
-  var p2Items = cart.filter(function(c){ return c.tipo === "p2"; });
-  var finalItems = cart.filter(function(c){ return c.tipo === "final"; });
-  var s1Items = cart.filter(function(c){ return c.tipo === "s1"; });
-  var s2Items = cart.filter(function(c){ return c.tipo === "s2"; });
-  var s4p1Items = cart.filter(function(c){ return c.tipo === "s4_p1"; });
-  var s4p2Items = cart.filter(function(c){ return c.tipo === "s4_p2"; });
-  var s4finalItems = cart.filter(function(c){ return c.tipo === "s4_final"; });
-  var cursoItems = cart.filter(function(c){ return c.tipo === "curso"; });
-  var aulaoItems = cart.filter(function(c){ return c.tipo === "aulao"; });
-
-  var subtotalP2 = p2Items.length * PRECO_UNIT;
-  var subtotalFinal = finalItems.length * (PROMO_FINAL_ATIVA ? PRECO_FINAL_DE : PRECO_FINAL);
-  var subtotalS1 = s1Items.length * PRECO_S1_UNIT;
-  var subtotalS2 = s2Items.length * PRECO_S2_UNIT;
-  var subtotalS4P1 = s4p1Items.length * PRECO_S4_P1_UNIT;
-  var subtotalS4P2 = s4p2Items.reduce(function(sum,c){return sum+(c.key==="pacote_s4_p2"?PRECO_S4_P2_PACK:PRECO_S4_P2_UNIT);},0);
-  var subtotalS4Final = s4finalItems.length * PRECO_S4_FINAL_UNIT;
-  var subtotalCurso = cursoItems.reduce(function(acc,c){ return acc + c.preco; }, 0);
-  var subtotalAulao = aulaoItems.reduce(function(acc,c){ return acc + Number(c.preco||0); }, 0);
-  var subtotal = subtotalP2 + subtotalFinal + subtotalS1 + subtotalS2 + subtotalS4P1 + subtotalS4P2 + subtotalS4Final + subtotalCurso + subtotalAulao;
-
-  var totalP2 = subtotalP2;
-  var totalFinal = subtotalFinal;
-  var totalS1 = subtotalS1;
-  var totalS2 = subtotalS2;
-  var totalS4P1 = subtotalS4P1;
-  var totalS4P2 = subtotalS4P2;
-  var totalS4Final = subtotalS4Final;
-  var totalCurso = subtotalCurso;
-  var totalAulao = subtotalAulao;
-  var descLabel = "";
-
-  // Desconto P2: pacote completo ou 3+
-  var p2NaoAdquiridos = MATERIAS.filter(function(m){ return !hasAccess(m,"p2"); });
-  var todasP2NoCarrinho = p2NaoAdquiridos.length === MATERIAS.length &&
-    MATERIAS.every(function(m){ return cart.find(function(c){ return c.key === m.key+"_p2"; }); });
-
-  if (todasP2NoCarrinho) {
-    totalP2 = PRECO_PACK;
-    descLabel = "🏷️ Pacote P2 completo (33% off)";
-  } else if (p2Items.length >= 3) {
-    totalP2 = p2Items.length * PRECO_COMBO3;
-    descLabel = "🏷️ Desconto P2 3+ itens (20% off)";
-  }
-
-  // Desconto Final: pacote completo ou 3+ itens (20% off)
-  var temPacoteCompleto = finalItems.some(function(c){ return c.isPacoteCompleto; });
-  var finalReady = MATERIAS.filter(function(m){ return m.finalReady; });
-
-  if (temPacoteCompleto) {
-    totalFinal = PRECO_PACK_FINAL;
-    var pctPack = Math.round((1 - PRECO_PACK_FINAL / (finalReady.length * PRECO_FINAL)) * 100);
-    descLabel += (descLabel ? " + " : "") + "🏷️ Pacote Final completo (" + pctPack + "% off)";
-  } else if (finalItems.length >= 3) {
-    totalFinal = finalItems.length * PRECO_FINAL_COMBO3;
-    descLabel += (descLabel ? " + " : "") + "🏷️ Desconto Final 3+ itens (20% off)";
-  } else if (finalItems.length > 0) {
-    totalFinal = finalItems.length * PRECO_FINAL;
-  }
-
-  // Desconto S1: pacote completo ou 3+ itens (20% off)
-  var temComboS1 = s1Items.some(function(c){ return c.isComboS1; });
-  if (temComboS1) {
-    totalS1 = PRECO_S1_PACK;
-    descLabel += (descLabel ? " + " : "") + "🏷️ Pacote S1 completo (33% off)";
-  } else if (s1Items.length >= 3) {
-    totalS1 = s1Items.length * PRECO_S1_COMBO3;
-    descLabel += (descLabel ? " + " : "") + "🏷️ Desconto S1 3+ itens (20% off)";
-  }
-
-  // Desconto S2: pacote completo ou 3+ itens (20% off)
-  var temComboS2 = s2Items.some(function(c){ return c.isComboS2; });
-  if (temComboS2) {
-    totalS2 = PRECO_S2_PACK;
-    descLabel += (descLabel ? " + " : "") + "🏷️ Pacote S2 completo (33% off)";
-  } else if (s2Items.length >= 3) {
-    totalS2 = s2Items.length * PRECO_S2_COMBO3;
-    descLabel += (descLabel ? " + " : "") + "🏷️ Desconto S2 3+ itens (20% off)";
-  }
-
-  // Desconto S4 P1/P2/Final: pacote completo (por prova) ou 3+ itens (20% off)
-  var s4Combos = [
-    { items: s4p1Items, pack: PRECO_S4_P1_PACK, combo3: PRECO_S4_P1_COMBO3, rotulo: "P1" },
-    { items: s4p2Items, pack: PRECO_S4_P2_PACK, combo3: PRECO_S4_P2_COMBO3, rotulo: "P2" },
-    { items: s4finalItems, pack: PRECO_S4_FINAL_PACK, combo3: PRECO_S4_FINAL_COMBO3, rotulo: "Final" },
-  ];
-  var totalS4 = { p1: totalS4P1, p2: totalS4P2, final: totalS4Final };
-  var keyMap = { P1: "p1", P2: "p2", Final: "final" };
-  s4Combos.forEach(function(sc) {
-    var k = keyMap[sc.rotulo];
-    var temCombo = sc.items.some(function(c){ return c.isComboS4; });
-    if (temCombo) {
-      totalS4[k] = sc.pack;
-      descLabel += (descLabel ? " + " : "") + (k==="p2"?"Pacote completo P2 · 4º semestre":"🏷️ Pacote "+sc.rotulo+" 4º Sem. completo");
-    } else if (sc.items.length >= 3) {
-      totalS4[k] = sc.items.length * sc.combo3;
-      descLabel += (descLabel ? " + " : "") + "🏷️ Desconto " + sc.rotulo + " 4º Sem. 3+ itens (20% off)";
-    }
+async function loadStorePrices() {
+  var result = await window.authClient.from("config").select("chave,valor").in("chave",StorePricing.configKeys);
+  if(result.error) throw result.error;
+  storePrices = StorePricing.settings(result.data);
+  var mapping = {
+    s1:[(u,b,p)=>{PRECO_S1_UNIT=u;PRECO_S1_COMBO3=b;PRECO_S1_PACK=p;}],
+    s2:[(u,b,p)=>{PRECO_S2_UNIT=u;PRECO_S2_COMBO3=b;PRECO_S2_PACK=p;}],
+    p2:[(u,b,p)=>{PRECO_UNIT=u;PRECO_COMBO3=b;PRECO_PACK=p;}],
+    final:[(u,b,p)=>{PRECO_FINAL=u;PRECO_FINAL_COMBO3=b;PRECO_PACK_FINAL=p;}],
+    s4_p1:[(u,b,p)=>{PRECO_S4_P1_UNIT=u;PRECO_S4_P1_COMBO3=b;PRECO_S4_P1_PACK=p;}],
+    s4_p2:[(u,b,p)=>{PRECO_S4_P2_UNIT=u;PRECO_S4_P2_COMBO3=b;PRECO_S4_P2_PACK=p;}],
+    s4_final:[(u,b,p)=>{PRECO_S4_FINAL_UNIT=u;PRECO_S4_FINAL_COMBO3=b;PRECO_S4_FINAL_PACK=p;}]
+  };
+  Object.entries(mapping).forEach(([id,[set]])=>{
+    var group=storePrices.groups[id];
+    set(group.unit/100,group.bulk/100,group.pack/100);
   });
-  totalS4P1 = totalS4.p1; totalS4P2 = totalS4.p2; totalS4Final = totalS4.final;
+  storePricesReady = true;
+}
 
-  // Expor flag para o cupom saber se tem pacote completo
-  calcCartTotal._temPacoteCompleto = temPacoteCompleto;
+function escapeHtml(value) {
+  var node=document.createElement("span");
+  node.textContent=String(value ?? "");
+  return node.innerHTML;
+}
+function itemPrice(key) { return StorePricing.price(key,storePrices)/100; }
+function selectedCombos() { return [...new Set(cart.map(item=>item.comboId).filter(Boolean))]; }
+function calcCartTotal() {
+  if (!cart.length) return {subtotal:0,desconto:0,total:0,coupon:0,descLabel:""};
+  if (cart[0]?.tipo === "aulao") {
+    var price = Number(cart[0].preco);
+    return {subtotal:price,desconto:0,total:price,coupon:0,descLabel:""};
+  }
+  var q = StorePricing.quote(cart.map(item=>item.key),storePrices,cupomAtivo,selectedCombos());
+  return {subtotal:q.subtotal/100,desconto:(q.subtotal-q.comboTotal)/100,total:q.total/100,
+    coupon:q.discount/100,descLabel:[...new Set(q.comboNames)].join(" · ")};
+}
 
-  var total = totalP2 + totalFinal + totalS1 + totalS2 + totalS4P1 + totalS4P2 + totalS4Final + totalCurso + totalAulao;
-  var desconto = subtotal - total;
+function storeItemDetails(key) {
+  var g = StorePricing.products[key] || StorePricing.packages[key];
+  if (!g) return "Curso";
+  return g.semester+"º semestre · "+({unico:"Resumo único",p1:"P1",p2:"P2",final:"Final"})[g.exam];
+}
 
-  return { subtotal: subtotal, desconto: desconto, total: total, descLabel: descLabel };
+function comboItemLabel(key) {
+  var subject = MATERIAS_S1.concat(MATERIAS_S2,MATERIAS,MATERIAS_S4).find(m=>key===m.key || ["p1","p2","final"].some(exam=>key===m.key+"_"+exam));
+  return subject?.label || key;
+}
+
+function ownsStoreKey(key) {
+  var g = StorePricing.products[key];
+  if (!g) return false;
+  var subjectKey = g.exam==="unico" ? key : key.slice(0,-g.exam.length-1);
+  var subject = {1:MATERIAS_S1,2:MATERIAS_S2,3:MATERIAS,4:MATERIAS_S4}[g.semester].find(m=>m.key===subjectKey);
+  return g.semester===1 ? hasAccessS1(subject) : g.semester===2 ? hasAccessS2(subject) : hasAccess(subject,g.exam);
+}
+
+function renderCustomCombos() {
+  var host = document.getElementById("storeCustomCombos");
+  host.replaceChildren();
+  storePrices.combos.filter(bundle=>bundle.active!==false && Array.isArray(bundle.keys) &&
+    bundle.keys.every(key=>StorePricing.products[key]?.ready.includes(key)) &&
+    StorePricing.validCents(bundle.price) && bundle.price < bundle.keys.reduce((total,key)=>total+StorePricing.price(key,storePrices),0)).forEach(bundle=>{
+    var card = document.createElement("article");
+    card.className = "produto-card";
+    var name = document.createElement("strong");
+    name.className = "produto-nome";
+    name.textContent = bundle.name;
+    var contents = document.createElement("div");
+    contents.className = "produto-sub";
+    contents.textContent = bundle.keys.map(key=>comboItemLabel(key)+" ("+storeItemDetails(key)+")").join(" · ");
+    var button = document.createElement("button");
+    button.className = "add-btn";
+    button.disabled = bundle.keys.some(ownsStoreKey);
+    button.textContent = button.disabled ? "Inclui material já adquirido" : "Adicionar combo · "+formatPrice(bundle.price/100);
+    button.onclick = ()=>{
+      if(cart.some(item=>item.tipo==="aulao")) { alert("Finalize ou remova a aula em vídeo do carrinho."); return; }
+      if(cart.some(item=>item.comboId && bundle.keys.includes(item.key))) { alert("Remova o combo que já contém estes materiais."); return; }
+      if(cart.some(item=>StorePricing.packages[item.key]?.keys.some(key=>bundle.keys.includes(key)))) { alert("Seu carrinho já tem um pacote com estes materiais."); return; }
+      cart = cart.filter(item=>!bundle.keys.includes(item.key));
+      bundle.keys.forEach(key=>cart.push({key,label:comboItemLabel(key),emoji:"📦",tipo:StorePricing.products[key].id,comboId:bundle.id,comboName:bundle.name}));
+      updateCartUI();
+      renderStore();
+      openCart();
+    };
+    card.append(name,contents,button);
+    host.append(card);
+  });
+  document.getElementById("storeCustomSection").hidden = !host.childElementCount;
 }
 
 function formatPrice(v) {
@@ -3772,7 +3724,13 @@ window.aplicarCupom = async function() {
     if (c.max_usos && c.usos >= c.max_usos) { msg.className = "cart-cupom-msg err"; msg.textContent = "Cupom esgotado."; btn.disabled = false; btn.textContent = "Aplicar"; return; }
 
     // Válido!
-    cupomAtivo = { codigo: c.codigo, desconto_pct: c.desconto_pct };
+    if (!cart.length || cart[0].tipo==="aulao" ||
+        !StorePricing.quote(cart.map(item=>item.key),storePrices,c,selectedCombos()).discount) {
+      msg.className = "cart-cupom-msg err";
+      msg.textContent = "Este cupom não se aplica aos itens avulsos do carrinho.";
+      return;
+    }
+    cupomAtivo = c;
     document.getElementById("cupomInputRow").style.display = "none";
     msg.className = "cart-cupom-msg"; msg.textContent = "";
     var applied = document.getElementById("cupomApplied");
@@ -3783,8 +3741,9 @@ window.aplicarCupom = async function() {
     msg.className = "cart-cupom-msg err";
     msg.textContent = "Erro ao validar. Tente novamente.";
     console.warn("Cupom error:", e);
+  } finally {
+    btn.disabled = false; btn.textContent = "Aplicar";
   }
-  btn.disabled = false; btn.textContent = "Aplicar";
 };
 
 window.removerCupom = function() {
@@ -3810,6 +3769,7 @@ function updateCartUI() {
   var footer = document.getElementById("cartFooter");
   var lista = document.getElementById("cartItemsList");
   var comboHint = document.getElementById("cartComboHint");
+  document.getElementById("cupomInputRow").closest(".cart-cupom").hidden = cart[0]?.tipo === "aulao";
 
   // FAB
   if (n > 0) fab.classList.remove("hidden");
@@ -3824,25 +3784,17 @@ function updateCartUI() {
     return;
   }
 
-  var precoFinalEfetivo = PRECO_FINAL;
   lista.innerHTML = cart.map(function(c) {
-    var precoItem;
-    if (c.isPacoteCompleto) {
-      precoItem = c.preco; // preço já dividido pelo pacote
-    } else if (c.tipo === "final") {
-      precoItem = precoFinalEfetivo;
-    } else {
-      precoItem = c.preco;
-    }
-    var precoOriginal = (c.tipo === "final" && !c.isPacoteCompleto && PROMO_FINAL_ATIVA && PRECO_FINAL < PRECO_FINAL_DE)
-      ? '<span style="text-decoration:line-through;color:rgba(125,211,232,0.3);font-size:11px;margin-right:4px;">' + formatPrice(PRECO_FINAL_DE) + '</span>'
-      : '';
-    var subLabel = c.tipo === "aulao" ? "Aula em vídeo · acesso individual" : (c.isPacoteCompleto ? "Pacote Completo · 50 dias" : (c.tipo === "curso" ? "Curso · 50 dias de acesso" : (c.tipo === "s1" ? "1º Semestre · 50 dias de acesso" : (c.tipo === "s2" ? "2º Semestre · 50 dias de acesso" : ((c.tipo === "s4_p1" || c.tipo === "s4_p2" || c.tipo === "s4_final") ? "4º Semestre · 50 dias de acesso" : "3º Semestre · 50 dias de acesso")))));
+    var precoItem = c.tipo==="aulao" ? Number(c.preco) : itemPrice(c.key);
+    var precoOriginal = "";
+    var subLabel = c.tipo==="aulao" ? "Aula em vídeo" : c.tipo==="curso" ? "Curso com certificado" : "Resumo · "+storeItemDetails(c.key);
+    if(c.isPacoteCompleto) subLabel = "Pacote completo · "+storeItemDetails(c.key);
+    if(c.comboName) subLabel += " · Combo "+c.comboName;
     return '<div class="cart-item">' +
       '<span class="cart-item-emoji">' + c.emoji + '</span>' +
       '<div class="cart-item-info">' +
-        '<div class="cart-item-name">' + c.label + '</div>' +
-        '<div class="cart-item-sub">' + subLabel + '</div>' +
+        '<div class="cart-item-name">' + escapeHtml(c.label) + '</div>' +
+        '<div class="cart-item-sub">' + escapeHtml(subLabel) + '</div>' +
       '</div>' +
       '<span class="cart-item-price">' + precoOriginal + formatPrice(precoItem) + '</span>' +
       '<button class="cart-item-remove" onclick="removeFromCart(\'' + c.key + '\')">✕</button>' +
@@ -3853,38 +3805,9 @@ function updateCartUI() {
   var calc = calcCartTotal();
   footer.style.display = "block";
 
-  // Dica inteligente
-  var p2InCart = cart.filter(function(c){ return c.tipo === "p2"; });
-  var p2NaoAdquiridos = MATERIAS.filter(function(m){ return !hasAccess(m,"p2"); });
-  var faltamParaPacote = p2NaoAdquiridos.filter(function(m){ return !cart.find(function(c){ return c.key === m.key+"_p2"; }); }).length;
-  var faltamPara3 = Math.max(0, 3 - p2InCart.length);
+  comboHint.textContent = "Confira o tipo de material, o semestre e a avaliação antes de pagar.";
+  comboHint.classList.add("visible");
 
-  var finalIndividuais = cart.filter(function(c){ return c.tipo === "final" && !c.isPacoteCompleto; });
-  var temPacoteFinal = cart.some(function(c){ return c.isPacoteCompleto; });
-  var hints = [];
-  if (p2InCart.length > 0 && faltamPara3 > 0) {
-    hints.push("💡 Adicione mais " + faltamPara3 + " P2 para ganhar 20% de desconto!");
-  } else if (p2InCart.length >= 3 && faltamParaPacote > 0 && p2NaoAdquiridos.length === MATERIAS.length) {
-    hints.push("🔥 Faltam " + faltamParaPacote + " P2 para o pacote completo com 33% off!");
-  }
-  var finaisDisponiveis = MATERIAS.filter(function(m){ return m.finalReady && !hasAccess(m,"final"); });
-  if (!temPacoteFinal) {
-    if (finalIndividuais.length > 0) {
-      var custoIndiv = finalIndividuais.length * PRECO_FINAL;
-      if (finalIndividuais.length >= finaisDisponiveis.length && custoIndiv > PRECO_PACK_FINAL) {
-        hints.push("🔥 Leve o Pacote Completo Final por " + formatPrice(PRECO_PACK_FINAL) + " e economize " + formatPrice(custoIndiv - PRECO_PACK_FINAL) + "!");
-      } else {
-        hints.push("🎓 Promo Recuperatória: " + formatPrice(PRECO_FINAL) + " por resumo · pacote completo por " + formatPrice(PRECO_PACK_FINAL));
-      }
-    }
-  } else {
-    hints.push("📦 Pacote Completo Final: " + formatPrice(PRECO_PACK_FINAL) + " — cupom não acumulável");
-  }
-  if (hints.length > 0) { comboHint.innerHTML = hints.join("<br>"); comboHint.classList.add("visible"); }
-  else { comboHint.classList.remove("visible"); }
-
-  // Resumo
-  var calc = calcCartTotal();
   document.getElementById("cartSubtotal").textContent = formatPrice(calc.subtotal);
   var descontoRow = document.getElementById("cartDescontoRow");
   if (calc.desconto > 0) {
@@ -3896,42 +3819,13 @@ function updateCartUI() {
   }
   document.getElementById("cartTotal").textContent = formatPrice(calc.total);
 
-  // Cupom aplicado — SOMENTE sobre itens individuais (não pacote completo final)
   var cupomRow = document.getElementById("cartCupomRow");
-  var temPacoteNoCarrinho = cart.some(function(c){ return c.isPacoteCompleto; });
-
-  if (cupomAtivo && calc.total > 0) {
-    if (temPacoteNoCarrinho) {
-      // Cupom não se aplica ao pacote completo
-      // Calcular base somente dos itens P2 (sem os finais do pacote)
-      var p2Only = cart.filter(function(c){ return c.tipo !== "final"; });
-      if (p2Only.length > 0) {
-        // Tem P2 + pacote final: cupom só nos P2
-        var baseP2 = calc.total - PRECO_PACK_FINAL;
-        var cupomVal = Math.round(baseP2 * cupomAtivo.desconto_pct) / 100;
-        var totalComCupom = Math.max(0, calc.total - cupomVal);
-        cupomRow.style.display = "flex";
-        document.getElementById("cartCupomLabel").textContent = "🎟️ Cupom " + cupomAtivo.codigo + " (" + cupomAtivo.desconto_pct + "% · só nos P2)";
-        document.getElementById("cartCupomDesconto").textContent = "- " + formatPrice(cupomVal);
-        document.getElementById("cartTotal").textContent = formatPrice(totalComCupom);
-      } else {
-        // Só pacote completo: cupom não se aplica
-        cupomRow.style.display = "flex";
-        document.getElementById("cartCupomLabel").textContent = "🎟️ Cupom " + cupomAtivo.codigo + " — não aplicável ao Pacote Completo";
-        document.getElementById("cartCupomDesconto").textContent = "R$ 0,00";
-        document.getElementById("cartTotal").textContent = formatPrice(calc.total);
-      }
-    } else {
-      // Sem pacote completo: cupom normal sobre tudo
-      var cupomVal = Math.round(calc.total * cupomAtivo.desconto_pct) / 100;
-      var totalComCupom = Math.max(0, calc.total - cupomVal);
-      cupomRow.style.display = "flex";
-      document.getElementById("cartCupomLabel").textContent = "🎟️ Cupom " + cupomAtivo.codigo + " (" + cupomAtivo.desconto_pct + "%)";
-      document.getElementById("cartCupomDesconto").textContent = "- " + formatPrice(cupomVal);
-      document.getElementById("cartTotal").textContent = formatPrice(totalComCupom);
-    }
-  } else {
-    cupomRow.style.display = "none";
+  cupomRow.style.display = cupomAtivo ? "flex" : "none";
+  if (cupomAtivo) {
+    document.getElementById("cartCupomLabel").textContent = calc.coupon
+      ? "Cupom "+cupomAtivo.codigo+" ("+cupomAtivo.desconto_pct+"%)"
+      : "Cupom sem itens avulsos elegíveis";
+    document.getElementById("cartCupomDesconto").textContent = "- "+formatPrice(calc.coupon);
   }
 }
 
@@ -3959,33 +3853,14 @@ window.checkoutCart = function(metodo) {
   var nomes = cart.map(function(c){ return c.label; }).join(", ");
   var keys = cart.map(function(c){ return c.key; });
 
-  // Aplica cupom ao total — somente sobre itens elegíveis.
+  if (!temAulao && !storePricesReady) { alert("Não foi possível carregar os preços. Atualize a página."); return; }
   var finalTotal = calc.total;
-  var appliedDiscount = 0;
-  var temPacoteCheckout = cart.some(function(c){ return c.isPacoteCompleto; });
-  if (!temAulao && cupomAtivo && finalTotal > 0) {
-    if (temPacoteCheckout) {
-      var p2Only = cart.filter(function(c){ return c.tipo !== "final"; });
-      if (p2Only.length > 0) {
-        var baseP2 = finalTotal - PRECO_PACK_FINAL;
-        var cupomVal = Math.round(baseP2 * cupomAtivo.desconto_pct) / 100;
-        appliedDiscount = Math.max(0, cupomVal);
-        finalTotal = Math.max(0, finalTotal - appliedDiscount);
-      }
-    } else {
-      var cupomVal = Math.round(finalTotal * cupomAtivo.desconto_pct) / 100;
-      appliedDiscount = Math.max(0, cupomVal);
-      finalTotal = Math.max(0, finalTotal - appliedDiscount);
-    }
-  }
-
-  finalTotal = Math.round((finalTotal + Number.EPSILON) * 100) / 100;
-  appliedDiscount = Math.round((appliedDiscount + Number.EPSILON) * 100) / 100;
-
+  var review = cart.map(c=>c.label+" · "+(c.tipo==="aulao" ? "Aula em vídeo" : storeItemDetails(c.key))+(c.comboName?" · Combo "+c.comboName:"")).join("\n");
+  if (!window.confirm("Confira sua compra\n\n"+review+"\n\nTotal: "+formatPrice(finalTotal)+"\nContinuar para "+(metodo==="card"?"cartão":"PIX")+"?")) return;
   var checkoutMeta = {
     items: checkoutPayloadItems(),
-    coupon_code: appliedDiscount > 0 && cupomAtivo ? cupomAtivo.codigo : null,
-    discount_amount: appliedDiscount
+    coupon_code: calc.coupon > 0 ? cupomAtivo.codigo : null,
+    combo_ids: selectedCombos()
   };
 
   // Se for 1 item só, usa fluxo normal
@@ -4103,13 +3978,14 @@ window.initPaymentMultiple = async function(productKeys, productName, totalPrice
             metodo:       "card",
             items:        checkoutMeta.items || [],
             coupon_code:  checkoutMeta.coupon_code || null,
-            discount_amount: Number(checkoutMeta.discount_amount || 0),
+            combo_ids: checkoutMeta.combo_ids || [],
+            pricing_version: 1,
           }),
         }
       );
       var data = await res.json();
       if (!res.ok || !data.init_point) {
-        alert("Erro ao gerar pagamento com cartão. Tente novamente.");
+        alert(data.error || "Erro ao gerar pagamento com cartão. Tente novamente.");
         return;
       }
       // Redireciona para o Checkout Pro do Mercado Pago
@@ -4148,14 +4024,15 @@ window.initPaymentMultiple = async function(productKeys, productName, totalPrice
           metodo:       "pix",
           items:        checkoutMeta.items || [],
           coupon_code:  checkoutMeta.coupon_code || null,
-          discount_amount: Number(checkoutMeta.discount_amount || 0),
+          combo_ids: checkoutMeta.combo_ids || [],
+            pricing_version: 1,
         }),
       }
     );
 
     var data = await res.json();
     if (!res.ok || !data.qr_code) {
-      document.getElementById("modalStatus").innerHTML = "❌ Erro ao gerar pagamento. Tente novamente.";
+      document.getElementById("modalStatus").textContent = data.error || "Erro ao gerar pagamento. Tente novamente.";
       return;
     }
 
@@ -4185,17 +4062,26 @@ window.initPaymentMultiple = async function(productKeys, productName, totalPrice
 
 // ── Renderiza loja ────────────────────────────────────────────────────────────
 function renderStore() {
+  document.getElementById("storeCursoPrice").textContent = formatPrice(itemPrice("curso-peconhentos"));
+  document.getElementById("curso-pec-btn").textContent = "Adicionar curso ao carrinho · "+formatPrice(itemPrice("curso-peconhentos"));
+  renderCustomCombos();
   renderAulaoStore();
   renderStoreGridS1();
   renderStoreGridS2();
   renderStoreGridS4();
   renderStoreGrid();
+  [["s1","s1"],["s2","s2"],["p2","p2"],["final","final"],
+    ["s4p1","s4_p1"],["s4p2","s4_p2"],["s4final","s4_final"]].forEach(([id,groupId])=>{
+    var card=document.getElementById(id==="final"?"store-combo-final-section":"combo-"+id+"-card");
+    if(card) card.style.display=canBuyStorePackage(StorePricing.groups.find(g=>g.id===groupId))?"block":"none";
+  });
   // Abrir 1º semestre por padrão
   var sem1 = document.getElementById("sem-1");
   if (sem1 && !sem1.classList.contains("open")) sem1.classList.add("open");
 }
 
 function renderStoreGrid() {
+  renderPackagePrice("p2","p2");
   var grid = document.getElementById("store-grid-p2");
   if (!grid) return;
   grid.innerHTML = "";
@@ -4216,7 +4102,7 @@ function renderStoreGrid() {
       '<span class="produto-emoji">' + m.emoji + '</span>' +
       '<div class="produto-nome">' + m.label + '</div>' +
       '<div class="produto-sub">P2 · 3º Semestre · 50 dias</div>' +
-      '<div class="produto-preco">R$ 15,00<span>/resumo</span></div>' +
+      '<div class="produto-preco">'+formatPrice(itemPrice(key))+'<span>/resumo</span></div>' +
       '<button class="' + btnClass + '"' + (owned ? ' disabled' : ' onclick="addToCart(\'' + key + '\')"') + '>' + btnLabel + '</button>';
 
     grid.appendChild(card);
@@ -4230,7 +4116,7 @@ function renderStoreGrid() {
       comboBtn.textContent = "✅ Você já possui todos os resumos de P2";
       comboBtn.disabled = true;
     } else {
-      comboBtn.textContent = "🛒 Adicionar pacote ao carrinho — R$ 69,90";
+      comboBtn.textContent = "🛒 Adicionar pacote ao carrinho — " + formatPrice(PRECO_PACK);
       comboBtn.disabled = false;
     }
   }
@@ -4239,25 +4125,10 @@ function renderStoreGrid() {
   renderStoreGridFinal();
 }
 
-window.addComboFinalToCart = function() {
-  var readyMaterias = MATERIAS.filter(function(m){ return m.finalReady && !hasAccess(m,"final"); });
-  if (readyMaterias.length === 0) { alert("Você já possui todos os resumos finais disponíveis!"); return; }
-
-  // Remove TODOS os itens Final do carrinho (evita duplicação)
-  cart = cart.filter(function(c){ return c.tipo !== "final"; });
-
-  // Adiciona todos como pacote completo — PRECO_PACK_FINAL dividido entre os itens
-  // isPacoteCompleto = true → bloqueia cupom e combo individual
-  var precoPorItem = PRECO_PACK_FINAL / readyMaterias.length;
-  readyMaterias.forEach(function(m) {
-    cart.push({ key: m.key+"_final", label: m.label+" — Final", emoji: m.emoji, preco: precoPorItem, tipo: "final", isPacoteCompleto: true });
-  });
-  updateCartUI();
-  renderStoreGrid();
-  openCart();
-};
+window.addComboFinalToCart = function() { addStorePackage("final","final"); };
 
 function renderStoreGridFinal() {
+  renderPackagePrice("final","final");
   var grid = document.getElementById("store-grid-final");
   var breveMsg = document.getElementById("store-final-breve");
   if (!grid) return;
@@ -4277,7 +4148,7 @@ function renderStoreGridFinal() {
     var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "Adicionar");
     var btnClass = "add-btn" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
-    var precoExibido = formatPrice(PRECO_FINAL);
+    var precoExibido = formatPrice(itemPrice(key));
     var descTag = "";
     if (PROMO_FINAL_ATIVA && PRECO_FINAL < PRECO_FINAL_DE) {
       var pctOff = Math.round((1 - PRECO_FINAL / PRECO_FINAL_DE) * 100);
@@ -4364,13 +4235,14 @@ window.initPayment = async function(productKey, productName, price, metodo, chec
             metodo:       "card",
             items:        checkoutMeta.items || [],
             coupon_code:  checkoutMeta.coupon_code || null,
-            discount_amount: Number(checkoutMeta.discount_amount || 0),
+            combo_ids: checkoutMeta.combo_ids || [],
+            pricing_version: 1,
           }),
         }
       );
       var data = await res.json();
       if (!res.ok || !data.init_point) {
-        alert("Erro ao gerar pagamento com cartão. Tente novamente.");
+        alert(data.error || "Erro ao gerar pagamento com cartão. Tente novamente.");
         return;
       }
       window.location.href = data.init_point;
@@ -4411,7 +4283,8 @@ window.initPayment = async function(productKey, productName, price, metodo, chec
           metodo:       "pix",
           items:        checkoutMeta.items || [],
           coupon_code:  checkoutMeta.coupon_code || null,
-          discount_amount: Number(checkoutMeta.discount_amount || 0),
+          combo_ids: checkoutMeta.combo_ids || [],
+            pricing_version: 1,
         }),
       }
     );
@@ -4419,7 +4292,7 @@ window.initPayment = async function(productKey, productName, price, metodo, chec
     var data = await res.json();
 
     if (!res.ok || !data.qr_code) {
-      document.getElementById("modalStatus").innerHTML = "❌ Erro ao gerar pagamento. Tente novamente.";
+      document.getElementById("modalStatus").textContent = data.error || "Erro ao gerar pagamento. Tente novamente.";
       document.getElementById("modalStatus").style.color = "#f87171";
       return;
     }
@@ -4571,7 +4444,7 @@ document.addEventListener("authReady", async function(e) {
     if (adminBtn) adminBtn.classList.add("visible");
   }
 
-  await loadAuloes();
+  await Promise.all([loadAuloes(),loadStorePrices().catch(console.error)]);
 
   statusArea.style.display = "none";
   mainContent.style.display = "block";
