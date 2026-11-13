@@ -3130,8 +3130,8 @@ function renderPackagePrice(id,groupId) {
   var pack = itemPrice(group.packageKey);
   var old=document.getElementById("combo-"+id+"-old");
   if(old) old.textContent = formatPrice(full);
-  var new=document.getElementById("combo-"+id+"-new");
-  if(new) new.textContent = formatPrice(pack);
+  var current=document.getElementById("combo-"+id+"-new");
+  if(current) current.textContent = formatPrice(pack);
   var pct=document.getElementById("combo-"+id+"-pct");
   if(pct) pct.textContent = Math.max(0,Math.round((1-pack/full)*100))+"% de desconto";
 }
