@@ -3128,9 +3128,12 @@ function renderPackagePrice(id,groupId) {
   var group = StorePricing.groups.find(g=>g.id===groupId);
   var full = group.keys.reduce((sum,key)=>sum+itemPrice(key),0);
   var pack = itemPrice(group.packageKey);
-  document.getElementById("combo-"+id+"-old").textContent = formatPrice(full);
-  document.getElementById("combo-"+id+"-new").textContent = formatPrice(pack);
-  document.getElementById("combo-"+id+"-pct").textContent = Math.max(0,Math.round((1-pack/full)*100))+"% de desconto";
+  var old=document.getElementById("combo-"+id+"-old");
+  if(old) old.textContent = formatPrice(full);
+  var new=document.getElementById("combo-"+id+"-new");
+  if(new) new.textContent = formatPrice(pack);
+  var pct=document.getElementById("combo-"+id+"-pct");
+  if(pct) pct.textContent = Math.max(0,Math.round((1-pack/full)*100))+"% de desconto";
 }
 
 function canBuyStorePackage(group) {
