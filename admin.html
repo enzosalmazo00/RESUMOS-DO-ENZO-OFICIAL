@@ -461,7 +461,6 @@
     <button class="admin-tab" onclick="switchAdminTab('alunos')"><span class="tab-icon">&#128101;</span><span class="tab-text">Alunos</span><span class="tab-badge" id="tabBadgeAlunos">0</span></button>
     <button class="admin-tab" onclick="switchAdminTab('professores')"><span class="tab-icon">🎓</span><span class="tab-text">Professores</span><span class="tab-badge" id="tabBadgeProfessores">0</span></button>
     <button class="admin-tab" onclick="switchAdminTab('pagamentos')"><span class="tab-icon">&#128176;</span><span class="tab-text">Financeiro</span></button>
-    <a id="personalFinanceLink" class="admin-tab" href="financas-pessoais.html" style="display:none;text-decoration:none"><span class="tab-icon">◈</span><span class="tab-text">Finanças pessoais</span></a>
     <button class="admin-tab" onclick="switchAdminTab('auloes')"><span class="tab-icon">🎥</span><span class="tab-text">Aulões</span></button>
     <button class="admin-tab" onclick="switchAdminTab('promos')"><span class="tab-icon">&#127915;</span><span class="tab-text">Promoções</span></button>
   </div>
@@ -1130,7 +1129,6 @@ async function init(){
     if(!pr.data||!pr.data.is_admin){hideOverlay();alert("Acesso negado.");window.location.replace("dashboard.html");return;}
     hideOverlay();
     document.getElementById("adminEmail").textContent=session.user.email;
-    if(session.user.id==="7e757386-e344-4cd0-8490-f81df33c35b3")document.getElementById("personalFinanceLink").style.display="flex";
     try{await loadAuloesAdmin();}catch(e){console.warn("auloes:",e);}
     await loadAlunos();
     await loadProfessoresAdmin();
