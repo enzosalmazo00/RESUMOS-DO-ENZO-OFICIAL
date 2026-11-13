@@ -20,6 +20,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
+    #itemAccessDialog {width:min(420px,calc(100% - 32px));padding:24px;background:#0b1c32;color:#e6f8ff;border:1px solid #315879;border-radius:16px;font:inherit}
+    #itemAccessDialog::backdrop {background:#020811c9}
+    #itemAccessDialog h2 {margin:0 0 10px;font-size:20px}
+    #itemAccessDays {margin:0;color:#67e8f9;font-weight:700}
+    #itemAccessDate {margin:5px 0 18px;color:#b4cfe1;font-size:13px}
+    .item-access-actions {display:flex;justify-content:flex-end;gap:10px;align-items:center;flex-wrap:wrap}
+    .item-access-actions :is(button,a) {display:inline-block;padding:9px 14px;border:1px solid #477499;background:#162e48;color:#fff;border-radius:9px;text-decoration:none;font:inherit;cursor:pointer}
+    .item-access-actions a {background:#15516e}
+
     :root {
       --cyan:   #22d3ee;
       --cyan2:  #06b6d4;
@@ -1174,7 +1183,7 @@
         <span><strong id="onlineStudentsCount">0</strong> online agora</span>
       </div>
       <div class="user-email" id="userEmail"></div>
-      <div class="expiry-badge" id="expiryBadge" style="display:none"></div>
+      <a class="expiry-badge" href="conta.html?tab=acessos">Meus acessos</a>
       <button class="admin-btn" id="adminBtn" onclick="window.location.href='admin.html'">&#9881;&#65039; Painel Admin</button>
       <button class="admin-btn" id="professorBtn" onclick="window.location.href='professor.html'" style="border-color:rgba(168,85,247,.35);background:rgba(168,85,247,.08);color:#c4b5fd;">🎓 Área do Professor</button>
       <a class="logout-btn" id="platformAccountBtn" href="conta.html">👤 Minha Conta</a>
@@ -1801,6 +1810,12 @@
 </div>
 
 <!-- MODAL PRESENTE -->
+<dialog id="itemAccessDialog" aria-labelledby="itemAccessTitle">
+  <h2 id="itemAccessTitle"></h2>
+  <p id="itemAccessDays"></p>
+  <p id="itemAccessDate"></p>
+  <form method="dialog" class="item-access-actions"><button>Voltar</button><a id="itemAccessOpen" href="#">Abrir material</a></form>
+</dialog>
 <div class="presente-modal" id="presenteModal" onclick="closePresenteModal()">
   <div class="presente-modal-box" onclick="event.stopPropagation()">
     <span class="presente-emoji">🎁</span>
@@ -1956,7 +1971,6 @@ var currentMateria = null; // null = vista pastas | "bioquimica" = vista interna
 var statusArea   = document.getElementById("statusArea");
 var mainContent  = document.getElementById("mainContent");
 var userEmailEl  = document.getElementById("userEmail");
-var expiryBadge  = document.getElementById("expiryBadge");
 var logoutBtn    = document.getElementById("logoutBtn");
 
 // ── Tabs ──────────────────────────────────────────────────────────────────────
@@ -2115,8 +2129,13 @@ function renderAuloesGrid() {
 
       var btn = card.querySelector(".aulao-btn");
       if (unlocked) {
-        btn.addEventListener("click", function(ev){ev.stopPropagation();window.location.href="aulao.html?v=seek-icons-2&key="+encodeURIComponent(a.chave);});
-        card.addEventListener("click", function(){window.location.href="aulao.html?v=seek-icons-2&key="+encodeURIComponent(a.chave);});
+        function openAulaoAccess() {
+          var href = "aulao.html?v=seek-icons-2&key="+encodeURIComponent(a.chave);
+          if (isFreeAulao(a)) { window.location.href=href; return; }
+          showItemAccess(a.nome,href,resolveAccessExpiry(a.chave));
+        }
+        btn.addEventListener("click", function(ev){ev.stopPropagation();openAulaoAccess();});
+        card.addEventListener("click", openAulaoAccess);
       } else if (sellable) {
         btn.addEventListener("click", function(ev){ev.stopPropagation();switchTab("loja");setTimeout(function(){var el=document.querySelector('[data-aulao-store="'+a.chave+'"]');if(el)el.scrollIntoView({behavior:"smooth",block:"center"});},100);});
       }
@@ -2187,40 +2206,8 @@ function colKey(materia, tipo) {
 function hasAccess(materia, tipo) {
   if (!profile) return false;
   if (profile.is_admin) return true;
-
-  var col = colKey(materia, tipo);
-  var pacoteKey = MATERIAS_S4.indexOf(materia) !== -1 ? "pacote_s4_" + tipo : "pacote_" + tipo;
-
-  // Nova tabela acessos: se existir registro válido, é fonte confiável.
-  var acesso = acessosCache[col];
-  if (acesso) {
-    if (!acesso.expira_em) return true;
-    if (new Date(acesso.expira_em) > new Date()) return true;
-  }
-  var acessoPacote = acessosCache[pacoteKey];
-  if (acessoPacote) {
-    if (!acessoPacote.expira_em) return true;
-    if (new Date(acessoPacote.expira_em) > new Date()) return true;
-  }
-
-  function presente(k) {
-    var arr = Array.isArray(profile.resumos_presente) ? profile.resumos_presente : [];
-    return arr.indexOf(k) >= 0;
-  }
-  function validoNoProfile(k) {
-    if (!k || !profile[k]) return false;
-    var exp = profile[k + "_expira"];
-    if (exp) return new Date(exp) > new Date();
-
-    // Só aceita ausência de _expira quando for cortesia explicitamente marcada.
-    if (presente(k)) {
-      if (profile.acesso_expira_em) return new Date(profile.acesso_expira_em) > new Date();
-      return true;
-    }
-    return false;
-  }
-
-  return validoNoProfile(col) || validoNoProfile(pacoteKey);
+  var prefix = MATERIAS_S4.includes(materia) ? "pacote_s4_" : "pacote_";
+  return resolveAccessExpiry(colKey(materia,tipo),prefix+tipo) !== null;
 }
 
 function hasS4Pack(tipo) {
@@ -2235,81 +2222,53 @@ function hasS4Pack(tipo) {
   return pres&&(!profile.acesso_expira_em||new Date(profile.acesso_expira_em)>new Date());
 }
 
+function resolveAccessExpiry(key, packageKey, legacyWithoutExpiry) {
+  var now = Date.now();
+  var candidates = [key, packageKey].filter(Boolean).flatMap(function(k) {
+    var row = acessosCache[k];
+    if (row) return [row.expira_em === null ? Infinity : Date.parse(row.expira_em)];
+    if (!profile || !profile[k]) return [];
+    var date = profile[k + "_expira"];
+    if (date) return [Date.parse(date)];
+    if (profile.resumos_presente?.includes(k)) {
+      return [profile.acesso_expira_em ? Date.parse(profile.acesso_expira_em) : Infinity];
+    }
+    return legacyWithoutExpiry ? [Infinity] : [];
+  }).filter(date => date > now);
+  return candidates.length ? Math.max(...candidates) : null;
+}
+
+function expiryDays(expiry) {
+  return Number.isFinite(expiry) ? Math.max(0, Math.ceil((expiry - Date.now()) / 86400000)) : null;
+}
+
 function daysLeftForResumo(materia, tipo) {
-  if (!profile) return null;
-  var col = colKey(materia, tipo);
-  var pacoteKey = MATERIAS_S4.indexOf(materia) !== -1 ? "pacote_s4_" + tipo : "pacote_" + tipo;
-  
-  // ── [M2] DUAL-MODE: Tenta acessos PRIMEIRO ────────────────────────────────
-  var chaveAcesso = col;
-  var acesso = acessosCache[chaveAcesso], pack = acessosCache[pacoteKey];
-  var expiryCandidates=[acesso&&acesso.expira_em,pack&&pack.expira_em,
-    profile[col+"_expira"],profile[pacoteKey+"_expira"]]
-    .filter(function(x){return x&&new Date(x)>new Date();});
-  if(expiryCandidates.length){
-    var latest=Math.max.apply(null,expiryCandidates.map(function(x){return new Date(x).getTime();}));
-    return Math.max(0,Math.ceil((latest-Date.now())/86400000));
-  }
-  // ── Fallback: cortesias sem expiração própria ────────────────────────────────
-  var expiraCol = col + "_expira";
-  var expiraPacote = pacoteKey + "_expira";
-  var expira = null;
-  if (!expira) {
-    var arr = Array.isArray(profile.resumos_presente) ? profile.resumos_presente : [];
-    var cortesia = arr.indexOf(col) >= 0 || arr.indexOf(pacoteKey) >= 0;
-    if (cortesia) expira = profile.acesso_expira_em || null;
-  }
-  if (!expira) return null;
-  var diff = new Date(expira) - new Date();
-  return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
+  var prefix = MATERIAS_S4.includes(materia) ? "pacote_s4_" : "pacote_";
+  return expiryDays(resolveAccessExpiry(colKey(materia, tipo), prefix + tipo));
 }
 
-function isExpired() {
-  // Não usa mais expiração global — cada resumo tem sua própria data
-  return false;
+function showItemAccess(title, href, expiry) {
+  var dialog = document.getElementById("itemAccessDialog");
+  var days = expiryDays(expiry);
+  var expiryText = days === null ? (expiry === Infinity ? "Acesso sem vencimento" : "Acesso administrativo ou sem prazo informado")
+    : days + (days === 1 ? " dia restante" : " dias restantes");
+  document.getElementById("itemAccessTitle").textContent = title;
+  document.getElementById("itemAccessDays").textContent = expiryText;
+  document.getElementById("itemAccessDate").textContent = days === null ? "" :
+    "Válido até " + new Intl.DateTimeFormat("pt-BR", {dateStyle:"long",timeStyle:"short"}).format(new Date(expiry));
+  document.getElementById("itemAccessOpen").href = href;
+  dialog.showModal();
 }
 
-function daysLeft() {
-  // Retorna o menor prazo entre todos os resumos ativos
-  if (!profile) return null;
-  var minDays = null;
-  var COLS = ["bioquimica_p1","bioquimica_p2","bioquimica_final",
-    "biofisica_p1","biofisica_p2","biofisica_final",
-    "genetica_p1","genetica_p2","genetica_final",
-    "fisiologia_p1","fisiologia_p2","fisiologia_final",
-    "microbiologia_p1","microbiologia_p2","microbiologia_final",
-    "micro_pratica_p1","micro_pratica_p2","micro_pratica_final",
-    "imunologia_p1","imunologia_p2","imunologia_final",
-    "fisiologia_2_p1","fisiologia_2_p2","fisiologia_2_final",
-    "bioquimica_2_p1","bioquimica_2_p2","bioquimica_2_final",
-    "epidemiologia_p1","epidemiologia_p2","epidemiologia_final",
-    "nutricao_p1","nutricao_p2","nutricao_final",
-    "microbiologia_2_p1","microbiologia_2_p2","microbiologia_2_final",
-    "micro_pratica_2_p1","micro_pratica_2_p2","micro_pratica_2_final",
-    "eletrocardiograma_p1","eletrocardiograma_p2","eletrocardiograma_final"];
-  COLS.forEach(function(col) {
-    if (!profile[col]) return;
-    var expira = profile[col + "_expira"];
-    if (!expira) return;
-    var diff = new Date(expira) - new Date();
-    var days = Math.max(0, Math.ceil(diff / (1000*60*60*24)));
-    if (minDays === null || days < minDays) minDays = days;
+function showResumoAccessOnClick(link, materia, tipo, pack) {
+  link.addEventListener("click", function(event) {
+    if (event.defaultPrevented || event.target.closest(".presente-btn") ||
+        event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    var key = tipo ? colKey(materia,tipo) : materia.key;
+    var title = materia.label + (tipo ? " · " + (tipo === "final" ? "Final" : tipo.toUpperCase()) : "");
+    showItemAccess(title, link.href, resolveAccessExpiry(key,pack,!tipo));
   });
-  return minDays;
-}
-
-// ── Renderiza badge de expiração ──────────────────────────────────────────────
-function renderExpiryBadge() {
-  var d = daysLeft();
-  if (d === null) return;
-  expiryBadge.style.display = "block";
-  if (d <= 7) {
-    expiryBadge.className = "expiry-badge warning";
-    expiryBadge.textContent = "⚠️ Acesso expira em " + d + " dia" + (d===1?"":"s");
-  } else {
-    expiryBadge.className = "expiry-badge";
-    expiryBadge.textContent = "⏱️ " + d + " dias restantes";
-  }
 }
 
 // ── Renderiza grid de resumos (aba Meus Resumos) ───────────────────────────────
@@ -2723,6 +2682,7 @@ function renderMateriaInterna(key) {
     var p2 = document.createElement("a");
     p2.className = "resumo-card unlocked";
     p2.href = m.file_p2;
+    showResumoAccessOnClick(p2,m,"p2","pacote_p2");
     p2.style.position = "relative";
     p2.innerHTML =
       (ehPresente ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>' : '') +
@@ -2759,6 +2719,7 @@ function renderMateriaInterna(key) {
       var finalCard = document.createElement("a");
       finalCard.className = "resumo-card unlocked";
       finalCard.href = m.file_final;
+      showResumoAccessOnClick(finalCard,m,"final","pacote_final");
       finalCard.style.position = "relative";
       finalCard.style.borderColor = "rgba(74,222,128,0.25)";
       finalCard.innerHTML =
@@ -2848,6 +2809,7 @@ function renderMateriaInternaS4(key) {
       var card = document.createElement("a");
       card.className = "resumo-card unlocked";
       card.href = file;
+      showResumoAccessOnClick(card,m,tipo,"pacote_s4_"+tipo);
       card.style.position = "relative";
       if (tipo === "final") card.style.borderColor = "rgba(74,222,128,0.25)";
       card.innerHTML =
@@ -2899,33 +2861,11 @@ window.goToStore = function() { switchTab("loja"); };
 
 // ── S1: Acesso e dias restantes (resumo único por disciplina) ─────────────────
 function hasAccessS1(materia) {
-  if (!profile) return false;
-  var col = materia.key;
-  // Verifica acessos cache primeiro
-  var acesso = acessosCache[col];
-  if (acesso) {
-    if (!acesso.expira_em) return true;
-    return new Date(acesso.expira_em) > new Date();
-  }
-  // Fallback: profiles
-  if (!profile[col]) return false;
-  var expira = profile[col + "_expira"];
-  if (!expira) return true;
-  return new Date(expira) > new Date();
+  return !!profile && resolveAccessExpiry(materia.key,"pacote_s1",true) !== null;
 }
 
 function daysLeftForResumoS1(materia) {
-  if (!profile) return null;
-  var col = materia.key;
-  var acesso = acessosCache[col];
-  if (acesso && acesso.expira_em) {
-    var diff = new Date(acesso.expira_em) - new Date();
-    return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
-  }
-  var expira = profile[col + "_expira"];
-  if (!expira) return null;
-  var diff = new Date(expira) - new Date();
-  return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
+  return expiryDays(resolveAccessExpiry(materia.key,"pacote_s1",true));
 }
 
 // ── S1: Navegação (abrir/fechar matéria) ─────────────────────────────────────
@@ -2984,6 +2924,7 @@ function renderMateriaInternaS1(key) {
     var card = document.createElement("a");
     card.className = "resumo-card unlocked";
     card.href = m.file;
+    showResumoAccessOnClick(card,m,null,"pacote_s1");
     card.style.position = "relative";
     card.innerHTML =
       (ehPresente ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>' : '') +
@@ -3272,31 +3213,11 @@ function renderStoreGridS4() {
 
 // ── S2: Acesso e dias restantes ──────────────────────────────────────────────
 function hasAccessS2(materia) {
-  if (!profile) return false;
-  var col = materia.key;
-  var acesso = acessosCache[col];
-  if (acesso) {
-    if (!acesso.expira_em) return true;
-    return new Date(acesso.expira_em) > new Date();
-  }
-  if (!profile[col]) return false;
-  var expira = profile[col + "_expira"];
-  if (!expira) return true;
-  return new Date(expira) > new Date();
+  return !!profile && resolveAccessExpiry(materia.key,"pacote_s2",true) !== null;
 }
 
 function daysLeftForResumoS2(materia) {
-  if (!profile) return null;
-  var col = materia.key;
-  var acesso = acessosCache[col];
-  if (acesso && acesso.expira_em) {
-    var diff = new Date(acesso.expira_em) - new Date();
-    return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
-  }
-  var expira = profile[col + "_expira"];
-  if (!expira) return null;
-  var diff = new Date(expira) - new Date();
-  return Math.max(0, Math.ceil(diff / (1000*60*60*24)));
+  return expiryDays(resolveAccessExpiry(materia.key,"pacote_s2",true));
 }
 
 // ── S2: Navegação ────────────────────────────────────────────────────────────
@@ -3355,6 +3276,7 @@ function renderMateriaInternaS2(key) {
     var card = document.createElement("a");
     card.className = "resumo-card unlocked";
     card.href = m.file;
+    showResumoAccessOnClick(card,m,null,"pacote_s2");
     card.style.position = "relative";
     card.innerHTML =
       (ehPresente ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>' : '') +
@@ -3511,7 +3433,7 @@ function renderCursosGrid() {
       card.style.backgroundImage = "url('" + c.capa + "')";
     }
     if (liberado) {
-      card.onclick = function(){ window.location.href = c.file; };
+      card.onclick = function(){ showItemAccess(c.titulo,c.file,resolveAccessExpiry(c.chave)); };
       card.innerHTML =
         '<div class="curso-img-overlay">' +
           '<div class="curso-img-badge" style="background:#059669;">✓ Liberado</div>' +
@@ -3880,33 +3802,16 @@ window.checkoutCart = function(metodo) {
 };
 
 // ── Confirmação automática de pagamento / acesso ─────────────────────────────
-function accessRowIsValid(row){
-  if(!row)return false;
-  if(!row.expira_em)return true;
-  return new Date(row.expira_em)>new Date();
-}
-async function refreshPaidAccess(keys,session){
-  keys=(keys||[]).filter(Boolean);
-  if(!keys.length)return false;
-
-  // Cursos e Aulas em Vídeo usam a tabela `acessos` como fonte de verdade.
-  var accessKeys=keys.filter(function(k){return k.indexOf("aulao-")===0||k.indexOf("curso-")===0||!!acessosCache[k]});
-  if(accessKeys.length){
-    var ar=await window.authClient.from("acessos").select("resumo,expira_em").eq("user_id",session.user.id).in("resumo",accessKeys);
-    if(!ar.error&&(ar.data||[]).length){
-      (ar.data||[]).forEach(function(row){acessosCache[row.resumo]={expira_em:row.expira_em};});
-    }
-  }
-
-  // Resumos legados continuam compatíveis com as colunas booleanas de profiles.
-  var remaining=keys.filter(function(k){return !accessRowIsValid(acessosCache[k]);});
-  var profileKeys=remaining.filter(function(k){return /^[A-Za-z0-9_]+$/.test(k)&&k.indexOf("aulao-")!==0&&k.indexOf("curso-")!==0;});
-  if(profileKeys.length){
-    var pr=await window.authClient.from("profiles").select(profileKeys.join(",")).eq("id",session.user.id).single();
-    if(!pr.error&&pr.data){profileKeys.forEach(function(k){if(pr.data[k]===true)profile[k]=true;});}
-  }
-
-  return keys.every(function(k){return accessRowIsValid(acessosCache[k])||(profile&&profile[k]===true);});
+async function refreshPaidAccess(keys,session,orderId) {
+  if (!keys.length || !orderId) return false;
+  var db = window.authClient;
+  var order = await db.from("orders").select("status,access_granted_at").eq("id",orderId).eq("user_id",session.user.id).maybeSingle();
+  if (order.error || order.data?.status !== "approved" || !order.data.access_granted_at) return false;
+  // Recarrega o conjunto inteiro: um pacote pode liberar várias disciplinas.
+  var result = await db.from("acessos").select("resumo,expira_em").eq("user_id",session.user.id);
+  if (result.error) return false;
+  acessosCache = Object.fromEntries((result.data || []).map(row => [row.resumo,row]));
+  return keys.every(key => !!acessosCache[key]);
 }
 function finishPaymentSuccess(keys){
   if(pollingTimer){clearInterval(pollingTimer);pollingTimer=null;}
@@ -3917,12 +3822,12 @@ function finishPaymentSuccess(keys){
   renderResumosGrid();renderCursosGrid();renderAuloesGrid();renderStore();
   setTimeout(function(){closeModal();},1200);
 }
-function startPaymentAccessPolling(keys,session){
+function startPaymentAccessPolling(keys,session,orderId){
   if(pollingTimer)clearInterval(pollingTimer);
   var checking=false;
   async function check(){
     if(checking)return;checking=true;
-    try{if(await refreshPaidAccess(keys,session))finishPaymentSuccess(keys)}catch(e){console.warn("payment access polling:",e)}
+    try{if(await refreshPaidAccess(keys,session,orderId))finishPaymentSuccess(keys)}catch(e){console.warn("payment access polling:",e)}
     finally{checking=false}
   }
   check();
@@ -4056,7 +3961,7 @@ window.initPaymentMultiple = async function(productKeys, productName, totalPrice
     currentPaymentId = data.payment_id;
     var cartItemsForPolling = [...productKeys];
     if(data.charged_amount)document.getElementById("modalProductPrice").textContent=formatPrice(Number(data.charged_amount));
-    startPaymentAccessPolling(cartItemsForPolling,session);
+    startPaymentAccessPolling(cartItemsForPolling,session,data.order_id);
   } catch(err) {
     console.error(err);
     document.getElementById("modalStatus").innerHTML = "❌ Erro de conexão. Tente novamente.";
@@ -4319,7 +4224,7 @@ window.initPayment = async function(productKey, productName, price, metodo, chec
 
     currentPaymentId = data.payment_id;
     if(data.charged_amount)document.getElementById("modalProductPrice").textContent=formatPrice(Number(data.charged_amount));
-    startPaymentAccessPolling([productKey],session);
+    startPaymentAccessPolling([productKey],session,data.order_id);
 
   } catch(err) {
     console.error(err);
@@ -4452,7 +4357,6 @@ document.addEventListener("authReady", async function(e) {
   statusArea.style.display = "none";
   mainContent.style.display = "block";
 
-  renderExpiryBadge();
   renderWelcome();
   renderResumosGrid();
   renderCursosGrid();

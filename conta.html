@@ -100,7 +100,7 @@ async function init(){
     if(!hasExpiry && !/^pacote_/.test(k))return;
     if(accesses.some(a=>a.resumo===k))return;
     accesses.push({
-      id:"legacy-"+k,resumo:k,expira_em:profile[k+"_expira"]||profile.acesso_expira_em||null,
+      id:"legacy-"+k,resumo:k,expira_em:profile[k+"_expira"]||(profile.resumos_presente?.includes(k)?profile.acesso_expira_em:null)||null,
       created_at:profile.created_at||u.created_at,order_id:null,source:"legacy_profile"
     });
   });
@@ -109,6 +109,7 @@ async function init(){
     items=ir.data||[];
   }
   render();
+  if(new URLSearchParams(location.search).get("tab")==="acessos") document.querySelector('[data-tab="acessos"]')?.click();
   document.documentElement.style.visibility="visible";document.getElementById("loading").style.display="none";document.getElementById("app").style.display="";
 }
 function render(){
@@ -118,7 +119,12 @@ function render(){
   document.getElementById("mSpent").textContent=money(orders.filter(o=>o.status==="approved").reduce((a,o)=>a+Number(o.valor||0),0));
   document.getElementById("mSince").textContent=dateOnly(profile.created_at||window.authSession.user.created_at);
   document.getElementById("accessCount").textContent=active.length+" ativos";
-  document.getElementById("accessList").innerHTML=accesses.length?accesses.map(a=>`<div class="row"><div class="grow"><div class="title">${esc(prettyKey(a.resumo))}</div><div class="meta">${a.order_id?"Compra #"+shortId(a.order_id):a.source==="legacy"?"Acesso anterior":"Acesso concedido"} · ${a.expira_em?"Até "+dateOnly(a.expira_em):"Acesso permanente"}</div></div><span class="status ${!a.expira_em||new Date(a.expira_em)>new Date()?"ok":"bad"}">${!a.expira_em||new Date(a.expira_em)>new Date()?"Ativo":"Expirado"}</span></div>`).join(""):'<div class="empty">Nenhum acesso normalizado encontrado.</div>';
+  document.getElementById("accessList").innerHTML=accesses.length?accesses.map(a=>{
+    const until = a.expira_em ? Date.parse(a.expira_em) : Infinity;
+    const days = Math.max(0,Math.ceil((until-Date.now())/86400000));
+    const remaining = !Number.isFinite(until) ? "Acesso permanente" : days ? days+(days===1?" dia restante":" dias restantes") : "Acesso expirado";
+    return `<details><summary><div class="row"><div class="grow"><div class="title">${esc(prettyKey(a.resumo))}</div><div class="meta">${remaining}</div></div><span class="status ${until>Date.now()?"ok":"bad"}">${until>Date.now()?"Ativo":"Expirado"}</span></div></summary><div class="meta" style="padding:0 12px 12px">${a.expira_em?"Validade até "+dateOnly(a.expira_em):remaining}${a.order_id?" · Compra #"+shortId(a.order_id):""}</div></details>`;
+  }).join(""):'<div class="empty">Nenhum acesso encontrado.</div>';
   document.getElementById("ordersList").innerHTML=orders.length?orders.map(o=>{
     const oi=items.filter(i=>i.order_id===o.id);return `<details><summary><div class="row"><div class="grow"><div class="title">${esc(o.produto_nome||prettyKey(o.produto_key))}</div><div class="meta">${dt(o.criado_em)} · Pedido #${shortId(o.id)} · ${o.payment_method==="pix"?"PIX":o.payment_method==="card"?"Cartão":"Forma não registrada"}</div></div><span class="status ${statusClass(o.status)}">${esc(statusLabel(o.status))}</span><div class="money">${money(o.valor)}</div></div></summary><div style="padding:0 12px 14px 12px"><div class="sub">ID Mercado Pago: ${esc(o.mp_payment_id||o.mp_preference_id||"—")}<br>Aprovado: ${dt(o.approved_at)} · Acesso liberado: ${dt(o.access_granted_at)}${o.coupon_code?`<br>Cupom: ${esc(o.coupon_code)} · desconto registrado: ${money(o.discount_amount)}`:""}</div>${oi.length?`<div style="margin-top:9px">${oi.map(i=>`<div class="meta">• ${esc(i.product_name||prettyKey(i.product_key))} ${i.line_total!=null?"— "+money(i.line_total):""}</div>`).join("")}</div>`:""}</div></details>`;
   }).join(""):'<div class="empty">Nenhuma compra registrada.</div>';
