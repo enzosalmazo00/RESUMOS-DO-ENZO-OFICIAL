@@ -1692,7 +1692,7 @@
               <div class="combo-header">
                 <div>
                   <div class="combo-title" style="color:#4ade80;">🎓 Pacote Completo — Final · 4º Semestre</div>
-                  <div class="combo-sub">Todas as disciplinas com Final disponível</div>
+                  <div class="combo-sub">Todas as 7 disciplinas Final, inclusive futuros lançamentos · acesso por 50 dias após a compra</div>
                 </div>
                 <div class="combo-preco-box">
                   <div class="combo-preco-old" id="combo-s4final-old" style="font-size:22px;color:rgba(74,222,128,0.55);">R$ 90,00</div>
@@ -3063,6 +3063,8 @@ function renderPackagePrice(id,groupId) {
 }
 
 function canBuyStorePackage(group) {
+  if (!group) return false;
+  if (group.id === "s4_p2" || group.id === "s4_final") return !hasS4Pack(group.exam);
   return group.ready.length === group.keys.length && !group.keys.some(ownsStoreKey) &&
     StorePricing.price(group.packageKey,storePrices) < group.keys.reduce((sum,key)=>sum+StorePricing.price(key,storePrices),0);
 }
@@ -3141,7 +3143,7 @@ function renderStoreGridS4() {
 
     if (!comboCard) return;
 
-    if (tipo !== "p2" && itensReady.length < 2) {
+    if (tipo === "p1" && itensReady.length < 2) {
       comboCard.style.display = "none";
       return;
     }
@@ -3149,7 +3151,7 @@ function renderStoreGridS4() {
     renderPackagePrice("s4"+tipo,"s4_"+tipo);
 
     var readyNaoAdq = itensReady.filter(function(m){ return !hasAccess(m, tipo); });
-    var precoCheio = itensReady.length * unitMap[tipo];
+    var precoCheio = StorePricing.groups.find(g=>g.id==="s4_"+tipo).keys.reduce((sum,key)=>sum+itemPrice(key),0);
     var pct = precoCheio > 0 ? Math.round((1 - packMap[tipo] / precoCheio) * 100) : 0;
 
     if (comboOld) comboOld.textContent = formatPrice(precoCheio);
@@ -3157,13 +3159,13 @@ function renderStoreGridS4() {
     if (comboPct) comboPct.textContent = "🏷️ " + Math.max(0, pct) + "% off";
 
     if (comboBtn) {
-      if(tipo==="p2"){
-        var ownedPack=hasS4Pack("p2");
+      if(tipo==="p2" || tipo==="final"){
+        var ownedPack=hasS4Pack(tipo);
         comboBtn.disabled=ownedPack;
-        comboBtn.textContent=ownedPack?"✅ Pacote P2 já adquirido":
-          (cart.some(function(c){return c.key==="pacote_s4_p2";})?
-            "✓ Pacote P2 no carrinho — "+formatPrice(PRECO_S4_P2_PACK):
-            "🛒 Adicionar pacote completo ao carrinho — "+formatPrice(PRECO_S4_P2_PACK));
+        comboBtn.textContent=ownedPack?"✅ Pacote já adquirido":
+          (cart.some(function(c){return c.key==="pacote_s4_"+tipo;})?
+            "✓ Pacote no carrinho — "+formatPrice(packMap[tipo]):
+            "🛒 Adicionar pacote completo ao carrinho — "+formatPrice(packMap[tipo]));
       } else if (readyNaoAdq.length === 0) {
         comboBtn.textContent = "✅ Você já possui todos os resumos disponíveis";
         comboBtn.disabled = true;
@@ -3965,7 +3967,7 @@ function renderStore() {
   [["s1","s1"],["s2","s2"],["p2","p2"],["final","final"],
     ["s4p1","s4_p1"],["s4p2","s4_p2"],["s4final","s4_final"]].forEach(([id,groupId])=>{
     var card=document.getElementById(id==="final"?"store-combo-final-section":"combo-"+id+"-card");
-    if(card) card.style.display=canBuyStorePackage(StorePricing.groups.find(g=>g.id===groupId))?"block":"none";
+    if(card) card.style.display=(groupId==="s4_p2" || groupId==="s4_final" || canBuyStorePackage(StorePricing.groups.find(g=>g.id===groupId)))?"block":"none";
   });
   // Abrir 1º semestre por padrão
   var sem1 = document.getElementById("sem-1");
