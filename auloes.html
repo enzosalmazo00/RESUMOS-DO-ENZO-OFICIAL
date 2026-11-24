@@ -34,6 +34,14 @@
 .card.gift-access .gift-banner{background:linear-gradient(105deg,#7c4a0b,#c58a22,#f7d77a,#a76612);color:#241600;padding:12px 10px;font-size:11px;letter-spacing:.05em}
 .gift-message{margin:13px 0 10px;border:1px solid #c99a35;border-radius:14px;background:linear-gradient(140deg,rgba(107,65,9,.32),rgba(238,187,67,.12));padding:16px 12px;text-align:center;box-shadow:inset 0 1px 0 #f6d78d33}
 .gift-message .gift-symbol{font-size:28px;display:block;margin-bottom:5px}.gift-message .gift-heading{font-size:13px;font-weight:800;color:#f9d77a;line-height:1.5}.gift-message .gift-recipient{font-size:15px;font-weight:800;color:#fff3cb;overflow-wrap:anywhere;margin-top:5px}.gift-watch-button{display:flex;justify-content:center;align-items:center;gap:8px;width:100%;min-height:49px;border-radius:12px;text-decoration:none;background:linear-gradient(115deg,#a46a14,#eab849,#ffe18c);color:#251600!important;font-weight:900;font-size:14px;box-shadow:0 5px 18px #c08a3155;transition:transform .15s,filter .15s}.gift-watch-button:hover{filter:brightness(1.1);transform:translateY(-2px)}.card.gift-access .bottom{display:none}
+ 
+/* Biblioteca compacta: pastas e aulas */
+.hero{padding:18px 22px}.hero h1{font-size:clamp(24px,3vw,34px)}.category-btn{min-height:72px;padding:12px 16px}.category-title{font-size:15px}.category-switch{margin:14px 0;gap:10px}
+.library-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 14px;font-size:12px}.library-nav button{font:600 12px Poppins;color:#dffbff;background:#071827;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}.library-nav button:hover,.folder:hover{border-color:var(--cyan)}.library-nav span{color:var(--muted)}
+.grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));gap:12px}.folder{font-family:inherit;text-align:left;color:white;cursor:pointer;display:flex;align-items:center;gap:12px;padding:16px 12px;min-height:80px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(135deg,#0d1a2b,#101328)}.folder-icon{font-size:27px;flex:none}.folder strong{font-size:13px;display:block;overflow-wrap:anywhere}.folder small{font-size:10px;color:var(--muted)}.folder:focus-visible,.card:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.card{border-radius:12px}.cover-wrap{aspect-ratio:16/9;max-height:125px}.cover-fallback{font-size:26px}.card-body{padding:10px}.card h3{font-size:13px;margin:4px 0 6px;overflow-wrap:anywhere}.prof-line{gap:6px;margin-bottom:6px}.avatar{width:23px;height:23px;border-radius:6px}.prof-name{font-size:10px}.prof-label{display:none}.rating{margin-top:5px}.bottom{margin-top:7px;gap:5px;flex-wrap:wrap}.price,.card.free-access .price{font-size:13px}.card .free-access-banner,.card.gift-access .gift-banner{font-size:10px;padding:6px}.card.free-access .details{font-size:10px}.card .owned-badge.gift-badge,.owned-badge{font-size:8px;top:5px;right:5px;padding:4px 6px}.card .gift-message{padding:7px;margin:6px 0}.card .gift-symbol{font-size:16px}.card .gift-heading,.card .gift-recipient{font-size:10px}.card .gift-watch-button{min-height:34px;font-size:10px}.card .meta{font-size:9px}.card .subject{font-size:8px}
+@media(max-width:680px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.folder{padding:10px 8px;gap:7px}.folder-icon{font-size:20px}.folder strong{font-size:11px}.card h3{font-size:12px}.card-body{padding:8px}.cover-wrap{max-height:105px}.category-switch{grid-template-columns:repeat(2,minmax(0,1fr))}.category-title{font-size:12px}.category-sub{display:none}.tools{gap:5px}.hero{padding:15px}.hero h1{font-size:25px}}
+@media(max-width:330px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -58,7 +66,7 @@
     </button>
   </div>
   <div class="tools"><div class="search"><span>⌕</span><input id="search" autocomplete="off" placeholder="Pesquisar professor, matéria, P1, P2, Final ou nome da aula…"></div><div class="count" id="resultCount"></div></div>
-  <section class="grid" id="grid"></section>
+  <nav class="library-nav" id="libraryNav" aria-label="Pastas de aulas"></nav><section class="grid" id="grid"></section>
 </main>
 <div class="modal" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
   <div class="modal-card" id="modalCard"></div>
@@ -91,7 +99,7 @@ function money(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",c
 function initials(v){return String(v||"?").split(/\s+/).filter(Boolean).slice(0,2).map(function(x){return x[0]}).join("").toUpperCase()}
 function language(a){return a&&a.idioma_conteudo==="es"?"Español":"Português"}
 function deny(msg){document.getElementById("gate").innerHTML='<div class="gatebox"><div style="font-size:34px">🔒</div><h2>Acesso indisponível</h2><p>'+esc(msg)+'</p><a class="back" href="dashboard.html">Voltar</a></div>';document.documentElement.style.visibility="visible"}
-var client=null,session=null,auloes=[],professores=[],ratingMap={},accessSet=new Set(),giftSet=new Set(),studentName="",category="platform",selected=null;
+var client=null,session=null,auloes=[],professores=[],ratingMap={},accessSet=new Set(),giftSet=new Set(),studentName="",category="platform",selected=null,folderPath=[];
 function prof(a){
   var p=professores.find(function(x){return x.id===a.professor_id});
   if(p)return p;
@@ -113,6 +121,27 @@ function filtered(){
     var p=prof(a);return norm([a.nome,a.materia,a.avaliacao,a.semestre,a.descricao,p.nome,language(a)].join(" ")).indexOf(q)>=0;
   });
 }
+function folderValue(a,level){
+  if(level===0){var s=String(a.semestre||"").trim();var m=s.match(/^(\d+)\s*(?:[º°o]?\s*(?:semestre)?)?$/i);return m?Number(m[1])+"º semestre":s||"Semestre não informado";}
+  if(level===1){var v=String(a.avaliacao||"").trim();var n=norm(v);return n==="p1"?"P1":n==="p2"?"P2":n==="final"?"Final":v||"Avaliação não informada";}
+  return String(a.materia||"").trim()||"Outras matérias";
+}
+function folderKey(v){return norm(v).replace(/\s+/g," ")}
+function renderFolders(list,grid){
+  var nav=document.getElementById("libraryNav"),searching=!!norm(document.getElementById("search").value);
+  nav.replaceChildren();
+  function crumb(label,depth){var b=document.createElement("button");b.type="button";b.textContent=label;b.addEventListener("click",function(){folderPath=folderPath.slice(0,depth);document.getElementById("search").value="";render()});nav.appendChild(b);}
+  crumb("⌂ Todas as pastas",0);
+  folderPath.forEach(function(v,i){var sep=document.createElement("span");sep.textContent="›";nav.appendChild(sep);crumb(v,i+1)});
+  if(searching){var note=document.createElement("span");note.textContent="Busca em toda a categoria";nav.appendChild(note);return list;}
+  var scoped=list.filter(function(a){return folderPath.every(function(v,i){return folderKey(folderValue(a,i))===folderKey(v)})});
+  if(folderPath.length===3)return scoped;
+  var groups=new Map();scoped.forEach(function(a){var name=folderValue(a,folderPath.length),key=folderKey(name);if(!groups.has(key))groups.set(key,{name:name,count:0});groups.get(key).count++});
+  if(!groups.size)return scoped;
+  grid.replaceChildren();
+  Array.from(groups.values()).sort(function(a,b){return a.name.localeCompare(b.name,"pt-BR",{numeric:true})}).forEach(function(g){var b=document.createElement("button");b.type="button";b.className="folder";b.innerHTML='<span class="folder-icon" aria-hidden="true">📁</span><span><strong>'+esc(g.name)+'</strong><small>'+g.count+' aula'+(g.count===1?'':'s')+'</small></span>';b.addEventListener("click",function(){folderPath.push(g.name);render()});grid.appendChild(b)});
+  document.getElementById("resultCount").textContent=groups.size+" pasta"+(groups.size===1?"":"s")+" · "+scoped.length+" aula"+(scoped.length===1?"":"s");return null;
+}
 function render(){
   document.getElementById("btnPlatform").classList.toggle("active",category==="platform");
   document.getElementById("btnDoctors").classList.toggle("active",category==="doctors");
@@ -124,10 +153,11 @@ function render(){
   ];
   function courseOrder(a){var index=microP2Order.indexOf(a.chave);return index<0?microP2Order.length:index;}
   var list=filtered().sort(function(a,b){return courseOrder(a)-courseOrder(b)}),grid=document.getElementById("grid");
+  list=renderFolders(list,grid);if(list===null)return;
   document.getElementById("resultCount").textContent=list.length+" aula"+(list.length===1?"":"s")+" disponível"+(list.length===1?"":"eis");
   if(!list.length){grid.innerHTML='<div class="empty">Nenhuma aula encontrada nesta área.</div>';return}
   grid.innerHTML=list.map(function(a){var p=prof(a),owned=hasAccess(a),free=isFreeAulao(a),gift=isGift(a);return '<article class="card '+(free?'free-access':gift?'gift-access':'')+'" tabindex="0" data-key="'+esc(a.chave)+'">'+
-    '<div class="cover-wrap">'+(a.capa_url?'<img class="cover" src="'+esc(a.capa_url)+'" alt="">':'<div class="cover-fallback">🎥</div>')+(!free&&owned?'<span class="owned-badge '+(gift?'gift-badge':'')+'">'+(gift?'🎁 Um presente para você':'✓ Acesso liberado')+'</span>':'')+'</div>'+(free?'<div class="free-access-banner">ACESSO GRATUITO</div>':gift?'<div class="gift-banner">🎁 PRESENTE ESPECIAL</div>':'')+
+    '<div class="cover-wrap">'+(a.capa_url?'<img class="cover" loading="lazy" src="'+esc(a.capa_url)+'" alt="">':'<div class="cover-fallback">🎥</div>')+(!free&&owned?'<span class="owned-badge '+(gift?'gift-badge':'')+'">'+(gift?'🎁 Um presente para você':'✓ Acesso liberado')+'</span>':'')+'</div>'+(free?'<div class="free-access-banner">ACESSO GRATUITO</div>':gift?'<div class="gift-banner">🎁 PRESENTE ESPECIAL</div>':'')+
     '<div class="card-body"><div class="prof-line">'+(p.foto_url?'<img class="avatar" src="'+esc(p.foto_url)+'" alt="">':'<div class="avatar">'+esc(initials(p.nome))+'</div>')+'<div><div class="prof-label">Ministrado por</div><div class="prof-name">'+esc(p.nome)+'</div></div></div>'+
     '<div class="subject">'+esc(a.materia||"Aula em vídeo")+'</div><h3>'+esc(a.nome)+'</h3><div class="meta">'+esc(String(a.semestre||""))+'º semestre'+(a.avaliacao?' · '+esc(a.avaliacao):'')+' · '+esc(language(a))+'</div><div class="rating">'+ratingText(a)+'</div><div class="bottom"><div><div class="price">'+(isFreeAulao(a)?"Grátis":gift?"🎁 Presente liberado":owned?"Acesso liberado":money(a.preco))+'</div><div class="meta">'+(free?'Liberado para todos os alunos':owned?'Disponível na sua conta':a.dias_acesso?esc(a.dias_acesso)+' dias de acesso':'Acesso conforme oferta')+'</div></div><div class="details">'+(free?'Assistir grátis →':owned?'Assistir agora →':'Ver detalhes →')+'</div></div>'+(gift?'<div class="gift-message"><span class="gift-symbol">🎁</span><div class="gift-heading">Um presente do Resumos do Enzo para você!</div><div class="gift-recipient">'+esc(studentName||"Aluno(a)")+'</div></div><a class="gift-watch-button" href="aulao.html?v=seek-icons-2&key='+encodeURIComponent(a.chave)+'">▶ Clique para assistir</a>':'')+'</div></article>'}).join("");
   grid.querySelectorAll(".card").forEach(function(card){function go(){openDetail(card.dataset.key)}card.addEventListener("click",function(e){if(e.target.closest(".gift-watch-button"))return;go()});card.addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&!e.target.closest(".gift-watch-button")){e.preventDefault();go()}})});
@@ -139,8 +169,8 @@ function openDetail(key){
   modal.classList.add("open");document.getElementById("closeModal").focus();
 }
 function closeDetail(){document.getElementById("detailModal").classList.remove("open");selected=null}
-document.getElementById("btnPlatform").addEventListener("click",function(){category="platform";render()});
-document.getElementById("btnDoctors").addEventListener("click",function(){category="doctors";render()});
+document.getElementById("btnPlatform").addEventListener("click",function(){category="platform";folderPath=[];document.getElementById("search").value="";render()});
+document.getElementById("btnDoctors").addEventListener("click",function(){category="doctors";folderPath=[];document.getElementById("search").value="";render()});
 document.getElementById("search").addEventListener("input",render);
 document.getElementById("detailModal").addEventListener("click",function(e){if(e.target===this)closeDetail()});
 document.addEventListener("click",function(e){if(e.target&&e.target.id==="closeModal")closeDetail()});
