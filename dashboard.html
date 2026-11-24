@@ -2260,17 +2260,6 @@ function showItemAccess(title, href, expiry) {
   dialog.showModal();
 }
 
-function showResumoAccessOnClick(link, materia, tipo, pack) {
-  link.addEventListener("click", function(event) {
-    if (event.defaultPrevented || event.target.closest(".presente-btn") ||
-        event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    var key = tipo ? colKey(materia,tipo) : materia.key;
-    var title = materia.label + (tipo ? " · " + (tipo === "final" ? "Final" : tipo.toUpperCase()) : "");
-    showItemAccess(title, link.href, resolveAccessExpiry(key,pack,!tipo));
-  });
-}
-
 // ── Renderiza grid de resumos (aba Meus Resumos) ───────────────────────────────
 // ── Boas vindas personalizadas ─────────────────────────────────────────────
 function renderWelcome() {
@@ -2682,7 +2671,6 @@ function renderMateriaInterna(key) {
     var p2 = document.createElement("a");
     p2.className = "resumo-card unlocked";
     p2.href = m.file_p2;
-    showResumoAccessOnClick(p2,m,"p2","pacote_p2");
     p2.style.position = "relative";
     p2.innerHTML =
       (ehPresente ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>' : '') +
@@ -2719,7 +2707,6 @@ function renderMateriaInterna(key) {
       var finalCard = document.createElement("a");
       finalCard.className = "resumo-card unlocked";
       finalCard.href = m.file_final;
-      showResumoAccessOnClick(finalCard,m,"final","pacote_final");
       finalCard.style.position = "relative";
       finalCard.style.borderColor = "rgba(74,222,128,0.25)";
       finalCard.innerHTML =
@@ -2809,7 +2796,6 @@ function renderMateriaInternaS4(key) {
       var card = document.createElement("a");
       card.className = "resumo-card unlocked";
       card.href = file;
-      showResumoAccessOnClick(card,m,tipo,"pacote_s4_"+tipo);
       card.style.position = "relative";
       if (tipo === "final") card.style.borderColor = "rgba(74,222,128,0.25)";
       card.innerHTML =
@@ -2924,7 +2910,6 @@ function renderMateriaInternaS1(key) {
     var card = document.createElement("a");
     card.className = "resumo-card unlocked";
     card.href = m.file;
-    showResumoAccessOnClick(card,m,null,"pacote_s1");
     card.style.position = "relative";
     card.innerHTML =
       (ehPresente ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>' : '') +
@@ -3276,7 +3261,6 @@ function renderMateriaInternaS2(key) {
     var card = document.createElement("a");
     card.className = "resumo-card unlocked";
     card.href = m.file;
-    showResumoAccessOnClick(card,m,null,"pacote_s2");
     card.style.position = "relative";
     card.innerHTML =
       (ehPresente ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>' : '') +
