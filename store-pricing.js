@@ -10,7 +10,7 @@
     ["final",3,"final",subjects3,2499,1999,8990,subjects3,"pacote_final",["preco_final_unit",null,"preco_final_pack"]],
     ["s4_p1",4,"p1",subjects4,1290,1090,3990,subjects4,"pacote_s4_p1"],
     ["s4_p2",4,"p2",subjects4,1290,1090,4990,subjects4,"pacote_s4_p2"],
-    ["s4_final",4,"final",subjects4,1290,1090,3990,[],"pacote_s4_final"]
+    ["s4_final",4,"final",subjects4,1290,1090,3990,["fisiologia_2"],"pacote_s4_final"]
   ].map(([id,semester,exam,subjects,unit,bulk,pack,ready,packageKey,legacy]) => {
     const key = subject => exam === "unico" ? subject : subject + "_" + exam;
     return {id, semester, exam, keys: subjects.map(key), ready: ready.map(key), packageKey, unit, bulk, pack, legacy:legacy || []};
