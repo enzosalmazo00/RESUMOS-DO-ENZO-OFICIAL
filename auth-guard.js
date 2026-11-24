@@ -250,7 +250,7 @@
 
       if (result.error) return false;
       var record = result.data;
-      if (!record) return false;
+      if (!record) return null;
       if (!record.expira_em) return true;
       return new Date(record.expira_em) >= new Date();
     } catch (err) {
@@ -322,7 +322,9 @@
     if (pageKey && !isCurso) extraFields += ", " + pageKey + "_expira";
     if (pacoteKey) extraFields += ", " + pacoteKey + "_expira";
 
-    var fields = "is_approved, active_session, device_id" + (pageKey==="eletrocardiograma_p2" ? ", is_admin" : "") + extraFields;
+    var isFisioFinal = pageKey === "fisiologia_2_final";
+    if (isFisioFinal) extraFields += ", resumos_presente, acesso_expira_em";
+    var fields = "is_approved, active_session, device_id, is_admin" + extraFields;
 
     // Perfil e acesso normalizado são buscados em paralelo.
     var profilePromise = client
@@ -371,19 +373,27 @@
       return;
     }
 
-    if (pageKey) {
+    if (pageKey && profile.is_admin !== true) {
       var temAcessoNovo = !!accessResult[0];
       var temAcessoPacote = !!accessResult[1];
       var temAcessoAntigo = !!profile[pageKey] || !!(pacoteKey && profile[pacoteKey]);
-      var temAcessoAdminECG = pageKey==="eletrocardiograma_p2" && profile.is_admin === true;
-      var temAcesso = temAcessoNovo || temAcessoPacote || temAcessoAntigo || temAcessoAdminECG;
+      if (isFisioFinal) {
+        temAcessoAntigo = [pageKey, pacoteKey].some(function (key, index) {
+          if (accessResult[index] !== null || profile[key] !== true) return false;
+          var expiry = profile[key + "_expira"];
+          if (expiry) return Date.parse(expiry) > Date.now();
+          return Array.isArray(profile.resumos_presente) && profile.resumos_presente.includes(key) &&
+            (!profile.acesso_expira_em || Date.parse(profile.acesso_expira_em) > Date.now());
+        });
+      }
+      var temAcesso = temAcessoNovo || temAcessoPacote || temAcessoAntigo;
 
       if (!temAcesso) {
         window.location.replace(DASHBOARD_PAGE);
         return;
       }
 
-      if (!temAcessoNovo && !temAcessoPacote && !temAcessoAdminECG) {
+      if (!isFisioFinal && !temAcessoNovo && !temAcessoPacote) {
         var expiraCol = pageKey + "_expira";
         var expiraPack = pacoteKey ? pacoteKey + "_expira" : null;
         var expiraData = profile[expiraCol] || (expiraPack ? profile[expiraPack] : null);
