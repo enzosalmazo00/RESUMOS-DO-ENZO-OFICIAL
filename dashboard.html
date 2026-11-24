@@ -2247,10 +2247,10 @@ function daysLeftForResumo(materia, tipo) {
   return expiryDays(resolveAccessExpiry(colKey(materia, tipo), prefix + tipo));
 }
 
-function showItemAccess(title, href, expiry) {
+function showItemAccess(title, href, expiry, isFisioFinal) {
   var dialog = document.getElementById("itemAccessDialog");
   var days = expiryDays(expiry);
-  var expiryText = days === null ? (expiry === Infinity ? "Acesso sem vencimento" : (profile && profile.is_admin ? "Acesso de administrador" : "Prazo não informado"))
+  var expiryText = days === null ? (expiry === Infinity ? "Acesso sem vencimento" : (isFisioFinal && profile && profile.is_admin ? "Acesso de administrador" : "Acesso administrativo ou sem prazo informado"))
     : days + (days === 1 ? " dia restante" : " dias restantes");
   document.getElementById("itemAccessTitle").textContent = title;
   document.getElementById("itemAccessDays").textContent = expiryText;
@@ -2267,7 +2267,7 @@ function showResumoAccessOnClick(link, materia, tipo, pack) {
     event.preventDefault();
     var key = tipo ? colKey(materia,tipo) : materia.key;
     var title = materia.label + (tipo ? " · " + (tipo === "final" ? "Final" : tipo.toUpperCase()) : "");
-    showItemAccess(title, link.href, resolveAccessExpiry(key,pack,!tipo));
+    showItemAccess(title, link.href, resolveAccessExpiry(key,pack,!tipo), key === "fisiologia_2_final");
   });
 }
 

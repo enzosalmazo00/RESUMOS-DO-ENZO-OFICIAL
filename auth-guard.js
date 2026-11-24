@@ -239,7 +239,7 @@
   }
 
   // ── Acesso normalizado ──────────────────────────────────────────────────
-  async function checkAccessInAcessos(client, userId, resumo) {
+  async function checkAccessInAcessos(client, userId, resumo, distinguirAusencia) {
     if (!resumo) return false;
     try {
       var result = await client
@@ -250,7 +250,7 @@
 
       if (result.error) return false;
       var record = result.data;
-      if (!record) return null;
+      if (!record) return distinguirAusencia ? null : false;
       if (!record.expira_em) return true;
       return new Date(record.expira_em) >= new Date();
     } catch (err) {
@@ -324,7 +324,8 @@
 
     var isFisioFinal = pageKey === "fisiologia_2_final";
     if (isFisioFinal) extraFields += ", resumos_presente, acesso_expira_em";
-    var fields = "is_approved, active_session, device_id, is_admin" + extraFields;
+    var adminFields = isFisioFinal || pageKey === "eletrocardiograma_p2" ? ", is_admin" : "";
+    var fields = "is_approved, active_session, device_id" + adminFields + extraFields;
 
     // Perfil e acesso normalizado são buscados em paralelo.
     var profilePromise = client
@@ -335,8 +336,8 @@
 
     var accessPromise = pageKey
       ? Promise.all([
-          checkAccessInAcessos(client, session.user.id, pageKey),
-          pacoteKey ? checkAccessInAcessos(client, session.user.id, pacoteKey) : Promise.resolve(false)
+          checkAccessInAcessos(client, session.user.id, pageKey, isFisioFinal),
+          pacoteKey ? checkAccessInAcessos(client, session.user.id, pacoteKey, isFisioFinal) : Promise.resolve(false)
         ])
       : Promise.resolve([false, false]);
 
@@ -373,27 +374,32 @@
       return;
     }
 
-    if (pageKey && profile.is_admin !== true) {
+    if (isFisioFinal) {
+      var liberado = profile.is_admin === true || [pageKey, pacoteKey].some(function (key, index) {
+        if (accessResult[index] !== null) return accessResult[index] === true;
+        if (profile[key] !== true) return false;
+        var expiry = profile[key + "_expira"];
+        if (expiry) return Date.parse(expiry) > Date.now();
+        return Array.isArray(profile.resumos_presente) && profile.resumos_presente.includes(key) &&
+          (!profile.acesso_expira_em || Date.parse(profile.acesso_expira_em) > Date.now());
+      });
+      if (!liberado) {
+        window.location.replace(DASHBOARD_PAGE);
+        return;
+      }
+    } else if (pageKey) {
       var temAcessoNovo = !!accessResult[0];
       var temAcessoPacote = !!accessResult[1];
       var temAcessoAntigo = !!profile[pageKey] || !!(pacoteKey && profile[pacoteKey]);
-      if (isFisioFinal) {
-        temAcessoAntigo = [pageKey, pacoteKey].some(function (key, index) {
-          if (accessResult[index] !== null || profile[key] !== true) return false;
-          var expiry = profile[key + "_expira"];
-          if (expiry) return Date.parse(expiry) > Date.now();
-          return Array.isArray(profile.resumos_presente) && profile.resumos_presente.includes(key) &&
-            (!profile.acesso_expira_em || Date.parse(profile.acesso_expira_em) > Date.now());
-        });
-      }
-      var temAcesso = temAcessoNovo || temAcessoPacote || temAcessoAntigo;
+      var temAcessoAdminECG = pageKey==="eletrocardiograma_p2" && profile.is_admin === true;
+      var temAcesso = temAcessoNovo || temAcessoPacote || temAcessoAntigo || temAcessoAdminECG;
 
       if (!temAcesso) {
         window.location.replace(DASHBOARD_PAGE);
         return;
       }
 
-      if (!isFisioFinal && !temAcessoNovo && !temAcessoPacote) {
+      if (!temAcessoNovo && !temAcessoPacote && !temAcessoAdminECG) {
         var expiraCol = pageKey + "_expira";
         var expiraPack = pacoteKey ? pacoteKey + "_expira" : null;
         var expiraData = profile[expiraCol] || (expiraPack ? profile[expiraPack] : null);
