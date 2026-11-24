@@ -3033,7 +3033,7 @@ window.addToCartS4 = function(key) {
     tipo = "p1";
     m = MATERIAS_S4.find(function(x){ return x.key + "_p1" === key; });
   }
-  if (!m) return;
+  if (!m || hasAccess(m,tipo)) return;
   if (tipo==="p2" && cart.some(function(c){return c.key==="pacote_s4_p2";})){
     alert("O pacote completo P2 já inclui esta disciplina e os próximos lançamentos.");return;
   }
@@ -3064,7 +3064,7 @@ function renderPackagePrice(id,groupId) {
 
 function canBuyStorePackage(group) {
   if (!group) return false;
-  if (group.id === "s4_p2" || group.id === "s4_final") return !hasS4Pack(group.exam);
+  if (group.id === "s4_p2" || group.id === "s4_final") return !hasS4Pack(group.exam) && !group.keys.some(ownsStoreKey);
   return group.ready.length === group.keys.length && !group.keys.some(ownsStoreKey) &&
     StorePricing.price(group.packageKey,storePrices) < group.keys.reduce((sum,key)=>sum+StorePricing.price(key,storePrices),0);
 }
@@ -3160,9 +3160,11 @@ function renderStoreGridS4() {
 
     if (comboBtn) {
       if(tipo==="p2" || tipo==="final"){
-        var ownedPack=hasS4Pack(tipo);
-        comboBtn.disabled=ownedPack;
-        comboBtn.textContent=ownedPack?"✅ Pacote já adquirido":
+        var group = StorePricing.groups.find(g=>g.id==="s4_"+tipo);
+        var ownedPack=hasS4Pack(tipo) || group.keys.every(ownsStoreKey);
+        var partialOwned=!ownedPack && group.keys.some(ownsStoreKey);
+        comboBtn.disabled=ownedPack || partialOwned;
+        comboBtn.textContent=ownedPack?"✅ Você já possui todos os resumos":partialOwned?"Você já possui parte dos resumos · compre apenas os restantes":
           (cart.some(function(c){return c.key==="pacote_s4_"+tipo;})?
             "✓ Pacote no carrinho — "+formatPrice(packMap[tipo]):
             "🛒 Adicionar pacote completo ao carrinho — "+formatPrice(packMap[tipo]));
@@ -3754,6 +3756,10 @@ function checkoutPayloadItems(){
 
 window.checkoutCart = function(metodo) {
   if (cart.length === 0) return;
+  if (cart.some(c=>StorePricing.packages[c.key] ? !canBuyStorePackage(StorePricing.packages[c.key]) : StorePricing.products[c.key] && ownsStoreKey(c.key))) {
+    alert("Seu carrinho contém materiais já adquiridos ou um pacote indisponível. Revise os itens antes de pagar.");
+    return;
+  }
   var temAulao = cart.some(function(c){ return c.tipo === "aulao"; });
   if (temAulao && cart.length !== 1) {
     alert("Aulas em Vídeo devem ser compradas separadamente dos outros produtos.");
