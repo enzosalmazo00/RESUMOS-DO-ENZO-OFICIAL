@@ -2247,10 +2247,10 @@ function daysLeftForResumo(materia, tipo) {
   return expiryDays(resolveAccessExpiry(colKey(materia, tipo), prefix + tipo));
 }
 
-function showItemAccess(title, href, expiry, isFisioFinal) {
+function showItemAccess(title, href, expiry) {
   var dialog = document.getElementById("itemAccessDialog");
   var days = expiryDays(expiry);
-  var expiryText = days === null ? (expiry === Infinity ? "Acesso sem vencimento" : (isFisioFinal && profile && profile.is_admin ? "Acesso de administrador" : "Acesso administrativo ou sem prazo informado"))
+  var expiryText = days === null ? (expiry === Infinity ? "Acesso sem vencimento" : (profile && profile.is_admin ? "Acesso de administrador" : "Acesso administrativo ou sem prazo informado"))
     : days + (days === 1 ? " dia restante" : " dias restantes");
   document.getElementById("itemAccessTitle").textContent = title;
   document.getElementById("itemAccessDays").textContent = expiryText;
@@ -2267,7 +2267,7 @@ function showResumoAccessOnClick(link, materia, tipo, pack) {
     event.preventDefault();
     var key = tipo ? colKey(materia,tipo) : materia.key;
     var title = materia.label + (tipo ? " · " + (tipo === "final" ? "Final" : tipo.toUpperCase()) : "");
-    showItemAccess(title, link.href, resolveAccessExpiry(key,pack,!tipo), key === "fisiologia_2_final");
+    showItemAccess(title, link.href, resolveAccessExpiry(key,pack,!tipo));
   });
 }
 
@@ -2590,7 +2590,7 @@ function renderPastas() {
       }
       var ac = hasAccess(m, tipo);
       var dias = daysLeftForResumo(m, tipo);
-      var diasStr = dias !== null ? dias + " dias restantes" : "Acesso permanente";
+      var diasStr = dias !== null ? dias + " dias restantes" : (profile.is_admin ? "Acesso de administrador" : "Acesso permanente");
       return ac
         ? '<div class="folder-status-item" style="color:' + corLiberado + ';">✓ ' + rotulo + ' · ' + diasStr + '</div>'
         : '<div class="folder-status-item" style="color:rgba(125,211,232,0.35);">🔒 ' + rotulo + ' bloqueado</div>';
