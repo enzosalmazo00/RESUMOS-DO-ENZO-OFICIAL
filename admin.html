@@ -1076,10 +1076,10 @@ SEMESTRES.forEach(function(s){ s.cols.forEach(function(c){ RESUMOS_COLS.push(c);
 // Isso evita exibir como ativo um acesso antigo apenas porque o booleano ficou true.
 function resumoAtivo(a,key){
   if(!a || !a[key]) return false;
-  var isProva=/(?:_p1|_p2|_final)$/.test(key) || key.indexOf("pacote_")===0;
-  if(!isProva) return true;
   var exp=a[key+"_expira"];
-  if(exp) return new Date(exp)>new Date();
+  if(exp)return Date.parse(exp)>Date.now();
+  var isProva=/(?:_p1|_p2|_final)$/.test(key) || key.indexOf("pacote_")===0;
+  if(!isProva && !(a.resumos_presente||[]).includes(key)) return true;
 
   // Sem _expira só conta se for cortesia explicitamente marcada.
   var presentes=Array.isArray(a.resumos_presente)?a.resumos_presente:[];
@@ -2036,17 +2036,63 @@ function renderActivity(){
 }
 
 // ── MODAL ──
-window.openModal=function(id){
+var accessRows={}, originalToggles={}, modalVersion=0, accessReady=false, savingAccess=false, dateEdited=false;
+function localDay(date){
+  return [date.getFullYear(),String(date.getMonth()+1).padStart(2,"0"),String(date.getDate()).padStart(2,"0")].join("-");
+}
+function renewalDay(){
+  var date=new Date();
+  date.setDate(date.getDate()+50);
+  return localDay(date);
+}
+var expiryField=document.getElementById("expiryInput");
+expiryField.addEventListener("input",function(){dateEdited=true;});
+window.openModal=async function(id){
+  if(savingAccess)return;
+  var version=++modalVersion;
   currentAluno=allAlunos.find(function(a){return a.id===id;});
   if(!currentAluno)return;
-  document.getElementById("modalEmail").textContent=currentAluno.email||"\u2014";
-  document.getElementById("expiryInput").value=currentAluno.acesso_expira_em?currentAluno.acesso_expira_em.substring(0,10):"";
-  currentToggles={};
-  RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=!!currentAluno[r.key];});
+  accessReady=false;
+  dateEdited=false;
+  document.getElementById("saveBtn").disabled=true;
+  document.getElementById("modalEmail").textContent=currentAluno.email||"—";
+  var previous=currentAluno.acesso_expira_em;
+  expiryField.value=previous?(Date.parse(previous)>Date.now()?localDay(new Date(previous)):renewalDay()):"";
   currentPresente=(currentAluno.resumos_presente||[]).slice();
-  renderModalSections();
-  loadCursosDoAluno(currentAluno.id);
+  var wrap=document.getElementById("modalSemSections");
+  wrap.textContent="Carregando acessos…";
   document.getElementById("modalAluno").classList.add("open");
+  try{
+    var [catalog,access]=await Promise.all([
+      client.from("auloes").select("chave,nome,publicado").order("nome"),
+      client.from("acessos").select("resumo,expira_em,source").eq("user_id",id)
+    ]);
+    if(version!==modalVersion||!currentAluno)return;
+    if(catalog.error||access.error)throw catalog.error||access.error;
+    accessRows=Object.fromEntries(access.data.map(row=>[row.resumo,row]));
+    currentToggles={};originalToggles={};
+    RESUMOS_COLS.forEach(function(r){
+      var row=accessRows[r.key];
+      var active=row?(row.expira_em==null||Date.parse(row.expira_em)>Date.now()):resumoAtivo(currentAluno,r.key);
+      originalToggles[r.key]=currentToggles[r.key]=active;
+    });
+    CURSOS_COLS=[{key:"curso-peconhentos",label:"Curso Peçonhentos"}];
+    catalog.data.forEach(function(a){
+      if(a.chave&&!CURSOS_COLS.some(c=>c.key===a.chave))
+        CURSOS_COLS.push({key:a.chave,label:"🎥 "+(a.nome||a.chave)+(a.publicado?"":" (não publicado)")});
+    });
+    currentCursoOriginal={};currentCursoToggles={};currentCursoGift={};
+    CURSOS_COLS.forEach(function(c){
+      var row=accessRows[c.key];
+      currentCursoOriginal[c.key]=currentCursoToggles[c.key]=!!row&&(row.expira_em==null||Date.parse(row.expira_em)>Date.now());
+      currentCursoGift[c.key]=!!row&&row.source==="admin_grant";
+    });
+    renderModalSections();renderCursosGridModal();
+    accessReady=true;
+    document.getElementById("saveBtn").disabled=false;
+  }catch(err){
+    if(version===modalVersion)wrap.textContent="Falha ao carregar os acessos. Feche e abra o painel novamente.";
+  }
 };
 
 function renderModalSections(){
@@ -2096,7 +2142,7 @@ window.toggleModalSem=function(header){
 window.grantSem=function(semId){
   var sem=SEMESTRES.find(function(s){return s.id===semId;});
   if(!sem)return;
-  sem.cols.forEach(function(c){currentToggles[c.key]=true;});
+  sem.cols.forEach(function(c){currentToggles[c.key]=true;suggestRenewal(c.key,true);});
   renderModalSections();
   // Re-render cursos se já carregados
   if(Object.keys(currentCursoToggles).length>0) renderCursosGrid();
@@ -2130,38 +2176,6 @@ function renderResumosGrid(){
   });
 }
 
-// Lê da tabela acessos os cursos já liberados para este aluno
-async function loadCursosDoAluno(userId){
-  currentCursoToggles={};currentCursoOriginal={};currentCursoGift={};
-  var g=document.getElementById("cursosGridModal");
-  if(g)g.innerHTML="<div style='grid-column:1/-1;font-size:11px;color:rgba(125,211,232,0.5);'>Carregando cursos...</div>";
-  try{
-    // Aulões usam a mesma tabela de permissões dos cursos escritos.
-    // A chave é obtida do catálogo, sem presumir IDs ou alterar pagamentos.
-    var catalogo=await client.from("auloes").select("chave,nome,publicado").order("nome");
-    if(catalogo.error)throw catalogo.error;
-    CURSOS_COLS=[{key:"curso-peconhentos",label:"Curso Peçonhentos"}];
-    (catalogo.data||[]).forEach(function(a){
-      if(a.chave&&!CURSOS_COLS.some(function(c){return c.key===a.chave;}))
-        CURSOS_COLS.push({key:a.chave,label:"🎥 "+(a.nome||a.chave)+(a.publicado?"":" (não publicado)")});
-    });
-    var chaves=CURSOS_COLS.map(function(c){return c.key;});
-    var res=await client.from("acessos").select("resumo,expira_em,source").eq("user_id",userId).in("resumo",chaves);
-    var liberados={};
-    if(res.data){res.data.forEach(function(r){
-      var valido=!r.expira_em||new Date(r.expira_em)>new Date();
-      if(valido){liberados[r.resumo]=true;currentCursoGift[r.resumo]=r.source==="admin_grant";}
-    });}
-    CURSOS_COLS.forEach(function(c){
-      currentCursoToggles[c.key]=!!liberados[c.key];
-      currentCursoOriginal[c.key]=!!liberados[c.key];
-    });
-  }catch(err){
-    CURSOS_COLS.forEach(function(c){currentCursoToggles[c.key]=false;currentCursoOriginal[c.key]=false;});
-  }
-  renderCursosGridModal();
-}
-
 function renderCursosGridModal(){
  var g=document.getElementById("cursosGridModal");if(!g)return;
  g.innerHTML=CURSOS_COLS.map(function(c){
@@ -2182,65 +2196,84 @@ window.markAulaoGift=async function(k){
  currentCursoGift[k]=gift;renderCursosGridModal();
  showToast(gift?"🎁 Presente ativado!":"Presente desmarcado.","success");
 };
-window.toggleCurso=function(k){currentCursoToggles[k]=!currentCursoToggles[k];renderCursosGridModal();};
+function suggestRenewal(k,active){
+  var old=accessRows[k]?.expira_em||currentAluno[k+"_expira"]||currentAluno.acesso_expira_em;
+  if(active&&!dateEdited&&!expiryField.value&&old&&Date.parse(old)<=Date.now())expiryField.value=renewalDay();
+}
+window.toggleCurso=function(k){currentCursoToggles[k]=!currentCursoToggles[k];suggestRenewal(k,currentCursoToggles[k]);renderCursosGridModal();};
 function renderCursosGrid(){renderCursosGridModal();}
-window.toggleResumo=function(k){currentToggles[k]=!currentToggles[k];renderResumosGrid();};
+window.toggleResumo=function(k){currentToggles[k]=!currentToggles[k];suggestRenewal(k,currentToggles[k]);renderResumosGrid();};
 window.togglePresente=function(k){if(!currentAluno)return;var i=currentPresente.indexOf(k);if(i>=0)currentPresente.splice(i,1);else currentPresente.push(k);var el=document.querySelector('.presente-icon[data-key="'+k+'"]');if(el)el.classList.toggle("on",currentPresente.indexOf(k)>=0);};
-window.set50Days=function(){var d=new Date();d.setDate(d.getDate()+50);document.getElementById("expiryInput").value=d.toISOString().substring(0,10);};
-window.closeModal=function(){document.getElementById("modalAluno").classList.remove("open");currentAluno=null;};
+window.set50Days=function(){expiryField.value=renewalDay();dateEdited=true;};
+window.closeModal=function(){
+  if(savingAccess)return;
+  modalVersion++;accessReady=false;
+  document.getElementById("modalAluno").classList.remove("open");currentAluno=null;
+};
 
-// ECG P2: toda liberação manual deve sincronizar também a tabela de acesso
-// protegida por RLS; o catálogo visual e a autorização real ficam coerentes.
-async function syncEcgP2Manual(userId, desired, expiryIso, previous, force){
-  var keys=["eletrocardiograma_p2","pacote_s4_p2"];
-  var existing=await client.from("acessos")
-    .select("resumo,source,order_id,expira_em")
-    .eq("user_id",userId).in("resumo",keys);
-  if(existing.error)throw existing.error;
-  var byKey={};
-  (existing.data||[]).forEach(function(r){byKey[r.resumo]=r;});
-  for(var i=0;i<keys.length;i++){
-    var k=keys[i],want=!!desired[k],before=!!(previous&&previous[k]),row=byKey[k];
-    var changed=force||want!==before;
-    if(!want){
-      if(changed&&row){
-        var del=await client.from("acessos").delete().match({user_id:userId,resumo:k});
-        if(del.error)throw del.error;
-      }
-      continue;
+async function writeAccessRows(userId,changes){
+  for(var change of changes){
+    var key=change.key;
+    var table=client.from("acessos");
+    var result;
+    if(!change.active){
+      result=await table.delete().match({user_id:userId,resumo:key});
+    }else{
+      // Preserve a purchase's source and order even when renewing a stale row.
+      result=await table.upsert({user_id:userId,resumo:key,expira_em:change.expiry,source:change.source},
+        {onConflict:"user_id,resumo",ignoreDuplicates:true});
+      if(!result.error)result=await client.from("acessos").update({expira_em:change.expiry}).match({user_id:userId,resumo:key});
     }
-    if(row&&row.source==="purchase"&&!changed)continue;
-    if(!changed&&row&&row.source!=="admin_grant"&&row.source!=="legacy_manual")continue;
-    if(!changed&&row&&String(row.expira_em||"")===String(expiryIso||""))continue;
-    if(changed||row||!row){
-      var up=await client.from("acessos").upsert({
-        user_id:userId,resumo:k,expira_em:expiryIso,source:"admin_grant",order_id:null
-      },{onConflict:"user_id,resumo"});
-      if(up.error)throw up.error;
-    }
+    if(result.error)throw result.error;
   }
 }
-
-window.saveAluno=async function(){if(!currentAluno)return;var btn=document.getElementById("saveBtn");btn.disabled=true;btn.textContent="Salvando...";var u={};var ev=document.getElementById("expiryInput").value;var expiraIso=ev?new Date(ev).toISOString():null;u.acesso_expira_em=expiraIso;RESUMOS_COLS.forEach(function(r){var antes=!!currentAluno[r.key];var agora=!!currentToggles[r.key];u[r.key]=agora;if(agora&&!antes&&expiraIso){u[r.key+"_expira"]=expiraIso;}else if(!agora){u[r.key+"_expira"]=null;}});u.resumos_presente=currentPresente;var res=await client.from("profiles").update(u).eq("id",currentAluno.id);if(res.error){showToast("Erro ao salvar!","error");btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";return;}try{await syncEcgP2Manual(currentAluno.id,currentToggles,expiraIso,currentAluno,false);}catch(e){console.error("[admin] ECG P2",e);showToast("Perfil atualizado, porém falhou sincronizar acesso ao ECG P2. Tente salvar novamente.","error");btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";return;}
-// ── Persistir CURSOS na tabela acessos (insert/delete conforme diff) ──
-try{
-  for(var ci=0;ci<CURSOS_COLS.length;ci++){
-    var ck=CURSOS_COLS[ci].key;
-    var antesC=!!currentCursoOriginal[ck];
-    var agoraC=!!currentCursoToggles[ck];
-    if(agoraC&&!antesC){
-      var grant=await client.from("acessos").upsert({user_id:currentAluno.id,resumo:ck,expira_em:expiraIso,source:"legacy",order_id:null},{onConflict:"user_id,resumo"});if(grant.error)throw grant.error;
-    }else if(!agoraC&&antesC){
-      await client.from("acessos").delete().match({user_id:currentAluno.id,resumo:ck});
-    }else if(agoraC&&antesC){
-      // já tinha: atualiza expiração se mudou
-      await client.from("acessos").update({expira_em:expiraIso}).match({user_id:currentAluno.id,resumo:ck});
-    }
+window.saveAluno=async function(){
+  if(!currentAluno||!accessReady||savingAccess)return;
+  var profile=currentAluno, btn=document.getElementById("saveBtn");
+  var day=expiryField.value;
+  var expiry=day?new Date(day+"T23:59:59.999").toISOString():null;
+  var changes=[], update={}, gifts=currentPresente.slice();
+  function collect(cols,desired,original,isCourse){
+    cols.forEach(function(item){
+      var k=item.key, active=desired[k];
+      if(active===original[k]&&!(active&&dateEdited))return;
+      var until=expiry;
+      var old=accessRows[k]?.expira_em||profile[k+"_expira"]||profile.acesso_expira_em;
+      if(active&&!dateEdited&&old&&Date.parse(old)<=Date.now()&&(!until||Date.parse(until)<=Date.now())){
+        until=new Date(renewalDay()+"T23:59:59.999").toISOString();
+      }
+      changes.push({key:k,active:active,expiry:until,source:isCourse?"legacy":"admin_grant"});
+      if(!isCourse){
+        update[k]=active;
+        if(Object.hasOwn(profile,k+"_expira"))update[k+"_expira"]=active?until:null;
+        if(!active)gifts=gifts.filter(g=>g!==k);
+        else if(!until&&!gifts.includes(k))gifts.push(k);
+      }
+    });
   }
-}catch(errC){showToast("Resumos salvos, mas erro ao salvar cursos!","error");}
-{showToast("&#9989; Salvo!","success");closeModal();await loadAlunos();renderActivity();}btn.disabled=false;btn.textContent="&#128190; Salvar alteracoes";};
-window.revokeAll=async function(){if(!currentAluno)return;if(!confirm("Revogar TODOS os acessos de "+currentAluno.email+"?"))return;RESUMOS_COLS.forEach(function(r){currentToggles[r.key]=false;});document.getElementById("expiryInput").value="";renderResumosGrid();showToast("Clique em Salvar para confirmar","success");};
-window.quickRevoke=async function(id,emailEnc){var email=decodeURIComponent(emailEnc);if(!confirm("Revogar todos de "+email+"?"))return;var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=false;u[r.key+"_expira"]=null;});u.acesso_expira_em=null;var res=await client.from("profiles").update(u).eq("id",id);if(res.error)showToast("Erro!","error");else{try{await syncEcgP2Manual(id,{eletrocardiograma_p2:false,pacote_s4_p2:false},null,{eletrocardiograma_p2:true,pacote_s4_p2:true},true);}catch(e){console.error("[admin] revogação ECG P2",e);showToast("Perfil revogado, mas falhou revogação no ECG P2.","error");return;}showToast("&#9989; Revogado!","success");await loadAlunos();renderActivity();}};
+  collect(RESUMOS_COLS,currentToggles,originalToggles,false);
+  collect(CURSOS_COLS,currentCursoToggles,currentCursoOriginal,true);
+  if(changes.some(c=>c.active&&c.expiry&&Date.parse(c.expiry)<=Date.now())){
+    showToast("Escolha uma validade a partir de hoje.","error");return;
+  }
+  if(dateEdited||(profile.acesso_expira_em&&Date.parse(profile.acesso_expira_em)<=Date.now()&&changes.some(c=>c.active)))
+    update.acesso_expira_em=expiry;
+  if(JSON.stringify(gifts)!==JSON.stringify(profile.resumos_presente||[]))update.resumos_presente=gifts;
+  savingAccess=true;btn.disabled=true;btn.textContent="Salvando…";
+  try{
+    await writeAccessRows(profile.id,changes);
+    if(Object.keys(update).length){
+      var result=await client.from("profiles").update(update).eq("id",profile.id);
+      if(result.error)throw result.error;
+    }
+  }catch(err){
+    console.error("[admin] salvar acessos",err);
+    showToast("Falha ao concluir a gravação. Tente salvar novamente.","error");return;
+  }finally{savingAccess=false;btn.disabled=false;btn.textContent="💾 Salvar alterações";}
+  closeModal();showToast("Acessos salvos.","success");await loadAlunos();renderActivity();
+};
+window.revokeAll=function(){if(!currentAluno||!accessReady||!confirm("Revogar TODOS os acessos de "+currentAluno.email+"?"))return;RESUMOS_COLS.forEach(r=>currentToggles[r.key]=false);CURSOS_COLS.forEach(c=>currentCursoToggles[c.key]=false);expiryField.value="";dateEdited=true;renderResumosGrid();renderCursosGridModal();showToast("Clique em Salvar para confirmar","success");};
+window.quickRevoke=async function(id,emailEnc){var email=decodeURIComponent(emailEnc);if(!confirm("Revogar todos de "+email+"?"))return;var u={};RESUMOS_COLS.forEach(function(r){u[r.key]=false;u[r.key+"_expira"]=null;});u.acesso_expira_em=null;var res=await client.from("profiles").update(u).eq("id",id);if(res.error)showToast("Erro!","error");else{try{var revoked=await client.from("acessos").delete().eq("user_id",id).in("resumo",RESUMOS_COLS.map(r=>r.key));if(revoked.error)throw revoked.error;}catch(e){console.error("[admin] revogação ECG P2",e);showToast("Perfil revogado, mas falhou a revogação dos resumos.","error");return;}showToast("&#9989; Revogado!","success");await loadAlunos();renderActivity();}};
 window.quickGrantAll=async function(id,emailEnc){
   var email=decodeURIComponent(emailEnc);
   if(!confirm("Liberar TODOS os resumos por 50 dias para "+email+"?"))return;
@@ -2252,7 +2285,7 @@ window.quickGrantAll=async function(id,emailEnc){
   });
   var res=await client.from("profiles").update(u).eq("id",id);
   if(res.error)showToast("Erro!","error");
-  else{try{await syncEcgP2Manual(id,{eletrocardiograma_p2:true,pacote_s4_p2:true},exp,{eletrocardiograma_p2:false,pacote_s4_p2:false},true);}catch(e){console.error("[admin] liberação ECG P2",e);showToast("Perfil atualizado, mas falhou liberar ECG P2.","error");return;}showToast("&#9989; Todos liberados por 50 dias!","success");await loadAlunos();renderActivity();}
+  else{try{await writeAccessRows(id,RESUMOS_COLS.map(r=>({key:r.key,active:true,expiry:exp,source:"admin_grant"})));}catch(e){console.error("[admin] liberação ECG P2",e);showToast("Perfil atualizado, mas falhou a liberação dos resumos.","error");return;}showToast("&#9989; Todos liberados por 50 dias!","success");await loadAlunos();renderActivity();}
 };
 
 function showToast(msg,type){var t=document.createElement("div");t.className="toast "+type;t.innerHTML=msg;document.body.appendChild(t);setTimeout(function(){t.remove();},3000);}
