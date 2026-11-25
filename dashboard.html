@@ -198,6 +198,10 @@
       background:rgba(34,211,238,0.08); border:1px solid rgba(34,211,238,0.20);
       color:rgba(125,211,232,0.7); cursor:pointer; transition:all .2s;
     }
+    .resumo-purchase { display:flex; align-items:center; gap:.65rem; flex-wrap:wrap; margin-top:.75rem; }
+    .resumo-purchase strong { color:#fcd34d; font-size:.85rem; }
+    .resumo-purchase .lock-badge { margin:0; font:inherit; font-size:.85rem; color:#cffafe; padding:.5rem .75rem; }
+    .produto-card[id^="produto-resumo-"]:focus { outline:3px solid #67e8f9; outline-offset:3px; }
     .lock-badge:hover { background:rgba(34,211,238,0.18); color:#fff; }
 
     .soon-badge {
@@ -2205,7 +2209,7 @@ function colKey(materia, tipo) {
 
 function hasAccess(materia, tipo) {
   if (!profile) return false;
-  if (profile.is_admin) return true;
+  if (profile.is_admin && ["fisiologia_2_final","eletrocardiograma_p2"].includes(colKey(materia,tipo))) return true;
   var prefix = MATERIAS_S4.includes(materia) ? "pacote_s4_" : "pacote_";
   return resolveAccessExpiry(colKey(materia,tipo),prefix+tipo) !== null;
 }
@@ -2222,8 +2226,7 @@ function hasS4Pack(tipo) {
   return pres&&(!profile.acesso_expira_em||new Date(profile.acesso_expira_em)>new Date());
 }
 
-function resolveAccessExpiry(key, packageKey, legacyWithoutExpiry) {
-  var now = Date.now();
+function latestAccessExpiry(key, packageKey, legacyWithoutExpiry) {
   var candidates = [key, packageKey].filter(Boolean).flatMap(function(k) {
     var row = acessosCache[k];
     if (row) return [row.expira_em === null ? Infinity : Date.parse(row.expira_em)];
@@ -2234,9 +2237,50 @@ function resolveAccessExpiry(key, packageKey, legacyWithoutExpiry) {
       return [profile.acesso_expira_em ? Date.parse(profile.acesso_expira_em) : Infinity];
     }
     return legacyWithoutExpiry ? [Infinity] : [];
-  }).filter(date => date > now);
+  }).filter(date => !Number.isNaN(date));
   return candidates.length ? Math.max(...candidates) : null;
 }
+
+function resolveAccessExpiry(key, packageKey, legacyWithoutExpiry) {
+  var expiry=latestAccessExpiry(key,packageKey,legacyWithoutExpiry);
+  return expiry!==null && expiry>Date.now() ? expiry : null;
+}
+
+function expiredResumo(key) {
+  var group=StorePricing.products[key];
+  if(!group)return false;
+  var expiry=latestAccessExpiry(key,group.packageKey,group.exam==="unico");
+  return expiry!==null && expiry<=Date.now();
+}
+
+function resumoPurchaseAction(key) {
+  var expired=expiredResumo(key);
+  return '<div class="resumo-purchase">'+(expired?'<strong>⏱ Expirado</strong>':'')+
+    '<button type="button" class="lock-badge" data-buy-resumo="'+key+'">'+
+    (expired?'Adquira novamente na loja':'Adquira na loja')+'</button></div>';
+}
+
+function openResumoProduct(key) {
+  var card=document.getElementById("produto-resumo-"+key);
+  if(!card)return;
+  switchTab("loja");
+  switchStoreCategory("resumos");
+  card.closest(".sem-card").classList.add("open");
+  card.tabIndex=-1;
+  card.focus({preventScroll:true});
+  card.scrollIntoView({block:"center"});
+}
+
+document.getElementById("materiaCardsGrid").addEventListener("click", function(event){
+  var button=event.target.closest("[data-buy-resumo]");
+  if(button){openResumoProduct(button.dataset.buyResumo);return;}
+  var link=event.target.closest("a[data-resumo]");
+  if(link && !ownsStoreKey(link.dataset.resumo)){
+    event.preventDefault();
+    renderResumosGrid();
+    document.querySelector("#materiaCardsGrid [data-buy-resumo='"+link.dataset.resumo+"']")?.focus();
+  }
+});
 
 function expiryDays(expiry) {
   return Number.isFinite(expiry) ? Math.max(0, Math.ceil((expiry - Date.now()) / 86400000)) : null;
@@ -2409,7 +2453,7 @@ function renderPastas() {
         '<div class="folder-status">' +
           (ac
             ? '<div class="folder-status-item" style="color:#22d3ee;">✓ Liberado · ' + diasStr + '</div>'
-            : '<div class="folder-status-item" style="color:rgba(125,211,232,0.35);">🔒 Bloqueado</div>') +
+            : '<div class="folder-status-item" style="color:rgba(125,211,232,0.35);">' + (expiredResumo(m.key)?'⏱ Expirado':'🔒 Bloqueado') + '</div>') +
         '</div>' +
       '</div>';
   });
@@ -2465,7 +2509,7 @@ function renderPastas() {
         '<div class="folder-status">' +
           (ac
             ? '<div class="folder-status-item" style="color:#22d3ee;">✓ Liberado · ' + diasStr + '</div>'
-            : '<div class="folder-status-item" style="color:rgba(125,211,232,0.35);">🔒 Bloqueado</div>') +
+            : '<div class="folder-status-item" style="color:rgba(125,211,232,0.35);">' + (expiredResumo(m.key)?'⏱ Expirado':'🔒 Bloqueado') + '</div>') +
         '</div>' +
       '</div>';
   });
@@ -2510,7 +2554,7 @@ function renderPastas() {
       ? '<div class="folder-status-item" style="color:rgba(251,191,36,0.5);">🔜 Final em breve</div>'
       : (acFinal
           ? '<div class="folder-status-item" style="color:#4ade80;">✓ Final · ' + diasFStr + '</div>'
-          : '<div class="folder-status-item" style="color:rgba(251,191,36,0.5);">🔒 Final disponível</div>');
+          : '<div class="folder-status-item" style="color:rgba(251,191,36,0.5);">' + (expiredResumo(m.key+"_final")?'⏱ Final · Expirado':'🔒 Final disponível') + '</div>');
 
     materiasHtml +=
       '<div class="folder-card" onclick="openMateria(\'' + m.key + '\')">' +
@@ -2520,7 +2564,7 @@ function renderPastas() {
           '<div class="folder-status-item" style="color:rgba(248,113,113,0.5);">⏰ P1 encerrado</div>' +
           (acP2
             ? '<div class="folder-status-item" style="color:#22d3ee;">✓ P2 · ' + diasStr + '</div>'
-            : '<div class="folder-status-item" style="color:rgba(125,211,232,0.35);">🔒 P2 bloqueado</div>') +
+            : '<div class="folder-status-item" style="color:rgba(125,211,232,0.35);">' + (expiredResumo(m.key+"_p2")?'⏱ P2 · Expirado':'🔒 P2 bloqueado') + '</div>') +
           finalStatusHtml +
         '</div>' +
       '</div>';
@@ -2582,7 +2626,7 @@ function renderPastas() {
       var diasStr = dias !== null ? dias + " dias restantes" : (profile.is_admin ? "Acesso de administrador" : "Acesso permanente");
       return ac
         ? '<div class="folder-status-item" style="color:' + corLiberado + ';">✓ ' + rotulo + ' · ' + diasStr + '</div>'
-        : '<div class="folder-status-item" style="color:rgba(125,211,232,0.35);">🔒 ' + rotulo + ' bloqueado</div>';
+        : '<div class="folder-status-item" style="color:rgba(125,211,232,0.35);">' + rotulo + (expiredResumo(m.key+"_"+tipo)?' · Expirado':' bloqueado') + '</div>';
     }
 
     s4Html +=
@@ -2671,6 +2715,7 @@ function renderMateriaInterna(key) {
     var p2 = document.createElement("a");
     p2.className = "resumo-card unlocked";
     p2.href = m.file_p2;
+    p2.dataset.resumo=m.key+"_p2";
     p2.style.position = "relative";
     p2.innerHTML =
       (ehPresente ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>' : '') +
@@ -2685,7 +2730,7 @@ function renderMateriaInterna(key) {
       '<span class="card-emoji">' + m.emoji + '</span>' +
       '<div class="card-title">' + m.label + ' — P2</div>' +
       '<div class="card-desc">' + m.desc + '</div>' +
-      '<div class="lock-badge" onclick="goToStore()">🔒 Comprar acesso</div>';
+      resumoPurchaseAction(m.key+"_p2");
     grid.appendChild(p2locked);
   }
 
@@ -2707,6 +2752,7 @@ function renderMateriaInterna(key) {
       var finalCard = document.createElement("a");
       finalCard.className = "resumo-card unlocked";
       finalCard.href = m.file_final;
+      finalCard.dataset.resumo=m.key+"_final";
       finalCard.style.position = "relative";
       finalCard.style.borderColor = "rgba(74,222,128,0.25)";
       finalCard.innerHTML =
@@ -2722,7 +2768,7 @@ function renderMateriaInterna(key) {
         '<span class="card-emoji">' + m.emoji + '</span>' +
         '<div class="card-title" style="color:rgba(74,222,128,0.6);">' + m.label + ' — Final</div>' +
         '<div class="card-desc">' + m.desc + '</div>' +
-        '<div class="lock-badge" onclick="goToStore()" style="background:rgba(74,222,128,0.08);border-color:rgba(74,222,128,0.3);color:#4ade80;">🔒 Comprar acesso</div>';
+        resumoPurchaseAction(m.key+"_final");
       grid.appendChild(finalLocked);
     }
   } else {
@@ -2796,6 +2842,7 @@ function renderMateriaInternaS4(key) {
       var card = document.createElement("a");
       card.className = "resumo-card unlocked";
       card.href = file;
+      card.dataset.resumo=m.key+"_"+tipo;
       card.style.position = "relative";
       if (tipo === "final") card.style.borderColor = "rgba(74,222,128,0.25)";
       card.innerHTML =
@@ -2811,7 +2858,7 @@ function renderMateriaInternaS4(key) {
         '<span class="card-emoji">' + m.emoji + '</span>' +
         '<div class="card-title" style="color:' + corTema + ';">' + m.label + ' — ' + rotulo + '</div>' +
         '<div class="card-desc">' + m.desc + '</div>' +
-        '<div class="lock-badge" onclick="goToStore()"' + (tipo === "final" ? ' style="background:rgba(74,222,128,0.08);border-color:rgba(74,222,128,0.3);color:#4ade80;"' : '') + '>🔒 Comprar acesso</div>';
+        resumoPurchaseAction(m.key+"_"+tipo);
       grid.appendChild(locked);
     }
   }
@@ -2910,6 +2957,7 @@ function renderMateriaInternaS1(key) {
     var card = document.createElement("a");
     card.className = "resumo-card unlocked";
     card.href = m.file;
+    card.dataset.resumo=m.key;
     card.style.position = "relative";
     card.innerHTML =
       (ehPresente ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>' : '') +
@@ -2924,7 +2972,7 @@ function renderMateriaInternaS1(key) {
       '<span class="card-emoji">' + m.emoji + '</span>' +
       '<div class="card-title">' + m.label + '</div>' +
       '<div class="card-desc">' + m.desc + '</div>' +
-      '<div class="lock-badge" onclick="goToStore()">🔒 Comprar acesso</div>';
+      resumoPurchaseAction(m.key);
     grid.appendChild(lockedCard);
   }
 }
@@ -2973,6 +3021,7 @@ function renderStoreGridS1() {
     var inCart = !!cart.find(function(c){ return c.key === key; });
 
     var card = document.createElement("div");
+    card.id = "produto-resumo-"+key;
     card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
     var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "Adicionar");
@@ -3125,7 +3174,8 @@ function renderStoreGridS4() {
       var inCart = !!cart.find(function(c){ return c.key === key; });
 
       var card = document.createElement("div");
-      card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
+      card.id = "produto-resumo-"+key;
+    card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
       var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "Adicionar");
       var btnClass = "add-btn" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
@@ -3272,6 +3322,7 @@ function renderMateriaInternaS2(key) {
     var card = document.createElement("a");
     card.className = "resumo-card unlocked";
     card.href = m.file;
+    card.dataset.resumo=m.key;
     card.style.position = "relative";
     card.innerHTML =
       (ehPresente ? '<div class="presente-btn" onclick="showPresenteMsg(event)">🎁</div>' : '') +
@@ -3286,7 +3337,7 @@ function renderMateriaInternaS2(key) {
       '<span class="card-emoji">' + m.emoji + '</span>' +
       '<div class="card-title">' + m.label + '</div>' +
       '<div class="card-desc">' + m.desc + '</div>' +
-      '<div class="lock-badge" onclick="goToStore()">🔒 Comprar acesso</div>';
+      resumoPurchaseAction(m.key);
     grid.appendChild(lockedCard);
   }
 }
@@ -3335,6 +3386,7 @@ function renderStoreGridS2() {
     var inCart = !!cart.find(function(c){ return c.key === key; });
 
     var card = document.createElement("div");
+    card.id = "produto-resumo-"+key;
     card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
     var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "Adicionar");
@@ -3999,6 +4051,7 @@ function renderStoreGrid() {
     var inCart = !!cart.find(function(c){ return c.key === key; });
 
     var card = document.createElement("div");
+    card.id = "produto-resumo-"+key;
     card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
     var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "Adicionar");
@@ -4050,6 +4103,7 @@ function renderStoreGridFinal() {
     var inCart = !!cart.find(function(c){ return c.key === key; });
 
     var card = document.createElement("div");
+    card.id = "produto-resumo-"+key;
     card.className = "produto-card" + (owned ? " owned" : "") + (inCart ? " in-cart" : "");
 
     var btnLabel = owned ? "✅ Já adquirido" : (inCart ? "✓ No carrinho" : "Adicionar");
@@ -4368,7 +4422,9 @@ document.addEventListener("authReady", async function(e) {
     var directParams = new URLSearchParams(location.search);
     var directAulaoKey = directParams.get("add_aulao");
     var directTab = directParams.get("tab");
-    if (directAulaoKey) {
+    if (directParams.has("resumo")) {
+      openResumoProduct(directParams.get("resumo"));
+    } else if (directAulaoKey) {
       switchTab("loja");
       switchStoreCategory("auloes");
       setTimeout(function(){
