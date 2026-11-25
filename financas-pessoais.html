@@ -1267,11 +1267,11 @@ function drawCartPage(){
   paint(sectorOf(r.item),60,y+35,29,'#34645a',true);
   ctx.strokeStyle='#53756b';ctx.lineWidth=3;ctx.strokeRect(62,y+64,36,36);
   let size=42,lines;
-  do{ctx.font='700 '+size+'px system-ui';lines=wrapName(r.item,885);if(lines.length<=3||size<=24)break;size-=2;}while(true);
+  do{ctx.font='700 '+size+'px system-ui';lines=wrapName(r.item.replace(/ · kg$/i,''),885);if(lines.length<=3||size<=24)break;size-=2;}while(true);
   lines.forEach((line,i)=>paint(line.trim(),124,y+98+i*(size+3),size,'#192c30',true));
   const price=r.price_cents==null?'Preço a conferir':money(r.price_cents)+' cada   ·   '+money(Math.round(r.quantity*r.price_cents));
-  paint('Qtd. '+quantityLabel(r.quantity)+'   ·   '+price,124,y+199,32,'#374b50');
-  ctx.fillStyle='#ccd6d1';ctx.fillRect(60,y+218,960,2);
+  const isKg=/ · kg$/i.test(r.item),q=Number(r.quantity);const pretty=isKg?(q<1?quantityLabel(Math.round(q*1000))+' g':quantityLabel(q)+' kg'):quantityLabel(q)+' '+(r.item.split(' · ').pop()||'un.');paint(pretty,124,y+185,42,'#192c30',true);paint(price,124,y+216,25,'#374b50');
+  ctx.fillStyle='#ccd6d1';ctx.fillRect(60,y+230,960,2);
  });
  const priced=imageRows.filter(r=>r.price_cents!=null);
  const total=priced.reduce((a,r)=>a+Math.round(r.quantity*r.price_cents),0);
