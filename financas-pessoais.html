@@ -1241,7 +1241,7 @@ $('itemForm').onsubmit=e=>{e.preventDefault();plannerAction(async()=>{
 $('marketSector').onchange=renderMarket;
 $('marketPicked').onchange=renderMarket;
 let imageRows=[], imagePage=0, imageMonth='';
-const perImage=6;
+const perImage=10;
 function drawCartPage(){
  const canvas=document.createElement('canvas');
  canvas.width=1080;canvas.height=1920;
@@ -1259,26 +1259,27 @@ function drawCartPage(){
  const pageCount=Math.ceil(imageRows.length/perImage);
  const part=imageRows.slice(imagePage*perImage,(imagePage+1)*perImage);
  ctx.fillStyle='#f6f4ef';ctx.fillRect(0,0,1080,1920);
- ctx.fillStyle='#123b38';ctx.fillRect(0,0,1080,264);
- paint('LISTA DE COMPRAS',58,100,68,'#ffffff',true);
- paint(monthText(imageMonth)+'   ·   '+imageRows.length+' produtos',60,182,39,'#d2ede4');
+ ctx.fillStyle='#123b38';ctx.fillRect(0,0,1080,180);
+ paint('LISTA DE COMPRAS',48,76,60,'#ffffff',true);
+ paint(monthText(imageMonth)+' · '+imageRows.length+' produtos',48,136,35,'#d2ede4');
  part.forEach((r,j)=>{
-  const y=300+j*225;
-  paint(sectorOf(r.item),60,y+35,29,'#34645a',true);
-  ctx.strokeStyle='#53756b';ctx.lineWidth=3;ctx.strokeRect(62,y+64,36,36);
-  let size=42,lines;
-  do{ctx.font='700 '+size+'px system-ui';lines=wrapName(r.item.replace(/ · kg$/i,''),885);if(lines.length<=3||size<=24)break;size-=2;}while(true);
-  lines.forEach((line,i)=>paint(line.trim(),124,y+98+i*(size+3),size,'#192c30',true));
-  const price=r.price_cents==null?'Preço a conferir':money(r.price_cents)+' cada   ·   '+money(Math.round(r.quantity*r.price_cents));
-  const isKg=/ · kg$/i.test(r.item),q=Number(r.quantity);const pretty=isKg?(q<1?quantityLabel(Math.round(q*1000))+' g':quantityLabel(q)+' kg'):quantityLabel(q)+' '+(r.item.split(' · ').pop()||'un.');paint(pretty,124,y+185,42,'#192c30',true);paint(price,124,y+216,25,'#374b50');
-  ctx.fillStyle='#ccd6d1';ctx.fillRect(60,y+230,960,2);
+  const y=192+j*143,unit=r.item.includes(' · ')?r.item.split(' · ').pop():'un.',name=r.item.replace(/ · [^·]+$/,'');
+  const q=Number(r.quantity),fmt=n=>n.toLocaleString('pt-BR',{maximumFractionDigits:3});
+  const pretty=/^kg$/i.test(unit)?(q<1?fmt(Math.round(q*1000))+' g':fmt(q)+' kg'):fmt(q)+' '+unit;
+  if(j%2===0){ctx.fillStyle='#e9eeea';ctx.fillRect(24,y,1032,140);}
+  ctx.strokeStyle='#53756b';ctx.lineWidth=3;ctx.strokeRect(48,y+49,34,34);
+  paint(sectorOf(r.item),104,y+28,23,'#34645a',true);
+  let size=35,lines;do{ctx.font='700 '+size+'px system-ui';lines=wrapName(name,650);if(lines.length<=2||size<=20)break;size-=2;}while(true);
+  lines.slice(0,2).forEach((line,i)=>paint(line.trim(),104,y+65+i*(size+3),size,'#192c30',true));
+  ctx.textAlign='right';let qs=40;ctx.font='700 '+qs+'px system-ui';while(ctx.measureText(pretty).width>250&&qs>18){qs--;ctx.font='700 '+qs+'px system-ui';}paint(pretty,1020,y+69,qs,'#123b38',true);ctx.textAlign='left';
+  if(r.price_cents!=null){ctx.textAlign='right';paint(money(Math.round(q*r.price_cents)),1020,y+108,25,'#374b50');ctx.textAlign='left';}
+  ctx.fillStyle='#ccd6d1';ctx.fillRect(48,y+140,972,2);
  });
- const priced=imageRows.filter(r=>r.price_cents!=null);
- const total=priced.reduce((a,r)=>a+Math.round(r.quantity*r.price_cents),0);
- ctx.fillStyle='#123b38';ctx.fillRect(0,1690,1080,230);
- paint('Subtotal da lista com preços',60,1758,34,'#d2ede4');
- paint(money(total),60,1832,57,'white',true);
- paint((imageRows.length-priced.length)+' sem preço   ·   Página '+(imagePage+1)+' de '+pageCount,60,1888,31,'white');
+ const priced=imageRows.filter(r=>r.price_cents!=null),total=priced.reduce((a,r)=>a+Math.round(r.quantity*r.price_cents),0);
+ ctx.fillStyle='#123b38';ctx.fillRect(0,1640,1080,280);
+ paint('Subtotal dos produtos com preço',48,1710,34,'#d2ede4');
+ paint(money(total),48,1784,57,'white',true);
+ paint((imageRows.length-priced.length)+' sem preço · Página '+(imagePage+1)+' de '+pageCount,48,1850,31,'white');
  const png=canvas.toDataURL('image/png');
  $('cartImagePreview').src=png;
  $('cartImageDownload').href=png;
