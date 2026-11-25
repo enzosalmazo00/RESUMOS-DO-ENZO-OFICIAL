@@ -209,7 +209,7 @@ details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotat
 <div class="row hero"><div><div class="eyebrow">SEU PLANEJAMENTO PESSOAL</div><h1>Minhas finanças</h1><p>Clareza para hoje. Organização para os próximos meses.</p></div><div class="tools"><button id="reload">Atualizar</button><button type="button" id="openingAdd">Saldo inicial</button><button type="button" id="manageBanks">⚙ Gerenciar bancos</button><button class="quick-launch" type="button" id="quickAdd">⚡ Gasto rápido</button><button class="primary" id="add">+ Novo lançamento</button></div></div>
 <div id="message" role="status" aria-live="polite"></div>
 <div class="row"><label>Mês de planejamento<input class="month" id="month" type="month"></label><div class="tools"><button id="csv">Exportar CSV</button><button id="print" type="button">Relatórios / PDF</button></div></div>
-<div class="cards" id="cards"></div><section class="panel" id="simpleFinancePanel" style="margin:14px 0 20px"><div class="row"><h2>Para onde vai meu dinheiro?</h2><span class="badge">Resumo do mês</span></div><p class="fine">Entradas e saídas confirmadas, com dívidas pendentes por banco. Pagamentos concluídos saem da lista de pendências.</p><div id="privateMonthPlan"></div><div id="simpleFinanceSummary"></div><div id="simpleFinanceDebts"></div></section><section class="checkpoint-panel" aria-labelledby="checkpointTitle"><h2 id="checkpointTitle">Quanto vai sobrar nos dias 10, 20 e 30?</h2><p class="fine">Saldo acumulado após as entradas e contas até cada data, inclusive. Lançamentos pendentes entram pelo vencimento e os confirmados pela data da movimentação. Em fevereiro, a última previsão usa o último dia do mês.</p><div class="checkpoint-grid" id="checkpointBalances"></div></section><div id="afterFlex" class="fine"></div><h2>Minhas ferramentas</h2><div class="hub-grid"><button data-pane="flex" aria-controls="flex" aria-expanded="false"><strong aria-hidden="true">◷</strong>Gastos planejados</button><button data-pane="market" aria-controls="market" aria-expanded="false"><strong aria-hidden="true">🛒</strong>Lista de compras e preços</button><button data-pane="banksPane" aria-controls="banksPane" aria-expanded="false"><strong aria-hidden="true">▤</strong>Bancos e compromissos</button><button data-pane="flows" aria-controls="flows" aria-expanded="false"><strong aria-hidden="true">⇄</strong>Contas e recebimentos</button><button data-pane="alertsPane" aria-controls="alertsPane" aria-expanded="false"><strong aria-hidden="true">◴</strong>Avisos e vencimentos</button><button data-pane="entriesPane" aria-controls="entriesPane" aria-expanded="false"><strong aria-hidden="true">≡</strong>Lançamentos e categorias</button><button data-pane="ledgerPane" aria-controls="ledgerPane" aria-expanded="false"><strong aria-hidden="true">▥</strong>Extrato por dia</button><button data-pane="savingsPane" aria-controls="savingsPane" aria-expanded="false"><strong aria-hidden="true">◇</strong>Economia com quitações</button></div><section class="panel hub-area" id="flex" hidden><div class="row"><h2>Gastos planejados</h2><button data-closepane>Fechar</button></div><p>Reserve um valor por categoria em até três períodos do mês. O que já foi lançado na categoria, pago ou previsto, consome a reserva do período uma única vez. Valores planejados não geram cobrança nem atraso.</p><form id="flexForm" class="market-fields"><label>Categoria<input id="flexCat" required maxlength="80" list="flexCats" value="Mercado"></label><datalist id="flexCats"></datalist><label>Período<select id="flexPeriod"><option value="1">Dias 1 a 10</option><option value="2">Dias 11 a 20</option><option value="3">Dia 21 ao fim do mês</option></select></label><label>Valor planejado (R$)<input id="flexAmount" inputmode="decimal" required placeholder="0,00"></label><button>Salvar planejamento</button></form><p class="fine">Para retirar uma reserva, salve o valor zero.</p><div id="flexRows"></div></section><section class="panel hub-area" id="market" hidden><div class="row"><h2>Lista de compras e preços</h2><button data-closepane>Fechar</button></div><p>Selecione os itens para a lista do mês. Em Editar, informe a quantidade e o preço observado por unidade ou embalagem. Para comparar preços, mantenha o mesmo produto e tamanho.</p><div class="tools"><input id="marketSearch" placeholder="Buscar produto" aria-label="Buscar produto"><button id="newItem">Adicionar produto</button><button id="printList">Imprimir lista</button></div><p id="cartTotal"></p><div class="market-scroll" id="marketList"></div></section><section class="panel hub-area" id="banksPane" hidden><div class="row"><h2>Bancos e compromissos</h2><button data-closepane>Fechar</button></div><div id="debtSummary" class="debt-strip"></div><div class="row bank-summary-head"><div><div class="section-label">CONTROLE POR INSTITUIÇÃO</div><h2>Bancos e compromissos</h2></div><span class="fine">Valores cadastrados • despesas pendentes</span></div><div id="banks" class="bank-grid"></div><div id="banksGrandTotal" class="banks-grand-total" aria-live="polite"></div><p class="fine">Cartão de crédito: registre as compras/parcelas ou o total da fatura, para não contar a mesma despesa duas vezes. Os valores e juros são informados por você; não há consulta automática aos bancos.</p>
+<div class="cards" id="cards"></div><section class="panel" id="simpleFinancePanel" style="margin:14px 0 20px"><div class="row"><h2>Para onde vai meu dinheiro?</h2><span class="badge">Resumo do mês</span></div><p class="fine">Entradas e saídas confirmadas, com dívidas pendentes por banco. Pagamentos concluídos saem da lista de pendências.</p><div id="privateMonthPlan"></div><div id="simpleFinanceSummary"></div><div id="simpleFinanceDebts"></div></section><section class="checkpoint-panel" aria-labelledby="checkpointTitle"><h2 id="checkpointTitle">Quanto vai sobrar nos dias 10, 20 e 30?</h2><p class="fine">Saldo acumulado após as entradas e contas até cada data, inclusive. Lançamentos pendentes entram pelo vencimento e os confirmados pela data da movimentação. Em fevereiro, a última previsão usa o último dia do mês.</p><div class="checkpoint-grid" id="checkpointBalances"></div></section><div id="afterFlex" class="fine"></div><h2>Minhas ferramentas</h2><div class="hub-grid"><button data-pane="flex" aria-controls="flex" aria-expanded="false"><strong aria-hidden="true">◷</strong>Gastos planejados</button><button data-pane="market" aria-controls="market" aria-expanded="false"><strong aria-hidden="true">🛒</strong>Lista de compras e preços</button><button data-pane="banksPane" aria-controls="banksPane" aria-expanded="false"><strong aria-hidden="true">▤</strong>Bancos e compromissos</button><button data-pane="flows" aria-controls="flows" aria-expanded="false"><strong aria-hidden="true">⇄</strong>Contas e recebimentos</button><button data-pane="alertsPane" aria-controls="alertsPane" aria-expanded="false"><strong aria-hidden="true">◴</strong>Avisos e vencimentos</button><button data-pane="entriesPane" aria-controls="entriesPane" aria-expanded="false"><strong aria-hidden="true">≡</strong>Lançamentos e categorias</button><button data-pane="ledgerPane" aria-controls="ledgerPane" aria-expanded="false"><strong aria-hidden="true">▥</strong>Extrato por dia</button><button data-pane="savingsPane" aria-controls="savingsPane" aria-expanded="false"><strong aria-hidden="true">◇</strong>Economia com quitações</button></div><section class="panel hub-area" id="flex" hidden><div class="row"><h2>Gastos planejados</h2><button data-closepane>Fechar</button></div><p>Reserve um valor por categoria em até três períodos do mês. O que já foi lançado na categoria, pago ou previsto, consome a reserva do período uma única vez. Valores planejados não geram cobrança nem atraso.</p><form id="flexForm" class="market-fields"><label>Categoria<input id="flexCat" required maxlength="80" list="flexCats" value="Mercado"></label><datalist id="flexCats"></datalist><label>Período<select id="flexPeriod"><option value="1">Dias 1 a 10</option><option value="2">Dias 11 a 20</option><option value="3">Dia 21 ao fim do mês</option></select></label><label>Valor planejado (R$)<input id="flexAmount" inputmode="decimal" required placeholder="0,00"></label><button>Salvar planejamento</button></form><p class="fine">Para retirar uma reserva, salve o valor zero.</p><div id="flexRows"></div></section><section class="panel hub-area" id="market" hidden><div class="row"><h2>Lista de compras e preços</h2><button data-closepane>Fechar</button></div><p>Selecione os itens para a lista do mês. Em Editar, informe a quantidade e o preço observado por unidade ou embalagem. Para comparar preços, mantenha o mesmo produto e tamanho.</p><div class="tools"><input id="marketSearch" placeholder="Buscar produto" aria-label="Buscar produto"><select id="marketSector" aria-label="Setor do mercado"><option value="">Todos os setores</option></select><label><input type="checkbox" id="marketPicked"> Só selecionados</label><button id="newItem">Adicionar produto</button><button class="primary" id="marketPNG" type="button">Gerar imagem</button><button id="printList">Imprimir lista</button></div><p id="cartTotal"></p><div class="market-scroll" id="marketList"></div></section><section class="panel hub-area" id="banksPane" hidden><div class="row"><h2>Bancos e compromissos</h2><button data-closepane>Fechar</button></div><div id="debtSummary" class="debt-strip"></div><div class="row bank-summary-head"><div><div class="section-label">CONTROLE POR INSTITUIÇÃO</div><h2>Bancos e compromissos</h2></div><span class="fine">Valores cadastrados • despesas pendentes</span></div><div id="banks" class="bank-grid"></div><div id="banksGrandTotal" class="banks-grand-total" aria-live="polite"></div><p class="fine">Cartão de crédito: registre as compras/parcelas ou o total da fatura, para não contar a mesma despesa duas vezes. Os valores e juros são informados por você; não há consulta automática aos bancos.</p>
 </section><section class="panel hub-area" id="flows" hidden><div class="row"><h2>Contas e recebimentos</h2><button data-closepane>Fechar</button></div><div class="finances-separation">
 <section class="panel flow-money-panel flow-payable"><div class="section-label">SAÍDAS • CONTAS E PARCELAS</div><h2>Valores a pagar por mês</h2><p class="fine">Valor total, meses restantes, média mensal e vencimentos detalhados, sem receitas misturadas.</p><div id="payablesByMonth"></div></section>
 <section class="panel flow-money-panel flow-income"><div class="section-label">ENTRADAS • RECEBIMENTOS</div><h2>Valores a receber por mês</h2><p class="fine">Receitas pendentes, datas de recebimento e origem de cada entrada, sem despesas misturadas.</p><div id="receivables"></div></section>
@@ -219,7 +219,7 @@ details.bank-card[open] .bank-expand-hint b{display:inline-block;transform:rotat
 </section><section class="panel hub-area" id="ledgerPane" hidden><div class="row"><h2>Extrato por dia</h2><button data-closepane>Fechar</button></div><section class="panel ledger-panel" style="margin-top:18px"><div class="row"><div><div class="section-label">FLUXO DE CAIXA</div><h2>Extrato financeiro com saldo acumulado</h2></div><span class="badge">Realizado + previsto</span></div><p class="fine">O saldo de cada dia passa para o dia seguinte e de um mês para o outro. Lançamentos recebidos/pagos usam a data efetiva; pendentes usam o vencimento previsto. A projeção supõe que todas as pendências ocorram nas datas previstas e não é o extrato do banco.</p><div id="agendaSummary"></div><div id="agenda"></div></section>
 </section><section class="panel hub-area" id="savingsPane" hidden><div class="row"><h2>Economia com quitações</h2><button data-closepane>Fechar</button></div><section id="savingsPanel" class="savings-panel" aria-label="Economia com antecipação de parcelas"></section></section><p class="fine" style="margin-top:22px">Dados pessoais protegidos e sincronizados na sua conta. Moeda: real (R$). Datas de referência: horário de Brasília.</p>
 </div></main>
-<dialog id="itemDialog"><form id="itemForm"><h2>Produto do mês</h2><label>Produto e unidade ou embalagem<input required id="itemName" maxlength="120" placeholder="Ex.: Arroz · pacote de 5 kg"></label><label>Quantidade na lista<input required type="number" id="itemQty" step="0.001" min="0.001" max="9999999"></label><label>Preço observado neste mês por unidade ou embalagem (R$)<input inputmode="decimal" id="itemPrice" placeholder="Ainda sem preço"></label><label><input type="checkbox" id="itemSelected"> Incluir na lista</label><p id="itemError" role="alert"></p><div class="formbuttons"><button type="button" id="itemCancel">Cancelar</button><button class="primary">Salvar produto</button></div></form></dialog><dialog id="quickDialog" class="quick-dialog" aria-labelledby="quickHeading"><form id="quickForm">
+<dialog id="cartImageDialog" aria-labelledby="cartImageTitle" style="width:min(94vw,520px);max-height:92vh;overflow:auto;box-sizing:border-box"><h2 id="cartImageTitle">Imagem da lista</h2><div class="tools"><button id="cartImagePrev" type="button">Anterior</button><span id="cartImagePage" aria-live="polite"></span><button id="cartImageNext" type="button">Próxima</button></div><img id="cartImagePreview" alt="Lista de compras selecionadas" style="display:block;max-width:100%;max-height:58vh;margin:10px auto"><div class="tools"><a id="cartImageDownload" style="color:inherit;text-decoration:underline">Baixar PNG</a><button id="cartImageShare" type="button" hidden>Compartilhar</button><button id="cartImageClose" type="button">Fechar</button></div></dialog><dialog id="itemDialog"><form id="itemForm"><h2>Produto do mês</h2><label>Produto e unidade ou embalagem<input required id="itemName" maxlength="120" placeholder="Ex.: Arroz · pacote de 5 kg"></label><label>Quantidade na lista<input required type="number" id="itemQty" step="0.001" min="0.001" max="9999999"></label><label>Preço observado neste mês por unidade ou embalagem (R$)<input inputmode="decimal" id="itemPrice" placeholder="Ainda sem preço"></label><label><input type="checkbox" id="itemSelected"> Incluir na lista</label><p id="itemError" role="alert"></p><div class="formbuttons"><button type="button" id="itemCancel">Cancelar</button><button class="primary">Salvar produto</button></div></form></dialog><dialog id="quickDialog" class="quick-dialog" aria-labelledby="quickHeading"><form id="quickForm">
 <div class="row"><div><div class="eyebrow">REGISTRO RÁPIDO DE DESPESAS</div><h2 id="quickHeading">Quanto gastou agora?</h2></div><button type="button" id="quickClose" aria-label="Fechar">✕</button></div>
 <p class="fine">Digite valor e item de uma vez. A data de hoje e a categoria são preenchidas automaticamente. Confira antes de salvar.</p>
 <label class="quick-command-label">Digite, por exemplo: 10,00 Uber<input id="quickCommand" type="text" autocomplete="off" placeholder="10,00 Uber" maxlength="180"></label>
@@ -1048,7 +1048,96 @@ $('quickDescription').addEventListener('input',()=>{
 
 const marketTable='personal_market_months', planTable='personal_flexible_plans';
 let marketRows=[],planRows=[];
-const staples=['Arroz · pacote 5 kg','Feijão · kg','Frango · kg','Carne bovina · kg','Linguiça · kg','Macarrão · pacote 500 g','Molho de tomate · sachê','Ovos · bandeja 30','Batata · kg','Cebola · kg','Alho · kg','Tomate · kg','Cenoura · kg','Alface · pé','Banana · kg','Mamão · kg','Manteiga · pote 200 g','Creme de leite · caixa 200 g','Leite · litro','Café · pacote 500 g','Óleo · garrafa 900 ml','Sal · kg','Pão · kg','Detergente · frasco 500 ml'];
+const marketCatalog = {
+ "Açougue bovino": {
+  "kg": "Acém|Alcatra|Ancho|Assado de tira|Bife de chorizo|Bife de fígado|Bisteca bovina|Bucho|Capa de filé|Carne bovina|Carne de sol|Carne moída de acém|Carne moída de patinho|Carne seca|Contrafilé|Costela bovina|Coxão duro|Coxão mole|Cupim|Filé-mignon|Fraldinha|Lagarto|Língua bovina|Maminha|Músculo|Ossobuco|Paleta bovina|Patinho|Peito bovino|Picanha|Rabada"
+ },
+ "Aves, suínos e linguiças": {
+  "kg": "Frango|Frango inteiro|Peito de frango|Filé de peito|Sassami|Coxa de frango|Sobrecoxa|Asa de frango|Coxinha da asa|Coração de frango|Moela|Fígado de frango|Peito de peru fresco|Bisteca suína|Costelinha suína|Copa-lombo|Lombo suíno|Pernil suíno|Panceta|Torresmo|Bacon|Linguiça|Linguiça toscana|Linguiça calabresa|Linguiça de frango|Paio|Chouriço|Salsicha|Pernil de cordeiro"
+ },
+ "Peixaria": {
+  "kg": "Filé de tilápia|Salmão|Merluza|Pescada|Sardinha fresca|Atum fresco|Bacalhau|Pacu|Pintado|Dourado|Corvina|Camarão|Lula|Mexilhão"
+ },
+ "Grãos, farinhas e cereais": {
+  "pacote 5 kg": "Arroz",
+  "kg": "Feijão|Feijão carioca|Feijão preto|Feijão branco|Feijão vermelho|Feijão-fradinho|Arroz integral|Arroz parboilizado|Arroz para risoto|Grão-de-bico|Lentilha|Ervilha seca|Soja em grão|Canjica|Milho de pipoca|Farinha de trigo|Farinha de mandioca|Fubá",
+  "pacote": "Farinha de rosca|Farinha integral|Farinha de arroz|Flocão de milho|Amido de milho|Tapioca|Polvilho doce|Polvilho azedo|Farofa pronta|Aveia|Granola|Quinoa|Chia|Linhaça|Trigo para quibe|Proteína de soja"
+ },
+ "Massas, molhos e conservas": {
+  "pacote 500 g": "Macarrão|Espaguete|Penne|Parafuso|Talharim|Macarrão integral|Macarrão sem glúten",
+  "pacote": "Lasanha em folhas|Canelone|Nhoque|Ravioli|Macarrão instantâneo|Massa de pastel|Massa de pizza|Massa folhada|Purê instantâneo",
+  "sachê": "Molho de tomate|Molho branco|Molho quatro queijos",
+  "un.": "Massa de tomate (extrato)|Passata de tomate|Tomate pelado|Milho em conserva|Ervilha em conserva|Seleta de legumes|Palmito|Azeitona verde|Azeitona preta|Pepino em conserva|Atum em lata|Sardinha em lata|Cogumelos em conserva|Leite de coco"
+ },
+ "Padaria": {
+  "kg": "Pão|Pão francês",
+  "pacote": "Pão de forma|Pão de forma integral|Pão sem glúten|Pão de hambúrguer|Pão de hot dog|Pão sírio|Tortilha|Bisnaguinha|Torrada",
+  "un.": "Baguete|Ciabatta|Croissant|Pão doce|Sonho|Bolo de padaria|Rosca|Chipa|Pão de queijo assado"
+ },
+ "Leites, ovos e frios": {
+  "litro": "Leite|Leite integral|Leite desnatado|Leite sem lactose|Bebida vegetal",
+  "pote 200 g": "Manteiga",
+  "caixa 200 g": "Creme de leite",
+  "bandeja 30": "Ovos",
+  "dúzia": "Ovos caipiras",
+  "pote": "Margarina|Requeijão|Cream cheese|Iogurte natural|Iogurte grego|Coalhada|Doce de leite",
+  "kg": "Muçarela|Queijo prato|Queijo minas|Queijo coalho|Parmesão|Provolone|Ricota|Queijo azul|Queso Paraguay|Presunto|Mortadela|Salame|Peito de peru fatiado|Apresuntado",
+  "un.": "Leite em pó|Leite condensado|Queijo ralado|Iogurte de beber|Bebida láctea"
+ },
+ "Congelados e pratos prontos": {
+  "un.": "Pizza congelada|Pizza de muçarela|Pizza de calabresa|Pizza quatro queijos|Lasanha congelada|Escondidinho|Panqueca pronta|Refeição congelada",
+  "pacote": "Nuggets de frango|Hambúrguer bovino|Hambúrguer de frango|Hambúrguer vegetal|Batata frita congelada|Batata rústica congelada|Pão de queijo congelado|Almôndega|Quibe congelado|Coxinha congelada|Anéis de cebola|Iscas de peixe empanadas|Brócolis congelado|Mix de legumes congelados|Polpa de fruta|Açaí congelado",
+  "pote": "Sorvete"
+ },
+ "Hortaliças e legumes": {
+  "kg": "Batata|Batata-doce|Batata-baroa|Mandioca|Inhame|Cará|Abóbora|Abobrinha|Berinjela|Cenoura|Beterraba|Cebola|Cebola roxa|Alho|Tomate|Tomate-cereja|Pepino|Chuchu|Quiabo|Vagem|Pimentão verde|Pimentão vermelho|Pimentão amarelo|Repolho|Rabanete|Gengibre",
+  "pé": "Alface",
+  "maço": "Rúcula|Agrião|Espinafre|Couve|Acelga|Salsa|Cebolinha|Coentro|Hortelã|Manjericão|Alho-poró|Aipo|Brócolis",
+  "un.": "Couve-flor|Milho verde",
+  "bandeja": "Shimeji|Shiitake"
+ },
+ "Frutas": {
+  "kg": "Banana|Mamão|Maçã|Laranja|Limão|Tangerina|Pera|Manga|Melancia|Melão|Abacate|Uva|Kiwi|Pêssego|Ameixa|Maracujá|Goiaba|Caqui|Jabuticaba|Nectarina|Pitaya",
+  "un.": "Abacaxi|Coco verde",
+  "bandeja": "Morango|Mirtilo|Amora"
+ },
+ "Óleos, condimentos e temperos": {
+  "garrafa 900 ml": "Óleo",
+  "kg": "Sal|Açúcar refinado|Açúcar cristal",
+  "un.": "Azeite de oliva|Óleo de girassol|Óleo de coco|Banha|Vinagre|Vinagre balsâmico|Sal grosso|Açúcar mascavo|Adoçante|Ketchup|Mostarda|Maionese|Molho barbecue|Molho de pimenta|Molho inglês|Shoyu|Pesto|Caldo de legumes|Pimenta-do-reino|Páprica|Cominho|Orégano|Louro|Canela|Cravo|Noz-moscada|Açafrão-da-terra|Colorau|Chimichurri|Alecrim|Tomilho|Curry"
+ },
+ "Café da manhã, doces e lanches": {
+  "pacote 500 g": "Café",
+  "un.": "Café solúvel|Filtro de café|Cápsulas de café|Chá|Erva-mate|Erva para tereré|Achocolatado|Cacau em pó|Mel|Geleia|Pasta de amendoim|Creme de avelã|Cereal matinal|Barra de cereal|Biscoito recheado|Biscoito de água e sal|Biscoito de polvilho|Cookies|Salgadinho|Batata chips|Amendoim|Castanha-de-caju|Castanha-do-pará|Nozes|Uva-passa|Chocolate|Bombom|Paçoca|Gelatina|Mistura para bolo|Fermento químico|Fermento biológico|Coco ralado|Granulado|Essência de baunilha"
+ },
+ "Bebidas e gelo": {
+  "un.": "Água mineral|Água com gás|Água de coco|Suco integral|Néctar de fruta|Suco em pó|Refrigerante|Refrigerante zero|Água tônica|Chá gelado|Isotônico|Energético|Cerveja|Cerveja sem álcool|Vinho tinto|Vinho branco|Espumante",
+  "saco": "Gelo"
+ },
+ "Limpeza e lavanderia": {
+  "frasco 500 ml": "Detergente",
+  "un.": "Sabão em barra|Sabão em pó|Lava-roupas líquido|Amaciante|Tira-manchas|Água sanitária|Desinfetante|Limpador multiuso|Limpa-vidros|Desengordurante|Sapólio|Limpador de piso|Lustra-móveis|Álcool de limpeza|Esponja de louça|Lã de aço|Escova de limpeza|Pano de chão|Pano multiuso|Luvas de limpeza|Saco de lixo|Vassoura|Rodo|Pá de lixo|Balde|Pregador de roupa|Inseticida"
+ },
+ "Higiene, bebê e cuidados pessoais": {
+  "un.": "Papel higiênico|Sabonete|Sabonete líquido|Xampu|Condicionador|Creme para pentear|Desodorante|Creme dental|Escova de dentes|Fio dental|Enxaguante bucal|Absorvente|Protetor diário|Algodão|Hastes flexíveis|Aparelho de barbear|Espuma de barbear|Hidratante corporal|Protetor solar|Repelente|Lenço de papel|Fralda infantil|Fralda geriátrica|Lenço umedecido|Pomada para assaduras|Sabonete infantil|Xampu infantil|Papinha"
+ },
+ "Utilidades e churrasco": {
+  "un.": "Papel-toalha|Guardanapo|Papel-alumínio|Filme plástico|Papel-manteiga|Saco para congelar|Pote para alimentos|Copo descartável|Prato descartável|Palito de dente|Palito de churrasco|Carvão|Fósforo|Acendedor|Vela|Pilha|Lâmpada|Bucha vegetal"
+ },
+ "Pet shop": {
+  "un.": "Ração para cães|Ração para gatos|Sachê para cães|Sachê para gatos|Petisco para cães|Petisco para gatos|Areia para gatos|Tapete higiênico|Xampu para pets"
+ }
+};
+const marketSectors = new Map();
+for (const [sector, units] of Object.entries(marketCatalog)) {
+ for (const [unit, products] of Object.entries(units)) {
+  for (const product of products.split('|')) marketSectors.set(product+' · '+unit,sector);
+ }
+}
+const staples = [...marketSectors.keys()];
+const sectorOf = name => marketSectors.get(name)||'Meus produtos';
+const marketKey = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
+for (const sector of [...Object.keys(marketCatalog),'Meus produtos']) $('marketSector').add(new Option(sector,sector));
 const plannerMonth=()=>$('month').value+'-01';
 async function plannerData(table,keys){
  const result=[];
@@ -1088,12 +1177,13 @@ function priceChange(current,prev){
 }
 const monthText=m=>m.slice(5,7)+'/'+m.slice(0,4);
 function renderMarket(){
- const filter=$('marketSearch').value.trim().toLocaleLowerCase('pt-BR');
+ const filter=marketKey($('marketSearch').value.trim());
  const cart=marketRows.filter(r=>r.month===plannerMonth()&&r.selected);
  const priced=cart.filter(r=>r.price_cents!=null);
  $('cartTotal').textContent=cart.length+' itens selecionados · subtotal com preço neste mês '+money(priced.reduce((a,r)=>a+Math.round(r.quantity*r.price_cents),0))+' · sem preço: '+(cart.length-priced.length);
  $('printList').disabled=!cart.length;
- $('marketList').innerHTML=allItems().filter(n=>n.toLocaleLowerCase('pt-BR').includes(filter)).map(name=>{
+ $('marketPNG').disabled=!cart.length;
+ $('marketList').innerHTML=allItems().filter(n=>marketKey(n).includes(filter)&&(!$('marketSector').value||sectorOf(n)===$('marketSector').value)&&(!$('marketPicked').checked||monthItem(n)?.selected)).map(name=>{
   const r=monthItem(name),h=historyFor(name),safe=esc(name);
   const history=h.map((p,i)=>'<p>'+monthText(p.month)+' · '+money(p.price_cents)+' · '+priceChange(p,h[i+1])+'</p>').join('');
   return '<div class="market-line"><input aria-label="Selecionar '+safe+'" data-pick="'+safe+'" type="checkbox" '+(r?.selected?'checked':'')+'><div><b>'+safe+'</b><small>Quantidade '+quantityLabel(r?.quantity||1)+' · '+(r?.price_cents?money(r.price_cents):'Sem preço neste mês')+'</small>'+(history?'<details><summary>Histórico de preços</summary>'+history+'</details>':'')+'</div><button data-item="'+safe+'">Editar</button></div>';
@@ -1122,6 +1212,73 @@ $('itemForm').onsubmit=e=>{e.preventDefault();plannerAction(async()=>{
  await plannerSave(marketTable,{month:plannerMonth(),item,quantity:Number($('itemQty').value),selected:$('itemSelected').checked,price_cents:price?cents(price):null},['month','item'],marketRows);
  $('itemDialog').close();renderMarket();
 },m=>$('itemError').textContent=m);};
+
+$('marketSector').onchange=renderMarket;
+$('marketPicked').onchange=renderMarket;
+let imageRows=[], imagePage=0, imageMonth='';
+const perImage=6;
+function drawCartPage(){
+ const canvas=document.createElement('canvas');
+ canvas.width=1080;canvas.height=1920;
+ const ctx=canvas.getContext('2d');
+ function paint(text,x,y,size,color,bold=false){ctx.font=(bold?'700 ':'400 ')+size+'px system-ui';ctx.fillStyle=color;ctx.fillText(text,x,y);}
+ function wrapName(text,width) {
+  const lines=[];let line='';
+  for(const word of text.split(/\s+/)){
+   if(line && ctx.measureText(line+' '+word).width>width){lines.push(line);line='';}
+   for(const ch of word){if(ctx.measureText(line+ch).width>width){lines.push(line);line='';}line+=ch;}
+   line+=' ';
+  }
+  if(line.trim())lines.push(line.trim());return lines;
+ }
+ const pageCount=Math.ceil(imageRows.length/perImage);
+ const part=imageRows.slice(imagePage*perImage,(imagePage+1)*perImage);
+ ctx.fillStyle='#f6f4ef';ctx.fillRect(0,0,1080,1920);
+ ctx.fillStyle='#123b38';ctx.fillRect(0,0,1080,264);
+ paint('LISTA DE COMPRAS',58,100,68,'#ffffff',true);
+ paint(monthText(imageMonth)+'   ·   '+imageRows.length+' produtos',60,182,39,'#d2ede4');
+ part.forEach((r,j)=>{
+  const y=300+j*225;
+  paint(sectorOf(r.item),60,y+35,29,'#34645a',true);
+  ctx.strokeStyle='#53756b';ctx.lineWidth=3;ctx.strokeRect(62,y+64,36,36);
+  let size=42,lines;
+  do{ctx.font='700 '+size+'px system-ui';lines=wrapName(r.item,885);if(lines.length<=3||size<=24)break;size-=2;}while(true);
+  lines.forEach((line,i)=>paint(line.trim(),124,y+98+i*(size+3),size,'#192c30',true));
+  const price=r.price_cents==null?'Preço a conferir':money(r.price_cents)+' cada   ·   '+money(Math.round(r.quantity*r.price_cents));
+  paint('Qtd. '+quantityLabel(r.quantity)+'   ·   '+price,124,y+199,32,'#374b50');
+  ctx.fillStyle='#ccd6d1';ctx.fillRect(60,y+218,960,2);
+ });
+ const priced=imageRows.filter(r=>r.price_cents!=null);
+ const total=priced.reduce((a,r)=>a+Math.round(r.quantity*r.price_cents),0);
+ ctx.fillStyle='#123b38';ctx.fillRect(0,1690,1080,230);
+ paint('Subtotal da lista com preços',60,1758,34,'#d2ede4');
+ paint(money(total),60,1832,57,'white',true);
+ paint((imageRows.length-priced.length)+' sem preço   ·   Página '+(imagePage+1)+' de '+pageCount,60,1888,31,'white');
+ const png=canvas.toDataURL('image/png');
+ $('cartImagePreview').src=png;
+ $('cartImageDownload').href=png;
+ $('cartImageDownload').download='compras-'+imageMonth.slice(0,7)+'-'+(imagePage+1)+'.png';
+ $('cartImagePage').textContent=(imagePage+1)+' / '+pageCount;
+ $('cartImagePrev').disabled=imagePage===0;
+ $('cartImageNext').disabled=imagePage+1===pageCount;
+ $('cartImageShare').hidden=!(navigator.canShare&&navigator.canShare({files:[new File([''],'lista.png',{type:'image/png'})]}));
+}
+$('marketPNG').onclick=()=>{
+ imageMonth=plannerMonth();
+ imageRows=marketRows.filter(r=>r.month===imageMonth&&r.selected).sort((a,b)=>sectorOf(a.item).localeCompare(sectorOf(b.item),'pt-BR')||a.item.localeCompare(b.item,'pt-BR'));
+ if(!imageRows.length)return;
+ imagePage=0;drawCartPage();$('cartImageDialog').showModal();
+};
+$('cartImagePrev').onclick=()=>{if(imagePage>0){imagePage--;drawCartPage();}};
+$('cartImageNext').onclick=()=>{if((imagePage+1)*perImage<imageRows.length){imagePage++;drawCartPage();}};
+$('cartImageClose').onclick=()=>$('cartImageDialog').close();
+$('cartImageShare').onclick=async()=>{
+ try{
+ const link=$('cartImageDownload'), bytes=Uint8Array.from(atob(link.href.split(',')[1]),c=>c.charCodeAt(0));
+ await navigator.share({files:[new File([bytes],link.download,{type:'image/png'})]});
+ }catch(error){if(error.name!=='AbortError')alert('Use Baixar PNG para salvar esta página da lista.');}
+};
+
 $('printList').onclick=()=>{
  const cart=marketRows.filter(r=>r.month===plannerMonth()&&r.selected).sort((a,b)=>a.item.localeCompare(b.item,'pt-BR'));
  if(!cart.length)return;
