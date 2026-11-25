@@ -240,23 +240,12 @@
 
   // ── Acesso normalizado ──────────────────────────────────────────────────
   async function checkAccessInAcessos(client, userId, resumo) {
-    if (!resumo) return false;
-    try {
-      var result = await client
-        .from("acessos")
-        .select("expira_em")
-        .match({ user_id:userId, resumo:resumo })
-        .maybeSingle();
+    if (!resumo) return null;
+    var result=await client.from("acessos").select("expira_em")
+      .match({user_id:userId,resumo:resumo}).maybeSingle();
+    if(result.error)throw result.error;
+    return result.data;
 
-      if (result.error) return false;
-      var record = result.data;
-      if (!record) return false;
-      if (!record.expira_em) return true;
-      return new Date(record.expira_em) >= new Date();
-    } catch (err) {
-      console.error("[auth-guard] checkAccessInAcessos erro:", err);
-      return false;
-    }
   }
 
   // ── Fluxo principal: começa AGORA, sem esperar DOMContentLoaded ──────────
@@ -316,14 +305,10 @@
       if (pageKey.endsWith("_final")) pacoteKey = isS4 ? "pacote_s4_final" : "pacote_final";
     }
 
-    var extraFields = "";
-    if (pageKey && !isCurso) extraFields += ", " + pageKey;
-    if (pacoteKey) extraFields += ", " + pacoteKey;
-    if (pageKey && !isCurso) extraFields += ", " + pageKey + "_expira";
-    if (pacoteKey) extraFields += ", " + pacoteKey + "_expira";
-
+    if (["biologia_celular","embriologia","histologia_1","anatomia_1"].includes(pageKey)) pacoteKey="pacote_s1";
+    if (["psicologia_salud","medicina_comunitaria","histologia_2","guarani","anatomia_2","bioestatistica"].includes(pageKey)) pacoteKey="pacote_s2";
     var permiteAdmin = pageKey === "fisiologia_2_final" || pageKey === "eletrocardiograma_p2";
-    var fields = "is_approved, active_session, device_id" + (permiteAdmin ? ", is_admin" : "") + extraFields;
+    var fields = pageKey ? "*" : "is_approved, active_session, device_id";
 
     // Perfil e acesso normalizado são buscados em paralelo.
     var profilePromise = client
@@ -373,26 +358,35 @@
     }
 
     if (pageKey) {
-      var temAcessoNovo = !!accessResult[0];
-      var temAcessoPacote = !!accessResult[1];
-      var temAcessoAntigo = !!profile[pageKey] || !!(pacoteKey && profile[pacoteKey]);
-      var temAcessoAdmin = permiteAdmin && profile.is_admin === true;
-      var temAcesso = temAcessoNovo || temAcessoPacote || temAcessoAntigo || temAcessoAdmin;
-
-      if (!temAcesso) {
-        window.location.replace(DASHBOARD_PAGE);
-        return;
+      function expiryFor(key,row){
+        if(!key)return null;
+        if(row)return row.expira_em==null?Infinity:Date.parse(row.expira_em);
+        if(!profile[key])return null;
+        if(profile[key+"_expira"])return Date.parse(profile[key+"_expira"]);
+        if(profile.resumos_presente?.includes(key))return profile.acesso_expira_em?Date.parse(profile.acesso_expira_em):Infinity;
+        return !pacoteKey||pacoteKey==="pacote_s1"||pacoteKey==="pacote_s2"?Infinity:null;
       }
-
-      if (!temAcessoNovo && !temAcessoPacote && !temAcessoAdmin) {
-        var expiraCol = pageKey + "_expira";
-        var expiraPack = pacoteKey ? pacoteKey + "_expira" : null;
-        var expiraData = profile[expiraCol] || (expiraPack ? profile[expiraPack] : null);
-
-        if (expiraData && new Date(expiraData) < new Date()) {
+      var expiries=[expiryFor(pageKey,accessResult[0]),expiryFor(pacoteKey,accessResult[1])];
+      var now=Date.now();
+      if(!(permiteAdmin && profile.is_admin) && !expiries.some(value=>value!==null && value>now)){
+        if(!pacoteKey || pageKey.endsWith("_p1") && pacoteKey==="pacote_p1"){
           window.location.replace(DASHBOARD_PAGE);
           return;
         }
+        await domReady;
+        var expired=expiries.some(value=>value!==null && value<=now);
+        var notice=document.createElement("main");
+        notice.style.cssText="max-width:36rem;margin:12vh auto;padding:2rem;background:#102238;color:white;border-radius:1rem;font:1rem system-ui";
+        var title=document.createElement("h1");
+        title.textContent=expired?"Acesso expirado":"Resumo sem acesso";
+        var link=document.createElement("a");
+        link.href=DASHBOARD_PAGE+"?tab=loja&resumo="+encodeURIComponent(pageKey);
+        link.textContent=expired?"Adquira novamente na loja":"Adquira na loja";
+        link.style.cssText="display:inline-block;margin-top:1rem;padding:.75rem 1rem;background:#67e8f9;color:#082032;border-radius:.5rem";
+        notice.append(title,link);
+        document.body.replaceChildren(notice);
+        revealProtectedPage();
+        return;
       }
     }
 
