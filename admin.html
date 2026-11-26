@@ -2261,21 +2261,17 @@ function renderCursosGridModal(){
  var g=document.getElementById("cursosGridModal");if(!g)return;
  g.innerHTML=CURSOS_COLS.map(function(c){
   var on=!!currentCursoToggles[c.key],aulao=c.key.indexOf("aulao-")===0,gift=!!currentCursoGift[c.key];
-  var icon=aulao?"<span class='presente-icon curso-gift-icon "+(gift?"on":"")+"' role='button' tabindex='0' data-key='"+c.key+"' data-act='markgift' title='"+(gift?"Remover marcação de presente":"Marcar como presente do ADM")+"' aria-label='"+(gift?"Remover presente":"Marcar presente")+"' aria-pressed='"+gift+"'>🎁</span>":"";
+  var icon=true?"<span class='presente-icon curso-gift-icon "+(gift?"on":"")+"' role='button' tabindex='0' data-key='"+c.key+"' data-act='markgift' title='"+(gift?"Remover marcação de presente":"Marcar como presente do ADM")+"' aria-label='"+(gift?"Remover presente":"Marcar presente")+"' aria-pressed='"+gift+"'>🎁</span>":"";
   return "<div class='curso-tile'><div class='resumo-toggle "+(on?"on":"")+"' data-key='"+c.key+"' data-act='togglecurso'>"+(on?"✅ ":"🔒 ")+c.label+"</div>"+icon+"</div>";
  }).join("");
 }
-window.markAulaoGift=async function(k){
- if(!currentAluno||k.indexOf("aulao-")!==0)return;
- if(!currentCursoToggles[k]){showToast("Primeiro libere o aulão e salve o acesso.","error");return;}
- var existing=await client.from("acessos").select("source,order_id").eq("user_id",currentAluno.id).eq("resumo",k).maybeSingle();
- if(existing.error||!existing.data){showToast("Acesso não encontrado. Salve primeiro.","error");return;}
- if(existing.data.source==="purchase"||existing.data.order_id){showToast("Este acesso possui registro de compra e não pode ser alterado.","error");return;}
- var gift=existing.data.source!=="admin_grant";
- var result=await client.from("acessos").update({source:gift?"admin_grant":"legacy"}).eq("user_id",currentAluno.id).eq("resumo",k);
- if(result.error){showToast("Erro ao atualizar presente: "+result.error.message,"error");return;}
- currentCursoGift[k]=gift;renderCursosGridModal();
- showToast(gift?"🎁 Presente ativado!":"Presente desmarcado.","success");
+window.markAulaoGift=function(k){
+ if(!currentAluno||!accessReady||savingAccess)return;
+ var existing=accessRows[k];
+ if(existing&&(existing.source==="purchase"||existing.order_id)){showToast("Este acesso possui registro de compra.","error");return;}
+ currentCursoGift[k]=!currentCursoGift[k];
+ if(currentCursoGift[k]){currentCursoToggles[k]=true;suggestRenewal(k,true);}
+ renderCursosGridModal();
 };
 function suggestRenewal(k,active){
   var old=accessRows[k]?.expira_em||currentAluno[k+"_expira"]||currentAluno.acesso_expira_em;
@@ -2284,7 +2280,7 @@ function suggestRenewal(k,active){
 window.toggleCurso=function(k){currentCursoToggles[k]=!currentCursoToggles[k];suggestRenewal(k,currentCursoToggles[k]);renderCursosGridModal();};
 function renderCursosGrid(){renderCursosGridModal();}
 window.toggleResumo=function(k){currentToggles[k]=!currentToggles[k];suggestRenewal(k,currentToggles[k]);renderResumosGrid();};
-window.togglePresente=function(k){if(!currentAluno)return;var i=currentPresente.indexOf(k);if(i>=0)currentPresente.splice(i,1);else currentPresente.push(k);var el=document.querySelector('.presente-icon[data-key="'+k+'"]');if(el)el.classList.toggle("on",currentPresente.indexOf(k)>=0);};
+window.togglePresente=function(k){if(!currentAluno||!accessReady||savingAccess)return;var existing=accessRows[k];if(existing&&(existing.source==="purchase"||existing.order_id)){showToast("Este acesso possui registro de compra.","error");return;}var i=currentPresente.indexOf(k);if(i>=0)currentPresente.splice(i,1);else {currentPresente.push(k);currentToggles[k]=true;suggestRenewal(k,true);renderResumosGrid();}var el=document.querySelector('.presente-icon[data-key="'+k+'"]');if(el)el.classList.toggle("on",currentPresente.indexOf(k)>=0);};
 window.set50Days=function(){expiryField.value=renewalDay();dateEdited=true;};
 window.closeModal=function(){
   if(savingAccess)return;
@@ -2323,12 +2319,12 @@ window.saveAluno=async function(){
       if(active&&!dateEdited&&old&&Date.parse(old)<=Date.now()&&(!until||Date.parse(until)<=Date.now())){
         until=new Date(renewalDay()+"T23:59:59.999").toISOString();
       }
-      changes.push({key:k,active:active,expiry:until,source:isCourse?"legacy":"admin_grant"});
+      changes.push({key:k,active:active,expiry:until,source:(isCourse?currentCursoGift[k]:gifts.includes(k))?"admin_grant":"legacy"});
       if(!isCourse){
         update[k]=active;
         if(Object.hasOwn(profile,k+"_expira"))update[k+"_expira"]=active?until:null;
         if(!active)gifts=gifts.filter(g=>g!==k);
-        else if(!until&&!gifts.includes(k))gifts.push(k);
+        
       }
     });
   }
@@ -2339,10 +2335,20 @@ window.saveAluno=async function(){
   }
   if(dateEdited||(profile.acesso_expira_em&&Date.parse(profile.acesso_expira_em)<=Date.now()&&changes.some(c=>c.active)))
     update.acesso_expira_em=expiry;
+  gifts=gifts.filter(k=>currentToggles[k]!==false);
   if(JSON.stringify(gifts)!==JSON.stringify(profile.resumos_presente||[]))update.resumos_presente=gifts;
   savingAccess=true;btn.disabled=true;btn.textContent="Salvando…";
   try{
     await writeAccessRows(profile.id,changes);
+    for(var item of RESUMOS_COLS.concat(CURSOS_COLS)){
+      var k=item.key,isCourse=CURSOS_COLS.some(x=>x.key===k),active=isCourse?currentCursoToggles[k]:currentToggles[k];
+      if(!active)continue;
+      var old=accessRows[k];if(old&&(old.source==="purchase"||old.order_id))continue;
+      var gift=isCourse?!!currentCursoGift[k]:gifts.includes(k);
+      if(old&&old.source===(gift?"admin_grant":"legacy"))continue;
+      var marked=await client.from("acessos").update({source:gift?"admin_grant":"legacy"}).eq("user_id",profile.id).eq("resumo",k).is("order_id",null).in("source",["legacy","admin_grant"]);
+      if(marked.error)throw marked.error;
+    }
     if(Object.keys(update).length){
       var result=await client.from("profiles").update(update).eq("id",profile.id);
       if(result.error)throw result.error;
