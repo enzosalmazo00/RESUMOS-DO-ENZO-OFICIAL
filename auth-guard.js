@@ -307,7 +307,7 @@
 
     if (["biologia_celular","embriologia","histologia_1","anatomia_1"].includes(pageKey)) pacoteKey="pacote_s1";
     if (["psicologia_salud","medicina_comunitaria","histologia_2","guarani","anatomia_2","bioestatistica"].includes(pageKey)) pacoteKey="pacote_s2";
-    var permiteAdmin = pageKey === "fisiologia_2_final" || pageKey === "eletrocardiograma_p2";
+    var permiteAdmin = pageKey === "bioquimica_2_final" || pageKey === "fisiologia_2_final" || pageKey === "eletrocardiograma_p2";
     var fields = pageKey ? "*" : "is_approved, active_session, device_id";
 
     // Perfil e acesso normalizado são buscados em paralelo.
