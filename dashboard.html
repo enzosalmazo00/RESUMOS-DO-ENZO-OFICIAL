@@ -1181,6 +1181,7 @@
   <!-- HEADER -->
   <div class="header">
     <div class="logo">RESUMOS <span>ENZO</span></div>
+    <div id="myGiftBar" hidden><button id="myGiftButton" type="button" aria-haspopup="dialog"><svg width="40" height="40" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="20" width="34" height="24" rx="4" fill="#ad8034"/><rect x="4" y="14" width="40" height="10" rx="3" fill="#f5d580"/><path d="M24 14C3 15 11 -4 24 14C37 -4 45 15 24 14" fill="none" stroke="#f5d580" stroke-width="3"/><path d="M24 15V44" stroke="#ffe8ae" stroke-width="5"/></svg><span><strong id="myGiftTotal"></strong><small>Valor economizado com presentes</small><small>Ver detalhes ›</small></span></button></div>
     <div class="header-right">
       <div class="online-students-badge" id="onlineStudentsBadge" title="Alunos conectados agora">
         <span class="online-students-dot"></span>
@@ -1211,12 +1212,40 @@
       #myGiftButton strong{display:block;font-size:23px;line-height:1.2;color:#ffe3a0}
       #myGiftButton small{display:block;font-size:11px;line-height:1.5}
       #myGiftDialog{color:#f5e5bf;background:#101d32;border:1px solid #b99a53;border-radius:18px;padding:20px;width:min(480px,calc(100% - 32px));max-height:80vh;overflow:auto;box-sizing:border-box}
-      #myGiftDialog::backdrop{background:#000a}
+      #myGiftDialog::backdrop{background:#000a} 
+      .container > .header{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px 16px;margin-bottom:20px}
+      .container > .header > .logo{grid-column:1;grid-row:1;min-width:0}
+      .container > .header > #myGiftBar{grid-column:2;grid-row:1;margin:0;min-width:0}
+      .container > .header > .header-right{grid-column:1/-1;width:100%;min-width:0;display:flex;align-items:center;justify-content:flex-start;gap:8px;flex-wrap:wrap}
+      .header-right .user-email{flex:0 1 auto;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .header-right .logout-btn,.header-right .admin-btn{padding:8px 12px;font-size:12px;min-height:36px;white-space:nowrap}
+      #myGiftButton{padding:8px 12px;gap:8px}
+      #myGiftButton svg{flex-shrink:0;width:32px;height:32px}
+      #myGiftButton strong{font-size:20px}
+      #myGiftButton small{font-size:10px}
+      @media(max-width:700px){
+        .container > .header{gap:10px;margin-bottom:16px}
+        .container > .header > .header-right{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+        .header-right .user-email{grid-column:1/-1;grid-row:1;max-width:100%;font-size:11px}
+        .header-right .online-students-badge,.header-right .expiry-badge{justify-content:center;text-align:center;min-width:0}
+        .header-right .logout-btn,.header-right .admin-btn.visible{justify-content:center;text-align:center;min-width:0;white-space:normal;font-size:11px;padding:7px 5px}
+        #myGiftButton{padding:7px 9px;gap:6px}
+        #myGiftButton svg{width:25px;height:25px}
+        #myGiftButton strong{font-size:17px}
+        #myGiftButton small{font-size:9px;max-width:150px}
+      }
+      @media(max-width:380px){
+        .container > .header{grid-template-columns:minmax(0,1fr)}
+        .container > .header > #myGiftBar{grid-column:1;grid-row:2;justify-content:stretch}
+        #myGiftButton{width:100%}
+        .container > .header > .header-right{grid-row:3}
+      }
+
       .my-gift-line{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #b99a5333;font-size:13px}
       .my-gift-line strong{white-space:nowrap;color:#f5d580}
       @media(max-width:600px){#myGiftButton{padding:10px 12px}#myGiftButton strong{font-size:19px}}
     </style>
-    <div id="myGiftBar" hidden><button id="myGiftButton" type="button" aria-haspopup="dialog"><svg width="40" height="40" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="20" width="34" height="24" rx="4" fill="#ad8034"/><rect x="4" y="14" width="40" height="10" rx="3" fill="#f5d580"/><path d="M24 14C3 15 11 -4 24 14C37 -4 45 15 24 14" fill="none" stroke="#f5d580" stroke-width="3"/><path d="M24 15V44" stroke="#ffe8ae" stroke-width="5"/></svg><span><strong id="myGiftTotal"></strong><small>Valor economizado com presentes</small><small>Ver detalhes ›</small></span></button></div>
+
     <dialog id="myGiftDialog" aria-labelledby="myGiftTitle"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h2 id="myGiftTitle" style="font-size:18px;color:#f5d580">🎁 Meus presentes</h2><form method="dialog"><button aria-label="Fechar" style="background:transparent;color:#f5d580;border:0;font-size:24px;cursor:pointer">×</button></form></div><div id="myGiftList"></div><p style="font-size:12px;color:#f5d580" id="myGiftFooter"></p></dialog>
 
 
