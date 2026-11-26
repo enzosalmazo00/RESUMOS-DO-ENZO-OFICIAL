@@ -139,7 +139,7 @@ function renderFolders(list,grid){
   var groups=new Map();scoped.forEach(function(a){var name=folderValue(a,folderPath.length),key=folderKey(name);if(!groups.has(key))groups.set(key,{name:name,count:0});groups.get(key).count++});
   if(!groups.size)return scoped;
   grid.replaceChildren();
-  Array.from(groups.values()).sort(function(a,b){return a.name.localeCompare(b.name,"pt-BR",{numeric:true})}).forEach(function(g){var b=document.createElement("button");b.type="button";b.className="folder";b.innerHTML='<span class="folder-icon" aria-hidden="true">📁</span><span><strong>'+esc(g.name)+'</strong><small>'+g.count+' aula'+(g.count===1?'':'s')+'</small></span>';b.addEventListener("click",function(){folderPath.push(g.name);render()});grid.appendChild(b)});
+  Array.from(groups.values()).sort(function(a,b){var rank=function(n){return ["P1","P2","FINAL"].indexOf(String(n).trim().toUpperCase())};var x=rank(a.name),y=rank(b.name);return x>=0&&y>=0?x-y:x>=0?-1:y>=0?1:a.name.localeCompare(b.name,"pt-BR",{numeric:true})}).forEach(function(g){var b=document.createElement("button");b.type="button";b.className="folder";b.innerHTML='<span class="folder-icon" aria-hidden="true">📁</span><span><strong>'+esc(g.name)+'</strong><small>'+g.count+' aula'+(g.count===1?'':'s')+'</small></span>';b.addEventListener("click",function(){folderPath.push(g.name);render()});grid.appendChild(b)});
   document.getElementById("resultCount").textContent=groups.size+" pasta"+(groups.size===1?"":"s")+" · "+scoped.length+" aula"+(scoped.length===1?"":"s");return null;
 }
 function render(){
