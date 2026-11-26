@@ -133,6 +133,7 @@
 
   // ── Presença privada ─────────────────────────────────────────────────────
   var _presenceTouchTimer = null;
+  var _onPresenceVisible = null;
   var _presenceCountTimer = null;
 
   function startPrivatePresence(client, session) {
@@ -140,9 +141,11 @@
 
     async function touch() {
       try {
-        await client.rpc("presence_touch", {
+        if (document.hidden) return;
+        var result = await client.rpc("presence_touch", {
           p_page: (document.title || location.pathname || "").slice(0, 160)
         });
+        if (result.error) throw result.error;
       } catch (e) {
         console.warn("[auth-guard] presence_touch:", e);
       }
@@ -163,6 +166,9 @@
     }
 
     // Não aguarda presença para liberar a página.
+    if (_onPresenceVisible) document.removeEventListener("visibilitychange", _onPresenceVisible);
+    _onPresenceVisible = touch;
+    document.addEventListener("visibilitychange", touch);
     setTimeout(touch, 0);
     setTimeout(updateCount, 0);
 
