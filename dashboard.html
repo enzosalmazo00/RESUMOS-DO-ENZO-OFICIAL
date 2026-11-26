@@ -1204,6 +1204,21 @@
 
   <!-- CONTEÚDO PRINCIPAL — revelado após authReady -->
   <div id="mainContent" style="display:none">
+    <style>
+      #myGiftBar{display:flex;justify-content:flex-end;margin:0 0 16px}
+      #myGiftBar[hidden]{display:none}
+      #myGiftButton{display:flex;align-items:center;gap:12px;text-align:left;color:#f5d580;background:linear-gradient(125deg,#101d32,#29251f);border:1px solid #a98948;border-radius:16px;padding:12px 18px;cursor:pointer;box-shadow:0 0 20px #d4a94a18;font:inherit;max-width:100%}
+      #myGiftButton strong{display:block;font-size:23px;line-height:1.2;color:#ffe3a0}
+      #myGiftButton small{display:block;font-size:11px;line-height:1.5}
+      #myGiftDialog{color:#f5e5bf;background:#101d32;border:1px solid #b99a53;border-radius:18px;padding:20px;width:min(480px,calc(100% - 32px));max-height:80vh;overflow:auto;box-sizing:border-box}
+      #myGiftDialog::backdrop{background:#000a}
+      .my-gift-line{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #b99a5333;font-size:13px}
+      .my-gift-line strong{white-space:nowrap;color:#f5d580}
+      @media(max-width:600px){#myGiftButton{padding:10px 12px}#myGiftButton strong{font-size:19px}}
+    </style>
+    <div id="myGiftBar" hidden><button id="myGiftButton" type="button" aria-haspopup="dialog"><svg width="40" height="40" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="20" width="34" height="24" rx="4" fill="#ad8034"/><rect x="4" y="14" width="40" height="10" rx="3" fill="#f5d580"/><path d="M24 14C3 15 11 -4 24 14C37 -4 45 15 24 14" fill="none" stroke="#f5d580" stroke-width="3"/><path d="M24 15V44" stroke="#ffe8ae" stroke-width="5"/></svg><span><strong id="myGiftTotal"></strong><small>Valor economizado com presentes</small><small>Ver detalhes ›</small></span></button></div>
+    <dialog id="myGiftDialog" aria-labelledby="myGiftTitle"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h2 id="myGiftTitle" style="font-size:18px;color:#f5d580">🎁 Meus presentes</h2><form method="dialog"><button aria-label="Fechar" style="background:transparent;color:#f5d580;border:0;font-size:24px;cursor:pointer">×</button></form></div><div id="myGiftList"></div><p style="font-size:12px;color:#f5d580" id="myGiftFooter"></p></dialog>
+
 
     <!-- BOAS VINDAS PERSONALIZADAS -->
     <div class="welcome-box" id="welcomeBox">
@@ -3616,6 +3631,43 @@ function storeItemDetails(key) {
   return g.semester+"º semestre · "+({unico:"Resumo único",p1:"P1",p2:"P2",final:"Final"})[g.exam];
 }
 
+async function renderMyGiftSavings(session){
+  var bar=document.getElementById("myGiftBar"),dialog=document.getElementById("myGiftDialog");
+  bar.hidden=true;document.getElementById("myGiftList").replaceChildren();
+  try{
+    var db=window.authClient,uid=session.user.id;
+    var [p,g,o]=await Promise.all([
+      db.from("profiles").select("resumos_presente").eq("id",uid).single(),
+      db.from("acessos").select("resumo,source").eq("user_id",uid).eq("source","admin_grant"),
+      db.from("orders").select("produto_key").eq("user_id",uid).eq("status","approved")
+    ]);
+    if(p.error||g.error||o.error)throw p.error||g.error||o.error;
+    var current=await db.auth.getSession();if(current.data?.session?.user.id!==uid)return;
+    var gifts=new Set([...(Array.isArray(p.data.resumos_presente)?p.data.resumos_presente:[]),...(g.data||[]).map(x=>x.resumo)]);
+    var expand=k=>StorePricing.packages[k]?.keys||[k];
+    var bought=new Set((o.data||[]).flatMap(x=>String(x.produto_key||"").split(",").map(k=>k.trim()).filter(Boolean).flatMap(expand)));
+    gifts.forEach(k=>{if(StorePricing.packages[k])expand(k).forEach(x=>gifts.delete(x));});
+    var keys=[...new Set([...gifts].flatMap(k=>StorePricing.packages[k]&&expand(k).some(x=>bought.has(x))?expand(k).filter(x=>!bought.has(x)):[k]))].filter(k=>!expand(k).some(x=>bought.has(x)));
+    if(!keys.length)return;
+    var total=0,missing=0,fmt=n=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+    var list=document.getElementById("myGiftList");
+    keys.forEach(k=>{
+      var aula=AULOES.find(a=>a.chave===k),group=StorePricing.products[k]||StorePricing.packages[k],price=null;
+      if(aula&&aula.preco!=null&&Number.isFinite(Number(aula.preco)))price=Number(aula.preco);
+      else if(storePricesReady){try{price=StorePricing.price(k,storePrices)/100;}catch(e){}}
+      var name=aula?"🎥 "+aula.nome:k==="curso-peconhentos"?"🎓 Curso Peçonhentos":StorePricing.packages[k]?"📦 Pacote completo — "+group.semester+"º semestre — "+group.exam.toUpperCase():"📚 "+comboItemLabel(k)+(group&&group.exam!=="unico"?" — "+group.exam.toUpperCase():"");
+      var row=document.createElement("div"),label=document.createElement("span"),value=document.createElement("strong");
+      row.className="my-gift-line";label.textContent=name;value.textContent=price===null?"Preço indisponível":fmt(price);
+      row.append(label,value);list.append(row);
+      if(price===null)missing++;else total+=Math.round(price*100);
+    });
+    var amount=fmt(total/100);
+    document.getElementById("myGiftTotal").textContent=missing?"Total parcial: "+amount:amount;
+    document.getElementById("myGiftFooter").textContent=(missing?"Total parcial: ":"Total economizado: ")+amount+(missing?" · "+missing+" item(ns) sem preço disponível":"");
+    document.getElementById("myGiftButton").onclick=()=>dialog.showModal();
+    bar.hidden=false;
+  }catch(e){console.warn("Meus presentes:",e);}
+}
 function comboItemLabel(key) {
   var subject = MATERIAS_S1.concat(MATERIAS_S2,MATERIAS,MATERIAS_S4).find(m=>key===m.key || ["p1","p2","final"].some(exam=>key===m.key+"_"+exam));
   return subject?.label || key;
@@ -4406,6 +4458,7 @@ document.addEventListener("authReady", async function(e) {
   }
 
   await Promise.all([loadAuloes(),loadStorePrices().catch(console.error)]);
+  renderMyGiftSavings(session);
 
   statusArea.style.display = "none";
   mainContent.style.display = "block";
