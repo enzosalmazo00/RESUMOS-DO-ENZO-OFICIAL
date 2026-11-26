@@ -51,6 +51,7 @@
     .stat-value{font-size:26px;font-weight:700;color:#e2f8fc;letter-spacing:-1px;}
     .stat-sub{font-size:10px;color:rgba(125,211,232,0.35);margin-top:3px;}
     .stat-card.online{border-color:rgba(74,222,128,0.25);background:rgba(74,222,128,0.06);}
+    .stat-card.gifts-total{border-color:#b99a5370;background:linear-gradient(135deg,#b99a5318,#b99a5308)} .stat-card.gifts-total .stat-value,.stat-card.gifts-total .stat-label{color:#f5d580} .stat-card.gifts-total .stat-value{font-size:clamp(17px,2vw,23px);overflow-wrap:anywhere}
     .stat-card.revenue{border-color:rgba(34,211,238,0.25);background:rgba(34,211,238,0.06);}
     .online-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4ade80;margin-right:5px;animation:pulse-dot 1.5s infinite;}
     @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.4);}}
@@ -472,6 +473,7 @@
       <div class="stat-card"><div class="stat-label">Total de Alunos</div><div class="stat-value" id="statAlunos">&#8212;</div><div class="stat-sub">contas cadastradas</div></div>
       <div class="stat-card"><div class="stat-label">Com Acesso Ativo</div><div class="stat-value" id="statAtivos">&#8212;</div><div class="stat-sub">algum resumo liberado</div></div>
       <div class="stat-card revenue"><div class="stat-label">Total Recebido</div><div class="stat-value" id="statReceita">&#8212;</div><div class="stat-sub">pagamentos aprovados</div></div>
+      <div class="stat-card gifts-total"><div class="stat-label">🎁 Total em presentes</div><div class="stat-value" id="statGiftTotal">—</div><div class="stat-sub" id="statGiftSub">valor concedido aos alunos</div></div>
       <div class="stat-card"><div class="stat-label">Pagtos Aprovados</div><div class="stat-value" id="statPagamentos">&#8212;</div><div class="stat-sub">pedidos confirmados</div></div>
       <div class="stat-card"><div class="stat-label">Expiram em 7 dias</div><div class="stat-value" id="statExpirando">&#8212;</div><div class="stat-sub">precisam renovar</div></div>
       <div class="stat-card online"><div class="stat-label"><span class="online-dot"></span>Online Agora</div><div class="stat-value" id="statOnline">0</div><div class="stat-sub">alunos conectados</div></div>
@@ -1178,12 +1180,27 @@ async function loadAlunos(){
   // Presença agora é privada: a lista online do ADM é carregada exclusivamente
   // pela RPC admin_online_students(), sem canal Realtime compartilhado.
 }
+function renderGiftTotal(){
+  var el=document.getElementById("statGiftTotal"),sub=document.getElementById("statGiftSub");
+  if(!el||!sub)return;
+  if(!studentOrdersReady||studentGiftRows===null||!studentPriceConfig){el.textContent="—";sub.textContent="Aguardando dados";return;}
+  var cents=0,count=0,missing=0;
+  allAlunos.filter(a=>!a.is_admin).forEach(a=>{
+    var f=studentFinancial(a);
+    count+=f.giftCount;
+    if(f.giftValue===null){missing++;f.giftKeys.forEach(k=>{var p=studentProductPrice(k);if(p!==null&&Number.isFinite(p))cents+=Math.round(p*100);});}
+    else cents+=Math.round(f.giftValue*100);
+  });
+  el.textContent=money(cents/100);
+  sub.textContent=count+" presentes concedidos"+(missing?" · total parcial":"");
+}
 function renderStats(){
   var ativos=allAlunos.filter(function(a){return RESUMOS_COLS.some(function(r){return resumoAtivo(a,r.key);});}).length;
   var exp=allAlunos.filter(function(a){if(!a.acesso_expira_em)return false;var d=new Date(a.acesso_expira_em)-new Date();return d>0&&d<7*24*60*60*1000;}).length;
   document.getElementById("statAlunos").textContent=allAlunos.length;
   document.getElementById("statAtivos").textContent=ativos;
   document.getElementById("statExpirando").textContent=exp;
+  renderGiftTotal();
 }
 function expInfo(a){
   var str="\u2014",color="",css="";
@@ -1790,6 +1807,7 @@ async function loadOrders(){
     from+=pageSize;
   }
   allOrders=data;
+  renderGiftTotal();
   window.filterAlunos();
   populateSalesSubjects();
   populateProfessorSalesFilter();
@@ -2647,6 +2665,7 @@ async function loadAuloesAdmin(){
   var r=await client.from("auloes").select("*").order("semestre").order("created_at",{ascending:false});
   if(r.error){console.error("auloes:",r.error);return;}
   adminAuloes=r.data||[];
+  renderGiftTotal();
   renderAuloesAdmin();
   if(allOrders&&allOrders.length){populateSalesSubjects();renderSalesAnalytics();}
   renderPendingAuloes();
