@@ -2,12 +2,15 @@
   "use strict";
 
   var touchTimer=null;
+  var onVisible=null;
   var countTimer=null;
   var currentClient=null;
   var currentSession=null;
   var lastAdminKeys=[];
 
   async function stop(){
+    if(onVisible)document.removeEventListener("visibilitychange",onVisible);
+    onVisible=null;
     if(touchTimer)clearInterval(touchTimer);
     if(countTimer)clearInterval(countTimer);
     touchTimer=null;countTimer=null;
@@ -29,7 +32,7 @@
     var shouldTrack=options.track!==false;
 
     async function touch(){
-      if(!shouldTrack)return;
+      if(!shouldTrack || document.hidden)return;
       try{await client.rpc("presence_touch",{p_page:String(page||"").slice(0,160)})}
       catch(e){console.warn("[presence] touch:",e)}
     }
@@ -74,6 +77,8 @@
       }catch(e){console.warn("[presence] sync:",e)}
     }
 
+    onVisible=touch;
+    document.addEventListener("visibilitychange",onVisible);
     await touch();
     await sync();
     touchTimer=setInterval(touch,30000);
