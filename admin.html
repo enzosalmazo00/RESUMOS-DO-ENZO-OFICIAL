@@ -1211,20 +1211,27 @@ async function loadStudentGiftData(){
     studentPriceConfig=StorePricing.settings(p.data);
   }catch(e){console.warn("Preços dos presentes:",e);}
 }
+function studentProductPrice(k){
+  var aula=aulaoByKey(k);
+  if(aula && aula.preco!=null && Number.isFinite(Number(aula.preco)) && Number(aula.preco)>=0)return Number(aula.preco);
+  if(!studentPriceConfig)return null;
+  try{return StorePricing.price(k,studentPriceConfig)/100;}catch(e){return null;}
+}
 function studentFinancial(a){
-  var valid=function(k){return !!(StorePricing.products[k]||StorePricing.packages[k]);};
+  var valid=function(k){return typeof k==="string" && k.length>0;};
   var expand=function(k){return StorePricing.packages[k]?StorePricing.packages[k].keys:[k];};
   var orders=allOrders.filter(function(o){
-    return o.status==="approved" && (o.user_id?o.user_id===a.id:orderEmail(o).toLowerCase()===(a.email||"").toLowerCase()) && productKeys(o).length && productKeys(o).every(valid);
+    return o.status==="approved" && (o.user_id?o.user_id===a.id:orderEmail(o).toLowerCase()===(a.email||"").toLowerCase());
   });
   var seen=new Set();orders=orders.filter(function(o){var id=o.mp_payment_id||o.id;if(!id)return true;if(seen.has(id))return false;seen.add(id);return true;});
   var bought=new Set(orders.flatMap(o=>productKeys(o).flatMap(expand)));
   var gifts=new Set((Array.isArray(a.resumos_presente)?a.resumos_presente:[]).filter(valid));
   (studentGiftRows||[]).forEach(function(row){if(row.user_id===a.id&&valid(row.resumo))gifts.add(row.resumo);});
   gifts.forEach(function(k){if(StorePricing.packages[k])StorePricing.packages[k].keys.forEach(x=>gifts.delete(x));});
-  var giftKeys=[...gifts].filter(k=>!expand(k).some(x=>bought.has(x)));
+  var giftKeys=[...gifts].flatMap(k=>StorePricing.packages[k]&&expand(k).some(x=>bought.has(x))?expand(k).filter(x=>!bought.has(x)):[k]).filter(k=>!expand(k).some(x=>bought.has(x)));
   var giftCount=new Set(giftKeys.flatMap(expand)).size;
-  var giftValue=studentPriceConfig?giftKeys.reduce((sum,k)=>sum+StorePricing.price(k,studentPriceConfig),0)/100:null;
+  var prices=giftKeys.map(studentProductPrice);
+  var giftValue=prices.some(p=>p===null)?null:prices.reduce((sum,p)=>sum+Math.round(p*100),0)/100;
   return {orders:orders,bought:bought.size,giftCount:giftCount,giftValue:giftValue,giftKeys:giftKeys,paid:orders.reduce((sum,o)=>sum+Math.round(Number(o.valor||0)*100),0)/100};
 }
 function studentFinanceHtml(a,detail){
@@ -1232,9 +1239,9 @@ function studentFinanceHtml(a,detail){
   var gift=studentGiftRows===null||!studentOrdersReady||f.giftValue===null?"Indisponível":money(f.giftValue);
   var html="<div style='font-size:10px;line-height:1.65;margin-top:5px;white-space:nowrap'><div>💰 Gastou: <strong>"+paid+"</strong></div><div>🎁 Presentes: <strong>"+gift+"</strong></div></div>";
   if(detail){
-    html+="<div style='font-size:11px;margin:8px 0'>Comprados: "+(studentOrdersReady?f.bought:"—")+" · Presentes registrados: "+(studentGiftRows!==null&&studentOrdersReady?f.giftCount:"—")+"<br>Valor combinado: "+(studentOrdersReady&&studentGiftRows!==null&&f.giftValue!==null?money(f.paid+f.giftValue):"—")+"<br>Presentes avaliados pelo preço do catálogo; registros removidos podem não estar disponíveis.</div>";
+    html+="<div style='font-size:11px;margin:8px 0'>Comprados: "+(studentOrdersReady?f.bought:"—")+" · Presentes registrados: "+(studentGiftRows!==null&&studentOrdersReady?f.giftCount:"—")+"<br>Valor combinado: "+(studentOrdersReady&&studentGiftRows!==null&&f.giftValue!==null?money(f.paid+f.giftValue):"—")+"<br>Inclui resumos, aulões, cursos e pacotes. Presentes avaliados pelo preço do catálogo; registros removidos podem não estar disponíveis.</div>";
     html+="<details><summary>Histórico de compras aprovadas</summary>"+(studentOrdersReady?(f.orders.map(o=>"<div style='font-size:11px;padding:5px 0'>"+escHtml(localDate(o).toLocaleDateString("pt-BR"))+" · "+escHtml(o.produto_nome||o.produto_key)+" · "+money(o.valor)+"</div>").join("")||"Nenhuma compra registrada"):"Histórico indisponível")+"</details>";
-    html+="<details><summary>Presentes registrados</summary>"+f.giftKeys.map(k=>"<div style='font-size:11px;padding:4px 0'>🎁 "+escHtml(prettyProduct(k))+" · "+(studentPriceConfig?money(StorePricing.price(k,studentPriceConfig)/100):"—")+"</div>").join("")+"</details>";
+    html+="<details><summary>Presentes registrados</summary>"+f.giftKeys.map(k=>"<div style='font-size:11px;padding:4px 0'>🎁 "+escHtml(prettyProduct(k))+" · "+(studentProductPrice(k)!==null?money(studentProductPrice(k)):"Preço indisponível")+"</div>").join("")+"</details>";
   }
   return html;
 }
