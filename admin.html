@@ -1229,12 +1229,12 @@ function studentFinancial(a){
 }
 function studentFinanceHtml(a,detail){
   var f=studentFinancial(a),paid=studentOrdersReady?money(f.paid):"Indisponível";
-  var gift=studentGiftRows===null||!studentOrdersReady||f.giftValue===null?"Indisponível":money(f.giftValue)+(f.giftCount?" (estim.)":"");
+  var gift=studentGiftRows===null||!studentOrdersReady||f.giftValue===null?"Indisponível":money(f.giftValue);
   var html="<div style='font-size:10px;line-height:1.65;margin-top:5px;white-space:nowrap'><div>💰 Gastou: <strong>"+paid+"</strong></div><div>🎁 Presentes: <strong>"+gift+"</strong></div></div>";
   if(detail){
-    html+="<div style='font-size:11px;margin:8px 0'>Comprados: "+(studentOrdersReady?f.bought:"—")+" · Presentes registrados: "+(studentGiftRows!==null&&studentOrdersReady?f.giftCount:"—")+"<br>Valor combinado: "+(studentOrdersReady&&studentGiftRows!==null&&f.giftValue!==null?money(f.paid+f.giftValue)+" (estimado)":"—")+"<br>Presentes avaliados pelo preço atual; registros removidos podem não estar disponíveis.</div>";
+    html+="<div style='font-size:11px;margin:8px 0'>Comprados: "+(studentOrdersReady?f.bought:"—")+" · Presentes registrados: "+(studentGiftRows!==null&&studentOrdersReady?f.giftCount:"—")+"<br>Valor combinado: "+(studentOrdersReady&&studentGiftRows!==null&&f.giftValue!==null?money(f.paid+f.giftValue):"—")+"<br>Presentes avaliados pelo preço do catálogo; registros removidos podem não estar disponíveis.</div>";
     html+="<details><summary>Histórico de compras aprovadas</summary>"+(studentOrdersReady?(f.orders.map(o=>"<div style='font-size:11px;padding:5px 0'>"+escHtml(localDate(o).toLocaleDateString("pt-BR"))+" · "+escHtml(o.produto_nome||o.produto_key)+" · "+money(o.valor)+"</div>").join("")||"Nenhuma compra registrada"):"Histórico indisponível")+"</details>";
-    html+="<details><summary>Presentes registrados</summary>"+f.giftKeys.map(k=>"<div style='font-size:11px;padding:4px 0'>🎁 "+escHtml(prettyProduct(k))+" · "+(studentPriceConfig?money(StorePricing.price(k,studentPriceConfig)/100)+" (estim.)":"—")+"</div>").join("")+"</details>";
+    html+="<details><summary>Presentes registrados</summary>"+f.giftKeys.map(k=>"<div style='font-size:11px;padding:4px 0'>🎁 "+escHtml(prettyProduct(k))+" · "+(studentPriceConfig?money(StorePricing.price(k,studentPriceConfig)/100):"—")+"</div>").join("")+"</details>";
   }
   return html;
 }
