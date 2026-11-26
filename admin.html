@@ -508,7 +508,7 @@
       </select>
     </div>
     <div class="table-wrap desktop-only">
-      <table><thead><tr><th>Email</th><th>Resumos</th><th>Expira em</th><th>Ultimo login</th><th>Ações</th></tr></thead>
+      <table><thead><tr><th>Email</th><th>Resumos</th><th>Expira em</th><th>Último acesso</th><th>Ações</th></tr></thead>
       <tbody id="alunosBody"><tr><td colspan="5" class="loading"><span class="spinner-inline"></span> Carregando...</td></tr></tbody></table>
     </div>
     <div class="cards-wrap" id="alunosCards">
@@ -1143,12 +1143,37 @@ async function init(){
 }
 
 // ── LOAD ALUNOS ──
+var lastAccessById = new Map();
+var accessTimeFormat = new Intl.DateTimeFormat("pt-BR", {
+  timeZone: "America/Asuncion", dateStyle: "short", timeStyle: "medium"
+});
+async function refreshLastAccess(){
+  var response = await client.rpc("admin_student_last_access");
+  if(response.error){console.warn("Último acesso:",response.error);return false;}
+  var changed = false;
+  (response.data || []).forEach(function(row){
+    var time = Date.parse(row.last_access);
+    if(time > (lastAccessById.get(row.user_id) || 0)){
+      lastAccessById.set(row.user_id,time);
+      changed = true;
+    }
+  });
+  return changed;
+}
+function lastAccessLabel(aluno){
+  var seen = lastAccessById.get(aluno.id);
+  var login = Date.parse(aluno.last_login);
+  if(seen && (!Number.isFinite(login) || seen >= login))return accessTimeFormat.format(seen);
+  if(Number.isFinite(login))return accessTimeFormat.format(login) + " (login)";
+  return "Sem registro";
+}
 async function loadAlunos(){
   var r=await client.from("profiles").select("*").order("email");
   if(r.error){console.error(r.error);return;}
   allAlunos=r.data||[];
   document.getElementById("tabBadgeAlunos").textContent=allAlunos.length;
-  renderStats();renderAlunos(allAlunos);
+  await refreshLastAccess();
+  renderStats();window.filterAlunos();
   // Presença agora é privada: a lista online do ADM é carregada exclusivamente
   // pela RPC admin_online_students(), sem canal Realtime compartilhado.
 }
@@ -1174,11 +1199,11 @@ function renderAlunos(list){
   var rows="",cds="";
   list.forEach(function(a){
     var cnt=RESUMOS_COLS.filter(function(r){return resumoAtivo(a,r.key);}).length;
-    var ei=expInfo(a);var ll=a.last_login?new Date(a.last_login).toLocaleDateString("pt-BR"):"\u2014";
+    var ei=expInfo(a);var ll=lastAccessLabel(a);
     var adm=a.is_admin?"<span class='badge badge-yellow' style='font-size:9px;margin-left:4px;'>Admin</span>":"";
     var bdg="<span class='badge "+(cnt>0?"badge-green":"badge-red")+"'>"+(cnt>0?cnt+" resumo"+(cnt>1?"s":""):"Nenhum")+"</span>";
     rows+="<tr><td class='email-cell'>"+(a.email||"\u2014")+adm+"</td><td>"+bdg+"</td><td style='"+ei.css+";font-size:11px;'>"+ei.str+"</td><td class='date-cell'>"+ll+"</td><td><div class='actions-cell'>"+"<button class='action-btn cyan' data-id='"+a.id+"' data-act='edit'>&#9998;&#65039;</button>"+"<button class='action-btn cyan' data-id='"+a.id+"' data-act='password'>🔑 Senha</button>"+(cnt>0?"<button class='action-btn red' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='revoke'>Revogar</button>":"<button class='action-btn green' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='grant'>Liberar</button>")+"</div></td></tr>";
-    cds+="<div class='aluno-card'><div class='ac-top'><div class='ac-email'>"+(a.email||"\u2014")+adm+"</div><div>"+bdg+"</div></div><div class='ac-meta'>"+(ei.str!=="\u2014"?"<span style='color:"+(ei.color||"rgba(125,211,232,0.5)")+"'>&#8987; "+ei.str+"</span>":"")+"<span>&#128197; "+ll+"</span></div><button class='ac-btn cyan' data-id='"+a.id+"' data-act='edit'>&#9998;&#65039; Editar acesso</button><button class='ac-btn cyan' data-id='"+a.id+"' data-act='password'>🔑 Redefinir senha</button>"+(cnt>0?"<button class='ac-btn red' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='revoke'>&#128683; Revogar</button>":"<button class='ac-btn green' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='grant'>&#9989; Liberar tudo</button>")+"</div>";
+    cds+="<div class='aluno-card'><div class='ac-top'><div class='ac-email'>"+(a.email||"\u2014")+adm+"</div><div>"+bdg+"</div></div><div class='ac-meta'>"+(ei.str!=="\u2014"?"<span style='color:"+(ei.color||"rgba(125,211,232,0.5)")+"'>&#8987; "+ei.str+"</span>":"")+"<span>&#128197; Último acesso: "+ll+"</span></div><button class='ac-btn cyan' data-id='"+a.id+"' data-act='edit'>&#9998;&#65039; Editar acesso</button><button class='ac-btn cyan' data-id='"+a.id+"' data-act='password'>🔑 Redefinir senha</button>"+(cnt>0?"<button class='ac-btn red' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='revoke'>&#128683; Revogar</button>":"<button class='ac-btn green' data-id='"+a.id+"' data-email='"+encodeURIComponent(a.email||"")+"' data-act='grant'>&#9989; Liberar tudo</button>")+"</div>";
   });
   tbody.innerHTML=rows;cards.innerHTML=cds;
 }
@@ -2519,6 +2544,7 @@ async function refreshOnlineUsers(){
     var r=await client.rpc("admin_online_students");
     if(r.error)throw r.error;
     renderOnlineUsers(r.data||[]);
+    if(!document.hidden && await refreshLastAccess())window.filterAlunos();
   }catch(e){
     console.warn("Private presence:",e);
     var stat=document.getElementById("statOnline");
